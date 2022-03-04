@@ -3,7 +3,9 @@
       <thead>
           <tr class="table-primary">
               <th class="text-center">#</th>
-              <th>Pangkat</th>
+              <th>Kantor Cabang</th>
+              <th>Alamat</th>
+              <th>Kabupaten</th>
               <th></th>
           </tr>
       </thead>
@@ -12,10 +14,12 @@
               $page = Request::get('page');
               $no = !$page || $page == 1 ? 1 : ($page - 1) * 10 + 1;
           @endphp
-          @foreach ($data as $item)
+          @foreach ($cabang as $item)
               <tr class="border-bottom-primary">
                 <td class="text-center text-muted">{{ $no }}</td>
-                <td>{{ $item->pangkat }}</td>
+                <td>{{ $item->cabang }}</td>
+                <td>{{ $item->alamat }}</td>
+                {{-- <td>{{ $item->kabupaten->kabupaten }}</td> --}}
                 <td>
                     <div class="form-inline btn-action">
                         <a href="{{ route('cabang.edit', $item->id) }}" class="mr-2">
@@ -42,6 +46,6 @@
       </tbody>
   </table>
   <div class="pull-right">
-    {{$data->appends(Request::all())->links('vendor.pagination.custom')}}
+    {{$cabang->appends(Request::all())->links('vendor.pagination.custom')}}
   </div>
 </div>
