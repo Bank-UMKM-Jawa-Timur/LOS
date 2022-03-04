@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PengajuanKreditController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,8 +19,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class,'index']);
+    Route::resource('pengajuan-kredit', PengajuanKreditController::class);
+
+});
 
 require __DIR__.'/auth.php';
