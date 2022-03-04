@@ -52,6 +52,7 @@
                         <a class="dropdown-item" href="{{ route('kabupaten.index') }}">Master Kabupaten</a>
                         <a class="dropdown-item" href="{{ route('kecamatan.index') }}">Master Kecamatan</a>
                         <a class="dropdown-item" href="{{ route('desa.index') }}">Master Desa</a>
+                        <a class="dropdown-item" href="{{ route('user.index') }}">Master User</a>
                     </div>
                 </li>
                 @if (auth()->user()->level == 'Administrator' || auth()->user()->level == 'Admin' || auth()->user()->level == 'Kasat')
@@ -70,7 +71,7 @@
                       <span class="fa fa-user"></span> Admin
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                      <a class="dropdown-item" href="">Ganti Password</a>
+                      <a class="dropdown-item" href="{{ route('change_password') }}">Ganti Password</a>
                       <a class="dropdown-item logout" href="#" >Logout</a>
                       <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf

@@ -27,7 +27,7 @@ class CabangController extends Controller
     }
     public function index(Request $request)
     {
-        $this->param['pageTitle'] = 'List Cabang';
+        $this->param['pageTitle'] = 'List Kantor Cabang';
         $this->param['btnText'] = 'Tambah Cabang';
         $this->param['btnLink'] = route('cabang.create');
 
@@ -116,7 +116,7 @@ class CabangController extends Controller
      */
     public function edit($id)
     {
-        $this->param['pageTitle'] = 'Edit Cabang';
+        $this->param['pageTitle'] = 'Edit Kantor Cabang';
         $this->param['cabang'] = Cabang::find($id);
         $this->param['btnText'] = 'List Cabang';
         $this->param['btnLink'] = route('cabang.index');

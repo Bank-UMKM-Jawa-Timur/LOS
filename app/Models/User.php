@@ -41,4 +41,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function cabang()
+    {
+        return $this->belongsTo('\App\Models\Cabang', 'id_cabang')->withDefault(['cabang' => '-']);
+    }
 }

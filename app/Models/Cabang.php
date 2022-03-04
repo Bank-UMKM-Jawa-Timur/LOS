@@ -15,4 +15,9 @@ class Cabang extends Model
         return $this->hasMany('\App\Models\Kabupaten', 'id');
     }
 
+    public function cabang()
+    {
+        return $this->hasMany('\App\Models\Cabang', 'id');
+    }
+
 }
