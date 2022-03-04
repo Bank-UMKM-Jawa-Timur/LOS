@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\KabupatenController;
 use \App\Http\Controllers\KecamatanController;
+use \App\Http\Controllers\DesaController;
+use \App\Http\Controllers\CabangController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,6 +27,8 @@ use \App\Http\Controllers\KecamatanController;
 Route::middleware(['auth','verified'])->group(function () {
     Route::resource('kabupaten', KabupatenController::class);
     Route::resource('kecamatan', KecamatanController::class);
+    Route::resource('desa', DesaController::class);
+    Route::resource('cabang', CabangController::class);
 });
 
 require __DIR__.'/auth.php';
