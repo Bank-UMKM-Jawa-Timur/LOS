@@ -1,0 +1,302 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+:root{
+    --colorPrimary : #dc3545;
+    --colorDark : #112042;
+    --colorDarkBlue : #1f1d62;
+}
+body,html{
+    font-family: "Poppins", sans-serif !important;
+    background:  #f0f1f3;
+    color : rgba(0,0,0,.5);
+    font-weight: 400;
+}
+a{
+    color : var(--colorPrimary);
+}
+.btn-back{
+    background : var(--colorPrimary);
+    color : white;
+}
+.btn-default{
+    background: #efefef;
+    color : var(--colorDark) !important; 
+}
+.btn-success,.btn-primary{
+    color : white !important;
+}
+.btn-primary{
+    background: var(--colorPrimary);
+    border-color: var(--colorPrimary);
+}
+@media (min-width: 1200px){
+    .container,.modal-tanggal {
+        max-width: 1280px !important;
+    }
+}
+@media (min-width: 992px){
+    .container,.modal-tanggal {
+        max-width: 1100px;
+    }
+}
+@media (min-width: 768px){
+    .container,.modal-tanggal {
+        max-width: 860px;
+    }
+}
+@media (min-width: 576px){
+    .container,.modal-tanggal {
+        max-width: 680px;
+    }
+}
+.navbar-dark{
+    background : var(--colorDark);
+    border-radius: 5px;
+}
+.navbar-dark li{
+    margin-left : 5px;
+    margin-right : 5px;
+}
+.navbar-dark li a{
+    padding: 0.5rem 1.2rem !important;
+}
+.navbar-dark li a.active,.navbar-dark li a:hover{
+    background : var(--colorPrimary); 
+    color : white !important;
+    border-radius: 5px;
+}
+.box-content{
+    background : white;
+    border-radius: 5px;
+}
+.sidebox-content{
+    background : #ced1d9;
+    border-radius: 5px;
+}
+.row-breadcrumbs h5 a{
+    cursor: pointer;
+}
+.row-breadcrumbs h5{
+    font-weight: 600 !important;
+    color : var(--colorDarkBlue);
+}
+.row-breadcrumbs h6{
+    color : rgba(0,0,0,.5);
+
+}
+.row-breadcrumbs h5,.row-breadcrumbs h6{
+    margin-top : 0;
+    margin-bottom : 0;
+    font-weight: 400;
+}
+.table-hover tbody tr:hover{
+    background: rgba(71, 145,254,0.05) !important;
+}
+.table-primary, .table-primary>td, .table-primary>th{
+    background-color: var(--colorPrimary) !important;
+    color : white
+}
+.td-top{
+    font-weight: 500;
+    color : var(--colorPrimary);
+}
+.b-radius-3{
+    border-radius: 3px !important;
+}
+.badge-lg{
+    font-size: 15px;
+    padding : 7px 14px !important;
+}
+.badge{
+    padding : 4px 8px;
+    font-weight: 500;
+}
+.bg-primary{
+    background: var(--colorPrimary) !important;
+    color : white;
+}
+.bg-darkBlue{
+    background: var(--colorDarkBlue) !important;
+}
+.bg-rgb-info,.badge-info{
+    background: rgba(23, 162,184,0.2);
+    color : #17a2b8;
+}
+.badge-primary,.btn-rgb-primary,.bg-rgb-primary{
+    background: rgba(71, 145,254,0.2);
+    color : var(--colorPrimary);
+}
+.badge-warning,.btn-rgb-warning,.bg-rgb-warning{
+    background: rgba(255, 193,7,0.2);
+    color : #ffc107;
+}
+.badge-success,.btn-rgb-success,.bg-rgb-success{
+    background: rgba(40, 167,69,0.2);
+    color : #28a745;
+}
+.badge-danger,.btn-rgb-danger,.bg-rgb-danger{
+    background: rgba(220, 53,69,0.2);
+    color : #dc3545;
+}
+.table-custom tbody tr td{
+    vertical-align: middle;
+}
+.table-custom tbody tr td{
+    position: relative;
+}
+.table-custom tbody tr td .btn-action{
+    opacity: 0;
+    transition: all.3s ease-in-out;
+}
+.table-custom tbody tr:hover td .btn-action{
+    opacity: 1;
+}
+label{
+    font-weight: 600;
+    color : var(--colorDarkBlue)
+}
+.color-darkBlue{
+    color : var(--colorDarkBlue)
+}
+.select2{
+    width : 100% !important;
+}
+.select2-container--default .select2-selection--single{
+    border : 1px solid #ced4da;
+    height: calc(2.25rem + 2px);
+    padding : .375rem .75rem;
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered{
+    line-height: inherit;
+    color : inherit;
+    padding : 0px;
+}
+.select2-container--default .select2-results__option--highlighted[aria-selected]{
+    background: var(--colorPrimary);
+}
+.datepicker{
+    padding : .375rem .75rem;
+    font-weight: 300;
+}
+.form-control:disabled, .form-control[readonly]{
+    background: #f0f1f3;
+}
+.input-penugasan-popup{
+    display :none;
+}
+.input-penugasan-popup.active{
+    display :block;
+}
+.btn-pointer{
+    cursor: pointer;
+}
+.disabled{
+    cursor : no-drop;
+    pointer-events: inherit !important;
+}
+.loop-tanggal{
+    display : inline-block;
+}
+.select-anggota.selected-ketua{
+    color : #4099ff !important;
+    font-weight: bold;
+}
+.select-anggota.selected-ketua label:after{
+    content : "(Ketua)";
+}
+.select-anggota .isKetua{
+    display : none;
+    margin-left : 10px;
+    cursor : pointer;
+    color : #4099ff;
+    text-decoration : underline;
+}
+.select-anggota.checked:not(.selected-ketua):hover .isKetua{
+    display : inline-block;
+}
+.remove-tanggal:hover{
+    color : red;
+    cursor: pointer !important;
+}
+.fc-event{
+    background : var(--colorPrimary) !important;
+    color : white !important;
+    cursor: pointer;
+}
+.fc-button-group button{
+    background: rgba(71, 145,254,0.2);
+    color : var(--colorPrimary);
+}
+.fc-today-button{
+    background: var(--colorPrimary);
+    color : white;
+}
+.fc-center h2{
+    font-size: 1.25rem;    
+    font-weight: bold;
+    color : var(--colorDark);
+}
+.fc-unthemed td.fc-today{
+    background: rgba(71, 145,254,0.05) !important;    
+}
+.fc-day-grid-event{
+    padding : 3px 8px
+}
+.table td, .table th{
+    padding :1rem;
+}
+.card-body{
+    overflow: hidden;
+    position: relative;
+}
+.sticky-fa-card{
+    position : absolute;
+    left : 0;
+    top : 0;
+    font-size: 100px;
+    opacity: 0.2;
+    transform: translate(-20%,-20%);
+    -webkit-transform: translate(-20%,-20%);
+    -moz-transform: translate(-20%,-20%);
+    -o-transform: translate(-20%,-20%);
+}
+.alert{
+    padding : 1rem 1.25rem;
+}
+#login .input{
+    position: relative;
+}
+#login .input input:focus{
+    box-shadow: none;
+}
+#login .input input{
+    position: relative;
+    border : none;
+    border-bottom :1px solid #ced4da;
+    padding-left : 2rem;
+}
+#login .input span{
+    z-index: 2;
+    position: absolute;
+    font-size: 18px;
+    top : 50%;
+    left : 2px;
+    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+}
+.content-detail{
+    position: relative;
+}
+.loading-content-detail{
+    background: #f0f1f3;
+    padding : 5px 10px;
+    border-radius: 3px;
+    display: inline-block;
+}
+p .loading-content-detail{
+    min-width: 300px;
+}
+#modalDetail .modal-body{
+    padding : 0px;
+}

@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PengajuanKreditController;
 use \App\Http\Controllers\KabupatenController;
 use \App\Http\Controllers\KecamatanController;
 use \App\Http\Controllers\DesaController;
@@ -20,11 +22,14 @@ use \App\Http\Controllers\CabangController;
 //     return view('welcome');
 // });
 
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth'])->name('dashboard');
 
+// Route::get('/dashboard', function () {
+    //     return view('dashboard');
+    // })->middleware(['auth'])->name('dashboard');
+    
 Route::middleware(['auth','verified'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class,'index']);
+    Route::resource('pengajuan-kredit', PengajuanKreditController::class);
     Route::resource('kabupaten', KabupatenController::class);
     Route::resource('kecamatan', KecamatanController::class);
     Route::resource('desa', DesaController::class);
