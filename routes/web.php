@@ -27,15 +27,13 @@ use \App\Http\Controllers\UserController;
 // Route::get('/dashboard', function () {
     //     return view('dashboard');
     // })->middleware(['auth'])->name('dashboard');
-    
+
 Route::middleware(['auth','verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class,'index']);
     Route::resource('pengajuan-kredit', PengajuanKreditController::class);
     Route::resource('kabupaten', KabupatenController::class);
     Route::resource('kecamatan', KecamatanController::class);
-    Route::get('get-kecamatan-by-kabupaten-id/{id}', [KecamatanController::class, 'getKecamatanByKabupatenId']);
     Route::resource('desa', DesaController::class);
-    Route::get('get-desa-by-kecamatan-id/{id}', [DesaController::class, 'getDesaByKecamatanId']);
     Route::resource('cabang', CabangController::class);
     Route::resource('user', UserController::class);
     Route::get('change-password', [UserController::class, 'changePassword'])->name('change_password');
