@@ -300,3 +300,16 @@ p .loading-content-detail{
 #modalDetail .modal-body{
     padding : 0px;
 }
+
+.page-item.active .page-link{
+    background-color: var(--colorPrimary);
+    border-color: var(--colorPrimary);
+}
+
+.page-link {
+    color : var(--colorPrimary);
+}
+
+.page-link:hover {
+    color : var(--colorPrimary);
+}

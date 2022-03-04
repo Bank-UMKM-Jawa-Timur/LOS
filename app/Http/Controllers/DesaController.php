@@ -18,8 +18,18 @@ class DesaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    private $param;
+
+    public function __construct()
+    {
+        $this->param['pageIcon'] = 'fa fa-database';
+        $this->param['parentMenu'] = '/desa';
+        $this->param['current'] = 'Desa';
+    }
+
     public function index(Request $request)
     {
+        $this->param['pageTitle'] = 'List Desa';
         $this->param['btnText'] = 'Tambah Desa';
         $this->param['btnLink'] = route('desa.create');
 
@@ -39,7 +49,7 @@ class DesaController extends Controller
             return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
         }
 
-        // return \view('desa.index', $this->param);
+        return \view('desa.index', $this->param);
     }
 
     /**
@@ -49,11 +59,12 @@ class DesaController extends Controller
      */
     public function create()
     {
+        $this->param['pageTitle'] = 'Tambah Desa';
         $this->param['btnText'] = 'List Desa';
         $this->param['btnLink'] = route('desa.index');
         $this->param['allKab'] = Kabupaten::get();
         $this->param['allKec'] = Kecamatan::get();
-        // return \view('desa.create', $this->param);
+        return \view('desa.create', $this->param);
     }
 
     /**
@@ -84,7 +95,7 @@ class DesaController extends Controller
             return back()->withError('Terjadi kesalahan.');
         }
 
-        // return redirect()->route('desa.index')->withStatus('Data berhasil disimpan.');
+        return redirect()->route('desa.index')->withStatus('Data berhasil disimpan.');
     }
 
     /**
@@ -106,13 +117,14 @@ class DesaController extends Controller
      */
     public function edit($id)
     {
+        $this->param['pageTitle'] = 'Edit Desa';
         $desa = Desa::find($id);
         $this->param['desa'] = $desa;
         $this->param['btnText'] = 'List Desa';
         $this->param['btnLink'] = route('desa.index');
         $this->param['allKab'] = Kabupaten::get();
         $this->param['allKec'] = Kecamatan::where('id_kabupaten', $desa->id_kabupaten)->get();
-        // return view('desa.edit', $this->param);
+        return view('desa.edit', $this->param);
     }
 
     /**
@@ -147,7 +159,7 @@ class DesaController extends Controller
             return redirect()->back()->withError('Terjadi kesalahan.');
         }
 
-        // return redirect()->route('desa.index')->withStatus('Data berhasil diperbarui.');
+        return redirect()->route('desa.index')->withStatus('Data berhasil diperbarui.');
     }
 
     /**
@@ -167,6 +179,13 @@ class DesaController extends Controller
             return back()->withError('Terjadi kesalahan.');
         }
 
-        // return redirect()->route('desa.index')->withStatus('Data berhasil dihapus.');
+        return redirect()->route('desa.index')->withStatus('Data berhasil dihapus.');
+    }
+    
+    public function getDesaByKecamatanId($id)
+    {
+        $desa = Desa::where('id_kecamatan', $id)->get();
+
+        return json_encode($desa);
     }
 }

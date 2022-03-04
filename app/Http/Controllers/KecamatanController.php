@@ -16,8 +16,18 @@ class KecamatanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    private $param;
+
+    public function __construct()
+    {
+        $this->param['pageIcon'] = 'fa fa-database';
+        $this->param['parentMenu'] = '/kabupaten';
+        $this->param['current'] = 'Kabupaten';
+    }
+    
     public function index(Request $request)
     {
+        $this->param['pageTitle'] = 'List Kecamatan';
         $this->param['btnText'] = 'Tambah Kecamatan';
         $this->param['btnLink'] = route('kecamatan.create');
 
@@ -36,7 +46,7 @@ class KecamatanController extends Controller
             return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
         }
 
-        // return \view('kecamatan.index', $this->param);
+        return \view('kecamatan.index', $this->param);
     }
 
     /**
@@ -46,12 +56,13 @@ class KecamatanController extends Controller
      */
     public function create()
     {
+        $this->param['pageTitle'] = 'Tambah Kecamatan';
         $this->param['btnText'] = 'List Kecamatan';
         $this->param['btnLink'] = route('kecamatan.index');
         $this->param['allKab'] = Kabupaten::get();
 
 
-        // return \view('kecamatan.create', $this->param);
+        return \view('kecamatan.create', $this->param);
     }
 
     /**
@@ -81,7 +92,7 @@ class KecamatanController extends Controller
             return back()->withError('Terjadi kesalahan.');
         }
 
-        // return redirect()->route('kecamatan.index')->withStatus('Data berhasil disimpan.');
+        return redirect()->route('kecamatan.index')->withStatus('Data berhasil disimpan.');
     }
 
     /**
@@ -103,12 +114,13 @@ class KecamatanController extends Controller
      */
     public function edit($id)
     {
+        $this->param['pageTitle'] = 'Edit Kecamatan';
         $this->param['kecamatan'] = kecamatan::find($id);
         $this->param['btnText'] = 'List Kecamatan';
         $this->param['btnLink'] = route('kecamatan.index');
         $this->param['allKab'] = Kabupaten::get();
 
-        // return view('kecamatan.edit', $this->param);
+        return view('kecamatan.edit', $this->param);
     }
 
     /**
@@ -141,7 +153,7 @@ class KecamatanController extends Controller
             return redirect()->back()->withError('Terjadi kesalahan.');
         }
 
-        // return redirect()->route('kecamatan.index')->withStatus('Data berhasil diperbarui.');
+        return redirect()->route('kecamatan.index')->withStatus('Data berhasil diperbarui.');
     }
 
     /**
@@ -162,5 +174,12 @@ class KecamatanController extends Controller
         }
 
         return redirect()->route('kecamatan.index')->withStatus('Data berhasil dihapus.');
+    }
+
+    public function getKecamatanByKabupatenId($id)
+    {
+        $kecamatan = Kecamatan::where('id_kabupaten', $id)->get();
+
+        return json_encode($kecamatan);
     }
 }

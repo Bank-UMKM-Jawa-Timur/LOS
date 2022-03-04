@@ -32,7 +32,9 @@ Route::middleware(['auth','verified'])->group(function () {
     Route::resource('pengajuan-kredit', PengajuanKreditController::class);
     Route::resource('kabupaten', KabupatenController::class);
     Route::resource('kecamatan', KecamatanController::class);
+    Route::get('get-kecamatan-by-kabupaten-id/{id}', [KecamatanController::class, 'getKecamatanByKabupatenId']);
     Route::resource('desa', DesaController::class);
+    Route::get('get-desa-by-kecamatan-id/{id}', [DesaController::class, 'getDesaByKecamatanId']);
     Route::resource('cabang', CabangController::class);
 });
 

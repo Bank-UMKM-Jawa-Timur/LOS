@@ -48,7 +48,10 @@
                       <span class="fa fa-file-alt"></span> Data Master
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                      <a class="dropdown-item" href="">Menu 1</a>
+                        <a class="dropdown-item" href="{{ route('cabang.index') }}">Master Cabang</a>
+                        <a class="dropdown-item" href="{{ route('kabupaten.index') }}">Master Kabupaten</a>
+                        <a class="dropdown-item" href="{{ route('kecamatan.index') }}">Master Kecamatan</a>
+                        <a class="dropdown-item" href="{{ route('desa.index') }}">Master Desa</a>
                     </div>
                 </li>
                 @if (auth()->user()->level == 'Administrator' || auth()->user()->level == 'Admin' || auth()->user()->level == 'Kasat')
@@ -111,7 +114,7 @@
             e.preventDefault()
             swal({
                     title: "Apakah anda yakin?",
-                    text: 'Anda akan keluar dari aplikasi PUSKOGAP',
+                    text: 'Anda akan keluar dari Aplikasi Analisa Kredit',
                     type: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#dc3545",

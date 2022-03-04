@@ -16,8 +16,18 @@ class KabupatenController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    private $param;
+
+    public function __construct()
+    {
+        $this->param['pageIcon'] = 'fa fa-database';
+        $this->param['parentMenu'] = '/kabupaten';
+        $this->param['current'] = 'Kabupaten';
+    }
+
     public function index(Request $request)
     {
+        $this->param['pageTitle'] = 'List Kabupaten';
         $this->param['btnText'] = 'Tambah Kabupaten';
         $this->param['btnLink'] = route('kabupaten.create');
 
@@ -37,7 +47,7 @@ class KabupatenController extends Controller
             return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
         }
 
-        // return \view('kabupaten.index', $this->param);
+        return \view('kabupaten.index', $this->param);
     }
 
     /**
@@ -47,10 +57,11 @@ class KabupatenController extends Controller
      */
     public function create()
     {
+        $this->param['pageTitle'] = 'Tambah Kabupaten';
         $this->param['btnText'] = 'List kabupaten';
         $this->param['btnLink'] = route('kabupaten.index');
 
-        // return \view('kabupaten.create', $this->param);
+        return \view('kabupaten.create', $this->param);
     }
 
     /**
@@ -101,11 +112,12 @@ class KabupatenController extends Controller
      */
     public function edit($id)
     {
+        $this->param['pageTitle'] = 'Edit Kabupaten';
         $this->param['kabupaten'] = Kabupaten::find($id);
         $this->param['btnText'] = 'List Kabupaten';
         $this->param['btnLink'] = route('kabupaten.index');
 
-        // return view('kabupaten.edit', $this->param);
+        return view('kabupaten.edit', $this->param);
     }
 
     /**
@@ -136,7 +148,7 @@ class KabupatenController extends Controller
             return redirect()->back()->withError('Terjadi kesalahan.');
         }
 
-        // return redirect()->route('kabupaten.index')->withStatus('Data berhasil diperbarui.');
+        return redirect()->route('kabupaten.index')->withStatus('Data berhasil diperbarui.');
     }
 
     /**
@@ -156,6 +168,6 @@ class KabupatenController extends Controller
             return back()->withError('Terjadi kesalahan.');
         }
 
-        // return redirect()->route('kabupaten.index')->withStatus('Data berhasil dihapus.');
+        return redirect()->route('kabupaten.index')->withStatus('Data berhasil dihapus.');
     }
 }
