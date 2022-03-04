@@ -68,9 +68,80 @@ a{
     background : white;
     border-radius: 5px;
 }
-.sidebox-content{
-    background : #ced1d9;
+.side-wizard ul{
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+.side-wizard ul li.active a{
+    background: rgba(220, 53, 69,0.1);
+    font-weight: bold;
+    color : var(--colorPrimary);
+    border-color : var(--colorPrimary);
+}
+.side-wizard ul li.active a span{
+    background: var(--colorPrimary);
+    color : white;
+}
+.side-wizard ul li a:hover{
+    text-decoration: none;
+}
+.side-wizard ul li:not(.active) a:hover{
+    cursor: no-drop;
+}
+.side-wizard ul li.active a:hover,.side-wizard ul li.active.selected a{
+    background: var(--colorPrimary);
+    color : white;
+    border-color: #911a25;
+}
+.side-wizard ul li.active a:hover span,.side-wizard ul li.active.selected a span{
+    background: #911a25;
+}
+.side-wizard ul li a{
+    transition: all.3s ease;
+    -webkit-transition: all.3s ease;
+    -o-transition: all.3s ease;
+    -moz-transition: all.3s ease;
+    border : 2px solid transparent;
+    display: block;
+    margin-bottom: 10px;
+    padding : 10px;
     border-radius: 5px;
+    color : #c2c7cf;
+    position: relative;
+}
+.side-wizard ul li:last-child a span::before{
+    display: none;
+}
+.side-wizard ul li.active a span::before{
+    /* height: 30%;
+    bottom :-85%;
+    background: var(--colorPrimary); */
+    display: none;
+}
+.side-wizard ul li a span::before{
+    content :"";
+    position: absolute;
+    width: 1px;
+    height: 100%;
+    background: #c2c7cf;
+    bottom :-120%;
+    left : 50%;
+}
+.side-wizard ul li a span i{
+    margin-top : 6px;
+}
+.side-wizard ul li a span{
+    font-size: 14px;
+    background : #c2c7cf;
+    color : #f0f1f3;
+    width : 25px;
+    height : 25px;
+    display: inline-block;
+    text-align: center;
+    margin-right: 5px;
+    border-radius: 100%;
+    position: relative;
 }
 .row-breadcrumbs h5 a{
     cursor: pointer;
