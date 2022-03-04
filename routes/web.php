@@ -3,7 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PengajuanKreditController;
-
+use \App\Http\Controllers\KabupatenController;
+use \App\Http\Controllers\KecamatanController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,14 +16,20 @@ use App\Http\Controllers\PengajuanKreditController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
-Route::middleware(['auth'])->group(function () {
+
+// Route::get('/dashboard', function () {
+    //     return view('dashboard');
+    // })->middleware(['auth'])->name('dashboard');
+    
+Route::middleware(['auth','verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class,'index']);
     Route::resource('pengajuan-kredit', PengajuanKreditController::class);
-
+    Route::resource('kabupaten', KabupatenController::class);
+    Route::resource('kecamatan', KecamatanController::class);
 });
 
 require __DIR__.'/auth.php';
