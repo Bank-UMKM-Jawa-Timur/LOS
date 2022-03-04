@@ -384,3 +384,9 @@ p .loading-content-detail{
 .page-link:hover {
     color : var(--colorPrimary);
 }
+.form-wizard{
+    display: none;
+}
+.form-wizard.active{
+    display: block;
+}
