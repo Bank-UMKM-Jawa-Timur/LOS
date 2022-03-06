@@ -25,11 +25,11 @@ use \App\Http\Controllers\UserController;
 
 
 // Route::get('/dashboard', function () {
-    //     return view('dashboard');
-    // })->middleware(['auth'])->name('dashboard');
+//     return view('dashboard');
+// })->middleware(['auth'])->name('dashboard');
 
-Route::middleware(['auth','verified'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class,'index']);
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index']);
     Route::resource('pengajuan-kredit', PengajuanKreditController::class);
     Route::resource('kabupaten', KabupatenController::class);
     Route::resource('kecamatan', KecamatanController::class);
@@ -40,4 +40,4 @@ Route::middleware(['auth','verified'])->group(function () {
     Route::put('change-password/{id}', [UserController::class, 'updatePassword'])->name('update_password');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

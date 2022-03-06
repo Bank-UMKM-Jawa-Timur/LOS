@@ -2,5 +2,6 @@
 
 
 @section('content')
-@include('user._form-change-password')
+    @include('components.notification')
+    @include('user._form-change-password')
 @endsection
