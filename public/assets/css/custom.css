@@ -19,7 +19,7 @@ a{
 }
 .btn-default{
     background: #efefef;
-    color : var(--colorDark) !important; 
+    color : var(--colorDark) !important;
 }
 .btn-success,.btn-primary{
     color : white !important;
@@ -60,7 +60,7 @@ a{
     padding: 0.5rem 1.2rem !important;
 }
 .navbar-dark li a.active,.navbar-dark li a:hover{
-    background : var(--colorPrimary); 
+    background : var(--colorPrimary);
     color : white !important;
     border-radius: 5px;
 }
@@ -215,7 +215,8 @@ a{
     position: relative;
 }
 .table-custom tbody tr td .btn-action{
-    opacity: 0;
+    opacity: 1;
+    /* opacity: 0; */
     transition: all.3s ease-in-out;
 }
 .table-custom tbody tr:hover td .btn-action{
@@ -302,12 +303,12 @@ label{
     color : white;
 }
 .fc-center h2{
-    font-size: 1.25rem;    
+    font-size: 1.25rem;
     font-weight: bold;
     color : var(--colorDark);
 }
 .fc-unthemed td.fc-today{
-    background: rgba(71, 145,254,0.05) !important;    
+    background: rgba(71, 145,254,0.05) !important;
 }
 .fc-day-grid-event{
     padding : 3px 8px
