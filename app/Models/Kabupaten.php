@@ -22,7 +22,7 @@ class Kabupaten extends Model
 
     public function cabang()
     {
-        return $this->belongsTo('\App\Models\Cabang', 'id_kabupaten');
+        return $this->hasMany('\App\Models\Cabang', 'id_kabupaten');
     }
 
 }
