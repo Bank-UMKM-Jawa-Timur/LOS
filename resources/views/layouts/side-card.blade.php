@@ -2,9 +2,11 @@
     <div class="col-md-3">
         <div class="box-content side-wizard px-4 py-4 ">
             <ul>
-                <li data-index='0'><a href="#"><span><i class="fa fa-ban"></i></span> Input Step 1</a></li>
-                <li data-index='1'><a href="#"><span><i class="fa fa-ban"></i></span> Input Step 2</a></li>
-                <li data-index='2'><a href="#"><span><i class="fa fa-ban"></i></span> Input Step 3</a></li>
+                <li><label>DATA UMUM</label></li>
+                <li data-index='0'><a href="#"><span><i class="fa fa-ban"></i></span> Data Umum</a></li>
+                <li><label>PEMBAHASAN PER ASPEK</label></li>
+                <li data-index='1'><a href="#"><span><i class="fa fa-ban"></i></span> Management</a></li>
+                <li data-index='2'><a href="#"><span><i class="fa fa-ban"></i></span> Hukum/Jaminan</a></li>
                 <li><a href="#"><span><i class="fa fa-ban"></i></span> Input Step 4</a></li>
                 <li><a href="#"><span><i class="fa fa-ban"></i></span> Input Step 5</a></li>
                 <li><a href="#"><span><i class="fa fa-ban"></i></span> Input Step 6</a></li>

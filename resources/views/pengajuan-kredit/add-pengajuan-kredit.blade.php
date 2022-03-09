@@ -1,44 +1,39 @@
 @extends('layouts.template')
 @section('content')
+<style>
+    .form-wizard .sub label:not(.info){
+        font-weight: 400;
+    }
+
+</style>
 <div class="form-wizard active" data-index='0' data-done='false'>
     <div class="row form-group">
         <div class="col-md-6">
-            <label for="">Label 1</label>
+            <label for="">Usaha Dilakukan Sejak</label>
+            <input type="text" class="form-control" placeholder="Contoh: 2020">
+        </div>
+        <div class="col-md-6">
+            <label for="">Badan Usaha</label>
+            <select name="" id="" class="form-control select2">
+                <option value="">---Pilih Badan Usaha ---</option>
+                <option value="">Perseorangan</option>
+                <option value="">Persero</option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <label class="info" for="">Permodalan Dipenuhi Dari</label>
+        </div>
+    </div>
+    <div class="row form-group pl-3 sub">
+        <div class="col-md-6">
+            <label for="">Modal (awal) sendiri</label>
             <input type="text" class="form-control" placeholder="Input label 1">
         </div>
         <div class="col-md-6">
-            <label for="">Label 2</label>
-            <select name="" id="" class="form-control select2">
-                <option value="">---Pilih Select---</option>
-            </select>
-        </div>
-    </div>
-    <div class="row form-group">
-        <div class="col-md-6">
-            <label for="">Label 3</label>
-            <input type="file" class="form-control" placeholder="Input label 1">
-        </div>
-        <div class="col-md-6">
-            <label for="">Label 4</label>
-            <input type="text" class="form-control" placeholder="Input label 4">
-        </div>
-    </div>
-    <div class="row form-group">
-        <div class="col-md-6">
-            <label for="">Label 5</label>
-            <select name="" id="" class="form-control select2">
-                <option value="">---Pilih Select---</option>
-            </select>
-        </div>
-        <div class="col-md-6">
-            <label for="">Label 6</label>
-            <input type="text" class="form-control" placeholder="Input label 6">
-        </div>
-    </div>
-    <div class="row form-group">
-        <div class="col-md-12">
-            <label for="">Label 7</label>
-            <textarea name="" class="form-control" id="" rows="5"></textarea>
+            <label for="">Modal Pinjaman</label>
+            <input type="text" class="form-control" placeholder="Input label 1">
         </div>
     </div>
 </div>
