@@ -1,6 +1,6 @@
 @extends('layouts.template')
 @section('content')
-<div id="form-data-umum" class="form-wizard active" data-index='0' data-done='false'>
+<div class="form-wizard active" data-index='0' data-done='false'>
     <div class="row form-group">
         <div class="col-md-6">
             <label for="">Label 1</label>
@@ -42,7 +42,7 @@
         </div>
     </div>
 </div>
-<div id="form-2" class="form-wizard" data-index='1' data-done="false">
+<div class="form-wizard" data-index='1' data-done="false">
     <div class="row form-group">
         <div class="col-md-6">
             <label for="">Label 5</label>
@@ -68,7 +68,7 @@
         </div>
     </div>
 </div>
-<div id="form-3" class="form-wizard" data-index='2' data-done="false">
+<div class="form-wizard" data-index='2' data-done="false">
     <div class="row form-group">
         <div class="col-md-6">
             <label for="">Label 5</label>
@@ -121,6 +121,15 @@
     }
     cekBtn()
     cekWizard()
+    
+    $(".side-wizard li a").click(function(){
+        var dataIndex = $(this).closest('li').data('index')
+        if($(this).closest('li').hasClass('active')){
+            $(".form-wizard").removeClass('active')
+            $(".form-wizard[data-index='"+dataIndex+"']").addClass('active')
+            cekWizard()
+        }
+    })
 
     $(".btn-next").click(function(){
         var indexNow = $(".form-wizard.active").data('index')
