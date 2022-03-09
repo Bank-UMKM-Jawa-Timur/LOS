@@ -7,7 +7,7 @@
                 <th>Email</th>
                 <th>Role</th>
                 <th>Kantor Cabang</th>
-                <th></th>
+                <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -26,19 +26,19 @@
                         <div class="form-inline btn-action">
                             <a href="{{ route('user.edit', $item->id) }}" class="mr-2">
                                 <button type="button" id="PopoverCustomT-1" class="btn btn-rgb-primary btn-sm"
-                                data-toggle="tooltip" title="Edit" data-placement="top"><span
-                                    class="fa fa-edit fa-sm"></span></button>
+                                    data-toggle="tooltip" title="Edit" data-placement="top"><span
+                                        class="fa fa-edit fa-sm"></span></button>
                             </a>
                             @if (auth()->user()->id != $item->id)
-                            <form action="{{ route('user.destroy', $item->id) }}" method="post">
-                                @csrf
-                                @method('delete')
-                                <button type="button" class="btn btn-rgb-danger btn-sm" data-toggle="tooltip"
-                                title="Hapus" data-placement="top"
-                                onclick="confirm('{{ __('Apakah anda yakin ingin menghapus?') }}') ? this.parentElement.submit() : ''">
-                                <span class="fa fa-trash fa-sm"></span>
-                            </button>
-                            </form>
+                                <form action="{{ route('user.destroy', $item->id) }}" method="post">
+                                    @csrf
+                                    @method('delete')
+                                    <button type="button" class="btn btn-rgb-danger btn-sm" data-toggle="tooltip"
+                                        title="Hapus" data-placement="top"
+                                        onclick="confirm('{{ __('Apakah anda yakin ingin menghapus?') }}') ? this.parentElement.submit() : ''">
+                                        <span class="fa fa-trash fa-sm"></span>
+                                    </button>
+                                </form>
                             @endif
                         </div>
                     </td>
