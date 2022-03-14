@@ -24,19 +24,20 @@ class CabangRequest extends FormRequest
     public function rules()
     {
         return [
+            'kode_cabang' => 'required|unique:cabang',
             'cabang' => 'required|max:191',
             'alamat' => 'required',
-            'id_kabupaten' => 'required',
         ];
     }
 
     public function messages()
     {
         return [
+            'kode_cabang.required' => 'Kode Cabang harus terisi',
             'cabang.required' => 'Cabang harus diisi.',
             'cabang.max' => 'Maksimal jumlah karakter 191.',
             'alamat.required' => 'Alamat harus diisi.',
-            'id_kabupaten.required' => 'Kabupaten harus diisi.',
+            'kode_cabang.unique' => 'Kode Cabang sudah dipakai.'
         ];
     }
 }

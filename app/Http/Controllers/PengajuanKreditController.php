@@ -2,7 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CalonNasabah;
+use App\Models\Desa;
+use App\Models\Kabupaten;
+use App\Models\Kecamatan;
+use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class PengajuanKreditController extends Controller
 {
@@ -24,7 +31,9 @@ class PengajuanKreditController extends Controller
     public function create()
     {
         $param['pageTitle'] = "Dashboard";
-
+        $param['dataDesa'] = Desa::all();
+        $param['dataKecamatan'] = Kecamatan::all();
+        $param['dataKabupaten'] = Kabupaten::all();
         return view('pengajuan-kredit.add-pengajuan-kredit',$param);
     }
 
@@ -36,7 +45,56 @@ class PengajuanKreditController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'alamat_rumah' => 'required',
+            'alamat_usaha' => 'required',
+            'no_ktp' => 'required|unique:calon_nasabah,no_ktp|max:16',
+            'tempat_lahir' => 'required',
+            'tanggal_lahir' => 'required',
+            'status' => 'required',
+            'sektor_kredit' => 'required',
+            'jenis_usaha' => 'required',
+            'jumlah_kredit' => 'required',
+            'tujuan_kredit' => 'required',
+            'jaminan' => 'required',
+            'hubungan_bank' => 'required',
+            'hasil_verifikasi' => 'required',
+        ],[
+            'required' => 'data harus terisi.'
+        ]);
+        try {
+            $addData = new CalonNasabah;
+            $addData->nama = $request->name;
+            $addData->alamat_rumah = $request->alamat_rumah;
+            $addData->alamat_usaha = $request->alamat_usaha;
+            $addData->no_ktp = $request->no_ktp;
+            $addData->tempat_lahir = $request->tempat_lahir;
+            $addData->tanggal_lahir = $request->tanggal_lahir;
+            $addData->status = $request->status;
+            $addData->sektor_kredit = $request->sektor_kredit;
+            $addData->jenis_usaha = $request->jenis_usaha;
+            $addData->jumlah_kredit = $request->jumlah_kredit;
+            $addData->tujuan_kredit = $request->tujuan_kredit;
+            $addData->jaminan_kredit = $request->jaminan;
+            $addData->hubungan_bank = $request->hubungan_bank;
+            $addData->verifikasi_umum = $request->hasil_verifikasi;
+            $addData->id_user = auth()->user()->id;
+            $addData->id_desa = $request->desa;
+            $addData->id_kecamatan = $request->kec;
+            $addData->id_kabupaten = $request->kab;
+            $addData->save();
+
+            Session::put('id',$addData->id);
+
+            return redirect()->back()->withStatus('Data berhasil disimpan.');
+        } catch (Exception $e) {
+            return $e;
+            return redirect()->back()->withError('Terjadi kesalahan.');
+        }catch(QueryException $e){
+            return $e;
+            return redirect()->back()->withError('Terjadi kesalahan');
+        }
     }
 
     /**

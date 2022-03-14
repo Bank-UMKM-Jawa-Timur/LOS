@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddUsersIdAtUsersTable extends Migration
+class DropColumnIdKabupateAtCabangTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class AddUsersIdAtUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('calon_nasabah', function (Blueprint $table) {
-            // $table->bigInteger('id_cabang')->after('role')->nullable();
-            $table->foreignId('id_users')->after('tujuan_kredit');
+        Schema::table('cabang', function (Blueprint $table) {
+           $table->dropColumn('id_kabupaten');
         });
     }
 
@@ -26,9 +25,8 @@ class AddUsersIdAtUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('calon_nasabah', function (Blueprint $table) {
-            $table->dropColumn('id_users');
+        Schema::table('cabang', function (Blueprint $table) {
+            //
         });
-
     }
 }

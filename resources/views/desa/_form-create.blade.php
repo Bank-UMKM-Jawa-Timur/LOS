@@ -10,7 +10,7 @@
                     </div>
                 @enderror
         </div>
-    
+
         <div class="form-group col-md-6">
             <label>Kabupaten</label>
             <select name="id_kabupaten" id="id_kabupaten" class="select2 form-control" style="width: 100%;" required>
@@ -32,9 +32,9 @@
             <label>Kecamatan</label>
             <select name="id_kecamatan" id="id_kecamatan" class="select2 form-control" style="width: 100%;" required>
                 <option value="">Pilih Kecamatan</option>
-                {{-- @foreach ($allKec as $kec)
+                @foreach ($allKec as $kec)
                     <option value="{{ $kec->id }}" {{ old('id_kecamatan') == $kec->id ? ' selected' : '' }}>{{ $kec->kecamatan }}</option>
-                @endforeach --}}
+                @endforeach
             </select>
             @error('id_kecamatan')
                 <div class="invalid-feedback">
@@ -43,7 +43,7 @@
             @enderror
         </div>
     </div>
-    
+
     <button type="submit" class="btn btn-primary mr-2"><i class="fa fa-save"></i> Simpan</button>
     <button type="reset" class="btn btn-default"><i class="fa fa-times"></i> Reset</button>
 </form>

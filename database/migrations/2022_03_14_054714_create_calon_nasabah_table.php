@@ -15,18 +15,20 @@ class CreateCalonNasabahTable extends Migration
     {
         Schema::create('calon_nasabah', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_kabupaten')->nullable();
-            $table->foreignId('id_kecamatan')->nullable();
-            $table->foreignId('id_desa')->nullable();
             $table->string('nama');
+            $table->text('alamat_rumah');
+            $table->text('alamat_usaha');
             $table->string('no_ktp',16);
             $table->string('tempat_lahir');
             $table->date('tanggal_lahir');
             $table->string('status');
-            $table->string('sektor_kredit');
             $table->string('jenis_usaha');
             $table->string('jumlah_kredit');
-            $table->string('tujuan_kredit');
+            $table->text('tujuan_kredit');
+            $table->text('jaminan_kredit');
+            $table->text('hubungan_bank');
+            $table->text('verifikasi_umum');
+            $table->foreignId('id_user')->constrained('users');
             $table->timestamps();
         });
     }

@@ -5,15 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Cabang extends Model
+class CalonNasabah extends Model
 {
     use HasFactory;
-    protected $table = 'cabang';
+    protected $table = 'calon_nasabah';
 
-
-    public function cabang()
+    public function users()
     {
-        return $this->hasMany('\App\Models\Cabang', 'id');
+        return $this->belongsTo('\App\Models\Users', 'id');
     }
-
 }
