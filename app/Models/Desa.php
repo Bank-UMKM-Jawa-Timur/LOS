@@ -14,7 +14,7 @@ class Desa extends Model
     {
         return $this->belongsTo('\App\Models\Kecamatan', 'id_kecamatan');
     }
-    
+
     public function kabupaten()
     {
         return $this->belongsTo('\App\Models\Kabupaten', 'id_kabupaten');

@@ -45,6 +45,7 @@ class PengajuanKreditController extends Controller
      */
     public function store(Request $request)
     {
+        return $request;
         $request->validate([
             'name' => 'required',
             'alamat_rumah' => 'required',
@@ -82,12 +83,11 @@ class PengajuanKreditController extends Controller
             $addData->id_user = auth()->user()->id;
             $addData->id_desa = $request->desa;
             $addData->id_kecamatan = $request->kec;
-            $addData->id_kabupaten = $request->kab;
+            $addData->id_kabupaten = $request->kabupaten;
             $addData->save();
-
             Session::put('id',$addData->id);
 
-            return redirect()->back()->withStatus('Data berhasil disimpan.');
+            return redirect()->route('create.pengajuan.management')->withStatus('Data berhasil disimpan.');
         } catch (Exception $e) {
             return $e;
             return redirect()->back()->withError('Terjadi kesalahan.');
@@ -95,6 +95,22 @@ class PengajuanKreditController extends Controller
             return $e;
             return redirect()->back()->withError('Terjadi kesalahan');
         }
+    }
+    public function createPengajuanManagement()
+    {
+        $param['pageTitle'] = "Dashboard";
+        $param['dataDesa'] = Desa::all();
+        $param['dataKecamatan'] = Kecamatan::all();
+        $param['dataKabupaten'] = Kabupaten::all();
+        return view('pengajuan-kredit.add-aspek-management',$param);
+    }
+    public function pengajuanManagement(Request $request)
+    {
+        return redirect()->route('create.pengajuan.management');
+    }
+    public function pengajuanHukumJaminan(Request $request)
+    {
+
     }
 
     /**
@@ -140,5 +156,17 @@ class PengajuanKreditController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getkecamatan(Request $request)
+    {
+        $kecamatan = Kecamatan::where("id_kabupaten",$request->kabID)->pluck('id','kecamatan');
+        return response()->json($kecamatan);
+    }
+    public function getdesa(Request $request)
+    {
+        $desa = Desa::where("id_kecamatan",$request->kecID)->pluck('id','desa');
+        return response()->json($desa);
+
     }
 }
