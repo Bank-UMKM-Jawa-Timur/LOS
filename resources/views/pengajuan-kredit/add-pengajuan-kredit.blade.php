@@ -7,12 +7,13 @@
     }
 
 </style>
-<form id="pengajuan_kredit">
+<form id="pengajuan_kredit" action="{{ route('pengajuan-kredit.store') }}" method="post">
+    @csrf
     <div class="form-wizard active" data-index='0' data-done='true'>
         <div class="row">
             <div class="form-group col-md-12">
                 <label for="">Nama Lengkap</label>
-                <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" value="{{old('name')}}" placeholder="Nama sesuai dengan KTP">
+                <input type="text" name="name" id="nama" class="form-control @error('name') is-invalid @enderror" value="{{old('name')}}" placeholder="Nama sesuai dengan KTP">
                 @error('name')
                 <div class="invalid-feedback">
                     {{ $message }}
@@ -665,7 +666,7 @@
         <div class="col text-right">
             <button class="btn btn-default btn-prev"><span class="fa fa-chevron-left"></span> Sebelumnya</button>
             <button class="btn btn-danger btn-next">Selanjutnya <span class="fa fa-chevron-right"></span></button>
-            <button class="btn btn-info btn-simpan" id="submit">Simpan <span class="fa fa-save"></span></button>
+            <button type="submit" class="btn btn-info btn-simpan" id="submit">Simpan <span class="fa fa-save"></span></button>
             {{-- <button class="btn btn-info ">Simpan <span class="fa fa-chevron-right"></span></button> --}}
         </div>
     </div>
@@ -750,19 +751,19 @@
             $(".btn-next").hide()
             $(".btn-simpan").show()
 
-            $('#pengajuan_kredit').on('submit',function(e){
-                e.preventDefault();
-                let name = $('#name').val();
-                // $.ajax({
-                //     url: "/pengajuan-kredit",
-                //     type:"POST",
-                //     data:{
-                //         "_token": "{{ csrf_token() }}",
-                //     },
-                // })
-                console.log(name);
-                // console.log('berhasil');
-            });
+            // $('#pengajuan_kredit').on('submit',function(e){
+            //     e.preventDefault();
+            //     let name = $('#nama').val();
+            //     console.log(name);
+            //     $.ajax({
+            //         url: "/pengajuan-kredit",
+            //         type:"POST",
+            //         data:{
+            //             "_token": "{{ csrf_token() }}",
+            //         },
+            //     })
+            //     // console.log('berhasil');
+            // });
 
         }else{
             $(".btn-next").show()
@@ -799,7 +800,8 @@
         }
     })
 
-    $(".btn-next").click(function(){
+    $(".btn-next").click(function(e){
+        event.preventDefault(e);
         var indexNow = $(".form-wizard.active").data('index')
         var next = parseInt(indexNow) + 1
 
@@ -812,7 +814,8 @@
         cekWizard()
         cekBtn(true)
     })
-    $(".btn-prev").click(function(){
+    $(".btn-prev").click(function(e){
+        event.preventDefault(e);
         var indexNow = $(".form-wizard.active").data('index')
         var prev = parseInt(indexNow) - 1
         if($(".form-wizard[data-index='"+prev+"']").length==1){
@@ -821,6 +824,7 @@
         }
         cekWizard()
         cekBtn()
+        e.preventDefault();
     })
 
 

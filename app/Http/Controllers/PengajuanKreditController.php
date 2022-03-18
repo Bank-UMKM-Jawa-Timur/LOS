@@ -45,7 +45,6 @@ class PengajuanKreditController extends Controller
      */
     public function store(Request $request)
     {
-        return $request;
         $request->validate([
             'name' => 'required',
             'alamat_rumah' => 'required',
@@ -87,7 +86,7 @@ class PengajuanKreditController extends Controller
             $addData->save();
             Session::put('id',$addData->id);
 
-            return redirect()->route('create.pengajuan.management')->withStatus('Data berhasil disimpan.');
+            return redirect()->route('pengajuan-kredit.create')->withStatus('Data berhasil disimpan.');
         } catch (Exception $e) {
             return $e;
             return redirect()->back()->withError('Terjadi kesalahan.');
