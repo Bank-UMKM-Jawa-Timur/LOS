@@ -30,6 +30,14 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('getkecamatan', [PengajuanKreditController::class,"getkecamatan"]);
+    Route::get('getdesa', [PengajuanKreditController::class,"getdesa"]);
+
+    // Route::post('pengajuan-kredit/create/pengajuan-hukum-jaminan', [PengajuanKreditController::class,"pengajuanHukumJaminan"])->name('pengajuan.hukum.jaminan');
+
+    // Route::get('pengajuan-kredit/create/pengajuan-kredit-management', [PengajuanKreditController::class,"createPengajuanManagement"])->name('create.pengajuan.management');
+    // Route::post('pengajuan-kredit/create/pengajuan-kredit-management', [PengajuanKreditController::class,"pengajuanManagement"])->name('pengajuan.management');
+
     Route::resource('pengajuan-kredit', PengajuanKreditController::class);
     Route::resource('kabupaten', KabupatenController::class);
     Route::resource('kecamatan', KecamatanController::class);

@@ -33,10 +33,10 @@ class CabangController extends Controller
 
         try {
             $keyword = $request->get('keyword');
-            $getCabang = Cabang::with('kabupaten')->orderBy('id', 'ASC');
+            $getCabang = Cabang::orderBy('kode_cabang', 'ASC');
 
             if ($keyword) {
-                $getCabang->where('id', 'LIKE', "%{$keyword}%")->orWhere('cabang', 'LIKE', "%{$keyword}%");
+                $getCabang->where('kode_cabang', 'LIKE', "%{$keyword}%")->orWhere('cabang', 'LIKE', "%{$keyword}%");
             }
 
             $this->param['cabang'] = $getCabang->paginate(10);
@@ -60,7 +60,6 @@ class CabangController extends Controller
         $this->param['pageTitle'] = 'Tambah Kantor Cabang';
         $this->param['btnText'] = 'List Kantor Cabang';
         $this->param['btnLink'] = route('cabang.index');
-        $this->param['allKab'] = Kabupaten::get();
 
 
         return \view('cabang.create', $this->param);
@@ -74,18 +73,11 @@ class CabangController extends Controller
      */
     public function store(CabangRequest $request)
     {
-                /*
-        TODO
-        1. validasi form
-        2. simpan ke db
-        3. redirect ke index
-        */
-
         $validated = $request->validated();
         try {
             $cabang = new Cabang;
+            $cabang->kode_cabang = $validated['kode_cabang'];
             $cabang->cabang = $validated['cabang'];
-            $cabang->id_kabupaten = $validated['id_kabupaten'];
             $cabang->alamat = $validated['alamat'];
             $cabang->save();
         } catch (Exception $e) {
@@ -120,7 +112,6 @@ class CabangController extends Controller
         $this->param['cabang'] = Cabang::find($id);
         $this->param['btnText'] = 'List Cabang';
         $this->param['btnLink'] = route('cabang.index');
-        $this->param['allKab'] = Kabupaten::get();
 
         return view('cabang.edit', $this->param);
     }
@@ -134,23 +125,24 @@ class CabangController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $cabang = Cabang::findOrFail($id);
-
+        $kode_cabang = Cabang::find($id);
+        $isUniqueKodeCabang = $kode_cabang->kode_cabang == $request->kode_cabang ? '' : '|unique:cabang';
         $validatedData = $request->validate(
             [
+                'kode_cabang' => 'required'.$isUniqueKodeCabang,
                 'cabang' => 'required',
                 'alamat' => 'required',
-                'id_kabupaten' => 'required',
             ],
         );
 
         try {
+            $cabang = Cabang::findOrFail($id);
+            $cabang->kode_cabang = $request->get('kode_cabang');
             $cabang->cabang = $request->get('cabang');
             $cabang->alamat = $request['alamat'];
-            $cabang->id_kabupaten = $request['id_kabupaten'];
             $cabang->save();
 
-            
+
         } catch (\Exception $e) {
             return redirect()->back()->withError('Terjadi kesalahan.');
         } catch (\Illuminate\Database\QueryException $e) {

@@ -245,7 +245,8 @@ label{
 .select2{
     width : 100% !important;
 }
-.select2-container--default .select2-selection--single{
+
+.select2-container--default .select2-selection--single {
     border : 1px solid #ced4da;
     height: calc(2.25rem + 2px);
     padding : .375rem .75rem;

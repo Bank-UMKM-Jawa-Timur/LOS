@@ -3,9 +3,9 @@
         <thead>
             <tr class="table-primary">
                 <th class="text-center">#</th>
+                <th>Kode Cabang</th>
                 <th>Kantor Cabang</th>
                 <th>Alamat</th>
-                <th>Kabupaten</th>
                 <th>Aksi</th>
             </tr>
         </thead>
@@ -17,9 +17,9 @@
             @foreach ($cabang as $item)
                 <tr class="border-bottom-primary">
                     <td class="text-center text-muted">{{ $no }}</td>
+                    <td>{{ $item->kode_cabang }}</td>
                     <td>{{ $item->cabang }}</td>
                     <td>{{ $item->alamat }}</td>
-                    <td>{{ $item->kabupaten->kabupaten }}</td>
                     <td>
                         <div class="form-inline btn-action">
                             <a href="{{ route('cabang.edit', $item->id) }}" class="mr-2">

@@ -64,6 +64,7 @@ class DesaController extends Controller
         $this->param['btnLink'] = route('desa.index');
         $this->param['allKab'] = Kabupaten::get();
         $this->param['allKec'] = Kecamatan::get();
+
         return \view('desa.create', $this->param);
     }
 
@@ -181,7 +182,7 @@ class DesaController extends Controller
 
         return redirect()->route('desa.index')->withStatus('Data berhasil dihapus.');
     }
-    
+
     public function getDesaByKecamatanId($id)
     {
         $desa = Desa::where('id_kecamatan', $id)->get();
