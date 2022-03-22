@@ -68,7 +68,7 @@
             <ul class="navbar-nav">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      <span class="fa fa-user"></span> Admin
+                      <span class="fa fa-user"></span> {{auth()->user()->name}}
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                       <a class="dropdown-item" href="{{ route('change_password') }}">Ganti Password</a>
