@@ -13,7 +13,7 @@
                     <span class="fa fa-calendar-check sticky-fa-card"></span>
                     <div class="row align-items-center">
                         <div class="col-md-8 pr-0 font-weight-bold">
-                            Yang Telah Di Analisa
+                            Pengajuan Telah Ditinjak Lanjuti
                         </div>
                         <div class="col-md-4 pr-0 text-center">
                             {{-- <h1>{{ \App\Models\Penugasan::where('status', 'Rencana')->count() }}</h1> --}}
@@ -27,49 +27,12 @@
             </div>
         </div>
         <div class="col-md-3 mb-4">
-            <div class="card bg-rgb-success border border-success">
-                <div class="card-body py-4">
-                    <i class="fas fa-check sticky-fa-card"></i>
-                    <div class="row">
-                        <div class="col-md-8 pr-0 font-weight-bold">
-                            Analisa Status Hijau
-                        </div>
-                        <div class="col-md-4 pl-0 text-center font-weight-bold">
-                            <h1>2</h1>
-                            {{-- <h1>{{ \App\Models\Penugasan::where('status', 'Pelaksanaan')->count() }}</h1> --}}
-                        </div>
-                    </div>
-                    <hr>
-                    <a href="#" class="btn btn-success btn-sm b-radius-3 px-3">Lihat Detail</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-4">
-            <div class="card bg-rgb-warning border border-warning">
-                <div class="card-body py-4">
-                    <i class="fa fa-exclamation-triangle sticky-fa-card"></i>
-                    <div class="row font-weight-bold">
-                        <div class="col-md-8 pr-0">
-                            Analisa Status Kuning
-                        </div>
-                        <div class="col-md-4 pl-0 text-center">
-                            <h1>3</h1>
-                            {{-- <h1>{{ \App\Models\Penugasan::where('status', 'Selesai')->count() }}</h1> --}}
-                        </div>
-                    </div>
-                    <hr>
-                    <a href="#" class="btn btn-warning btn-sm b-radius-3 px-3">Lihat
-                        Detail</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3 mb-4">
             <div class="card bg-rgb-danger border border-danger">
                 <div class="card-body py-4">
                     <i class="fa fa-ban sticky-fa-card"></i>
                     <div class="row font-weight-bold">
                         <div class="col-md-8 pr-0">
-                            Analisa Status Merah
+                            Pengajuan Belum Ditindak Lanjuti
                         </div>
                         <div class="col-md-4 pl-0 text-center">
                             <h1>4</h1>
@@ -84,6 +47,32 @@
         </div>
     </div>
     <br>
+    <h5 class="color-darkBlue font-weight-bold">Pengajuan Lama Belum Ditindak Lanjuti</h5>
+    <hr>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-hover table-custom">
+                    <thead>
+                        <tr class="table-primary">
+                            <th>#</th>
+                            <th>Nama Lengkap</th>
+                            <th>Sektor Kredit</th>
+                            <th>Jenis Usaha</th>
+                            <th>Jumlah Kredit yang diminta</th>
+                            <th>Tanggal Pengajuan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="7" class="text-center" style="background: rgba(71, 145,254,0.05) !important">Data Kosong</td>
+                        </tr>
+                    </tbody>
+            
+                </table>
+            </div>
+        </div>
+    </div>
     {{-- @endif --}}
     {{-- <div class="row">
         <div class="col-md-6">

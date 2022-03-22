@@ -783,8 +783,8 @@
         for (let index = 0; index <= parseInt(indexNow); index++) {
             var selected = index==parseInt(indexNow) ? ' selected' : ''
             $(".side-wizard li[data-index='"+index+"']").addClass('active'+selected)
-            $(".side-wizard li[data-index='"+index+"'] a span i").removeClass('fa-ban')
-            $(".side-wizard li[data-index='"+index+"'] a span i").addClass('fa-check')
+            $(".side-wizard li[data-index='"+index+"'] a span i").removeClass('fa fa-ban')
+            $(".side-wizard li[data-index='"+index+"'] a span i").html('0%')
         }
 
     }

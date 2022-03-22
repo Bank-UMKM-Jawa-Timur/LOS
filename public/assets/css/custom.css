@@ -112,8 +112,8 @@ a{
     border : 2px solid transparent;
     display: block;
     margin-bottom: 10px;
-    margin-left: 15px;
-    padding : 10px;
+    margin-left: 8px;
+    padding : 6px 10px;
     border-radius: 5px;
     color : #c2c7cf;
     position: relative;
@@ -137,14 +137,23 @@ a{
     left : 50%;
 }
 .side-wizard ul li a span i{
-    margin-top : 6px;
+    font-size: 12px;
+    position: absolute;
+    top : 50%;
+    left : 50%;
+    transform: translate(-50%,-50%);
+    font-style: normal;
+}
+.side-wizard ul li{
+    position: relative;
 }
 .side-wizard ul li a span{
     font-size: 14px;
     background : #c2c7cf;
     color : #f0f1f3;
-    width : 25px;
-    height : 25px;
+    width : 35px;
+    vertical-align: middle;
+    height : 35px;
     display: inline-block;
     text-align: center;
     margin-right: 5px;
