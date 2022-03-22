@@ -9,7 +9,7 @@
 </style>
 <form action="{{ route('pengajuan-kredit.store') }}" method="post">
     @csrf
-
+    
     <div class="row form-group">
         <div class="col text-right">
             <button class="btn btn-default btn-prev"><span class="fa fa-chevron-left"></span> Sebelumnya</button>

@@ -27,6 +27,46 @@
             </div>
         </div>
         <div class="col-md-3 mb-4">
+<<<<<<< Updated upstream
+=======
+            <div class="card bg-rgb-success border border-success">
+                <div class="card-body py-4">
+                    <i class="fas fa-check sticky-fa-card"></i>
+                    <div class="row">
+                        <div class="col-md-8 pr-0 font-weight-bold">
+                            Analisa Status Hijau qwkgq
+                        </div>
+                        <div class="col-md-4 pl-0 text-center font-weight-bold">
+                            <h1></h1>
+                            {{-- <h1>{{ \App\Models\Penugasan::where('status', 'Pelaksanaan')->count() }}</h1> --}}
+                        </div>
+                    </div>
+                    <hr>
+                    <a href="#" class="btn btn-success btn-sm b-radius-3 px-3">Lihat Detail</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card bg-rgb-warning border border-warning">
+                <div class="card-body py-4">
+                    <i class="fa fa-exclamation-triangle sticky-fa-card"></i>
+                    <div class="row font-weight-bold">
+                        <div class="col-md-8 pr-0">
+                            Analisa Status Kuning
+                        </div>
+                        <div class="col-md-4 pl-0 text-center">
+                            <h1>3</h1>
+                            {{-- <h1>{{ \App\Models\Penugasan::where('status', 'Selesai')->count() }}</h1> --}}
+                        </div>
+                    </div>
+                    <hr>
+                    <a href="#" class="btn btn-warning btn-sm b-radius-3 px-3">Lihat
+                        Detail</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+>>>>>>> Stashed changes
             <div class="card bg-rgb-danger border border-danger">
                 <div class="card-body py-4">
                     <i class="fa fa-ban sticky-fa-card"></i>
