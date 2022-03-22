@@ -43,7 +43,7 @@
                 <li class="nav-item">
                     <a class="nav-link {{ Request::segment(1) == 'pengajuan-kredit' ? 'active' : '' }}" href="{{url('pengajuan-kredit')}}"><span class="fa fa-credit-card mr-1"></span> Analisa Kredit</a>
                 </li>
-                @if (auth()->user()->level == 'Administrator')
+                @if (auth()->user()->role == 'Administrator')
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle {{ Request::segment(1) == 'rekap' ? 'active' : '' }}" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       <span class="fa fa-file-alt"></span> Data Master
