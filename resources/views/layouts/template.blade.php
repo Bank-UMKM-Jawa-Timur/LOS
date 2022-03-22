@@ -41,7 +41,7 @@
                     <a class="nav-link {{ Request::segment(1) == 'dashboard' ? 'active' : '' }}" href="{{url('/dashboard')}}"><span class="fa fa-home mr-1"></span> Dashboard <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ Request::segment(1) == 'pengajuan-kredit' ? 'active' : '' }}" href="{{url('pengajuan-kredit/create')}}"><span class="fa fa-credit-card mr-1"></span> Analisa Kredit</a>
+                    <a class="nav-link {{ Request::segment(1) == 'pengajuan-kredit' ? 'active' : '' }}" href="{{url('pengajuan-kredit')}}"><span class="fa fa-credit-card mr-1"></span> Analisa Kredit</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle {{ Request::segment(1) == 'rekap' ? 'active' : '' }}" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
