@@ -77,7 +77,7 @@
     </nav> 
     @yield('dashboard')
     <div class="my-4">
-        @if(Request::segment(1) == 'pengajuan-kredit' && (auth()->user()->role == 'Pincab' || auth()->user()->role == 'PBO / PBP'  || auth()->user()->role == 'Penyelia Kredit'))
+        @if(Request::segment(1) == 'pengajuan-kredit' && (auth()->user()->role == 'Staf Analis Kredit' || auth()->user()->role == 'PBO / PBP'  || auth()->user()->role == 'Penyelia Kredit'))
             @include('layouts.side-card')
         @else
             @include('layouts.full-card')
