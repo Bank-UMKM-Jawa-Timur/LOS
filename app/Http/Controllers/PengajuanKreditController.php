@@ -20,6 +20,16 @@ class PengajuanKreditController extends Controller
      */
     public function index()
     {
+        $param['pageTitle'] = "Dashboard";
+        if(auth()->user()->level == 'Penyelia Kredit' || auth()->user()->level == 'Staf Analis Kredit'){
+            $param['dataDesa'] = Desa::all();
+            $param['dataKecamatan'] = Kecamatan::all();
+            $param['dataKabupaten'] = Kabupaten::all();
+            return view('pengajuan-kredit.add-pengajuan-kredit',$param);
+        }
+        else{
+            return view('pengajuan-kredit.list-pengajuan-kredit',$param);
+        }
         //
     }
 
@@ -30,11 +40,6 @@ class PengajuanKreditController extends Controller
      */
     public function create()
     {
-        $param['pageTitle'] = "Dashboard";
-        $param['dataDesa'] = Desa::all();
-        $param['dataKecamatan'] = Kecamatan::all();
-        $param['dataKabupaten'] = Kabupaten::all();
-        return view('pengajuan-kredit.add-pengajuan-kredit',$param);
     }
 
     /**
