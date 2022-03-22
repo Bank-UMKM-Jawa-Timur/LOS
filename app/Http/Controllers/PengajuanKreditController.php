@@ -21,7 +21,7 @@ class PengajuanKreditController extends Controller
     public function index()
     {
         $param['pageTitle'] = "Dashboard";
-        if(auth()->user()->level == 'Penyelia Kredit' || auth()->user()->level == 'Staf Analis Kredit'){
+        if(auth()->user()->level == 'Pincab' || auth()->user()->level == 'PBO / PBP'  || auth()->user()->level == 'Penyelia Kredit'){
             $param['dataDesa'] = Desa::all();
             $param['dataKecamatan'] = Kecamatan::all();
             $param['dataKabupaten'] = Kabupaten::all();
