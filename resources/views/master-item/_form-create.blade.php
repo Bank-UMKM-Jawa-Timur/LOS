@@ -3,7 +3,8 @@
     <div class="row">
         <div class="form-group col-md-4">
             <label>Level</label>
-            <select name="" id="" class="form-control" >
+            <select name="level" id="level" class="form-control">
+                <option value="0">---Pilih----</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -12,7 +13,7 @@
         </div>
         <div class="form-group col-md-4">
             <label>Item Turunan 1</label>
-            <select name="" id="" class="form-control" >
+            <select name="item-turunan" id="itemTurunan1" class="form-control" >
                 <option value="1">1-Aspek Management</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -21,7 +22,7 @@
         </div>
         <div class="form-group col-md-4">
             <label>Item Turunan 2</label>
-            <select name="" id="" class="form-control" >
+            <select name="" id="itemTurunan2" class="form-control" >
                 <option value="1">1-Aspek Management</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -40,48 +41,61 @@
 
     </div>
     <hr>
-    <p><strong>Opsi atau Jawaban</strong></p>
-    <div class="row">
-        <div class="form-group col-md-4">
-            <label>Opsi</label>
-            <input type="text" name="nama" class="form-control @error('nama') is-invalid @enderror" placeholder="Nama Item" value="{{old('nama')}}">
-            @error('nama')
-                <div class="invalid-feedback">
-                    {{ $message }}
+    <div id="opsi">
+        <p><strong>Opsi atau Jawaban</strong></p>
+        <div class="row">
+            <div class="form-group col-md-4">
+                <label>Opsi</label>
+                <input type="text" id="id_opsi" name="opsi" class="form-control @error('opsi') is-invalid @enderror" placeholder="Nama Opsi" value="{{old('Opsi')}}">
+                @error('opsi')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
+            </div>
+            <div class="form-group col-md-5">
+                <label>Skor</label>
+                <input type="number" id="skor" name="skor" class="form-control @error('skor') is-invalid @enderror" placeholder="Skor" value="{{old('skor')}}">
+                @error('skor')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
+            </div>
+            <div class="form-group col-md-3" >
+                <div class="d-flex">
+                    <div class="py-4">
+                        <a class="addDetail" class="btn p-3" href=""><i class="fa fa-plus-square text-primary p-3" style="font-size: 24px"></i></a>
+                    </div>
+                    {{-- @if ($hapus) --}}
+                    <div class="p-3 py-4">
+                        <a class="deleteDetail"  href=""><i class="fa fa-minus-square text-danger py-3" style="font-size: 24px"></i></a>
+                    </div>
+                    {{-- @endif --}}
+                     {{-- @if($hapus) --}}
+                    {{-- @endif --}}
                 </div>
-            @enderror
-        </div>
-        <div class="form-group col-md-5">
-            <label>Skor</label>
-            <input type="number" name="skor" class="form-control @error('skor') is-invalid @enderror" placeholder="Skor" value="{{old('skor')}}">
-            @error('skor')
-                <div class="invalid-feedback">
-                    {{ $message }}
-                </div>
-            @enderror
-        </div>
-        <div class="form-group col-md-3">
-            <div class="d-flex">
-                <div class="py-4">
-                    <a class="addDetail" class="btn p-3" href=""><i class="fa fa-plus-square text-primary"></i></a>
-                </div>
-                {{-- @if ($hapus) --}}
-                <div class="p-3 py-4">
-                    <a class="deleteDetail"  href=""><i class="fa fa-minus-square text-danger "></i></a>
-                </div>
-                {{-- @endif --}}
-                 {{-- @if($hapus) --}}
-                {{-- @endif --}}
             </div>
         </div>
     </div>
-
-
     <button type="submit" class="btn btn-primary mr-2"><i class="fa fa-save"></i> Simpan</button>
     <button type="reset" class="btn btn-default"><i class="fa fa-times"></i> Reset</button>
 </form>
 @push('custom-script')
     <script>
+        $("#level").change(function(){
+            if($(this).val() == "1") {
+                $('#itemTurunan1').prop('disabled', true);
+                $('#itemTurunan2').prop('disabled', true);
+                $('#id_opsi').prop('disabled', true);
+                $('#skor').prop('disabled', true);
+                $('#opsi').hide();
+            } else {
+                $('#itemTurunan1').prop('disabled', false);
+                $('#itemTurunan2').prop('disabled', false);
+                $('#opsi').show();
+            }
+        });
 
     </script>
 @endpush

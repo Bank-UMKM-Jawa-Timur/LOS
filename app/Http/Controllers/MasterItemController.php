@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ItemModel;
 use Illuminate\Http\Request;
 
 class MasterItemController extends Controller
@@ -64,7 +65,14 @@ class MasterItemController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $addItem = new ItemModel;
+        $addItem->nama = $request->get('nama');
+        $addItem->level = $request->get('level');
+        $addItem->save();
+
+        return redirect()->route('master-item.index')->withStatus('Berhasil menambah data.');
+
+        // return $request;
     }
 
     /**
