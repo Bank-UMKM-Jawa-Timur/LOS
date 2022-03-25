@@ -3,7 +3,7 @@
         <div class="box-content side-wizard px-4 py-4 ">
             <ul>
                 <li><label>DATA UMUM</label></li>
-                <li data-index='0'><a href="#"><span><i>99%</i></span> Data Umum</a></li>
+                <li data-index='0'><a href="#"><span><i>100%</i></span> Data Umum</a></li>
                 <li><label>PEMBAHASAN PER ASPEK</label></li>
                 <li data-index='1'><a href="#"><span><i class="fa fa-ban"></i></span> Management</a></li>
                 <li data-index='2'><a href="#"><span><i class="fa fa-ban"></i></span> Hukum/Jaminan</a></li>

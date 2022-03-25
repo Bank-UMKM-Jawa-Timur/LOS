@@ -10,8 +10,8 @@
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
       integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
       crossorigin="anonymous"
-    />    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />    
+    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="{{ asset('') }}vendor/select2/select2.min.css" />
     <link rel="stylesheet" href="{{ asset('') }}vendor/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" />
     <link rel="stylesheet" href="{{ asset('') }}vendor/sweetalert-master/dist/sweetalert.css" />
@@ -20,7 +20,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
     <script src="https://unpkg.com/popper.js@1.12.8/dist/umd/popper.min.js"></script>
     <script src="https://unpkg.com/tooltip.js@1.3.1/dist/umd/tooltip.min.js"></script>
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
 
     <link rel="stylesheet" href="{{ asset('') }}css/custom.css" />
@@ -54,6 +54,7 @@
                         <a class="dropdown-item" href="{{ route('kecamatan.index') }}">Master Kecamatan</a>
                         <a class="dropdown-item" href="{{ route('desa.index') }}">Master Desa</a> --}}
                         <a class="dropdown-item" href="{{ route('user.index') }}">Master User</a>
+                        <a class="dropdown-item" href="{{ route('master-item.index') }}">Master Item</a>
                     </div>
                 </li>
                 @endif
@@ -74,7 +75,7 @@
             </ul>
         </div>
     </div>
-    </nav> 
+    </nav>
     @yield('dashboard')
     <div class="my-4">
         @if(Request::segment(1) == 'pengajuan-kredit' && (auth()->user()->role == 'Staf Analis Kredit' || auth()->user()->role == 'PBO / PBP'  || auth()->user()->role == 'Penyelia Kredit'))
@@ -119,7 +120,7 @@
                     $("#logout-form").submit()
                 }
             );
-        })        
+        })
     // })
     $(".delete").click(function(e){
             e.preventDefault()
@@ -138,7 +139,7 @@
                 }
             );
             console.log('bisa');
-        })  
+        })
 </script>
 @stack('custom-script')
 </body>

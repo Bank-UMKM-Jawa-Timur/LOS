@@ -7,6 +7,7 @@ use \App\Http\Controllers\KabupatenController;
 use \App\Http\Controllers\KecamatanController;
 use \App\Http\Controllers\DesaController;
 use \App\Http\Controllers\CabangController;
+use App\Http\Controllers\MasterItemController;
 use \App\Http\Controllers\UserController;
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +47,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('user', UserController::class);
     Route::get('change-password', [UserController::class, 'changePassword'])->name('change_password');
     Route::put('change-password/{id}', [UserController::class, 'updatePassword'])->name('update_password');
+    // master item
+    Route::resource('master-item', MasterItemController::class);
 });
 
 require __DIR__ . '/auth.php';
