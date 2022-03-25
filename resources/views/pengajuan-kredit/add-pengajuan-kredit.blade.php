@@ -678,6 +678,7 @@
 
 @push('custom-script')
 <script>
+
     $('#kabupaten').change(function(){
     var kabID = $(this).val();
     if(kabID){
@@ -784,7 +785,9 @@
             var selected = index==parseInt(indexNow) ? ' selected' : ''
             $(".side-wizard li[data-index='"+index+"']").addClass('active'+selected)
             $(".side-wizard li[data-index='"+index+"'] a span i").removeClass('fa fa-ban')
-            $(".side-wizard li[data-index='"+index+"'] a span i").html('0%')
+            if($(".side-wizard li[data-index='"+index+"'] a span i").html()=='' || $(".side-wizard li[data-index='"+index+"'] a span i").html()=='0%'){
+                $(".side-wizard li[data-index='"+index+"'] a span i").html('0%')
+            }
         }
 
     }
@@ -800,8 +803,49 @@
         }
     })
 
+    function setPercentage(formIndex){
+        var form = ".form-wizard[data-index='"+formIndex+"']"
+
+        var input = $(form+" input")
+        var select = $(form+" select")
+        var textarea = $(form+" textarea")
+
+        var ttlInput = 0;
+        var ttlInputFilled=0;
+        $.each(input, function(i,v){
+            ttlInput++
+            if(v.value!=''){
+                ttlInputFilled++
+            }
+        })
+
+        var ttlSelect = 0;
+        var ttlSelectFilled=0;
+        $.each(select, function(i,v){
+            ttlSelect++
+            if(v.value!=''){
+                ttlSelectFilled++
+            }
+        })
+
+        var ttlTextarea = 0;
+        var ttlTextareaFilled=0;
+        $.each(textarea, function(i,v){
+            ttlTextarea++
+            if(v.value!=''){
+                ttlTextareaFilled++
+            }
+        })
+
+        var allInput = ttlInput + ttlSelect + ttlTextarea
+        var allInputFilled = ttlInputFilled + ttlSelectFilled + ttlTextareaFilled
+
+        var percentage = parseInt(allInputFilled/allInput * 100);
+        $(".side-wizard li[data-index='"+formIndex+"'] a span i").html(percentage+"%")
+    }
+
     $(".btn-next").click(function(e){
-        event.preventDefault(e);
+        e.preventDefault();
         var indexNow = $(".form-wizard.active").data('index')
         var next = parseInt(indexNow) + 1
 
@@ -811,9 +855,12 @@
             $(".form-wizard[data-index='"+indexNow+"']").attr('data-done','true')
         }
 
+
         cekWizard()
         cekBtn(true)
+        setPercentage(indexNow)
     })
+
     $(".btn-prev").click(function(e){
         event.preventDefault(e);
         var indexNow = $(".form-wizard.active").data('index')
