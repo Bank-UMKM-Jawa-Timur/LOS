@@ -50,6 +50,7 @@ class MasterItemController extends Controller
      */
     public function create()
     {
+        $this->param['itemsatu'] = ItemModel::select('*')->where('level', 1)->get();
         $this->param['pageTitle'] = 'Tambah Master Item';
         $this->param['btnText'] = 'List Item';
         $this->param['btnLink'] = route('master-item.index');
@@ -65,14 +66,13 @@ class MasterItemController extends Controller
      */
     public function store(Request $request)
     {
+
         $addItem = new ItemModel;
         $addItem->nama = $request->get('nama');
         $addItem->level = $request->get('level');
         $addItem->save();
 
         return redirect()->route('master-item.index')->withStatus('Berhasil menambah data.');
-
-        // return $request;
     }
 
     /**

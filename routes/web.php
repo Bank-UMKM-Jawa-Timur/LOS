@@ -48,6 +48,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('change-password', [UserController::class, 'changePassword'])->name('change_password');
     Route::put('change-password/{id}', [UserController::class, 'updatePassword'])->name('update_password');
     // master item
+    // Route::get('item-satu', [MasterItemController::class,'itemSatu']);
     Route::resource('master-item', MasterItemController::class);
 });
 
