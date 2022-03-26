@@ -3,28 +3,29 @@
         <thead>
             <tr class="table-primary">
                 <th class="text-center">#</th>
-                <th>Kabupaten</th>
+                <th>Nama Item</th>
+                <th>Level</th>
                 <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
-                <td>aga</td>
-            {{-- @php
+            @php
                 $page = Request::get('page');
                 $no = !$page || $page == 1 ? 1 : ($page - 1) * 10 + 1;
             @endphp
-            @foreach ($kabupaten as $item)
+            @foreach ($item as $data)
                 <tr class="border-bottom-primary">
                     <td class="text-center text-muted">{{ $no }}</td>
-                    <td>{{ $item->kabupaten }}</td>
+                    <td>{{ $data->nama }}</td>
+                    <td>{{ $data->level }}</td>
                     <td>
                         <div class="form-inline btn-action">
-                            <a href="{{ route('kabupaten.edit', $item->id) }}" class="mr-2">
+                            <a href="{{ route('master-item.edit', $data->id) }}" class="mr-2">
                                 <button type="button" id="PopoverCustomT-1" class="btn btn-rgb-primary btn-sm"
                                     data-toggle="tooltip" title="Edit" data-placement="top"><span
                                         class="fa fa-edit fa-sm"></span></button>
                             </a>
-                            <form action="{{ route('kabupaten.destroy', $item->id) }}" method="post">
+                            <form action="{{ route('master-item.destroy', $data->id) }}" method="post">
                                 @csrf
                                 @method('delete')
                                 <button type="button" class="btn btn-rgb-danger btn-sm" data-toggle="tooltip"
@@ -39,10 +40,10 @@
                 @php
                     $no++;
                 @endphp
-            @endforeach --}}
+            @endforeach
         </tbody>
     </table>
     <div class="pull-right">
-        {{-- {{ $kabupaten->appends(Request::all())->links('vendor.pagination.custom') }} --}}
+        {{ $item->appends(Request::all())->links('vendor.pagination.custom') }}
     </div>
 </div>

@@ -248,6 +248,10 @@ label{
     font-weight: 600;
     color : var(--colorDarkBlue)
 }
+table.opsi-jawaban thead tr th{
+    font-weight: 600;
+    color : var(--colorDarkBlue)
+}
 .color-darkBlue{
     color : var(--colorDarkBlue)
 }

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\ItemModel;
+use App\Models\OptionModel;
+use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
 class MasterItemController extends Controller
@@ -18,27 +21,29 @@ class MasterItemController extends Controller
         $this->param['parentMenu'] = '/master-item';
         $this->param['current'] = 'Master Item';
     }
-    public function index()
+    public function index(Request $request)
     {
         $this->param['pageTitle'] = 'List Master Item';
         $this->param['btnText'] = 'Tambah Item';
         $this->param['btnLink'] = route('master-item.create');
 
-        // try {
-        //     $keyword = $request->get('keyword');
-        //     $getKabupaten = Kabupaten::orderBy('id', 'ASC');
+        try {
+            $keyword = $request->get('keyword');
+            $getItem = ItemModel::orderBy('id','DESC');
 
-        //     if ($keyword) {
-        //         $getKabupaten->where('id', 'LIKE', "%{$keyword}%")->orWhere('kabupaten', 'LIKE', "%{$keyword}%");
-        //     }
+            if ($keyword) {
+                $getItem->where('id', 'LIKE', "%{$keyword}%")->orWhere('nama', 'LIKE', "%{$keyword}%");
+            }
 
-        //     $this->param['kabupaten'] = $getKabupaten->paginate(10);
-        // } catch (\Illuminate\Database\QueryException $e) {
-        //     return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
-        // }
-        // catch (Exception $e) {
-        //     return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
-        // }
+            $this->param['item'] = $getItem->paginate(10);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return $e;
+            return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
+        }
+        catch (Exception $e) {
+            return $e;
+            return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
+        }
 
         return \view('master-item.index', $this->param);
     }
@@ -50,14 +55,31 @@ class MasterItemController extends Controller
      */
     public function create()
     {
-        $this->param['itemsatu'] = ItemModel::select('*')->where('level', 1)->get();
         $this->param['pageTitle'] = 'Tambah Master Item';
         $this->param['btnText'] = 'List Item';
         $this->param['btnLink'] = route('master-item.index');
+        // $this->param['itemsatu'] = ItemModel::select('*')->where('level', 1)->get();
 
         return \view('master-item.create', $this->param);
     }
-
+    public function dataItemSatu(Request $request)
+    {
+        $data = ItemModel::select('id','nama','level')->where('level', 1)->get();
+        return response()->json($data);
+    }
+    public function dataItemTiga(Request $request)
+    {
+        // $data = ItemModel::select('id','nama','level')->orderBy('level', 2)->orderBy('level', )->get();
+        $req = $request->itemTiga;
+        $data = ItemModel::select('*')->where('id_parent',$req)->where('level',2)->get();
+        return response()->json($data);
+    }
+    public function dataItemempat(Request $request)
+    {
+        $req = $request->itemTiga;
+        $data = ItemModel::select('*')->where('id_parent',$req)->where('level',2)->where('level',3)->get();
+        return response()->json($data);
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -66,13 +88,64 @@ class MasterItemController extends Controller
      */
     public function store(Request $request)
     {
+        if ($request->get('opsi') != null) {
+            foreach ($request->get('opsi') as $key => $value) {
+                $validation['opsi.'.$key.'.opsi_name'] = 'required';
+                $validation['opsi.'.$key.'.skor'] = 'required';
+            }
+            $this->validate($request, $validation);
+        }
 
-        $addItem = new ItemModel;
-        $addItem->nama = $request->get('nama');
-        $addItem->level = $request->get('level');
-        $addItem->save();
+        try {
+            $addItem = new ItemModel;
+            $addItem->nama = $request->get('nama');
+            $addItem->level = $request->get('level');
+            $addItem->id_parent = $request->level != 2 ? $request->item_turunan_dua : $request->item_turunan ;
+            $addItem->save();
+            if ($request->level != 1) {
+                // return 'ada selain 1';
+                if ($request->level == 2) {
+                    // return 'ada';
+                    // return $request;
 
-        return redirect()->route('master-item.index')->withStatus('Berhasil menambah data.');
+
+                    foreach ($request->get('opsi') as $key => $value) {
+                        // return $value['opsi_name'];
+                        $addDataOption = new OptionModel;
+                        $addDataOption->id_item = $addItem->id;
+                        $addDataOption->option = $value['opsi_name'];
+                        $addDataOption->skor = $value['skor'];
+                        $addDataOption->save();
+                    }
+                }elseif ($request->level == 3) {
+
+                    foreach ($request->get('opsi') as $key => $value) {
+                        // return $value['opsi_name'];
+                        $addDataOption = new OptionModel;
+                        $addDataOption->id_item = $addItem->id;
+                        $addDataOption->option = $value['opsi_name'];
+                        $addDataOption->skor = $value['skor'];
+                        $addDataOption->save();
+                    }
+                }else{
+                    foreach ($request->get('opsi') as $key => $value) {
+                        // return $value['opsi_name'];
+                        $addDataOption = new OptionModel;
+                        $addDataOption->id_item = $addItem->id;
+                        $addDataOption->option = $value['opsi_name'];
+                        $addDataOption->skor = $value['skor'];
+                        $addDataOption->save();
+                    }
+                }
+            }
+            return redirect()->route('master-item.index')->withStatus('Berhasil menambah data.');
+
+        } catch(Exception $e) {
+            return $e;
+        }catch (QueryException $e){
+            return $e;
+        }
+
     }
 
     /**
