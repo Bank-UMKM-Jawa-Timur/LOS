@@ -88,7 +88,6 @@ class MasterItemController extends Controller
      */
     public function store(Request $request)
     {
-        return $request;
         if ($request->get('opsi') != null) {
             foreach ($request->get('opsi') as $key => $value) {
                 $validation['opsi.'.$key.'.opsi_name'] = 'required';
@@ -175,6 +174,8 @@ class MasterItemController extends Controller
         $this->param['btnLink'] = route('master-item.index');
 
         $this->param['item'] = ItemModel::find($id);
+        $this->param['itemTurunan'] = ItemModel::select('id','nama')->find( $this->param['item']->id_parent);
+
         $this->param['opsi'] = OptionModel::where('id_item',$id)->get();
         return view('master-item.edit',$this->param);
     }
@@ -188,9 +189,60 @@ class MasterItemController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+       $request->validate([
+           'nama' => 'required',
+           'option.*' => 'required',
+           'skor.*' => 'required',
+       ]);
+        try {
+            $updateItem = ItemModel::find($id);
+            $updateItem->nama = $request->get('nama');
+            $updateItem->save();
+            if ($request->id_detail != null) {
+                foreach ($request->id_detail as $key => $value) {
+                    if ($request->id_detail[$key] != 0) {
+                        $updateOption = OptionModel::select('option','skor')->where('id',$request->id_detail[$key])->get();
+                        OptionModel::where('id',$request->id_detail[$key])->update([
+                            'option' => $request->option[$key],
+                            'skor' => $request->skor[$key],
+                        ]);
+                    }else{
+                        $newOptionItem = new OptionModel;
+                        $newOptionItem->id_item = $request->get('id_item');
+                        $newOptionItem->option = $request->get('option')[$key];
+                        $newOptionItem->skor = $request->get('skor')[$key];
+                        $newOptionItem->save();
+                    }
+
+                }
+                if (isset($request->id_delete)) {
+                    foreach ($request->id_delete as $key => $value) {
+                         OptionModel::where('id',$request->id_delete)->delete();
+                    }
+                }
+            }
+            return redirect()->route('master-item.index')->withStatus('Berhasil mengganti data.');
+
+        } catch(Exception $e) {
+            return $e;
+            return redirect()->back()->withStatus('Terjadi Kesalahan.');
+        }catch (QueryException $e){
+            return $e;
+            return redirect()->back()->withStatus('Terjadi Kesalahan.');
+        }
     }
 
+    public function addEditItem(Request $request)
+    {
+        $fields = array(
+            'option' => 'option',
+            'skor' => 'skor',
+        );
+        $next = $_GET['biggestNo'] + 1;
+
+
+        return view('master-item.editDetail', ['hapus' => true, 'no' => $next, 'fields' => $fields, 'idDetail' => '0']);
+    }
     /**
      * Remove the specified resource from storage.
      *
@@ -199,6 +251,18 @@ class MasterItemController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try{
+            $deleteItem = ItemModel::find($id)->delete();
+            OptionModel::where('id_item',$id)->delete();
+
+            return redirect()->route('master-item.index')->withStatus('Berhasil menghapus data.');
+
+        } catch(Exception $e) {
+            return $e;
+            return redirect()->back()->withStatus('Terjadi Kesalahan.');
+        }catch (QueryException $e){
+            return $e;
+            return redirect()->back()->withStatus('Terjadi Kesalahan.');
+        }
     }
 }

@@ -1,32 +1,33 @@
 <form action="{{ route('master-item.update',$item->id) }}" method="POST">
     @method('PUT')
     @csrf
+    <div class="idDelete">
+    </div>
     <div class="row">
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-6">
             <label>Level</label>
-            <select name="level" id="level" class="form-control">
+            <select name="level" id="level" class="form-control"  disabled>
                 <option value="0"> --- Pilih Level --- </option>
-                <option value="1" {{ $item->level == 1 ? "selected" : ""}}>1</option>
+                <option aria-readonly="true" value="1" {{ $item->level == 1 ? "selected" : ""}}>1</option>
                 <option value="2" {{ $item->level == 2 ? "selected" : ""}}>2</option>
                 <option value="3" {{ $item->level == 3 ? "selected" : ""}}>3</option>
                 <option value="4" {{ $item->level == 4 ? "selected" : ""}}>4</option>
             </select>
         </div>
-        <div class="form-group col-md-4">
-            <label>Item Turunan 1</label>
-            <select name="item_turunan" id="itemTurunan1" class="form-control" >
-                <option value="0"> ---Pilih Turunan ---</option>
-               {{-- @foreach ($itemsatu as $item)
-                <option value="{{ $item->id }}">{{ $item->id.'. '.$item->nama }}</option>
-               @endforeach --}}
-            </select>
-        </div>
-        <div class="form-group col-md-4">
-            <label>Item Turunan 2</label>
-            <select name="item_turunan_dua" id="itemTurunan2" class="form-control" >
-                <option value="0"> ---Pilih Turunan ---</option>
-            </select>
-        </div>
+        @if ($item->level != 1)
+            <div class="form-group col-md-6">
+                <label>Item Turunan</label>
+                <input type="text" name="id_turunan" value="{{ $itemTurunan->id }}" hidden>
+                <input type="text" name="id_item" value="{{ $item->id }}" hidden>
+                <input type="text" name="item_turunan" class="form-control @error('item_turunan') is-invalid @enderror" value="{{old('item_turunan', $itemTurunan->nama )}}" readonly>
+                @error('item_turunan')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
+            </div>
+        @endif
+
         <div class="form-group col-md-6">
             <label>Nama</label>
             <input type="text" name="nama" class="form-control @error('nama') is-invalid @enderror" placeholder="Nama Item" value="{{old('nama',$item->nama)}}">
@@ -38,103 +39,55 @@
         </div>
     </div>
     <hr>
-    <div id="opsi">
-        <p><strong>Opsi atau Jawaban</strong></p>
-        <table class="table opsi-jawaban">
-            <thead>
-                <tr>
-                    <th>Opsi</th>
-                    <th>Skor</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="id_opsi">
-            @if (old('opsi',$opsi) != "")
-                @foreach (old('opsi', $opsi) as $key => $value)
-                <div class="countVar" data-count="{{ count(old('opsi',$opsi)) }}"></div>
-                <tr data-id={{ ($key == 0)?$key+1:$key }}>
-                    <td>
-                        <div class="form-group col-md-12">
-                            {{-- <label>Opsi</label> --}}
-                            <input type="text" id="opsi_name" name="opsi[{{ $key }}]['opsi_name']" class="form-control @error('opsi.'.$key.'.opsi_name') is-invalid @enderror" placeholder="Nama Opsi" value="{{ old('opsi.'.$key.'.opsi_name',$value->option) }}">
-                            @error('opsi.'.$key.'.opsi_name')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group col-md-12">
-                            {{-- <label>Skor</label> --}}
-                            <input type="number" id="skor" name="opsi[{{$key}}][skor]" class="form-control @error('opsi.'.$key.'.skor') is-invalid @enderror" placeholder="Skor" value="{{ old('opsi.$key.skor') }}">
-                            @error('opsi.'.$key.'.skor')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-                    </td>
-                    <td>
-                        @if ($key == 0)
-                        <div class="">
-                            <button type="button" class="btn btn-success plus"> <i class="fa fa-plus"></i> </button>
-                            {{-- <a class="addDetail" class="btn p-3" href=""><i class="fa fa-plus-square text-primary p-3" style="font-size: 24px"></i></a> --}}
-                        </div>
+    <div class="detail-lawan">
+        <div class="" id="urlAddDetail" data-url="{{ url('master-item/addEditItem') }}">
+            <p><strong>Opsi atau Jawaban</strong></p>
+        @if (!is_null(old('id')))
+            @php
+                $loop = array();
+                foreach(old('id') as $i => $val){
+                    $loop[] = array(
+                    'option' => old('option.'.$i),
+                    'skor' => old('skor.'.$i),
+                    );
+                }
+            @endphp
 
-                        @else
-                            <div class="">
-                                <button type="button" class="btn btn-success plus"> <i class="fa fa-plus"></i> </button>
-                                <button type="button" class="btn btn-danger minus"> <i class="fa fa-minus"></i> </button>
-                                {{-- <a class="addDetail" class="btn p-3" href=""><i class="fa fa-plus-square text-primary p-3" style="font-size: 24px"></i></a> --}}
-                            </div>
-                        @endif
-                    </td>
-                </tr>
-                @endforeach
-            @else
-            <div id="countVar" data-count = "0"></div>
-            <tr data-id="1">
-                <td>
-                    <div class="">
-                        {{-- <label>Opsi</label> --}}
-                        <input type="text" id="opsi_name" name="opsi[1][opsi_name]" class="form-control " placeholder="Nama Opsi" >
-                        @error('opsi.1.opsi_name')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                </td>
-                <td>
-                    <div class="">
-                        {{-- <label>Skor</label> --}}
-                        <input type="number" id="skor" name="opsi[1][skor]" class="form-control" placeholder="Skor" >
-                        @error('opsi.1.skor')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                </td>
-                <td>
-                    <div class="">
-                        <button type="button" class="btn btn-success plus"> <i class="fa fa-plus"></i> </button>
-                        {{-- <a class="addDetail" class="btn p-3" href=""><i class="fa fa-plus-square text-primary p-3" style="font-size: 24px"></i></a> --}}
-                    </div>
-                </td>
+        @else
+            @php
+                $loop = $opsi;
+            @endphp
+        @endif
+        @php $no = 0; $total = 0; @endphp
 
-            </tr>
-            @endif
-            </tbody>
-        </table>
+        @foreach ($loop as $n => $edit)
+            @php
+                $no++;
+                $linkHapus = $no==1 ? false : true;
+                $fields = array(
+                    'option' => 'option.'.$n,
+                    'skor' => 'skor.'.$n,
+                );
+
+                if(!is_null(old('id_item'))){
+                    $idDetail = old('id_detail.'.$n);
+                }
+                else{
+                    $idDetail = $edit['id'];
+                }
+            @endphp
+            @include('master-item.editDetail',['hapus' => $linkHapus, 'no' => $no])
+                    {{-- @include('pages.transaksi-bank.form-detail-transaksi-bank'); --}}
+        @endforeach
+        </div>
     </div>
     <button type="submit" class="btn btn-primary mr-2"><i class="fa fa-save"></i> Simpan</button>
     <button type="reset" class="btn btn-default"><i class="fa fa-times"></i> Reset</button>
 </form>
 @push('custom-script')
     <script>
-        addOption()
+    $(document).ready(function() {
+
         $('#opsi').hide();
         $('#level option').each(function() {
             var id_level = $("#level option:selected").val()
@@ -147,182 +100,83 @@
             }
 
             if(id_level == "1") {
-                $('#itemTurunan1').prop('disabled', true);
+                $('#itemTurunan1').prop('disabled', false);
                 $('#itemTurunan2').prop('disabled', true);
                 $('#opsi_name').prop('disabled', true);
                 $('#skor').prop('disabled', true);
                 $('#opsi').hide();
             } else {
-                $('#itemTurunan1').prop('disabled', false);
+                $('#itemTurunan1').prop('disabled', true);
                 $('#itemTurunan2').prop('disabled', false);
                 $('#opsi_name').prop('disabled', false);
                 $('#skor').prop('disabled', false);
                 $('#opsi').show();
             }
             if (id_level == "2") {
-                console.log(id_level);
-                $('#itemTurunan2').prop('disabled', true);
-                if (id_level == "2") {
-                    turunanSatu(id_level)
-                }else{
-                    $('#itemTurunan1').empty();
-                }
-
             }else if (id_level == "3"){
-                turunanSatu(id_level);
-                $('#itemTurunan1').change(function(e) {
-                    e.preventDefault();
-                    var id_turunan = $(this).val();
-                    turunanDua(id_turunan);
-                })
-                addOption()
+
                 // $('#itemTurunan1').empty();
                 // $("#itemTurunan1").append('<option value="0">---Pilih Item Turunan---</option>');
-            }else{
-                turunanSatu(id_level);
-                $('#itemTurunan1').change(function(e) {
-                    e.preventDefault();
-                    var id_turunan_empat = $(this).val();
-                    turunanDua(id_turunan_empat);
-
-                })
-                addOption()
             }
 
         });
-
-        $("#level").change(function(){
-            var id_level = $("#level option:selected").val()
-            if(id_level == "1") {
-                $('#itemTurunan1').prop('disabled', true);
-                $('#itemTurunan2').prop('disabled', true);
-                $('#opsi_name').prop('disabled', true);
-                $('#skor').prop('disabled', true);
-                $('#opsi').hide();
-            } else {
-                $('#itemTurunan1').prop('disabled', false);
-                $('#itemTurunan2').prop('disabled', false);
-                $('#opsi_name').prop('disabled', false);
-                $('#skor').prop('disabled', false);
-                $('#opsi').show();
-            }
-            if (id_level == "2") {
-                console.log(id_level);
-                $('#itemTurunan2').prop('disabled', true);
-                if (id_level == "2") {
-                    turunanSatu(id_level)
-                    addOption()
-                }else{
-                    $('#itemTurunan1').empty();
+        function addOption(param) {
+            var biggestNo = 0; //setting awal No/Id terbesar
+            $(".row-detail").each(function() {
+                var currentNo = parseInt($(this).attr("data-no"));
+                if (currentNo > biggestNo) {
+                    biggestNo = currentNo;
                 }
+            }); //cari no terbesar
+            var next = parseInt(biggestNo) + 1;
+            var thisNo = param.data("no");
+            var url = $("#urlAddDetail").data('url')
+            console.log(url);
+            $.ajax({
+                type: "get",
+                url: url,
+                data: { biggestNo: biggestNo },
+                success: function(response) {
+                    console.log(response);
+                    $(".row-detail[data-no='" + thisNo + "']").after(response);
 
-            }else if (id_level == "3"){
-                turunanSatu(id_level);
-                $('#itemTurunan1').change(function(e) {
-                    e.preventDefault();
-                    var id_turunan = $(this).val();
-                    turunanDua(id_turunan);
-                    addOption()
-                })
-                // $('#itemTurunan1').empty();
-                // $("#itemTurunan1").append('<option value="0">---Pilih Item Turunan---</option>');
-            }else{
-                turunanSatu(id_level);
-                $('#itemTurunan1').change(function(e) {
-                    e.preventDefault();
-                    var id_turunan_empat = $(this).val();
-                    turunanDua(id_turunan_empat);
-                    addOption()
+                    $(".addDetail[data-no='" + next + "']").click(function(e) {
+                        e.preventDefault()
+                        addDetail($(this));
+                    })
 
-                })
-            }
+                    $(".deleteDetail").click(function(e) {
+                        e.preventDefault()
+                        deleteDetail($(this));
+                    });
+                }
+            })
+
+        }
+        $(".addDetail").click(function(e) {
+            e.preventDefault();
+            addOption($(this));
+            console.log(e);
         });
-        // tambah ajax 1
-        function turunanSatu(id_level) {
-            $.ajax({
-                type: "GET",
-                url: "/data-item-satu?itemSatu="+id_level,
-                dataType: 'JSON',
-                success:function(res){
-                    // console.log(res);
-                    if (res) {
-                        $('#itemTurunan1').empty();
-                        $("#itemTurunan1").append('<option value="0">---Pilih Item Turunan---</option>');
-                        var count=Object.keys(res).length;
-                        for (let i = 0; i <= count; i++) {
-                            $("#itemTurunan1").append('<option value="'+ res[i].id +'">'+res[i].level+". "+res[i].nama+'</option>');
 
-                        }
-                    }else{
-                        $('#itemTurunan1').empty();
-                    }
-                }
-            })
+        function deleteDetail(thisParam) {
+            var delNo = thisParam.data("no");
+            var parent = ".row-detail[data-no='" + delNo + "']";
+            var idDetail = $(parent + " .idDetail").val();
+            if (thisParam.hasClass("addDeleteId") && idDetail != 0) {
+                $(".idDelete").append(
+                    "<input type='hidden' name='id_delete[]' value='" +
+                    idDetail +
+                    "'>"
+                );
+            }
+            $(parent).remove();
         }
-        // ajax 2
-        function turunanDua(id_turunan) {
-            $.ajax({
-                type: "GET",
-                url: "/data-item-tiga?itemTiga="+id_turunan,
-                dataType: 'JSON',
-                success:function(res){
-                    console.log(res);
-                    if (res) {
-                        $('#itemTurunan2').empty();
-                        $("#itemTurunan2").append('<option value="0">---Pilih Item Turunan---</option>');
-                        var count=Object.keys(res).length;
-                        for (let i = 0; i <= count; i++) {
-                            $("#itemTurunan2").append('<option value="'+ res[i].id +'">'+res[i].level+". "+res[i].nama+'</option>');
-                        }
-                    }else{
-                        $('#itemTurunan2').empty();
-                    }
-                }
-            })
-        }
-        // ajax 3
-        function turunanTiga(id_turunan_empat) {
-            $.ajax({
-                type: "GET",
-                url: "/data-item-empat?itemEmpat="+id_turunan_empat,
-                dataType: 'JSON',
-                success:function(res){
-                    console.log(res);
-                    if (res) {
-                        $('#itemTurunan2').empty();
-                        $("#itemTurunan2").append('<option value="0">---Pilih Item Turunan---</option>');
-                        var count=Object.keys(res).length;
-                        for (let i = 0; i <= count; i++) {
-                            $("#itemTurunan2").append('<option value="'+ res[i].id +'">'+res[i].level+". "+res[i].nama+'</option>');
-                        }
-                    }else{
-                        $('#itemTurunan2').empty();
-                    }
-                }
-            })
-        }
+        $(".deleteDetail").click(function(e) {
+            e.preventDefault();
+            deleteDetail($(this));
+        });
+    });
 
-        function addOption() {
-            $('body').on('click','.plus',function() {
-                var i = $("#opsi tr:last").data('id');
-                i = i + 1;
-                $('#id_opsi').append('<tr data-id="'+ i +'">\
-                    <td>\
-                            <input type="text" id="id_opsi" name="opsi['+ i +'][opsi_name]" class="form-control" placeholder="Nama Opsi">\
-                    </td>\
-                    <td>\
-                        <input type="number" id="skor" name="opsi['+ i +'][skor]" class="form-control" placeholder="Skor" >\
-                        </td>\
-                    <td class="">\
-                        <button type="button" class="btn btn-success plus"> <i class="fa fa-plus"></i> </button>\
-                        <button type="button" class="btn btn-danger minus"> <i class="fa fa-minus"></i> </button>\
-                    </td>\
-                </tr>');
-            });
-            $('body').on('click', '.minus', function() {
-                $(this).closest('tr').remove();
-                // i--;
-            });
-        }
     </script>
 @endpush

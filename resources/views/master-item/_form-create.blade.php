@@ -55,7 +55,7 @@
                     <td>
                         <div class="form-group col-md-12">
                             {{-- <label>Opsi</label> --}}
-                            <input type="text" id="opsi_name" name="opsi[{{ $key }}]['opsi_name']" class="form-control @error('opsi.'.$key.'.opsi_name') is-invalid @enderror" placeholder="Nama Opsi" value="{{ old('opsi.'.$key.'.opsi_name') }}">
+                            <input type="text" id="opsi_name" name="opsi[{{ $key }}][opsi_name]" class="form-control @error('opsi.'.$key.'.opsi_name') is-invalid @enderror" placeholder="Nama Opsi" value="{{ old('opsi.'.$key.'.opsi_name') }}">
                             @error('opsi.'.$key.'.opsi_name')
                                 <div class="invalid-feedback">
                                     {{ $message }}

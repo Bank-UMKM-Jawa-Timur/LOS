@@ -9,4 +9,10 @@ class OptionModel extends Model
 {
     use HasFactory;
     protected $table = 'option';
+
+    public function detailOptionItem()
+    {
+        return $this->hasMany('App\Models\ItemModel');
+    }
+
 }
