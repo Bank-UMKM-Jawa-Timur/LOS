@@ -88,6 +88,7 @@ class MasterItemController extends Controller
      */
     public function store(Request $request)
     {
+        return $request;
         if ($request->get('opsi') != null) {
             foreach ($request->get('opsi') as $key => $value) {
                 $validation['opsi.'.$key.'.opsi_name'] = 'required';
@@ -141,8 +142,10 @@ class MasterItemController extends Controller
             return redirect()->route('master-item.index')->withStatus('Berhasil menambah data.');
 
         } catch(Exception $e) {
+            return redirect()->back()->withStatus('Terjadi Kesalahan.');
             return $e;
         }catch (QueryException $e){
+            return redirect()->back()->withStatus('Terjadi Kesalahan.');
             return $e;
         }
 
@@ -167,7 +170,13 @@ class MasterItemController extends Controller
      */
     public function edit($id)
     {
-        //
+        $this->param['pageTitle'] = 'Tambah Master Item';
+        $this->param['btnText'] = 'List Item';
+        $this->param['btnLink'] = route('master-item.index');
+
+        $this->param['item'] = ItemModel::find($id);
+        $this->param['opsi'] = OptionModel::where('id_item',$id)->get();
+        return view('master-item.edit',$this->param);
     }
 
     /**

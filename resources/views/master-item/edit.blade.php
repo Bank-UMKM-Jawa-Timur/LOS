@@ -3,6 +3,6 @@
 
 @section('content')
 
-    @include('kabupaten._form-edit')
+    @include('master-item._form-edit')
 
 @endsection

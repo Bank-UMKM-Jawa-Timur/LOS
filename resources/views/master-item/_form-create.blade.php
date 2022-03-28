@@ -164,8 +164,8 @@
                     e.preventDefault();
                     var id_turunan = $(this).val();
                     turunanDua(id_turunan);
-                    addOption()
                 })
+                addOption()
                 // $('#itemTurunan1').empty();
                 // $("#itemTurunan1").append('<option value="0">---Pilih Item Turunan---</option>');
             }else{
