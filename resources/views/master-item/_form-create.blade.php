@@ -173,7 +173,7 @@
                 $('#itemTurunan1').change(function(e) {
                     e.preventDefault();
                     var id_turunan_empat = $(this).val();
-                    turunanDua(id_turunan_empat);
+                    turunanTiga(id_turunan_empat);
                     addOption()
 
                 })

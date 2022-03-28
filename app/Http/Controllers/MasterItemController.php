@@ -76,8 +76,7 @@ class MasterItemController extends Controller
     }
     public function dataItemempat(Request $request)
     {
-        $req = $request->itemTiga;
-        $data = ItemModel::select('*')->where('id_parent',$req)->where('level',2)->where('level',3)->get();
+        $data = ItemModel::where('level','!=',1)->get();
         return response()->json($data);
     }
     /**
@@ -252,9 +251,8 @@ class MasterItemController extends Controller
     public function destroy($id)
     {
         try{
+            $data = OptionModel::where('id_item',$id)->delete();
             $deleteItem = ItemModel::find($id)->delete();
-            OptionModel::where('id_item',$id)->delete();
-
             return redirect()->route('master-item.index')->withStatus('Berhasil menghapus data.');
 
         } catch(Exception $e) {
