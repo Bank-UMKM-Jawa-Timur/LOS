@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+{{-- <html lang="en"> --}}
+<html ng-app="AngularApp">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,6 +16,9 @@
     <link rel="stylesheet" href="{{ asset('') }}vendor/select2/select2.min.css" />
     <link rel="stylesheet" href="{{ asset('') }}vendor/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" />
     <link rel="stylesheet" href="{{ asset('') }}vendor/sweetalert-master/dist/sweetalert.css" />
+    <link href="{{ asset('') }}build/please-wait.css" rel="stylesheet">
+
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
@@ -23,10 +27,14 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
 
+    {{-- <link href="assets/build/css/default.css" rel="stylesheet"> --}}
+
     <link rel="stylesheet" href="{{ asset('') }}css/custom.css" />
 
 </head>
-<body>
+<body ng-controller="MainCtrl">
+    <div class="inner" ng-view>
+    </div>
     <div class="container custom">
         <nav class="navbar navbar-expand-lg py-3 navbar-dark mt-4">
             <div class="container custom">
@@ -94,6 +102,9 @@
 <script src="{{ asset('') }}vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 <script src="{{ asset('') }}vendor/sweetalert-master/dist/sweetalert.min.js"></script>
 <script src="{{ asset('') }}js/select2.full.min.js"></script>
+{{-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script> --}}
+<script src="{{ asset('') }}build/please-wait.min.js"></script>
+
 
 <script>
     // $(document).ready(function(){
@@ -139,8 +150,18 @@
                 }
             );
             console.log('bisa');
-        })
+        });
+
 </script>
+<script type="text/javascript">
+        var loading_screen = pleaseWait({
+            logo: "{{ asset('img/logo.png') }}",
+            backgroundColor: '#112042',
+            loadingHtml: "<div class='spinner'><div class='double-bounce1'></div><div class='double-bounce2'></div><div class='double-bounce3'></div></div>"
+        });
+        window.loading_screen.finish();
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script>
 @stack('custom-script')
 </body>
 </html>

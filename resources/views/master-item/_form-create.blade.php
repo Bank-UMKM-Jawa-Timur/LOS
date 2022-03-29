@@ -1,7 +1,7 @@
 <form action="{{ route('master-item.store') }}" method="POST">
     @csrf
     <div class="row">
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-3">
             <label>Level</label>
             <select name="level" id="level" class="form-control">
                 <option value="0"> --- Pilih Level --- </option>
@@ -11,18 +11,24 @@
                 <option value="4">4</option>
             </select>
         </div>
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-3">
             <label>Item Turunan 1</label>
-            <select name="item_turunan" id="itemTurunan1" class="form-control" >
+            <select name="item_turunan" id="itemTurunan1" class="select2 form-control" >
                 <option value="0"> ---Pilih Turunan ---</option>
                {{-- @foreach ($itemsatu as $item)
                 <option value="{{ $item->id }}">{{ $item->id.'. '.$item->nama }}</option>
                @endforeach --}}
             </select>
         </div>
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-3">
             <label>Item Turunan 2</label>
-            <select name="item_turunan_dua" id="itemTurunan2" class="form-control" >
+            <select name="item_turunan_dua" id="itemTurunan2" class="select2 form-control" >
+                <option value="0"> ---Pilih Turunan ---</option>
+            </select>
+        </div>
+        <div class="form-group col-md-3" id="item_turunan_tiga">
+            <label>Item Turunan 3</label>
+            <select name="item_turunan_tiga" id="itemTurunan3" class="select2 form-control" >
                 <option value="0"> ---Pilih Turunan ---</option>
             </select>
         </div>
@@ -133,24 +139,32 @@
 </form>
 @push('custom-script')
     <script>
+        $('#item_turunan_tiga').hide();
         $('#opsi').hide();
         $("#level").change(function(){
             var id_level = $(this).val()
-            if(id_level == "1") {
+            if(id_level === "1") {
                 $('#itemTurunan1').prop('disabled', true);
                 $('#itemTurunan2').prop('disabled', true);
                 $('#opsi_name').prop('disabled', true);
                 $('#skor').prop('disabled', true);
                 $('#opsi').hide();
+                $('#item_turunan_tiga').hide();
+                $('#item_turunan_tiga').prop('disabled', true)
+
             } else {
                 $('#itemTurunan1').prop('disabled', false);
                 $('#itemTurunan2').prop('disabled', false);
                 $('#opsi_name').prop('disabled', false);
                 $('#skor').prop('disabled', false);
                 $('#opsi').show();
+
             }
             if (id_level === "2") {
                 $('#itemTurunan2').prop('disabled', true);
+                $('#item_turunan_tiga').prop('disabled', true)
+                $('#item_turunan_tiga').hide()
+                $('#item_turunan_tiga').prop('disabled', true)
                 if (id_level == "2") {
                     turunanSatu(id_level)
                     addOption()
@@ -168,8 +182,11 @@
                 addOption()
                 // $('#itemTurunan1').empty();
                 // $("#itemTurunan1").append('<option value="0">---Pilih Item Turunan---</option>');
+            }else if(id_level == 1){
+
             }else{
                 turunanSatu(id_level);
+                $('#item_turunan_tiga').show();
                 $('#itemTurunan1').change(function(e) {
                     e.preventDefault();
                     var id_turunan_empat = $(this).val();

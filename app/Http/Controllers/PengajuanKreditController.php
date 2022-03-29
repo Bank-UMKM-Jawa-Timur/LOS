@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CalonNasabah;
 use App\Models\Desa;
+use App\Models\ItemModel;
 use App\Models\Kabupaten;
 use App\Models\Kecamatan;
 use Exception;
@@ -25,6 +26,9 @@ class PengajuanKreditController extends Controller
             $param['dataDesa'] = Desa::all();
             $param['dataKecamatan'] = Kecamatan::all();
             $param['dataKabupaten'] = Kabupaten::all();
+            $param['dataAspek'] = ItemModel::select('*')->where('level',1)->get();
+
+            $data['dataPertanyaanSatu'] = ItemModel::select('id','nama','level','id_parent')->where('level',2)->where('id_parent',3)->get();
             return view('pengajuan-kredit.add-pengajuan-kredit',$param);
         }
         else{
