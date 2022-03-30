@@ -1,4 +1,5 @@
-
+    var jumlahData = $('#jumlahData').val();
+    console.log(jumlahData);
     function cekBtn(){
         var indexNow = $(".form-wizard.active").data('index')
         var prev = parseInt(indexNow) - 1
@@ -10,7 +11,7 @@
         if($(".form-wizard[data-index='"+prev+"']").length==1){
             $(".btn-prev").show()
         }
-        if (indexNow == 5) {
+        if (indexNow == jumlahData) {
 
             $(".btn-next").hide()
             $(".btn-simpan").show()

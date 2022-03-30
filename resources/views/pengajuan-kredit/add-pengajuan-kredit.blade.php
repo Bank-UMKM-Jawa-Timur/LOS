@@ -5,7 +5,24 @@
     .form-wizard .sub label:not(.info){
         font-weight: 400;
     }
-
+    .form-wizard h4{
+        color: #1f1d62;
+        font-weight: 600 !important;
+        font-size: 20px;
+        /* border-bottom: 1px solid #dc3545; */
+    }
+    .form-wizard h5{
+        color: #1f1d62;
+        font-weight: 600 !important;
+        font-size: 18px;
+        /* border-bottom: 1px solid #dc3545; */
+    }
+    .form-wizard h6{
+        color: #c2c7cf;
+        font-weight: 600 !important;
+        font-size: 16px;
+        /* border-bottom: 1px solid #dc3545; */
+    }
 </style>
 <form id="pengajuan_kredit" action="{{ route('pengajuan-kredit.store') }}" method="post">
     @csrf
@@ -178,28 +195,113 @@
             </div>
         </div>
     </div>
+    <input type="text" id="jumlahData" name="jumlahData" hidden value="{{ count($dataAspek) }}">
     @foreach ($dataAspek as $key => $value)
         @php
             $key += 1;
-            $dataLevelSatu = \App\Models\ItemModel::select('id','nama','level','id_parent')->where('level',2)->where('id_parent',$value->id)->get();
-        @endphp
-        @foreach ($dataLevelSatu as $item)
-        @php
-            $dataJawaban = \App\Models\OptionModel::select('id','id_item','option','skor')->where('id_item',$item->id)->get()
-        @endphp
+            // check level 2
+            $dataLevelDua = \App\Models\ItemModel::select('id','nama','level','id_parent')->where('level',2)->where('id_parent',$value->id)->get();
 
-        @endforeach
-
+            // check level 4
+            $dataLevelEmpat = \App\Models\ItemModel::select('id','nama','level','id_parent')->where('level',4)->where('id_parent',$value->id)->get();
+        @endphp
+        {{-- level level 2 --}}
         <div class="form-wizard" data-index='{{ $key }}' data-done='true'>
-            @php
+            <div class="row">
+                @foreach ($dataLevelDua as $item)
+                    @php
+                        $dataJawaban = \App\Models\OptionModel::where('option',"!=","-")->where('id_item',$item->id)->get();
+                        $dataOption = \App\Models\OptionModel::where('option',"=","-")->where('id_item',$item->id)->get();
+                        // check level 3
+                        $dataLevelTiga = \App\Models\ItemModel::select('id','nama','level','id_parent')->where('level',3)->where('id_parent',$item->id)->get();
+                    @endphp
+
+                    @foreach ($dataOption as $itemOption)
+                        @if ($itemOption->option == "-")
+                            <div class="form-group col-md-12">
+                                <h4>{{ $item->nama }}</h4>
+                            </div>
+                        @endif
+                    @endforeach
+
+                    @if (count($dataJawaban) != 0)
+                         <div class="form-group col-md-6">
+                            <label for="">{{  $item->nama }}</label>
+                            <select name="dataLevelDua[]" id="dataLevelDua" class="form-control">
+                                @foreach ($dataJawaban as $itemJawaban)
+                                    <option value="{{ $itemJawaban->skor."-".$itemJawaban->id }}">{{ $itemJawaban->option }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endif
+                    @foreach ($dataLevelTiga as $keyTiga => $itemTiga)
+                        @php
+                            // check  jawaban level tiga
+                            $dataJawabanLevelTiga = \App\Models\OptionModel::where('option',"!=","-")->where('id_item',$itemTiga->id)->get();
+                            $dataOptionTiga = \App\Models\OptionModel::where('option',"=","-")->where('id_item',$itemTiga->id)->get();
+                            // check level empat
+                            $dataLevelEmpat = \App\Models\ItemModel::select('id','nama','level','id_parent')->where('level',4)->where('id_parent',$itemTiga->id)->get();
+                        @endphp
+
+                        @foreach ($dataOptionTiga as $itemOptionTiga)
+                          @if ($itemOptionTiga->option == "-")
+                              <div class="form-group col-md-12">
+                                  <h5>{{ $itemTiga->nama }}</h5>
+                              </div>
+                          @endif
+                        @endforeach
+                        {{-- @foreach ($dataOptionEmpat as $itemOptionEmpat)
+                            @if ($itemOptionEmpat->option == "-")
+                                <div class="form-group col-md-12">
+                                    <h5>{{ $itemTiga->nama }}</h5>
+                                </div>
+                            @endif
+                        @endforeach --}}
+                        @if (count($dataJawabanLevelTiga) != 0)
+                            <div class="form-group col-md-6">
+                                <label for="">{{ $itemTiga->nama }}</label>
+                                <select name="dataLevelTiga[]" id="" class="form-control">
+                                    @foreach ($dataJawabanLevelTiga as $itemJawabanTiga)
+                                        <option value="{{ $itemJawabanTiga->skor.'-'.$itemJawabanTiga->id }}">{{ $itemJawabanTiga->option }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
+                        @foreach ($dataLevelEmpat as $keyEmpat => $itemEmpat)
+                            @php
+                                // check level empat
+                                $dataJawabanLevelEmpat = \App\Models\OptionModel::where('option',"!=","-")->where('id_item',$itemEmpat->id)->get();
+                                $dataOptionEmpat = \App\Models\OptionModel::where('option',"=","-")->where('id_item',$itemEmpat->id)->get();
+                            @endphp
+
+                            @foreach ($dataOptionEmpat as $itemOptionEmpat)
+                             @if ($itemOptionEmpat->option == "-")
+                                 <div class="form-group col-md-12">
+                                     <h6>{{ $itemEmpat->nama }}</h6>
+                                 </div>
+                             @endif
+                           @endforeach
+
+                            @if (count($dataJawabanLevelEmpat) != 0)
+                                <div class="form-group col-md-6">
+                                    <label for="">{{ $itemEmpat->nama }}</label>
+                                    <select name="dataLevelEmpat[]" id="" class="form-control">
+                                        @foreach ($dataJawabanLevelEmpat as $itemJawabanEmpat)
+                                            <option value="{{ $itemJawabanEmpat->skor.'-'.$itemJawabanEmpat->id }}">{{ $itemJawabanEmpat->option }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            @endif
+                        @endforeach
+                    @endforeach
+                @endforeach
+            </div>
+            {{-- @php
                 echo "<pre>";
                 print_r($dataLevelSatu);
                 echo "</pre>";
-            @endphp
+            @endphp --}}
         </div>
-    @endforeach
-    @foreach ($dataLevelSatu as $item)
-
 
     @endforeach
     <div class="row form-group">

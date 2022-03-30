@@ -64,19 +64,20 @@ class MasterItemController extends Controller
     }
     public function dataItemSatu(Request $request)
     {
-        $data = ItemModel::select('id','nama','level')->where('level', 1)->get();
+        $data = ItemModel::where('level', 1)->pluck('id','nama');
         return response()->json($data);
     }
     public function dataItemTiga(Request $request)
     {
         // $data = ItemModel::select('id','nama','level')->orderBy('level', 2)->orderBy('level', )->get();
         $req = $request->itemTiga;
-        $data = ItemModel::select('*')->where('id_parent',$req)->where('level',2)->get();
+        $data = ItemModel::where('id_parent',$req)->where('level',2)->pluck('id','nama');
         return response()->json($data);
     }
-    public function dataItemempat(Request $request)
+    public function dataItemEmpat(Request $request)
     {
-        $data = ItemModel::where('level','!=',1)->get();
+        $req = $request->itemEmpat;
+        $data = ItemModel::where('id_parent',$req)->where('level',3)->pluck('id','nama');
         return response()->json($data);
     }
     /**
@@ -87,19 +88,27 @@ class MasterItemController extends Controller
      */
     public function store(Request $request)
     {
-        if ($request->get('opsi') != null) {
-            foreach ($request->get('opsi') as $key => $value) {
-                $validation['opsi.'.$key.'.opsi_name'] = 'required';
-                $validation['opsi.'.$key.'.skor'] = 'required';
-            }
-            $this->validate($request, $validation);
-        }
+        // if ($request->get('opsi') != null) {
+        //     foreach ($request->get('opsi') as $key => $value) {
+        //         $validation['opsi.'.$key.'.opsi_name'] = 'required';
+        //         $validation['opsi.'.$key.'.skor'] = 'required';
+        //     }
+        //     $this->validate($request, $validation);
+        // }
 
         try {
             $addItem = new ItemModel;
             $addItem->nama = $request->get('nama');
             $addItem->level = $request->get('level');
-            $addItem->id_parent = $request->level != 2 ? $request->item_turunan_dua : $request->item_turunan ;
+            if ($request->level == 2) {
+                $addItem->id_parent = $request->item_turunan;
+            }elseif ($request->level == 3) {
+                $addItem->id_parent = $request->item_turunan_dua;
+            }elseif ($request->level == 4) {
+                $addItem->id_parent = $request->item_turunan_tiga;
+
+            }
+            // $addItem->id_parent = $request->level != 2 ? $request->item_turunan_dua : $request->item_turunan;
             $addItem->save();
             if ($request->level != 1) {
                 // return 'ada selain 1';
@@ -112,8 +121,8 @@ class MasterItemController extends Controller
                         // return $value['opsi_name'];
                         $addDataOption = new OptionModel;
                         $addDataOption->id_item = $addItem->id;
-                        $addDataOption->option = $value['opsi_name'];
-                        $addDataOption->skor = $value['skor'];
+                        $addDataOption->option = $value['opsi_name'] != null ? $value['opsi_name'] : '-';
+                        $addDataOption->skor = $value['skor'] != null ? $value['skor'] : 0;
                         $addDataOption->save();
                     }
                 }elseif ($request->level == 3) {
@@ -122,8 +131,8 @@ class MasterItemController extends Controller
                         // return $value['opsi_name'];
                         $addDataOption = new OptionModel;
                         $addDataOption->id_item = $addItem->id;
-                        $addDataOption->option = $value['opsi_name'];
-                        $addDataOption->skor = $value['skor'];
+                        $addDataOption->option = $value['opsi_name'] != null ? $value['opsi_name'] : '-';
+                        $addDataOption->skor = $value['skor'] != null ? $value['skor'] : 0;
                         $addDataOption->save();
                     }
                 }else{
@@ -131,8 +140,8 @@ class MasterItemController extends Controller
                         // return $value['opsi_name'];
                         $addDataOption = new OptionModel;
                         $addDataOption->id_item = $addItem->id;
-                        $addDataOption->option = $value['opsi_name'];
-                        $addDataOption->skor = $value['skor'];
+                        $addDataOption->option = $value['opsi_name'] != null ? $value['opsi_name'] : '-';
+                        $addDataOption->skor = $value['skor'] != null ? $value['skor'] : 0;
                         $addDataOption->save();
                     }
                 }
@@ -140,11 +149,11 @@ class MasterItemController extends Controller
             return redirect()->route('master-item.index')->withStatus('Berhasil menambah data.');
 
         } catch(Exception $e) {
-            return redirect()->back()->withStatus('Terjadi Kesalahan.');
             return $e;
+            return redirect()->back()->withStatus('Terjadi Kesalahan.');
         }catch (QueryException $e){
-            return redirect()->back()->withStatus('Terjadi Kesalahan.');
             return $e;
+            return redirect()->back()->withStatus('Terjadi Kesalahan.');
         }
 
     }

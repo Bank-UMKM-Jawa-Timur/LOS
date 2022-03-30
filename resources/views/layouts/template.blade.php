@@ -58,9 +58,9 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <a class="dropdown-item" href="{{ route('cabang.index') }}">Master Kantor Cabang</a>
-                        {{-- <a class="dropdown-item" href="{{ route('kabupaten.index') }}">Master Kabupaten</a>
+                        <a class="dropdown-item" href="{{ route('kabupaten.index') }}">Master Kabupaten</a>
                         <a class="dropdown-item" href="{{ route('kecamatan.index') }}">Master Kecamatan</a>
-                        <a class="dropdown-item" href="{{ route('desa.index') }}">Master Desa</a> --}}
+                        <a class="dropdown-item" href="{{ route('desa.index') }}">Master Desa</a>
                         <a class="dropdown-item" href="{{ route('user.index') }}">Master User</a>
                         <a class="dropdown-item" href="{{ route('master-item.index') }}">Master Item</a>
                     </div>

@@ -13,7 +13,7 @@
         </div>
         <div class="form-group col-md-3">
             <label>Item Turunan 1</label>
-            <select name="item_turunan" id="itemTurunan1" class="select2 form-control" >
+            <select name="item_turunan" id="itemTurunan1" class="select form-control" >
                 <option value="0"> ---Pilih Turunan ---</option>
                {{-- @foreach ($itemsatu as $item)
                 <option value="{{ $item->id }}">{{ $item->id.'. '.$item->nama }}</option>
@@ -22,13 +22,13 @@
         </div>
         <div class="form-group col-md-3">
             <label>Item Turunan 2</label>
-            <select name="item_turunan_dua" id="itemTurunan2" class="select2 form-control" >
+            <select name="item_turunan_dua" id="itemTurunan2" class="select form-control" >
                 <option value="0"> ---Pilih Turunan ---</option>
             </select>
         </div>
         <div class="form-group col-md-3" id="item_turunan_tiga">
             <label>Item Turunan 3</label>
-            <select name="item_turunan_tiga" id="itemTurunan3" class="select2 form-control" >
+            <select name="item_turunan_tiga" id="itemTurunan3" class="select form-control" >
                 <option value="0"> ---Pilih Turunan ---</option>
             </select>
         </div>
@@ -139,6 +139,7 @@
 </form>
 @push('custom-script')
     <script>
+
         $('#item_turunan_tiga').hide();
         $('#opsi').hide();
         $("#level").change(function(){
@@ -160,7 +161,8 @@
                 $('#opsi').show();
 
             }
-            if (id_level === "2") {
+            if (id_level == "2") {
+                $(".select").select2()
                 $('#itemTurunan2').prop('disabled', true);
                 $('#item_turunan_tiga').prop('disabled', true)
                 $('#item_turunan_tiga').hide()
@@ -173,6 +175,9 @@
                 }
 
             }else if (id_level == "3"){
+                $(".select").select2()
+                $('#item_turunan_tiga').hide()
+                $('#item_turunan_tiga').prop('disabled', true)
                 turunanSatu(id_level);
                 $('#itemTurunan1').change(function(e) {
                     e.preventDefault();
@@ -182,18 +187,24 @@
                 addOption()
                 // $('#itemTurunan1').empty();
                 // $("#itemTurunan1").append('<option value="0">---Pilih Item Turunan---</option>');
-            }else if(id_level == 1){
-
-            }else{
+            }else if(id_level == 4){
+                $(".select").select2();
+                addOption();
                 turunanSatu(id_level);
                 $('#item_turunan_tiga').show();
                 $('#itemTurunan1').change(function(e) {
                     e.preventDefault();
-                    var id_turunan_empat = $(this).val();
-                    turunanTiga(id_turunan_empat);
-                    addOption()
-
+                    var id_turunan = $(this).val();
+                    turunanDua(id_turunan)
                 })
+                $('#itemTurunan2').change(function(e) {
+                    e.preventDefault();
+                    var id_turunan = $(this).val();
+                    console.log(id_turunan);
+                    turunanTiga(id_turunan)
+                })
+            }else{
+
             }
         });
         // tambah ajax 1
@@ -207,15 +218,10 @@
                     if (res) {
                         $('#itemTurunan1').empty();
                         $("#itemTurunan1").append('<option value="0">---Pilih Item Turunan---</option>');
-                        var count=Object.keys(res).length;
-                        for (let i = 0; i <= count; i++) {
-                            $("#itemTurunan1").append('<option value="'+ res[i].id +'">'+res[i].level+". "+res[i].nama+'</option>');
-
-                        }
-                        // $.each(res,function(data){
-
-                        // });
-
+                        $.each(res,function(nama,id){
+                            // console.log(res);
+                            $("#itemTurunan1").append('<option value="'+id+'">'+nama+'</option>');
+                        });
                     }else{
                         $('#itemTurunan1').empty();
                     }
@@ -229,14 +235,18 @@
                 url: "/data-item-tiga?itemTiga="+id_turunan,
                 dataType: 'JSON',
                 success:function(res){
-                    console.log(res);
+                    // console.log(res);
                     if (res) {
                         $('#itemTurunan2').empty();
                         $("#itemTurunan2").append('<option value="0">---Pilih Item Turunan---</option>');
-                        var count=Object.keys(res).length;
-                        for (let i = 0; i <= count; i++) {
-                            $("#itemTurunan2").append('<option value="'+ res[i].id +'">'+res[i].level+". "+res[i].nama+'</option>');
-                        }
+                        $.each(res,function(nama,id){
+                            // console.log(res);
+                            $("#itemTurunan2").append('<option value="'+id+'">'+nama+'</option>');
+                        });
+                        // var count=Object.keys(res).length;
+                        // for (let i = 0; i <= count; i++) {
+                        //     $("#itemTurunan2").append('<option value="'+ res[i].id +'">'+res[i].level+". "+res[i].nama+'</option>');
+                        // }
                     }else{
                         $('#itemTurunan2').empty();
                     }
@@ -244,22 +254,26 @@
             })
         }
         // ajax 3
-        function turunanTiga(id_turunan_empat) {
+        function turunanTiga(id_turunan) {
             $.ajax({
                 type: "GET",
-                url: "/data-item-empat?itemEmpat="+id_turunan_empat,
+                url: "/data-item-empat?itemEmpat="+id_turunan,
                 dataType: 'JSON',
                 success:function(res){
-                    console.log(res);
+                    // console.log(res);
                     if (res) {
-                        $('#itemTurunan2').empty();
-                        $("#itemTurunan2").append('<option value="0">---Pilih Item Turunan---</option>');
-                        var count=Object.keys(res).length;
-                        for (let i = 0; i <= count; i++) {
-                            $("#itemTurunan2").append('<option value="'+ res[i].id +'">'+res[i].level+". "+res[i].nama+'</option>');
-                        }
+                        $('#itemTurunan3').empty();
+                        $("#itemTurunan3").append('<option value="0">---Pilih Item Turunan---</option>');
+                        $.each(res,function(nama,id){
+                            // console.log(res);
+                            $("#itemTurunan3").append('<option value="'+id+'">'+nama+'</option>');
+                        });
+                        // var count=Object.keys(res).length;
+                        // for (let i = 0; i <= count; i++) {
+                        //     $("#itemTurunan2").append('<option value="'+ res[i].id +'">'+res[i].level+". "+res[i].nama+'</option>');
+                        // }
                     }else{
-                        $('#itemTurunan2').empty();
+                        $('#itemTurunan3').empty();
                     }
                 }
             })

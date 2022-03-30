@@ -52,7 +52,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/master-item/addEditItem',[MasterItemController::class,'addEditItem']);
     Route::get('data-item-satu',[MasterItemController::class,'dataItemSatu']);
     Route::get('data-item-tiga',[MasterItemController::class,'dataItemtiga']);
-    Route::get('data-item-empat',[MasterItemController::class,'dataItemempat']);
+    Route::get('data-item-empat',[MasterItemController::class,'dataItemEmpat']);
     Route::resource('master-item', MasterItemController::class);
 });
 
