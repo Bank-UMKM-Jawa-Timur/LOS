@@ -39,32 +39,40 @@
             </div>
             <div class="form-group col-md-4">
                 <label for="">Kabupaten</label>
-                <select name="kabupaten" class="form-control select2" id="kabupaten">
-                    <option value="">---Pilih Kabupaten----</option>
+                <select name="kabupaten" class="form-control @error('name') is-invalid @enderror select2" id="kabupaten">
+                    <option value="0">---Pilih Kabupaten----</option>
                     @foreach ($dataKabupaten as $item)
                         <option value="{{ old('id',$item->id) }}">{{ $item->kabupaten }}</option>
                     @endforeach
                 </select>
+                @error('kabupaten')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
             </div>
             <div class="form-group col-md-4">
                 <label for="">Kecamatan</label>
-                <select name="kec" id="kecamatan" class="form-control select2" >
-                    <option value="">---Pilih Kecamatan----</option>
+                <select name="kec" id="kecamatan" class="form-control @error('kec') is-invalid @enderror  select2">
+                    <option value="0">---Pilih Kecamatan----</option>
 
-                    {{-- @foreach ($dataKecamatan as $item)
-                    <option value="{{ old('id',$item->id) }}">{{ $item->kecamatan }}</option>
-                    @endforeach --}}
                 </select>
+                @error('kec')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
             </div>
             <div class="form-group col-md-4">
                 <label for="">Desa</label>
-                <select name="desa" id="desa" class="form-control select2" >
-                    <option value="">---Pilih Desa----</option>
-
-                    {{-- @foreach ($dataDesa as $item)
-                    <option value="{{ old('id',$item->id) }}">{{ $item->desa }}</option>
-                    @endforeach --}}
+                <select name="desa" id="desa" class="form-control @error('desa') is-invalid @enderror select2" >
+                    <option value="0">---Pilih Desa----</option>
                 </select>
+                @error('desa')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
             </div>
             <div class="form-group col-md-12">
                 <label for="">Alamat Rumah</label>
@@ -115,6 +123,7 @@
             <div class="form-group col-md-4">
                 <label for="">Status</label>
                 <select name="status" id="" class="form-control @error('status') is-invalid @enderror select2" value="{{old('status')}}">
+                    <option value="0"> --Pilih Status --</option>
                     <option value="menikah">Menikah</option>
                     <option value="belum menikah">Belum Menikah</option>
                     <option value="duda">Duda</option>
@@ -128,7 +137,8 @@
             </div>
             <div class="form-group col-md-12">
                 <label for="">Sektor Kredit</label>
-                <select name="sektor_kredit" id="" class="form-control @error('sektor_kredit') is-invalid @enderror select2" required value="{{old('sektor_kredit')}}">
+                <select name="sektor_kredit" id="" class="form-control @error('sektor_kredit') is-invalid @enderror select2" value="{{old('sektor_kredit')}}">
+                    <option value="0"> --Pilih Sektor Kredit -- </option>
                     <option value="perdagangan">Perdagangan</option>
                     <option value="perindustrian">Perindustrian</option>
                     <option value="dll">dll</option>
@@ -228,10 +238,16 @@
                          <div class="form-group col-md-6">
                             <label for="">{{  $item->nama }}</label>
                             <select name="dataLevelDua[]" id="dataLevelDua" class="form-control">
+                                    <option value="0"> --Pilih Data -- </option>
                                 @foreach ($dataJawaban as $itemJawaban)
                                     <option value="{{ $itemJawaban->skor."-".$itemJawaban->id }}">{{ $itemJawaban->option }}</option>
                                 @endforeach
                             </select>
+                            @if(isset($key)&&$errors->has('dataLevelDua.'.$key))
+                                <div class="invalid-feedback">
+                                    {{ $errors->first('dataLevelDua.'.$key) }}
+                                </div>
+                            @endif
                         </div>
                     @endif
                     @foreach ($dataLevelTiga as $keyTiga => $itemTiga)
@@ -313,8 +329,6 @@
         </div>
     </div>
 </form>
-
-
 
 @endsection
 

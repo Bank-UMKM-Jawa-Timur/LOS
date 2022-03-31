@@ -48,9 +48,15 @@
                 <li class="nav-item">
                     <a class="nav-link {{ Request::segment(1) == 'dashboard' ? 'active' : '' }}" href="{{url('/dashboard')}}"><span class="fa fa-home mr-1"></span> Dashboard <span class="sr-only">(current)</span></a>
                 </li>
+                @if(Request::segment(1) == 'pengajuan-kredit' && (auth()->user()->role == 'Staf Analis Kredit' || auth()->user()->role == 'PBO / PBP'))
                 <li class="nav-item">
                     <a class="nav-link {{ Request::segment(1) == 'pengajuan-kredit' ? 'active' : '' }}" href="{{url('pengajuan-kredit')}}"><span class="fa fa-credit-card mr-1"></span> Analisa Kredit</a>
                 </li>
+                @else
+                <li class="nav-item">
+                    <a class="nav-link {{ Request::segment(1) == 'pengajuan-kredit' ? 'active' : '' }}" href="{{url('pengajuan-kredit')}}"><span class="fa fa-credit-card mr-1"></span> Analisa Kredit</a>
+                </li>
+                @endif
                 @if (auth()->user()->role == 'Administrator')
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle {{ Request::segment(1) == 'rekap' ? 'active' : '' }}" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -70,7 +76,7 @@
             <ul class="navbar-nav">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      <span class="fa fa-user"></span> {{auth()->user()->name}}
+                      <span class="fa fa-user"></span> {{auth()->user()->role}}
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                       <a class="dropdown-item" href="{{ route('change_password') }}">Ganti Password</a>
@@ -86,7 +92,7 @@
     </nav>
     @yield('dashboard')
     <div class="my-4">
-        @if(Request::segment(1) == 'pengajuan-kredit' && (auth()->user()->role == 'Staf Analis Kredit' || auth()->user()->role == 'PBO / PBP'  || auth()->user()->role == 'Penyelia Kredit'))
+        @if(Request::segment(1) == 'pengajuan-kredit' && (auth()->user()->role == 'Staf Analis Kredit' || auth()->user()->role == 'PBO / PBP'))
             @include('layouts.side-card')
         @else
             @include('layouts.full-card')

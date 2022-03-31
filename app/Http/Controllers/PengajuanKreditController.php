@@ -12,6 +12,7 @@ use App\Models\PengajuanModel;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class PengajuanKreditController extends Controller
@@ -24,7 +25,7 @@ class PengajuanKreditController extends Controller
     public function index()
     {
         $param['pageTitle'] = "Dashboard";
-        if(auth()->user()->role == 'Staf Analis Kredit' || auth()->user()->role == 'PBO / PBP'  || auth()->user()->role == 'Penyelia Kredit'){
+        if(auth()->user()->role == 'Staf Analis Kredit' || auth()->user()->role == 'PBO / PBP'){
             $param['dataDesa'] = Desa::all();
             $param['dataKecamatan'] = Kecamatan::all();
             $param['dataKabupaten'] = Kabupaten::all();
@@ -34,6 +35,12 @@ class PengajuanKreditController extends Controller
             return view('pengajuan-kredit.add-pengajuan-kredit',$param);
         }
         else{
+            $id_cabang = Auth::user()->id_cabang;
+            $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.status','pengajuan.tanggal_konfirmasi','pengajuan.id_cabang','calon_nasabah.nama','calon_nasabah.jenis_usaha','calon_nasabah.id_pengajuan')
+                                            ->join('calon_nasabah','calon_nasabah.id_pengajuan','pengajuan.id')
+                                            ->where('pengajuan.id_cabang',$id_cabang)
+                                            ->get();
+
             return view('pengajuan-kredit.list-pengajuan-kredit',$param);
         }
         //
@@ -56,24 +63,34 @@ class PengajuanKreditController extends Controller
      */
     public function store(Request $request)
     {
-        // $request->validate([
-        //     'name' => 'required',
-        //     'alamat_rumah' => 'required',
-        //     'alamat_usaha' => 'required',
-        //     'no_ktp' => 'required|unique:calon_nasabah,no_ktp|max:16',
-        //     'tempat_lahir' => 'required',
-        //     'tanggal_lahir' => 'required',
-        //     'status' => 'required',
-        //     'sektor_kredit' => 'required',
-        //     'jenis_usaha' => 'required',
-        //     'jumlah_kredit' => 'required',
-        //     'tujuan_kredit' => 'required',
-        //     'jaminan' => 'required',
-        //     'hubungan_bank' => 'required',
-        //     'hasil_verifikasi' => 'required',
-        // ],[
-        //     'required' => 'data harus terisi.'
-        // ]);
+        $checkLevelDua = $request->dataLevelDua != null ? 'required|not_in:0' : '';
+        $checkLevelTiga = $request->dataLevelTiga != null ? 'required|not_in:0' : '';
+        $checkLevelEmpat = $request->dataLevelEmpat != null ? 'required|not_in:0' : '';
+        $request->validate([
+            'name' => 'required',
+            'alamat_rumah' => 'required',
+            'alamat_usaha' => 'required',
+            'no_ktp' => 'required|unique:calon_nasabah,no_ktp|max:16',
+            'kabupaten' => 'required|not_in:0',
+            'kec' => 'required|not_in:0',
+            'desa' => 'required|not_in:0',
+            'kabupaten' => 'required|not_in:0',
+            'tempat_lahir' => 'required',
+            'tanggal_lahir' => 'required',
+            'status' => 'required|not_in:0',
+            'sektor_kredit' => 'required|not_in:0',
+            'jenis_usaha' => 'required',
+            'jumlah_kredit' => 'required',
+            'tujuan_kredit' => 'required',
+            'jaminan' => 'required',
+            'hubungan_bank' => 'required',
+            'hasil_verifikasi' => 'required',
+            'dataLevelDua.*' => $checkLevelDua,
+            'dataLevelTiga.*' => $checkLevelTiga,
+            'dataLevelEmpat.*' => $checkLevelEmpat,
+        ],[
+            'required' => 'data harus terisi.'
+        ]);
         try {
             $addPengajuan = new PengajuanModel;
             $addPengajuan->tanggal = date(now());
@@ -160,22 +177,6 @@ class PengajuanKreditController extends Controller
             return $e;
         }
     }
-    public function createPengajuanManagement()
-    {
-        $param['pageTitle'] = "Dashboard";
-        $param['dataDesa'] = Desa::all();
-        $param['dataKecamatan'] = Kecamatan::all();
-        $param['dataKabupaten'] = Kabupaten::all();
-        return view('pengajuan-kredit.add-aspek-management',$param);
-    }
-    public function pengajuanManagement(Request $request)
-    {
-        return redirect()->route('create.pengajuan.management');
-    }
-    public function pengajuanHukumJaminan(Request $request)
-    {
-
-    }
 
     /**
      * Display the specified resource.
@@ -237,6 +238,19 @@ class PengajuanKreditController extends Controller
     {
         $data_level = explode('-',$data);
         return $data_level;
+    }
+
+    // get detail jawaban dan skor pengajuan
+    public function getDetailJawaban($id)
+    {
+        $param['pageTitle'] = "Dashboard";
+        $param['jawabanpengajuan'] = JawabanPengajuanModel::select('jawaban.id','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','option.id as id_option','option.option as name_option','option.id_item','item.id as id_item','item.nama')
+                                    ->join('option','option.id','jawaban.id_jawaban')
+                                    ->join('item','item.id','option.id_item')
+                                    ->where('jawaban.id_pengajuan',$id)
+                                    ->get();
+
+        return view('pengajuan-kredit.detail-pengajuan-jawaban',$param);
     }
 }
 

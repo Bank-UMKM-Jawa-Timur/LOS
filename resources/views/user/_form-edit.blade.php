@@ -62,15 +62,35 @@
         $(document).ready(function() {
             $('#rowCabang').hide();
 
+            var role = $("#role option:selected").val()
             // Role on change
+            if (role == "Staf Analis Kredit") {
+                $('#rowCabang').show();
+            }else if (role == "Penyelia Kredit"){
+                $('#rowCabang').show();
+            }else if (role == "Pincab"){
+                $('#rowCabang').show();
+            }else{
+                $('#rowCabang').hide();
+            }
             $('#role').change(function() {
-                let role = $(this).val();
-
-                if (role != 'Administrator') {
+                var hasilRole = $(this).val();
+                console.log(hasilRole);
+                if (hasilRole == "Penyelia Kredit") {
                     $('#rowCabang').show();
-                } else if (role == 'Administrator') {
+                }else if (hasilRole == "Pincab"){
+                    $('#rowCabang').show();
+                }else if (hasilRole == "Staf Analis Kredit"){
+                    $('#rowCabang').show();
+                }else{
                     $('#rowCabang').hide();
                 }
+
+                // if (role != 'Administrator') {
+                //     $('#rowCabang').show();
+                // } else if (role == 'Administrator') {
+                //     $('#rowCabang').hide();
+                // }
             });
         });
     </script>

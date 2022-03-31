@@ -7,17 +7,31 @@
         <thead>
             <tr class="table-primary">
                 <th class="text-center">#</th>
-                <th>Nama Lengkap</th>
-                <th>Sektor Kredit</th>
+                <th>Tanggal Pengajuan</th>
+                <th>Status</th>
+                <th>Nama Calon Nasabah</th>
                 <th>Jenis Usaha</th>
-                <th>Jumlah Kredit yang diminta</th>
-                <th>Jaminan yang disediakan</th>
                 <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td colspan="7" class="text-center" style="background: rgba(71, 145,254,0.05) !important">Data Kosong</td>
+                @forelse ($data_pengajuan as $item)
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $item->tanggal }}</td>
+                    <td>{{ $item->status }}</td>
+                    <td>{{ $item->nama }}</td>
+                    <td>{{ $item->jenis_usaha }}</td>
+                    <td>
+                        <a href="{{ route('pengajuan.detailjawaban',$item->id_pengajuan) }}" class="mr-2">
+                            <button type="button" id="PopoverCustomT-1" class="btn btn-rgb-primary btn-sm"
+                                data-toggle="tooltip" title="Detail data" data-placement="top"><span
+                                    class="fa fa-edit fa-sm"></span></button>
+                        </a>
+                    </td>
+                @empty
+                    <td colspan="7" class="text-center" style="background: rgba(71, 145,254,0.05) !important">Data Kosong</td>
+                @endforelse
             </tr>
         </tbody>
     </table>
