@@ -13,6 +13,7 @@ use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class PengajuanKreditController extends Controller
@@ -63,6 +64,7 @@ class PengajuanKreditController extends Controller
      */
     public function store(Request $request)
     {
+        // return $request;
         $checkLevelDua = $request->dataLevelDua != null ? 'required|not_in:0' : '';
         $checkLevelTiga = $request->dataLevelTiga != null ? 'required|not_in:0' : '';
         $checkLevelEmpat = $request->dataLevelEmpat != null ? 'required|not_in:0' : '';
@@ -91,6 +93,7 @@ class PengajuanKreditController extends Controller
         ],[
             'required' => 'data harus terisi.'
         ]);
+        DB::beginTransaction();
         try {
             $addPengajuan = new PengajuanModel;
             $addPengajuan->tanggal = date(now());
@@ -122,33 +125,42 @@ class PengajuanKreditController extends Controller
             $addData->save();
             $id_calon_nasabah = $addData->id;
 
+
+            // $addJawabanLevel = new JawabanPengajuanModel;
+            // $addJawabanLevel->id_pengajuan = $id_pengajuan;
+            $finalArray = array();
+            $rata_rata = array();
             // data Level dua
             if ($request->dataLevelDua != null) {
                 foreach ($request->dataLevelDua as $key => $value) {
                     $data_level_dua = $this->getDataLevel($value);
-                    $skor = $data_level_dua[0];
-                    $id_jawaban = $data_level_dua[1];
-
-                    $addJawabanLevel = new JawabanPengajuanModel;
-                    $addJawabanLevel->id_pengajuan = $id_pengajuan;
-                    $addJawabanLevel->id_jawaban = $id_jawaban[$key];
-                    $addJawabanLevel->skor = $skor[$key];
-                    $addJawabanLevel->save();
+                    $skor[$key] = $data_level_dua[0];
+                    $id_jawaban[$key] = $data_level_dua[1];
+                    array_push($rata_rata,$skor[$key]);
+                    array_push($finalArray, array(
+                        'id_pengajuan'=> $id_pengajuan,
+                        'id_jawaban'=> $id_jawaban[$key],
+                        'skor'=> $skor[$key],
+                        'created_at' => date("Y-m-d H:i:s"),)
+                    );
                 }
+                // return $skor[$key];
             }
 
             // data level tiga
             if ($request->dataLevelTiga != null) {
                 foreach ($request->dataLevelTiga as $key => $value) {
                     $data_level_tiga = $this->getDataLevel($value);
-                    $skor = $data_level_tiga[0];
-                    $id_jawaban = $data_level_tiga[1];
+                    $skor[$key] = $data_level_tiga[0];
+                    $id_jawaban[$key] = $data_level_tiga[1];
+                    array_push($rata_rata,$skor[$key]);
+                    array_push($finalArray, array(
+                        'id_pengajuan'=> $id_pengajuan,
+                        'id_jawaban'=> $id_jawaban[$key],
+                        'skor'=> $skor[$key],
+                        'created_at' => date("Y-m-d H:i:s"),)
+                    );
 
-                    $addJawabanLevel = new JawabanPengajuanModel;
-                    $addJawabanLevel->id_pengajuan = $id_pengajuan;
-                    $addJawabanLevel->id_jawaban = $id_jawaban[$key];
-                    $addJawabanLevel->skor = $skor[$key];
-                    $addJawabanLevel->save();
                 }
             }
 
@@ -156,25 +168,45 @@ class PengajuanKreditController extends Controller
             if ($request->dataLevelEmpat != null) {
                 foreach ($request->dataLevelEmpat as $key => $value) {
                     $data_level_empat = $this->getDataLevel($value);
-                    $skor = $data_level_empat[0];
-                    $id_jawaban = $data_level_empat[1];
+                    $skor[$key] = $data_level_empat[0];
+                    $id_jawaban[$key] = $data_level_empat[1];
+                    array_push($rata_rata,$skor[$key]);
+                    array_push($finalArray, array(
+                        'id_pengajuan'=> $id_pengajuan,
+                        'id_jawaban'=> $id_jawaban[$key],
+                        'skor'=> $skor[$key],
+                        'created_at' => date("Y-m-d H:i:s"),)
+                    );
 
-                    $addJawabanLevel = new JawabanPengajuanModel;
-                    $addJawabanLevel->id_pengajuan = $id_pengajuan;
-                    $addJawabanLevel->id_jawaban = $id_jawaban[$key];
-                    $addJawabanLevel->skor = $skor[$key];
-                    $addJawabanLevel->save();
                 }
             }
-            // data level empat
+            $average = array_sum($rata_rata)/count($rata_rata);
+            $result = round($average,2);
+            $status = "";
+            $updateData = PengajuanModel::find($id_pengajuan);
+            if ($result > 0 && $result <= 1) {
+                $status = "merah";
+            }elseif($result > 2 && $result <= 3 ){
+                $updateData->status = "kuning";
+                $status = "kuning";
+            }elseif($result >= 4 ) {
+                $status = "hijau";
+            }
+            $updateData->status = $status;
+            $updateData->average = $result;
+            $updateData->update();
+            JawabanPengajuanModel::insert($finalArray);
             // Session::put('id',$addData->id);
+            DB::commit();
             return redirect()->back()->withStatus('Data berhasil disimpan.');
         } catch (Exception $e) {
             return redirect()->back()->withError('Terjadi kesalahan.');
             return $e;
+            DB::rollBack();
         }catch(QueryException $e){
             return redirect()->back()->withError('Terjadi kesalahan');
             return $e;
+            DB::rollBack();
         }
     }
 
