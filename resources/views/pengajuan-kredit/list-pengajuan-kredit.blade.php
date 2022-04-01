@@ -25,9 +25,9 @@
                     <td>
                         <a href="{{ route('pengajuan.detailjawaban',$item->id_pengajuan) }}" class="mr-2">
                             <button type="button" id="PopoverCustomT-1" class="btn btn-rgb-primary btn-sm"
-                                data-toggle="tooltip" title="Detail data" data-placement="top"><span
-                                    class="fa fa-edit fa-sm"></span></button>
-                        </a>
+                                data-toggle="tooltip" title="detail data" data-placement="top"><span
+                                    class="fa fa-solid fa-info fa-sm"></span></button>
+                        </a></i>
                     </td>
                 @empty
                     <td colspan="7" class="text-center" style="background: rgba(71, 145,254,0.05) !important">Data Kosong</td>
