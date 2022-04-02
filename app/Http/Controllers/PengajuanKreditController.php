@@ -188,10 +188,10 @@ class PengajuanKreditController extends Controller
             $updateData = PengajuanModel::find($id_pengajuan);
             if ($result > 0 && $result <= 1) {
                 $status = "merah";
-            }elseif($result > 2 && $result <= 3 ){
-                $updateData->status = "kuning";
+            }elseif($result >= 2 && $result <= 3 ){
+                // $updateData->status = "kuning";
                 $status = "kuning";
-            }elseif($result >= 4 ) {
+            }elseif($result > 3) {
                 $status = "hijau";
             }
             JawabanPengajuanModel::insert($finalArray);
@@ -202,13 +202,11 @@ class PengajuanKreditController extends Controller
             DB::commit();
             return redirect()->back()->withStatus('Data berhasil disimpan.');
         } catch (Exception $e) {
-            return $e;
-            return redirect()->back()->withError('Terjadi kesalahan.');
             DB::rollBack();
+            return redirect()->back()->withError('Terjadi kesalahan.' . $e->getMessage());
         }catch(QueryException $e){
-            return $e;
-            return redirect()->back()->withError('Terjadi kesalahan');
             DB::rollBack();
+            return redirect()->back()->withError('Terjadi kesalahan'. $e->getMessage());
         }
     }
 
