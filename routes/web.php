@@ -32,6 +32,7 @@ Route::get('/', function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index']);
 
+    Route::post('pengajuan-kredit/jawaban-pengajuan', [PengajuanKreditController::class,"getInsertKomentar"])->name('pengajuan.insertkomentar');
     Route::get('pengajuan-kredit/jawaban-pengajuan/{id}', [PengajuanKreditController::class,"getDetailJawaban"])->name('pengajuan.detailjawaban');
     Route::get('getkecamatan', [PengajuanKreditController::class,"getkecamatan"]);
     Route::get('getdesa', [PengajuanKreditController::class,"getdesa"]);

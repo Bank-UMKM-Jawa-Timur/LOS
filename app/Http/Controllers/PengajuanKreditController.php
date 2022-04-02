@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\CalonNasabah;
 use App\Models\Desa;
+use App\Models\DetailKomentarModel;
 use App\Models\ItemModel;
 use App\Models\JawabanPengajuanModel;
 use App\Models\Kabupaten;
 use App\Models\Kecamatan;
+use App\Models\KomentarModel;
 use App\Models\PengajuanModel;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -37,7 +39,7 @@ class PengajuanKreditController extends Controller
         }
         else{
             $id_cabang = Auth::user()->id_cabang;
-            $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.status','pengajuan.tanggal_konfirmasi','pengajuan.id_cabang','calon_nasabah.nama','calon_nasabah.jenis_usaha','calon_nasabah.id_pengajuan')
+            $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.status','pengajuan.tanggal_konfirmasi','pengajuan.id_cabang','pengajuan.average','calon_nasabah.nama','calon_nasabah.jenis_usaha','calon_nasabah.id_pengajuan')
                                             ->join('calon_nasabah','calon_nasabah.id_pengajuan','pengajuan.id')
                                             ->where('pengajuan.id_cabang',$id_cabang)
                                             ->get();
@@ -241,7 +243,7 @@ class PengajuanKreditController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+
     }
 
     /**
@@ -276,13 +278,41 @@ class PengajuanKreditController extends Controller
     public function getDetailJawaban($id)
     {
         $param['pageTitle'] = "Dashboard";
-        $param['jawabanpengajuan'] = JawabanPengajuanModel::select('jawaban.id','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','option.id as id_option','option.option as name_option','option.id_item','item.id as id_item','item.nama')
+        $param['jawabanpengajuan'] = JawabanPengajuanModel::select('jawaban.id','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','option.id as id_option','option.option as name_option','option.id_item','item.id as id_item','item.nama','item.level','item.id_parent')
                                     ->join('option','option.id','jawaban.id_jawaban')
                                     ->join('item','item.id','option.id_item')
                                     ->where('jawaban.id_pengajuan',$id)
                                     ->get();
 
         return view('pengajuan-kredit.detail-pengajuan-jawaban',$param);
+    }
+    // insert komentar
+    public function getInsertKomentar(Request $request)
+    {
+       $request->validate([
+           'komentar.*' => 'required',
+       ]);
+        try {
+            $addKomentar = new KomentarModel;
+            $addKomentar->id_pengajuan = $request->id_pengajuan;
+            $addKomentar->save();
+            $id_komentar = $addKomentar->id;
+            foreach ($request->id_item as $key => $value) {
+                $addDetailKomentar = new DetailKomentarModel;
+                $addDetailKomentar->id_komentar = $id_komentar;
+                $addDetailKomentar->id_user = Auth::user()->id;
+                $addDetailKomentar->id_item = $_POST['id_item'][$key];
+                $addDetailKomentar->komentar = $_POST['komentar'][$key];
+                $addDetailKomentar->save();
+            }
+            return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil menambahkan data');
+        }catch (Exception $e) {
+            return $e;
+            return redirect()->back()->withError('Terjadi kesalahan.');
+            return $e;
+        }catch(QueryException $e){
+            return redirect()->back()->withError('Terjadi kesalahan');
+        }
     }
 }
 

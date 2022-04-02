@@ -9,17 +9,39 @@
                 <th class="text-center">#</th>
                 <th>Tanggal Pengajuan</th>
                 <th>Status</th>
+                <th>Rata-rata</th>
                 <th>Nama Calon Nasabah</th>
                 <th>Jenis Usaha</th>
                 <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                @forelse ($data_pengajuan as $item)
+            @forelse ($data_pengajuan as $item)
+                <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $item->tanggal }}</td>
-                    <td>{{ $item->status }}</td>
+                    <td>
+                        @if ($item->status == 'hijau')
+                            <p class="text-success">
+                                {{ $item->status }}
+                            </p>
+                        @elseif ($item->status == 'kuning')
+                            <p class="text-warning">
+                                {{ $item->status }}
+                            </p>
+                        @elseif ($item->status == 'merah')
+                            <p class="text-danger">
+                                {{ $item->status }}
+                            </p>
+                        @else
+                            <p class="text-secondary">
+                                {{ $item->status }}
+
+                            </p>
+                        @endif
+
+                    </td>
+                    <td>{{ $item->average != null ? $item->average : '-'  }}</td>
                     <td>{{ $item->nama }}</td>
                     <td>{{ $item->jenis_usaha }}</td>
                     <td>
@@ -31,8 +53,8 @@
                     </td>
                 @empty
                     <td colspan="7" class="text-center" style="background: rgba(71, 145,254,0.05) !important">Data Kosong</td>
+                </tr>
                 @endforelse
-            </tr>
         </tbody>
     </table>
     <div class="pull-right">
