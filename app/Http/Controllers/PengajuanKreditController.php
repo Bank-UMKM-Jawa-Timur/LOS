@@ -194,20 +194,20 @@ class PengajuanKreditController extends Controller
             }elseif($result >= 4 ) {
                 $status = "hijau";
             }
+            JawabanPengajuanModel::insert($finalArray);
             $updateData->status = $status;
             $updateData->average = $result;
             $updateData->update();
-            JawabanPengajuanModel::insert($finalArray);
             // Session::put('id',$addData->id);
             DB::commit();
             return redirect()->back()->withStatus('Data berhasil disimpan.');
         } catch (Exception $e) {
-            return redirect()->back()->withError('Terjadi kesalahan.');
             return $e;
+            return redirect()->back()->withError('Terjadi kesalahan.');
             DB::rollBack();
         }catch(QueryException $e){
-            return redirect()->back()->withError('Terjadi kesalahan');
             return $e;
+            return redirect()->back()->withError('Terjadi kesalahan');
             DB::rollBack();
         }
     }
