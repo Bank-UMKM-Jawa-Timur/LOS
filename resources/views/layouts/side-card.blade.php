@@ -9,15 +9,8 @@
                     @php
                         $key += 1;
                     @endphp
-                <li data-index='{{ $key }}'><a href="#"><span><i class="fa fa-ban"></i></span>{{ $value->nama }}</a></li>
-
+                <li data-index='{{ $key }}' class="{{ request()->routeIs('pengajuan-kredit.edit') == 'pengajuan-kredit' ? 'active' : '' }}"><a href="#"><span><i class="fa fa-ban"></i></span>{{ $value->nama }}</a></li>
                 @endforeach
-                {{-- <li data-index='2'><a href="#"><span><i class="fa fa-ban"></i></span> Hukum/Jaminan</a></li>
-                <li data-index='3'><a href="#"><span><i class="fa fa-ban"></i></span> Teknis & Produksi</a></li>
-                <li data-index='4'><a href="#"><span><i class="fa fa-ban"></i></span> Aspek Pemasaran</a></li>
-                <li data-index='5'><a href="#"><span><i class="fa fa-ban"></i></span> Aspek Keuangan</a></li> --}}
-                {{-- <li><a href="#"><span><i class="fa fa-ban"></i></span> Input Step 5</a></li> --}}
-
             </ul>
         </div>
     </div>

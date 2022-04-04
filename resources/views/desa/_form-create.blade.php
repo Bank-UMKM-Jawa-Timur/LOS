@@ -50,27 +50,30 @@
 
 @push('custom-script')
     <script>
-        const urlGetKecamatan = "{{ url('get-kecamatan-by-kabupaten-id') }}";
-        const urlGetDesa = "{{ url('get-desa-by-kecamatan-id') }}";
+        const urlGetKecamatan = "{{ url('getkecamatan') }}";
+        const urlGetDesa = "{{ url('getkecamatan') }}";
         $(document).ready(function() {
             // level on change
             $('#id_kabupaten').change(function() {
+                console.log($(this).val());
                 getKecamatanByKabupaten($(this).val())
             });
 
             function getKecamatanByKabupaten(idKabupaten) {
                 $.ajax({
                     type: "get",
-                    url: `${urlGetKecamatan}/${idKabupaten}`,
+                    // url: `${urlGetKecamatan}/${idKabupaten}`,
+                    url: "/getkecamatan?kabID="+idKabupaten,
                     dataType: "json",
                     success: function(response) {
                         $('#id_kecamatan option').remove();
                         $('#id_kecamatan').append(`<option value="">Pilih Kecamatan</option>`);
-                        $.each(response, function(index, value) {
-
-                            let addOption =
-                                `<option value="${value.id}">${value.kecamatan}</option>`;
-                            $('#id_kecamatan').append(addOption);
+                        // $.each(response, function(index, value) {
+                        $.each(response, function(nama,kode) {
+                            $("#id_kecamatan").append('<option value="'+kode+'">'+nama+'</option>');
+                            // let addOption =
+                            //     `<option value="${value.id}">${value.kecamatan}</option>`;
+                            // $('#id_kecamatan').append(addOption);
                         });
                     }
                 });

@@ -16,8 +16,13 @@ class CreatePengajuanTable extends Migration
         Schema::create('pengajuan', function (Blueprint $table) {
             $table->id();
             $table->date('tanggal');
-            $table->enum('status',['menunggu konfirmasi','hijau','kuning','merah']);
-            $table->date('tanggal_konfirmasi')->nullable();
+            $table->enum('posisi',['Proses Input Data','Review Penyelia','Pincab','Selesai']);
+            $table->date('tanggal_review_penyelia')->nullable()->nullable();
+            $table->date('tanggal_review_pincab')->nullable();
+            $table->enum('status_by_sistem',['hijau','kuning','merah'])->nullable();
+            $table->enum('status',['hijau','kuning','merah'])->nullable();
+            $table->decimal('average_by_sistem',4,2)->nullable();
+            $table->decimal('average_by_penyelia',4,2)->nullable();
             $table->integer('id_cabang')->nullable();
             $table->timestamps();
         });
