@@ -31,7 +31,16 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index']);
-
+    // check Pincab
+    Route::post('pengajuan-kredit/pincabStatusDetailPost',[PengajuanKreditController::class,"checkPincabStatusDetailPost"])->name('pengajuan.check.pincab.status.detail.post');
+    Route::get('pengajuan-kredit/pincabStatusDetail/{id}',[PengajuanKreditController::class,"checkPincabStatusDetail"])->name('pengajuan.check.pincab.status.detail');
+    Route::get('pengajuan-kredit/pincabStatusChange/{id}',[PengajuanKreditController::class,"checkPincabStatusChange"])->name('pengajuan.change.pincab.status');
+    Route::get('pengajuan-kredit/pincabStatus',[PengajuanKreditController::class,"checkPincabStatus"])->name('pengajuan.check.pincab.status');
+    Route::get('pengajuan-kredit/pincab/{id}',[PengajuanKreditController::class,"checkPincab"])->name('pengajuan.check.pincab');
+    // check Staf analisa
+    Route::get('pengajuan-kredit/staf-analisa/{id}',[PengajuanKreditController::class,"checkStafAnalisa"])->name('pengajuan.check.stafanalisa');
+    // check penyelia
+    Route::get('pengajuan-kredit/penyelia-kredit/{id}',[PengajuanKreditController::class,"checkPenyeliaKredit"])->name('pengajuan.check.penyeliakredit');
     Route::post('pengajuan-kredit/jawaban-pengajuan', [PengajuanKreditController::class,"getInsertKomentar"])->name('pengajuan.insertkomentar');
     Route::get('pengajuan-kredit/jawaban-pengajuan/{id}', [PengajuanKreditController::class,"getDetailJawaban"])->name('pengajuan.detailjawaban');
     Route::get('getkecamatan', [PengajuanKreditController::class,"getkecamatan"]);

@@ -62,18 +62,21 @@
                         @if ($item->posisi == 'Review Penyelia')
                         <div class="d-flex">
 
-                            <a href="" class="btn btn-primary">Tindak lanjut Review Pincab</a>
+                            <a href="{{ route('pengajuan.detailjawaban',$item->id_pengajuan) }}" class="btn btn-primary">Tindak lanjut Review Penyelia</a>
                         </div>
                         @elseif ($item->posisi == 'Pincab')
-                            <a href="" class="btn btn-info">Tindak lanjut Pincab</a>
+                            <a href="{{ route('pengajuan.check.pincab.status') }}" class="btn btn-info">Tindak lanjut Pincab</a>
                         @elseif ($item->posisi == 'Selesai')
                             <a href="" class="btn btn-success">Selesai </a>
                         @else
-                            <a href="{{ route('pengajuan-kredit.edit',$item->id_pengajuan) }}" class="mr-2">
-                                <button type="button" id="PopoverCustomT-1" class="btn btn-rgb-primary"
-                                    data-toggle="tooltip" title="edit data" data-placement="top"><span
-                                        class="fa fa-edit fa-sm"></span></button>
-                            </a></i>
+                            <div class="d-flex">
+                                <a href="{{ route('pengajuan-kredit.edit',$item->id_pengajuan) }}" class="mr-2">
+                                    <button type="button" id="PopoverCustomT-1" class="btn btn-rgb-primary"
+                                        data-toggle="tooltip" title="edit data" data-placement="top"><span
+                                            class="fa fa-edit fa-sm"></span></button>
+                                </a></i>
+                                <a href="{{ route('pengajuan.check.penyeliakredit',$item->id_pengajuan) }}" class="btn btn-primary">Tindak lanjut Penyelia</a>
+                            </div>
 
                         @endif
                     </td>

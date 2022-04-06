@@ -265,8 +265,6 @@ class PengajuanKreditController extends Controller
 
         $param['pageTitle'] = "Dashboard";
 
-        // $param['dataDesa'] = Desa::all();
-
         $param['dataAspek'] = ItemModel::select('*')->where('level',1)->get();
 
         $data['dataPertanyaanSatu'] = ItemModel::select('id','nama','level','id_parent')->where('level',2)->where('id_parent',3)->get();
@@ -485,6 +483,7 @@ class PengajuanKreditController extends Controller
     // get detail jawaban dan skor pengajuan
     public function getDetailJawaban($id)
     {
+       if (auth()->user()->role == 'Penyelia Kredit') {
         $param['pageTitle'] = "Dashboard";
         $param['jawabanpengajuan'] = JawabanPengajuanModel::select('jawaban.id','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','option.id as id_option','option.option as name_option','option.id_item','item.id as id_item','item.nama','item.level','item.id_parent')
                                     ->join('option','option.id','jawaban.id_jawaban')
@@ -493,6 +492,9 @@ class PengajuanKreditController extends Controller
                                     ->get();
 
         return view('pengajuan-kredit.detail-pengajuan-jawaban',$param);
+       }else{
+        return redirect()->back()->withError('Tidak memiliki hak akses.');
+       }
     }
     // insert komentar
     public function getInsertKomentar(Request $request)
@@ -525,7 +527,6 @@ class PengajuanKreditController extends Controller
             for ($i=0; $i < count($finalArray); $i++) {
                JawabanPengajuanModel::where('id_pengajuan',$request->id_pengajuan)->update($finalArray[$i]);
             }
-            $updateData->posisi = 'Pincab';
             $updateData->tanggal_review_penyelia = date(now());
             $updateData->status = $status;
             $updateData->average_by_penyelia = $result;
@@ -545,11 +546,123 @@ class PengajuanKreditController extends Controller
             }
             return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil menambahkan data');
         }catch (Exception $e) {
-            return $e;
             return redirect()->back()->withError('Terjadi kesalahan.');
-            return $e;
         }catch(QueryException $e){
             return redirect()->back()->withError('Terjadi kesalahan');
+        }
+    }
+
+    // check status penyelia data pengajuan
+    public function checkPenyeliaKredit($id)
+    {
+        try {
+            $statusPenyelia = PengajuanModel::find($id);
+            $statusPenyelia->posisi = "Review Penyelia";
+            $statusPenyelia->update();
+            return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+        }catch (Exception $e) {
+            return redirect()->back()->withError('Terjadi kesalahan.');
+        }catch(QueryException $e){
+            return redirect()->back()->withError('Terjadi kesalahan');
+        }
+
+    }
+
+    // check status pincab
+    public function checkPincab($id)
+    {
+        if (auth()->user()->role == 'Penyelia Kredit') {
+            $dataPenyelia = PengajuanModel::find($id);
+            $tanggal_review_penyelia = $dataPenyelia->tanggal_review_penyelia;
+            if ($tanggal_review_penyelia != null) {
+                $dataPenyelia->posisi = "Pincab";
+                $dataPenyelia->update();
+                return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+            }else{
+               return redirect()->back()->withError('Belum di review Penyelia.');
+               return "Belum di review";
+            }
+        }else{
+            return redirect()->back()->withError('Tidak memiliki hak akses.');
+        }
+    }
+    // check status pincab
+    public function checkPincabStatus()
+    {
+       if (auth()->user()->role == "Pincab") {
+            $param['pageTitle'] = "Dashboard";
+            $id_cabang = Auth::user()->id_cabang;
+            $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.status','pengajuan.status_by_sistem','pengajuan.id_cabang','pengajuan.average_by_sistem','pengajuan.average_by_penyelia',
+                                                    'calon_nasabah.nama','calon_nasabah.jenis_usaha','calon_nasabah.id_pengajuan')
+                                                    ->join('calon_nasabah','calon_nasabah.id_pengajuan','pengajuan.id')
+                                                    ->where('pengajuan.id_cabang',$id_cabang)
+                                                    ->get();
+            return view('pengajuan-kredit.komentar-pincab-pengajuan',$param);
+       }else{
+            return redirect()->back()->withError('Tidak memiliki hak akses.');
+       }
+
+    }
+    public function checkPincabStatusDetail($id)
+    {
+        $param['pageTitle'] = "Dashboard";
+        $param['jawabanpengajuan'] = JawabanPengajuanModel::select('jawaban.id','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','option.id as id_option','option.option as name_option','option.id_item','item.id as id_item','item.nama','item.level','item.id_parent')
+                                    ->join('option','option.id','jawaban.id_jawaban')
+                                    ->join('item','item.id','option.id_item')
+                                    ->where('jawaban.id_pengajuan',$id)
+                                    ->get();
+
+        return view('pengajuan-kredit.detail-komentar-pengajuan',$param);
+
+    }
+    public function checkPincabStatusDetailPost(Request $request)
+    {
+        try {
+            $updateData = PengajuanModel::find($request->id_pengajuan);
+            $updateData->tanggal_review_pincab = date(now());
+            $updateData->update();
+
+            $addKomentar = new KomentarModel;
+            $addKomentar->id_pengajuan = $request->id_pengajuan;
+            $addKomentar->save();
+            $id_komentar = $addKomentar->id;
+            foreach ($request->id_item as $key => $value) {
+                $addDetailKomentar = new DetailKomentarModel;
+                $addDetailKomentar->id_komentar = $id_komentar;
+                $addDetailKomentar->id_user = Auth::user()->id;
+                $addDetailKomentar->id_item = $_POST['id_item'][$key];
+                $addDetailKomentar->komentar = $_POST['komentar'][$key];
+                $addDetailKomentar->save();
+            }
+            return redirect()->route('pengajuan.check.pincab.status')->withStatus('Berhasil menambahkan komentar');
+        }catch (Exception $e) {
+            return redirect()->back()->withError('Terjadi kesalahan.');
+        }catch(QueryException $e){
+            return redirect()->back()->withError('Terjadi kesalahan');
+        }
+    }
+    public function checkPincabStatusChange($id)
+    {
+        $statusPincab = PengajuanModel::find($id);
+        $tanggal_review_pincab = $statusPincab->tanggal_review_pincab;
+        if ($tanggal_review_pincab != null) {
+            $statusPincab->posisi = "Selesai";
+            $statusPincab->update();
+            return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+        }else{
+            return redirect()->back()->withError('Belum di review Pincab.');
+        }
+    }
+    // check status staf analisa
+    public function checkStafAnalisa($id)
+    {
+        if (auth()->user()->role == 'Staf Analis Kredit ') {
+            $statusPenyelia = PengajuanModel::find($id);
+            $statusPenyelia->posisi = "Review Penyelia";
+            $statusPenyelia->update();
+            return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+        }else{
+            return redirect()->back()->withError('Tidak memiliki hak akses.');
         }
     }
 }

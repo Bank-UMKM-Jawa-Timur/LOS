@@ -12,7 +12,8 @@
                 <th>Posisi</th>
                 <th>Skor Sistem</th>
                 <th>Skor Penyelia</th>
-                <th>Status</th>
+                <th>Status Sistem</th>
+                <th>Status Penyelia</th>
                 <th>Aksi</th>
             </tr>
         </thead>
@@ -48,6 +49,24 @@
 
                     </td>
                     <td>
+                        @if ($item->status == 'hijau')
+                            <p class="text-success">
+                                {{ $item->status }}
+                            </p>
+                        @elseif ($item->status == 'kuning')
+                            <p class="text-warning">
+                                {{ $item->status }}
+                            </p>
+                        @elseif ($item->status == 'merah')
+                            <p class="text-danger">
+                                {{ $item->status }}
+                            </p>
+                        @else
+                            -
+                        @endif
+
+                    </td>
+                    <td>
                         @if ($item->posisi == 'Review Penyelia')
                             <div class="d-flex">
                                 <a href="{{ route('pengajuan.detailjawaban',$item->id_pengajuan) }}" class="mr-2">
@@ -57,8 +76,18 @@
                                 </a></i>
                             </div>
                         @elseif ($item->posisi == 'Pincab')
-                            <a href="{{ route('pengajuan.detailjawaban',$item->id_pengajuan) }}" class="btn btn-primary">Tindak lanjut Pincab</a>
-                            {{-- <a href="" class="btn btn-info">Tindak lanjut Pincab</a> --}}
+                            <div class="d-flex">
+                                <a href="{{ route('pengajuan.check.pincab.status.detail',$item->id_pengajuan) }}" class="mr-2">
+                                    <button type="button" id="PopoverCustomT-1" class="btn btn-rgb-primary"
+                                        data-toggle="tooltip" title="detail data" data-placement="top"><span
+                                            class="fa fa-solid fa-info fa-sm"></span></button>
+                                </a></i>
+                                @if ($item->posisi == "Selesai")
+                                    <a href="{{ route('pengajuan.change.pincab.status',$item->id_pengajuan) }}" class="btn btn-primary">Selsai</a>
+                                @else
+                                    <a href="{{ route('pengajuan.change.pincab.status',$item->id_pengajuan) }}" class="btn btn-primary">Tindak lanjut Pincab</a>
+                                @endif
+                            </div>
                         @elseif ($item->posisi == 'Selesai')
                             <a href="" class="btn btn-success">Selesai </a>
                         @else
