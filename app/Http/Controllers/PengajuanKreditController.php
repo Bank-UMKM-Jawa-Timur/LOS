@@ -210,6 +210,8 @@ class PengajuanKreditController extends Controller
                 $status = "kuning";
             }elseif($result > 3) {
                 $status = "hijau";
+            }else{
+                $status = "merah";
             }
             JawabanPengajuanModel::insert($finalArray);
             $updateData->posisi = 'Proses Input Data';
@@ -249,6 +251,7 @@ class PengajuanKreditController extends Controller
      */
     public function edit($id)
     {
+
         $param['pageTitle'] = "Dashboard";
 
         // $param['dataDesa'] = Desa::all();
@@ -288,6 +291,155 @@ class PengajuanKreditController extends Controller
      */
     public function update(Request $request, $id)
     {
+
+        $request->validate([
+            'name' => 'required',
+            'alamat_rumah' => 'required',
+            'alamat_usaha' => 'required',
+            'no_ktp' => 'required|max:16',
+            'kabupaten' => 'required',
+            'kec' => 'required',
+            'desa' => 'required',
+            'kabupaten' => 'required',
+            'tempat_lahir' => 'required',
+            'tanggal_lahir' => 'required',
+            'status' => 'required',
+            'sektor_kredit' => 'required',
+            'jenis_usaha' => 'required',
+            'jumlah_kredit' => 'required',
+            'tujuan_kredit' => 'required',
+            'jaminan' => 'required',
+            'hubungan_bank' => 'required',
+            'hasil_verifikasi' => 'required',
+            // 'dataLevelDua.*' => $checkLevelDua,
+            // 'dataLevelTiga.*' => $checkLevelTiga,
+            // 'dataLevelEmpat.*' => $checkLevelEmpat,
+        ],[
+            'required' => 'data harus terisi.'
+        ]);
+        DB::beginTransaction();
+        try {
+            $updatePengajuan = PengajuanModel::find($id);
+            $updatePengajuan->tanggal = date(now());
+            $updatePengajuan->id_cabang = auth()->user()->id_cabang;
+            $updatePengajuan->save();
+            $id_pengajuan = $updatePengajuan->id;
+
+            $updateData = CalonNasabah::find($request->id_nasabah);
+            $updateData->nama = $request->name;
+            $updateData->alamat_rumah = $request->alamat_rumah;
+            $updateData->alamat_usaha = $request->alamat_usaha;
+            $updateData->no_ktp = $request->no_ktp;
+            $updateData->tempat_lahir = $request->tempat_lahir;
+            $updateData->tanggal_lahir = $request->tanggal_lahir;
+            $updateData->status = $request->status;
+            $updateData->sektor_kredit = $request->sektor_kredit;
+            $updateData->jenis_usaha = $request->jenis_usaha;
+            $updateData->jumlah_kredit = $request->jumlah_kredit;
+            $updateData->tujuan_kredit = $request->tujuan_kredit;
+            $updateData->jaminan_kredit = $request->jaminan;
+            $updateData->hubungan_bank = $request->hubungan_bank;
+            $updateData->verifikasi_umum = $request->hasil_verifikasi;
+            $updateData->id_user = auth()->user()->id;
+            $updateData->id_pengajuan = $id_pengajuan;
+            $updateData->id_desa = $request->desa;
+            $updateData->id_kecamatan = $request->kec;
+            $updateData->id_kabupaten = $request->kabupaten;
+            $updateData->save();
+            $id_calon_nasabah = $updateData->id;
+
+
+            // $addJawabanLevel = new JawabanPengajuanModel;
+            // $addJawabanLevel->id_pengajuan = $id_pengajuan;
+            $finalArray = array();
+            $rata_rata = array();
+            // data Level dua
+            if ($request->dataLevelDua != null) {
+                $data = $request->dataLevelDua;
+                $result_dua = array_values(array_filter($data));
+                foreach ($result_dua as $key => $value) {
+                    $data_level_dua = $this->getDataLevel($value);
+                    $skor[$key] = $data_level_dua[0];
+                    $id_jawaban[$key] = $data_level_dua[1];
+                    array_push($rata_rata,$skor[$key]);
+                    array_push($finalArray, array(
+                        'id_pengajuan'=> $id_pengajuan,
+                        'id_jawaban'=> $id_jawaban[$key],
+                        'skor'=> $skor[$key],
+                        'updated_at' => date("Y-m-d H:i:s"),)
+                    );
+                }
+            }
+
+            // data level tiga
+            if ($request->dataLevelTiga != null) {
+                $data = $request->dataLevelTiga;
+                $result_tiga = array_values(array_filter($data));
+                foreach ($result_tiga as $key => $value) {
+                    $data_level_tiga = $this->getDataLevel($value);
+                    $skor[$key] = $data_level_tiga[0];
+                    $id_jawaban[$key] = $data_level_tiga[1];
+                    array_push($rata_rata,$skor[$key]);
+                    array_push($finalArray, array(
+                        'id_pengajuan'=> $id_pengajuan,
+                        'id_jawaban'=> $id_jawaban[$key],
+                        'skor'=> $skor[$key],
+                        'updated_at' => date("Y-m-d H:i:s"),)
+                    );
+
+                }
+            }
+
+            // data level empat
+            if ($request->dataLevelEmpat != null) {
+                $data = $request->dataLevelEmpat;
+                $result_empat = array_values(array_filter($data));
+                foreach ($result_empat as $key => $value) {
+                    $data_level_empat = $this->getDataLevel($value);
+                    $skor[$key] = $data_level_empat[0];
+                    $id_jawaban[$key] = $data_level_empat[1];
+                    array_push($rata_rata,$skor[$key]);
+                    array_push($finalArray, array(
+                        'id_pengajuan'=> $id_pengajuan,
+                        'id_jawaban'=> $id_jawaban[$key],
+                        'skor'=> $skor[$key],
+                        'updated_at' => date("Y-m-d H:i:s"),)
+                    );
+
+                }
+            }
+            $average = array_sum($rata_rata)/count($rata_rata);
+            $result = round($average,2);
+            $status = "";
+            $updateData = PengajuanModel::find($id_pengajuan);
+            if ($result > 0 && $result <= 1) {
+                $status = "merah";
+            }elseif($result >= 2 && $result <= 3 ){
+                // $updateData->status = "kuning";
+                $status = "kuning";
+            }elseif($result > 3) {
+                $status = "hijau";
+            }else{
+                $status = "merah";
+            }
+            for ($i=0; $i < count($finalArray); $i++) {
+                $data = JawabanPengajuanModel::whereIn('id',$request->id)->update($finalArray[$i]);
+            }
+
+            $updateData->posisi = 'Proses Input Data';
+            $updateData->status = $status;
+            $updateData->average_by_sistem = $result;
+            $updateData->update();
+            // Session::put('id',$addData->id);
+            DB::commit();
+            return redirect()->back()->withStatus('Data mengganti data.');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withError('Terjadi kesalahan.' . $e->getMessage());
+        }catch(QueryException $e){
+            DB::rollBack();
+            return redirect()->back()->withError('Terjadi kesalahan'. $e->getMessage());
+        }
 
     }
 

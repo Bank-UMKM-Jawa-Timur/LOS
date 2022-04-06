@@ -16,7 +16,7 @@ class CreateJawabanTable extends Migration
         Schema::create('jawaban', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_pengajuan')->constrained('pengajuan');
-            $table->foreignId('id_jawaban')->constrained('option');
+            $table->foreignId('id_jawaban')->constrained('option')->cascadeOnUpdate()->cascadeOnDelete();
             $table->integer('skor');
             $table->timestamps();
         });

@@ -24,9 +24,11 @@
         /* border-bottom: 1px solid #dc3545; */
     }
 </style>
-<form id="pengajuan_kredit" action="{{ route('pengajuan-kredit.store') }}" method="post">
+<form id="pengajuan_kredit" action="{{ route('pengajuan-kredit.update',$dataUmum->id) }}" method="post">
+    @method('PUT')
     @csrf
     <div class="form-wizard active" data-index='0' data-done='true'>
+        <input type="hidden" name="id_nasabah" value="{{ $dataUmum->id_calon_nasabah }}">
         <div class="row">
             <div class="form-group col-md-12">
                 <label for="">Nama Lengkap</label>
@@ -211,6 +213,12 @@
         </div>
     </div>
     <input type="text" id="jumlahData" name="jumlahData" hidden value="{{ count($dataAspek) }}">
+    @php
+        $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id','id_jawaban')->where('id_pengajuan',$dataUmum->id)->get();
+    @endphp
+    @foreach ($dataDetailJawaban as $itemId)
+        <input type="text" name="id[]" value="{{ $itemId->id }}">
+    @endforeach
     @foreach ($dataAspek as $key => $value)
         @php
             $key += 1;
@@ -223,13 +231,16 @@
         {{-- level level 2 --}}
         <div class="form-wizard" data-index='{{ $key }}' data-done='true'>
             <div class="row">
+
                 @foreach ($dataLevelDua as $item)
                     @php
                         $dataJawaban = \App\Models\OptionModel::where('option',"!=","-")->where('id_item',$item->id)->get();
                         $dataOption = \App\Models\OptionModel::where('option',"=","-")->where('id_item',$item->id)->get();
+
                         // check level 3
                         $dataLevelTiga = \App\Models\ItemModel::select('id','nama','level','id_parent')->where('level',3)->where('id_parent',$item->id)->get();
                     @endphp
+
                     @foreach ($dataOption as $itemOption)
                         @if ($itemOption->option == "-")
                             <div class="form-group col-md-12">
@@ -242,21 +253,18 @@
                         <div class="form-group col-md-6">
                             <label for="">{{  $item->nama }}</label>
                             <select name="dataLevelDua[]" id="dataLevelDua" class="form-control">
-                                    <option value=""> --Pilih Data -- </option>
+                                <option value=""> -- Pilih Data -- </option>
                                 @foreach ($dataJawaban as $key => $itemJawaban)
                                     @php
-                                        $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id_jawaban')->where('id_pengajuan',$dataUmum->id)->get();
+                                        $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id','id_jawaban')->where('id_pengajuan',$dataUmum->id)->get();
+                                        $count = count($dataDetailJawaban);
+                                        for ($i=0; $i < $count; $i++) {
+                                            $data[] = $dataDetailJawaban[$i]['id_jawaban'];
+                                        }
                                     @endphp
-                                    @foreach ($dataDetailJawaban as $key => $itemDetail)
-                                        @if ($itemDetail->id_jawaban == $itemJawaban->id)
-                                            <option value="{{ $itemJawaban->skor."-".$itemJawaban->id }}" selected >{{ $itemJawaban->option }}</option>
-                                        @else
-                                        @endif
-                                    @endforeach
-                                        <option value="{{ $itemJawaban->skor."-".$itemJawaban->id }}" >{{ $itemJawaban->option }}</option>
+                                        <option value="{{ $itemJawaban->skor."-".$itemJawaban->id }}" {{ in_array($itemJawaban->id,$data) ? 'selected' : '' }} >{{ $itemJawaban->option }}</option>
                                 @endforeach
-                                </select>
-
+                            </select>
                             @if(isset($key)&&$errors->has('dataLevelDua.'.$key))
                                 <div class="invalid-feedback">
                                     {{ $errors->first('dataLevelDua.'.$key) }}
@@ -287,7 +295,14 @@
                                 <select name="dataLevelTiga[]" id="" class="form-control">
                                     <option value=""> --Pilih Opsi-- </option>
                                     @foreach ($dataJawabanLevelTiga as $itemJawabanTiga)
-                                        <option value="{{ $itemJawabanTiga->skor.'-'.$itemJawabanTiga->id }}" {{ $itemJawabanTiga->id == 18 ? 'selected' : '' }}>{{ $itemJawabanTiga->option }}</option>
+                                        @php
+                                            $dataDetailJawabanTiga = \App\Models\JawabanPengajuanModel::select('id','id_jawaban')->where('id_pengajuan',$dataUmum->id)->get();
+                                            $count = count($dataDetailJawabanTiga);
+                                            for ($i=0; $i < $count; $i++) {
+                                                $dataTiga[] = $dataDetailJawabanTiga[$i]['id_jawaban'];
+                                            }
+                                        @endphp
+                                        <option value="{{ $itemJawabanTiga->skor."-".$itemJawabanTiga->id }}" {{ in_array($itemJawaban->id,$dataTiga) ? 'selected' : '' }} >{{ $itemJawabanTiga->option }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -313,7 +328,15 @@
                                     <option value=""> --Pilih Opsi -- </option>
                                     <select name="dataLevelEmpat[]" id="" class="form-control">
                                         @foreach ($dataJawabanLevelEmpat as $itemJawabanEmpat)
-                                            <option value="{{ $itemJawabanEmpat->skor.'-'.$itemJawabanEmpat->id }}" >{{ $itemJawabanEmpat->option }}</option>
+                                            @php
+                                                $dataDetailJawabanEmpat = \App\Models\JawabanPengajuanModel::select('id','id_jawaban')->where('id_pengajuan',$dataUmum->id)->get();
+                                                $count = count($dataDetailJawabanEmpat);
+                                                for ($i=0; $i < $count; $i++) {
+                                                    $dataEmpat[] = $dataDetailJawabanEmpat[$i]['id_jawaban'];
+                                                }
+                                            @endphp
+                                            <option value="{{ $itemJawabanEmpat->skor."-".$itemJawabanEmpat->id }}" {{ in_array($itemJawaban->id,$dataEmpat) ? 'selected' : '' }} >{{ $itemJawabanEmpat->option }}</option>
+
                                         @endforeach
                                     </select>
                                 </div>
@@ -401,7 +424,55 @@
 </script>
 <script>
     var jumlahData = $('#jumlahData').val();
-    // console.log(jumlahData);
+    for (let index = 0; index < jumlahData + 1; index++) {
+        for (let index = 0; index <= parseInt(jumlahData); index++) {
+            var selected = index==parseInt(jumlahData) ? ' selected' : ''
+            $(".side-wizard li[data-index='"+index+"']").addClass('active'+selected)
+            $(".side-wizard li[data-index='"+index+"'] a span i").removeClass('fa fa-ban')
+            if($(".side-wizard li[data-index='"+index+"'] a span i").html()=='' || $(".side-wizard li[data-index='"+index+"'] a span i").html()=='0%'){
+                $(".side-wizard li[data-index='"+index+"'] a span i").html('0%')
+            }
+        }
+
+        var form = ".form-wizard[data-index='"+index+"']"
+
+        var input = $(form+" input")
+        var select = $(form+" select")
+        var textarea = $(form+" textarea")
+
+        var ttlInput = 0;
+        var ttlInputFilled=0;
+        $.each(input, function(i,v){
+            ttlInput++
+            if(v.value!=''){
+                ttlInputFilled++
+            }
+        })
+        var ttlSelect = 0;
+        var ttlSelectFilled=0;
+        $.each(select, function(i,v){
+            ttlSelect++
+            if(v.value!=''){
+                ttlSelectFilled++
+            }
+        })
+
+        var ttlTextarea = 0;
+        var ttlTextareaFilled=0;
+        $.each(textarea, function(i,v){
+            ttlTextarea++
+            if(v.value!=''){
+                ttlTextareaFilled++
+            }
+        })
+
+        var allInput = ttlInput + ttlSelect + ttlTextarea
+        var allInputFilled = ttlInputFilled + ttlSelectFilled + ttlTextareaFilled
+
+        var percentage = parseInt(allInputFilled/allInput * 100);
+        $(".side-wizard li[data-index='"+index+"'] a span i").html(percentage+"%")
+
+    }
     function cekBtn(){
         var indexNow = $(".form-wizard.active").data('index')
         var prev = parseInt(indexNow) - 1
@@ -418,19 +489,6 @@
             $(".btn-next").hide()
             $(".btn-simpan").show()
 
-            // $('#pengajuan_kredit').on('submit',function(e){
-            //     e.preventDefault();
-            //     let name = $('#nama').val();
-            //     console.log(name);
-            //     $.ajax({
-            //         url: "/pengajuan-kredit",
-            //         type:"POST",
-            //         data:{
-            //             "_token": "{{ csrf_token() }}",
-            //         },
-            //     })
-            //     // console.log('berhasil');
-            // });
 
         }else{
             $(".btn-next").show()
@@ -450,7 +508,7 @@
         for (let index = 0; index <= parseInt(indexNow); index++) {
             var selected = index==parseInt(indexNow) ? ' selected' : ''
             $(".side-wizard li[data-index='"+index+"']").addClass('active'+selected)
-            $(".side-wizard li[data-index='"+index+"'] a span i").removeClass('fa fa-ban')
+            // $(".side-wizard li[data-index='"+index+"'] a span i").removeClass('fa fa-ban')
             if($(".side-wizard li[data-index='"+index+"'] a span i").html()=='' || $(".side-wizard li[data-index='"+index+"'] a span i").html()=='0%'){
                 $(".side-wizard li[data-index='"+index+"'] a span i").html('0%')
             }
@@ -470,7 +528,7 @@
     })
 
     function setPercentage(formIndex){
-        // console.log(formIndex);
+        console.log(formIndex);
         var form = ".form-wizard[data-index='"+formIndex+"']"
 
         var input = $(form+" input")
