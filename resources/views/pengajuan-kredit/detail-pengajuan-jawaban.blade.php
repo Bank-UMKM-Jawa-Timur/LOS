@@ -56,11 +56,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group col-md-12">
+                            <div class="form-group col-md-6 sub">
                                 <label for="">Komentar</label>
-                                <textarea name="komentar[]" class="form-control" id="" cols="30" rows="10"></textarea>
+                                <textarea name="komentar[]" class="form-control" id="" cols="1" rows="1"></textarea>
                             </div>
-
+                            <div class="form-group col-md-6 sub">
+                                <label for="">Skor</label>
+                                <input type="number" name="skor_penyelia[]" id="" class="form-control" value="{{ old('skor_by_sistem',$item->skor) }}">
+                            </div>
                             <div class="form-group col-md-12">
                                 <input type="hidden" name="id_item[]" value="{{ old('id', $item_data_empat_satu->id) }}" id="">
                             </div>
@@ -90,9 +93,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group col-md-12">
+                            <div class="form-group col-md-6 sub">
                                 <label for="">Komentar</label>
-                                <textarea name="komentar[]" class="form-control" id="" cols="30" rows="10"></textarea>
+                                <textarea name="komentar[]" class="form-control" id="" cols="1" rows="1"></textarea>
+                            </div>
+                            <div class="form-group col-md-6 sub">
+                                <label for="">Skor</label>
+                                <input type="number" name="skor_penyelia[]" id="" class="form-control" value="{{ old('skor_by_sistem',$item->skor) }}">
                             </div>
 
                             <div class="form-group col-md-12">
@@ -119,11 +126,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group col-md-12">
+                        <div class="form-group col-md-6 sub">
                             <label for="">Komentar</label>
-                            <textarea name="komentar[]" class="form-control" id="" cols="30" rows="10"></textarea>
+                            <textarea name="komentar[]" class="form-control" id="" cols="1" rows="1"></textarea>
                         </div>
-                        <div class="form-group col-md-12">
+                        <div class="form-group col-md-6 sub">
+                            <label for="">Skor</label>
+                            <input type="number" name="skor_penyelia[]" id="" class="form-control" value="{{ old('skor_by_sistem',$item->skor) }}">
+                        </div>
+                        <div class="form-group col-md-6">
                             <input type="hidden" name="id_item[]" value="{{ old('id', $item_satu->id) }}" id="">
                         </div>
                     @endforeach

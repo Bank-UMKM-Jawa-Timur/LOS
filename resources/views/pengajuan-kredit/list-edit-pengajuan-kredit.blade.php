@@ -38,21 +38,21 @@
                     <td>{{ $item->posisi }}</td>
                     <td>{{ $item->jenis_usaha }}</td>
                     <td>
-                        @if ($item->status == 'hijau')
+                        @if ($item->status_by_sistem == 'hijau')
                             <p class="text-success">
-                                {{ $item->status }}
+                                {{ $item->status_by_sistem }}
                             </p>
-                        @elseif ($item->status == 'kuning')
+                        @elseif ($item->status_by_sistem == 'kuning')
                             <p class="text-warning">
-                                {{ $item->status }}
+                                {{ $item->status_by_sistem }}
                             </p>
-                        @elseif ($item->status == 'merah')
+                        @elseif ($item->status_by_sistem == 'merah')
                             <p class="text-danger">
-                                {{ $item->status }}
+                                {{ $item->status_by_sistem }}
                             </p>
                         @else
                             <p class="text-secondary">
-                                {{ $item->status }}
+                                {{ $item->status_by_sistem }}
 
                             </p>
                         @endif
@@ -60,14 +60,17 @@
                     </td>
                     <td>
                         @if ($item->posisi == 'Review Penyelia')
-                            <a href="" class="btn btn-primary">Tindak lanjut Review Penyelia</a>
+                        <div class="d-flex">
+
+                            <a href="" class="btn btn-primary">Tindak lanjut Review Pincab</a>
+                        </div>
                         @elseif ($item->posisi == 'Pincab')
                             <a href="" class="btn btn-info">Tindak lanjut Pincab</a>
                         @elseif ($item->posisi == 'Selesai')
                             <a href="" class="btn btn-success">Selesai </a>
                         @else
                             <a href="{{ route('pengajuan-kredit.edit',$item->id_pengajuan) }}" class="mr-2">
-                                <button type="button" id="PopoverCustomT-1" class="btn btn-rgb-primary btn-sm"
+                                <button type="button" id="PopoverCustomT-1" class="btn btn-rgb-primary"
                                     data-toggle="tooltip" title="edit data" data-placement="top"><span
                                         class="fa fa-edit fa-sm"></span></button>
                             </a></i>

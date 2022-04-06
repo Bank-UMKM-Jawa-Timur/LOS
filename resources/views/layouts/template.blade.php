@@ -166,7 +166,7 @@
 <script type="text/javascript">
         var loading_screen = pleaseWait({
             logo: "{{ asset('img/logo.png') }}",
-            backgroundColor: '#112042',
+            backgroundColor: '#112042f1',
             loadingHtml: "<div class='spinner'><div class='double-bounce1'></div><div class='double-bounce2'></div><div class='double-bounce3'></div></div>"
         });
         window.loading_screen.finish();

@@ -217,7 +217,7 @@
         $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id','id_jawaban')->where('id_pengajuan',$dataUmum->id)->get();
     @endphp
     @foreach ($dataDetailJawaban as $itemId)
-        <input type="text" name="id[]" value="{{ $itemId->id }}">
+        <input type="hidden" name="id[]" value="{{ $itemId->id }}">
     @endforeach
     @foreach ($dataAspek as $key => $value)
         @php
@@ -325,8 +325,8 @@
                             @if (count($dataJawabanLevelEmpat) != 0)
                                 <div class="form-group col-md-6">
                                     <label for="">{{ $itemEmpat->nama }}</label>
-                                    <option value=""> --Pilih Opsi -- </option>
                                     <select name="dataLevelEmpat[]" id="" class="form-control">
+                                        <option value=""> --Pilih Opsi -- </option>
                                         @foreach ($dataJawabanLevelEmpat as $itemJawabanEmpat)
                                             @php
                                                 $dataDetailJawabanEmpat = \App\Models\JawabanPengajuanModel::select('id','id_jawaban')->where('id_pengajuan',$dataUmum->id)->get();

@@ -33,23 +33,36 @@ class PengajuanKreditController extends Controller
             $param['btnText'] = 'Tambah Pengajuan';
             $param['btnLink'] = route('pengajuan-kredit.create');
             $id_cabang = Auth::user()->id_cabang;
-            $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.status','pengajuan.id_cabang','pengajuan.average_by_sistem','calon_nasabah.nama','calon_nasabah.jenis_usaha','calon_nasabah.id_pengajuan')
+            $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.status','pengajuan.status_by_sistem','pengajuan.id_cabang','pengajuan.average_by_sistem','calon_nasabah.nama','calon_nasabah.jenis_usaha','calon_nasabah.id_pengajuan')
                                             ->join('calon_nasabah','calon_nasabah.id_pengajuan','pengajuan.id')
                                             ->where('pengajuan.id_cabang',$id_cabang)
                                             ->get();
             // return view('pengajuan-kredit.add-pengajuan-kredit',$param);
             return view('pengajuan-kredit.list-edit-pengajuan-kredit',$param);
-        }
-        else{
+        }elseif (auth()->user()->role == 'Penyelia Kredit') {
             $id_cabang = Auth::user()->id_cabang;
-            $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.status','pengajuan.id_cabang','pengajuan.average_by_sistem','calon_nasabah.nama','calon_nasabah.jenis_usaha','calon_nasabah.id_pengajuan')
+            // $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.tanggal_review_penyelia','pengajuan.status','pengajuan.id_cabang','pengajuan.average_by_sistem','calon_nasabah.nama','calon_nasabah.jenis_usaha','calon_nasabah.id_pengajuan')
+            //                                             ->join('calon_nasabah','calon_nasabah.id_pengajuan','pengajuan.id')
+            //                                             ->where('pengajuan.id_cabang',$id_cabang)
+            //                                             ->get();
+
+            $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.status','pengajuan.status_by_sistem','pengajuan.id_cabang','pengajuan.average_by_sistem','pengajuan.average_by_penyelia',
+                                                        'calon_nasabah.nama','calon_nasabah.jenis_usaha','calon_nasabah.id_pengajuan')
                                                         ->join('calon_nasabah','calon_nasabah.id_pengajuan','pengajuan.id')
                                                         ->where('pengajuan.id_cabang',$id_cabang)
                                                         ->get();
-
             return view('pengajuan-kredit.list-pengajuan-kredit',$param);
+        }elseif (auth()->user()->role == 'Pincab') {
+            $id_cabang = Auth::user()->id_cabang;
+            $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.status','pengajuan.status_by_sistem','pengajuan.id_cabang','pengajuan.average_by_sistem','pengajuan.average_by_penyelia',
+                                        'calon_nasabah.nama','calon_nasabah.jenis_usaha','calon_nasabah.id_pengajuan')
+                                        ->join('calon_nasabah','calon_nasabah.id_pengajuan','pengajuan.id')
+                                        ->where('pengajuan.id_cabang',$id_cabang)
+                                        ->get();
+            return view('pengajuan-kredit.komentar-pincab-pengajuan',$param);
+        }else{
+            return 'ini selain pincab dan penyelia atau staff';
         }
-        //
     }
 
     /**
@@ -215,18 +228,16 @@ class PengajuanKreditController extends Controller
             }
             JawabanPengajuanModel::insert($finalArray);
             $updateData->posisi = 'Proses Input Data';
-            $updateData->status = $status;
+            $updateData->status_by_sistem = $status;
             $updateData->average_by_sistem = $result;
             $updateData->update();
             // Session::put('id',$addData->id);
             DB::commit();
-            return redirect()->back()->withStatus('Data berhasil disimpan.');
+            return redirect()->route('pengajuan-kredit.index')->withStatus('Data berhasil disimpan.');
         } catch (Exception $e) {
-            return $e;
             DB::rollBack();
             return redirect()->back()->withError('Terjadi kesalahan.' . $e->getMessage());
         }catch(QueryException $e){
-            return $e;
             DB::rollBack();
             return redirect()->back()->withError('Terjadi kesalahan'. $e->getMessage());
         }
@@ -427,12 +438,12 @@ class PengajuanKreditController extends Controller
             }
 
             $updateData->posisi = 'Proses Input Data';
-            $updateData->status = $status;
+            $updateData->status_by_sistem = $status;
             $updateData->average_by_sistem = $result;
             $updateData->update();
             // Session::put('id',$addData->id);
             DB::commit();
-            return redirect()->back()->withStatus('Data mengganti data.');
+            return redirect()->back()->withStatus('Berhasil mengganti data.');
         } catch (Exception $e) {
             DB::rollBack();
             return redirect()->back()->withError('Terjadi kesalahan.' . $e->getMessage());
@@ -486,10 +497,40 @@ class PengajuanKreditController extends Controller
     // insert komentar
     public function getInsertKomentar(Request $request)
     {
+        // return $request;
        $request->validate([
            'komentar.*' => 'required',
        ]);
         try {
+            $finalArray = array();
+            foreach ($request->skor_penyelia as $key => $value) {
+                array_push($finalArray,[
+                    'skor_penyelia' => $value
+                ]);
+            };
+
+            $average = array_sum($request->skor_penyelia)/count($request->skor_penyelia);
+            $result = round($average,2);
+            $status = "";
+            $updateData = PengajuanModel::find($request->id_pengajuan);
+            if ($result > 0 && $result <= 1) {
+                $status = "merah";
+            }elseif($result >= 2 && $result <= 3 ){
+                $status = "kuning";
+            }elseif($result > 3) {
+                $status = "hijau";
+            }else{
+                $status = "merah";
+            }
+            for ($i=0; $i < count($finalArray); $i++) {
+               JawabanPengajuanModel::where('id_pengajuan',$request->id_pengajuan)->update($finalArray[$i]);
+            }
+            $updateData->posisi = 'Pincab';
+            $updateData->tanggal_review_penyelia = date(now());
+            $updateData->status = $status;
+            $updateData->average_by_penyelia = $result;
+            $updateData->update();
+
             $addKomentar = new KomentarModel;
             $addKomentar->id_pengajuan = $request->id_pengajuan;
             $addKomentar->save();

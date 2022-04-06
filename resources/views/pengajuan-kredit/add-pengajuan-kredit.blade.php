@@ -301,8 +301,8 @@
                             @if (count($dataJawabanLevelEmpat) != 0)
                                 <div class="form-group col-md-6">
                                     <label for="">{{ $itemEmpat->nama }}</label>
-                                    <option value=""> --Pilih Opsi -- </option>
                                     <select name="dataLevelEmpat[]" id="" class="form-control">
+                                        <option value=""> --Pilih Opsi -- </option>
                                         @foreach ($dataJawabanLevelEmpat as $itemJawabanEmpat)
                                             <option value="{{ $itemJawabanEmpat->skor.'-'.$itemJawabanEmpat->id }}">{{ $itemJawabanEmpat->option }}</option>
                                         @endforeach
