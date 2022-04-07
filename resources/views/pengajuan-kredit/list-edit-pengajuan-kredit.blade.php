@@ -62,7 +62,7 @@
                         @if ($item->posisi == 'Review Penyelia')
                         <div class="d-flex">
 
-                            <a href="{{ route('pengajuan.detailjawaban',$item->id_pengajuan) }}" class="btn btn-primary">Tindak lanjut Review Penyelia</a>
+                            <a href="{{ route('pengajuan.detailjawaban',$item->id_pengajuan) }}" class="btn btn-warning">Tindak lanjut Review Penyelia</a>
                         </div>
                         @elseif ($item->posisi == 'Pincab')
                             <a href="{{ route('pengajuan.check.pincab.status') }}" class="btn btn-info">Tindak lanjut Pincab</a>
@@ -75,7 +75,7 @@
                                         data-toggle="tooltip" title="edit data" data-placement="top"><span
                                             class="fa fa-edit fa-sm"></span></button>
                                 </a></i>
-                                <a href="{{ route('pengajuan.check.penyeliakredit',$item->id_pengajuan) }}" class="btn btn-primary">Tindak lanjut Penyelia</a>
+                                <a href="{{ route('pengajuan.check.penyeliakredit',$item->id_pengajuan) }}" class="btn btn-warning">Tindak lanjut Review Penyelia</a>
                             </div>
 
                         @endif

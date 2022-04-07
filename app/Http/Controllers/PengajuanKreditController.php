@@ -41,10 +41,6 @@ class PengajuanKreditController extends Controller
             return view('pengajuan-kredit.list-edit-pengajuan-kredit',$param);
         }elseif (auth()->user()->role == 'Penyelia Kredit') {
             $id_cabang = Auth::user()->id_cabang;
-            // $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.tanggal_review_penyelia','pengajuan.status','pengajuan.id_cabang','pengajuan.average_by_sistem','calon_nasabah.nama','calon_nasabah.jenis_usaha','calon_nasabah.id_pengajuan')
-            //                                             ->join('calon_nasabah','calon_nasabah.id_pengajuan','pengajuan.id')
-            //                                             ->where('pengajuan.id_cabang',$id_cabang)
-            //                                             ->get();
 
             $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.status','pengajuan.status_by_sistem','pengajuan.id_cabang','pengajuan.average_by_sistem','pengajuan.average_by_penyelia',
                                                         'calon_nasabah.nama','calon_nasabah.jenis_usaha','calon_nasabah.id_pengajuan')
@@ -61,7 +57,13 @@ class PengajuanKreditController extends Controller
                                         ->get();
             return view('pengajuan-kredit.komentar-pincab-pengajuan',$param);
         }else{
-            return 'ini selain pincab dan penyelia atau staff';
+            $id_cabang = Auth::user()->id_cabang;
+            $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.status','pengajuan.status_by_sistem','pengajuan.id_cabang','pengajuan.average_by_sistem','pengajuan.average_by_penyelia',
+                                        'calon_nasabah.nama','calon_nasabah.jenis_usaha','calon_nasabah.id_pengajuan')
+                                        ->join('calon_nasabah','calon_nasabah.id_pengajuan','pengajuan.id')
+                                        ->where('pengajuan.id_cabang',$id_cabang)
+                                        ->get();
+            return view('pengajuan-kredit.komentar-pincab-pengajuan',$param);
         }
     }
 

@@ -74,14 +74,14 @@
                                         data-toggle="tooltip" title="detail data" data-placement="top"><span
                                             class="fa fa-solid fa-info fa-sm"></span></button>
                                 </a></i>
-                                <a href="{{ route('pengajuan.check.pincab',$item->id_pengajuan) }}" class="btn btn-primary">Tindak lanjut Pincab</a>
+                                <a href="{{ route('pengajuan.check.pincab',$item->id_pengajuan) }}" class="btn btn-info">Tindak lanjut Pincab</a>
                             </div>
                         @elseif ($item->posisi == 'Pincab')
-                            <a href="{{ route('pengajuan.check.pincab.status') }}" class="btn btn-primary">Tindak lanjut Pincab</a>
+                            <a href="{{ route('pengajuan.check.pincab.status') }}" class="btn btn-info">Tindak lanjut Pincab</a>
                         @elseif ($item->posisi == 'Selesai')
                             <a href="" class="btn btn-success">Selesai </a>
                         @else
-                            <a href="{{ route('pengajuan.detailjawaban',$item->id_pengajuan) }}" class="btn btn-primary">Tindak lanjut Review Penyelia</a>
+                            <a href="{{ route('pengajuan.check.penyeliakredit',$item->id_pengajuan) }}" class="btn btn-warning">Tindak lanjut Penyelia</a>
                         @endif
                     </td>
                 @empty
