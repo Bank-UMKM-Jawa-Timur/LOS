@@ -7,6 +7,7 @@
             <tr class="table-primary">
                 <th class="text-center">#</th>
                 <th>Tanggal Pengajuan</th>
+                <th>Rentang Penyelia</th>
                 <th>Nama Calon Nasabah</th>
                 <th>Jenis Usaha</th>
                 <th>Posisi</th>
@@ -22,6 +23,7 @@
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $item->tanggal }}</td>
+                    <td>{{ $item->rentang_penyelia != null ? $item->rentang_penyelia.'Hari' : '-' }}</td>
                     <td>{{ $item->nama }}</td>
                     <td>{{ $item->jenis_usaha }}</td>
                     <td>{{ $item->posisi }}</td>

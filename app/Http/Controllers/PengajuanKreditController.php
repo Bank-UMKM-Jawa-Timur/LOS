@@ -11,6 +11,7 @@ use App\Models\Kabupaten;
 use App\Models\Kecamatan;
 use App\Models\KomentarModel;
 use App\Models\PengajuanModel;
+use DateTime;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -33,7 +34,7 @@ class PengajuanKreditController extends Controller
             $param['btnText'] = 'Tambah Pengajuan';
             $param['btnLink'] = route('pengajuan-kredit.create');
             $id_cabang = Auth::user()->id_cabang;
-            $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.status','pengajuan.status_by_sistem','pengajuan.id_cabang','pengajuan.average_by_sistem','calon_nasabah.nama','calon_nasabah.jenis_usaha','calon_nasabah.id_pengajuan')
+            $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.progress_pengajuan_data','pengajuan.status','pengajuan.status_by_sistem','pengajuan.id_cabang','pengajuan.average_by_sistem','calon_nasabah.nama','calon_nasabah.jenis_usaha','calon_nasabah.id_pengajuan')
                                             ->join('calon_nasabah','calon_nasabah.id_pengajuan','pengajuan.id')
                                             ->where('pengajuan.id_cabang',$id_cabang)
                                             ->get();
@@ -42,7 +43,7 @@ class PengajuanKreditController extends Controller
         }elseif (auth()->user()->role == 'Penyelia Kredit') {
             $id_cabang = Auth::user()->id_cabang;
 
-            $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.status','pengajuan.status_by_sistem','pengajuan.id_cabang','pengajuan.average_by_sistem','pengajuan.average_by_penyelia',
+            $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.rentang_penyelia','pengajuan.posisi','pengajuan.status','pengajuan.status_by_sistem','pengajuan.id_cabang','pengajuan.average_by_sistem','pengajuan.average_by_penyelia',
                                                         'calon_nasabah.nama','calon_nasabah.jenis_usaha','calon_nasabah.id_pengajuan')
                                                         ->join('calon_nasabah','calon_nasabah.id_pengajuan','pengajuan.id')
                                                         ->where('pengajuan.id_cabang',$id_cabang)
@@ -50,7 +51,7 @@ class PengajuanKreditController extends Controller
             return view('pengajuan-kredit.list-pengajuan-kredit',$param);
         }elseif (auth()->user()->role == 'Pincab') {
             $id_cabang = Auth::user()->id_cabang;
-            $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.status','pengajuan.status_by_sistem','pengajuan.id_cabang','pengajuan.average_by_sistem','pengajuan.average_by_penyelia',
+            $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.rentang_pincab','pengajuan.status','pengajuan.status_by_sistem','pengajuan.id_cabang','pengajuan.average_by_sistem','pengajuan.average_by_penyelia',
                                         'calon_nasabah.nama','calon_nasabah.jenis_usaha','calon_nasabah.id_pengajuan')
                                         ->join('calon_nasabah','calon_nasabah.id_pengajuan','pengajuan.id')
                                         ->where('pengajuan.id_cabang',$id_cabang)
@@ -128,6 +129,7 @@ class PengajuanKreditController extends Controller
             $addPengajuan = new PengajuanModel;
             $addPengajuan->tanggal = date(now());
             $addPengajuan->id_cabang = auth()->user()->id_cabang;
+            $addPengajuan->progress_pengajuan_data = $request->progress;
             $addPengajuan->save();
             $id_pengajuan = $addPengajuan->id;
 
@@ -228,7 +230,9 @@ class PengajuanKreditController extends Controller
             }else{
                 $status = "merah";
             }
-            JawabanPengajuanModel::insert($finalArray);
+            for ($i=0; $i < count($finalArray); $i++) {
+                JawabanPengajuanModel::insert($finalArray[$i]);
+            }
             $updateData->posisi = 'Proses Input Data';
             $updateData->status_by_sistem = $status;
             $updateData->average_by_sistem = $result;
@@ -302,7 +306,6 @@ class PengajuanKreditController extends Controller
      */
     public function update(Request $request, $id)
     {
-
         $request->validate([
             'name' => 'required',
             'alamat_rumah' => 'required',
@@ -333,6 +336,7 @@ class PengajuanKreditController extends Controller
             $updatePengajuan = PengajuanModel::find($id);
             $updatePengajuan->tanggal = date(now());
             $updatePengajuan->id_cabang = auth()->user()->id_cabang;
+            $updatePengajuan->progress_pengajuan_data = $request->progress;
             $updatePengajuan->save();
             $id_pengajuan = $updatePengajuan->id;
 
@@ -434,7 +438,10 @@ class PengajuanKreditController extends Controller
                 $status = "merah";
             }
             for ($i=0; $i < count($finalArray); $i++) {
-                $data = JawabanPengajuanModel::whereIn('id',$request->id)->update($finalArray[$i]);
+                DB::table('jawaban')
+                    ->where('id',$request->id[$i])
+                    ->update($finalArray[$i]);
+                // JawabanPengajuanModel::whereIn('id',$request->id[$i])->update($finalArray[$i]);
             }
 
             $updateData->posisi = 'Proses Input Data';
@@ -443,7 +450,7 @@ class PengajuanKreditController extends Controller
             $updateData->update();
             // Session::put('id',$addData->id);
             DB::commit();
-            return redirect()->back()->withStatus('Berhasil mengganti data.');
+            return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil mengganti data.');
         } catch (Exception $e) {
             DB::rollBack();
             return redirect()->back()->withError('Terjadi kesalahan.' . $e->getMessage());
@@ -529,7 +536,6 @@ class PengajuanKreditController extends Controller
             for ($i=0; $i < count($finalArray); $i++) {
                JawabanPengajuanModel::where('id_pengajuan',$request->id_pengajuan)->update($finalArray[$i]);
             }
-            $updateData->tanggal_review_penyelia = date(now());
             $updateData->status = $status;
             $updateData->average_by_penyelia = $result;
             $updateData->update();
@@ -573,12 +579,22 @@ class PengajuanKreditController extends Controller
     // check status pincab
     public function checkPincab($id)
     {
+
         if (auth()->user()->role == 'Penyelia Kredit') {
             $dataPenyelia = PengajuanModel::find($id);
-            $tanggal_review_penyelia = $dataPenyelia->tanggal_review_penyelia;
-            if ($tanggal_review_penyelia != null) {
+            $status = $dataPenyelia->status;
+            if ($status != null) {
+                $dataPenyelia->tanggal_review_penyelia = date(now());
                 $dataPenyelia->posisi = "Pincab";
                 $dataPenyelia->update();
+                $idDataPenyelia = $dataPenyelia->id;
+                $updateTanggalPenyelia = PengajuanModel::find($idDataPenyelia);
+                $awal = new DateTime($updateTanggalPenyelia->tanggal);
+                $akhir = new DateTime($updateTanggalPenyelia->tanggal_review_penyelia);
+                $interval = $awal->diff($akhir);
+                $result_rentang = $interval->format('%a');
+                $updateTanggalPenyelia->rentang_penyelia = $result_rentang;
+                $updateTanggalPenyelia->update();
                 return redirect()->back()->withStatus('Berhasil mengganti posisi.');
             }else{
                return redirect()->back()->withError('Belum di review Penyelia.');
@@ -594,7 +610,7 @@ class PengajuanKreditController extends Controller
        if (auth()->user()->role == "Pincab") {
             $param['pageTitle'] = "Dashboard";
             $id_cabang = Auth::user()->id_cabang;
-            $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.status','pengajuan.status_by_sistem','pengajuan.id_cabang','pengajuan.average_by_sistem','pengajuan.average_by_penyelia',
+            $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.status','pengajuan.rentang_pincab','pengajuan.status_by_sistem','pengajuan.id_cabang','pengajuan.average_by_sistem','pengajuan.average_by_penyelia',
                                                     'calon_nasabah.nama','calon_nasabah.jenis_usaha','calon_nasabah.id_pengajuan')
                                                     ->join('calon_nasabah','calon_nasabah.id_pengajuan','pengajuan.id')
                                                     ->where('pengajuan.id_cabang',$id_cabang)
@@ -646,10 +662,20 @@ class PengajuanKreditController extends Controller
     public function checkPincabStatusChange($id)
     {
         $statusPincab = PengajuanModel::find($id);
-        $tanggal_review_pincab = $statusPincab->tanggal_review_pincab;
-        if ($tanggal_review_pincab != null) {
+        $review_pincab = $statusPincab->tanggal_review_pincab;
+        if ($review_pincab != null) {
             $statusPincab->posisi = "Selesai";
+            $statusPincab->tanggal_review_pincab = date(now());
             $statusPincab->update();
+            $idStatusPincab = $statusPincab->id;
+            $rentangPincab = PengajuanModel::find($idStatusPincab);
+            $awal = new DateTime($rentangPincab->tanggal);
+            $akhir = new DateTime($rentangPincab->tanggal_review_pincab);
+            $interval = $awal->diff($akhir);
+            $result_rentang = $interval->format('%a');
+            $rentangPincab->rentang_pincab = $result_rentang;
+            $rentangPincab->update();
+
             return redirect()->back()->withStatus('Berhasil mengganti posisi.');
         }else{
             return redirect()->back()->withError('Belum di review Pincab.');

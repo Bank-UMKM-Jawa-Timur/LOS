@@ -7,6 +7,7 @@
             <tr class="table-primary">
                 <th class="text-center">#</th>
                 <th>Tanggal Pengajuan</th>
+                <th>Rentang Pincab</th>
                 <th>Nama Calon Nasabah</th>
                 <th>Jenis Usaha</th>
                 <th>Posisi</th>
@@ -22,6 +23,7 @@
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $item->tanggal }}</td>
+                    <td>{{ $item->rentang_pincab }}</td>
                     <td>{{ $item->nama }}</td>
                     <td>{{ $item->jenis_usaha }}</td>
                     <td>{{ $item->posisi }}</td>
@@ -69,11 +71,8 @@
                     <td>
                         @if ($item->posisi == 'Review Penyelia')
                             <div class="d-flex">
-                                <a href="{{ route('pengajuan.detailjawaban',$item->id_pengajuan) }}" class="mr-2">
-                                    <button type="button" id="PopoverCustomT-1" class="btn btn-rgb-primary"
-                                        data-toggle="tooltip" title="detail data" data-placement="top"><span
-                                            class="fa fa-solid fa-info fa-sm"></span></button>
-                                </a></i>
+                                <a href="{{ route('pengajuan.check.pincab',$item->id_pengajuan) }}" class="btn btn-info">Tindak lanjut Pincab</a>
+
                             </div>
                         @elseif ($item->posisi == 'Pincab')
                             <div class="d-flex">
@@ -91,7 +90,7 @@
                         @elseif ($item->posisi == 'Selesai')
                             <a href="" class="btn btn-success">Selesai </a>
                         @else
-                            <a href="{{ route('pengajuan.detailjawaban',$item->id_pengajuan) }}" class="btn btn-primary">Tindak lanjut Review Penyelia</a>
+                            <a href="{{ route('pengajuan.detailjawaban',$item->id_pengajuan) }}" class="btn btn-warning">Tindak lanjut Staf Kredit</a>
                         @endif
                     </td>
                 @empty

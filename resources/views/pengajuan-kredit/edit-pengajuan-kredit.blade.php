@@ -27,8 +27,9 @@
 <form id="pengajuan_kredit" action="{{ route('pengajuan-kredit.update',$dataUmum->id) }}" method="post">
     @method('PUT')
     @csrf
+    <input type="text" name="progress" class="progress" >
+    <input type="hidden" name="id_nasabah" value="{{ $dataUmum->id_calon_nasabah }}">
     <div class="form-wizard active" data-index='0' data-done='true'>
-        <input type="hidden" name="id_nasabah" value="{{ $dataUmum->id_calon_nasabah }}">
         <div class="row">
             <div class="form-group col-md-12">
                 <label for="">Nama Lengkap</label>
@@ -302,7 +303,7 @@
                                                 $dataTiga[] = $dataDetailJawabanTiga[$i]['id_jawaban'];
                                             }
                                         @endphp
-                                        <option value="{{ $itemJawabanTiga->skor."-".$itemJawabanTiga->id }}" {{ in_array($itemJawaban->id,$dataTiga) ? 'selected' : '' }} >{{ $itemJawabanTiga->option }}</option>
+                                        <option value="{{ $itemJawabanTiga->skor."-".$itemJawabanTiga->id }}" {{ in_array($itemJawabanTiga->id,$dataTiga) ? 'selected' : '' }} >{{ $itemJawabanTiga->option }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -313,7 +314,6 @@
                                 $dataJawabanLevelEmpat = \App\Models\OptionModel::where('option',"!=","-")->where('id_item',$itemEmpat->id)->get();
                                 $dataOptionEmpat = \App\Models\OptionModel::where('option',"=","-")->where('id_item',$itemEmpat->id)->get();
                             @endphp
-
                             @foreach ($dataOptionEmpat as $itemOptionEmpat)
                              @if ($itemOptionEmpat->option == "-")
                                  <div class="form-group col-md-12">
@@ -335,8 +335,7 @@
                                                     $dataEmpat[] = $dataDetailJawabanEmpat[$i]['id_jawaban'];
                                                 }
                                             @endphp
-                                            <option value="{{ $itemJawabanEmpat->skor."-".$itemJawabanEmpat->id }}" {{ in_array($itemJawaban->id,$dataEmpat) ? 'selected' : '' }} >{{ $itemJawabanEmpat->option }}</option>
-
+                                            <option value="{{ $itemJawabanEmpat->skor."-".$itemJawabanEmpat->id }}" {{ in_array($itemJawabanEmpat->id,$dataEmpat) ? 'selected' : '' }} >{{ $itemJawabanEmpat->option }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -471,8 +470,20 @@
 
         var percentage = parseInt(allInputFilled/allInput * 100);
         $(".side-wizard li[data-index='"+index+"'] a span i").html(percentage+"%")
-
+        $(".side-wizard li[data-index='"+index+"'] input.answer").val(allInput);
+        $(".side-wizard li[data-index='"+index+"'] input.answerFilled").val(allInputFilled);
+        var allInputTotal = 0;
+        var allInputFilledTotal = 0;
     }
+    $(".side-wizard li input.answer").each(function(){
+        allInputTotal += Number($(this).val());
+    });
+    $(".side-wizard li input.answerFilled").each(function(){
+        allInputFilledTotal += Number($(this).val());
+    });
+    console.log(allInputTotal);
+    var result = parseInt(allInputFilledTotal/allInputTotal * 100);
+    $('.progress').val(result);
     function cekBtn(){
         var indexNow = $(".form-wizard.active").data('index')
         var prev = parseInt(indexNow) - 1
@@ -480,15 +491,23 @@
 
         $(".btn-prev").hide()
         $(".btn-simpan").hide()
+        $(".progress").prop('disabled', true);
 
         if($(".form-wizard[data-index='"+prev+"']").length==1){
             $(".btn-prev").show()
         }
         if (indexNow == jumlahData) {
 
-            $(".btn-next").hide()
-            $(".btn-simpan").show()
+            $(".btn-next").click(function(e){
+                    if (parseInt(indexNow) != parseInt(jumlahData)) {
+                        $(".btn-next").show()
 
+                    }
+                    $(".btn-simpan").show()
+                    $(".progress").prop('disabled', false);
+                    $(".btn-next").hide()
+                });
+                $(".btn-next").show()
 
         }else{
             $(".btn-next").show()
@@ -566,6 +585,19 @@
 
         var percentage = parseInt(allInputFilled/allInput * 100);
         $(".side-wizard li[data-index='"+formIndex+"'] a span i").html(percentage+"%")
+        $(".side-wizard li[data-index='"+formIndex+"'] input.answer").val(allInput);
+        $(".side-wizard li[data-index='"+formIndex+"'] input.answerFilled").val(allInputFilled);
+            var allInputTotal = 0;
+            var allInputFilledTotal = 0;
+            $(".side-wizard li input.answer").each(function(){
+                allInputTotal += Number($(this).val());
+            });
+            $(".side-wizard li input.answerFilled").each(function(){
+                allInputFilledTotal += Number($(this).val());
+            });
+
+            var result = parseInt(allInputFilledTotal/allInputTotal * 100);
+            $('.progress').val(result);
     }
 
     $(".btn-next").click(function(e){

@@ -20,10 +20,11 @@
             <tr class="table-primary">
                 <th class="text-center">#</th>
                 <th>Tanggal Pengajuan</th>
-                <th>Nama Calon Nasabah</th>
-                <th>Skor By Sistem</th>
+                <th>Nama Nasabah</th>
+                <th>Progress Pengajuan</th>
                 <th>Posisi Pengajuan</th>
                 <th>Jenis Usaha</th>
+                <th>Skor By Sistem</th>
                 <th>Status</th>
                 <th>Aksi</th>
             </tr>
@@ -34,9 +35,10 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $item->tanggal }}</td>
                     <td>{{ $item->nama }}</td>
-                    <td>{{ $item->average_by_sistem != null ? $item->average_by_sistem : '-'  }}</td>
+                    <td>{{ $item->progress_pengajuan_data != null ? $item->progress_pengajuan_data.'%' : '-' }}</td>
                     <td>{{ $item->posisi }}</td>
                     <td>{{ $item->jenis_usaha }}</td>
+                    <td>{{ $item->average_by_sistem != null ? $item->average_by_sistem : '-'  }}</td>
                     <td>
                         @if ($item->status_by_sistem == 'hijau')
                             <p class="text-success">

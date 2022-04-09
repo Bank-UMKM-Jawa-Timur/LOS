@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-{{-- <html lang="en"> --}}
-<html ng-app="AngularApp">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <html ng-app="AngularApp">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,7 +26,8 @@
     <script src="https://unpkg.com/tooltip.js@1.3.1/dist/umd/tooltip.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
-
+    {{-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script> --}}
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     {{-- <link href="assets/build/css/default.css" rel="stylesheet"> --}}
 
     <link rel="stylesheet" href="{{ asset('') }}css/custom.css" />
@@ -114,7 +115,14 @@
 <script src="{{ asset('') }}js/select2.full.min.js"></script>
 {{-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script> --}}
 <script src="{{ asset('') }}build/please-wait.min.js"></script>
-
+<script type="text/javascript">
+    var loading_screen = pleaseWait({
+        logo: "{{ asset('img/logo.png') }}",
+        backgroundColor: '#112042f1',
+        loadingHtml: "<div class='spinner'><div class='double-bounce1'></div><div class='double-bounce2'></div><div class='double-bounce3'></div></div>"
+    });
+    window.loading_screen.finish();
+</script>
 
 <script>
     // $(document).ready(function(){
@@ -163,15 +171,7 @@
         });
 
 </script>
-<script type="text/javascript">
-        var loading_screen = pleaseWait({
-            logo: "{{ asset('img/logo.png') }}",
-            backgroundColor: '#112042f1',
-            loadingHtml: "<div class='spinner'><div class='double-bounce1'></div><div class='double-bounce2'></div><div class='double-bounce3'></div></div>"
-        });
-        window.loading_screen.finish();
-</script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script>
+
 @stack('custom-script')
 </body>
 </html>

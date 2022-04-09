@@ -26,6 +26,7 @@
 </style>
 <form id="pengajuan_kredit" action="{{ route('pengajuan-kredit.store') }}" method="post">
     @csrf
+    <input type="hidden" name="progress" class="progress" >
     <div class="form-wizard active" data-index='0' data-done='true'>
         <div class="row">
             <div class="form-group col-md-12">
@@ -210,12 +211,12 @@
             $key += 1;
             // check level 2
             $dataLevelDua = \App\Models\ItemModel::select('id','nama','level','id_parent')->where('level',2)->where('id_parent',$value->id)->get();
-
             // check level 4
             $dataLevelEmpat = \App\Models\ItemModel::select('id','nama','level','id_parent')->where('level',4)->where('id_parent',$value->id)->get();
         @endphp
         {{-- level level 2 --}}
         <div class="form-wizard" data-index='{{ $key }}' data-done='true'>
+
             <div class="row">
                 @foreach ($dataLevelDua as $item)
                     @php
