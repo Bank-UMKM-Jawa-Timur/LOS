@@ -45,7 +45,7 @@ class PengajuanKreditController extends Controller
             // $param['dataAspek'] = ItemModel::select('*')->where('level',1)->get();
 
             $id_cabang = Auth::user()->id_cabang;
-            $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.progress_pengajuan_data','pengajuan.tanggal_review_penyelia','pengajuan.tanggal_review_pincab','pengajuan.status','pengajuan.status_by_sistem','pengajuan.id_cabang','pengajuan.average_by_sistem',
+            $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.progress_pengajuan_data','pengajuan.tanggal_review_penyelia','pengajuan.tanggal_review_pincab','pengajuan.status','pengajuan.status_by_sistem','pengajuan.id_cabang','pengajuan.average_by_sistem','pengajuan.average_by_penyelia',
                                             'calon_nasabah.nama','calon_nasabah.jenis_usaha','calon_nasabah.id_pengajuan')
                                             ->join('calon_nasabah','calon_nasabah.id_pengajuan','pengajuan.id')
                                             ->where('pengajuan.id_cabang',$id_cabang)
@@ -53,7 +53,7 @@ class PengajuanKreditController extends Controller
             return view('pengajuan-kredit.list-pengajuan-kredit',$param);
         }elseif (auth()->user()->role == 'Pincab') {
             $id_cabang = Auth::user()->id_cabang;
-            $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.progress_pengajuan_data','pengajuan.tanggal_review_penyelia','pengajuan.tanggal_review_pincab','pengajuan.status','pengajuan.status_by_sistem','pengajuan.id_cabang','pengajuan.average_by_sistem',
+            $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.progress_pengajuan_data','pengajuan.tanggal_review_penyelia','pengajuan.tanggal_review_pincab','pengajuan.status','pengajuan.status_by_sistem','pengajuan.id_cabang','pengajuan.average_by_sistem','pengajuan.average_by_penyelia',
                                                     'calon_nasabah.nama','calon_nasabah.jenis_usaha','calon_nasabah.id_pengajuan')
                                                     ->join('calon_nasabah','calon_nasabah.id_pengajuan','pengajuan.id')
                                                     ->where('pengajuan.id_cabang',$id_cabang)
@@ -61,7 +61,7 @@ class PengajuanKreditController extends Controller
             return view('pengajuan-kredit.komentar-pincab-pengajuan',$param);
         }else{
             $id_cabang = Auth::user()->id_cabang;
-            $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.status','pengajuan.status_by_sistem','pengajuan.id_cabang','pengajuan.average_by_sistem','pengajuan.average_by_penyelia',
+            $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.status','pengajuan.status_by_sistem','pengajuan.id_cabang','pengajuan.average_by_sistem','pengajuan.average_by_penyelia','pengajuan.average_by_penyelia',
                                         'calon_nasabah.nama','calon_nasabah.jenis_usaha','calon_nasabah.id_pengajuan')
                                         ->join('calon_nasabah','calon_nasabah.id_pengajuan','pengajuan.id')
                                         ->where('pengajuan.id_cabang',$id_cabang)
@@ -530,9 +530,8 @@ class PengajuanKreditController extends Controller
     // insert komentar
     public function getInsertKomentar(Request $request)
     {
-        return $request;
        $request->validate([
-           'komentar.*' => 'required',
+           'komentar_penyelia.*' => 'required',
        ]);
         try {
             $finalArray = array();
@@ -556,7 +555,7 @@ class PengajuanKreditController extends Controller
                 $status = "merah";
             }
             for ($i=0; $i < count($finalArray); $i++) {
-               JawabanPengajuanModel::where('id_pengajuan',$request->id_pengajuan)->update($finalArray[$i]);
+               JawabanPengajuanModel::where('id',$request->id_jawaban[$i])->update($finalArray[$i]);
             }
             $updateData->status = $status;
             $updateData->average_by_penyelia = $result;
@@ -566,12 +565,12 @@ class PengajuanKreditController extends Controller
             $addKomentar->id_pengajuan = $request->id_pengajuan;
             $addKomentar->save();
             $id_komentar = $addKomentar->id;
-            foreach ($request->id_item as $key => $value) {
+            foreach ($request->id as $key => $value) {
                 $addDetailKomentar = new DetailKomentarModel;
                 $addDetailKomentar->id_komentar = $id_komentar;
                 $addDetailKomentar->id_user = Auth::user()->id;
-                $addDetailKomentar->id_item = $_POST['id_item'][$key];
-                $addDetailKomentar->komentar = $_POST['komentar'][$key];
+                $addDetailKomentar->id_item = $_POST['id'][$key];
+                $addDetailKomentar->komentar = $_POST['komentar_penyelia'][$key];
                 $addDetailKomentar->save();
             }
             return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil menambahkan data');
@@ -606,7 +605,7 @@ class PengajuanKreditController extends Controller
             $dataPenyelia = PengajuanModel::find($id);
             $status = $dataPenyelia->status;
             if ($status != null) {
-                $dataPenyelia->tanggal_review_penyelia = date(now());
+                $dataPenyelia->tanggal_review_pincab = date(now());
                 $dataPenyelia->posisi = "Pincab";
                 $dataPenyelia->update();
                 return redirect()->back()->withStatus('Berhasil mengganti posisi.');

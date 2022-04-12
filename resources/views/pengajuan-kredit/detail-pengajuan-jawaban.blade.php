@@ -27,14 +27,16 @@
 </style>
 <form action="{{ route('pengajuan.insertkomentar') }}" method="POST" >
     @csrf
-    <input type="text" id="jumlahData" name="jumlahData" hidden value="{{ count($dataAspek) }}">
+    <input type="hidden" id="jumlahData" name="jumlahData" hidden value="{{ count($dataAspek) }}">
+    <input type="hidden" id="id_pengajuan" name="id_pengajuan" value="{{ $dataUmum->id }}">
     @php
-        $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id','id_jawaban')->where('id_pengajuan',$dataUmum->id)->get();
+        $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id','id_jawaban','skor')->where('id_pengajuan',$dataUmum->id)->get();
     @endphp
-    @foreach ($dataDetailJawaban as $itemId)
-        <input type="hidden" name="id[]" value="{{ $itemId->id }}">
+    @foreach ($dataDetailJawaban as $itemJawabanDetail)
+        <input type="hidden" name="id_jawaban[]" value="{{ $itemJawabanDetail->id }}" id="">
     @endforeach
-    @foreach ($dataAspek as $key => $value)
+     @foreach ($dataAspek as $key => $value)
+
         @php
             $key;
             // check level 2
@@ -44,10 +46,12 @@
             $dataLevelEmpat = \App\Models\ItemModel::select('id','nama','level','id_parent')->where('level',4)->where('id_parent',$value->id)->get();
         @endphp
         {{-- level level 2 --}}
+
         <div class="form-wizard {{ $key === 0 ? 'active' : '' }}" data-index='{{ $key }}' data-done='true'>
             <div class="">
 
                 @foreach ($dataLevelDua as $item)
+
                     @php
                         $dataJawaban = \App\Models\OptionModel::where('option',"!=","-")->where('id_item',$item->id)->get();
                         $dataOption = \App\Models\OptionModel::where('option',"=","-")->where('id_item',$item->id)->get();
@@ -55,7 +59,6 @@
                         // check level 3
                         $dataLevelTiga = \App\Models\ItemModel::select('id','nama','level','id_parent')->where('level',3)->where('id_parent',$item->id)->get();
                     @endphp
-
                     @foreach ($dataOption as $itemOption)
                         @if ($itemOption->option == "-")
                             <div class="row">
@@ -73,42 +76,30 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="form-group col-md-6">
-                                <select name="dataLevelDua[]" id="dataLevelDua" class="form-control mb-3" disabled>
-                                    @foreach ($dataJawaban as $key => $itemJawaban)
-                                        @php
-                                            $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id','id_jawaban')->where('id_pengajuan',$dataUmum->id)->get();
-                                            $count = count($dataDetailJawaban);
-                                            for ($i=0; $i < $count; $i++) {
-                                                $data[] = $dataDetailJawaban[$i]['id_jawaban'];
-                                            }
-                                        @endphp
-                                            <option value="{{ $itemJawaban->skor."-".$itemJawaban->id }}" {{ in_array($itemJawaban->id,$data) ? 'selected' : '' }} >{{ $itemJawaban->option }}</option>
-                                    @endforeach
-                                </select>
-                                <input type="text" class="form-control" placeholder="Masukkan komentar" name="komentar_penyelia[]">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <select name="dataLevelDua[]" id="dataLevelDua" class="form-control mb-3" disabled>
-                                    @foreach ($dataJawaban as $key => $itemJawaban)
-                                        @php
-                                            $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id','id_jawaban')->where('id_pengajuan',$dataUmum->id)->get();
-                                            $count = count($dataDetailJawaban);
-                                            for ($i=0; $i < $count; $i++) {
-                                                $data[] = $dataDetailJawaban[$i]['id_jawaban'];
-                                            }
-                                        @endphp
-                                            <option value="{{ $itemJawaban->skor."-".$itemJawaban->id }}" {{ in_array($itemJawaban->id,$data) ? 'selected' : '' }} >{{ $itemJawaban->skor }}</option>
-                                    @endforeach
-                                </select>
-                                @foreach ($dataJawaban as $key => $itemJawaban)
-                                    @if (in_array($itemJawaban->id,$data))
-                                        <input type="number" class="form-control" placeholder="Masukkan Skor" name="skor_penyelia[]" value="{{ old('skor_penyelia',$itemJawaban->skor) }}" >
+                            @foreach ($dataJawaban as $key => $itemJawaban)
+                                @php
+                                    $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id','id_jawaban','skor')->where('id_pengajuan',$dataUmum->id)->get();
+                                    $count = count($dataDetailJawaban);
+                                    for ($i=0; $i < $count; $i++) {
+                                        $data[] = $dataDetailJawaban[$i]['id_jawaban'];
+                                    }
+                                @endphp
+                                @if (in_array($itemJawaban->id,$data))
+                                    @if (isset($data))
+                                        <div class="form-group col-md-6">
+                                            <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemJawaban->option }}" disabled>
 
+                                            <input type="text" class="form-control" placeholder="Masukkan komentar" name="komentar_penyelia[]" >
+
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemJawaban->skor }}" disabled>
+                                            <input type="number" class="form-control" placeholder="" name="skor_penyelia[]" value="{{ $itemJawaban->skor != null ? $itemJawaban->skor : '' }}">
+                                        </div>
+                                        <input type="hidden" name="id[]" value="{{ $value->id }}">
                                     @endif
-                                @endforeach
-                            </div>
-
+                                @endif
+                            @endforeach
                         </div>
                     @endif
                     @foreach ($dataLevelTiga as $keyTiga => $itemTiga)
@@ -129,52 +120,34 @@
                             </div>
                           @endif
                         @endforeach
+
                         @if (count($dataJawabanLevelTiga) != 0)
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <label for="">{{ $itemTiga->nama }}</label>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group col-md-6">
-                                    <select name="dataLevelTiga[]" id="" class="form-control" disabled>
-                                        <option value=""> --Pilih Opsi-- </option>
-                                        @foreach ($dataJawabanLevelTiga as $itemJawabanTiga)
-                                            @php
-                                                $dataDetailJawabanTiga = \App\Models\JawabanPengajuanModel::select('id','id_jawaban')->where('id_pengajuan',$dataUmum->id)->get();
-                                                $count = count($dataDetailJawabanTiga);
-                                                for ($i=0; $i < $count; $i++) {
-                                                    $dataTiga[] = $dataDetailJawabanTiga[$i]['id_jawaban'];
-                                                }
-                                            @endphp
-                                            <option value="{{ $itemJawabanTiga->skor."-".$itemJawabanTiga->id }}" {{ in_array($itemJawabanTiga->id,$dataTiga) ? 'selected' : '' }}>{{ $itemJawabanTiga->option }}</option>
-                                        @endforeach
-                                    </select>
-                                    <input type="text" class="form-control" placeholder="Masukkan komentar" name="komentar_penyelia[]">
+                        <div class="row">
+                            @foreach ($dataJawabanLevelTiga as $key => $itemJawabanLevelTiga)
+                                @php
+                                    $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id','id_jawaban','skor')->where('id_pengajuan',$dataUmum->id)->get();
+                                    $count = count($dataDetailJawaban);
+                                    for ($i=0; $i < $count; $i++) {
+                                        $data[] = $dataDetailJawaban[$i]['id_jawaban'];
+                                    }
+                                @endphp
+                                @if (in_array($itemJawabanLevelTiga->id,$data))
+                                    @if (isset($data))
+                                        <div class="form-group col-md-6">
+                                            <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemJawabanLevelTiga->option }}" disabled>
 
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <select name="dataLevelTiga[]" id="" class="form-control" disabled>
-                                        <option value=""> --Pilih Opsi-- </option>
-                                        @foreach ($dataJawabanLevelTiga as $dataJawabanLevelTiga)
-                                            @php
-                                                $dataDetailJawabanTiga = \App\Models\JawabanPengajuanModel::select('id','id_jawaban')->where('id_pengajuan',$dataUmum->id)->get();
-                                                $count = count($dataDetailJawabanTiga);
-                                                for ($i=0; $i < $count; $i++) {
-                                                    $dataTiga[] = $dataDetailJawabanTiga[$i]['id_jawaban'];
-                                                }
-                                            @endphp
-                                            <option value="{{ $itemJawabanTiga->skor."-".$itemJawabanTiga->id }}" {{ in_array($itemJawabanTiga->id,$dataTiga) ? 'selected' : '' }}>{{ $itemJawabanTiga->skor }}</option>
-                                        @endforeach
-                                    </select>
-                                    @foreach ($dataJawabanLevelTiga as $key => $dataJawabanLevelTiga)
-                                        @if (in_array($dataJawabanLevelTiga->id,$data))
-                                            <input type="number" class="form-control" placeholder="Masukkan Skor" name="skor_penyelia[]" value="{{ old('skor_penyelia',$itemJawabanTiga->skor) }}" >
-                                        @endif
-                                    @endforeach
-                                </div>
+                                            <input type="text" class="form-control" placeholder="Masukkan komentar" name="komentar_penyelia[]" >
 
-                            </div>
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="skor_penyelia" value="{{ $itemJawabanLevelTiga->skor }}" disabled>
+                                            <input type="number" class="form-control" placeholder="" name="skor_penyelia[]" value="{{ $itemJawabanLevelTiga->skor != null ? $itemJawabanLevelTiga->skor : '' }}">
+                                        </div>
+                                        <input type="hidden" name="id[]" value="{{ $value->id }}">
+                                    @endif
+                                @endif
+                            @endforeach
+                        </div>
                         @endif
                         @foreach ($dataLevelEmpat as $keyEmpat => $itemEmpat)
                             @php
@@ -192,50 +165,33 @@
                              @endif
                             @endforeach
 
+                            {{-- Data jawaban Level Empat --}}
                             @if (count($dataJawabanLevelEmpat) != 0)
                                 <div class="row">
-                                    <div class="form-group col-md-12">
-                                        <label for="">{{ $itemEmpat->nama }}</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-md-6">
-                                        <select name="dataLevelEmpat[]" id="" class="form-control mb-3" disabled>
-                                            <option value=""> --Pilih Opsi -- </option>
-                                            @foreach ($dataJawabanLevelEmpat as $itemJawabanEmpat)
-                                                @php
-                                                    $dataDetailJawabanEmpat = \App\Models\JawabanPengajuanModel::select('id','id_jawaban')->where('id_pengajuan',$dataUmum->id)->get();
-                                                    $count = count($dataDetailJawabanEmpat);
-                                                    for ($i=0; $i < $count; $i++) {
-                                                        $dataEmpat[] = $dataDetailJawabanEmpat[$i]['id_jawaban'];
-                                                    }
-                                                @endphp
-                                                <option value="{{ $itemJawabanEmpat->skor."-".$itemJawabanEmpat->id }}" {{ in_array($itemJawabanEmpat->id,$dataEmpat) ? 'selected' : '' }} >{{ $itemJawabanEmpat->option }}</option>
-                                            @endforeach
-                                        </select>
-                                        <input type="text" class="form-control" placeholder="Masukkan komentar" name="komentar_penyelia[]">
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <select name="dataLevelEmpat[]" id="" class="form-control mb-3" disabled>
-                                            <option value=""> --Pilih Opsi -- </option>
-                                            @foreach ($dataJawabanLevelEmpat as $itemJawabanEmpat)
-                                                @php
-                                                    $dataDetailJawabanEmpat = \App\Models\JawabanPengajuanModel::select('id','id_jawaban')->where('id_pengajuan',$dataUmum->id)->get();
-                                                    $count = count($dataDetailJawabanEmpat);
-                                                    for ($i=0; $i < $count; $i++) {
-                                                        $dataEmpat[] = $dataDetailJawabanEmpat[$i]['id_jawaban'];
-                                                    }
-                                                @endphp
-                                                <option value="{{ $itemJawabanEmpat->skor."-".$itemJawabanEmpat->id }}" {{ in_array($itemJawabanEmpat->id,$dataEmpat) ? 'selected' : '' }} >{{ $itemJawabanEmpat->skor }}</option>
-                                            @endforeach
-                                        </select>
-                                        @foreach ($dataJawabanLevelEmpat as $key => $itemJawabanEmpat)
-                                            @if (in_array($itemJawabanEmpat->id,$data))
-                                                <input type="number" class="form-control" placeholder="Masukkan Skor" name="skor_penyelia[]" value="{{ old('skor_penyelia',$itemJawabanEmpat->skor) }}" >
-                                            @endif
-                                        @endforeach
-                                    </div>
+                                    @foreach ($dataJawabanLevelEmpat as $key => $itemJawabanLevelEmpat)
+                                        @php
+                                            $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id','id_jawaban','skor')->where('id_pengajuan',$dataUmum->id)->get();
+                                            $count = count($dataDetailJawaban);
+                                            for ($i=0; $i < $count; $i++) {
+                                                $data[] = $dataDetailJawaban[$i]['id_jawaban'];
+                                            }
+                                        @endphp
+                                        @if (in_array($itemJawabanLevelEmpat->id,$data))
+                                            @if (isset($data))
+                                                <div class="form-group col-md-6">
+                                                    <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemJawabanLevelEmpat->option }}" disabled>
 
+                                                    <input type="text" class="form-control" placeholder="Masukkan komentar" name="komentar_penyelia[]" >
+
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia[]" value="{{ $itemJawabanLevelEmpat->skor }}" disabled>
+                                                    <input type="number" class="form-control" placeholder="" name="skor_penyelia[]" value="{{ $itemJawabanLevelEmpat->skor != null ? $itemJawabanLevelEmpat->skor : '' }}">
+                                                </div>
+                                                <input type="hidden" name="id[]" value="{{ $value->id }}">
+                                            @endif
+                                        @endif
+                                    @endforeach
                                 </div>
                             @endif
                         @endforeach
@@ -261,7 +217,7 @@
 @push('custom-script')
 <script>
     var jumlahData = $('#jumlahData').val();
-    for (let index = 0; index < jumlahData; index++) {
+    for (let index = 0; index < jumlahData + 1; index++) {
         for (let index = 0; index <= parseInt(jumlahData); index++) {
             var selected = index==parseInt(jumlahData) ? ' selected' : ''
             $(".side-wizard li[data-index='"+index+"']").addClass('active'+selected)
@@ -273,35 +229,24 @@
 
         var form = ".form-wizard[data-index='"+index+"']"
 
-        var select = $(form+" select")
+        var input = $(form+" input:disabled");
 
-        var ttlSelect = 0;
-        var ttlSelectFilled=0;
-        $.each(select, function(i,v){
-            ttlSelect++
+        var ttlInput = 0;
+        var ttlInputFilled=0;
+        $.each(input, function(i,v){
+            ttlInput++
             if(v.value!=''){
-                ttlSelectFilled++
+                ttlInputFilled++
             }
         })
-
-        var allInput =  ttlSelect
-        var allInputFilled =  ttlSelectFilled
+        var allInput = ttlInput
+        var allInputFilled = ttlInputFilled
 
         var percentage = parseInt(allInputFilled/allInput * 100);
-        $(".side-wizard li[data-index='"+index+"'] a span i").html(percentage+"%")
-        $(".side-wizard li[data-index='"+index+"'] input.answer").val(allInput);
-        $(".side-wizard li[data-index='"+index+"'] input.answerFilled").val(allInputFilled);
-        var allInputTotal = 0;
-        var allInputFilledTotal = 0;
+            $(".side-wizard li[data-index='"+index+"'] a span i").html(percentage != NaN ? percentage : 0+"%")
+        // $(".side-wizard li[data-index='"+index+"'] input.answer").val(allInput);
+        // $(".side-wizard li[data-index='"+index+"'] input.answerFilled").val(allInputFilled);
     }
-    $(".side-wizard li input.answer").each(function(){
-        allInputTotal += Number($(this).val());
-    });
-    $(".side-wizard li input.answerFilled").each(function(){
-        allInputFilledTotal += Number($(this).val());
-    });
-    var result = parseInt(allInputFilledTotal/allInputTotal * 100);
-    $('.progress').val(result);
     function cekBtn(){
         var indexNow = $(".form-wizard.active").data('index')
         var prev = parseInt(indexNow) - 1
@@ -314,7 +259,6 @@
         if($(".form-wizard[data-index='"+prev+"']").length==1){
             $(".btn-prev").show()
         }
-        console.log(indexNow);
         if (next == jumlahData) {
 
             $(".btn-next").click(function(e){
@@ -364,36 +308,6 @@
 
     function setPercentage(formIndex){
         var form = ".form-wizard[data-index='"+formIndex+"']"
-
-        var select = $(form+" select")
-
-        var ttlSelect = 0;
-        var ttlSelectFilled=0;
-        $.each(select, function(i,v){
-            ttlSelect++
-            if(v.value!=''){
-                ttlSelectFilled++
-            }
-        })
-
-        var allInput = ttlSelect
-        var allInputFilled = ttlSelectFilled
-
-        var percentage = parseInt(allInputFilled/allInput * 100);
-        $(".side-wizard li[data-index='"+formIndex+"'] a span i").html(percentage+"%")
-        $(".side-wizard li[data-index='"+formIndex+"'] input.answer").val(allInput);
-        $(".side-wizard li[data-index='"+formIndex+"'] input.answerFilled").val(allInputFilled);
-            var allInputTotal = 0;
-            var allInputFilledTotal = 0;
-            $(".side-wizard li input.answer").each(function(){
-                allInputTotal += Number($(this).val());
-            });
-            $(".side-wizard li input.answerFilled").each(function(){
-                allInputFilledTotal += Number($(this).val());
-            });
-
-            var result = parseInt(allInputFilledTotal/allInputTotal * 100);
-            $('.progress').val(result);
     }
 
     $(".btn-next").click(function(e){

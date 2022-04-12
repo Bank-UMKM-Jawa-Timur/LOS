@@ -47,6 +47,7 @@
                         {{ $item->tanggal_review_pincab != null ? $result_rentang_pincab.' hari' : '-' }}
                     </td>
                     <td>
+                        {{ $item->average_by_penyelia }}
                         @if ($item->average_by_penyelia != null)
                             @if ($item->status == 'hijau')
                                 <p class="text-success">

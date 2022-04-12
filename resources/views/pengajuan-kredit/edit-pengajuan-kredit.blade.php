@@ -344,11 +344,7 @@
                     @endforeach
                 @endforeach
             </div>
-            {{-- @php
-                echo "<pre>";
-                print_r($dataLevelSatu);
-                echo "</pre>";
-            @endphp --}}
+           
         </div>
 
     @endforeach
