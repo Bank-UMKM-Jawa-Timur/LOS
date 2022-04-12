@@ -100,7 +100,16 @@
                 @include('layouts.side-card')
             @endif
         @else
-            @include('layouts.full-card')
+            @if (Request::segment(1) == 'pengajuan-kredit' && auth()->user()->role == 'Penyelia Kredit')
+                @if (request()->routeIs('pengajuan-kredit.index') == 'pengajuan-kredit')
+                    @include('layouts.full-card')
+                @else
+                    @include('layouts.penyelia-side-card')
+                @endif
+            @else
+                @include('layouts.full-card')
+            @endif
+
         @endif
     </div>
 

@@ -27,7 +27,7 @@
 <form id="pengajuan_kredit" action="{{ route('pengajuan-kredit.update',$dataUmum->id) }}" method="post">
     @method('PUT')
     @csrf
-    <input type="text" name="progress" class="progress" >
+    <input type="hidden" name="progress" class="progress" >
     <input type="hidden" name="id_nasabah" value="{{ $dataUmum->id_calon_nasabah }}">
     <div class="form-wizard active" data-index='0' data-done='true'>
         <div class="row">

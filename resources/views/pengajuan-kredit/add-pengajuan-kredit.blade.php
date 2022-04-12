@@ -238,7 +238,7 @@
                          <div class="form-group col-md-6">
                             <label for="">{{  $item->nama }}</label>
                             <select name="dataLevelDua[]" id="dataLevelDua" class="form-control">
-                                    <option value=""> --Pilih Data -- </option>
+                                <option value=""> --Pilih Data -- </option>
                                 @foreach ($dataJawaban as $itemJawaban)
                                     <option value="{{ $itemJawaban->skor."-".$itemJawaban->id }}">{{ $itemJawaban->option }}</option>
                                 @endforeach

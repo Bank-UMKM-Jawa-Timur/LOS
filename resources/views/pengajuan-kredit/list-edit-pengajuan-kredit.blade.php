@@ -21,10 +21,11 @@
                 <th class="text-center">#</th>
                 <th>Tanggal Pengajuan</th>
                 <th>Nama Nasabah</th>
-                <th>Progress Pengajuan</th>
-                <th>Posisi Pengajuan</th>
                 <th>Jenis Usaha</th>
-                <th>Skor By Sistem</th>
+                <th>Posisi</th>
+                <th>Durasi Penyelia</th>
+                <th>Durasi Pincab</th>
+                <th>Skor</th>
                 <th>Status</th>
                 <th>Aksi</th>
             </tr>
@@ -35,48 +36,81 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $item->tanggal }}</td>
                     <td>{{ $item->nama }}</td>
-                    <td>{{ $item->progress_pengajuan_data != null ? $item->progress_pengajuan_data.'%' : '-' }}</td>
-                    <td>{{ $item->posisi }}</td>
                     <td>{{ $item->jenis_usaha }}</td>
-                    <td>{{ $item->average_by_sistem != null ? $item->average_by_sistem : '-'  }}</td>
+                    <td>{{ $item->posisi }}</td>
                     <td>
-                        @if ($item->status_by_sistem == 'hijau')
-                            <p class="text-success">
-                                {{ $item->status_by_sistem }}
-                            </p>
-                        @elseif ($item->status_by_sistem == 'kuning')
-                            <p class="text-warning">
-                                {{ $item->status_by_sistem }}
-                            </p>
-                        @elseif ($item->status_by_sistem == 'merah')
-                            <p class="text-danger">
-                                {{ $item->status_by_sistem }}
-                            </p>
-                        @else
-                            <p class="text-secondary">
-                                {{ $item->status_by_sistem }}
-
-                            </p>
-                        @endif
-
+                        @php
+                            $rentangPenyelia = \App\Models\PengajuanModel::find($item->id);
+                            $awal = date_create(date(now()));
+                            $akhir = date_create($rentangPenyelia->tanggal_review_penyelia);
+                            $interval = $awal->diff($akhir);
+                            $result_rentang = $interval->format('%a');
+                        @endphp
+                        {{-- {{ $rentangPenyelia }} --}}
+                        {{ $item->tanggal_review_penyelia != null ? $result_rentang.' hari' : '-' }}
                     </td>
                     <td>
-                        @if ($item->posisi == 'Review Penyelia')
-                        <div class="d-flex">
-
-                            <a href="{{ route('pengajuan.detailjawaban',$item->id_pengajuan) }}" class="btn btn-warning">Tindak lanjut Review Penyelia</a>
-                        </div>
-                        @elseif ($item->posisi == 'Pincab')
-                            <a href="{{ route('pengajuan.check.pincab.status') }}" class="btn btn-info">Tindak lanjut Pincab</a>
-                        @elseif ($item->posisi == 'Selesai')
-                            <a href="" class="btn btn-success">Selesai </a>
+                        @php
+                            $rentangPincab = \App\Models\PengajuanModel::find($item->id);
+                            $awal = date_create(date(now()));
+                            $akhir = date_create($rentangPincab->tanggal_review_pincab);
+                            $interval = $awal->diff($akhir);
+                            $result_rentang_pincab = $interval->format('%a');
+                        @endphp
+                        {{ $item->tanggal_review_pincab != null ? $result_rentang_pincab.' hari' : '-' }}
+                    </td>
+                    <td>
+                        @if ($item->average_by_penyelia != null)
+                            @if ($item->status == 'hijau')
+                                <p class="text-success">
+                                    {{ $item->average_by_penyelia }}
+                                </p>
+                            @elseif ($item->status == 'kuning')
+                                <p class="text-warning">
+                                    {{ $item->average_by_penyelia }}
+                                </p>
+                            @elseif ($item->status == 'merah')
+                                <p class="text-danger">
+                                    {{ $item->average_by_penyelia }}
+                                </p>
+                            @else
+                                <p class="text-secondary">
+                                    {{ $item->average_by_penyelia }}
+                                </p>
+                            @endif
                         @else
+                            @if ($item->status_by_sistem == 'hijau')
+                                <p class="text-success">
+                                    {{ $item->average_by_sistem }}
+                                </p>
+                            @elseif ($item->status_by_sistem == 'kuning')
+                                <p class="text-warning">
+                                    {{ $item->average_by_sistem }}
+                                </p>
+                            @elseif ($item->status_by_sistem == 'merah')
+                                <p class="text-danger">
+                                    {{ $item->average_by_sistem }}
+                                </p>
+                            @else
+                                <p class="text-secondary">
+                                    {{ $item->average_by_sistem }}
+                                </p>
+                            @endif
+                        @endif
+                    </td>
+                    <td>
+                        @if ($item->posisi === 'Selesai')
+                            <p class="text-success">Selesai</p>
+                        @else
+                            <p class="text-warning">On Progress</p>
+                        @endif
+                    </td>
+                    <td>
+                        @if ($item->posisi == 'Proses Input Data')
                             <div class="d-flex">
-                                <a href="{{ route('pengajuan-kredit.edit',$item->id_pengajuan) }}" class="mr-2">
-                                    <button type="button" id="PopoverCustomT-1" class="btn btn-rgb-primary"
-                                        data-toggle="tooltip" title="edit data" data-placement="top"><span
-                                            class="fa fa-edit fa-sm"></span></button>
-                                </a></i>
+                                <a href="{{ route('pengajuan-kredit.edit',$item->id_pengajuan) }}" class="btn btn-rgb-primary mr-2">
+                                    Edit data
+                                </a>
                                 <a href="{{ route('pengajuan.check.penyeliakredit',$item->id_pengajuan) }}" class="btn btn-warning">Tindak lanjut Review Penyelia</a>
                             </div>
 
