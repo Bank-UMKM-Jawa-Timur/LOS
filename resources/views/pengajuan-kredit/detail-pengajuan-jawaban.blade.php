@@ -94,7 +94,7 @@
                                         </div>
                                         <div class="form-group col-md-6">
                                             <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemJawaban->skor }}" disabled>
-                                            <input type="number" class="form-control" placeholder="" name="skor_penyelia[]" value="{{ $itemJawaban->skor != null ? $itemJawaban->skor : '' }}">
+                                            <input type="number" class="form-control" placeholder="" name="skor_penyelia[]" value="{{ $itemJawaban->skor != null ? $itemJawaban->skor : 0 }}">
                                         </div>
                                         <input type="hidden" name="id[]" value="{{ $value->id }}">
                                     @endif

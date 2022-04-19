@@ -530,9 +530,10 @@ class PengajuanKreditController extends Controller
     // insert komentar
     public function getInsertKomentar(Request $request)
     {
-       $request->validate([
-           'komentar_penyelia.*' => 'required',
-       ]);
+        $request->validate([
+            'komentar_penyelia.*' => 'required',
+            'skor_penyelia.*' => 'required',
+        ]);
         try {
             $finalArray = array();
             foreach ($request->skor_penyelia as $key => $value) {
@@ -636,6 +637,12 @@ class PengajuanKreditController extends Controller
     public function checkPincabStatusDetail($id)
     {
         $param['pageTitle'] = "Dashboard";
+        $param['dataUmum'] = CalonNasabah::select('calon_nasabah.*','kabupaten.id as kabupaten_id','kabupaten.kabupaten','kecamatan.id as kecamatan_id','kecamatan.id_kabupaten','kecamatan.kecamatan','desa.id as desa_id','desa.id_kabupaten','desa.id_kecamatan','desa.desa')
+                                        ->join('kabupaten','kabupaten.id','calon_nasabah.id_kabupaten')
+                                        ->join('kecamatan','kecamatan.id','calon_nasabah.id_kecamatan')
+                                        ->join('desa','desa.id','calon_nasabah.id_desa')
+                                        ->where('calon_nasabah.id_pengajuan',$id)
+                                        ->first();
         $param['jawabanpengajuan'] = JawabanPengajuanModel::select('jawaban.id','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','option.id as id_option','option.option as name_option','option.id_item','item.id as id_item','item.nama','item.level','item.id_parent')
                                     ->join('option','option.id','jawaban.id_jawaban')
                                     ->join('item','item.id','option.id_item')

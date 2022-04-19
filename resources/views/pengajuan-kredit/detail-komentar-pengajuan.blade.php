@@ -28,110 +28,53 @@
 <div class="">
     <form action="{{ route('pengajuan.check.pincab.status.detail.post') }}" method="POST" >
     @csrf
-        <div class="row">
-            @forelse ($jawabanpengajuan as $item)
-            <input type="hidden" name="id_pengajuan" value="{{ old('id_pengajuan',$item->id_pengajuan) }}">
-                @if ($item->level == 4)
-                    @php
-                        $item_data = \App\Models\ItemModel::select('id','nama','level','id_parent')->where('id',$item->id_parent)->get();
-                    @endphp
-                    @foreach ($item_data as $valueLevelEmpat)
-                        @php
-                            $item_data_empat_tiga = \App\Models\ItemModel::select('id','nama','level','id_parent')->where('id',$valueLevelEmpat->id_parent)->get();
-                        @endphp
-                        @foreach ($item_data_empat_tiga as $item_empat_tiga)
-                            @php
-                                $item_data_empat_satu = \App\Models\ItemModel::select('id','nama','level','id_parent')->where('id',$item_empat_tiga->id_parent)->first();
-                            @endphp
-                            <div class="form-group col-md-12">
-                                <label for="">{{ $item->nama }}</label>
-                                <div class="row sub">
-                                    <div class="col-md-6">
-                                        <label for="">Jawaban</label>
-                                        <input type="text" name="name[]" id="nama" class="form-control"  value="{{old('name',$item->name_option)}}" placeholder="Nama sesuai dengan KTP" readonly>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="">Skor</label>
-                                        <input type="text" name="skor[]" id="nama" class="form-control"  value="{{old('skor',$item->skor)}}" placeholder="Nama sesuai dengan KTP" readonly>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-12 sub">
-                                <label for="">Komentar</label>
-                                <textarea name="komentar[]" class="form-control" id="" cols="1" rows="3"></textarea>
-                            </div>
-                            <div class="form-group col-md-12">
-                                <input type="hidden" name="id_item[]" value="{{ old('id', $item_data_empat_satu->id) }}" id="">
-                            </div>
-                        @endforeach
-                    @endforeach
-                @endif
-                @if ($item->level == 3)
-                    @php
-                        $item_data_dua = \App\Models\ItemModel::select('id','nama','level','id_parent')->where('id',$item->id_parent)->get();
-                    @endphp
-
-                    @foreach ($item_data_dua as $item_data_dua_dua)
-                        @php
-                            $item_data_dua_satu = \App\Models\ItemModel::select('id','nama','level','id_parent')->where('id',$item_data_dua_dua->id_parent)->get();
-                        @endphp
-                        @foreach ($item_data_dua_satu as $item_dua_satu)
-                            <div class="form-group col-md-12">
-                                <label for="">{{ $item->nama }}</label>
-                                <div class="row sub">
-                                    <div class="col-md-6">
-                                        <label for="">Jawaban</label>
-                                        <input type="text" name="name[]" id="nama" class="form-control"  value="{{old('name',$item->name_option)}}" placeholder="Nama sesuai dengan KTP" readonly>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="">Skor</label>
-                                        <input type="text" name="skor[]" id="nama" class="form-control"  value="{{old('skor',$item->skor)}}" placeholder="Nama sesuai dengan KTP" readonly>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-12 sub">
-                                <label for="">Komentar</label>
-                                <textarea name="komentar[]" class="form-control" id="" cols="1" rows="3"></textarea>
-                            </div>
-
-                            <div class="form-group col-md-12">
-                                <input type="hidden" name="id_item[]" value="{{ old('id', $item_dua_satu->id) }}" id="">
-                            </div>
-                        @endforeach
-                    @endforeach
-                @endif
-                @if ($item->level == 2)
-                    @php
-                        $item_data_satu = \App\Models\ItemModel::select('id','nama','level','id_parent')->where('id',$item->id_parent)->get();
-                    @endphp
-                    @foreach ($item_data_satu as $item_satu)
-                        <div class="form-group col-md-12">
-                            <label for="">{{ $item->nama }}</label>
-                            <div class="row sub">
-                                <div class="col-md-6">
-                                    <label for="">Jawaban</label>
-                                    <input type="text" name="name[]" id="nama" class="form-control"  value="{{old('name',$item->name_option)}}" placeholder="Nama sesuai dengan KTP" readonly>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="">Skor</label>
-                                    <input type="text" name="skor[]" id="nama" class="form-control"  value="{{old('skor',$item->skor)}}" placeholder="Nama sesuai dengan KTP" readonly>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group col-md-12 sub">
-                            <label for="">Komentar</label>
-                            <textarea name="komentar[]" class="form-control" id="" cols="1" rows="3"></textarea>
-                        </div>
-
-                        <div class="form-group col-md-6">
-                            <input type="hidden" name="id_item[]" value="{{ old('id', $item_satu->id) }}" id="">
-                        </div>
-                    @endforeach
-                @endif
-            @empty
-                <p class="text-center">Tidak ada data yang tersimpan.</p>
-            @endforelse
+        {{-- calon nasabah --}}
+        <div class="form-group row">
+            <label for="staticEmail" class="col-sm-3 col-form-label">Nama Lengkap</label>
+            <label for="staticEmail" class="col-sm-1 col-form-label">:</label>
+            <div class="col-sm-7">
+                <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ $dataUmum->nama }}">
+            </div>
         </div>
+        <div class="form-group row">
+            {{-- alamat rumah --}}
+            <label for="staticEmail" class="col-sm-3 col-form-label">Alamat Rumah</label>
+            <label for="staticEmail" class="col-sm-1 col-form-label">:</label>
+            <div class="col-sm-7">
+                <textarea name="" class="form-control-plaintext" readonly id="" cols="5" rows="2" >{{ $dataUmum->alamat_rumah }}</textarea>
+            </div>
+            {{-- alamat usaha --}}
+            <label for="staticEmail" class="col-sm-3 col-form-label">Alamat Usaha</label>
+            <label for="staticEmail" class="col-sm-1 col-form-label">:</label>
+            <div class="col-sm-7">
+                <textarea name="" class="form-control-plaintext" readonly id="" cols="5" rows="2" >{{ $dataUmum->alamat_usaha }}</textarea>
+            </div>
+            {{-- No KTP --}}
+            <label for="staticEmail" class="col-sm-3 col-form-label">No. KTP</label>
+            <label for="staticEmail" class="col-sm-1 col-form-label">:</label>
+            <div class="col-sm-7">
+                <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ $dataUmum->no_ktp }}">
+            </div>
+            {{-- Tempat tanggal lahir --}}
+            <label for="staticEmail" class="col-sm-3 col-form-label">Tempat, Tanggal lahir/Status</label>
+            <label for="staticEmail" class="col-sm-1 col-form-label">:</label>
+            <div class="col-sm-4">
+                <div class="d-flex justify-content-end ">
+                    <div class="">
+                        <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ $dataUmum->tempat_lahir.',' }}">
+                    </div>
+                    <div class="">
+                        <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ $dataUmum->tanggal_lahir }}">
+                    </div>
+                    <div class="">
+                        <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ $dataUmum->status }}">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
         <button type="submit" class="btn btn-primary mr-2"><i class="fa fa-save"></i> Simpan</button>
         <button type="reset" class="btn btn-default"><i class="fa fa-times"></i> Reset</button>
     </form>
