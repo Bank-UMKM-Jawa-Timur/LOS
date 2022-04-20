@@ -61,10 +61,9 @@ class PengajuanKreditController extends Controller
             return view('pengajuan-kredit.komentar-pincab-pengajuan',$param);
         }else{
             $id_cabang = Auth::user()->id_cabang;
-            $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.status','pengajuan.status_by_sistem','pengajuan.id_cabang','pengajuan.average_by_sistem','pengajuan.average_by_penyelia','pengajuan.average_by_penyelia',
+            $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.progress_pengajuan_data','pengajuan.tanggal_review_penyelia','pengajuan.tanggal_review_pincab','pengajuan.status','pengajuan.status_by_sistem','pengajuan.id_cabang','pengajuan.average_by_sistem','pengajuan.average_by_penyelia',
                                         'calon_nasabah.nama','calon_nasabah.jenis_usaha','calon_nasabah.id_pengajuan')
                                         ->join('calon_nasabah','calon_nasabah.id_pengajuan','pengajuan.id')
-                                        ->where('pengajuan.id_cabang',$id_cabang)
                                         ->get();
             return view('pengajuan-kredit.komentar-pincab-pengajuan',$param);
         }
@@ -636,18 +635,27 @@ class PengajuanKreditController extends Controller
     }
     public function checkPincabStatusDetail($id)
     {
+
         $param['pageTitle'] = "Dashboard";
-        $param['dataUmum'] = CalonNasabah::select('calon_nasabah.*','kabupaten.id as kabupaten_id','kabupaten.kabupaten','kecamatan.id as kecamatan_id','kecamatan.id_kabupaten','kecamatan.kecamatan','desa.id as desa_id','desa.id_kabupaten','desa.id_kecamatan','desa.desa')
-                                        ->join('kabupaten','kabupaten.id','calon_nasabah.id_kabupaten')
-                                        ->join('kecamatan','kecamatan.id','calon_nasabah.id_kecamatan')
-                                        ->join('desa','desa.id','calon_nasabah.id_desa')
-                                        ->where('calon_nasabah.id_pengajuan',$id)
-                                        ->first();
+        $param['dataAspek'] = ItemModel::select('*')->where('level',1)->get();
         $param['jawabanpengajuan'] = JawabanPengajuanModel::select('jawaban.id','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','option.id as id_option','option.option as name_option','option.id_item','item.id as id_item','item.nama','item.level','item.id_parent')
                                     ->join('option','option.id','jawaban.id_jawaban')
                                     ->join('item','item.id','option.id_item')
                                     ->where('jawaban.id_pengajuan',$id)
                                     ->get();
+        $param['dataNasabah'] = CalonNasabah::select('calon_nasabah.*','kabupaten.id as kabupaten_id','kabupaten.kabupaten','kecamatan.id as kecamatan_id','kecamatan.id_kabupaten','kecamatan.kecamatan','desa.id as desa_id','desa.id_kabupaten','desa.id_kecamatan','desa.desa')
+                                        ->join('kabupaten','kabupaten.id','calon_nasabah.id_kabupaten')
+                                        ->join('kecamatan','kecamatan.id','calon_nasabah.id_kecamatan')
+                                        ->join('desa','desa.id','calon_nasabah.id_desa')
+                                        ->where('calon_nasabah.id_pengajuan',$id)
+                                        ->first();
+        $param['dataUmum'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.tanggal_review_penyelia')
+                                        ->find($id);
+        // $param['jawabanpengajuan'] = JawabanPengajuanModel::select('jawaban.id','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','option.id as id_option','option.option as name_option','option.id_item','item.id as id_item','item.nama','item.level','item.id_parent')
+        //                             ->join('option','option.id','jawaban.id_jawaban')
+        //                             ->join('item','item.id','option.id_item')
+        //                             ->where('jawaban.id_pengajuan',$id)
+        //                             ->get();
 
         return view('pengajuan-kredit.detail-komentar-pengajuan',$param);
 
@@ -655,22 +663,13 @@ class PengajuanKreditController extends Controller
     public function checkPincabStatusDetailPost(Request $request)
     {
         try {
-            $updateData = PengajuanModel::find($request->id_pengajuan);
-            $updateData->tanggal_review_pincab = date(now());
-            $updateData->update();
-
+            // $updateData = PengajuanModel::find($request->id_pengajuan);
+            // $updateData->update();
             $addKomentar = new KomentarModel;
             $addKomentar->id_pengajuan = $request->id_pengajuan;
+            $addKomentar->komentar_pincab = $request->komentar;
             $addKomentar->save();
-            $id_komentar = $addKomentar->id;
-            foreach ($request->id_item as $key => $value) {
-                $addDetailKomentar = new DetailKomentarModel;
-                $addDetailKomentar->id_komentar = $id_komentar;
-                $addDetailKomentar->id_user = Auth::user()->id;
-                $addDetailKomentar->id_item = $_POST['id_item'][$key];
-                $addDetailKomentar->komentar = $_POST['komentar'][$key];
-                $addDetailKomentar->save();
-            }
+
             return redirect('/pengajuan-kredit')->withStatus('Berhasil menambahkan komentar');
         }catch (Exception $e) {
             return redirect()->back()->withError('Terjadi kesalahan.');
@@ -682,13 +681,19 @@ class PengajuanKreditController extends Controller
     {
         $statusPincab = PengajuanModel::find($id);
         $review_pincab = $statusPincab->tanggal_review_pincab;
-        if ($review_pincab != null) {
-            $statusPincab->posisi = "Selesai";
-            $statusPincab->tanggal_review_pincab = date(now());
-            $statusPincab->update();
-            return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+        if (auth()->user()->role == 'Pincab') {
+            if ($review_pincab != null) {
+                $statusPincab->posisi = "Selesai";
+                $statusPincab->tanggal_review_pincab = date(now());
+                $statusPincab->update();
+                return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+            }else{
+                return redirect()->back()->withError('Belum di review Pincab.');
+            }
+
         }else{
-            return redirect()->back()->withError('Belum di review Pincab.');
+            return redirect()->back()->withError('Tidak memiliki hak akses.');
+
         }
     }
     // check status staf analisa

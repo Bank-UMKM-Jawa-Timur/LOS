@@ -100,9 +100,11 @@
                             </div>
                         @elseif ($item->posisi == 'Pincab')
                             <div class="d-flex">
-                                <a href="{{ route('pengajuan.check.pincab.status.detail',$item->id_pengajuan) }}" class="btn btn-rgb-primary mr-2">
-                                    Detail data
-                                </a>
+                                @if (auth()->user()->role == 'Pincab')
+                                    <a href="{{ route('pengajuan.check.pincab.status.detail',$item->id_pengajuan) }}" class="btn btn-rgb-primary mr-2">
+                                        Detail data
+                                    </a>
+                                @endif
                                 @if ($item->posisi == "Selesai")
                                     <button href="{{ route('pengajuan.change.pincab.status',$item->id_pengajuan) }}" class="btn btn-primary">Selesai</button>
                                 @else
@@ -110,7 +112,7 @@
                                 @endif
                             </div>
                         @elseif ($item->posisi == 'Selesai')
-                            <a href="" class="btn btn-success">Selesai </a>
+                            <button disabled href="" class="btn btn-success" >Selesai </button>
                         @else
                             <a href="{{ route('pengajuan.detailjawaban',$item->id_pengajuan) }}" class="btn btn-warning">Tindak lanjut Staf Kredit</a>
                         @endif

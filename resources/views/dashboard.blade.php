@@ -16,12 +16,11 @@
                             Pengajuan Telah Ditinjak Lanjuti
                         </div>
                         <div class="col-md-4 pr-0 text-center">
-                            {{-- <h1>{{ \App\Models\Penugasan::where('status', 'Rencana')->count() }}</h1> --}}
-                            <h1>1</h1>
+                            <h1>{{ \App\Models\PengajuanModel::where('posisi', 'Selesai')->count() }}</h1>
                         </div>
                     </div>
                     <hr>
-                    <a href="#" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
+                    <a href="{{ route('pengajuan-kredit.index') }}" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
                         Detail</a>
                 </div>
             </div>
@@ -35,12 +34,12 @@
                             Pengajuan Belum Ditindak Lanjuti
                         </div>
                         <div class="col-md-4 pl-0 text-center">
-                            <h1>4</h1>
+                            <h1>{{ \App\Models\PengajuanModel::where('posisi', 'Review Penyelia')->OrWhere('posisi','Proses Input Data')->count() }}</h1>
                             {{-- <h1>{{ \App\Models\Penugasan::where('status', 'Batal')->count() }}</h1> --}}
                         </div>
                     </div>
                     <hr>
-                    <a href="#" class="btn btn-danger btn-sm b-radius-3 px-3">Lihat
+                    <a href="{{ route('pengajuan-kredit.index') }}" class="btn btn-danger btn-sm b-radius-3 px-3">Lihat
                         Detail</a>
                 </div>
             </div>
@@ -64,9 +63,21 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td colspan="7" class="text-center" style="background: rgba(71, 145,254,0.05) !important">Data Kosong</td>
-                        </tr>
+                        @forelse ($data as $item)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $item->nama }}</td>
+                                <td>{{ $item->jenis_usaha }}</td>
+                                <td>{{ $item->sektor_kredit }}</td>
+                                <td>Rp.{{ number_format($item->jumlah_kredit, 2, '.', ',') }}</td>
+                                <td>{{ date('d-m-Y',strtotime( $item->tanggal ) ) }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="7" class="text-center" style="background: rgba(71, 145,254,0.05) !important">Data Kosong</td>
+                            </tr>
+
+                        @endforelse
                     </tbody>
 
                 </table>
