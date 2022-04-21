@@ -266,7 +266,7 @@
                             <div class="form-group col-md-6">
                                 <label for="">{{ $itemTiga->nama }}</label>
                                 <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
-                                <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" id="">
+                                <input type="hidden" name="opsi_jawaban[]" value="{{ $itemTiga->opsi_jawaban }}" id="">
                                 <input type="text" name="informasi[]" id="" placeholder="Masukkan informasi" class="form-control">
                             </div>
 
@@ -309,7 +309,7 @@
                                 <div class="form-group col-md-6">
                                     <label for="">{{ $itemEmpat->nama }}</label>
                                     <input type="hidden" name="id_level[]" value="{{ $itemEmpat->id }}" id="">
-                                    <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" id="">
+                                    <input type="hidden" name="opsi_jawaban[]" value="{{ $itemEmpat->opsi_jawaban }}" id="">
                                     <input type="text" name="informasi[]" id="" placeholder="Masukkan informasi" class="form-control">
                                 </div>
                             @endif

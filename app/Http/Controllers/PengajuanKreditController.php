@@ -98,6 +98,7 @@ class PengajuanKreditController extends Controller
      */
     public function store(Request $request)
     {
+        // return $request;
         // $checkLevelDua = $request->dataLevelDua != null ? 'required' : '';
         // $checkLevelTiga = $request->dataLevelTiga != null ? 'required' : '';
         // $checkLevelEmpat = $request->dataLevelEmpat != null ? 'required' : '';
@@ -159,7 +160,13 @@ class PengajuanKreditController extends Controller
             $id_calon_nasabah = $addData->id;
 
             if ($request->opsi_jawaban != 'input text') {
-
+                foreach ($request->id_level as $key => $value) {
+                    $dataJawabanText = new JawabanTextModel;
+                    $dataJawabanText->id_pengajuan = $id_pengajuan;
+                    $dataJawabanText->id_jawaban = $request->get('id_level')[$key];
+                    $dataJawabanText->opsi_text = $request->get('informasi')[$key];
+                    $dataJawabanText->save();
+                }
             }else{
 
             }
@@ -238,13 +245,7 @@ class PengajuanKreditController extends Controller
             for ($i=0; $i < count($finalArray); $i++) {
                 JawabanPengajuanModel::insert($finalArray[$i]);
             }
-            foreach ($request->id_level as $key => $value) {
-                $dataJawabanText = new JawabanTextModel;
-                $dataJawabanText->id_pengajuan = $id_pengajuan;
-                $dataJawabanText->id_jawaban = $request->get('id_level')[$key];
-                $dataJawabanText->opsi_text = $request->get('informasi')[$key];
-                $dataJawabanText->save();
-            }
+
             $updateData->posisi = 'Proses Input Data';
             $updateData->status_by_sistem = $status;
             $updateData->average_by_sistem = $result;
@@ -526,6 +527,7 @@ class PengajuanKreditController extends Controller
         $param['dataAspek'] = ItemModel::select('*')->where('level',1)->get();
         $param['dataUmum'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.tanggal_review_penyelia')
                                         ->find($id);
+
         // $param['jawabanpengajuan'] = JawabanPengajuanModel::select('jawaban.id','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','option.id as id_option','option.option as name_option','option.id_item','item.id as id_item','item.nama','item.level','item.id_parent')
         //                             ->join('option','option.id','jawaban.id_jawaban')
         //                             ->join('item','item.id','option.id_item')
@@ -540,19 +542,30 @@ class PengajuanKreditController extends Controller
     // insert komentar
     public function getInsertKomentar(Request $request)
     {
+        // return $request;
         $request->validate([
+            // 'komentar_penyelia_text.*'=> 'required',
             'komentar_penyelia.*' => 'required',
             'skor_penyelia.*' => 'required',
         ]);
         try {
             $finalArray = array();
+            $finalArray_text = array();
+
             foreach ($request->skor_penyelia as $key => $value) {
                 array_push($finalArray,[
                     'skor_penyelia' => $value
                 ]);
             };
-
-            $average = array_sum($request->skor_penyelia)/count($request->skor_penyelia);
+            foreach ($request->skor_penyelia_text as $key => $value) {
+                array_push($finalArray_text,[
+                    'skor_penyelia' => $value
+                ]);
+            }
+            // return $finalArray_text;
+            $sum_select = array_sum($request->skor_penyelia);
+            $sum_text = array_sum($request->skor_penyelia_text);
+            $average = ($sum_select + $sum_text ) / count($request->skor_penyelia);
             $result = round($average,2);
             $status = "";
             $updateData = PengajuanModel::find($request->id_pengajuan);
@@ -568,6 +581,9 @@ class PengajuanKreditController extends Controller
             for ($i=0; $i < count($finalArray); $i++) {
                JawabanPengajuanModel::where('id',$request->id_jawaban[$i])->update($finalArray[$i]);
             }
+            for ($i=0; $i < count($finalArray_text); $i++) {
+                JawabanTextModel::where('id',$request->id_jawaban_text[$i])->update($finalArray_text[$i]);
+             }
             $updateData->status = $status;
             $updateData->average_by_penyelia = $result;
             $updateData->update();

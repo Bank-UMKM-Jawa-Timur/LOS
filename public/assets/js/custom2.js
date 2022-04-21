@@ -1,6 +1,18 @@
 $(document).ready(function() {
 
     $('#opsi').hide();
+    $('#opsi_jawaban option').each(function() {
+        var option = $('#opsi_jawaban option:selected').val();
+        if (option == 'input text') {
+            $('#opsi_jawaban').prop('disabled', true);
+
+        }else if(option == 'option'){
+            $('#opsi_jawaban').prop('disabled', true);
+        }else{
+            $('#opsi_jawaban').prop('disabled', true);
+
+        }
+    })
     $('#level option').each(function() {
         var id_level = $("#level option:selected").val()
         if (id_level == 1){

@@ -40,16 +40,43 @@
         @php
             $key;
             // check level 2
-            $dataLevelDua = \App\Models\ItemModel::select('id','nama','level','id_parent')->where('level',2)->where('id_parent',$value->id)->get();
+            $dataLevelDua = \App\Models\ItemModel::select('id','nama','opsi_jawaban','level','id_parent')->where('level',2)->where('id_parent',$value->id)->get();
 
             // check level 4
-            $dataLevelEmpat = \App\Models\ItemModel::select('id','nama','level','id_parent')->where('level',4)->where('id_parent',$value->id)->get();
+            $dataLevelEmpat = \App\Models\ItemModel::select('id','nama','opsi_jawaban','level','id_parent')->where('level',4)->where('id_parent',$value->id)->get();
         @endphp
         {{-- level level 2 --}}
 
         <div class="form-wizard {{ $key === 0 ? 'active' : '' }}" data-index='{{ $key }}' data-done='true'>
             <div class="">
                 @foreach ($dataLevelDua as $item)
+                    @if ($item->opsi_jawaban == 'input text')
+                        @php
+                            $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id','jawaban_text.id_pengajuan','jawaban_text.id_jawaban','jawaban_text.opsi_text','item.id as id_item','item.nama')
+                                                                                    ->join('item','jawaban_text.id_jawaban','item.id')
+                                                                                    ->where('jawaban_text.id_pengajuan',$dataUmum->id)->where('jawaban_text.id_jawaban',$item->id)->get();
+                        @endphp
+                        @foreach ($dataDetailJawabanText as $itemTextDua)
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemTextDua->nama }}" disabled>
+                                {{-- <label for="">{{ $itemTextDua->nama }}</label> --}}
+                            </div>
+                            <div class="form-group col-md-6">
+                                <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemTextDua->opsi_text }}" disabled>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <input type="text" class="form-control" placeholder="" name="komentar_penyelia[]" placeholder="Masukkan Komentar">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <input type="number" class="form-control" placeholder="" name="skor_penyelia_text[]" value="">
+                            </div>
+                            <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextDua->id }}">
+                            <input type="hidden" name="id[]" value="{{ $value->id }}">
+
+                        </div>
+                        @endforeach
+                    @endif
                     @php
                         $dataJawaban = \App\Models\OptionModel::where('option',"!=","-")->where('id_item',$item->id)->get();
                         $dataOption = \App\Models\OptionModel::where('option',"=","-")->where('id_item',$item->id)->get();
@@ -101,12 +128,39 @@
                         </div>
                     @endif
                     @foreach ($dataLevelTiga as $keyTiga => $itemTiga)
+                        @if ($itemTiga->opsi_jawaban == 'input text')
+                            @php
+                                $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id','jawaban_text.id_pengajuan','jawaban_text.id_jawaban','jawaban_text.opsi_text','item.id as id_item','item.nama')
+                                                                                        ->join('item','jawaban_text.id_jawaban','item.id')
+                                                                                        ->where('jawaban_text.id_pengajuan',$dataUmum->id)->where('jawaban_text.id_jawaban',$itemTiga->id)->get();
+                            @endphp
+                            @foreach ($dataDetailJawabanText as $itemTextTiga)
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemTextTiga->nama }}" disabled>
+                                    {{-- <label for="">{{ $itemTextTiga->nama }}</label> --}}
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemTextTiga->opsi_text }}" disabled>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <input type="text" class="form-control" placeholder="" name="komentar_penyelia[]" placeholder="Masukkan Komentar">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <input type="number" class="form-control" placeholder="Masukkan skor" name="skor_penyelia_text[]" value="">
+                                </div>
+                                <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextTiga->id }}">
+                                <input type="hidden" name="id[]" value="{{ $value->id }}">
+
+                            </div>
+                            @endforeach
+                        @endif
                         @php
                             // check  jawaban level tiga
                             $dataJawabanLevelTiga = \App\Models\OptionModel::where('option',"!=","-")->where('id_item',$itemTiga->id)->get();
                             $dataOptionTiga = \App\Models\OptionModel::where('option',"=","-")->where('id_item',$itemTiga->id)->get();
                             // check level empat
-                            $dataLevelEmpat = \App\Models\ItemModel::select('id','nama','level','id_parent')->where('level',4)->where('id_parent',$itemTiga->id)->get();
+                            $dataLevelEmpat = \App\Models\ItemModel::select('id','nama','opsi_jawaban','level','id_parent')->where('level',4)->where('id_parent',$itemTiga->id)->get();
                         @endphp
 
                         @foreach ($dataOptionTiga as $itemOptionTiga)
@@ -148,6 +202,43 @@
                         </div>
                         @endif
                         @foreach ($dataLevelEmpat as $keyEmpat => $itemEmpat)
+                            {{-- @php
+                                echo "<pre>";
+                                    print($itemEmpat);
+                                echo "</pre>";
+                            @endphp --}}
+                            @if ($itemEmpat->opsi_jawaban == 'input text')
+                                @php
+                                    $dataDetailJawabanTextEmpat = \App\Models\JawabanTextModel::select('jawaban_text.id','jawaban_text.id_pengajuan','jawaban_text.id_jawaban','jawaban_text.opsi_text','item.id as id_item','item.nama')
+                                                                                            ->join('item','jawaban_text.id_jawaban','item.id')
+                                                                                            ->where('jawaban_text.id_pengajuan',$dataUmum->id)->where('jawaban_text.id_jawaban',$itemEmpat->id)->get();
+                                @endphp
+                                {{-- @php
+                                    echo "<pre>";
+                                        print($dataDetailJawabanTextEmpat);
+                                    echo "</pre>";
+                                @endphp --}}
+                                @foreach ($dataDetailJawabanTextEmpat as $itemTextEmpat)
+                                <div class="row">
+                                    <div class="form-group col-md-6">
+                                        <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemTextEmpat->nama }}" disabled>
+                                        {{-- <label for="">{{ $itemTextEmpat->nama }}</label> --}}
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemTextEmpat->opsi_text }}" disabled>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <input type="text" class="form-control" placeholder="" name="komentar_penyelia[]" placeholder="Masukkan Komentar">
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <input type="number" class="form-control" placeholder="Masukkan skor" name="skor_penyelia_text[]" value="">
+                                    </div>
+                                    <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextEmpat->id }}">
+                                    <input type="hidden" name="id[]" value="{{ $value->id }}">
+
+                                </div>
+                                @endforeach
+                            @endif
                             @php
                                 // check level empat
                                 $dataJawabanLevelEmpat = \App\Models\OptionModel::where('option',"!=","-")->where('id_item',$itemEmpat->id)->get();
