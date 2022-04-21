@@ -16,7 +16,7 @@ class CreateJawabanTextTable extends Migration
         Schema::create('jawaban_text', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_pengajuan')->constrained('pengajuan');
-            $table->foreignId('id_jawaban')->constrained('option')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('id_jawaban')->constrained('item')->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('opsi_text')->nullable();
             $table->integer('skor_penyelia')->nullable();
             $table->integer('skor')->nullable();

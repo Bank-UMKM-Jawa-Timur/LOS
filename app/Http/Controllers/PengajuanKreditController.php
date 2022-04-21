@@ -7,6 +7,7 @@ use App\Models\Desa;
 use App\Models\DetailKomentarModel;
 use App\Models\ItemModel;
 use App\Models\JawabanPengajuanModel;
+use App\Models\JawabanTextModel;
 use App\Models\Kabupaten;
 use App\Models\Kecamatan;
 use App\Models\KomentarModel;
@@ -97,7 +98,6 @@ class PengajuanKreditController extends Controller
      */
     public function store(Request $request)
     {
-        return $request;
         // $checkLevelDua = $request->dataLevelDua != null ? 'required' : '';
         // $checkLevelTiga = $request->dataLevelTiga != null ? 'required' : '';
         // $checkLevelEmpat = $request->dataLevelEmpat != null ? 'required' : '';
@@ -158,9 +158,12 @@ class PengajuanKreditController extends Controller
             $addData->save();
             $id_calon_nasabah = $addData->id;
 
+            if ($request->opsi_jawaban != 'input text') {
 
-            // $addJawabanLevel = new JawabanPengajuanModel;
-            // $addJawabanLevel->id_pengajuan = $id_pengajuan;
+            }else{
+
+            }
+
             $finalArray = array();
             $rata_rata = array();
             // data Level dua
@@ -234,6 +237,13 @@ class PengajuanKreditController extends Controller
             }
             for ($i=0; $i < count($finalArray); $i++) {
                 JawabanPengajuanModel::insert($finalArray[$i]);
+            }
+            foreach ($request->id_level as $key => $value) {
+                $dataJawabanText = new JawabanTextModel;
+                $dataJawabanText->id_pengajuan = $id_pengajuan;
+                $dataJawabanText->id_jawaban = $request->get('id_level')[$key];
+                $dataJawabanText->opsi_text = $request->get('informasi')[$key];
+                $dataJawabanText->save();
             }
             $updateData->posisi = 'Proses Input Data';
             $updateData->status_by_sistem = $status;
