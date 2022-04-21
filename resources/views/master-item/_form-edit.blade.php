@@ -37,6 +37,21 @@
                 </div>
             @enderror
         </div>
+
+        <div class="form-group col-md-6" id="form_opsi">
+            <label>Opsi Jawaban</label>
+            <select name="opsi_jawaban" id="opsi_jawaban" class="form-control @error('opsi_jawaban') is-invalid @enderror">
+                <option value="kosong" {{ $item->opsi_jawaban == 'kosong' ? 'selected' : ''  }}>Pilih Opsi Jawaban</option>
+                <option value="input text" {{ $item->opsi_jawaban == 'input text' ? 'selected' : ''  }}>Input Text</option>
+                <option value="option" {{ $item->opsi_jawaban == 'option' ? 'selected' : ''  }}>Opsi</option>
+            </select>
+            {{-- <input type="text" name="nama" class="form-control @error('nama') is-invalid @enderror" placeholder="Nama Item" value="{{old('nama')}}"> --}}
+            @error('opsi_jawaban')
+                <small class="text-danger">
+                    {{ $message }}
+                </small>
+            @enderror
+        </div>
     </div>
     <hr>
     <div class="detail-lawan">

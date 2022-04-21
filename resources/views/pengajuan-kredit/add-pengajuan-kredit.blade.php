@@ -210,20 +210,29 @@
         @php
             $key += 1;
             // check level 2
-            $dataLevelDua = \App\Models\ItemModel::select('id','nama','level','id_parent')->where('level',2)->where('id_parent',$value->id)->get();
+            $dataLevelDua = \App\Models\ItemModel::select('id','nama','level','opsi_jawaban','id_parent')->where('level',2)->where('id_parent',$value->id)->get();
             // check level 4
-            $dataLevelEmpat = \App\Models\ItemModel::select('id','nama','level','id_parent')->where('level',4)->where('id_parent',$value->id)->get();
+            $dataLevelEmpat = \App\Models\ItemModel::select('id','nama','level','opsi_jawaban','id_parent')->where('level',4)->where('id_parent',$value->id)->get();
         @endphp
         {{-- level level 2 --}}
         <div class="form-wizard" data-index='{{ $key }}' data-done='true'>
 
             <div class="row">
                 @foreach ($dataLevelDua as $item)
+                    @if ($item->opsi_jawaban == 'input text')
+                    <div class="form-group col-md-6">
+                        <label for="">{{ $item->nama }}</label>
+                        <input type="text" name="id_level[]" value="{{ $item->id }}" id="">
+                        <input type="text" name="informasi[]" id="" placeholder="Masukkan informasi" class="form-control">
+                    </div>
+                    @else
+
+                    @endif
                     @php
                         $dataJawaban = \App\Models\OptionModel::where('option',"!=","-")->where('id_item',$item->id)->get();
                         $dataOption = \App\Models\OptionModel::where('option',"=","-")->where('id_item',$item->id)->get();
                         // check level 3
-                        $dataLevelTiga = \App\Models\ItemModel::select('id','nama','level','id_parent')->where('level',3)->where('id_parent',$item->id)->get();
+                        $dataLevelTiga = \App\Models\ItemModel::select('id','nama','opsi_jawaban','level','id_parent')->where('level',3)->where('id_parent',$item->id)->get();
                     @endphp
 
                     @foreach ($dataOption as $itemOption)
@@ -251,12 +260,20 @@
                         </div>
                     @endif
                     @foreach ($dataLevelTiga as $keyTiga => $itemTiga)
+                        @if ($itemTiga->opsi_jawaban == 'input text')
+                            <div class="form-group col-md-6">
+                                <label for="">{{ $itemTiga->nama }}</label>
+                                <input type="text" name="id_level[]" value="{{ $itemTiga->id }}" id="">
+                                <input type="text" name="informasi[]" id="" placeholder="Masukkan informasi" class="form-control">
+                            </div>
+
+                        @endif
                         @php
                             // check  jawaban level tiga
                             $dataJawabanLevelTiga = \App\Models\OptionModel::where('option',"!=","-")->where('id_item',$itemTiga->id)->get();
                             $dataOptionTiga = \App\Models\OptionModel::where('option',"=","-")->where('id_item',$itemTiga->id)->get();
                             // check level empat
-                            $dataLevelEmpat = \App\Models\ItemModel::select('id','nama','level','id_parent')->where('level',4)->where('id_parent',$itemTiga->id)->get();
+                            $dataLevelEmpat = \App\Models\ItemModel::select('id','nama','opsi_jawaban','level','id_parent')->where('level',4)->where('id_parent',$itemTiga->id)->get();
                         @endphp
 
                         @foreach ($dataOptionTiga as $itemOptionTiga)
@@ -285,6 +302,13 @@
                             </div>
                         @endif
                         @foreach ($dataLevelEmpat as $keyEmpat => $itemEmpat)
+                            @if ($itemEmpat->opsi_jawaban == 'input text')
+                                <div class="form-group col-md-6">
+                                    <label for="">{{ $itemEmpat->nama }}</label>
+                                    <input type="text" name="id_level[]" value="{{ $itemEmpat->id }}" id="">
+                                    <input type="text" name="informasi[]" id="" placeholder="Masukkan informasi" class="form-control">
+                                </div>
+                            @endif
                             @php
                                 // check level empat
                                 $dataJawabanLevelEmpat = \App\Models\OptionModel::where('option',"!=","-")->where('id_item',$itemEmpat->id)->get();

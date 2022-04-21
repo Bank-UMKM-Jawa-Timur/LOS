@@ -41,6 +41,20 @@
                 </div>
             @enderror
         </div>
+        <div class="form-group col-md-6" id="form_opsi">
+            <label>Opsi Jawaban</label>
+            <select name="opsi_jawaban" id="opsi_jawaban" class="form-control @error('opsi_jawaban') is-invalid @enderror">
+                <option value="kosong">Pilih Opsi Jawaban</option>
+                <option value="input text">Input Text</option>
+                <option value="option">Opsi</option>
+            </select>
+            {{-- <input type="text" name="nama" class="form-control @error('nama') is-invalid @enderror" placeholder="Nama Item" value="{{old('nama')}}"> --}}
+            @error('opsi_jawaban')
+                <small class="text-danger">
+                    {{ $message }}
+                </small>
+            @enderror
+        </div>
     </div>
     <hr>
     <div id="opsi">
@@ -139,7 +153,6 @@
 </form>
 @push('custom-script')
     <script>
-
         $('#item_turunan_tiga').hide();
         $('#opsi').hide();
         $("#level").change(function(){
@@ -149,6 +162,8 @@
                 $('#itemTurunan2').prop('disabled', true);
                 $('#opsi_name').prop('disabled', true);
                 $('#skor').prop('disabled', true);
+                $('#form_opsi').hide();
+                $('#opsi_jawaban').prop('disabled',true);
                 $('#opsi').hide();
                 $('#item_turunan_tiga').hide();
                 $('#item_turunan_tiga').prop('disabled', true)
@@ -159,8 +174,24 @@
                 $('#opsi_name').prop('disabled', false);
                 $('#skor').prop('disabled', false);
                 $('#opsi').show();
-
+                $('#form_opsi').show();
+                $('#opsi_jawaban').prop('disabled',false);
             }
+            $('#opsi_jawaban').change(function(e) {
+                e.preventDefault();
+                let opsi_jawaban = $(this).val();
+                console.log(opsi_jawaban);
+                if (opsi_jawaban == "input text") {
+                    // console.log('input text');
+                    $('#opsi').hide();
+                    $('#opsi_name').prop('disabled',true);
+                    $('#skor').prop('disabled',true);
+                }else{
+                    $('#opsi').show();
+                    $('#opsi_name').prop('disabled',false);
+                    $('#skor').prop('disabled',false);
+                }
+            })
             if (id_level == "2") {
                 $(".select").select2()
                 $('#itemTurunan2').prop('disabled', true);
@@ -173,7 +204,6 @@
                 }else{
                     $('#itemTurunan1').empty();
                 }
-
             }else if (id_level == "3"){
                 $(".select").select2()
                 $('#item_turunan_tiga').hide()
@@ -206,6 +236,7 @@
             }else{
 
             }
+
         });
         // tambah ajax 1
         function turunanSatu(id_level) {

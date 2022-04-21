@@ -95,11 +95,19 @@ class MasterItemController extends Controller
         //     }
         //     $this->validate($request, $validation);
         // }
-
+        $request->validate([
+            // 'opsi_jawaban' => 'required|not_in:0',
+            'nama' => 'required'
+        ],[
+            'required' => 'data harus terisi.',
+            'not_in' => 'data harus terisi.',
+        ]);
+        // return $request;
         try {
             $addItem = new ItemModel;
             $addItem->nama = $request->get('nama');
             $addItem->level = $request->get('level');
+            $addItem->opsi_jawaban = $request->get('opsi_jawaban');
             if ($request->level == 2) {
                 $addItem->id_parent = $request->item_turunan;
             }elseif ($request->level == 3) {
@@ -110,50 +118,51 @@ class MasterItemController extends Controller
             }
             // $addItem->id_parent = $request->level != 2 ? $request->item_turunan_dua : $request->item_turunan;
             $addItem->save();
-            if ($request->level != 1) {
-                // return 'ada selain 1';
-                if ($request->level == 2) {
-                    // return 'ada';
-                    // return $request;
 
+            if ($request->get('opsi_jawaban') != 'input text') {
+                if ($request->level != 1) {
+                    // return 'ada selain 1';
+                    if ($request->level == 2) {
+                        // return 'ada';
+                        // return $request;
+                        foreach ($request->get('opsi') as $key => $value) {
+                            // return $value['opsi_name'];
+                            $addDataOption = new OptionModel;
+                            $addDataOption->id_item = $addItem->id;
+                            $addDataOption->option = $value['opsi_name'] != null ? $value['opsi_name'] : '-';
+                            $addDataOption->skor = $value['skor'] != null ? $value['skor'] : 0;
+                            $addDataOption->save();
+                        }
+                    }elseif ($request->level == 3) {
 
-                    foreach ($request->get('opsi') as $key => $value) {
-                        // return $value['opsi_name'];
-                        $addDataOption = new OptionModel;
-                        $addDataOption->id_item = $addItem->id;
-                        $addDataOption->option = $value['opsi_name'] != null ? $value['opsi_name'] : '-';
-                        $addDataOption->skor = $value['skor'] != null ? $value['skor'] : 0;
-                        $addDataOption->save();
-                    }
-                }elseif ($request->level == 3) {
-
-                    foreach ($request->get('opsi') as $key => $value) {
-                        // return $value['opsi_name'];
-                        $addDataOption = new OptionModel;
-                        $addDataOption->id_item = $addItem->id;
-                        $addDataOption->option = $value['opsi_name'] != null ? $value['opsi_name'] : '-';
-                        $addDataOption->skor = $value['skor'] != null ? $value['skor'] : 0;
-                        $addDataOption->save();
-                    }
-                }else{
-                    foreach ($request->get('opsi') as $key => $value) {
-                        // return $value['opsi_name'];
-                        $addDataOption = new OptionModel;
-                        $addDataOption->id_item = $addItem->id;
-                        $addDataOption->option = $value['opsi_name'] != null ? $value['opsi_name'] : '-';
-                        $addDataOption->skor = $value['skor'] != null ? $value['skor'] : 0;
-                        $addDataOption->save();
+                        foreach ($request->get('opsi') as $key => $value) {
+                            // return $value['opsi_name'];
+                            $addDataOption = new OptionModel;
+                            $addDataOption->id_item = $addItem->id;
+                            $addDataOption->option = $value['opsi_name'] != null ? $value['opsi_name'] : '-';
+                            $addDataOption->skor = $value['skor'] != null ? $value['skor'] : 0;
+                            $addDataOption->save();
+                        }
+                    }else{
+                        foreach ($request->get('opsi') as $key => $value) {
+                            // return $value['opsi_name'];
+                            $addDataOption = new OptionModel;
+                            $addDataOption->id_item = $addItem->id;
+                            $addDataOption->option = $value['opsi_name'] != null ? $value['opsi_name'] : '-';
+                            $addDataOption->skor = $value['skor'] != null ? $value['skor'] : 0;
+                            $addDataOption->save();
+                        }
                     }
                 }
             }
             return redirect()->route('master-item.index')->withStatus('Berhasil menambah data.');
 
         } catch(Exception $e) {
-            return $e;
             return redirect()->back()->withStatus('Terjadi Kesalahan.');
+            return $e;
         }catch (QueryException $e){
-            return $e;
             return redirect()->back()->withStatus('Terjadi Kesalahan.');
+            return $e;
         }
 
     }
@@ -205,6 +214,7 @@ class MasterItemController extends Controller
         try {
             $updateItem = ItemModel::find($id);
             $updateItem->nama = $request->get('nama');
+            $updateItem->opsi_jawaban = $request->get('opsi_jawaban');
             $updateItem->save();
             if ($request->id_detail != null) {
                 foreach ($request->id_detail as $key => $value) {

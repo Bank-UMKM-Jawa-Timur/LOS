@@ -97,6 +97,7 @@ class PengajuanKreditController extends Controller
      */
     public function store(Request $request)
     {
+        return $request;
         // $checkLevelDua = $request->dataLevelDua != null ? 'required' : '';
         // $checkLevelTiga = $request->dataLevelTiga != null ? 'required' : '';
         // $checkLevelEmpat = $request->dataLevelEmpat != null ? 'required' : '';

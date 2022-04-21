@@ -224,10 +224,10 @@
         @php
             $key += 1;
             // check level 2
-            $dataLevelDua = \App\Models\ItemModel::select('id','nama','level','id_parent')->where('level',2)->where('id_parent',$value->id)->get();
+            $dataLevelDua = \App\Models\ItemModel::select('id','nama','level','opsi_jawaban','id_parent')->where('level',2)->where('id_parent',$value->id)->get();
 
             // check level 4
-            $dataLevelEmpat = \App\Models\ItemModel::select('id','nama','level','id_parent')->where('level',4)->where('id_parent',$value->id)->get();
+            $dataLevelEmpat = \App\Models\ItemModel::select('id','nama','level','opsi_jawaban','id_parent')->where('level',4)->where('id_parent',$value->id)->get();
         @endphp
         {{-- level level 2 --}}
         <div class="form-wizard" data-index='{{ $key }}' data-done='true'>
@@ -239,7 +239,7 @@
                         $dataOption = \App\Models\OptionModel::where('option',"=","-")->where('id_item',$item->id)->get();
 
                         // check level 3
-                        $dataLevelTiga = \App\Models\ItemModel::select('id','nama','level','id_parent')->where('level',3)->where('id_parent',$item->id)->get();
+                        $dataLevelTiga = \App\Models\ItemModel::select('id','nama','level','opsi_jawaban','id_parent')->where('level',3)->where('id_parent',$item->id)->get();
                     @endphp
 
                     @foreach ($dataOption as $itemOption)
@@ -280,7 +280,7 @@
                             $dataJawabanLevelTiga = \App\Models\OptionModel::where('option',"!=","-")->where('id_item',$itemTiga->id)->get();
                             $dataOptionTiga = \App\Models\OptionModel::where('option',"=","-")->where('id_item',$itemTiga->id)->get();
                             // check level empat
-                            $dataLevelEmpat = \App\Models\ItemModel::select('id','nama','level','id_parent')->where('level',4)->where('id_parent',$itemTiga->id)->get();
+                            $dataLevelEmpat = \App\Models\ItemModel::select('id','nama','level','opsi_jawaban','id_parent')->where('level',4)->where('id_parent',$itemTiga->id)->get();
                         @endphp
 
                         @foreach ($dataOptionTiga as $itemOptionTiga)
@@ -344,7 +344,7 @@
                     @endforeach
                 @endforeach
             </div>
-           
+
         </div>
 
     @endforeach

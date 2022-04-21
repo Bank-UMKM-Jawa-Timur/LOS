@@ -5,6 +5,7 @@
                 <th class="text-center">#</th>
                 <th>Nama Item</th>
                 <th>Level</th>
+                <th>Opsi jawaban</th>
                 <th>Aksi</th>
             </tr>
         </thead>
@@ -18,6 +19,7 @@
                     <td class="text-center text-muted">{{ $no }}</td>
                     <td>{{ $data->nama }}</td>
                     <td>{{ $data->level }}</td>
+                    <td>{{ $data->opsi_jawaban != null ? $data->opsi_jawaban : 'Title' }}</td>
                     <td>
                         <div class="form-inline btn-action">
                             <a href="{{ route('master-item.edit', $data->id) }}" class="mr-2">
