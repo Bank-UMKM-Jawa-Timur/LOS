@@ -30,11 +30,11 @@ class PengajuanKreditController extends Controller
     public function index()
     {
         $param['pageTitle'] = "Dashboard";
+        $id_cabang = Auth::user()->id_cabang;
         if(auth()->user()->role == 'Staf Analis Kredit'){
             $param['pageTitle'] = 'Tambah Pengajuan Kredit';
             $param['btnText'] = 'Tambah Pengajuan';
             $param['btnLink'] = route('pengajuan-kredit.create');
-            $id_cabang = Auth::user()->id_cabang;
             $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.progress_pengajuan_data','pengajuan.tanggal_review_penyelia','pengajuan.tanggal_review_pincab','pengajuan.status','pengajuan.status_by_sistem','pengajuan.id_cabang','pengajuan.average_by_sistem',
                                             'calon_nasabah.nama','calon_nasabah.jenis_usaha','calon_nasabah.id_pengajuan')
                                             ->join('calon_nasabah','calon_nasabah.id_pengajuan','pengajuan.id')
@@ -53,12 +53,11 @@ class PengajuanKreditController extends Controller
                                             ->get();
             return view('pengajuan-kredit.list-pengajuan-kredit',$param);
         }elseif (auth()->user()->role == 'Pincab') {
-            $id_cabang = Auth::user()->id_cabang;
-            $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.progress_pengajuan_data','pengajuan.tanggal_review_penyelia','pengajuan.tanggal_review_pincab','pengajuan.status','pengajuan.status_by_sistem','pengajuan.id_cabang','pengajuan.average_by_sistem','pengajuan.average_by_penyelia',
-                                                    'calon_nasabah.nama','calon_nasabah.jenis_usaha','calon_nasabah.id_pengajuan')
-                                                    ->join('calon_nasabah','calon_nasabah.id_pengajuan','pengajuan.id')
-                                                    ->where('pengajuan.id_cabang',$id_cabang)
-                                                    ->get();
+                $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.progress_pengajuan_data','pengajuan.tanggal_review_penyelia','pengajuan.tanggal_review_pincab','pengajuan.status','pengajuan.status_by_sistem','pengajuan.id_cabang','pengajuan.average_by_sistem','pengajuan.average_by_penyelia',
+                                                        'calon_nasabah.nama','calon_nasabah.jenis_usaha','calon_nasabah.id_pengajuan')
+                                                        ->join('calon_nasabah','calon_nasabah.id_pengajuan','pengajuan.id')
+                                                        ->where('pengajuan.id_cabang', Auth::user()->id_cabang)
+                                                        ->get();
             return view('pengajuan-kredit.komentar-pincab-pengajuan',$param);
         }else{
             $id_cabang = Auth::user()->id_cabang;
@@ -665,11 +664,11 @@ class PengajuanKreditController extends Controller
 
         $param['pageTitle'] = "Dashboard";
         $param['dataAspek'] = ItemModel::select('*')->where('level',1)->get();
-        $param['jawabanpengajuan'] = JawabanPengajuanModel::select('jawaban.id','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','option.id as id_option','option.option as name_option','option.id_item','item.id as id_item','item.nama','item.level','item.id_parent')
-                                    ->join('option','option.id','jawaban.id_jawaban')
-                                    ->join('item','item.id','option.id_item')
-                                    ->where('jawaban.id_pengajuan',$id)
-                                    ->get();
+        // $param['jawabanpengajuan'] = JawabanPengajuanModel::select('jawaban.id','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','option.id as id_option','option.option as name_option','option.id_item','item.id as id_item','item.nama','item.level','item.id_parent')
+        //                             ->join('option','option.id','jawaban.id_jawaban')
+        //                             ->join('item','item.id','option.id_item')
+        //                             ->where('jawaban.id_pengajuan',$id)
+        //                             ->get();
         $param['dataNasabah'] = CalonNasabah::select('calon_nasabah.*','kabupaten.id as kabupaten_id','kabupaten.kabupaten','kecamatan.id as kecamatan_id','kecamatan.id_kabupaten','kecamatan.kecamatan','desa.id as desa_id','desa.id_kabupaten','desa.id_kecamatan','desa.desa')
                                         ->join('kabupaten','kabupaten.id','calon_nasabah.id_kabupaten')
                                         ->join('kecamatan','kecamatan.id','calon_nasabah.id_kecamatan')
@@ -694,13 +693,24 @@ class PengajuanKreditController extends Controller
             // $updateData->update();
             $addKomentar = new KomentarModel;
             $addKomentar->id_pengajuan = $request->id_pengajuan;
-            $addKomentar->komentar_pincab = $request->komentar;
+            // $addKomentar->komentar_pincab = $request->komentar;
             $addKomentar->save();
+            $id_komentar = $addKomentar->id;
+            foreach ($request->get('id') as $key => $value) {
+                $addDetailKomentar = new DetailKomentarModel;
+                $addDetailKomentar->id_komentar = $id_komentar;
+                $addDetailKomentar->id_user = Auth::user()->id;
+                $addDetailKomentar->id_item = $request->get('id')[$key];
+                $addDetailKomentar->komentar = $request->get('komentar');
+                $addDetailKomentar->save();
+            }
 
             return redirect('/pengajuan-kredit')->withStatus('Berhasil menambahkan komentar');
         }catch (Exception $e) {
+            return $e;
             return redirect()->back()->withError('Terjadi kesalahan.');
         }catch(QueryException $e){
+            return $e;
             return redirect()->back()->withError('Terjadi kesalahan');
         }
     }

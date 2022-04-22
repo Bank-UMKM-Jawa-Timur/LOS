@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\CalonNasabah;
 use App\Models\ItemModel;
+use App\Models\PengajuanModel;
 
 class CetakSuratController extends Controller
 {
@@ -13,10 +14,11 @@ class CetakSuratController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    // protected $param;
     public function index()
     {
-        $this->params['nasabah'] = CalonNasabah::get();
-        return view('cetak.cetak-surat', $this->params);
+        $param['nasabah'] = CalonNasabah::get();
+        return view('cetak.cetak-surat', $this->param);
     }
 
     /**
@@ -89,9 +91,17 @@ class CetakSuratController extends Controller
 
     public function cetak($id)
     {
-        $this->params['nasabah'] = CalonNasabah::find($id);
-        $this->params['aspek'] = ItemModel::whereNull('id_parent')->get();
-        // ddd($this->params['aspek']);
-        return view('cetak.cetak-surat', $this->params);
+        $param['dataAspek'] = ItemModel::select('*')->where('level',1)->get();
+        $param['dataNasabah'] = CalonNasabah::select('calon_nasabah.*','kabupaten.id as kabupaten_id','kabupaten.kabupaten','kecamatan.id as kecamatan_id','kecamatan.id_kabupaten','kecamatan.kecamatan','desa.id as desa_id','desa.id_kabupaten','desa.id_kecamatan','desa.desa')
+                                        ->join('kabupaten','kabupaten.id','calon_nasabah.id_kabupaten')
+                                        ->join('kecamatan','kecamatan.id','calon_nasabah.id_kecamatan')
+                                        ->join('desa','desa.id','calon_nasabah.id_desa')
+                                        ->where('calon_nasabah.id_pengajuan',$id)
+                                        ->first();
+        $param['dataUmum'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.tanggal_review_penyelia')
+                                        ->find($id);
+        $param['dataUmum'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.tanggal_review_penyelia')
+                                        ->find($id);
+        return view('cetak.cetak-surat', $param);
     }
 }

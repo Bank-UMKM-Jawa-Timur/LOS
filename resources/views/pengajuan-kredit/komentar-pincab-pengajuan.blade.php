@@ -93,12 +93,8 @@
                         @endif
                     </td>
                     <td>
-                        @if ($item->posisi == 'Review Penyelia')
-                            <div class="d-flex">
-                                <a href="{{ route('pengajuan.check.pincab',$item->id_pengajuan) }}" class="btn btn-info">Tindak lanjut Pincab</a>
 
-                            </div>
-                        @elseif ($item->posisi == 'Pincab')
+                        @if ($item->posisi == 'Pincab')
                             <div class="d-flex">
                                 @if (auth()->user()->role == 'Pincab')
                                     <a href="{{ route('pengajuan.check.pincab.status.detail',$item->id_pengajuan) }}" class="btn btn-rgb-primary mr-2">
@@ -112,9 +108,15 @@
                                 @endif
                             </div>
                         @elseif ($item->posisi == 'Selesai')
-                            <button disabled href="" class="btn btn-success" >Selesai </button>
-                        @else
-                            <a href="{{ route('pengajuan.detailjawaban',$item->id_pengajuan) }}" class="btn btn-warning">Tindak lanjut Staf Kredit</a>
+                            <div class="d-flex p-2">
+                                <div class="px-2">
+                                    <button disabled href="" class="btn btn-success" >Selesai </button>
+                                </div>
+                                <div>
+                                    <a href="{{ route('cetak',$item->id_pengajuan) }}" class="btn btn-info">Cetak</a>
+                                </div>
+
+                            </div>
                         @endif
                     </td>
                 @empty

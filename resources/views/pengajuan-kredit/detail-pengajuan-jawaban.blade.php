@@ -57,24 +57,24 @@
                                                                                     ->where('jawaban_text.id_pengajuan',$dataUmum->id)->where('jawaban_text.id_jawaban',$item->id)->get();
                         @endphp
                         @foreach ($dataDetailJawabanText as $itemTextDua)
-                        <div class="row">
-                            <div class="form-group col-md-6">
-                                <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemTextDua->nama }}" disabled>
-                                {{-- <label for="">{{ $itemTextDua->nama }}</label> --}}
-                            </div>
-                            <div class="form-group col-md-6">
-                                <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemTextDua->opsi_text }}" disabled>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <input type="text" class="form-control" placeholder="" name="komentar_penyelia[]" placeholder="Masukkan Komentar">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <input type="number" class="form-control" placeholder="" name="skor_penyelia_text[]" value="">
-                            </div>
-                            <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextDua->id }}">
-                            <input type="hidden" name="id[]" value="{{ $value->id }}">
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemTextDua->nama }}" disabled>
+                                    {{-- <label for="">{{ $itemTextDua->nama }}</label> --}}
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemTextDua->opsi_text }}" disabled>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <input type="text" class="form-control" placeholder="" name="komentar_penyelia[]" placeholder="Masukkan Komentar">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <input type="number" class="form-control" placeholder="" name="skor_penyelia_text[]" value="">
+                                </div>
+                                <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextDua->id }}">
+                                <input type="hidden" name="id[]" value="{{ $value->id }}">
 
-                        </div>
+                            </div>
                         @endforeach
                     @endif
                     @php
