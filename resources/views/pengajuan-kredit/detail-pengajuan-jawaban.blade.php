@@ -72,7 +72,7 @@
                                     <input type="number" class="form-control" placeholder="" name="skor_penyelia_text[]" value="">
                                 </div>
                                 <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextDua->id }}">
-                                <input type="hidden" name="id[]" value="{{ $itemTextDua->id }}">
+                                <input type="hidden" name="id[]" value="{{ $itemTextDua->id_item }}">
 
                             </div>
                         @endforeach
@@ -121,7 +121,7 @@
                                             <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemJawaban->skor }}" disabled>
                                             <input type="number" class="form-control" placeholder="" name="skor_penyelia[]" value="{{ $itemJawaban->skor != null ? $itemJawaban->skor : 0 }}">
                                         </div>
-                                        <input type="hidden" name="id[]" value="{{ $itemJawaban->id }}">
+                                        <input type="hidden" name="id[]" value="{{ $item->id }}">
                                     @endif
                                 @endif
                             @endforeach
@@ -150,7 +150,7 @@
                                     <input type="number" class="form-control" placeholder="Masukkan skor" name="skor_penyelia_text[]" value="">
                                 </div>
                                 <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextTiga->id }}">
-                                <input type="hidden" name="id[]" value="{{ $itemTiga->id }}">
+                                <input type="hidden" name="id[]" value="{{ $itemTextTiga->id_item }}">
 
                             </div>
                             @endforeach
@@ -195,7 +195,7 @@
                                             <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="skor_penyelia" value="{{ $itemJawabanLevelTiga->skor }}" disabled>
                                             <input type="number" class="form-control" placeholder="" name="skor_penyelia[]" value="{{ $itemJawabanLevelTiga->skor != null ? $itemJawabanLevelTiga->skor : '' }}">
                                         </div>
-                                        <input type="hidden" name="id[]" value="{{ $itemJawabanLevelTiga->id }}">
+                                        <input type="hidden" name="id[]" value="{{ $itemTiga->id }}">
                                     @endif
                                 @endif
                             @endforeach
@@ -234,7 +234,7 @@
                                         <input type="number" class="form-control" placeholder="Masukkan skor" name="skor_penyelia_text[]" value="">
                                     </div>
                                     <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextEmpat->id }}">
-                                    <input type="hidden" name="id[]" value="{{ $itemEmpat->id }}">
+                                    <input type="hidden" name="id[]" value="{{ $itemTextEmpat->id_item }}">
 
                                 </div>
                                 @endforeach
@@ -277,7 +277,7 @@
                                                     <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia[]" value="{{ $itemJawabanLevelEmpat->skor }}" disabled>
                                                     <input type="number" class="form-control" placeholder="" name="skor_penyelia[]" value="{{ $itemJawabanLevelEmpat->skor != null ? $itemJawabanLevelEmpat->skor : '' }}">
                                                 </div>
-                                                <input type="hidden" name="id[]" value="{{ $itemJawabanLevelEmpat->id }}">
+                                                <input type="hidden" name="id[]" value="{{ $itemEmpat->id }}">
                                             @endif
                                         @endif
                                     @endforeach

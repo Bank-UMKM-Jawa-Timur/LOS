@@ -625,7 +625,8 @@ class PengajuanKreditController extends Controller
     // insert komentar
     public function getInsertKomentar(Request $request)
     {
-        // return $request;
+        // return count($request->id);
+        // return count($request->komentar_penyelia);
         $request->validate([
             // 'komentar_penyelia_text.*'=> 'required',
             'komentar_penyelia.*' => 'required',
@@ -645,10 +646,11 @@ class PengajuanKreditController extends Controller
                     'skor_penyelia' => $value
                 ]);
             }
-            // return $finalArray_text;
+            // return $request->id;
             $sum_select = array_sum($request->skor_penyelia);
             $sum_text = array_sum($request->skor_penyelia_text);
             $average = ($sum_select + $sum_text) / count($request->skor_penyelia);
+            // return $average;
             $result = round($average, 2);
             $status = "";
             $updateData = PengajuanModel::find($request->id_pengajuan);
