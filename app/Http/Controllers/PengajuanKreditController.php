@@ -601,8 +601,10 @@ class PengajuanKreditController extends Controller
             }
             return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil menambahkan data');
         }catch (Exception $e) {
+            return $e;
             return redirect()->back()->withError('Terjadi kesalahan.');
         }catch(QueryException $e){
+            return $e;
             return redirect()->back()->withError('Terjadi kesalahan');
         }
     }
