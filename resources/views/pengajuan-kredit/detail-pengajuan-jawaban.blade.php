@@ -82,7 +82,7 @@
                         $dataOption = \App\Models\OptionModel::where('option',"=","-")->where('id_item',$item->id)->get();
 
                         // check level 3
-                        $dataLevelTiga = \App\Models\ItemModel::select('id','nama','level','id_parent')->where('level',3)->where('id_parent',$item->id)->get();
+                        $dataLevelTiga = \App\Models\ItemModel::select('id','nama','opsi_jawaban','level','id_parent')->where('level',3)->where('id_parent',$item->id)->get();
                     @endphp
                     @foreach ($dataOption as $itemOption)
                         @if ($itemOption->option == "-")
