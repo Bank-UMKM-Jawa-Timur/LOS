@@ -31,41 +31,96 @@ class PengajuanKreditController extends Controller
     {
         $param['pageTitle'] = "Dashboard";
         $id_cabang = Auth::user()->id_cabang;
-        if(auth()->user()->role == 'Staf Analis Kredit'){
+        if (auth()->user()->role == 'Staf Analis Kredit') {
             $param['pageTitle'] = 'Tambah Pengajuan Kredit';
             $param['btnText'] = 'Tambah Pengajuan';
             $param['btnLink'] = route('pengajuan-kredit.create');
-            $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.progress_pengajuan_data','pengajuan.tanggal_review_penyelia','pengajuan.tanggal_review_pincab','pengajuan.status','pengajuan.status_by_sistem','pengajuan.id_cabang','pengajuan.average_by_sistem',
-                                            'calon_nasabah.nama','calon_nasabah.jenis_usaha','calon_nasabah.id_pengajuan')
-                                            ->join('calon_nasabah','calon_nasabah.id_pengajuan','pengajuan.id')
-                                            ->where('pengajuan.id_cabang',$id_cabang)
-                                            ->get();
+            $param['data_pengajuan'] = PengajuanModel::select(
+                'pengajuan.id',
+                'pengajuan.tanggal',
+                'pengajuan.posisi',
+                'pengajuan.progress_pengajuan_data',
+                'pengajuan.tanggal_review_penyelia',
+                'pengajuan.tanggal_review_pincab',
+                'pengajuan.status',
+                'pengajuan.status_by_sistem',
+                'pengajuan.id_cabang',
+                'pengajuan.average_by_sistem',
+                'calon_nasabah.nama',
+                'calon_nasabah.jenis_usaha',
+                'calon_nasabah.id_pengajuan'
+            )
+                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                ->where('pengajuan.id_cabang', $id_cabang)
+                ->get();
             // return view('pengajuan-kredit.add-pengajuan-kredit',$param);
-            return view('pengajuan-kredit.list-edit-pengajuan-kredit',$param);
-        }elseif (auth()->user()->role == 'Penyelia Kredit') {
+            return view('pengajuan-kredit.list-edit-pengajuan-kredit', $param);
+        } elseif (auth()->user()->role == 'Penyelia Kredit') {
             // $param['dataAspek'] = ItemModel::select('*')->where('level',1)->get();
 
             $id_cabang = Auth::user()->id_cabang;
-            $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.progress_pengajuan_data','pengajuan.tanggal_review_penyelia','pengajuan.tanggal_review_pincab','pengajuan.status','pengajuan.status_by_sistem','pengajuan.id_cabang','pengajuan.average_by_sistem','pengajuan.average_by_penyelia',
-                                            'calon_nasabah.nama','calon_nasabah.jenis_usaha','calon_nasabah.id_pengajuan')
-                                            ->join('calon_nasabah','calon_nasabah.id_pengajuan','pengajuan.id')
-                                            ->where('pengajuan.id_cabang',$id_cabang)
-                                            ->get();
-            return view('pengajuan-kredit.list-pengajuan-kredit',$param);
-        }elseif (auth()->user()->role == 'Pincab') {
-                $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.progress_pengajuan_data','pengajuan.tanggal_review_penyelia','pengajuan.tanggal_review_pincab','pengajuan.status','pengajuan.status_by_sistem','pengajuan.id_cabang','pengajuan.average_by_sistem','pengajuan.average_by_penyelia',
-                                                        'calon_nasabah.nama','calon_nasabah.jenis_usaha','calon_nasabah.id_pengajuan')
-                                                        ->join('calon_nasabah','calon_nasabah.id_pengajuan','pengajuan.id')
-                                                        ->where('pengajuan.id_cabang', Auth::user()->id_cabang)
-                                                        ->get();
-            return view('pengajuan-kredit.komentar-pincab-pengajuan',$param);
-        }else{
+            $param['data_pengajuan'] = PengajuanModel::select(
+                'pengajuan.id',
+                'pengajuan.tanggal',
+                'pengajuan.posisi',
+                'pengajuan.progress_pengajuan_data',
+                'pengajuan.tanggal_review_penyelia',
+                'pengajuan.tanggal_review_pincab',
+                'pengajuan.status',
+                'pengajuan.status_by_sistem',
+                'pengajuan.id_cabang',
+                'pengajuan.average_by_sistem',
+                'pengajuan.average_by_penyelia',
+                'calon_nasabah.nama',
+                'calon_nasabah.jenis_usaha',
+                'calon_nasabah.id_pengajuan'
+            )
+                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                ->where('pengajuan.id_cabang', $id_cabang)
+                ->get();
+            return view('pengajuan-kredit.list-pengajuan-kredit', $param);
+        } elseif (auth()->user()->role == 'Pincab') {
+            $param['data_pengajuan'] = PengajuanModel::select(
+                'pengajuan.id',
+                'pengajuan.tanggal',
+                'pengajuan.posisi',
+                'pengajuan.progress_pengajuan_data',
+                'pengajuan.tanggal_review_penyelia',
+                'pengajuan.tanggal_review_pincab',
+                'pengajuan.status',
+                'pengajuan.status_by_sistem',
+                'pengajuan.id_cabang',
+                'pengajuan.average_by_sistem',
+                'pengajuan.average_by_penyelia',
+                'calon_nasabah.nama',
+                'calon_nasabah.jenis_usaha',
+                'calon_nasabah.id_pengajuan'
+            )
+                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                ->where('pengajuan.id_cabang', Auth::user()->id_cabang)
+                ->get();
+            return view('pengajuan-kredit.komentar-pincab-pengajuan', $param);
+        } else {
             $id_cabang = Auth::user()->id_cabang;
-            $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.progress_pengajuan_data','pengajuan.tanggal_review_penyelia','pengajuan.tanggal_review_pincab','pengajuan.status','pengajuan.status_by_sistem','pengajuan.id_cabang','pengajuan.average_by_sistem','pengajuan.average_by_penyelia',
-                                        'calon_nasabah.nama','calon_nasabah.jenis_usaha','calon_nasabah.id_pengajuan')
-                                        ->join('calon_nasabah','calon_nasabah.id_pengajuan','pengajuan.id')
-                                        ->get();
-            return view('pengajuan-kredit.komentar-pincab-pengajuan',$param);
+            $param['data_pengajuan'] = PengajuanModel::select(
+                'pengajuan.id',
+                'pengajuan.tanggal',
+                'pengajuan.posisi',
+                'pengajuan.progress_pengajuan_data',
+                'pengajuan.tanggal_review_penyelia',
+                'pengajuan.tanggal_review_pincab',
+                'pengajuan.status',
+                'pengajuan.status_by_sistem',
+                'pengajuan.id_cabang',
+                'pengajuan.average_by_sistem',
+                'pengajuan.average_by_penyelia',
+                'calon_nasabah.nama',
+                'calon_nasabah.jenis_usaha',
+                'calon_nasabah.id_pengajuan'
+            )
+                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                ->get();
+            return view('pengajuan-kredit.komentar-pincab-pengajuan', $param);
         }
     }
 
@@ -81,12 +136,11 @@ class PengajuanKreditController extends Controller
         $param['dataDesa'] = Desa::all();
         $param['dataKecamatan'] = Kecamatan::all();
         $param['dataKabupaten'] = Kabupaten::all();
-        $param['dataAspek'] = ItemModel::select('*')->where('level',1)->get();
+        $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->get();
 
-        $data['dataPertanyaanSatu'] = ItemModel::select('id','nama','level','id_parent')->where('level',2)->where('id_parent',3)->get();
+        $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
 
-        return view('pengajuan-kredit.add-pengajuan-kredit',$param);
-
+        return view('pengajuan-kredit.add-pengajuan-kredit', $param);
     }
 
     /**
@@ -123,7 +177,7 @@ class PengajuanKreditController extends Controller
             // 'dataLevelDua.*' => $checkLevelDua,
             // 'dataLevelTiga.*' => $checkLevelTiga,
             // 'dataLevelEmpat.*' => $checkLevelEmpat,
-        ],[
+        ], [
             'required' => 'data harus terisi.'
         ]);
         DB::beginTransaction();
@@ -166,8 +220,7 @@ class PengajuanKreditController extends Controller
                     $dataJawabanText->opsi_text = $request->get('informasi')[$key];
                     $dataJawabanText->save();
                 }
-            }else{
-
+            } else {
             }
 
             $finalArray = array();
@@ -180,12 +233,15 @@ class PengajuanKreditController extends Controller
                     $data_level_dua = $this->getDataLevel($value);
                     $skor[$key] = $data_level_dua[0];
                     $id_jawaban[$key] = $data_level_dua[1];
-                    array_push($rata_rata,$skor[$key]);
-                    array_push($finalArray, array(
-                        'id_pengajuan'=> $id_pengajuan,
-                        'id_jawaban'=> $id_jawaban[$key],
-                        'skor'=> $skor[$key],
-                        'created_at' => date("Y-m-d H:i:s"),)
+                    array_push($rata_rata, $skor[$key]);
+                    array_push(
+                        $finalArray,
+                        array(
+                            'id_pengajuan' => $id_pengajuan,
+                            'id_jawaban' => $id_jawaban[$key],
+                            'skor' => $skor[$key],
+                            'created_at' => date("Y-m-d H:i:s"),
+                        )
                     );
                 }
             }
@@ -198,14 +254,16 @@ class PengajuanKreditController extends Controller
                     $data_level_tiga = $this->getDataLevel($value);
                     $skor[$key] = $data_level_tiga[0];
                     $id_jawaban[$key] = $data_level_tiga[1];
-                    array_push($rata_rata,$skor[$key]);
-                    array_push($finalArray, array(
-                        'id_pengajuan'=> $id_pengajuan,
-                        'id_jawaban'=> $id_jawaban[$key],
-                        'skor'=> $skor[$key],
-                        'created_at' => date("Y-m-d H:i:s"),)
+                    array_push($rata_rata, $skor[$key]);
+                    array_push(
+                        $finalArray,
+                        array(
+                            'id_pengajuan' => $id_pengajuan,
+                            'id_jawaban' => $id_jawaban[$key],
+                            'skor' => $skor[$key],
+                            'created_at' => date("Y-m-d H:i:s"),
+                        )
                     );
-
                 }
             }
 
@@ -217,31 +275,33 @@ class PengajuanKreditController extends Controller
                     $data_level_empat = $this->getDataLevel($value);
                     $skor[$key] = $data_level_empat[0];
                     $id_jawaban[$key] = $data_level_empat[1];
-                    array_push($rata_rata,$skor[$key]);
-                    array_push($finalArray, array(
-                        'id_pengajuan'=> $id_pengajuan,
-                        'id_jawaban'=> $id_jawaban[$key],
-                        'skor'=> $skor[$key],
-                        'created_at' => date("Y-m-d H:i:s"),)
+                    array_push($rata_rata, $skor[$key]);
+                    array_push(
+                        $finalArray,
+                        array(
+                            'id_pengajuan' => $id_pengajuan,
+                            'id_jawaban' => $id_jawaban[$key],
+                            'skor' => $skor[$key],
+                            'created_at' => date("Y-m-d H:i:s"),
+                        )
                     );
-
                 }
             }
-            $average = array_sum($rata_rata)/count($rata_rata);
-            $result = round($average,2);
+            $average = array_sum($rata_rata) / count($rata_rata);
+            $result = round($average, 2);
             $status = "";
             $updateData = PengajuanModel::find($id_pengajuan);
             if ($result > 0 && $result <= 1) {
                 $status = "merah";
-            }elseif($result >= 2 && $result <= 3 ){
+            } elseif ($result >= 2 && $result <= 3) {
                 // $updateData->status = "kuning";
                 $status = "kuning";
-            }elseif($result > 3) {
+            } elseif ($result > 3) {
                 $status = "hijau";
-            }else{
+            } else {
                 $status = "merah";
             }
-            for ($i=0; $i < count($finalArray); $i++) {
+            for ($i = 0; $i < count($finalArray); $i++) {
                 JawabanPengajuanModel::insert($finalArray[$i]);
             }
 
@@ -255,9 +315,9 @@ class PengajuanKreditController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
             return redirect()->back()->withError('Terjadi kesalahan.' . $e->getMessage());
-        }catch(QueryException $e){
+        } catch (QueryException $e) {
             DB::rollBack();
-            return redirect()->back()->withError('Terjadi kesalahan'. $e->getMessage());
+            return redirect()->back()->withError('Terjadi kesalahan' . $e->getMessage());
         }
     }
 
@@ -283,21 +343,41 @@ class PengajuanKreditController extends Controller
 
         $param['pageTitle'] = "Dashboard";
 
-        $param['dataAspek'] = ItemModel::select('*')->where('level',1)->get();
+        $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->get();
 
-        $data['dataPertanyaanSatu'] = ItemModel::select('id','nama','level','id_parent')->where('level',2)->where('id_parent',3)->get();
+        $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
 
-        $param['dataUmum'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.tanggal_review_penyelia',
-                                                    'calon_nasabah.id as id_calon_nasabah','calon_nasabah.nama','calon_nasabah.alamat_rumah','calon_nasabah.alamat_usaha',
-                                                    'calon_nasabah.no_ktp','calon_nasabah.tempat_lahir','calon_nasabah.tanggal_lahir','calon_nasabah.status','calon_nasabah.sektor_kredit',
-                                                    'calon_nasabah.jenis_usaha','calon_nasabah.jumlah_kredit','calon_nasabah.tujuan_kredit','calon_nasabah.jaminan_kredit','calon_nasabah.hubungan_bank',
-                                                    'calon_nasabah.hubungan_bank','calon_nasabah.verifikasi_umum','calon_nasabah.id_kabupaten','calon_nasabah.id_kecamatan','calon_nasabah.id_desa')
-                                                    ->join('calon_nasabah','calon_nasabah.id_pengajuan','pengajuan.id')
-                                                    ->find($id);
+        $param['dataUmum'] = PengajuanModel::select(
+            'pengajuan.id',
+            'pengajuan.tanggal',
+            'pengajuan.posisi',
+            'pengajuan.tanggal_review_penyelia',
+            'calon_nasabah.id as id_calon_nasabah',
+            'calon_nasabah.nama',
+            'calon_nasabah.alamat_rumah',
+            'calon_nasabah.alamat_usaha',
+            'calon_nasabah.no_ktp',
+            'calon_nasabah.tempat_lahir',
+            'calon_nasabah.tanggal_lahir',
+            'calon_nasabah.status',
+            'calon_nasabah.sektor_kredit',
+            'calon_nasabah.jenis_usaha',
+            'calon_nasabah.jumlah_kredit',
+            'calon_nasabah.tujuan_kredit',
+            'calon_nasabah.jaminan_kredit',
+            'calon_nasabah.hubungan_bank',
+            'calon_nasabah.hubungan_bank',
+            'calon_nasabah.verifikasi_umum',
+            'calon_nasabah.id_kabupaten',
+            'calon_nasabah.id_kecamatan',
+            'calon_nasabah.id_desa'
+        )
+            ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+            ->find($id);
         $param['allKab'] = Kabupaten::get();
         $param['allKec'] = Kecamatan::where('id_kabupaten', $param['dataUmum']->id_kabupaten)->get();
         $param['allDesa'] = Desa::where('id_kecamatan', $param['dataUmum']->id_kecamatan)->get();
-                                                    // 'jawaban.id as id_jawaban','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','jawaban.skor_penyelia'
+        // 'jawaban.id as id_jawaban','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','jawaban.skor_penyelia'
 
         // return $param['jawabanpengajuan'] = JawabanPengajuanModel::select('jawaban.id','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','option.id as id_option','option.option as name_option','option.id_item','item.id as id_item','item.nama','item.level','item.id_parent')
         //                             ->join('option','option.id','jawaban.id_jawaban')
@@ -305,7 +385,7 @@ class PengajuanKreditController extends Controller
         //                             ->where('jawaban.id_pengajuan',$id)
         //                             ->get();
 
-        return view('pengajuan-kredit.edit-pengajuan-kredit',$param);
+        return view('pengajuan-kredit.edit-pengajuan-kredit', $param);
     }
 
     /**
@@ -339,7 +419,7 @@ class PengajuanKreditController extends Controller
             // 'dataLevelDua.*' => $checkLevelDua,
             // 'dataLevelTiga.*' => $checkLevelTiga,
             // 'dataLevelEmpat.*' => $checkLevelEmpat,
-        ],[
+        ], [
             'required' => 'data harus terisi.'
         ]);
         DB::beginTransaction();
@@ -387,12 +467,15 @@ class PengajuanKreditController extends Controller
                     $data_level_dua = $this->getDataLevel($value);
                     $skor[$key] = $data_level_dua[0];
                     $id_jawaban[$key] = $data_level_dua[1];
-                    array_push($rata_rata,$skor[$key]);
-                    array_push($finalArray, array(
-                        'id_pengajuan'=> $id_pengajuan,
-                        'id_jawaban'=> $id_jawaban[$key],
-                        'skor'=> $skor[$key],
-                        'updated_at' => date("Y-m-d H:i:s"),)
+                    array_push($rata_rata, $skor[$key]);
+                    array_push(
+                        $finalArray,
+                        array(
+                            'id_pengajuan' => $id_pengajuan,
+                            'id_jawaban' => $id_jawaban[$key],
+                            'skor' => $skor[$key],
+                            'updated_at' => date("Y-m-d H:i:s"),
+                        )
                     );
                 }
             }
@@ -405,14 +488,16 @@ class PengajuanKreditController extends Controller
                     $data_level_tiga = $this->getDataLevel($value);
                     $skor[$key] = $data_level_tiga[0];
                     $id_jawaban[$key] = $data_level_tiga[1];
-                    array_push($rata_rata,$skor[$key]);
-                    array_push($finalArray, array(
-                        'id_pengajuan'=> $id_pengajuan,
-                        'id_jawaban'=> $id_jawaban[$key],
-                        'skor'=> $skor[$key],
-                        'updated_at' => date("Y-m-d H:i:s"),)
+                    array_push($rata_rata, $skor[$key]);
+                    array_push(
+                        $finalArray,
+                        array(
+                            'id_pengajuan' => $id_pengajuan,
+                            'id_jawaban' => $id_jawaban[$key],
+                            'skor' => $skor[$key],
+                            'updated_at' => date("Y-m-d H:i:s"),
+                        )
                     );
-
                 }
             }
 
@@ -424,32 +509,34 @@ class PengajuanKreditController extends Controller
                     $data_level_empat = $this->getDataLevel($value);
                     $skor[$key] = $data_level_empat[0];
                     $id_jawaban[$key] = $data_level_empat[1];
-                    array_push($rata_rata,$skor[$key]);
-                    array_push($finalArray, array(
-                        'id_pengajuan'=> $id_pengajuan,
-                        'id_jawaban'=> $id_jawaban[$key],
-                        'skor'=> $skor[$key],
-                        'updated_at' => date("Y-m-d H:i:s"),)
+                    array_push($rata_rata, $skor[$key]);
+                    array_push(
+                        $finalArray,
+                        array(
+                            'id_pengajuan' => $id_pengajuan,
+                            'id_jawaban' => $id_jawaban[$key],
+                            'skor' => $skor[$key],
+                            'updated_at' => date("Y-m-d H:i:s"),
+                        )
                     );
-
                 }
             }
-            $average = array_sum($rata_rata)/count($rata_rata);
-            $result = round($average,2);
+            $average = array_sum($rata_rata) / count($rata_rata);
+            $result = round($average, 2);
             $status = "";
             $updateData = PengajuanModel::find($id_pengajuan);
             if ($result > 0 && $result <= 1) {
                 $status = "merah";
-            }elseif($result >= 2 && $result <= 3 ){
+            } elseif ($result >= 2 && $result <= 3) {
                 // $updateData->status = "kuning";
                 $status = "kuning";
-            }elseif($result > 3) {
+            } elseif ($result > 3) {
                 $status = "hijau";
-            }else{
+            } else {
                 $status = "merah";
             }
             // return $request;
-            for ($i=0; $i < count($finalArray); $i++) {
+            for ($i = 0; $i < count($finalArray); $i++) {
                 /*
                 1. variabel a = query select k table jawaban where(id, id_jawaban)
                 2. jika variabel a itu ada maka proses update
@@ -457,10 +544,9 @@ class PengajuanKreditController extends Controller
                 */
                 $data = DB::table('jawaban');
 
-                if(!empty($request->id[$i])){
-                    $data->where('id',$request->id[$i])->update($finalArray[$i]);
-
-                }else{
+                if (!empty($request->id[$i])) {
+                    $data->where('id', $request->id[$i])->update($finalArray[$i]);
+                } else {
                     $data->insert($finalArray[$i]);
                 }
                 // $data = DB::table('jawaban')
@@ -483,11 +569,10 @@ class PengajuanKreditController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
             return redirect()->back()->withError('Terjadi kesalahan.' . $e->getMessage());
-        }catch(QueryException $e){
+        } catch (QueryException $e) {
             DB::rollBack();
-            return redirect()->back()->withError('Terjadi kesalahan'. $e->getMessage());
+            return redirect()->back()->withError('Terjadi kesalahan' . $e->getMessage());
         }
-
     }
 
     /**
@@ -503,40 +588,39 @@ class PengajuanKreditController extends Controller
 
     public function getkecamatan(Request $request)
     {
-        $kecamatan = Kecamatan::where("id_kabupaten",$request->kabID)->pluck('id','kecamatan');
+        $kecamatan = Kecamatan::where("id_kabupaten", $request->kabID)->pluck('id', 'kecamatan');
         return response()->json($kecamatan);
     }
     public function getdesa(Request $request)
     {
-        $desa = Desa::where("id_kecamatan",$request->kecID)->pluck('id','desa');
+        $desa = Desa::where("id_kecamatan", $request->kecID)->pluck('id', 'desa');
         return response()->json($desa);
-
     }
     public function getDataLevel($data)
     {
-        $data_level = explode('-',$data);
+        $data_level = explode('-', $data);
         return $data_level;
     }
 
     // get detail jawaban dan skor pengajuan
     public function getDetailJawaban($id)
     {
-       if (auth()->user()->role == 'Penyelia Kredit') {
-        $param['pageTitle'] = "Dashboard";
-        $param['dataAspek'] = ItemModel::select('*')->where('level',1)->get();
-        $param['dataUmum'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.tanggal_review_penyelia')
-                                        ->find($id);
+        if (auth()->user()->role == 'Penyelia Kredit') {
+            $param['pageTitle'] = "Dashboard";
+            $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->get();
+            $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia')
+                ->find($id);
 
-        // $param['jawabanpengajuan'] = JawabanPengajuanModel::select('jawaban.id','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','option.id as id_option','option.option as name_option','option.id_item','item.id as id_item','item.nama','item.level','item.id_parent')
-        //                             ->join('option','option.id','jawaban.id_jawaban')
-        //                             ->join('item','item.id','option.id_item')
-        //                             ->where('jawaban.id_pengajuan',$id)
-        //                             ->get();
+            // $param['jawabanpengajuan'] = JawabanPengajuanModel::select('jawaban.id','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','option.id as id_option','option.option as name_option','option.id_item','item.id as id_item','item.nama','item.level','item.id_parent')
+            //                             ->join('option','option.id','jawaban.id_jawaban')
+            //                             ->join('item','item.id','option.id_item')
+            //                             ->where('jawaban.id_pengajuan',$id)
+            //                             ->get();
 
-        return view('pengajuan-kredit.detail-pengajuan-jawaban',$param);
-       }else{
-        return redirect()->back()->withError('Tidak memiliki hak akses.');
-       }
+            return view('pengajuan-kredit.detail-pengajuan-jawaban', $param);
+        } else {
+            return redirect()->back()->withError('Tidak memiliki hak akses.');
+        }
     }
     // insert komentar
     public function getInsertKomentar(Request $request)
@@ -552,37 +636,37 @@ class PengajuanKreditController extends Controller
             $finalArray_text = array();
 
             foreach ($request->skor_penyelia as $key => $value) {
-                array_push($finalArray,[
+                array_push($finalArray, [
                     'skor_penyelia' => $value
                 ]);
             };
             foreach ($request->skor_penyelia_text as $key => $value) {
-                array_push($finalArray_text,[
+                array_push($finalArray_text, [
                     'skor_penyelia' => $value
                 ]);
             }
             // return $finalArray_text;
             $sum_select = array_sum($request->skor_penyelia);
             $sum_text = array_sum($request->skor_penyelia_text);
-            $average = ($sum_select + $sum_text ) / count($request->skor_penyelia);
-            $result = round($average,2);
+            $average = ($sum_select + $sum_text) / count($request->skor_penyelia);
+            $result = round($average, 2);
             $status = "";
             $updateData = PengajuanModel::find($request->id_pengajuan);
             if ($result > 0 && $result <= 1) {
                 $status = "merah";
-            }elseif($result >= 2 && $result <= 3 ){
+            } elseif ($result >= 2 && $result <= 3) {
                 $status = "kuning";
-            }elseif($result > 3) {
+            } elseif ($result > 3) {
                 $status = "hijau";
-            }else{
+            } else {
                 $status = "merah";
             }
-            for ($i=0; $i < count($finalArray); $i++) {
-               JawabanPengajuanModel::where('id',$request->id_jawaban[$i])->update($finalArray[$i]);
+            for ($i = 0; $i < count($finalArray); $i++) {
+                JawabanPengajuanModel::where('id', $request->id_jawaban[$i])->update($finalArray[$i]);
             }
-            for ($i=0; $i < count($finalArray_text); $i++) {
-                JawabanTextModel::where('id',$request->id_jawaban_text[$i])->update($finalArray_text[$i]);
-             }
+            for ($i = 0; $i < count($finalArray_text); $i++) {
+                JawabanTextModel::where('id', $request->id_jawaban_text[$i])->update($finalArray_text[$i]);
+            }
             $updateData->status = $status;
             $updateData->average_by_penyelia = $result;
             $updateData->update();
@@ -600,10 +684,10 @@ class PengajuanKreditController extends Controller
                 $addDetailKomentar->save();
             }
             return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil menambahkan data');
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return $e;
             return redirect()->back()->withError('Terjadi kesalahan.');
-        }catch(QueryException $e){
+        } catch (QueryException $e) {
             return $e;
             return redirect()->back()->withError('Terjadi kesalahan');
         }
@@ -618,12 +702,11 @@ class PengajuanKreditController extends Controller
             $statusPenyelia->tanggal_review_penyelia = date(now());
             $statusPenyelia->update();
             return redirect()->back()->withStatus('Berhasil mengganti posisi.');
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return redirect()->back()->withError('Terjadi kesalahan.');
-        }catch(QueryException $e){
+        } catch (QueryException $e) {
             return redirect()->back()->withError('Terjadi kesalahan');
         }
-
     }
 
     // check status pincab
@@ -637,56 +720,66 @@ class PengajuanKreditController extends Controller
                 $dataPenyelia->posisi = "Pincab";
                 $dataPenyelia->update();
                 return redirect()->back()->withStatus('Berhasil mengganti posisi.');
-            }else{
-               return redirect()->back()->withError('Belum di review Penyelia.');
+            } else {
+                return redirect()->back()->withError('Belum di review Penyelia.');
             }
-        }else{
+        } else {
             return redirect()->back()->withError('Tidak memiliki hak akses.');
         }
     }
     // check status pincab
     public function checkPincabStatus()
     {
-       if (auth()->user()->role == "Pincab") {
+        if (auth()->user()->role == "Pincab") {
             $param['pageTitle'] = "Dashboard";
             $id_cabang = Auth::user()->id_cabang;
-            $param['data_pengajuan'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.status','pengajuan.status_by_sistem','pengajuan.id_cabang','pengajuan.average_by_sistem','pengajuan.average_by_penyelia',
-                                                    'calon_nasabah.nama','calon_nasabah.jenis_usaha','calon_nasabah.id_pengajuan')
-                                                    ->join('calon_nasabah','calon_nasabah.id_pengajuan','pengajuan.id')
-                                                    ->where('pengajuan.id_cabang',$id_cabang)
-                                                    ->get();
-            return view('pengajuan-kredit.komentar-pincab-pengajuan',$param);
-       }else{
+            $param['data_pengajuan'] = PengajuanModel::select(
+                'pengajuan.id',
+                'pengajuan.tanggal',
+                'pengajuan.posisi',
+                'pengajuan.status',
+                'pengajuan.status_by_sistem',
+                'pengajuan.id_cabang',
+                'pengajuan.average_by_sistem',
+                'pengajuan.average_by_penyelia',
+                'calon_nasabah.nama',
+                'calon_nasabah.jenis_usaha',
+                'calon_nasabah.id_pengajuan'
+            )
+                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                ->where('pengajuan.id_cabang', $id_cabang)
+                ->get();
+            return view('pengajuan-kredit.komentar-pincab-pengajuan', $param);
+        } else {
             return redirect()->back()->withError('Tidak memiliki hak akses.');
-       }
-
+        }
     }
     public function checkPincabStatusDetail($id)
     {
 
         $param['pageTitle'] = "Dashboard";
-        $param['dataAspek'] = ItemModel::select('*')->where('level',1)->get();
+        $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->get();
         // $param['jawabanpengajuan'] = JawabanPengajuanModel::select('jawaban.id','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','option.id as id_option','option.option as name_option','option.id_item','item.id as id_item','item.nama','item.level','item.id_parent')
         //                             ->join('option','option.id','jawaban.id_jawaban')
         //                             ->join('item','item.id','option.id_item')
         //                             ->where('jawaban.id_pengajuan',$id)
         //                             ->get();
-        $param['dataNasabah'] = CalonNasabah::select('calon_nasabah.*','kabupaten.id as kabupaten_id','kabupaten.kabupaten','kecamatan.id as kecamatan_id','kecamatan.id_kabupaten','kecamatan.kecamatan','desa.id as desa_id','desa.id_kabupaten','desa.id_kecamatan','desa.desa')
-                                        ->join('kabupaten','kabupaten.id','calon_nasabah.id_kabupaten')
-                                        ->join('kecamatan','kecamatan.id','calon_nasabah.id_kecamatan')
-                                        ->join('desa','desa.id','calon_nasabah.id_desa')
-                                        ->where('calon_nasabah.id_pengajuan',$id)
-                                        ->first();
-        $param['dataUmum'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.tanggal_review_penyelia')
-                                        ->find($id);
+        $param['dataNasabah'] = CalonNasabah::select('calon_nasabah.*', 'kabupaten.id as kabupaten_id', 'kabupaten.kabupaten', 'kecamatan.id as kecamatan_id', 'kecamatan.id_kabupaten', 'kecamatan.kecamatan', 'desa.id as desa_id', 'desa.id_kabupaten', 'desa.id_kecamatan', 'desa.desa')
+            ->join('kabupaten', 'kabupaten.id', 'calon_nasabah.id_kabupaten')
+            ->join('kecamatan', 'kecamatan.id', 'calon_nasabah.id_kecamatan')
+            ->join('desa', 'desa.id', 'calon_nasabah.id_desa')
+            ->where('calon_nasabah.id_pengajuan', $id)
+            ->first();
+        $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia')
+            ->find($id);
+        $param['comment'] = KomentarModel::where('id_pengajuan', $id)->first();
         // $param['jawabanpengajuan'] = JawabanPengajuanModel::select('jawaban.id','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','option.id as id_option','option.option as name_option','option.id_item','item.id as id_item','item.nama','item.level','item.id_parent')
         //                             ->join('option','option.id','jawaban.id_jawaban')
         //                             ->join('item','item.id','option.id_item')
         //                             ->where('jawaban.id_pengajuan',$id)
         //                             ->get();
 
-        return view('pengajuan-kredit.detail-komentar-pengajuan',$param);
-
+        return view('pengajuan-kredit.detail-komentar-pengajuan', $param);
     }
     public function checkPincabStatusDetailPost(Request $request)
     {
@@ -708,10 +801,10 @@ class PengajuanKreditController extends Controller
             }
 
             return redirect('/pengajuan-kredit')->withStatus('Berhasil menambahkan komentar');
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return $e;
             return redirect()->back()->withError('Terjadi kesalahan.');
-        }catch(QueryException $e){
+        } catch (QueryException $e) {
             return $e;
             return redirect()->back()->withError('Terjadi kesalahan');
         }
@@ -726,13 +819,11 @@ class PengajuanKreditController extends Controller
                 $statusPincab->tanggal_review_pincab = date(now());
                 $statusPincab->update();
                 return redirect()->back()->withStatus('Berhasil mengganti posisi.');
-            }else{
+            } else {
                 return redirect()->back()->withError('Belum di review Pincab.');
             }
-
-        }else{
+        } else {
             return redirect()->back()->withError('Tidak memiliki hak akses.');
-
         }
     }
     // check status staf analisa
@@ -743,9 +834,8 @@ class PengajuanKreditController extends Controller
             $statusPenyelia->posisi = "Review Penyelia";
             $statusPenyelia->update();
             return redirect()->back()->withStatus('Berhasil mengganti posisi.');
-        }else{
+        } else {
             return redirect()->back()->withError('Tidak memiliki hak akses.');
         }
     }
 }
-
