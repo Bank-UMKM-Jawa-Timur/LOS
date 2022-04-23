@@ -263,7 +263,7 @@
                         @endphp
                         @foreach ($dataDetailJawabanText as $itemTextTiga)
                         <tr>
-                            <td>{{  $item->nama }}</td>
+                            <td>{{  $itemTiga->nama }}</td>
                             <td>: </td>
                             <td>{{ $itemTextTiga->opsi_text }}</td>
                         </tr>

@@ -25,6 +25,191 @@
         /* border-bottom: 1px solid #dc3545; */
     }
 </style>
+<div class="form-wizard active" data-index='0' data-done='true'>
+    <div class="row">
+        <div class="form-group col-md-12">
+            <label for="">Nama Lengkap</label>
+            <input type="text" disabled name="name" id="nama" class="form-control @error('name') is-invalid @enderror" value="{{ old('name',$dataUmumNasabah->nama) }}" placeholder="Nama sesuai dengan KTP">
+            @error('name')
+            <div class="invalid-feedback">
+                {{ $message }}
+            </div>
+            @enderror
+        </div>
+        <div class="form-group col-md-4">
+            <label for="">Kabupaten</label>
+            <select name="kabupaten" disabled class="form-control @error('name') is-invalid @enderror select2" id="kabupaten">
+                <option value="">---Pilih Kabupaten----</option>
+                @foreach ($allKab as $item)
+                    <option value="{{ old('id',$item->id) }}" {{ old('id',$item->id) == $dataUmumNasabah->id_kabupaten ? 'selected' : '' }}>{{ $item->kabupaten }}</option>
+                @endforeach
+            </select>
+            @error('kabupaten')
+            <div class="invalid-feedback">
+                {{ $message }}
+            </div>
+            @enderror
+        </div>
+        <div class="form-group col-md-4">
+            <label for="">Kecamatan</label>
+            <select name="kec" disabled id="kecamatan" class="form-control @error('kec') is-invalid @enderror  select2">
+                <option value="">---Pilih Kecamatan----</option>
+                @foreach ($allKec as $kec)
+                    <option value="{{ $kec->id }}" {{$kec->id == $dataUmumNasabah->id_kecamatan ? 'selected' : ''}}>{{ $kec->kecamatan }}</option>
+                @endforeach
+            </select>
+            @error('kec')
+            <div class="invalid-feedback">
+                {{ $message }}
+            </div>
+            @enderror
+        </div>
+        <div class="form-group col-md-4">
+            <label for="">Desa</label>
+            <select disabled name="desa" id="desa" class="form-control @error('desa') is-invalid @enderror select2" >
+                <option value="">---Pilih Desa----</option>
+                @foreach ($allDesa as $desa)
+                    <option value="{{ $desa->id }}" {{$desa->id == $dataUmumNasabah->id_kecamatan ? 'selected' : ''}}>{{ $desa->desa }}</option>
+                @endforeach
+            </select>
+            @error('desa')
+            <div class="invalid-feedback">
+                {{ $message }}
+            </div>
+            @enderror
+        </div>
+        <div class="form-group col-md-12">
+            <label for="">Alamat Rumah</label>
+            <textarea disabled name="alamat_rumah" class="form-control @error('alamat_rumah') is-invalid @enderror"  id="" cols="30" rows="4" placeholder="Alamat Rumah disesuaikan dengan KTP">{{ old('alamat_rumah',$dataUmumNasabah->alamat_rumah) }}</textarea>
+            @error('alamat_rumah')
+            <div class="invalid-feedback">
+                {{ $message }}
+            </div>
+            @enderror
+            <hr>
+        </div>
+        <div class="form-group col-md-12">
+            <label for="">Alamat Usaha</label>
+            <textarea disabled name="alamat_usaha" class="form-control @error('alamat_usaha') is-invalid @enderror"  id="" cols="30" rows="4" placeholder="Alamat Usaha disesuaikan dengan KTP">{{ old('alamat_usaha',$dataUmumNasabah->alamat_usaha) }}</textarea>
+            @error('alamat_usaha')
+            <div class="invalid-feedback">
+                {{ $message }}
+            </div>
+            @enderror
+        </div>
+        <div class="form-group col-md-12">
+            <label for="">No. KTP</label>
+            <input disabled type="text" name="no_ktp" class="form-control @error('no_ktp') is-invalid @enderror" id="" value="{{ old('no_ktp',$dataUmumNasabah->no_ktp) }}" placeholder="Masukkan 16 digit No. KTP">
+            @error('no_ktp')
+            <div class="invalid-feedback">
+                {{ $message }}
+            </div>
+            @enderror
+        </div>
+        <div class="form-group col-md-4">
+            <label for="">Tempat</label>
+            <input disabled type="text" name="tempat_lahir" id="" class="form-control @error('tempat_lahir') is-invalid @enderror" value="{{ old('tempat_lahir',$dataUmumNasabah->tempat_lahir) }}" placeholder="Tempat Lahir">
+            @error('tempat_lahir')
+            <div class="invalid-feedback">
+                {{ $message }}
+            </div>
+            @enderror
+        </div>
+        <div class="form-group col-md-4">
+            <label for="">Tanggal Lahir</label>
+            <input disabled type="date" name="tanggal_lahir" id="" class="form-control @error('tanggal_lahir') is-invalid @enderror" value="{{ old('tanggal_lahir',$dataUmumNasabah->tanggal_lahir) }}" placeholder="Tempat Lahir">
+            @error('tanggal_lahir')
+            <div class="invalid-feedback">
+                {{ $message }}
+            </div>
+            @enderror
+        </div>
+        <div class="form-group col-md-4">
+            <label for="">Status</label>
+            <select disabled name="status" id="" class="form-control @error('status') is-invalid @enderror select2" >
+                <option value=""> --Pilih Status --</option>
+                <option value="menikah" {{ old('status',$dataUmumNasabah->status) == "menikah" ? 'selected' : '' }}>Menikah</option>
+                <option value="belum menikah" {{ old('status',$dataUmumNasabah->status) == "belum menikah" ? 'selected' : '' }}>Belum Menikah</option>
+                <option value="duda" {{ old('status',$dataUmumNasabah->status) == "duda" ? 'selected' : '' }}>Duda</option>
+                <option value="janda" {{ old('status',$dataUmumNasabah->status) == "janda" ? 'selected' : '' }}>Janda</option>
+            </select>
+            @error('status')
+            <div class="invalid-feedback">
+                {{ $message }}
+            </div>
+            @enderror
+        </div>
+        <div class="form-group col-md-12">
+            <label for="">Sektor Kredit</label>
+            <select disabled name="sektor_kredit" id="" class="form-control @error('sektor_kredit') is-invalid @enderror select2" >
+                <option value=""> --Pilih Sektor Kredit -- </option>
+                <option value="perdagangan" {{ old('sektor_kredit',$dataUmumNasabah->sektor_kredit) == "perdagangan" ? 'selected' : '' }}>Perdagangan</option>
+                <option value="perindustrian" {{ old('sektor_kredit',$dataUmumNasabah->sektor_kredit) == "perindustrian" ? 'selected' : '' }}>Perindustrian</option>
+                <option value="dll" {{ old('sektor_kredit',$dataUmumNasabah->sektor_kredit) == "dll" ? 'selected' : '' }}>dll</option>
+            </select>
+            @error('sektor_kredit')
+            <div class="invalid-feedback">
+                {{ $message }}
+            </div>
+            @enderror
+        </div>
+        <div class="form-group col-md-12">
+            <label for="">Jenis Usaha</label>
+            <textarea disabled name="jenis_usaha" class="form-control @error('jenis_usaha') is-invalid @enderror" id="" cols="30" rows="4" placeholder="Jenis Usaha secara spesifik">{{ old('jenis_usaha',$dataUmumNasabah->jenis_usaha) }}</textarea>
+            @error('jenis_usaha')
+            <div class="invalid-feedback">
+                {{ $message }}
+            </div>
+            @enderror
+        </div>
+        <div class="form-group col-md-12">
+            <label for="">Jumlah Kredit yang diminta</label>
+            <input type="number" disabled name="jumlah_kredit" class="form-control @error('jumlah_kredit') is-invalid @enderror" placeholder="Jumlah Kredit" value="{{ old('jumlah_kredit',$dataUmumNasabah->jumlah_kredit) }}">
+            {{-- <textarea name="jumlah_kredit" class="form-control @error('jumlah_kredit') is-invalid @enderror"  id="" cols="30" rows="4" placeholder="Jumlah Kredit">{{ old('jumlah_kredit',$dataUmumNasabah->jumlah_kredit) }}</textarea> --}}
+            @error('jumlah_kredit')
+            <div class="invalid-feedback">
+                {{ $message }}
+            </div>
+            @enderror
+        </div>
+        <div class="form-group col-md-12">
+            <label for="">Tujuan Kredit</label>
+            <textarea disabled name="tujuan_kredit" class="form-control @error('tujuan_kredit') is-invalid @enderror" id="" cols="30" rows="4" placeholder="Tujuan Kredit">{{ old('tujuan_kredit',$dataUmumNasabah->tujuan_kredit) }}</textarea>
+            @error('tujuan_kredit')
+            <div class="invalid-feedback">
+                {{ $message }}
+            </div>
+            @enderror
+        </div>
+        <div class="form-group col-md-12">
+            <label for="">Jaminan yang disediakan</label>
+            <textarea disabled name="jaminan" class="form-control @error('jaminan') is-invalid @enderror"  id="" cols="30" rows="4" placeholder="Jaminan yang disediakan">{{ old('jaminan',$dataUmumNasabah->jaminan_kredit) }}</textarea>
+            @error('jaminan')
+            <div class="invalid-feedback">
+                {{ $message }}
+            </div>
+            @enderror
+        </div>
+        <div class="form-group col-md-12">
+            <label for="">Hubungan Bank</label>
+            <textarea disabled name="hubungan_bank" class="form-control @error('hubungan_bank') is-invalid @enderror"  id="" cols="30" rows="4" placeholder="Hubungan dengan Bank">{{ old('hubungan_bank',$dataUmumNasabah->hubungan_bank) }}</textarea>
+            @error('hubungan_bank')
+            <div class="invalid-feedback">
+                {{ $message }}
+            </div>
+            @enderror
+        </div>
+        <div class="form-group col-md-12">
+            <label for="">Hasil Verifikasi</label>
+            <textarea disabled name="hasil_verifikasi" class="form-control @error('hasil_verifikasi') is-invalid @enderror" id="" cols="30" rows="4" placeholder="Hasil Verifikasi Karakter Umum">{{ old('hasil_verifikasi',$dataUmumNasabah->verifikasi_umum) }}</textarea>
+            @error('hasil_verifikasi')
+            <div class="invalid-feedback">
+                {{ $message }}
+            </div>
+            @enderror
+        </div>
+    </div>
+</div>
 <form action="{{ route('pengajuan.insertkomentar') }}" method="POST" >
     @csrf
     <input type="hidden" id="jumlahData" name="jumlahData" hidden value="{{ count($dataAspek) }}">
@@ -38,7 +223,7 @@
      @foreach ($dataAspek as $key => $value)
 
         @php
-            $key;
+            $key += 1;
             // check level 2
             $dataLevelDua = \App\Models\ItemModel::select('id','nama','opsi_jawaban','level','id_parent')->where('level',2)->where('id_parent',$value->id)->get();
 
@@ -47,7 +232,7 @@
         @endphp
         {{-- level level 2 --}}
 
-        <div class="form-wizard {{ $key === 0 ? 'active' : '' }}" data-index='{{ $key }}' data-done='true'>
+        <div class="form-wizard $key" data-index='{{ $key }}' data-done='true'>
             <div class="">
                 @foreach ($dataLevelDua as $item)
                     @if ($item->opsi_jawaban == 'input text')
@@ -58,23 +243,29 @@
                         @endphp
                         @foreach ($dataDetailJawabanText as $itemTextDua)
                             <div class="row">
-                                <div class="form-group col-md-6">
-                                    <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemTextDua->nama }}" disabled>
-                                    {{-- <label for="">{{ $itemTextDua->nama }}</label> --}}
+                                <div class="form-group col-md-12 mb-0">
+                                    <label for="">{{ $item->nama }}</label>
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemTextDua->opsi_text }}" disabled>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <input type="text" class="form-control" placeholder="" name="komentar_penyelia[]" placeholder="Masukkan Komentar">
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <input type="number" class="form-control" placeholder="" name="skor_penyelia_text[]" value="">
-                                </div>
-                                <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextDua->id }}">
-                                <input type="hidden" name="id[]" value="{{ $itemTextDua->id_item }}">
+                                <div class="col-md-12 form-group">
+                                    <b>Jawaban:</b>
+                                    <div class="mt-2 pl-3">
+                                        <p class="badge badge-info text-lg"><b> {{ $itemTextDua->opsi_text }}</b></p>
+                                        <div class="input-group input-b-bottom">
+                                            <input type="text" class="form-control komentar" name="komentar_penyelia[]" placeholder="Masukkan Komentar">
 
+                                            <div class="input-skor">
+                                            <input type="number" class="form-control" placeholder="" name="skor_penyelia_text[]" value="">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+
+                            <input type="text" hidden class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemTextDua->nama }}" disabled>
+                            <input type="text" hidden class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemTextDua->opsi_text }}" disabled>
+                            <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextDua->id }}">
+                            <input type="hidden" name="id[]" value="{{ $itemTextDua->id_item }}">
                         @endforeach
                     @endif
                     @php
@@ -111,16 +302,22 @@
                                 @endphp
                                 @if (in_array($itemJawaban->id,$data))
                                     @if (isset($data))
-                                        <div class="form-group col-md-6">
-                                            <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemJawaban->option }}" disabled>
+                                        <div class="col-md-12 form-group">
+                                            <b>Jawaban : </b>
+                                            <div class="mt-2 pl-2">
+                                                <p class="badge badge-info text-lg"><b>{{ $itemJawaban->option }}</b></p>
+                                            </div>
+                                            <div class="input-group input-b-bottom">
+                                                <input type="text" class="form-control komentar" name="komentar_penyelia[]" placeholder="Masukkan Komentar">
 
-                                            <input type="text" class="form-control" placeholder="Masukkan komentar" name="komentar_penyelia[]" >
+                                                <div class="input-skor">
+                                                <input type="number" class="form-control" placeholder="" name="skor_penyelia[]" value="{{ $itemJawaban->skor != null ? $itemJawaban->skor : 0 }}">
 
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="form-group col-md-6">
-                                            <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemJawaban->skor }}" disabled>
-                                            <input type="number" class="form-control" placeholder="" name="skor_penyelia[]" value="{{ $itemJawaban->skor != null ? $itemJawaban->skor : 0 }}">
-                                        </div>
+                                        <input type="text" hidden class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemJawaban->option }}" disabled>
+                                        <input type="text" hidden class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemJawaban->skor }}" disabled>
                                         <input type="hidden" name="id[]" value="{{ $item->id }}">
                                     @endif
                                 @endif
@@ -136,23 +333,31 @@
                             @endphp
                             @foreach ($dataDetailJawabanText as $itemTextTiga)
                             <div class="row">
-                                <div class="form-group col-md-6">
-                                    <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemTextTiga->nama }}" disabled>
-                                    {{-- <label for="">{{ $itemTextTiga->nama }}</label> --}}
+                                <div class="form-group col-md-12 mb-0">
+                                    <label for="">{{ $itemTextTiga->nama }}</label>
                                 </div>
-                                <div class="form-group col-md-6">
-                                    <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemTextTiga->opsi_text }}" disabled>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <input type="text" class="form-control" placeholder="" name="komentar_penyelia[]" placeholder="Masukkan Komentar">
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <input type="number" class="form-control" placeholder="Masukkan skor" name="skor_penyelia_text[]" value="">
-                                </div>
-                                <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextTiga->id }}">
-                                <input type="hidden" name="id[]" value="{{ $itemTextTiga->id_item }}">
+                                <div class="col-md-12 form-group">
+                                    <b>Jawaban:</b>
+                                    <div class="mt-2 pl-3">
+                                        <p class="badge badge-info text-lg"><b> {{ $itemTextTiga->opsi_text }}</b></p>
+                                        <div class="input-group input-b-bottom">
+                                            <input type="text" class="form-control komentar" name="komentar_penyelia[]" placeholder="Masukkan Komentar">
 
+                                            <div class="input-skor">
+                                            <input type="number" class="form-control" placeholder="" name="skor_penyelia_text[]" value="">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+
+                            <input type="hidden" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemTextTiga->nama }}" disabled>
+                            <input type="hidden" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemTextTiga->opsi_text }}" disabled>
+
+                            <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextTiga->id }}">
+                            <input type="hidden" name="id[]" value="{{ $itemTextTiga->id_item }}">
+
                             @endforeach
                         @endif
                         @php
@@ -167,7 +372,7 @@
                           @if ($itemOptionTiga->option == "-")
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                    <h5>{{ $itemTiga->nama }}</h5>
+                                    <h5> {{ $itemTiga->nama }}</h5>
                                 </div>
                             </div>
                           @endif
@@ -185,17 +390,23 @@
                                 @endphp
                                 @if (in_array($itemJawabanLevelTiga->id,$data))
                                     @if (isset($data))
-                                        <div class="form-group col-md-6">
-                                            <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemJawabanLevelTiga->option }}" disabled>
+                                        <div class="col-md-12 form-group">
+                                            <b>Jawaban : </b>
+                                            <div class="mt-2 pl-2">
+                                                <p class="badge badge-info text-lg"><b>{{ $itemJawabanLevelTiga->option }}</b></p>
+                                            </div>
+                                            <div class="input-group input-b-bottom">
+                                                <input type="text" class="form-control komentar" name="komentar_penyelia[]" placeholder="Masukkan Komentar">
 
-                                            <input type="text" class="form-control" placeholder="Masukkan komentar" name="komentar_penyelia[]" >
+                                                <div class="input-skor">
+                                                <input type="number" class="form-control" placeholder="" name="skor_penyelia[]" value="{{ $itemJawabanLevelTiga->skor != null ? $itemJawabanLevelTiga->skor : '' }}">
 
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="form-group col-md-6">
-                                            <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="skor_penyelia" value="{{ $itemJawabanLevelTiga->skor }}" disabled>
-                                            <input type="number" class="form-control" placeholder="" name="skor_penyelia[]" value="{{ $itemJawabanLevelTiga->skor != null ? $itemJawabanLevelTiga->skor : '' }}">
-                                        </div>
-                                        <input type="hidden" name="id[]" value="{{ $itemTiga->id }}">
+                                            <input type="text" hidden class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemJawabanLevelTiga->option }}" disabled>
+                                            <input type="text" hidden class="form-control mb-3" placeholder="Masukkan komentar" name="skor_penyelia" value="{{ $itemJawabanLevelTiga->skor }}" disabled>
+                                            <input type="hidden" name="id[]" value="{{ $itemTiga->id }}">
                                     @endif
                                 @endif
                             @endforeach
@@ -220,23 +431,29 @@
                                 @endphp --}}
                                 @foreach ($dataDetailJawabanTextEmpat as $itemTextEmpat)
                                 <div class="row">
-                                    <div class="form-group col-md-6">
-                                        <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemTextEmpat->nama }}" disabled>
-                                        {{-- <label for="">{{ $itemTextEmpat->nama }}</label> --}}
+                                    <div class="form-group col-md-12 mb-0">
+                                        <label for="">{{ $itemTextEmpat->nama }}</label>
                                     </div>
-                                    <div class="form-group col-md-6">
-                                        <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemTextEmpat->opsi_text }}" disabled>
+                                    <div class="col-md-12 form-group">
+                                        <b>Jawaban:</b>
+                                        <div class="mt-2 pl-3">
+                                            <p class="badge badge-info text-lg"><b> {{ $itemTextEmpat->opsi_text }}</b></p>
+                                            <div class="input-group input-b-bottom">
+                                                <input type="text" class="form-control komentar" name="komentar_penyelia[]" placeholder="Masukkan Komentar">
+
+                                                <div class="input-skor">
+                                                <input type="number" class="form-control" placeholder="" name="skor_penyelia_text[]" value="">
+
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="form-group col-md-6">
-                                        <input type="text" class="form-control" placeholder="" name="komentar_penyelia[]" placeholder="Masukkan Komentar">
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <input type="number" class="form-control" placeholder="Masukkan skor" name="skor_penyelia_text[]" value="">
-                                    </div>
+                                </div>
+
+                                    <input type="hidden" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemTextEmpat->nama }}" disabled>
+                                    <input type="hidden" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemTextEmpat->opsi_text }}" disabled>
                                     <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextEmpat->id }}">
                                     <input type="hidden" name="id[]" value="{{ $itemTextEmpat->id_item }}">
-
-                                </div>
                                 @endforeach
                             @endif
                             @php
@@ -248,7 +465,7 @@
                              @if ($itemOptionEmpat->option == "-")
                                 <div class="row">
                                     <div class="form-group col-md-12">
-                                        <h6>{{ $itemEmpat->nama }}</h6>
+                                        <h6> {{ $itemEmpat->nama }}</h6>
                                     </div>
                                 </div>
                              @endif
@@ -267,17 +484,22 @@
                                         @endphp
                                         @if (in_array($itemJawabanLevelEmpat->id,$data))
                                             @if (isset($data))
-                                                <div class="form-group col-md-6">
-                                                    <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemJawabanLevelEmpat->option }}" disabled>
-
-                                                    <input type="text" class="form-control" placeholder="Masukkan komentar" name="komentar_penyelia[]" >
-
+                                            <div class="col-md-12 form-group">
+                                                <b>Jawaban : </b>
+                                                <div class="mt-2 pl-2">
+                                                    <p class="badge badge-info text-lg"><b>{{ $itemJawabanLevelEmpat->option }}</b></p>
                                                 </div>
-                                                <div class="form-group col-md-6">
-                                                    <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia[]" value="{{ $itemJawabanLevelEmpat->skor }}" disabled>
+                                                <div class="input-group input-b-bottom">
+                                                    <input type="text" class="form-control komentar" name="komentar_penyelia[]" placeholder="Masukkan Komentar">
+
+                                                    <div class="input-skor">
                                                     <input type="number" class="form-control" placeholder="" name="skor_penyelia[]" value="{{ $itemJawabanLevelEmpat->skor != null ? $itemJawabanLevelEmpat->skor : '' }}">
+
+                                                    </div>
                                                 </div>
-                                                <input type="hidden" name="id[]" value="{{ $itemEmpat->id }}">
+                                            </div>
+                                            <input type="hidden" class="form-control mb-3" placeholder="Masukkan komentar" name="komentar_penyelia" value="{{ $itemJawabanLevelEmpat->option }}" disabled>
+                                            <input type="hidden" name="id[]" value="{{ $itemEmpat->id }}">
                                             @endif
                                         @endif
                                     @endforeach
@@ -320,6 +542,35 @@
 
         var input = $(form+" input:disabled");
 
+        var select = $(form+" select")
+        var textarea = $(form+" textarea")
+
+        var ttlInput = 0;
+        var ttlInputFilled=0;
+        $.each(input, function(i,v){
+            ttlInput++
+            if(v.value!=''){
+                ttlInputFilled++
+            }
+        })
+        var ttlSelect = 0;
+        var ttlSelectFilled=0;
+        $.each(select, function(i,v){
+            ttlSelect++
+            if(v.value!=''){
+                ttlSelectFilled++
+            }
+        })
+
+        var ttlTextarea = 0;
+        var ttlTextareaFilled=0;
+        $.each(textarea, function(i,v){
+            ttlTextarea++
+            if(v.value!=''){
+                ttlTextareaFilled++
+            }
+        })
+
         var ttlInput = 0;
         var ttlInputFilled=0;
         $.each(input, function(i,v){
@@ -332,7 +583,7 @@
         var allInputFilled = ttlInputFilled
 
         var percentage = parseInt(allInputFilled/allInput * 100);
-            $(".side-wizard li[data-index='"+index+"'] a span i").html(percentage != NaN ? percentage : 0+"%")
+            $(".side-wizard li[data-index='"+index+"'] a span i").html(percentage != NaN ? percentage + "%" : 0 +"%")
         // $(".side-wizard li[data-index='"+index+"'] input.answer").val(allInput);
         // $(".side-wizard li[data-index='"+index+"'] input.answerFilled").val(allInputFilled);
     }

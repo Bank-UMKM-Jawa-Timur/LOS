@@ -8,10 +8,8 @@
                 <th class="text-center">#</th>
                 <th>Tanggal Pengajuan</th>
                 <th>Nama Nasabah</th>
-                <th>Jenis Usaha</th>
                 <th>Posisi</th>
-                <th>Durasi Penyelia</th>
-                <th>Durasi Pincab</th>
+                <th>Durasi</th>
                 <th>Skor</th>
                 <th>Status</th>
                 <th>Aksi</th>
@@ -23,28 +21,46 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $item->tanggal }}</td>
                     <td>{{ $item->nama }}</td>
-                    <td>{{ $item->jenis_usaha }}</td>
-                    <td>{{ $item->posisi }}</td>
                     <td>
-                        @php
-                            $rentangPenyelia = \App\Models\PengajuanModel::find($item->id);
-                            $awal = date_create(date(now()));
-                            $akhir = date_create($rentangPenyelia->tanggal_review_penyelia);
-                            $interval = $awal->diff($akhir);
-                            $result_rentang = $interval->format('%a');
-                        @endphp
-                        {{-- {{ $rentangPenyelia }} --}}
-                        {{ $item->tanggal_review_penyelia != null ? $result_rentang.' hari' : '-' }}
+                        @if ($item->posisi == 'Proses Input Data')
+                            Staff
+                        @elseif ($item->posisi == 'Review Penyelia')
+                            Penyelia
+                        @else
+                            Pincab
+                        @endif
                     </td>
                     <td>
-                        @php
-                            $rentangPincab = \App\Models\PengajuanModel::find($item->id);
-                            $awal = date_create(date(now()));
-                            $akhir = date_create($rentangPincab->tanggal_review_pincab);
-                            $interval = $awal->diff($akhir);
-                            $result_rentang_pincab = $interval->format('%a');
-                        @endphp
-                        {{ $item->tanggal_review_pincab != null ? $result_rentang_pincab.' hari' : '-' }}
+                        @if ($item->posisi == 'Proses Input Data')
+                            @php
+                                $rentangStaff = \App\Models\PengajuanModel::find($item->id);
+                                $awal = date_create(date(now()));
+                                $akhir = date_create($rentangStaff->tanggal);
+                                $interval = $awal->diff($akhir);
+                                $result_rentang = $interval->format('%a');
+                            @endphp
+                            {{-- {{ $rentangPenyelia }} --}}
+                            {{ $result_rentang.' hari' }}
+                        @elseif ($item->posisi == 'Review Penyelia')
+                            @php
+                                $rentangPenyelia = \App\Models\PengajuanModel::find($item->id);
+                                $awal = date_create(date(now()));
+                                $akhir = date_create($rentangPenyelia->tanggal_review_penyelia);
+                                $interval = $awal->diff($akhir);
+                                $result_rentang = $interval->format('%a');
+                            @endphp
+                                {{ $item->tanggal_review_penyelia != null ? $result_rentang.' hari' : '-' }}
+                        @else
+                            @php
+                                $rentangPincab = \App\Models\PengajuanModel::find($item->id);
+                                $awal = date_create(date(now()));
+                                $akhir = date_create($rentangPincab->tanggal_review_pincab);
+                                $interval = $awal->diff($akhir);
+                                $result_rentang_pincab = $interval->format('%a');
+                            @endphp
+                            {{ $item->tanggal_review_pincab != null ? $result_rentang_pincab.' hari' : '-' }}
+                        @endif
+
                     </td>
                     <td>
                         @if ($item->average_by_penyelia != null)
@@ -86,21 +102,26 @@
                         @endif
                     </td>
                     <td>
-                        @if ($item->posisi === 'Selesai')
+                        @if ($item->posisi == 'Selesai')
                             <p class="text-success">Selesai</p>
+                        @elseif ($item->posisi == 'Ditolak')
+                            <p class="text-danger">Ditolak</p>
                         @else
                             <p class="text-warning">On Progress</p>
                         @endif
                     </td>
                     <td>
+                        <div class="d-flex">
                         @if ($item->posisi == 'Review Penyelia')
-                            <div class="d-flex">
                                 <a href="{{ route('pengajuan.detailjawaban',$item->id_pengajuan) }}" class="btn btn-rgb-primary mr-2">
                                     Detail data
                                 </a>
                                 <a href="{{ route('pengajuan.check.pincab',$item->id_pengajuan) }}" class="btn btn-info">Tindak lanjut Pincab</a>
-                            </div>
                         @endif
+                                <div class="px-2">
+                                    <a href="{{ route('cetak',$item->id_pengajuan) }}" class="btn btn-info">Cetak</a>
+                                </div>
+                        </div>
                     </td>
                 @empty
                     <td colspan="7" class="text-center" style="background: rgba(71, 145,254,0.05) !important">Data Kosong</td>

@@ -207,13 +207,15 @@
                     @endphp
                     @foreach ($dataDetailJawabanText as $itemTextDua)
                         @php
-                            $getKomentar = \App\Models\DetailKomentarModel::select('*')
+                            $getKomentar = \App\Models\DetailKomentarModel::select('detail_komentar.id','detail_komentar.id_komentar','detail_komentar.id_user','detail_komentar.id_item','detail_komentar.komentar')
+                            // $getKomentar = \App\Models\DetailKomentarModel::select('*')
                                 // ->join('komentar', 'komentar.id', 'detail_komentar.id_komentar')
-                                ->where('id_item', $itemTextDua->id_item)
-                                ->where('detail_komentar.id_komentar', $comment->id_pengajuan)
+                                ->where('detail_komentar.id_item', $itemTextDua->id_item)
+                                // ->where('komentar.id_pengajuan', $comment->id_pengajuan)
                                 ->get();
                         @endphp
-                        @foreach ($getKomentar as $itemKomentar)
+
+
                         <div class="row form-group sub">
                             <label for="staticEmail" class="col-sm-3 col-form-label">{{  $item->nama }}</label>
                             <label for="staticEmail" class="col-sm-1 col-form-label px-0">
@@ -224,38 +226,59 @@
                                 </div>
                             </label>
                             <div class="col-sm-7">
-                                <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ $itemTextDua->opsi_text }}">
+                                <input type="text" readonly class="form-control-plaintext font-weight-bold" id="staticEmail" value="{{ $itemTextDua->opsi_text }}">
                                 <input type="hidden" name="id[]" value="{{ $itemAspek->id }}">
                             </div>
                         </div>
-                        <div class="row form-group sub">
-                            <label for="staticEmail" class="col-sm-3 col-form-label">Skor Penyelia</label>
-                            <label for="staticEmail" class="col-sm-1 col-form-label px-0">
-                                <div class="d-flex justify-content-end">
-                                    <div style="width: 20px">
-                                        :
+
+                        <div class="p-3">
+                            <div class="row form-group sub">
+                                <label for="staticEmail" class="col-sm-3 col-form-label"></label>
+                                <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                                    <div class="d-flex justify-content-end">
+                                        <div style="width: 20px">
+
+                                        </div>
+                                    </div>
+                                </label>
+                                <div class="col-sm-7">
+                                    <div class="d-flex">
+                                        <div class="">
+                                            <p><strong>Skor :  </strong></p>
+                                        </div>
+                                        <div class="px-2">
+                                            <p class="badge badge-info text-lg"><b> {{ $itemTextDua->skor_penyelia }}</b></p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        @foreach ($getKomentar as $itemKomentar)
+                            <div class="row form-group sub">
+                                <label for="staticEmail" class="col-sm-3 col-form-label"></label>
+                                <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                                    <div class="d-flex justify-content-end">
+                                        <div style="width: 20px">
+
+                                        </div>
+                                    </div>
+                                </label>
+                                <div class="col-sm-7">
+                                    <div class="d-flex">
+                                        <div style="width: 15%">
+                                            <p class="p-0 m-0"><strong>Komentar : </strong></p>
+                                        </div>
+                                        <h6 class="font-italic">{{ $itemKomentar->komentar }}</h6>
+                                        {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
+
                                     </div>
                                 </div>
-                            </label>
-                            <div class="col-sm-7">
-                                <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ $itemTextDua->skor_penyelia }}">
                             </div>
-                        </div>
-                        <div class="row form-group sub">
-                            <label for="staticEmail" class="col-sm-3 col-form-label">Komentar</label>
-                            <label for="staticEmail" class="col-sm-1 col-form-label px-0">
-                                <div class="d-flex justify-content-end">
-                                    <div style="width: 20px">
-                                        :
-                                    </div>
-                                </div>
-                            </label>
-                            <div class="col-sm-7">
-                                <input type="text" readonly class="form-control-plaintext" id="komentar" value="{{ $itemKomentar->komentar }}">
-                            </div>
-                        </div>
-                        <hr>
                         @endforeach
+                        </div>
+
+                        <hr>
                     @endforeach
                 @endif
                 @php
@@ -286,7 +309,7 @@
                                 @endphp
                                 @if (in_array($itemJawaban->id,$data))
                                     @if (isset($data))
-                                        <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ $itemJawaban->option }}">
+                                        <input type="text" readonly class="form-control-plaintext font-weight-bold" id="staticEmail" value="{{ $itemJawaban->option }}">
                                         <input type="hidden" name="id[]" value="{{ $itemAspek->id }}">
                                     @endif
                                 @endif
@@ -294,11 +317,11 @@
                         </div>
                     </div>
                     <div class="row form-group sub">
-                        <label for="staticEmail" class="col-sm-3 col-form-label">Skor Penyelia</label>
+                        <label for="staticEmail" class="col-sm-3 col-form-label"></label>
                         <label for="staticEmail" class="col-sm-1 col-form-label px-0">
                             <div class="d-flex justify-content-end">
                                 <div style="width: 20px">
-                                    :
+
                                 </div>
                             </div>
                         </label>
@@ -316,34 +339,52 @@
                                         @php
                                             $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id','id_jawaban','skor','skor_penyelia')->where('id_pengajuan',$dataUmum->id)->where('id_jawaban',$itemJawaban->id)->get();
                                             $getKomentar2 = \App\Models\DetailKomentarModel::select('detail_komentar.*')
-                                                                                        ->join('komentar', 'komentar.id', 'detail_komentar.id_komentar')
-                                                                                        ->where('detail_komentar.id_item', $itemJawaban->id_item)
-                                                                                        ->where('detail_komentar.id_komentar', $comment->id_pengajuan)
+                                                                                        // ->join('komentar', 'komentar.id', 'detail_komentar.id_komentar')
+                                                                                        ->where('detail_komentar.id_item', $item->id)
+                                                                                        // ->where('detail_komentar.id_komentar', $comment->id_pengajuan)
                                                                                         ->get();
                                         @endphp
                                         @foreach ($dataDetailJawaban as $item)
-                                            <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ $item->skor_penyelia }}">
+                                        <div class="d-flex">
+                                            <div class="">
+                                                <p><strong>Skor :  </strong></p>
+                                            </div>
+                                            <div class="px-2">
+                                                <p class="badge badge-info text-lg"><b> {{ $item->skor_penyelia }}</b></p>
+                                            </div>
+                                        </div>
+                                            {{-- <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ $item->skor_penyelia }}"> --}}
                                         @endforeach
                                     @endif
                                 @endif
                             @endforeach
                         </div>
                     </div>
+
                     @foreach ($getKomentar2 as $itemKomentar2)
-                        <div class="row form-group sub">
-                            <label for="staticEmail" class="col-sm-3 col-form-label">Komentar</label>
-                            <label for="staticEmail" class="col-sm-1 col-form-label px-0">
-                                <div class="d-flex justify-content-end">
-                                    <div style="width: 20px">
-                                        :
+                            <div class="row form-group sub">
+                                <label for="staticEmail" class="col-sm-3 col-form-label">Komentar</label>
+                                <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                                    <div class="d-flex justify-content-end">
+                                        <div style="width: 20px">
+
+                                        </div>
                                     </div>
+                                </label>
+                                <div class="col-sm-7">
+                                    <div class="d-flex">
+                                        <div style="width: 15%">
+                                            <p class="p-0 m-0"><strong>Komentar : </strong></p>
+                                        </div>
+                                        <h6 class="font-italic">{{ $itemKomentar2->komentar }}</h6>
+                                        {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
+
+                                    </div>
+                                    {{-- <input type="text" readonly class="form-control-plaintext" id="komentar" value="{{ $itemKomentar2->komentar }}"> --}}
                                 </div>
-                            </label>
-                            <div class="col-sm-7">
-                                <input type="text" readonly class="form-control-plaintext" id="komentar" value="{{ $itemKomentar2->komentar }}">
                             </div>
-                        </div>
                     @endforeach
+
                     <hr>
                 @endif
                 @foreach ($dataLevelTiga as $keyTiga => $itemTiga)
@@ -353,13 +394,19 @@
                                                                                     ->join('item','jawaban_text.id_jawaban','item.id')
                                                                                     ->where('jawaban_text.id_pengajuan',$dataUmum->id)->where('jawaban_text.id_jawaban',$itemTiga->id)->get();
                             $getKomentar2 = \App\Models\DetailKomentarModel::select('*')
-                                // ->join('komentar', 'komentar.id', 'detail_komentar.id_komentar')
-                                ->where('id_item', $item->id)
-                                ->where('detail_komentar.id_komentar', $comment->id_pengajuan)
-                                ->get();
+                                            ->join('komentar', 'komentar.id', 'detail_komentar.id_komentar')
+                                            ->where('detail_komentar.id_item', $itemTiga->id)
+                                            ->where('komentar.id_pengajuan', $comment->id_pengajuan)
+                                            ->get();
                         @endphp
                         @foreach ($dataDetailJawabanText as $itemTextTiga)
-                            @foreach ($getKomentar2 as $itemKomentar2)
+                            @php
+                                $getKomentar2 = \App\Models\DetailKomentarModel::select('*')
+                                            ->join('komentar', 'komentar.id', 'detail_komentar.id_komentar')
+                                            ->where('detail_komentar.id_item', $itemTextTiga->id_item)
+                                            ->where('komentar.id_pengajuan', $comment->id_pengajuan)
+                                            ->get();
+                            @endphp
                                 <div class="row form-group sub">
                                     <label for="staticEmail" class="col-sm-3 col-form-label">{{  $item->nama }}</label>
                                     <label for="staticEmail" class="col-sm-1 col-form-label px-0">
@@ -375,32 +422,50 @@
                                     </div>
                                 </div>
                                 <div class="row form-group sub">
-                                    <label for="staticEmail" class="col-sm-3 col-form-label">Skor Penyelia</label>
+                                    <label for="staticEmail" class="col-sm-3 col-form-label"></label>
                                     <label for="staticEmail" class="col-sm-1 col-form-label px-0">
                                         <div class="d-flex justify-content-end">
                                             <div style="width: 20px">
-                                                :
+
                                             </div>
                                         </div>
                                     </label>
                                     <div class="col-sm-7">
-                                        <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ $itemTextTiga->skor_penyelia }}">
+                                        <div class="">
+                                            <p><strong>Skor :  </strong></p>
+                                        </div>
+                                        <div class="px-2">
+                                            <p class="badge badge-info text-lg"><b> {{ $itemTextTiga->skor_penyelia }}</b></p>
+                                        </div>
+                                        {{-- <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ $itemTextTiga->skor_penyelia }}"> --}}
 
                                     </div>
                                 </div>
+
+                            @foreach ($getKomentar2 as $itemKomentar2)
+
                                 <div class="row form-group sub">
-                                    <label for="staticEmail" class="col-sm-3 col-form-label">Komentar</label>
+                                    <label for="staticEmail" class="col-sm-3 col-form-label"></label>
                                     <label for="staticEmail" class="col-sm-1 col-form-label px-0">
                                         <div class="d-flex justify-content-end">
                                             <div style="width: 20px">
-                                                :
+
                                             </div>
                                         </div>
                                     </label>
                                     <div class="col-sm-7">
-                                        <input type="text" readonly class="form-control-plaintext" id="komentar" value="{{ $itemKomentar2->komentar }}">
+                                        <div class="d-flex">
+                                            <div style="width: 15%">
+                                                <p class="p-0 m-0"><strong>Komentar : </strong></p>
+                                            </div>
+                                            <h6 class="font-italic">{{ $itemKomentar2->komentar }}</h6>
+                                            {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
+
+                                        </div>
+                                        {{-- <input type="text" readonly class="form-control-plaintext" id="komentar" value="{{ $itemKomentar2->komentar }}"> --}}
                                     </div>
                                 </div>
+                                <hr>
                             @endforeach
                         @endforeach
                     @endif
@@ -442,11 +507,11 @@
                             </div>
                         </div>
                         <div class="row form-group sub">
-                            <label for="staticEmail" class="col-sm-3 col-form-label">Skor Penyelia</label>
+                            <label for="staticEmail" class="col-sm-3 col-form-label"></label>
                             <label for="staticEmail" class="col-sm-1 col-form-label px-0">
                                 <div class="d-flex justify-content-end">
                                     <div style="width: 20px">
-                                        :
+
                                     </div>
                                 </div>
                             </label>
@@ -464,13 +529,19 @@
                                             @php
                                                 $dataDetailJawabanTiga = \App\Models\JawabanPengajuanModel::select('id','id_jawaban','skor','skor_penyelia')->where('id_pengajuan',$dataUmum->id)->where('id_jawaban',$itemJawabanTiga->id)->get();
                                                 $getKomentar3 = \App\Models\DetailKomentarModel::select('*')
-                                                                                                // ->join('komentar', 'komentar.id', 'detail_komentar.id_komentar')
+                                                                                                ->join('komentar', 'komentar.id', 'detail_komentar.id_komentar')
                                                                                                 ->where('id_item', $itemJawabanTiga->id_item)
-                                                                                                ->where('detail_komentar.id_komentar', $comment->id_pengajuan)
+                                                                                                ->where('komentar.id_pengajuan', $comment->id_pengajuan)
                                                                                                 ->get();
                                             @endphp
                                             @foreach ($dataDetailJawabanTiga as $item)
-                                                <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ $item->skor_penyelia }}">
+                                            <div class="">
+                                                <p><strong>Skor :  </strong></p>
+                                            </div>
+                                            <div class="px-2">
+                                                <p class="badge badge-info text-lg"><b> {{ $item->skor_penyelia }}</b></p>
+                                            </div>
+                                                {{-- <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ $item->skor_penyelia }}"> --}}
                                             @endforeach
                                         @endif
                                     @endif
@@ -479,16 +550,24 @@
                         </div>
                         @foreach ($getKomentar3 as $itemKomentar3)
                             <div class="row form-group sub">
-                                <label for="staticEmail" class="col-sm-3 col-form-label">Komentar</label>
+                                <label for="staticEmail" class="col-sm-3 col-form-label"></label>
                                 <label for="staticEmail" class="col-sm-1 col-form-label px-0">
                                     <div class="d-flex justify-content-end">
                                         <div style="width: 20px">
-                                            :
+
                                         </div>
                                     </div>
                                 </label>
                                 <div class="col-sm-7">
-                                    <input type="text" readonly class="form-control-plaintext" id="komentar" value="{{ $itemKomentar3->komentar }}">
+                                    <div class="d-flex">
+                                        <div style="width: 15%">
+                                            <p class="p-0 m-0"><strong>Komentar : </strong></p>
+                                        </div>
+                                        <h6 class="font-italic">{{ $itemKomentar->komentar3 }}</h6>
+                                        {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
+
+                                    </div>
+                                    {{-- <input type="text" readonly class="form-control-plaintext" id="komentar" value="{{ $itemKomentar3->komentar }}"> --}}
                                 </div>
                             </div>
                         @endforeach
@@ -504,9 +583,9 @@
                             @foreach ($dataDetailJawabanText as $itemTextEmpat)
                             @php
                                 $getKomentar4 = \App\Models\DetailKomentarModel::select('*')
-                                                                            // ->join('komentar', 'komentar.id', 'detail_komentar.id_komentar')
+                                                                            ->join('komentar', 'komentar.id', 'detail_komentar.id_komentar')
                                                                             ->where('id_item', $itemTextEmpat->id_item)
-                                                                            ->where('detail_komentar.id_komentar', $comment->id_pengajuan)
+                                                                            ->where('komentar.id_pengajuan', $comment->id_pengajuan)
                                                                             ->get();
                             @endphp
                                 <div class="row form-group sub">
@@ -524,7 +603,7 @@
                                     </div>
                                 </div>
                                 <div class="row form-group sub">
-                                    <label for="staticEmail" class="col-sm-3 col-form-label">Skor Penyelia</label>
+                                    <label for="staticEmail" class="col-sm-3 col-form-label"></label>
                                     <label for="staticEmail" class="col-sm-1 col-form-label px-0">
                                         <div class="d-flex justify-content-end">
                                             <div style="width: 20px">
@@ -533,21 +612,35 @@
                                         </div>
                                     </label>
                                     <div class="col-sm-7">
-                                        <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ $itemTextEmpat->skor_penyelia }}">
+                                        <div class="">
+                                            <p><strong></strong></p>
+                                        </div>
+                                        <div class="px-2">
+                                            <p class="badge badge-info text-lg"><b> {{ $itemTextEmpat->skor_penyelia }}</b></p>
+                                        </div>
+                                        {{-- <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ $itemTextEmpat->skor_penyelia }}"> --}}
                                     </div>
                                 </div>
                                 @foreach ($getKomentar4 as $itemKomentar4)
                                     <div class="row form-group sub">
-                                        <label for="staticEmail" class="col-sm-3 col-form-label">Komentar</label>
+                                        <label for="staticEmail" class="col-sm-3 col-form-label"></label>
                                         <label for="staticEmail" class="col-sm-1 col-form-label px-0">
                                             <div class="d-flex justify-content-end">
                                                 <div style="width: 20px">
-                                                    :
+
                                                 </div>
                                             </div>
                                         </label>
                                         <div class="col-sm-7">
-                                            <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ $itemKomentar4->komentar }}">
+                                            <div class="d-flex">
+                                                <div style="width: 15%">
+                                                    <p class="p-0 m-0"><strong>Komentar : </strong></p>
+                                                </div>
+                                                <h6 class="font-italic">{{ $itemKomentar4->komentar }}</h6>
+                                                {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
+
+                                            </div>
+                                            {{-- <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ $itemKomentar4->komentar }}"> --}}
                                         </div>
                                     </div>
                                 @endforeach
@@ -589,11 +682,11 @@
                                 </div>
                             </div>
                             <div class="row form-group sub">
-                                <label for="staticEmail" class="col-sm-3 col-form-label">Skor Penyelia</label>
+                                <label for="staticEmail" class="col-sm-3 col-form-label"></label>
                                 <label for="staticEmail" class="col-sm-1 col-form-label px-0">
                                     <div class="d-flex justify-content-end">
                                         <div style="width: 20px">
-                                            :
+
                                         </div>
                                     </div>
                                 </label>
@@ -611,13 +704,19 @@
                                                 @php
                                                     $dataDetailJawabanEmpat = \App\Models\JawabanPengajuanModel::select('id','id_jawaban','skor','skor_penyelia')->where('id_pengajuan',$dataUmum->id)->where('id_jawaban',$itemJawabanEmpat->id)->get();
                                                     $getKomentar5 = \App\Models\DetailKomentarModel::select('*')
-                                                                            // ->join('komentar', 'komentar.id', 'detail_komentar.id_komentar')
-                                                                            ->where('id_item', $itemJawabanEmpat->id_item)
-                                                                            ->where('detail_komentar.id_komentar', $comment->id_pengajuan)
+                                                                            ->join('komentar', 'komentar.id', 'detail_komentar.id_komentar')
+                                                                            ->where('detail_komentar.id_item', $itemJawabanEmpat->id_item)
+                                                                            ->where('komentar.id_pengajuan', $comment->id_pengajuan)
                                                                             ->get();
                                                 @endphp
                                                 @foreach ($dataDetailJawabanEmpat as $item)
-                                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ $item->skor_penyelia }}">
+                                                <div class="">
+                                                    <p><strong>Skor :  </strong></p>
+                                                </div>
+                                                <div class="px-2">
+                                                    <p class="badge badge-info text-lg"><b> {{ $item->skor_penyelia }}</b></p>
+                                                </div>
+                                                    {{-- <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ $item->skor_penyelia }}"> --}}
                                                 @endforeach
                                             @endif
                                         @endif
@@ -626,15 +725,23 @@
                             </div>
                             @foreach ($getKomentar5 as $itemKomentar5)
                                 <div class="row form-group sub">
-                                    <label for="staticEmail" class="col-sm-3 col-form-label">Komentar</label>
+                                    <label for="staticEmail" class="col-sm-3 col-form-label"></label>
                                     <label for="staticEmail" class="col-sm-1 col-form-label px-0">
                                         <div class="d-flex justify-content-end">
                                             <div style="width: 20px">
-                                                :
+
                                             </div>
                                         </div>
                                     </label>
                                     <div class="col-sm-7">
+                                        <div class="d-flex">
+                                            <div style="width: 15%">
+                                                <p class="p-0 m-0"><strong>Komentar : </strong></p>
+                                            </div>
+                                            <h6 class="font-italic">{{ $itemKomentar->komentar3 }}</h6>
+                                            {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
+
+                                        </div>
                                         <input type="text" readonly class="form-control-plaintext" id="komentar" value="{{ $itemKomentar5->komentar }}">
                                     </div>
                                 </div>

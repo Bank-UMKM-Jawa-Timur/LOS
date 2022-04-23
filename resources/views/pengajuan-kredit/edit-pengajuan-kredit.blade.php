@@ -231,9 +231,26 @@
         @endphp
         {{-- level level 2 --}}
         <div class="form-wizard" data-index='{{ $key }}' data-done='true'>
-            <div class="row">
+            <div class="row form-group">
 
                 @foreach ($dataLevelDua as $item)
+
+                        @if ($item->opsi_jawaban == 'input text')
+                            @php
+                                $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id','jawaban_text.id_pengajuan','jawaban_text.id_jawaban','jawaban_text.opsi_text','jawaban_text.skor_penyelia','item.id as id_item','item.nama')
+                                                                                        ->join('item','jawaban_text.id_jawaban','item.id')
+                                                                                        ->where('jawaban_text.id_pengajuan',$dataUmum->id)->where('jawaban_text.id_jawaban',$item->id)->get();
+                            @endphp
+                            @foreach ($dataDetailJawabanText as $itemTextDua)
+                                <div class="form-group col-md-6">
+                                    <label for="">{{ $itemTextDua->nama }}</label>
+                                    <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="opsi_text[]" value="{{ $itemTextDua->opsi_text }}" >
+                                </div>
+                                <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextDua->id }}">
+                                <input type="hidden" name="id_text[]" value="{{ $itemTextDua->id_item }}">
+                                <input type="hidden" name="skor_penyelia_text[]" value="{{ $itemTextDua->skor_penyelia }}">
+                            @endforeach
+                    @endif
                     @php
                         $dataJawaban = \App\Models\OptionModel::where('option',"!=","-")->where('id_item',$item->id)->get();
                         $dataOption = \App\Models\OptionModel::where('option',"=","-")->where('id_item',$item->id)->get();
@@ -275,6 +292,24 @@
 
                     @endif
                     @foreach ($dataLevelTiga as $keyTiga => $itemTiga)
+
+                            @if ($itemTiga->opsi_jawaban == 'input text')
+                                @php
+                                    $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id','jawaban_text.id_pengajuan','jawaban_text.id_jawaban','jawaban_text.opsi_text','jawaban_text.skor_penyelia','item.id as id_item','item.nama')
+                                                                                            ->join('item','jawaban_text.id_jawaban','item.id')
+                                                                                            ->where('jawaban_text.id_pengajuan',$dataUmum->id)->where('jawaban_text.id_jawaban',$itemTiga->id)->get();
+                                @endphp
+                                @foreach ($dataDetailJawabanText as $itemTextTiga)
+                                        <div class="form-group col-md-6">
+                                            <label for="">{{ $itemTextTiga->nama }}</label>
+                                            <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="opsi_text[]" value="{{ $itemTextTiga->opsi_text }}">
+                                        </div>
+                                        <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextTiga->id }}">
+                                        <input type="hidden" name="id_text[]" value="{{ $itemTextTiga->id_item }}">
+                                        <input type="hidden" name="skor_penyelia_text[]" value="{{ $itemTextTiga->skor_penyelia }}">
+                                        {{-- <input type="hidden" name="id[]" value="{{ $itemTextTiga->id_item }}"> --}}
+                                @endforeach
+                            @endif
                         @php
                             // check  jawaban level tiga
                             $dataJawabanLevelTiga = \App\Models\OptionModel::where('option',"!=","-")->where('id_item',$itemTiga->id)->get();
@@ -309,6 +344,24 @@
                             </div>
                         @endif
                         @foreach ($dataLevelEmpat as $keyEmpat => $itemEmpat)
+                            @if ($itemEmpat->opsi_jawaban == 'input text')
+                                @php
+                                    $dataDetailJawabanTextEmpat = \App\Models\JawabanTextModel::select('jawaban_text.id','jawaban_text.id_pengajuan','jawaban_text.id_jawaban','jawaban_text.opsi_text','jawaban_text.skor_penyelia','item.id as id_item','item.nama')
+                                                                                            ->join('item','jawaban_text.id_jawaban','item.id')
+                                                                                            ->where('jawaban_text.id_pengajuan',$dataUmum->id)->where('jawaban_text.id_jawaban',$itemEmpat->id)->get();
+                                @endphp
+                                @foreach ($dataDetailJawabanTextEmpat as $itemTextEmpat)
+                                    <div class="form-group col-md-6">
+                                        <label for="">{{ $itemTextEmpat->nama }}</label>
+                                        <input type="text" class="form-control mb-3" placeholder="Masukkan komentar" name="opsi_text[]" value="{{ $itemTextEmpat->opsi_text }}">
+                                    </div>
+                                    <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextEmpat->id }}">
+                                    <input type="hidden" name="id_text[]" value="{{ $itemTextEmpat->id_item }}">
+                                    <input type="hidden" name="skor_penyelia_text[]" value="{{ $itemTextEmpat->skor_penyelia }}">
+
+                                    {{-- <input type="hidden" name="id[]" value="{{ $itemTextEmpat->id_item }}"> --}}
+                                @endforeach
+                            @endif
                             @php
                                 // check level empat
                                 $dataJawabanLevelEmpat = \App\Models\OptionModel::where('option',"!=","-")->where('id_item',$itemEmpat->id)->get();

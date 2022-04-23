@@ -455,6 +455,42 @@ p .loading-content-detail{
     -webkit-animation-delay: -0.16s;
     animation-delay: -0.16s;
   }
+  .badge.text-lg{
+      font-size : inherit;
+  }
+  .input-b-bottom input:last-child{
+      padding-left : 4rem;
+    }
+    .input-b-bottom .input-skor{
+      position : relative;
+  }
+  .input-b-bottom .input-komentar:before{
+    content : "Komentar: ";
+    position : absolute;
+    left : 10px;
+    height : 100%;
+    display : flex;
+    align-items : center;
+  }
+  .input-b-bottom .input-skor:before{
+    content : "Skor: ";
+    position : absolute;
+    left : 10px;
+    height : 100%;
+    display : flex;
+    align-items : center;
+  }
+.input-b-bottom .komentar{
+    border-radius : 0px;
+    border-top : none;
+    border-left : none;
+    border-right : none;
+  }
+.input-b-bottom .input-skor input{
+    border-radius : 0px;
+    border-top : none;
+    border-right : none;
+  }
 
   @-webkit-keyframes sk-bouncedelay {
     0%, 80%, 100% { -webkit-transform: scale(0) }
