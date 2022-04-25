@@ -250,13 +250,13 @@
                                     <b>Jawaban:</b>
                                     <div class="mt-2 pl-3">
                                         <p class="badge badge-info text-lg"><b> {{ $itemTextDua->opsi_text }}</b></p>
-                                        <div class="input-group input-b-bottom">
+                                        <div class="input-k-bottom">
                                             <input type="text" class="form-control komentar" name="komentar_penyelia[]" placeholder="Masukkan Komentar">
 
-                                            <div class="input-skor">
+                                            {{-- <div class="input-skor">
                                             <input type="number" class="form-control" placeholder="" name="skor_penyelia_text[]" value="">
 
-                                            </div>
+                                            </div> --}}
                                         </div>
                                     </div>
                                 </div>

@@ -486,6 +486,13 @@ p .loading-content-detail{
     border-left : none;
     border-right : none;
   }
+  .input-k-bottom .komentar{
+    border-radius : 0px;
+    border-top : none;
+    border-left : none;
+    border-right : none;
+  }
+
 .input-b-bottom .input-skor input{
     border-radius : 0px;
     border-top : none;
