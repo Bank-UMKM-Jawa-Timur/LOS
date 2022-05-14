@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\CalonNasabah;
 use App\Models\ItemModel;
+use App\Models\KomentarModel;
 use App\Models\PengajuanModel;
 
 class CetakSuratController extends Controller
@@ -102,6 +103,8 @@ class CetakSuratController extends Controller
                                         ->find($id);
         $param['dataUmum'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.tanggal_review_penyelia')
                                         ->find($id);
+        $param['komentar'] = KomentarModel::where('id_pengajuan', $id)->first();
+
         return view('cetak.cetak-surat', $param);
     }
 }

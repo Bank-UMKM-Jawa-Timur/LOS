@@ -13,11 +13,9 @@
     </style>
 </head>
 <body>
-    <table>
+    {{-- <table>
         <tr>
-            <td style="width: 25%;" class="title-head">ANALISA
-                    (KREDIT DIATAS RP 50 JUTA
-                    SAMPAI < RP 350 JUTA)
+            <td style="width: 30%;">
             </td>
             <td style="width: 50%;text-align:center">
                 ANALISA KREDIT MODAL KERJA
@@ -26,7 +24,11 @@
             </td>
             <td style="width: 25%;text-align:center" class="title-head">LAMPIRAN 25</td>
         </tr>
-    </table>
+    </table> --}}
+    <h4 style="text-align:center">ANALISA KREDIT MODAL KERJA
+        <br>
+        Sektor . . . . . . . .
+    </h4>
     <br>
     <table>
         <tr>
@@ -437,6 +439,36 @@
                 @endforeach
             @endforeach
         @endforeach
+    </table>
+    <br>
+    <table style="border-spacing:10px;">
+        <tr>
+            <td style="width: 100%;" ><b><u><span>PENDAPAT dan USULAN STAF KREDIT</span></u></b>
+            </td>
+        </tr>
+        <tr>
+            <td>{{$komentar->komentar_staff}}</td>
+        </tr>
+    </table>
+    <br>
+    <table style="border-spacing:10px;">
+        <tr>
+            <td style="width: 100%;" ><b><u><span>PENDAPAT dan USULAN PENYELIA KREDIT</span></u></b>
+            </td>
+        </tr>
+        <tr>
+            <td>{{$komentar->komentar_penyelia}}</td>
+        </tr>
+    </table>
+    <br>
+    <table style="border-spacing:10px;">
+        <tr>
+            <td style="width: 100%;" ><b><u><span>PENDAPAT PEMIMPIN CABANG</span></u></b>
+            </td>
+        </tr>
+        <tr>
+            <td>{{$komentar->komentar_pincab}}</td>
+        </tr>
     </table>
     {{-- <table>
          @php

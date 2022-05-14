@@ -130,7 +130,7 @@
                             <a href="{{ route('pengajuan.check.penyeliakredit',$item->id_pengajuan) }}" class="btn btn-warning">Tindak lanjut Review Penyelia</a>
                         @endif
                             <div class="px-2">
-                                <a href="{{ route('cetak',$item->id_pengajuan) }}" class="btn btn-info">Cetak</a>
+                                <a target="_blank" href="{{ route('cetak',$item->id_pengajuan) }}" class="btn btn-info">Cetak</a>
                             </div>
                         </div>
                     </td>

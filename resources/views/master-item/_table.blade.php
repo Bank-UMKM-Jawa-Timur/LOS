@@ -5,7 +5,9 @@
                 <th class="text-center">#</th>
                 <th>Nama Item</th>
                 <th>Level</th>
+                <th>Turunan Dari</th>
                 <th>Opsi jawaban</th>
+                <th>Dapat Dikomentari</th>
                 <th>Aksi</th>
             </tr>
         </thead>
@@ -19,7 +21,9 @@
                     <td class="text-center text-muted">{{ $no }}</td>
                     <td>{{ $data->nama }}</td>
                     <td>{{ $data->level }}</td>
-                    <td>{{ $data->opsi_jawaban != null ? $data->opsi_jawaban : 'Title' }}</td>
+                    <td>{{ $data->parent_name }}</td>
+                    <td>{{ $data->opsi_jawaban != null ? $data->opsi_jawaban : '-' }}</td>
+                    <td>{{ $data->is_commentable }}</td>
                     <td>
                         <div class="form-inline btn-action">
                             <a href="{{ route('master-item.edit', $data->id) }}" class="mr-2">

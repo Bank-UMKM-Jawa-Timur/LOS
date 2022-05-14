@@ -13,28 +13,29 @@
         </div>
         <div class="form-group col-md-3">
             <label>Item Turunan 1</label>
-            <select name="item_turunan" id="itemTurunan1" class="select form-control" >
+            <select name="item_turunan" id="itemTurunan1" class="select form-control">
                 <option value="0"> ---Pilih Turunan ---</option>
-               {{-- @foreach ($itemsatu as $item)
+                {{-- @foreach ($itemsatu as $item)
                 <option value="{{ $item->id }}">{{ $item->id.'. '.$item->nama }}</option>
                @endforeach --}}
             </select>
         </div>
         <div class="form-group col-md-3">
             <label>Item Turunan 2</label>
-            <select name="item_turunan_dua" id="itemTurunan2" class="select form-control" >
+            <select name="item_turunan_dua" id="itemTurunan2" class="select form-control">
                 <option value="0"> ---Pilih Turunan ---</option>
             </select>
         </div>
         <div class="form-group col-md-3" id="item_turunan_tiga">
             <label>Item Turunan 3</label>
-            <select name="item_turunan_tiga" id="itemTurunan3" class="select form-control" >
+            <select name="item_turunan_tiga" id="itemTurunan3" class="select form-control">
                 <option value="0"> ---Pilih Turunan ---</option>
             </select>
         </div>
         <div class="form-group col-md-6">
             <label>Nama</label>
-            <input type="text" name="nama" class="form-control @error('nama') is-invalid @enderror" placeholder="Nama Item" value="{{old('nama')}}">
+            <input type="text" name="nama" class="form-control @error('nama') is-invalid @enderror"
+                placeholder="Nama Item" value="{{ old('nama') }}">
             @error('nama')
                 <div class="invalid-feedback">
                     {{ $message }}
@@ -43,13 +44,28 @@
         </div>
         <div class="form-group col-md-6" id="form_opsi">
             <label>Opsi Jawaban</label>
-            <select name="opsi_jawaban" id="opsi_jawaban" class="form-control @error('opsi_jawaban') is-invalid @enderror">
+            <select name="opsi_jawaban" id="opsi_jawaban"
+                class="form-control @error('opsi_jawaban') is-invalid @enderror">
                 <option value="kosong">Pilih Opsi Jawaban</option>
                 <option value="input text">Input Text</option>
                 <option value="option">Opsi</option>
             </select>
             {{-- <input type="text" name="nama" class="form-control @error('nama') is-invalid @enderror" placeholder="Nama Item" value="{{old('nama')}}"> --}}
             @error('opsi_jawaban')
+                <small class="text-danger">
+                    {{ $message }}
+                </small>
+            @enderror
+        </div>
+        <div class="form-group col-md-6" id="dapat_dikomentari">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="1" id="is_commentable" name="is_commentable">
+                <label class="form-check-label" for="is_commentable">
+                    Dapat Dikomentari
+                </label>
+            </div>
+            {{-- <input type="text" name="nama" class="form-control @error('nama') is-invalid @enderror" placeholder="Nama Item" value="{{old('nama')}}"> --}}
+            @error('is_commentable')
                 <small class="text-danger">
                     {{ $message }}
                 </small>
@@ -64,87 +80,110 @@
                 <tr>
                     <th>Opsi</th>
                     <th>Skor</th>
+                    <th>Kolom Tambahan</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody id="id_opsi">
-            @if (old('opsi') != "")
-                @foreach (old('opsi') as $key => $value)
-                <div class="countVar" data-count="{{ count(old('opsi')) }}"></div>
-                <tr data-id={{ ($key == 0)?$key+1:$key }}>
-                    <td>
-                        <div class="form-group col-md-12">
-                            {{-- <label>Opsi</label> --}}
-                            <input type="text" id="opsi_name" name="opsi[{{ $key }}][opsi_name]" class="form-control @error('opsi.'.$key.'.opsi_name') is-invalid @enderror" placeholder="Nama Opsi" value="{{ old('opsi.'.$key.'.opsi_name') }}">
-                            @error('opsi.'.$key.'.opsi_name')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
+                @if (old('opsi') != '')
+                    @foreach (old('opsi') as $key => $value)
+                        <div class="countVar" data-count="{{ count(old('opsi')) }}"></div>
+                        <tr data-id={{ $key == 0 ? $key + 1 : $key }}>
+                            <td>
+                                <div class="form-group col-md-12">
+                                    {{-- <label>Opsi</label> --}}
+                                    <input type="text" id="opsi_name" name="opsi[{{ $key }}][opsi_name]"
+                                        class="form-control @error('opsi.' . $key . '.opsi_name') is-invalid @enderror"
+                                        placeholder="Nama Opsi" value="{{ old('opsi.' . $key . '.opsi_name') }}">
+                                    @error('opsi.' . $key . '.opsi_name')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                 </div>
-                            @enderror
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group col-md-12">
-                            {{-- <label>Skor</label> --}}
-                            <input type="number" id="skor" name="opsi[{{$key}}][skor]" class="form-control @error('opsi.'.$key.'.skor') is-invalid @enderror" placeholder="Skor" value="{{ old('opsi.$key.skor') }}">
-                            @error('opsi.'.$key.'.skor')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
+                            </td>
+                            <td>
+                                <div class="form-group col-md-12">
+                                    {{-- <label>Skor</label> --}}
+                                    <input type="number" id="skor" name="opsi[{{ $key }}][skor]"
+                                        class="form-control @error('opsi.' . $key . '.skor') is-invalid @enderror"
+                                        placeholder="Skor" value="{{ old('opsi.$key.skor') }}">
+                                    @error('opsi.' . $key . '.skor')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                 </div>
-                            @enderror
-                        </div>
-                    </td>
-                    <td>
-                        @if ($key == 0)
-                        <div class="">
-                            <button type="button" class="btn btn-success plus"> <i class="fa fa-plus"></i> </button>
-                            {{-- <a class="addDetail" class="btn p-3" href=""><i class="fa fa-plus-square text-primary p-3" style="font-size: 24px"></i></a> --}}
-                        </div>
-
-                        @else
+                            </td>
+                            <td>
+                                @if ($key == 0)
+                                    <div class="">
+                                        <button type="button" class="btn btn-success plus"> <i
+                                                class="fa fa-plus"></i> </button>
+                                        {{-- <a class="addDetail" class="btn p-3" href=""><i class="fa fa-plus-square text-primary p-3" style="font-size: 24px"></i></a> --}}
+                                    </div>
+                                @else
+                                    <div class="">
+                                        <button type="button" class="btn btn-success plus"> <i
+                                                class="fa fa-plus"></i> </button>
+                                        <button type="button" class="btn btn-danger minus"> <i
+                                                class="fa fa-minus"></i> </button>
+                                        {{-- <a class="addDetail" class="btn p-3" href=""><i class="fa fa-plus-square text-primary p-3" style="font-size: 24px"></i></a> --}}
+                                    </div>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                @else
+                    <div id="countVar" data-count="0"></div>
+                    <tr data-id="1">
+                        <td>
                             <div class="">
-                                <button type="button" class="btn btn-success plus"> <i class="fa fa-plus"></i> </button>
-                                <button type="button" class="btn btn-danger minus"> <i class="fa fa-minus"></i> </button>
+                                {{-- <label>Opsi</label> --}}
+                                <input type="text" id="opsi_name" name="opsi[1][opsi_name]" class="form-control "
+                                    placeholder="Nama Opsi">
+                                @error('opsi.1.opsi_name')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        </td>
+                        <td>
+                            <div class="">
+                                {{-- <label>Skor</label> --}}
+                                <input type="number" id="skor" name="opsi[1][skor]" class="form-control"
+                                    placeholder="Skor">
+                                @error('opsi.1.skor')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        </td>
+                        <td>
+                            <div class="">
+                                {{-- <label>Skor</label> --}}
+                                <input type="text" id="sub_column" name="opsi[1][sub_column]" class="form-control"
+                                    placeholder="Nama Kolom Tambahan">
+                                <span class="text-muted text-danger">*abaikan jika tidak terdapat kolom tambahan</span>
+                                @error('opsi.1.sub_column')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                        </td>
+                        <td>
+                            <div class="">
+                                <button type="button" class="btn btn-success plus"> <i class="fa fa-plus"></i>
+                                </button>
                                 {{-- <a class="addDetail" class="btn p-3" href=""><i class="fa fa-plus-square text-primary p-3" style="font-size: 24px"></i></a> --}}
                             </div>
-                        @endif
-                    </td>
-                </tr>
-                @endforeach
-            @else
-            <div id="countVar" data-count = "0"></div>
-            <tr data-id="1">
-                <td>
-                    <div class="">
-                        {{-- <label>Opsi</label> --}}
-                        <input type="text" id="opsi_name" name="opsi[1][opsi_name]" class="form-control " placeholder="Nama Opsi" >
-                        @error('opsi.1.opsi_name')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                </td>
-                <td>
-                    <div class="">
-                        {{-- <label>Skor</label> --}}
-                        <input type="number" id="skor" name="opsi[1][skor]" class="form-control" placeholder="Skor" >
-                        @error('opsi.1.skor')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                </td>
-                <td>
-                    <div class="">
-                        <button type="button" class="btn btn-success plus"> <i class="fa fa-plus"></i> </button>
-                        {{-- <a class="addDetail" class="btn p-3" href=""><i class="fa fa-plus-square text-primary p-3" style="font-size: 24px"></i></a> --}}
-                    </div>
-                </td>
+                        </td>
 
-            </tr>
-            @endif
+                    </tr>
+                @endif
             </tbody>
         </table>
     </div>
@@ -155,15 +194,16 @@
     <script>
         $('#item_turunan_tiga').hide();
         $('#opsi').hide();
-        $("#level").change(function(){
+        $("#level").change(function() {
             var id_level = $(this).val()
-            if(id_level === "1") {
+            if (id_level === "1") {
                 $('#itemTurunan1').prop('disabled', true);
                 $('#itemTurunan2').prop('disabled', true);
                 $('#opsi_name').prop('disabled', true);
                 $('#skor').prop('disabled', true);
                 $('#form_opsi').hide();
-                $('#opsi_jawaban').prop('disabled',true);
+                $('#dapat_dikomentari').hide();
+                $('#opsi_jawaban').prop('disabled', true);
                 $('#opsi').hide();
                 $('#item_turunan_tiga').hide();
                 $('#item_turunan_tiga').prop('disabled', true)
@@ -175,7 +215,8 @@
                 $('#skor').prop('disabled', false);
                 $('#opsi').show();
                 $('#form_opsi').show();
-                $('#opsi_jawaban').prop('disabled',false);
+                $('#dapat_dikomentari').show();
+                $('#opsi_jawaban').prop('disabled', false);
             }
             $('#opsi_jawaban').change(function(e) {
                 e.preventDefault();
@@ -184,12 +225,12 @@
                 if (opsi_jawaban == "input text") {
                     // console.log('input text');
                     $('#opsi').hide();
-                    $('#opsi_name').prop('disabled',true);
-                    $('#skor').prop('disabled',true);
-                }else{
+                    $('#opsi_name').prop('disabled', true);
+                    $('#skor').prop('disabled', true);
+                } else {
                     $('#opsi').show();
-                    $('#opsi_name').prop('disabled',false);
-                    $('#skor').prop('disabled',false);
+                    $('#opsi_name').prop('disabled', false);
+                    $('#skor').prop('disabled', false);
                 }
             })
             if (id_level == "2") {
@@ -201,10 +242,10 @@
                 if (id_level == "2") {
                     turunanSatu(id_level)
                     addOption()
-                }else{
+                } else {
                     $('#itemTurunan1').empty();
                 }
-            }else if (id_level == "3"){
+            } else if (id_level == "3") {
                 $(".select").select2()
                 $('#item_turunan_tiga').hide()
                 $('#item_turunan_tiga').prop('disabled', true)
@@ -217,7 +258,7 @@
                 addOption()
                 // $('#itemTurunan1').empty();
                 // $("#itemTurunan1").append('<option value="0">---Pilih Item Turunan---</option>');
-            }else if(id_level == 4){
+            } else if (id_level == 4) {
                 $(".select").select2();
                 addOption();
                 turunanSatu(id_level);
@@ -233,7 +274,7 @@
                     console.log(id_turunan);
                     turunanTiga(id_turunan)
                 })
-            }else{
+            } else {
 
             }
 
@@ -242,18 +283,19 @@
         function turunanSatu(id_level) {
             $.ajax({
                 type: "GET",
-                url: "/data-item-satu?itemSatu="+id_level,
+                url: "/data-item-satu?itemSatu=" + id_level,
                 dataType: 'JSON',
-                success:function(res){
+                success: function(res) {
                     // console.log(res);
                     if (res) {
                         $('#itemTurunan1').empty();
                         $("#itemTurunan1").append('<option value="0">---Pilih Item Turunan---</option>');
-                        $.each(res,function(nama,id){
+                        $.each(res, function(nama, id) {
                             // console.log(res);
-                            $("#itemTurunan1").append('<option value="'+id+'">'+nama+'</option>');
+                            $("#itemTurunan1").append('<option value="' + id + '">' + nama +
+                                '</option>');
                         });
-                    }else{
+                    } else {
                         $('#itemTurunan1').empty();
                     }
                 }
@@ -263,22 +305,23 @@
         function turunanDua(id_turunan) {
             $.ajax({
                 type: "GET",
-                url: "/data-item-tiga?itemTiga="+id_turunan,
+                url: "/data-item-tiga?itemTiga=" + id_turunan,
                 dataType: 'JSON',
-                success:function(res){
+                success: function(res) {
                     // console.log(res);
                     if (res) {
                         $('#itemTurunan2').empty();
                         $("#itemTurunan2").append('<option value="0">---Pilih Item Turunan---</option>');
-                        $.each(res,function(nama,id){
+                        $.each(res, function(nama, id) {
                             // console.log(res);
-                            $("#itemTurunan2").append('<option value="'+id+'">'+nama+'</option>');
+                            $("#itemTurunan2").append('<option value="' + id + '">' + nama +
+                                '</option>');
                         });
                         // var count=Object.keys(res).length;
                         // for (let i = 0; i <= count; i++) {
                         //     $("#itemTurunan2").append('<option value="'+ res[i].id +'">'+res[i].level+". "+res[i].nama+'</option>');
                         // }
-                    }else{
+                    } else {
                         $('#itemTurunan2').empty();
                     }
                 }
@@ -288,22 +331,23 @@
         function turunanTiga(id_turunan) {
             $.ajax({
                 type: "GET",
-                url: "/data-item-empat?itemEmpat="+id_turunan,
+                url: "/data-item-empat?itemEmpat=" + id_turunan,
                 dataType: 'JSON',
-                success:function(res){
+                success: function(res) {
                     // console.log(res);
                     if (res) {
                         $('#itemTurunan3').empty();
                         $("#itemTurunan3").append('<option value="0">---Pilih Item Turunan---</option>');
-                        $.each(res,function(nama,id){
+                        $.each(res, function(nama, id) {
                             // console.log(res);
-                            $("#itemTurunan3").append('<option value="'+id+'">'+nama+'</option>');
+                            $("#itemTurunan3").append('<option value="' + id + '">' + nama +
+                                '</option>');
                         });
                         // var count=Object.keys(res).length;
                         // for (let i = 0; i <= count; i++) {
                         //     $("#itemTurunan2").append('<option value="'+ res[i].id +'">'+res[i].level+". "+res[i].nama+'</option>');
                         // }
-                    }else{
+                    } else {
                         $('#itemTurunan3').empty();
                     }
                 }
@@ -311,21 +355,25 @@
         }
 
         function addOption() {
-            $('body').on('click','.plus',function() {
+            $('body').on('click', '.plus', function() {
                 var i = $("#opsi tr:last").data('id');
                 i = i + 1;
-                $('#id_opsi').append('<tr data-id="'+ i +'">\
-                    <td>\
-                            <input type="text" id="id_opsi" name="opsi['+ i +'][opsi_name]" class="form-control" placeholder="Nama Opsi">\
-                    </td>\
-                    <td>\
-                        <input type="number" id="skor" name="opsi['+ i +'][skor]" class="form-control" placeholder="Skor" >\
+                $('#id_opsi').append('<tr data-id="' + i + '">\
+                        <td>\
+                                <input type="text" id="id_opsi" name="opsi[' + i + '][opsi_name]" class="form-control" placeholder="Nama Opsi">\
                         </td>\
-                    <td class="">\
-                        <button type="button" class="btn btn-success plus"> <i class="fa fa-plus"></i> </button>\
-                        <button type="button" class="btn btn-danger minus"> <i class="fa fa-minus"></i> </button>\
-                    </td>\
-                </tr>');
+                        <td>\
+                            <input type="number" id="skor" name="opsi[' + i + '][skor]" class="form-control" placeholder="Skor" >\
+                            </td>\
+                        <td>\
+                            <input type="text" id="sub_column" name="opsi[' + i + '][sub_column]" class="form-control" placeholder="Nama kolom tambahan" >\
+                            <span class="text-muted text-danger">*abaikan jika tidak terdapat kolom tambahan</span>\
+                            </td>\
+                        <td class="">\
+                            <button type="button" class="btn btn-success plus"> <i class="fa fa-plus"></i> </button>\
+                            <button type="button" class="btn btn-danger minus"> <i class="fa fa-minus"></i> </button>\
+                        </td>\
+                    </tr>');
             });
             $('body').on('click', '.minus', function() {
                 $(this).closest('tr').remove();

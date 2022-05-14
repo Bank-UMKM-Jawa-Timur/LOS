@@ -1,49 +1,53 @@
 $(document).ready(function() {
 
     $('#opsi').hide();
+    $('#dapat_dikomentari').hide();
     $('#opsi_jawaban option').each(function() {
         var option = $('#opsi_jawaban option:selected').val();
         if (option == 'input text') {
             $('#opsi_jawaban').prop('disabled', true);
 
-        }else if(option == 'option'){
+        } else if (option == 'option') {
             $('#opsi_jawaban').prop('disabled', true);
-        }else{
+        } else {
             $('#opsi_jawaban').prop('disabled', true);
 
         }
     })
     $('#level option').each(function() {
         var id_level = $("#level option:selected").val()
-        if (id_level == 1){
+        if (id_level == 1) {
             $('#itemTurunan1').prop('disabled', true);
             $('#itemTurunan2').prop('disabled', true);
             $('#opsi_name').prop('disabled', true);
             $('#skor').prop('disabled', true);
             $('#opsi').hide();
+            $('#dapat_dikomentari').hide();
         }
 
-        if(id_level == "1") {
+        if (id_level == "1") {
             $('#itemTurunan1').prop('disabled', false);
             $('#itemTurunan2').prop('disabled', true);
             $('#opsi_name').prop('disabled', true);
             $('#skor').prop('disabled', true);
             $('#opsi').hide();
+            $('#dapat_dikomentari').hide();
         } else {
             $('#itemTurunan1').prop('disabled', true);
             $('#itemTurunan2').prop('disabled', false);
             $('#opsi_name').prop('disabled', false);
             $('#skor').prop('disabled', false);
             $('#opsi').show();
+            $('#dapat_dikomentari').show();
         }
-        if (id_level == "2") {
-        }else if (id_level == "3"){
+        if (id_level == "2") {} else if (id_level == "3") {
 
             // $('#itemTurunan1').empty();
             // $("#itemTurunan1").append('<option value="0">---Pilih Item Turunan---</option>');
         }
 
     });
+
     function addOption(param) {
         var biggestNo = 0; //setting awal No/Id terbesar
         $(".row-detail").each(function() {

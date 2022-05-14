@@ -174,6 +174,7 @@ class PengajuanKreditController extends Controller
             'jaminan' => 'required',
             'hubungan_bank' => 'required',
             'hasil_verifikasi' => 'required',
+            'komentar_staff' => 'required',
             // 'dataLevelDua.*' => $checkLevelDua,
             // 'dataLevelTiga.*' => $checkLevelTiga,
             // 'dataLevelEmpat.*' => $checkLevelEmpat,
@@ -310,14 +311,19 @@ class PengajuanKreditController extends Controller
             $updateData->average_by_sistem = $result;
             $updateData->update();
             // Session::put('id',$addData->id);
+            $addKomentar = new KomentarModel;
+            $addKomentar->id_pengajuan = $id_pengajuan;
+            $addKomentar->komentar_staff = $request->get('komentar_staff');
+            $addKomentar->id_staff = Auth::user()->id;
+            $addKomentar->save();
             DB::commit();
             return redirect()->route('pengajuan-kredit.index')->withStatus('Data berhasil disimpan.');
         } catch (Exception $e) {
             DB::rollBack();
-            return redirect()->back()->withError('Terjadi kesalahan.' . $e->getMessage());
+            return redirect()->back()->withError('Terjadi kesalahan.');
         } catch (QueryException $e) {
             DB::rollBack();
-            return redirect()->back()->withError('Terjadi kesalahan' . $e->getMessage());
+            return redirect()->back()->withError('Terjadi kesalahan');
         }
     }
 
@@ -586,13 +592,13 @@ class PengajuanKreditController extends Controller
             $updateData->update();
             // Session::put('id',$addData->id);
             DB::commit();
-            return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil mengganti data.');
+            return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil mengupdate data.');
         } catch (Exception $e) {
             DB::rollBack();
-            return redirect()->back()->withError('Terjadi kesalahan.' . $e->getMessage());
+            return redirect()->back()->withError('Terjadi kesalahan.');
         } catch (QueryException $e) {
             DB::rollBack();
-            return redirect()->back()->withError('Terjadi kesalahan' . $e->getMessage());
+            return redirect()->back()->withError('Terjadi kesalahan');
         }
     }
 
@@ -695,15 +701,15 @@ class PengajuanKreditController extends Controller
                     'skor_penyelia' => $value
                 ]);
             };
-            foreach ($request->skor_penyelia_text as $key => $value) {
-                array_push($finalArray_text, [
-                    'skor_penyelia' => $value
-                ]);
-            };
+            // foreach ($request->skor_penyelia_text as $key => $value) {
+            //     array_push($finalArray_text, [
+            //         'skor_penyelia' => $value
+            //     ]);
+            // };
             // return $finalArray;
             $sum_select = array_sum($request->skor_penyelia);
-            $sum_text = array_sum($request->skor_penyelia_text);
-            $average = ($sum_select + $sum_text) / count($request->skor_penyelia);
+            // $sum_text = array_sum($request->skor_penyelia_text);
+            $average = ($sum_select) / count($request->skor_penyelia);
             // return $average;
             $result = round($average, 2);
             $status = "";
@@ -727,25 +733,30 @@ class PengajuanKreditController extends Controller
             $updateData->average_by_penyelia = $result;
             $updateData->update();
 
-            $addKomentar = new KomentarModel;
-            $addKomentar->id_pengajuan = $request->id_pengajuan;
-            $addKomentar->save();
-            $id_komentar = $addKomentar->id;
-            foreach ($request->id as $key => $value) {
+            $idKomentar = KomentarModel::where('id_pengajuan', $request->id_pengajuan)->first();
+            KomentarModel::where('id', $idKomentar->id)->update(
+                [
+                    'komentar_penyelia' => $request->komentar_penyelia_keseluruhan,
+                    'id_penyelia' => Auth::user()->id,
+                    'updated_at' => date('Y-m-d H:i:s')
+                ]
+            );
+
+            foreach ($request->id_item as $key => $value) {
                 $addDetailKomentar = new DetailKomentarModel;
-                $addDetailKomentar->id_komentar = $id_komentar;
+                $addDetailKomentar->id_komentar = $idKomentar->id;
                 $addDetailKomentar->id_user = Auth::user()->id;
-                $addDetailKomentar->id_item = $_POST['id'][$key];
+                $addDetailKomentar->id_item = $value;
                 $addDetailKomentar->komentar = $_POST['komentar_penyelia'][$key];
                 $addDetailKomentar->save();
             }
             return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil menambahkan data');
         } catch (Exception $e) {
-            return $e;
+            // return $e;
             return redirect()->back()->withError('Terjadi kesalahan.');
         } catch (QueryException $e) {
-            return $e;
-            return redirect()->back()->withError('Terjadi kesalahan');
+            // return $e;
+            return redirect()->back()->withError('Terjadi kesalahan.');
         }
     }
 
@@ -840,21 +851,14 @@ class PengajuanKreditController extends Controller
     public function checkPincabStatusDetailPost(Request $request)
     {
         try {
-            // $updateData = PengajuanModel::find($request->id_pengajuan);
-            // $updateData->update();
-            $addKomentar = new KomentarModel;
-            $addKomentar->id_pengajuan = $request->id_pengajuan;
-            // $addKomentar->komentar_pincab = $request->komentar;
-            $addKomentar->save();
-            $id_komentar = $addKomentar->id;
-            foreach ($request->get('id') as $key => $value) {
-                $addDetailKomentar = new DetailKomentarModel;
-                $addDetailKomentar->id_komentar = $id_komentar;
-                $addDetailKomentar->id_user = Auth::user()->id;
-                $addDetailKomentar->id_item = $request->get('id')[$key];
-                $addDetailKomentar->komentar = $request->get('komentar');
-                $addDetailKomentar->save();
-            }
+            $idKomentar = KomentarModel::where('id_pengajuan', $request->id_pengajuan)->first();
+            KomentarModel::where('id', $idKomentar->id)->update(
+                [
+                    'komentar_pincab' => $request->komentar_pincab,
+                    'id_pincab' => Auth::user()->id,
+                    'updated_at' => date('Y-m-d H:i:s')
+                ]
+            );
 
             return redirect('/pengajuan-kredit')->withStatus('Berhasil menambahkan komentar');
         } catch (Exception $e) {

@@ -29,7 +29,8 @@ class MasterItemController extends Controller
 
         try {
             $keyword = $request->get('keyword');
-            $getItem = ItemModel::orderBy('id','DESC');
+            $getItem = ItemModel::select('item.*', 'i.nama as parent_name')
+            ->leftJoin('item as i', 'i.id', 'item.id_parent')->orderBy('id','DESC');
 
             if ($keyword) {
                 $getItem->where('id', 'LIKE', "%{$keyword}%")->orWhere('nama', 'LIKE', "%{$keyword}%");
@@ -108,6 +109,7 @@ class MasterItemController extends Controller
             $addItem->nama = $request->get('nama');
             $addItem->level = $request->get('level');
             $addItem->opsi_jawaban = $request->get('opsi_jawaban');
+            $addItem->is_commentable = $request->get('is_commentable');
             if ($request->level == 2) {
                 $addItem->id_parent = $request->item_turunan;
             }elseif ($request->level == 3) {
@@ -158,10 +160,10 @@ class MasterItemController extends Controller
             return redirect()->route('master-item.index')->withStatus('Berhasil menambah data.');
 
         } catch(Exception $e) {
-            return redirect()->back()->withStatus('Terjadi Kesalahan.');
+            return back()->withError('Terjadi Kesalahan.' . $e->getMessage());
             return $e;
         }catch (QueryException $e){
-            return redirect()->back()->withStatus('Terjadi Kesalahan.');
+            return back()->withError('Terjadi Kesalahan.' . $e->getMessage());
             return $e;
         }
 
@@ -190,8 +192,10 @@ class MasterItemController extends Controller
         $this->param['btnText'] = 'List Item';
         $this->param['btnLink'] = route('master-item.index');
 
-        $this->param['item'] = ItemModel::find($id);
+        $this->param['item'] = ItemModel::findOrFail($id);
         $this->param['itemTurunan'] = ItemModel::select('id','nama')->find( $this->param['item']->id_parent);
+        $isParent = ItemModel::where('id_parent', $id)->count() > 0 ? true : false;
+        $this->param['isParent'] = $isParent;
 
         $this->param['opsi'] = OptionModel::where('id_item',$id)->get();
         return view('master-item.edit',$this->param);
@@ -215,6 +219,7 @@ class MasterItemController extends Controller
             $updateItem = ItemModel::find($id);
             $updateItem->nama = $request->get('nama');
             $updateItem->opsi_jawaban = $request->get('opsi_jawaban');
+            $updateItem->is_commentable = $request->get('is_commentable');
             $updateItem->save();
             if ($request->id_detail != null) {
                 foreach ($request->id_detail as $key => $value) {
@@ -239,14 +244,12 @@ class MasterItemController extends Controller
                     }
                 }
             }
-            return redirect()->route('master-item.index')->withStatus('Berhasil mengganti data.');
+            return redirect()->route('master-item.index')->withStatus('Berhasil mengupdate data.');
 
         } catch(Exception $e) {
-            return $e;
-            return redirect()->back()->withStatus('Terjadi Kesalahan.');
+            return back()->withError('Terjadi Kesalahan.');
         }catch (QueryException $e){
-            return $e;
-            return redirect()->back()->withStatus('Terjadi Kesalahan.');
+            return back()->withError('Terjadi Kesalahan.');
         }
     }
 

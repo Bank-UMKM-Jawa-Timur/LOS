@@ -37,10 +37,10 @@
                 </div>
             @enderror
         </div>
-
+        <input type="hidden" name="opsi_jawaban" value="{{$item->opsi_jawaban}}">
         <div class="form-group col-md-6" id="form_opsi">
             <label>Opsi Jawaban</label>
-            <select name="opsi_jawaban" id="opsi_jawaban" class="form-control @error('opsi_jawaban') is-invalid @enderror">
+            <select id="opsi_jawaban" class="form-control @error('opsi_jawaban') is-invalid @enderror">
                 <option value="kosong" {{ $item->opsi_jawaban == 'kosong' ? 'selected' : ''  }}>Pilih Opsi Jawaban</option>
                 <option value="input text" {{ $item->opsi_jawaban == 'input text' ? 'selected' : ''  }}>Input Text</option>
                 <option value="option" {{ $item->opsi_jawaban == 'option' ? 'selected' : ''  }}>Opsi</option>
@@ -52,6 +52,24 @@
                 </small>
             @enderror
         </div>
+
+        @if (!$isParent)
+            <div class="form-group col-md-6" id="dapat_dikomentari">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="1" id="is_commentable" name="is_commentable" {{$item->is_commentable == 'Ya' ? 'checked' : ''}}>
+                    <label class="form-check-label" for="is_commentable">
+                        Dapat Dikomentari
+                    </label>
+                </div>
+                {{-- <input type="text" name="nama" class="form-control @error('nama') is-invalid @enderror" placeholder="Nama Item" value="{{old('nama')}}"> --}}
+                @error('is_commentable')
+                    <small class="text-danger">
+                        {{ $message }}
+                    </small>
+                @enderror
+            </div>
+        @endif
+
     </div>
     <hr>
     <div class="detail-lawan">

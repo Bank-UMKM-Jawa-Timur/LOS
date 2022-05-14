@@ -127,7 +127,7 @@
                                     </button>
                                 @endif
                                 <div class="px-2">
-                                    <a href="{{ route('cetak',$item->id_pengajuan) }}" class="btn btn-info">Cetak</a>
+                                    <a href="{{ route('cetak',$item->id_pengajuan) }}" target="_blank" class="btn btn-info">Cetak</a>
                                 </div>
 
                             </div>
@@ -137,7 +137,7 @@
                                     <button disabled href="" class="btn btn-success" >Selesai </button>
                                 </div>
                                 <div class="">
-                                    <a href="{{ route('cetak',$item->id_pengajuan) }}" class="btn btn-info">Cetak</a>
+                                    <a href="{{ route('cetak',$item->id_pengajuan) }}" class="btn btn-info" target="_blank">Cetak</a>
                                 </div>
                             </div>
                         @elseif ($item->posisi == 'Ditolak')
@@ -146,7 +146,7 @@
                                     <button disabled href="" class="btn btn-danger" >Ditolak </button>
                                 </div>
                                 <div class="">
-                                    <a href="{{ route('cetak',$item->id_pengajuan) }}" class="btn btn-info">Cetak</a>
+                                    <a href="{{ route('cetak',$item->id_pengajuan) }}" class="btn btn-info" target="_blank">Cetak</a>
                                 </div>
                             </div>
                         @endif

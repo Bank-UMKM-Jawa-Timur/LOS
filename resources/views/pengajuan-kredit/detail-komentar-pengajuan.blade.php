@@ -754,8 +754,8 @@
         @endforeach
         <hr>
         <div class="form-group row">
-            <label for="staticEmail" class="col-sm-3 col-form-label">Komentar</label>
-            <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+            <label for="komentar_pincab" class="col-sm-3 col-form-label">Pendapat Pemimpin Cabang</label>
+            <label for="komentar_pincab" class="col-sm-1 col-form-label px-0">
                 <div class="d-flex justify-content-end">
                     <div style="width: 20px">
                         :
@@ -764,7 +764,7 @@
             </label>
             <div class="col-sm-7">
                 <input type="hidden" name="id_pengajuan" id="" value="{{ $dataUmum->id }}">
-                <textarea name="komentar" class="form-control" id="" cols="5" rows="3" placeholder="Masukkan Komentar"></textarea>
+                <textarea name="komentar_pincab" class="form-control" id="" cols="5" rows="3" placeholder="Masukkan Pendapat Pemimpin Cabang"></textarea>
             </div>
         </div>
 
