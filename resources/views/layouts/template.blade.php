@@ -31,7 +31,7 @@
     {{-- <link href="assets/build/css/default.css" rel="stylesheet"> --}}
 
     <link rel="stylesheet" href="{{ asset('') }}css/custom.css" />
-
+    <script src="https://cdn.jsdelivr.net/npm/autonumeric@4.5.4"></script>
 </head>
 <body ng-controller="MainCtrl">
     <div class="inner" ng-view>

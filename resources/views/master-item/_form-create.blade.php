@@ -80,7 +80,7 @@
                 <tr>
                     <th>Opsi</th>
                     <th>Skor</th>
-                    <th>Kolom Tambahan</th>
+                    <th>Kolom Turunan</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -165,8 +165,8 @@
                             <div class="">
                                 {{-- <label>Skor</label> --}}
                                 <input type="text" id="sub_column" name="opsi[1][sub_column]" class="form-control"
-                                    placeholder="Nama Kolom Tambahan">
-                                <span class="text-muted text-danger">*abaikan jika tidak terdapat kolom tambahan</span>
+                                    placeholder="Nama Kolom Turunan">
+                                <span class="text-muted text-danger">*abaikan jika tidak terdapat kolom turunan</span>
                                 @error('opsi.1.sub_column')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -366,8 +366,8 @@
                             <input type="number" id="skor" name="opsi[' + i + '][skor]" class="form-control" placeholder="Skor" >\
                             </td>\
                         <td>\
-                            <input type="text" id="sub_column" name="opsi[' + i + '][sub_column]" class="form-control" placeholder="Nama kolom tambahan" >\
-                            <span class="text-muted text-danger">*abaikan jika tidak terdapat kolom tambahan</span>\
+                            <input type="text" id="sub_column" name="opsi[' + i + '][sub_column]" class="form-control" placeholder="Nama kolom turunan" >\
+                            <span class="text-muted text-danger">*abaikan jika tidak terdapat kolom turunan</span>\
                             </td>\
                         <td class="">\
                             <button type="button" class="btn btn-success plus"> <i class="fa fa-plus"></i> </button>\

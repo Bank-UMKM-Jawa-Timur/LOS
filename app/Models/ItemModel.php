@@ -15,4 +15,9 @@ class ItemModel extends Model
     {
         return $value == 1 ? 'Ya' : 'Tidak';
     }
+
+    public function option()
+    {
+        return $this->hasMany('\App\Models\OptionModel', 'id_item');
+    }
 }

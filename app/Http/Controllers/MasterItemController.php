@@ -133,6 +133,7 @@ class MasterItemController extends Controller
                             $addDataOption->id_item = $addItem->id;
                             $addDataOption->option = $value['opsi_name'] != null ? $value['opsi_name'] : '-';
                             $addDataOption->skor = $value['skor'] != null ? $value['skor'] : 0;
+                            $addDataOption->sub_column = $value['sub_column'];
                             $addDataOption->save();
                         }
                     }elseif ($request->level == 3) {
@@ -143,6 +144,7 @@ class MasterItemController extends Controller
                             $addDataOption->id_item = $addItem->id;
                             $addDataOption->option = $value['opsi_name'] != null ? $value['opsi_name'] : '-';
                             $addDataOption->skor = $value['skor'] != null ? $value['skor'] : 0;
+                            $addDataOption->sub_column = $value['sub_column'];
                             $addDataOption->save();
                         }
                     }else{
@@ -152,6 +154,7 @@ class MasterItemController extends Controller
                             $addDataOption->id_item = $addItem->id;
                             $addDataOption->option = $value['opsi_name'] != null ? $value['opsi_name'] : '-';
                             $addDataOption->skor = $value['skor'] != null ? $value['skor'] : 0;
+                            $addDataOption->sub_column = $value['sub_column'];
                             $addDataOption->save();
                         }
                     }
@@ -228,12 +231,14 @@ class MasterItemController extends Controller
                         OptionModel::where('id',$request->id_detail[$key])->update([
                             'option' => $request->option[$key],
                             'skor' => $request->skor[$key],
+                            'sub_column' => $request->sub_column[$key],
                         ]);
                     }else{
                         $newOptionItem = new OptionModel;
                         $newOptionItem->id_item = $request->get('id_item');
                         $newOptionItem->option = $request->get('option')[$key];
                         $newOptionItem->skor = $request->get('skor')[$key];
+                        $newOptionItem->sub_column = $request->get('sub_column')[$key];
                         $newOptionItem->save();
                     }
 

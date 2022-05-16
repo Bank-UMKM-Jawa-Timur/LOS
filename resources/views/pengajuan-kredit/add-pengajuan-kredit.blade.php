@@ -111,7 +111,7 @@
                     @enderror
                 </div>
                 <div class="form-group col-md-4">
-                    <label for="">Tempat</label>
+                    <label for="">Tempat Lahir</label>
                     <input type="text" name="tempat_lahir" id=""
                         class="form-control @error('tempat_lahir') is-invalid @enderror" placeholder="Tempat Lahir">
                     @error('tempat_lahir')
@@ -172,8 +172,9 @@
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Jumlah Kredit yang diminta</label>
-                    <textarea name="jumlah_kredit" class="form-control @error('jumlah_kredit') is-invalid @enderror" id="" cols="30"
-                        rows="4" placeholder="Jumlah Kredit"></textarea>
+                    <input type="number" name="jumlah_kredit" id="jumlah_kredit" class="form-control @error('jumlah_kredit') is-invalid @enderror" data-a-sign="" data-a-dec="," data-a-sep=".">
+                    {{-- <textarea name="jumlah_kredit" class="form-control @error('jumlah_kredit') is-invalid @enderror" id="" cols="30"
+                        rows="4" placeholder="Jumlah Kredit"></textarea> --}}
                     @error('jumlah_kredit')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -277,13 +278,17 @@
                         @if (count($dataJawaban) != 0)
                             <div class="form-group col-md-6">
                                 <label for="">{{ $item->nama }}</label>
-                                <select name="dataLevelDua[]" id="dataLevelDua" class="form-control">
+                                <select name="dataLevelDua[]" id="dataLevelDua" class="form-control cek-sub-column"
+                                    data-id_item={{ $item->id }}>
                                     <option value=""> --Pilih Data -- </option>
                                     @foreach ($dataJawaban as $itemJawaban)
                                         <option value="{{ $itemJawaban->skor . '-' . $itemJawaban->id }}">
                                             {{ $itemJawaban->option }}</option>
                                     @endforeach
                                 </select>
+                                <div id="item{{ $item->id }}">
+
+                                </div>
                                 @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                                     <div class="invalid-feedback">
                                         {{ $errors->first('dataLevelDua.' . $key) }}
@@ -292,99 +297,139 @@
                             </div>
                         @endif
                         @foreach ($dataLevelTiga as $keyTiga => $itemTiga)
-                            @if ($itemTiga->opsi_jawaban == 'input text')
+                            @if ($itemTiga->nama == 'Kategori')
                                 <div class="form-group col-md-6">
                                     <label for="">{{ $itemTiga->nama }}</label>
-                                    <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
+                                    <select name="kategori_jaminan" id="kategori_jaminan" class="form-control" required>
+                                        <option value="">-- Pilih Kategori --</option>
+                                        <option value="Tanah">Tanah</option>
+                                        <option value="Kendaraan Bermotor">Kendaraan Bermotor</option>
+                                        <option value="Tanah dan Bangunan">Tanah dan Bangunan</option>
+                                    </select>
+                                    {{-- <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
                                     <input type="hidden" name="opsi_jawaban[]" value="{{ $itemTiga->opsi_jawaban }}"
                                         id="">
                                     <input type="text" name="informasi[]" id="" placeholder="Masukkan informasi"
-                                        class="form-control">
+                                        class="form-control"> --}}
                                 </div>
-                            @endif
-                            @php
-                                // check  jawaban level tiga
-                                $dataJawabanLevelTiga = \App\Models\OptionModel::where('option', '!=', '-')
-                                    ->where('id_item', $itemTiga->id)
-                                    ->get();
-                                $dataOptionTiga = \App\Models\OptionModel::where('option', '=', '-')
-                                    ->where('id_item', $itemTiga->id)
-                                    ->get();
-                                // check level empat
-                                $dataLevelEmpat = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent')
-                                    ->where('level', 4)
-                                    ->where('id_parent', $itemTiga->id)
-                                    ->get();
-                            @endphp
 
-                            @foreach ($dataOptionTiga as $itemOptionTiga)
-                                @if ($itemOptionTiga->option == '-')
-                                    <div class="form-group col-md-12">
-                                        <h5>{{ $itemTiga->nama }}</h5>
-                                    </div>
-                                @endif
-                            @endforeach
-                            {{-- @foreach ($dataOptionEmpat as $itemOptionEmpat)
-                            @if ($itemOptionEmpat->option == '-')
+                                <div class="form-group col-md-6" id="select_kategori">
+
+                                </div>
+                            @elseif ($itemTiga->nama == 'Bukti Pemilikan')
                                 <div class="form-group col-md-12">
                                     <h5>{{ $itemTiga->nama }}</h5>
                                 </div>
-                            @endif
-                        @endforeach --}}
-                            @if (count($dataJawabanLevelTiga) != 0)
-                                <div class="form-group col-md-6">
-                                    <label for="">{{ $itemTiga->nama }}</label>
-                                    <select name="dataLevelTiga[]" id="" class="form-control">
-                                        <option value=""> --Pilih Opsi-- </option>
-                                        @foreach ($dataJawabanLevelTiga as $itemJawabanTiga)
-                                            <option value="{{ $itemJawabanTiga->skor . '-' . $itemJawabanTiga->id }}">
-                                                {{ $itemJawabanTiga->option }}</option>
-                                        @endforeach
-                                    </select>
+                                <div id="bukti_pemilikan" class="form-group col-md-12 row">
+
                                 </div>
-                            @endif
-                            @foreach ($dataLevelEmpat as $keyEmpat => $itemEmpat)
-                                @if ($itemEmpat->opsi_jawaban == 'input text')
+                            @else
+                                @if ($itemTiga->opsi_jawaban == 'input text')
                                     <div class="form-group col-md-6">
-                                        <label for="">{{ $itemEmpat->nama }}</label>
-                                        <input type="hidden" name="id_level[]" value="{{ $itemEmpat->id }}" id="">
-                                        <input type="hidden" name="opsi_jawaban[]" value="{{ $itemEmpat->opsi_jawaban }}"
+                                        <label for="">{{ $itemTiga->nama }}</label>
+                                        <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
+                                        <input type="hidden" name="opsi_jawaban[]" value="{{ $itemTiga->opsi_jawaban }}"
                                             id="">
                                         <input type="text" name="informasi[]" id="" placeholder="Masukkan informasi"
                                             class="form-control">
                                     </div>
                                 @endif
+
                                 @php
-                                    // check level empat
-                                    $dataJawabanLevelEmpat = \App\Models\OptionModel::where('option', '!=', '-')
-                                        ->where('id_item', $itemEmpat->id)
+                                    // check  jawaban level tiga
+                                    $dataJawabanLevelTiga = \App\Models\OptionModel::where('option', '!=', '-')
+                                        ->where('id_item', $itemTiga->id)
                                         ->get();
-                                    $dataOptionEmpat = \App\Models\OptionModel::where('option', '=', '-')
-                                        ->where('id_item', $itemEmpat->id)
+                                    $dataOptionTiga = \App\Models\OptionModel::where('option', '=', '-')
+                                        ->where('id_item', $itemTiga->id)
+                                        ->get();
+                                    // check level empat
+                                    $dataLevelEmpat = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent')
+                                        ->where('level', 4)
+                                        ->where('id_parent', $itemTiga->id)
                                         ->get();
                                 @endphp
 
-                                @foreach ($dataOptionEmpat as $itemOptionEmpat)
-                                    @if ($itemOptionEmpat->option == '-')
+                                @foreach ($dataOptionTiga as $itemOptionTiga)
+                                    @if ($itemOptionTiga->option == '-')
                                         <div class="form-group col-md-12">
-                                            <h6>{{ $itemEmpat->nama }}</h6>
+                                            <h5>{{ $itemTiga->nama }}</h5>
                                         </div>
                                     @endif
                                 @endforeach
-
-                                @if (count($dataJawabanLevelEmpat) != 0)
-                                    <div class="form-group col-md-6">
-                                        <label for="">{{ $itemEmpat->nama }}</label>
-                                        <select name="dataLevelEmpat[]" id="" class="form-control">
-                                            <option value=""> --Pilih Opsi -- </option>
-                                            @foreach ($dataJawabanLevelEmpat as $itemJawabanEmpat)
-                                                <option value="{{ $itemJawabanEmpat->skor . '-' . $itemJawabanEmpat->id }}">
-                                                    {{ $itemJawabanEmpat->option }}</option>
-                                            @endforeach
-                                        </select>
+                                {{-- @foreach ($dataOptionEmpat as $itemOptionEmpat)
+                                @if ($itemOptionEmpat->option == '-')
+                                    <div class="form-group col-md-12">
+                                        <h5>{{ $itemTiga->nama }}</h5>
                                     </div>
                                 @endif
-                            @endforeach
+                            @endforeach --}}
+                                @if (count($dataJawabanLevelTiga) != 0)
+                                    <div class="form-group col-md-6">
+                                        <label for="">{{ $itemTiga->nama }}</label>
+                                        <select name="dataLevelTiga[]" id="" class="form-control cek-sub-column"
+                                            data-id_item={{ $itemTiga->id }}>
+                                            <option value=""> --Pilih Opsi-- </option>
+                                            @foreach ($dataJawabanLevelTiga as $itemJawabanTiga)
+                                                <option
+                                                    value="{{ $itemJawabanTiga->skor . '-' . $itemJawabanTiga->id }}">
+                                                    {{ $itemJawabanTiga->option }}</option>
+                                            @endforeach
+                                        </select>
+                                        <div id="item{{ $itemTiga->id }}">
+
+                                        </div>
+                                    </div>
+                                @endif
+
+                                @foreach ($dataLevelEmpat as $keyEmpat => $itemEmpat)
+                                    @if ($itemEmpat->opsi_jawaban == 'input text')
+                                        <div class="form-group col-md-6">
+                                            <label for="">{{ $itemEmpat->nama }}</label>
+                                            <input type="hidden" name="id_level[]" value="{{ $itemEmpat->id }}" id="">
+                                            <input type="hidden" name="opsi_jawaban[]"
+                                                value="{{ $itemEmpat->opsi_jawaban }}" id="">
+                                            <input type="text" name="informasi[]" id="" placeholder="Masukkan informasi"
+                                                class="form-control">
+                                        </div>
+                                    @endif
+                                    @php
+                                        // check level empat
+                                        $dataJawabanLevelEmpat = \App\Models\OptionModel::where('option', '!=', '-')
+                                            ->where('id_item', $itemEmpat->id)
+                                            ->get();
+                                        $dataOptionEmpat = \App\Models\OptionModel::where('option', '=', '-')
+                                            ->where('id_item', $itemEmpat->id)
+                                            ->get();
+                                    @endphp
+
+                                    @foreach ($dataOptionEmpat as $itemOptionEmpat)
+                                        @if ($itemOptionEmpat->option == '-')
+                                            <div class="form-group col-md-12">
+                                                <h6>{{ $itemEmpat->nama }}</h6>
+                                            </div>
+                                        @endif
+                                    @endforeach
+
+                                    @if (count($dataJawabanLevelEmpat) != 0)
+                                        <div class="form-group col-md-6">
+                                            <label for="">{{ $itemEmpat->nama }}</label>
+                                            <select name="dataLevelEmpat[]" id="" class="form-control cek-sub-column"
+                                                data-id_item={{ $itemEmpat->id }}>
+                                                <option value=""> --Pilih Opsi -- </option>
+                                                @foreach ($dataJawabanLevelEmpat as $itemJawabanEmpat)
+                                                    <option
+                                                        value="{{ $itemJawabanEmpat->skor . '-' . $itemJawabanEmpat->id }}">
+                                                        {{ $itemJawabanEmpat->option }}</option>
+                                                @endforeach
+                                            </select>
+                                            <div id="item{{ $itemEmpat->id }}">
+
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endforeach
+                            @endif
                         @endforeach
                     @endforeach
                 </div>
@@ -396,12 +441,12 @@
             </div>
         @endforeach
         {{-- pendapat dan usulan --}}
-        <div class="form-wizard" data-index='{{count($dataAspek) + 1}}' data-done='true'>
+        <div class="form-wizard" data-index='{{ count($dataAspek) + 1 }}' data-done='true'>
             <div class="row">
                 <div class="form-group col-md-12">
                     <label for="">Pendapat dan Usulan</label>
-                    <textarea name="komentar_staff" class="form-control @error('komentar_staff') is-invalid @enderror" id="" cols="30" rows="4"
-                        placeholder="Pendapat dan Usulan Staf/Analis Kredit" required></textarea>
+                    <textarea name="komentar_staff" class="form-control @error('komentar_staff') is-invalid @enderror" id="" cols="30"
+                        rows="4" placeholder="Pendapat dan Usulan Staf/Analis Kredit" required></textarea>
                     @error('komentar_staff')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -425,7 +470,27 @@
 @endsection
 
 @push('custom-script')
+
     <script>
+        // input number thousand separator
+        // $('#jumlah_kredit').keyup(function(event) {
+        //     if (event.which >= 37 && event.which <= 40) return;
+        //     $(this).val(function(index, value) {
+        //         return value
+        //         // Keep only digits and decimal points:
+        //         .replace(/[^\d.]/g, "")
+        //         // Remove duplicated decimal point, if one exists:
+        //         .replace(/^(\d*\.)(.*)\.(.*)$/, '$1$2$3')
+        //         // Keep only two digits past the decimal point:
+        //         .replace(/\.(\d{2})\d+/, '.$1')
+        //         // Add thousands separators:
+        //         .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        //     });
+        // });
+
+        let urlCekSubColumn = "{{ route('cek-sub-column') }}";
+        let urlGetItemByKategori = "{{ route('get-item-jaminan-by-kategori') }}";
+
         $('#kabupaten').change(function() {
             var kabID = $(this).val();
             if (kabID) {
@@ -481,6 +546,87 @@
             } else {
                 $("#desa").empty();
             }
+        });
+
+        //cek apakah opsi yg dipilih memiliki sub column
+        $('.cek-sub-column').change(function(e) {
+            let idOption = $(this).val();
+            let idItem = $(this).data('id_item');
+            // cek option apakah ada turunan
+            $(`#item${idItem}`).empty();
+            $.ajax({
+                type: "get",
+                url: `${urlCekSubColumn}?idOption=${idOption}`,
+                dataType: "json",
+                success: function(response) {
+                    if (response.sub_column != null) {
+                        $(`#item${idItem}`).append(`
+                        <div class="form-group sub mt-2">
+                            <label for="">${response.sub_column}</label>
+                            <input type="hidden" name="id_option_sub_column[]" value="${idOption}">
+                            <input type="text" name="jawaban_sub_column[]" placeholder="Masukkan informasi tambahan" class="form-control" required>
+                        </div>
+                        `);
+                    } else {
+                        $(`#item${idItem}`).empty();
+                    }
+                }
+            });
+        });
+
+        //item kategori jaminan cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
+        $('#kategori_jaminan').change(function(e) {
+            //clear item
+            $('#select_kategori').empty();
+
+            // clear bukti pemilikan
+            $('#bukti_pemilikan').empty();
+
+            //get item by kategori
+            let kategoriJaminan = $(this).val();
+
+            $.ajax({
+                type: "get",
+                url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}`,
+                dataType: "json",
+                success: function(response) {
+                    console.log(response);
+                    // add item by kategori
+                    $('#select_kategori').append(`
+                        <label for="">${response.item.nama}</label>
+                        <select name="dataLevelEmpat[]" id="itemByKategori" class="form-control cek-sub-column"
+                            data-id_item="${response.item.id}">
+                            <option value=""> --Pilih Opsi -- </option>
+                            </select>
+
+                        <div id="item${response.item.id}">
+
+                        </div>
+                    `);
+                    // add opsi dari item
+                    $.each(response.item.option, function(i, valOption) {
+                        // console.log(valOption.skor);
+                        $('#itemByKategori').append(`
+                        <option value="${valOption.skor}-${valOption.id}">
+                        ${valOption.option}
+                        </option>`);
+                    });
+
+                    // add item bukti pemilikan
+                    $.each(response.itemBuktiPemilikan, function (i, valItem) {
+                        $('#bukti_pemilikan').append(`
+                            <div class="form-group col-md-6">
+                                <label for="">${valItem.nama}</label>
+                                <input type="hidden" name="id_level[]" value="${valItem.id}" id="">
+                                <input type="hidden" name="opsi_jawaban[]"
+                                    value="${valItem.opsi_jawaban}" id="">
+                                <input type="text" name="informasi[]" id="" placeholder="Masukkan informasi"
+                                    class="form-control">
+                            </div>
+                        `);
+                    });
+                }
+            });
         });
     </script>
     <script src="{{ asset('') }}js/custom.js"></script>

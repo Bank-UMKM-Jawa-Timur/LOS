@@ -364,18 +364,44 @@
                                         $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor')
                                             ->where('id_pengajuan', $dataUmum->id)
                                             ->get();
+
+                                        $jawabanTurunan = \App\Models\JawabanSubColumnModel::where('id_option', $itemJawaban->id)
+                                            ->where('id_pengajuan', $dataUmum->id)
+                                            ->first();
+
                                         $count = count($dataDetailJawaban);
                                         for ($i = 0; $i < $count; $i++) {
                                             $data[] = $dataDetailJawaban[$i]['id_jawaban'];
                                         }
+
+                                        // echo "<pre>";
+                                        // print_r ($dataDetailJawaban);
+                                        // echo "</pre>";
+
                                     @endphp
                                     @if (in_array($itemJawaban->id, $data))
                                         @if (isset($data))
                                             <div class="col-md-12 form-group">
-                                                <b>Jawaban : </b>
-                                                <div class="mt-2 pl-2">
-                                                    <p class="badge badge-info text-lg"><b>{{ $itemJawaban->option }}</b>
-                                                    </p>
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <b>Jawaban : </b>
+                                                        <div class="mt-2 pl-2">
+                                                            <p class="badge badge-info text-lg">
+                                                                <b>{{ $itemJawaban->option }}</b>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+
+                                                    @if ($jawabanTurunan)
+                                                        <div class="col-md-6">
+                                                            <b>{{ $itemJawaban->sub_column }} :</b>
+                                                            <div class="mt-2 pl-2">
+                                                                <p class="badge badge-info text-lg">
+                                                                    <b>{{ $jawabanTurunan->jawaban_sub_column }}</b>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    @endif
                                                 </div>
                                                 <div class="input-group input-b-bottom">
                                                     @if ($item->is_commentable)
@@ -474,11 +500,20 @@
 
                             @if (count($dataJawabanLevelTiga) != 0)
                                 <div class="row">
+                                    <div class="form-group col-md-12">
+                                        <label for="">{{ $itemTiga->nama }}</label>
+                                    </div>
+                                </div>
+                                <div class="row">
                                     @foreach ($dataJawabanLevelTiga as $key => $itemJawabanLevelTiga)
                                         @php
                                             $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor')
                                                 ->where('id_pengajuan', $dataUmum->id)
                                                 ->get();
+
+                                            $jawabanTurunan = \App\Models\JawabanSubColumnModel::where('id_option', $itemJawabanLevelTiga->id)
+                                                ->where('id_pengajuan', $dataUmum->id)
+                                                ->first();
                                             $count = count($dataDetailJawaban);
                                             for ($i = 0; $i < $count; $i++) {
                                                 $data[] = $dataDetailJawaban[$i]['id_jawaban'];
@@ -487,12 +522,26 @@
                                         @if (in_array($itemJawabanLevelTiga->id, $data))
                                             @if (isset($data))
                                                 <div class="col-md-12 form-group">
-                                                    <b>Jawaban : </b>
-                                                    <div class="mt-2 pl-2">
-                                                        <p class="badge badge-info text-lg">
-                                                            <b>{{ $itemJawabanLevelTiga->option }}</b>
-                                                        </p>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <b>Jawaban : </b>
+                                                            <div class="mt-2 pl-2">
+                                                                <p class="badge badge-info text-lg">
+                                                                    <b>{{ $itemJawabanLevelTiga->option }}</b>
+                                                                </p>
+                                                            </div>
+                                                        </div>
                                                     </div>
+                                                    @if ($jawabanTurunan)
+                                                        <div class="col-md-6">
+                                                            <b>{{ $itemJawaban->sub_column }} :</b>
+                                                            <div class="mt-2 pl-2">
+                                                                <p class="badge badge-info text-lg">
+                                                                    <b>{{ $jawabanTurunan->jawaban_sub_column }}</b>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    @endif
                                                     {{-- <div class="input-group input-b-bottom">
                                                         @if ($item->is_commentable)
                                                             <div class="input-group input-b-bottom">
@@ -602,14 +651,14 @@
                                     $dataOptionEmpat = \App\Models\OptionModel::where('option', '=', '-')
                                         ->where('id_item', $itemEmpat->id)
                                         ->get();
-
+                                    $isJawabanExist = \App\Models\OptionModel::join('jawaban', 'jawaban.id_jawaban','option.id')->where('id_item', $itemEmpat->id)->count();
                                     // echo "<pre>";
                                     // print_r ($dataOptionEmpat);
                                     // echo "</pre>";
                                     // ;
 
                                 @endphp
-                                @if ($itemEmpat->opsi_jawaban == 'option')
+                                @if ($itemEmpat->opsi_jawaban == 'option' && $isJawabanExist > 0)
                                     <div class="row">
                                         <div class="form-group col-md-12 mb-0">
                                             <label for="">{{ $itemEmpat->nama }}</label>
@@ -619,6 +668,7 @@
 
                                 {{-- Data jawaban Level Empat --}}
                                 @if (count($dataJawabanLevelEmpat) != 0)
+
                                     <div class="row">
                                         @foreach ($dataJawabanLevelEmpat as $key => $itemJawabanLevelEmpat)
                                             @php
@@ -629,16 +679,33 @@
                                                 for ($i = 0; $i < $count; $i++) {
                                                     $data[] = $dataDetailJawaban[$i]['id_jawaban'];
                                                 }
+                                                $jawabanTurunan = \App\Models\JawabanSubColumnModel::where('id_option', $itemJawabanLevelEmpat->id)
+                                                    ->where('id_pengajuan', $dataUmum->id)
+                                                    ->first();
                                             @endphp
                                             @if (in_array($itemJawabanLevelEmpat->id, $data))
                                                 @if (isset($data))
                                                     <div class="col-md-12 form-group">
-                                                        <b>Jawaban : </b>
-                                                        <div class="mt-2 pl-2">
-                                                            <p class="badge badge-info text-lg">
-                                                                <b>{{ $itemJawabanLevelEmpat->option }}</b>
-                                                            </p>
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <b>Jawaban : </b>
+                                                                <div class="mt-2 pl-2">
+                                                                    <p class="badge badge-info text-lg">
+                                                                        <b>{{ $itemJawabanLevelEmpat->option }}</b>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
                                                         </div>
+                                                        @if ($jawabanTurunan)
+                                                            <div class="col-md-6">
+                                                                <b>{{ $itemJawaban->sub_column }} :</b>
+                                                                <div class="mt-2 pl-2">
+                                                                    <p class="badge badge-info text-lg">
+                                                                        <b>{{ $jawabanTurunan->jawaban_sub_column }}</b>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        @endif
                                                         <div class="input-group input-b-bottom">
                                                             @if ($item->is_commentable)
                                                                 <input type="hidden" name="id_item[]"
@@ -671,12 +738,13 @@
             </div>
         @endforeach
         {{-- pendapat dan usulan --}}
-        <div class="form-wizard" data-index='{{count($dataAspek) + 1}}' data-done='true'>
+        <div class="form-wizard" data-index='{{ count($dataAspek) + 1 }}' data-done='true'>
             <div class="row">
                 <div class="form-group col-md-12">
                     <label for="">Pendapat dan Usulan</label>
-                    <textarea name="komentar_penyelia_keseluruhan" class="form-control @error('komentar_penyelia_keseluruhan') is-invalid @enderror" id="" cols="30" rows="4"
-                        placeholder="Pendapat dan Usulan Penyelia Kredit" required></textarea>
+                    <textarea name="komentar_penyelia_keseluruhan"
+                        class="form-control @error('komentar_penyelia_keseluruhan') is-invalid @enderror" id=""
+                        cols="30" rows="4" placeholder="Pendapat dan Usulan Penyelia Kredit" required></textarea>
                     @error('komentar_penyelia_keseluruhan')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -785,12 +853,10 @@
                 });
                 // $(".btn-next").show()
 
-            }
-            else if(indexNow ==  jumlahData){
+            } else if (indexNow == jumlahData) {
                 $(".btn-simpan").show()
                 $(".btn-next").hide()
-            }
-            else {
+            } else {
                 $(".btn-next").show()
                 $(".btn-simpan").hide()
             }

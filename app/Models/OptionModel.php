@@ -15,4 +15,9 @@ class OptionModel extends Model
         return $this->hasMany('App\Models\ItemModel');
     }
 
+    public function item()
+    {
+        return $this->belongsTo('App\Models\ItemModel', 'id_item');
+    }
+
 }

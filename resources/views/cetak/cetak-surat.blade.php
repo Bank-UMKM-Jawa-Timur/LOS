@@ -223,6 +223,22 @@
                         @endif
                     @endforeach
                     </tr>
+                    @php
+                        $cekSubColumn = \App\Models\JawabanSubColumnModel::join('option', 'option.id', 'jawaban_sub_column.id_option')->join('item', 'item.id', 'option.id_item')->select('option.sub_column','jawaban_sub_column.jawaban_sub_column')->where('id_pengajuan',$dataUmum->id)->where('id_item', $item->id)->first();
+
+                        // echo "<pre>";
+                        // print_r ($cekSubColumn);
+                        // echo "</pre>";
+
+                    @endphp
+                    @if ($cekSubColumn)
+                        <tr>
+                            <td>{{$cekSubColumn->sub_column}}</td>
+                            <td>:</td>
+                            <td>{{$cekSubColumn->jawaban_sub_column}}</td>
+                        </tr>
+
+                    @endif
 
                     {{-- <div class="row form-group sub">
                         <label for="staticEmail" class="col-sm-3 col-form-label">Skor Penyelia</label>

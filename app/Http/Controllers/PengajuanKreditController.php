@@ -11,7 +11,9 @@ use App\Models\JawabanTextModel;
 use App\Models\Kabupaten;
 use App\Models\Kecamatan;
 use App\Models\KomentarModel;
+use App\Models\OptionModel;
 use App\Models\PengajuanModel;
+use App\Models\JawabanSubColumnModel;
 use DateTime;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -141,6 +143,37 @@ class PengajuanKreditController extends Controller
         $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
 
         return view('pengajuan-kredit.add-pengajuan-kredit', $param);
+    }
+
+    public function checkSubColumn(Request $request)
+    {
+        $idItem = $this->getDataLevel($request->get('idOption'));
+        $subColumn = OptionModel::select('sub_column')->where('id', $idItem[1])->first();
+        return $subColumn;
+    }
+
+    public function getItemJaminanByKategori(Request $request)
+    {
+        $kategori = $request->get('kategori');
+
+        $item = ItemModel::with('option')->where('nama', $kategori)->first();
+
+        $itemBuktiPemilikan = ItemModel::with('option');
+        if ($kategori == 'Tanah') {
+            $itemBuktiPemilikan->whereIn('nama', ['SHM No', 'Atas Nama (SHM)']);
+        }
+        else if($kategori == 'Kendaraan Bermotor'){
+            $itemBuktiPemilikan->whereIn('nama', ['BPKB No', 'Atas Nama (BPKP)']);
+        }
+        else{
+            $itemBuktiPemilikan->whereIn('nama', ['SHM No', 'Atas Nama (SHM)', 'SHGB No', 'Atas Nama (SHGB)']);
+        }
+        $data = [
+            'item' => $item,
+            'itemBuktiPemilikan' => $itemBuktiPemilikan->get()
+        ];
+
+        return json_encode($data);
     }
 
     /**
@@ -310,7 +343,18 @@ class PengajuanKreditController extends Controller
             $updateData->status_by_sistem = $status;
             $updateData->average_by_sistem = $result;
             $updateData->update();
-            // Session::put('id',$addData->id);
+
+            //save to jawaban sub column
+            foreach ($request->get('id_option_sub_column') as $key => $value) {
+                $getIdOption = $this->getDataLevel($value);
+                $idOption = $getIdOption[1];
+                $addJawabanSubColumn = new JawabanSubColumnModel;
+                $addJawabanSubColumn->jawaban_sub_column = $request->get('jawaban_sub_column')[$key];
+                $addJawabanSubColumn->id_option = $idOption;
+                $addJawabanSubColumn->id_pengajuan = $id_pengajuan;
+                $addJawabanSubColumn->save();
+            }
+
             $addKomentar = new KomentarModel;
             $addKomentar->id_pengajuan = $id_pengajuan;
             $addKomentar->komentar_staff = $request->get('komentar_staff');
@@ -320,10 +364,12 @@ class PengajuanKreditController extends Controller
             return redirect()->route('pengajuan-kredit.index')->withStatus('Data berhasil disimpan.');
         } catch (Exception $e) {
             DB::rollBack();
-            return redirect()->back()->withError('Terjadi kesalahan.');
+            return $e->getMessage();
+            return redirect()->route('pengajuan-kredit.index')->withError('Terjadi kesalahan.'.$e->getMessage());
         } catch (QueryException $e) {
             DB::rollBack();
-            return redirect()->back()->withError('Terjadi kesalahan');
+            return $e->getMessage();
+            return redirect()->route('pengajuan-kredit.index')->withError('Terjadi kesalahan'.$e->getMessage());
         }
     }
 

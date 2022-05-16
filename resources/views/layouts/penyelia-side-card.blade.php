@@ -19,7 +19,7 @@
                 </li>
                 @endforeach
 
-                <li><label> PENDAPAT dan USULAN STAF/ANALIS KREDIT</label></li>
+                <li><label> PENDAPAT dan USULAN PENYELIA KREDIT</label></li>
                 <li data-index='{{count($dataAspek) + 1}}'>
                     <input type="hidden" name="answer" class="">
                     <input type="hidden" name="answerFilled" class="">

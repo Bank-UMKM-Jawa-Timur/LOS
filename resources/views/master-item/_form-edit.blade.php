@@ -82,6 +82,7 @@
                     $loop[] = array(
                     'option' => old('option.'.$i),
                     'skor' => old('skor.'.$i),
+                    'sub_column' => old('sub_column.'.$i),
                     );
                 }
             @endphp
@@ -100,6 +101,7 @@
                 $fields = array(
                     'option' => 'option.'.$n,
                     'skor' => 'skor.'.$n,
+                    'sub_column' => 'sub_column.'.$n,
                 );
 
                 if(!is_null(old('id_item'))){
