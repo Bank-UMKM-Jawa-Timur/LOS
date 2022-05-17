@@ -14,16 +14,16 @@
                 $(".btn-prev").show()
             }
             if (parseInt(indexNow) == parseInt(jumlahData)) {
-                $(".btn-next").click(function(e) {
-                    if (parseInt(indexNow) != parseInt(jumlahData)) {
-                        $(".btn-next").show()
+                // $(".btn-next").click(function(e) {
+                //     if (parseInt(indexNow) != parseInt(jumlahData)) {
+                //         $(".btn-next").show()
 
-                    }
+                //     }
                     $(".btn-simpan").show()
                     $(".progress").prop('disabled', false);
                     $(".btn-next").hide()
-                });
-                $(".btn-next").show()
+                // });
+                // $(".btn-next").show()
 
             } else {
                 $(".btn-next").show()
@@ -60,6 +60,7 @@
                 $(".form-wizard").removeClass('active')
                 $(".form-wizard[data-index='" + dataIndex + "']").addClass('active')
                 cekWizard()
+                cekBtn()
             }
         })
 
@@ -100,7 +101,7 @@
             var allInputFilled = ttlInputFilled + ttlSelectFilled + ttlTextareaFilled
 
             var percentage = parseInt(allInputFilled / allInput * 100);
-            percentage = isNan(percentage) ? 0 : percentage;
+            percentage = percentage.isNan ? 0 : percentage;
             $(".side-wizard li[data-index='" + formIndex + "'] a span i").html(percentage + "%")
             $(".side-wizard li[data-index='" + formIndex + "'] input.answer").val(allInput);
             $(".side-wizard li[data-index='" + formIndex + "'] input.answerFilled").val(allInputFilled);

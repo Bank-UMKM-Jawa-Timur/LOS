@@ -21,9 +21,10 @@
 
                 <li><label> PENDAPAT dan USULAN PENYELIA KREDIT</label></li>
                 <li data-index='{{count($dataAspek) + 1}}'>
-                    <input type="hidden" name="answer" class="">
-                    <input type="hidden" name="answerFilled" class="">
-                    <a href="#"><span><i></i></span> Pendapat dan Usulan</a>
+                    <input type="hidden" name="answer" class="answer">
+                    <input type="hidden" name="answerFilled" class="answerFilled">
+                    <a href="#"><span><i class="fa fa-ban"></i></span> Pendapat dan Usulan</a>
+
                 </li>
             </ul>
         </div>

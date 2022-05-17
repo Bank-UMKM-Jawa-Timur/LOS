@@ -250,7 +250,7 @@
                 </div>
             </div>
         </div>
-        <input type="text" id="jumlahData" name="jumlahData" hidden value="{{ count($dataAspek) }}">
+        <input type="text" id="jumlahData" name="jumlahData" hidden value="{{ count($dataAspek) + 1 }}">
         @php
             $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban')
                 ->where('id_pengajuan', $dataUmum->id)
