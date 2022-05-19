@@ -162,14 +162,11 @@ class PengajuanKreditController extends Controller
         $item = ItemModel::with('option')->where('nama', $kategori)->first();
 
         $itemBuktiPemilikan = ItemModel::with('option');
-        if ($kategori == 'Tanah') {
-            $itemBuktiPemilikan->whereIn('nama', ['SHM No', 'Atas Nama (SHM)']);
-        }
-        else if($kategori == 'Kendaraan Bermotor'){
-            $itemBuktiPemilikan->whereIn('nama', ['BPKB No', 'Atas Nama (BPKP)']);
+        if ($kategori == 'Tanah' || $kategori=='Tanah dan Bangunan') {
+            $itemBuktiPemilikan->whereIn('nama', ['SHM No', 'Atas Nama (SHM)', 'SHGB No', 'Atas Nama (SHGB)','Berakhir Hak (SHGB)','BPKB No','Atas Nama (BPKP)','Petok / Letter C']);
         }
         else{
-            $itemBuktiPemilikan->whereIn('nama', ['SHM No', 'Atas Nama (SHM)', 'SHGB No', 'Atas Nama (SHGB)']);
+            $itemBuktiPemilikan->whereIn('nama', ['BPKB No', 'Atas Nama (BPKP)']);
         }
         $data = [
             'item' => $item,

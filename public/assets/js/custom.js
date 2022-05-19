@@ -140,25 +140,40 @@
 
         }
 
-
+        function cekNpwp(indexNow) {
+            var isNext = true
+            var labelNpwp = "NPWP"
+            if(indexNow==2 && $('#npwp').length==1){
+                var kredit = $("#jumlah_kredit").val()
+                var npwp = $('#npwp').val()
+                if(kredit>=50000000 && npwp==''){
+                    isNext = false
+                    labelNpwp =  `NPWP <span style='color:red'>Pengajuan >= 50 Juta wajib memiliki NPWP</span>`
+                }
+            }
+            return [isNext,labelNpwp]
+        }
 
         $(".btn-next").click(function(e) {
             e.preventDefault();
             var indexNow = $(".form-wizard.active").data('index')
-            var next = parseInt(indexNow) + 1
-                // console.log($(".form-wizard[data-index='"+next+"']").length==1);
-                // console.log($(".form-wizard[data-index='"+  +"']"));
-            if ($(".form-wizard[data-index='" + next + "']").length == 1) {
-                // console.log(indexNow);
-                $(".form-wizard").removeClass('active')
-                $(".form-wizard[data-index='" + next + "']").addClass('active')
-                $(".form-wizard[data-index='" + indexNow + "']").attr('data-done', 'true')
+
+            if(cekNpwp(indexNow)[0]){
+                var next = parseInt(indexNow) + 1
+                    // console.log($(".form-wizard[data-index='"+next+"']").length==1);
+                    // console.log($(".form-wizard[data-index='"+  +"']"));
+                if ($(".form-wizard[data-index='" + next + "']").length == 1) {
+                    // console.log(indexNow);
+                    $(".form-wizard").removeClass('active')
+                    $(".form-wizard[data-index='" + next + "']").addClass('active')
+                    $(".form-wizard[data-index='" + indexNow + "']").attr('data-done', 'true')
+                }
+
+                cekWizard()
+                cekBtn(true)
+                setPercentage(indexNow)
             }
-
-
-            cekWizard()
-            cekBtn(true)
-            setPercentage(indexNow)
+            $("#npwp").closest('.form-group').find("label").html(cekNpwp(indexNow)[1])
         })
 
         $(".btn-prev").click(function(e) {

@@ -390,7 +390,7 @@
                                             <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
                                             <input type="hidden" name="opsi_jawaban[]" value="{{ $itemTiga->opsi_jawaban }}"
                                                 id="">
-                                            <input type="text" name="informasi[]" id="" placeholder="Masukkan informasi"
+                                            <input type="text" name="informasi[]" placeholder="Masukkan informasi"
                                                 class="form-control">
                                         </div>
                                     @endif
@@ -648,7 +648,6 @@
                 url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}`,
                 dataType: "json",
                 success: function(response) {
-                    console.log(response);
                     // add item by kategori
                     $('#select_kategori').append(`
                         <label for="">${response.item.nama}</label>
@@ -671,18 +670,31 @@
                     });
 
                     // add item bukti pemilikan
+                    var isCheck =  kategoriJaminan!='Kendaraan Bermotor' ? "<input type='checkbox' class='checkKategori'>" : ""
+                    var isDisabled = kategoriJaminan!='Kendaraan Bermotor' ? 'disabled' : ''
                     $.each(response.itemBuktiPemilikan, function (i, valItem) {
                         $('#bukti_pemilikan').append(`
-                            <div class="form-group col-md-6">
-                                <label for="">${valItem.nama}</label>
+                            <div class="form-group col-md-6 aspek_jaminan_kategori">
+                                <label>${isCheck} ${valItem.nama}</label>
                                 <input type="hidden" name="id_level[]" value="${valItem.id}" id="">
                                 <input type="hidden" name="opsi_jawaban[]"
                                     value="${valItem.opsi_jawaban}" id="">
-                                <input type="text" name="informasi[]" id="" placeholder="Masukkan informasi"
-                                    class="form-control">
+                                <input type="text" name="informasi[]" placeholder="Masukkan informasi"
+                                    class="form-control input" ${isDisabled}>
                             </div>
                         `);
                     });
+
+                    $(".checkKategori").click(function(){
+                        var input = $(this).closest('.form-group').find("input").last()
+                        if($(this).is(':checked')){
+                            input.prop('disabled',false)
+                        }
+                        else{
+                            input.val('')
+                            input.prop('disabled',true)
+                        }
+                    })
                 }
             });
         });
