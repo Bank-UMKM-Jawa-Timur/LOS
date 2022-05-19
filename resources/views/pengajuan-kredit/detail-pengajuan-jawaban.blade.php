@@ -255,7 +255,7 @@
             </div>
         </div>
     </div>
-    <form action="{{ route('pengajuan.insertkomentar') }}" method="POST">
+    <form action="{{ route('pengajuan.insertkomentarPenyelia') }}" method="POST">
         @csrf
         <input type="hidden" id="jumlahData" name="jumlahData" hidden value="{{ count($dataAspek) + 1 }}">
         <input type="hidden" id="id_pengajuan" name="id_pengajuan" value="{{ $dataUmum->id }}">
@@ -651,12 +651,13 @@
                                     $dataOptionEmpat = \App\Models\OptionModel::where('option', '=', '-')
                                         ->where('id_item', $itemEmpat->id)
                                         ->get();
-                                    $isJawabanExist = \App\Models\OptionModel::join('jawaban', 'jawaban.id_jawaban','option.id')->where('id_item', $itemEmpat->id)->count();
+                                    $isJawabanExist = \App\Models\OptionModel::join('jawaban', 'jawaban.id_jawaban', 'option.id')
+                                        ->where('id_item', $itemEmpat->id)
+                                        ->count();
                                     // echo "<pre>";
                                     // print_r ($dataOptionEmpat);
                                     // echo "</pre>";
                                     // ;
-
                                 @endphp
                                 @if ($itemEmpat->opsi_jawaban == 'option' && $isJawabanExist > 0)
                                     <div class="row">
@@ -668,7 +669,6 @@
 
                                 {{-- Data jawaban Level Empat --}}
                                 @if (count($dataJawabanLevelEmpat) != 0)
-
                                     <div class="row">
                                         @foreach ($dataJawabanLevelEmpat as $key => $itemJawabanLevelEmpat)
                                             @php
@@ -734,6 +734,17 @@
                             @endforeach
                         @endforeach
                     @endforeach
+                    <div class="form-group col-md-12">
+                        <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
+                        <input type="hidden" name="id_aspek[]" value="{{ $value->id }}">
+                        <textarea name="pendapat_per_aspek[]" class="form-control @error('pendapat_per_aspek') is-invalid @enderror" id=""
+                            cols="30" rows="4" placeholder="Pendapat Per Aspek"></textarea>
+                        @error('pendapat_per_aspek')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
                 </div>
             </div>
         @endforeach
