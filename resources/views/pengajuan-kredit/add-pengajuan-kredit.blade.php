@@ -276,19 +276,19 @@
 
                             <div class="form-group col-md-6" id="nib">
                                 <label for="">NIB</label>
-                                <input type="hidden" name="id_level[]" value="77" id="">
+                                <input type="hidden" name="id_level[]" value="77" id="nib_id">
                                 <input type="hidden" name="opsi_jawaban[]" value="input text"
-                                    id="">
-                                <input type="text" name="informasi[]" id="" placeholder="Masukkan informasi"
+                                    id="nib_opsi_jawaban">
+                                <input type="text" name="informasi[]" id="nib_text" placeholder="Masukkan informasi"
                                     class="form-control">
                             </div>
 
                             <div class="form-group col-md-6" id="surat_keterangan_usaha">
                                 <label for="">Surat Keterangan Usaha</label>
-                                <input type="hidden" name="id_level[]" value="78" id="">
+                                <input type="hidden" name="id_level[]" value="78" id="surat_keterangan_usaha_id">
                                 <input type="hidden" name="opsi_jawaban[]" value="input text"
-                                    id="">
-                                <input type="text" name="informasi[]" id="" placeholder="Masukkan informasi"
+                                    id="surat_keterangan_usaha_opsi_jawaban">
+                                <input type="text" name="informasi[]" id="surat_keterangan_usaha_text" placeholder="Masukkan informasi"
                                     class="form-control">
                             </div>
                         @elseif($item->nama == 'NPWP')
@@ -670,15 +670,15 @@
                     });
 
                     // add item bukti pemilikan
-                    var isCheck =  kategoriJaminan!='Kendaraan Bermotor' ? "<input type='checkbox' class='checkKategori'>" : ""
-                    var isDisabled = kategoriJaminan!='Kendaraan Bermotor' ? 'disabled' : ''
+                    var isCheck =  kategoriJaminan != 'Kendaraan Bermotor' ? "<input type='checkbox' class='checkKategori'>" : ""
+                    var isDisabled = kategoriJaminan != 'Kendaraan Bermotor' ? 'disabled' : ''
                     $.each(response.itemBuktiPemilikan, function (i, valItem) {
                         $('#bukti_pemilikan').append(`
                             <div class="form-group col-md-6 aspek_jaminan_kategori">
                                 <label>${isCheck} ${valItem.nama}</label>
-                                <input type="hidden" name="id_level[]" value="${valItem.id}" id="">
+                                <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input" ${isDisabled}>
                                 <input type="hidden" name="opsi_jawaban[]"
-                                    value="${valItem.opsi_jawaban}" id="">
+                                    value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
                                 <input type="text" name="informasi[]" placeholder="Masukkan informasi"
                                     class="form-control input" ${isDisabled}>
                             </div>
@@ -686,13 +686,19 @@
                     });
 
                     $(".checkKategori").click(function(){
-                        var input = $(this).closest('.form-group').find("input").last()
+                        var input = $(this).closest('.form-group').find(".input")
+                        // var input_id = $(this).closest('.form-group').find("input_id").last()
+                        // var input_opsi_jawaban = $(this).closest('.form-group').find("input_opsi_jawaban").last()
                         if($(this).is(':checked')){
                             input.prop('disabled',false)
+                            // input_id.prop('disabled',false)
+                            // input_opsi_jawaban.prop('disabled',false)
                         }
                         else{
                             input.val('')
                             input.prop('disabled',true)
+                            // input_id.prop('disabled',true)
+                            // input_opsi_jawaban.prop('disabled',true)
                         }
                     })
                 }
@@ -705,15 +711,36 @@
             let ijinUsaha = $(this).val();
             if (ijinUsaha == 'nib') {
                 $('#surat_keterangan_usaha').hide();
+                $('#surat_keterangan_usaha_id').attr('disabled', true);
+                $('#surat_keterangan_usaha_text').attr('disabled', true);
+                $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
+
                 $('#nib').show();
+                $('#nib_id').removeAttr('disabled');
+                $('#nib_text').removeAttr('disabled');
+                $('#nib_opsi_jawaban').removeAttr('disabled');
             }
             else if (ijinUsaha == 'surat_keterangan_usaha'){
                 $('#nib').hide();
+                $('#nib_id').attr('disabled', true);
+                $('#nib_text').attr('disabled', true);
+                $('#nib_opsi_jawaban').attr('disabled', true);
+
                 $('#surat_keterangan_usaha').show();
+                $('#surat_keterangan_usaha_id').removeAttr('disabled');
+                $('#surat_keterangan_usaha_text').removeAttr('disabled');
+                $('#surat_keterangan_usaha_opsi_jawaban').removeAttr('disabled');
             }
             else{
                 $('#nib').hide();
+                $('#nib_id').attr('disabled', true);
+                $('#nib_text').attr('disabled', true);
+                $('#nib_opsi_jawaban').attr('disabled', true);
+
                 $('#surat_keterangan_usaha').hide();
+                $('#surat_keterangan_usaha_id').attr('disabled', true);
+                $('#surat_keterangan_usaha_text').attr('disabled', true);
+                $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
             }
         });
         // end milih ijin usaha

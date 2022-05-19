@@ -184,7 +184,7 @@ class PengajuanKreditController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request;
+        // return 'jumlah id level = ' . count($request->get('id_level')) . '; jumlah input = ' . count($request->get('informasi'));
         // $checkLevelDua = $request->dataLevelDua != null ? 'required' : '';
         // $checkLevelTiga = $request->dataLevelTiga != null ? 'required' : '';
         // $checkLevelEmpat = $request->dataLevelEmpat != null ? 'required' : '';
@@ -214,6 +214,7 @@ class PengajuanKreditController extends Controller
         ], [
             'required' => 'data harus terisi.'
         ]);
+
         DB::beginTransaction();
         try {
             $addPengajuan = new PengajuanModel;
@@ -252,6 +253,7 @@ class PengajuanKreditController extends Controller
                     $dataJawabanText->id_pengajuan = $id_pengajuan;
                     $dataJawabanText->id_jawaban = $request->get('id_level')[$key];
                     $dataJawabanText->opsi_text = $request->get('informasi')[$key];
+                    // $dataJawabanText->opsi_text = $request->get('informasi')[$key] == null ? '-' : $request->get('informasi')[$key];
                     $dataJawabanText->save();
                 }
             } else {
