@@ -711,8 +711,6 @@ class PengajuanKreditController extends Controller
     {
         if (auth()->user()->role == 'Penyelia Kredit') {
             $param['pageTitle'] = "Dashboard";
-
-
             $param['dataAspek'] = ItemModel::where('level', 1)->where('nama', '!=','Data Umum')->get();
 
             $param['itemSlik'] = ItemModel::join('option as o', 'o.id_item', 'item.id')
