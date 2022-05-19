@@ -255,7 +255,9 @@
             </div>
         </div>
     </div>
-    <form action="{{ route('pengajuan.insertkomentarPenyelia') }}" method="POST">
+    {{-- <form action="{{ route('pengajuan.insertkomentarPenyelia') }}" method="POST"> --}}
+
+    <form id="pengajuan_kredit" action="{{ route('pengajuan.insertkomentar') }}" method="post">
         @csrf
         <input type="hidden" id="jumlahData" name="jumlahData" hidden value="{{ count($dataAspek) + 1 }}">
         <input type="hidden" id="id_pengajuan" name="id_pengajuan" value="{{ $dataUmum->id }}">
@@ -863,8 +865,8 @@
                 $(".btn-simpan").show()
                 $(".progress").prop('disabled', false);
                 $(".btn-next").hide()
-                    // });
-                    // $(".btn-next").show()
+                // });
+                // $(".btn-next").show()
 
             } else {
                 $(".btn-next").show()

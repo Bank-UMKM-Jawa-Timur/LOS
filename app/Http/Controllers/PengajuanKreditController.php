@@ -827,6 +827,16 @@ class PengajuanKreditController extends Controller
                 $addDetailKomentar->komentar = $_POST['komentar_penyelia'][$key];
                 $addDetailKomentar->save();
             }
+
+            // pendapat penyelia
+            foreach ($request->get('id_aspek') as $key => $value) {
+                $addPendapat = new PendapatPerAspek;
+                $addPendapat->id_pengajuan = $request->get('id_pengajuan');
+                $addPendapat->id_penyelia = Auth::user()->id;
+                $addPendapat->id_aspek = $value;
+                $addPendapat->pendapat_per_aspek = $request->get('pendapat_per_aspek')[$key];
+                $addPendapat->save();
+            }
             return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil menambahkan data');
         } catch (Exception $e) {
             // return $e;
@@ -993,6 +1003,8 @@ class PengajuanKreditController extends Controller
 
     public function storeAspekPenyelia(Request $request)
     {
+
+        DB::beginTransaction();
         try {
 
             // pendapat penyelia
@@ -1036,8 +1048,10 @@ class PengajuanKreditController extends Controller
             // }
         // return redirect()->route('pengajuan-kredit.index')->withStatus('Data berhasil disimpan.');
         } catch (Exception $e) {
+            DB::rollBack();
             return redirect()->back()->withError('Terjadi kesalahan.'.$e->getMessage());
         } catch (QueryException $e) {
+            DB::rollBack();
             return redirect()->back()->withError('Terjadi kesalahan'.$e->getMessage());
         }
     }
