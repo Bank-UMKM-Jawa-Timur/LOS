@@ -713,7 +713,15 @@ class PengajuanKreditController extends Controller
             $param['pageTitle'] = "Dashboard";
 
 
-            $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->get();
+            $param['dataAspek'] = ItemModel::where('level', 1)->where('nama', '!=','Data Umum')->get();
+
+            $param['itemSlik'] = ItemModel::join('option as o', 'o.id_item', 'item.id')
+                                ->join('jawaban as j', 'j.id_jawaban', 'o.id')
+                                ->join('pengajuan as p', 'p.id', 'j.id_pengajuan')
+                                ->where('p.id', $id)
+                                ->where('nama', 'SLIK')
+                                ->first();
+
             $param['dataUmumNasabah'] = PengajuanModel::select(
                 'pengajuan.id',
                 'pengajuan.tanggal',
@@ -769,14 +777,17 @@ class PengajuanKreditController extends Controller
         //     'komentar_penyelia.*' => 'required',
         //     'skor_penyelia.*' => 'required',
         // ]);
+        return $request->skor_penyelia;
         try {
             $finalArray = array();
             $finalArray_text = array();
 
             foreach ($request->skor_penyelia as $key => $value) {
-                array_push($finalArray, [
-                    'skor_penyelia' => $value
-                ]);
+                if ($value != '' || $value != null) {
+                    array_push($finalArray, [
+                        'skor_penyelia' => $value
+                    ]);
+                }
             };
             // foreach ($request->skor_penyelia_text as $key => $value) {
             //     array_push($finalArray_text, [
@@ -800,12 +811,19 @@ class PengajuanKreditController extends Controller
             } else {
                 $status = "merah";
             }
-            for ($i = 0; $i < count($finalArray); $i++) {
-                JawabanPengajuanModel::where('id', $request->id_jawaban[$i])->update($finalArray[$i]);
+
+            foreach ($request->get('id_option') as $key => $value) {
+                JawabanPengajuanModel::where('id_option', $value)->where('id_pengajuan', $request->get('id_pengajuan'))
+                ->update([
+                    'skor_penyelia' => $request->get('skor_penyelia')[$key]
+                ]);
             }
-            for ($i = 0; $i < count($finalArray_text); $i++) {
-                JawabanTextModel::where('id', $request->id_jawaban_text[$i])->update($finalArray_text[$i]);
-            }
+            // for ($i = 0; $i < count($finalArray); $i++) {
+            //     JawabanPengajuanModel::where('id', $request->id_jawaban[$i])->update($finalArray[$i]);
+            // }
+            // for ($i = 0; $i < count($finalArray_text); $i++) {
+            //     JawabanTextModel::where('id', $request->id_jawaban_text[$i])->update($finalArray_text[$i]);
+            // }
             $updateData->status = $status;
             $updateData->average_by_penyelia = $result;
             $updateData->update();

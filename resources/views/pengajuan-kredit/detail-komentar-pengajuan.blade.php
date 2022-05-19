@@ -765,6 +765,9 @@
                                         </div>
                                     </label>
                                     <div class="col-sm-7">
+                                        @php
+                                            $getKomentar5 = '';
+                                        @endphp
                                         @foreach ($dataJawabanLevelEmpat as $key => $itemJawabanEmpat)
                                             @php
                                                 $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
@@ -803,30 +806,32 @@
                                         @endforeach
                                     </div>
                                 </div>
-                                @foreach ($getKomentar5 as $itemKomentar5)
-                                    <div class="row form-group sub" style="padding-left: 5rem !important">
-                                        <label for="staticEmail" class="col-sm-3 col-form-label"></label>
-                                        <label for="staticEmail" class="col-sm-1 col-form-label px-0">
-                                            <div class="d-flex justify-content-end">
-                                                <div style="width: 20px">
+                                @if ($getKomentar5)
+                                    @foreach ($getKomentar5 as $itemKomentar5)
+                                        <div class="row form-group sub" style="padding-left: 5rem !important">
+                                            <label for="staticEmail" class="col-sm-3 col-form-label"></label>
+                                            <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                                                <div class="d-flex justify-content-end">
+                                                    <div style="width: 20px">
+
+                                                    </div>
+                                                </div>
+                                            </label>
+                                            <div class="col-sm-7">
+                                                <div class="d-flex">
+                                                    <div style="width: 15%">
+                                                        <p class="p-0 m-0"><strong>Komentar : </strong></p>
+                                                    </div>
+                                                    <h6 class="font-italic">{{ $itemKomentar->komentar3 }}</h6>
+                                                    {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
 
                                                 </div>
+                                                <input type="text" readonly class="form-control-plaintext" id="komentar"
+                                                    value="{{ $itemKomentar5->komentar }}">
                                             </div>
-                                        </label>
-                                        <div class="col-sm-7">
-                                            <div class="d-flex">
-                                                <div style="width: 15%">
-                                                    <p class="p-0 m-0"><strong>Komentar : </strong></p>
-                                                </div>
-                                                <h6 class="font-italic">{{ $itemKomentar->komentar3 }}</h6>
-                                                {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
-
-                                            </div>
-                                            <input type="text" readonly class="form-control-plaintext" id="komentar"
-                                                value="{{ $itemKomentar5->komentar }}">
                                         </div>
-                                    </div>
-                                @endforeach
+                                    @endforeach
+                                @endif
                                 <hr>
                             @endif
                         @endforeach

@@ -188,6 +188,22 @@
                 @enderror
             </div>
             <div class="form-group col-md-12">
+                <label for="">{{$itemSlik->nama}}</label>
+                <br>
+                <b>Jawaban : </b>
+                <div class="mt-2 pl-2">
+                    <p class="badge badge-info text-lg">
+                        <b>{{ $itemSlik->option }}</b>
+                    </p>
+                </div>
+                <b>Skor : </b>
+                <div class="mt-2 pl-2">
+                    <p class="badge badge-info text-lg">
+                        <b>{{ $itemSlik->skor }}</b>
+                    </p>
+                </div>
+            </div>
+            <div class="form-group col-md-12">
                 <label for="">Jenis Usaha</label>
                 <textarea disabled name="jenis_usaha" class="form-control @error('jenis_usaha') is-invalid @enderror" id="" cols="30"
                     rows="4"
@@ -271,16 +287,17 @@
             @php
                 $key += 1;
                 // check level 2
-                $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent')
+                $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor')
                     ->where('level', 2)
                     ->where('id_parent', $value->id)
                     ->get();
 
                 // check level 4
-                $dataLevelEmpat = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent')
+                $dataLevelEmpat = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor')
                     ->where('level', 4)
                     ->where('id_parent', $value->id)
                     ->get();
+                $pendapatStafPerAspek = \App\Models\PendapatPerAspek::where('id_pengajuan', $dataUmum->id)->whereNotNull('id_staf')->where('id_aspek', $value->id)->first();
             @endphp
             {{-- level level 2 --}}
 
@@ -337,7 +354,7 @@
                                 ->get();
 
                             // check level 3
-                            $dataLevelTiga = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent')
+                            $dataLevelTiga = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor')
                                 ->where('level', 3)
                                 ->where('id_parent', $item->id)
                                 ->get();
@@ -406,15 +423,16 @@
                                                 <div class="input-group input-b-bottom">
                                                     @if ($item->is_commentable)
                                                         <input type="hidden" name="id_item[]" value="{{ $item->id }}">
+                                                        <input type="hidden" name="id_option[]" value="{{ $itemJawaban->id }}">
                                                         <input type="text" class="form-control komentar"
                                                             name="komentar_penyelia[]" placeholder="Masukkan Komentar">
-                                                    @endif
-                                                    <div class="input-skor">
-                                                        <input type="number" class="form-control" placeholder=""
-                                                            name="skor_penyelia[]"
-                                                            value="{{ $itemJawaban->skor != null ? $itemJawaban->skor : 0 }}">
+                                                        <div class="input-skor">
+                                                            <input type="number" class="form-control" placeholder=""
+                                                                name="skor_penyelia[]" {{$item->status_skor == 0 ? 'readonly' : ''}}
+                                                                value="{{ $itemJawaban->skor != null ? $itemJawaban->skor : '' }}">
 
-                                                    </div>
+                                                        </div>
+                                                    @endif
                                                 </div>
                                             </div>
                                             <input type="text" hidden class="form-control mb-3"
@@ -482,7 +500,7 @@
                                     ->where('id_item', $itemTiga->id)
                                     ->get();
                                 // check level empat
-                                $dataLevelEmpat = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent')
+                                $dataLevelEmpat = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor')
                                     ->where('level', 4)
                                     ->where('id_parent', $itemTiga->id)
                                     ->get();
@@ -567,13 +585,13 @@
                                                                 value="{{ $item->id }}">
                                                             <input type="text" class="form-control komentar"
                                                                 name="komentar_penyelia[]" placeholder="Masukkan Komentar">
-                                                        @endif
-                                                        <div class="input-skor">
-                                                            <input type="number" class="form-control" placeholder=""
-                                                                name="skor_penyelia[]"
-                                                                value="{{ $itemJawabanLevelTiga->skor != null ? $itemJawabanLevelTiga->skor : '' }}">
+                                                                <div class="input-skor">
+                                                                    <input type="number" class="form-control" placeholder=""
+                                                                        name="skor_penyelia[]" {{$itemTiga->status_skor == 0 ? 'readonly' : ''}}
+                                                                        value="{{ $itemJawabanLevelTiga->skor != null ? $itemJawabanLevelTiga->skor : '' }}">
 
-                                                        </div>
+                                                                </div>
+                                                        @endif
                                                     </div>
                                                 </div>
                                                 <input type="text" hidden class="form-control mb-3"
@@ -651,7 +669,7 @@
                                     $dataOptionEmpat = \App\Models\OptionModel::where('option', '=', '-')
                                         ->where('id_item', $itemEmpat->id)
                                         ->get();
-                                    $isJawabanExist = \App\Models\OptionModel::join('jawaban', 'jawaban.id_jawaban','option.id')->where('id_item', $itemEmpat->id)->count();
+                                    $isJawabanExist = \App\Models\OptionModel::join('jawaban', 'jawaban.id_jawaban','option.id')->where('jawaban.id_pengajuan', $dataUmum->id)->where('id_item', $itemEmpat->id)->count();
                                     // echo "<pre>";
                                     // print_r ($dataOptionEmpat);
                                     // echo "</pre>";
@@ -713,13 +731,12 @@
                                                                 <input type="text" class="form-control komentar"
                                                                     name="komentar_penyelia[]"
                                                                     placeholder="Masukkan Komentar">
+                                                                <div class="input-skor">
+                                                                    <input type="number" class="form-control" placeholder=""
+                                                                        name="skor_penyelia[]" {{$itemEmpat->status_skor == 0 ? 'readonly' : ''}}
+                                                                        value="{{ $itemJawabanLevelEmpat->skor != null ? $itemJawabanLevelEmpat->skor : '' }}">
+                                                                </div>
                                                             @endif
-                                                            <div class="input-skor">
-                                                                <input type="number" class="form-control" placeholder=""
-                                                                    name="skor_penyelia[]"
-                                                                    value="{{ $itemJawabanLevelEmpat->skor != null ? $itemJawabanLevelEmpat->skor : '' }}">
-
-                                                            </div>
                                                         </div>
                                                     </div>
                                                     <input type="hidden" class="form-control mb-3"
@@ -734,6 +751,11 @@
                             @endforeach
                         @endforeach
                     @endforeach
+                </div>
+                <hr>
+                <div class="form-group col-md-12">
+                    <label for="">Pendapat dan Usulan Staf Kredit</label>
+                    <p>{{$pendapatStafPerAspek->pendapat_per_aspek}}</p>
                 </div>
             </div>
         @endforeach
