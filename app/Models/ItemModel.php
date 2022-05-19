@@ -20,4 +20,9 @@ class ItemModel extends Model
     {
         return $this->hasMany('\App\Models\OptionModel', 'id_item');
     }
+
+    public function detailPendapatPerAspek()
+    {
+        return $this->hasMany('\App\Models\DetailPendapatPerAspek', 'id_aspek');
+    }
 }

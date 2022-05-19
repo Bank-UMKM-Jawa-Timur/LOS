@@ -14,6 +14,8 @@ use App\Models\KomentarModel;
 use App\Models\OptionModel;
 use App\Models\PengajuanModel;
 use App\Models\JawabanSubColumnModel;
+use App\Models\PendapatPerAspek;
+use App\Models\DetailPendapatPerAspek;
 use DateTime;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -138,7 +140,8 @@ class PengajuanKreditController extends Controller
         $param['dataDesa'] = Desa::all();
         $param['dataKecamatan'] = Kecamatan::all();
         $param['dataKabupaten'] = Kabupaten::all();
-        $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->where('nama','!=','Aspek Data Umum')->get();
+        $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->where('nama','!=','Data Umum')->get();
+        $param['itemSlik'] = ItemModel::with('option')->where('nama', 'SLIK')->first();
 
         $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
 
@@ -267,7 +270,13 @@ class PengajuanKreditController extends Controller
                     $data_level_dua = $this->getDataLevel($value);
                     $skor[$key] = $data_level_dua[0];
                     $id_jawaban[$key] = $data_level_dua[1];
-                    array_push($rata_rata, $skor[$key]);
+                    //jika skor nya tidak kosong
+                    if ($skor[$key] != 'kosong') {
+                        array_push($rata_rata, $skor[$key]);
+                    }
+                    else{
+                        $skor[$key] = NULL;
+                    }
                     array_push(
                         $finalArray,
                         array(
@@ -288,7 +297,13 @@ class PengajuanKreditController extends Controller
                     $data_level_tiga = $this->getDataLevel($value);
                     $skor[$key] = $data_level_tiga[0];
                     $id_jawaban[$key] = $data_level_tiga[1];
-                    array_push($rata_rata, $skor[$key]);
+                    //jika skor nya tidak kosong
+                    if ($skor[$key] != 'kosong') {
+                        array_push($rata_rata, $skor[$key]);
+                    }
+                    else{
+                        $skor[$key] = NULL;
+                    }
                     array_push(
                         $finalArray,
                         array(
@@ -309,7 +324,13 @@ class PengajuanKreditController extends Controller
                     $data_level_empat = $this->getDataLevel($value);
                     $skor[$key] = $data_level_empat[0];
                     $id_jawaban[$key] = $data_level_empat[1];
-                    array_push($rata_rata, $skor[$key]);
+                    //jika skor nya tidak kosong
+                    if ($skor[$key] != 'kosong') {
+                        array_push($rata_rata, $skor[$key]);
+                    }
+                    else{
+                        $skor[$key] = NULL;
+                    }
                     array_push(
                         $finalArray,
                         array(
@@ -345,14 +366,24 @@ class PengajuanKreditController extends Controller
             $updateData->update();
 
             //save to jawaban sub column
-            foreach ($request->get('id_option_sub_column') as $key => $value) {
-                $getIdOption = $this->getDataLevel($value);
-                $idOption = $getIdOption[1];
-                $addJawabanSubColumn = new JawabanSubColumnModel;
-                $addJawabanSubColumn->jawaban_sub_column = $request->get('jawaban_sub_column')[$key];
-                $addJawabanSubColumn->id_option = $idOption;
-                $addJawabanSubColumn->id_pengajuan = $id_pengajuan;
-                $addJawabanSubColumn->save();
+            // foreach ($request->get('id_option_sub_column') as $key => $value) {
+            //     $getIdOption = $this->getDataLevel($value);
+            //     $idOption = $getIdOption[1];
+            //     $addJawabanSubColumn = new JawabanSubColumnModel;
+            //     $addJawabanSubColumn->jawaban_sub_column = $request->get('jawaban_sub_column')[$key];
+            //     $addJawabanSubColumn->id_option = $idOption;
+            //     $addJawabanSubColumn->id_pengajuan = $id_pengajuan;
+            //     $addJawabanSubColumn->save();
+            // }
+
+            //save pendapat per aspek
+            foreach ($request->get('id_aspek') as $key => $value) {
+                $addPendapat = new PendapatPerAspek;
+                $addPendapat->id_pengajuan = $id_pengajuan;
+                $addPendapat->id_staf = Auth::user()->id;
+                $addPendapat->id_aspek = $value;
+                $addPendapat->pendapat_per_aspek = $request->get('pendapat_per_aspek')[$key];
+                $addPendapat->save();
             }
 
             $addKomentar = new KomentarModel;
@@ -360,6 +391,7 @@ class PengajuanKreditController extends Controller
             $addKomentar->komentar_staff = $request->get('komentar_staff');
             $addKomentar->id_staff = Auth::user()->id;
             $addKomentar->save();
+
             DB::commit();
             return redirect()->route('pengajuan-kredit.index')->withStatus('Data berhasil disimpan.');
         } catch (Exception $e) {

@@ -19,11 +19,11 @@
                 //         $(".btn-next").show()
 
                 //     }
-                    $(".btn-simpan").show()
-                    $(".progress").prop('disabled', false);
-                    $(".btn-next").hide()
-                // });
-                // $(".btn-next").show()
+                $(".btn-simpan").show()
+                $(".progress").prop('disabled', false);
+                $(".btn-next").hide()
+                    // });
+                    // $(".btn-next").show()
 
             } else {
                 $(".btn-next").show()

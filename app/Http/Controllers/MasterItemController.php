@@ -110,6 +110,8 @@ class MasterItemController extends Controller
             $addItem->level = $request->get('level');
             $addItem->opsi_jawaban = $request->get('opsi_jawaban');
             $addItem->is_commentable = $request->get('is_commentable');
+            $addItem->status_skor = $request->get('status_skor');
+
             if ($request->level == 2) {
                 $addItem->id_parent = $request->item_turunan;
             }elseif ($request->level == 3) {
@@ -132,7 +134,7 @@ class MasterItemController extends Controller
                             $addDataOption = new OptionModel;
                             $addDataOption->id_item = $addItem->id;
                             $addDataOption->option = $value['opsi_name'] != null ? $value['opsi_name'] : '-';
-                            $addDataOption->skor = $value['skor'] != null ? $value['skor'] : 0;
+                            $addDataOption->skor = $value['skor'];
                             $addDataOption->sub_column = $value['sub_column'];
                             $addDataOption->save();
                         }
@@ -143,7 +145,7 @@ class MasterItemController extends Controller
                             $addDataOption = new OptionModel;
                             $addDataOption->id_item = $addItem->id;
                             $addDataOption->option = $value['opsi_name'] != null ? $value['opsi_name'] : '-';
-                            $addDataOption->skor = $value['skor'] != null ? $value['skor'] : 0;
+                            $addDataOption->skor = $value['skor'];
                             $addDataOption->sub_column = $value['sub_column'];
                             $addDataOption->save();
                         }
@@ -153,7 +155,7 @@ class MasterItemController extends Controller
                             $addDataOption = new OptionModel;
                             $addDataOption->id_item = $addItem->id;
                             $addDataOption->option = $value['opsi_name'] != null ? $value['opsi_name'] : '-';
-                            $addDataOption->skor = $value['skor'] != null ? $value['skor'] : 0;
+                            $addDataOption->skor = $value['skor'];
                             $addDataOption->sub_column = $value['sub_column'];
                             $addDataOption->save();
                         }

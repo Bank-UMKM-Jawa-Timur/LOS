@@ -10,4 +10,9 @@ class PengajuanModel extends Model
     use HasFactory;
     protected $table = "pengajuan";
 
+    public function pendapatPerAspek()
+    {
+        return $this->hasMany('\App\Models\PendapatPerAspek', 'id_pengajuan');
+    }
+
 }

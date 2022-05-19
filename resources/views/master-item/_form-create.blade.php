@@ -71,6 +71,22 @@
                 </small>
             @enderror
         </div>
+
+        <div class="form-group col-md-6" id="status_skor_item">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="1" id="status_skor" name="status_skor" checked>
+                <label class="form-check-label" for="status_skor">
+                    Perhitungan Skor
+                </label>
+            </div>
+            {{-- <input type="text" name="nama" class="form-control @error('nama') is-invalid @enderror" placeholder="Nama Item" value="{{old('nama')}}"> --}}
+            @error('status_skor')
+                <small class="text-danger">
+                    {{ $message }}
+                </small>
+            @enderror
+        </div>
+
     </div>
     <hr>
     <div id="opsi">
@@ -152,7 +168,7 @@
                         <td>
                             <div class="">
                                 {{-- <label>Skor</label> --}}
-                                <input type="number" id="skor" name="opsi[1][skor]" class="form-control"
+                                <input type="number" id="skor" name="opsi[1][skor]" class="form-control skor_option"
                                     placeholder="Skor">
                                 @error('opsi.1.skor')
                                     <div class="invalid-feedback">
@@ -194,8 +210,9 @@
     <script>
         $('#item_turunan_tiga').hide();
         $('#opsi').hide();
+
         $("#level").change(function() {
-            var id_level = $(this).val()
+            var id_level = $(this).val();
             if (id_level === "1") {
                 $('#itemTurunan1').prop('disabled', true);
                 $('#itemTurunan2').prop('disabled', true);
@@ -203,6 +220,7 @@
                 $('#skor').prop('disabled', true);
                 $('#form_opsi').hide();
                 $('#dapat_dikomentari').hide();
+                $('#status_skor_item').hide();
                 $('#opsi_jawaban').prop('disabled', true);
                 $('#opsi').hide();
                 $('#item_turunan_tiga').hide();
@@ -216,6 +234,7 @@
                 $('#opsi').show();
                 $('#form_opsi').show();
                 $('#dapat_dikomentari').show();
+                $('#status_skor_item').show();
                 $('#opsi_jawaban').prop('disabled', false);
             }
             $('#opsi_jawaban').change(function(e) {
@@ -224,11 +243,13 @@
                 console.log(opsi_jawaban);
                 if (opsi_jawaban == "input text") {
                     // console.log('input text');
+                    $('#status_skor_item').hide();
                     $('#opsi').hide();
                     $('#opsi_name').prop('disabled', true);
                     $('#skor').prop('disabled', true);
                 } else {
                     $('#opsi').show();
+                    $('#status_skor_item').show();
                     $('#opsi_name').prop('disabled', false);
                     $('#skor').prop('disabled', false);
                 }
@@ -363,7 +384,7 @@
                                 <input type="text" id="id_opsi" name="opsi[' + i + '][opsi_name]" class="form-control" placeholder="Nama Opsi">\
                         </td>\
                         <td>\
-                            <input type="number" id="skor" name="opsi[' + i + '][skor]" class="form-control" placeholder="Skor" >\
+                            <input type="number" id="skor" name="opsi[' + i + '][skor]" class="form-control skor_option" placeholder="Skor" >\
                             </td>\
                         <td>\
                             <input type="text" id="sub_column" name="opsi[' + i + '][sub_column]" class="form-control" placeholder="Nama kolom turunan" >\
@@ -380,5 +401,16 @@
                 // i--;
             });
         }
+
+        $('#status_skor').change(function (e) {
+            if($(this).is(":checked")) {
+                $('.skor_option').removeAttr('readonly');
+            }
+            else{
+                $('.skor_option').val('');
+                $('.skor_option').attr('readonly', true);
+            }
+            $('#status_skor').val($(this).is(':checked'));
+        });
     </script>
 @endpush
