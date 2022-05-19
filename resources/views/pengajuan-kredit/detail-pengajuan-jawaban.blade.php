@@ -196,11 +196,31 @@
                         <b>{{ $itemSlik->option }}</b>
                     </p>
                 </div>
-                <b>Skor : </b>
+                {{-- <b>Skor : </b>
                 <div class="mt-2 pl-2">
                     <p class="badge badge-info text-lg">
                         <b>{{ $itemSlik->skor }}</b>
                     </p>
+                </div> --}}
+                @php
+
+                    // echo "<pre>";
+                    // print_r ($itemSlik);
+                    // echo "</pre>";
+
+                @endphp
+                <div class="input-group input-b-bottom">
+                    <input type="hidden" name="id_item[]"
+                        value="{{ $itemSlik->id }}">
+                        <input type="hidden" name="id_option[]" value="{{ $itemSlik->id_jawaban }}">
+                    <input type="text" class="form-control komentar"
+                        name="komentar_penyelia[]"
+                        placeholder="Masukkan Komentar">
+                    <div class="input-skor">
+                        <input type="number" class="form-control" placeholder=""
+                            name="skor_penyelia[]" {{$itemSlik->status_skor == 0 ? 'readonly' : ''}}
+                            value="{{ $itemSlik->skor != null ? $itemSlik->skor : '' }}">
+                    </div>
                 </div>
             </div>
             <div class="form-group col-md-12">
