@@ -584,15 +584,16 @@
                                                     <div class="input-group input-b-bottom">
                                                         @if ($item->is_commentable)
                                                             <input type="hidden" name="id_item[]"
-                                                                value="{{ $item->id }}">
+                                                                value="{{ $itemTiga->id }}">
+                                                            <input type="hidden" name="id_option[]" value="{{ $itemJawabanLevelTiga->id }}">
                                                             <input type="text" class="form-control komentar"
                                                                 name="komentar_penyelia[]" placeholder="Masukkan Komentar">
-                                                                <div class="input-skor">
-                                                                    <input type="number" class="form-control" placeholder=""
-                                                                        name="skor_penyelia[]" {{$itemTiga->status_skor == 0 ? 'readonly' : ''}}
-                                                                        value="{{ $itemJawabanLevelTiga->skor != null ? $itemJawabanLevelTiga->skor : '' }}">
+                                                            <div class="input-skor">
+                                                                <input type="number" class="form-control" placeholder=""
+                                                                    name="skor_penyelia[]" {{$itemTiga->status_skor == 0 ? 'readonly' : ''}}
+                                                                    value="{{ $itemJawabanLevelTiga->skor != null ? $itemJawabanLevelTiga->skor : '' }}">
 
-                                                                </div>
+                                                            </div>
                                                         @endif
                                                     </div>
                                                 </div>
@@ -727,7 +728,8 @@
                                                         <div class="input-group input-b-bottom">
                                                             @if ($item->is_commentable)
                                                                 <input type="hidden" name="id_item[]"
-                                                                    value="{{ $item->id }}">
+                                                                    value="{{ $itemEmpat->id }}">
+                                                                    <input type="hidden" name="id_option[]" value="{{ $itemJawabanLevelEmpat->id }}">
                                                                 <input type="text" class="form-control komentar"
                                                                     name="komentar_penyelia[]"
                                                                     placeholder="Masukkan Komentar">

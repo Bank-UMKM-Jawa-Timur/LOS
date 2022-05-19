@@ -432,7 +432,7 @@
                                                 <option value=""> --Pilih Opsi-- </option>
                                                 @foreach ($dataJawabanLevelTiga as $itemJawabanTiga)
                                                     <option
-                                                        value="{{ ($itemJawaban->skor == NULL ? 'kosong' : $itemJawaban->skor) . '-' . $itemJawabanTiga->id }}">
+                                                        value="{{ ($itemJawabanTiga->skor == NULL ? 'kosong' : $itemJawabanTiga->skor) . '-' . $itemJawabanTiga->id }}">
                                                         {{ $itemJawabanTiga->option }}</option>
                                                 @endforeach
                                             </select>
@@ -479,7 +479,7 @@
                                                     <option value=""> --Pilih Opsi -- </option>
                                                     @foreach ($dataJawabanLevelEmpat as $itemJawabanEmpat)
                                                         <option
-                                                            value="{{ ($itemJawaban->skor == NULL ? 'kosong' : $itemJawaban->skor) . '-' . $itemJawabanEmpat->id }}">
+                                                            value="{{ ($itemJawabanEmpat->skor == NULL ? 'kosong' : $itemJawabanEmpat->skor) . '-' . $itemJawabanEmpat->id }}">
                                                             {{ $itemJawabanEmpat->option }}</option>
                                                     @endforeach
                                                 </select>
