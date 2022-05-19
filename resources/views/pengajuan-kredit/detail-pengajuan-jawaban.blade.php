@@ -271,7 +271,9 @@
             </div>
         </div>
     </div>
-    <form action="{{ route('pengajuan.insertkomentar') }}" method="POST">
+    {{-- <form action="{{ route('pengajuan.insertkomentarPenyelia') }}" method="POST"> --}}
+
+    <form id="pengajuan_kredit" action="{{ route('pengajuan.insertkomentar') }}" method="post">
         @csrf
         <input type="hidden" id="jumlahData" name="jumlahData" hidden value="{{ count($dataAspek) + 1 }}">
         <input type="hidden" id="id_pengajuan" name="id_pengajuan" value="{{ $dataUmum->id }}">
@@ -674,7 +676,6 @@
                                     // print_r ($dataOptionEmpat);
                                     // echo "</pre>";
                                     // ;
-
                                 @endphp
                                 @if ($itemEmpat->opsi_jawaban == 'option' && $isJawabanExist > 0)
                                     <div class="row">
@@ -686,7 +687,6 @@
 
                                 {{-- Data jawaban Level Empat --}}
                                 @if (count($dataJawabanLevelEmpat) != 0)
-
                                     <div class="row">
                                         @foreach ($dataJawabanLevelEmpat as $key => $itemJawabanLevelEmpat)
                                             @php
@@ -751,6 +751,17 @@
                             @endforeach
                         @endforeach
                     @endforeach
+                    <div class="form-group col-md-12">
+                        <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
+                        <input type="hidden" name="id_aspek[]" value="{{ $value->id }}">
+                        <textarea name="pendapat_per_aspek[]" class="form-control @error('pendapat_per_aspek') is-invalid @enderror" id=""
+                            cols="30" rows="4" placeholder="Pendapat Per Aspek"></textarea>
+                        @error('pendapat_per_aspek')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
                 </div>
                 <hr>
                 <div class="form-group col-md-12">
@@ -865,26 +876,23 @@
             if ($(".form-wizard[data-index='" + prev + "']").length == 1) {
                 $(".btn-prev").show()
             }
-            if (next == jumlahData) {
+            if (parseInt(indexNow) == parseInt(jumlahData)) {
+                // $(".btn-next").click(function(e) {
+                //     if (parseInt(indexNow) != parseInt(jumlahData)) {
+                //         $(".btn-next").show()
 
-                $(".btn-next").click(function(e) {
-
-                    $(".btn-simpan").show()
-                    // $(".progress").prop('disabled', false);
-                    $(".btn-next").hide()
-                });
+                //     }
+                $(".btn-simpan").show()
+                $(".progress").prop('disabled', false);
+                $(".btn-next").hide()
+                // });
                 // $(".btn-next").show()
 
-            } else if (indexNow == jumlahData) {
-                $(".btn-simpan").show()
-                $(".btn-next").hide()
             } else {
                 $(".btn-next").show()
                 $(".btn-simpan").hide()
+
             }
-            console.log(indexNow)
-            console.log(next);
-            console.log(jumlahData);
         }
 
         function cekWizard(isNext = false) {

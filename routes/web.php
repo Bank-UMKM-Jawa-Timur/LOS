@@ -49,6 +49,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('pengajuan-kredit/penyelia-kredit/{id}', [PengajuanKreditController::class, "checkPenyeliaKredit"])->name('pengajuan.check.penyeliakredit');
     Route::post('pengajuan-kredit/jawaban-pengajuan', [PengajuanKreditController::class, "getInsertKomentar"])->name('pengajuan.insertkomentar');
     Route::get('pengajuan-kredit/jawaban-pengajuan/{id}', [PengajuanKreditController::class, "getDetailJawaban"])->name('pengajuan.detailjawaban');
+    Route::post('pengajuan-kredit/jawaban-pengajuan-penyelia', [PengajuanKreditController::class, "storeAspekPenyelia"])->name('pengajuan.insertkomentarPenyelia');
 
     Route::get('getkecamatan', [PengajuanKreditController::class, "getkecamatan"]);
     Route::get('getdesa', [PengajuanKreditController::class, "getdesa"]);

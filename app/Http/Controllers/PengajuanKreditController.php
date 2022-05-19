@@ -845,6 +845,16 @@ class PengajuanKreditController extends Controller
                 $addDetailKomentar->komentar = $_POST['komentar_penyelia'][$key];
                 $addDetailKomentar->save();
             }
+
+            // pendapat penyelia
+            foreach ($request->get('id_aspek') as $key => $value) {
+                $addPendapat = new PendapatPerAspek;
+                $addPendapat->id_pengajuan = $request->get('id_pengajuan');
+                $addPendapat->id_penyelia = Auth::user()->id;
+                $addPendapat->id_aspek = $value;
+                $addPendapat->pendapat_per_aspek = $request->get('pendapat_per_aspek')[$key];
+                $addPendapat->save();
+            }
             return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil menambahkan data');
         } catch (Exception $e) {
             // return $e;
@@ -1006,6 +1016,61 @@ class PengajuanKreditController extends Controller
             return redirect()->back()->withStatus('Berhasil mengganti posisi.');
         } else {
             return redirect()->back()->withError('Tidak memiliki hak akses.');
+        }
+    }
+
+    public function storeAspekPenyelia(Request $request)
+    {
+
+        DB::beginTransaction();
+        try {
+
+            // pendapat penyelia
+            foreach ($request->get('id_aspek') as $key => $value) {
+                $addPendapat = new PendapatPerAspek;
+                $addPendapat->id_pengajuan = $request->get('id_pengajuan');
+                $addPendapat->id_penyelia = Auth::user()->id;
+                $addPendapat->id_aspek = $value;
+                $addPendapat->pendapat_per_aspek = $request->get('pendapat_per_aspek')[$key];
+                $addPendapat->save();
+            }
+
+            // komentar penyelia
+            $idKomentar = KomentarModel::where('id_pengajuan', $request->get('id_pengajuan'))->first();
+            foreach ($request->id_item as $key => $value){
+                $addDetailKomentar = new DetailKomentarModel;
+                $addDetailKomentar->id_komentar = $idKomentar->id;
+                $addDetailKomentar->id_user = Auth::user()->id;
+                $addDetailKomentar->id_item = $value;
+                $addDetailKomentar->komentar = $_POST['komentar_penyelia'][$key];
+                $addDetailKomentar->save();
+            }
+            KomentarModel::where('id', $idKomentar->id)->update(
+                [
+                    'komentar_penyelia' => $request->get('komentar_penyelia_keseluruhan'),
+                    'id_penyelia' => Auth::user()->id,
+                    'updated_at' => date('Y-m-d H:i:s')
+                ]
+            );
+
+            // skor penyelia
+            // foreach ($request->id_jawaban as $key => $value){
+            //     $detail = [
+            //         'id_pengajuan' => $request->id_pengajuan,
+            //         'id_jawaban' => $value,
+            //         // 'skor' => $request->get('product_code')[$key],
+            //         'skor_penyelia' => $request->get('skor_penyelia')[$key],
+            //         'created_at' => date("Y-m-d H:i:s"),
+            //     ];
+            //     DB::table('jawaban')->insert($detail);
+            // }
+        // return redirect()->route('pengajuan-kredit.index')->withStatus('Data berhasil disimpan.');
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withError('Terjadi kesalahan.'.$e->getMessage());
+        } catch (QueryException $e) {
+            DB::rollBack();
+            return redirect()->back()->withError('Terjadi kesalahan'.$e->getMessage());
         }
     }
 }
