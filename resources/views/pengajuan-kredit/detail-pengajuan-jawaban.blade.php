@@ -843,26 +843,23 @@
             if ($(".form-wizard[data-index='" + prev + "']").length == 1) {
                 $(".btn-prev").show()
             }
-            if (next == jumlahData) {
+            if (parseInt(indexNow) == parseInt(jumlahData)) {
+                // $(".btn-next").click(function(e) {
+                //     if (parseInt(indexNow) != parseInt(jumlahData)) {
+                //         $(".btn-next").show()
 
-                $(".btn-next").click(function(e) {
-
-                    $(".btn-simpan").show()
-                    // $(".progress").prop('disabled', false);
-                    $(".btn-next").hide()
-                });
-                // $(".btn-next").show()
-
-            } else if (indexNow == jumlahData) {
+                //     }
                 $(".btn-simpan").show()
+                $(".progress").prop('disabled', false);
                 $(".btn-next").hide()
+                    // });
+                    // $(".btn-next").show()
+
             } else {
                 $(".btn-next").show()
                 $(".btn-simpan").hide()
+
             }
-            console.log(indexNow)
-            console.log(next);
-            console.log(jumlahData);
         }
 
         function cekWizard(isNext = false) {
