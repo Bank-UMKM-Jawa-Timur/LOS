@@ -209,12 +209,12 @@
             @foreach ($dataAspek as $itemAspek)
                 @php
                     // check level 2
-                    $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent')
+                    $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent','status_skor','is_commentable')
                         ->where('level', 2)
                         ->where('id_parent', $itemAspek->id)
                         ->get();
                     // check level 4
-                    $dataLevelEmpat = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent')
+                    $dataLevelEmpat = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent','status_skor','is_commentable')
                         ->where('level', 4)
                         ->where('id_parent', $itemAspek->id)
                         ->get();
@@ -225,7 +225,7 @@
                 @foreach ($dataLevelDua as $item)
                     @if ($item->opsi_jawaban == 'input text')
                         @php
-                            $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
+                            $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama','item.status_skor','item.is_commentable')
                                 ->join('item', 'jawaban_text.id_jawaban', 'item.id')
                                 ->where('jawaban_text.id_pengajuan', $dataUmum->id)
                                 ->where('jawaban_text.id_jawaban', $item->id)
@@ -256,32 +256,8 @@
                                     <input type="hidden" name="id[]" value="{{ $itemAspek->id }}">
                                 </div>
                             </div>
-
-                            <div class="p-3">
-                                <div class="row form-group sub pl-4">
-                                    <label for="staticEmail" class="col-sm-3 col-form-label"></label>
-                                    <label for="staticEmail" class="col-sm-1 col-form-label px-0">
-                                        <div class="d-flex justify-content-end">
-                                            <div style="width: 20px">
-
-                                            </div>
-                                        </div>
-                                    </label>
-                                    <div class="col-sm-7">
-                                        <div class="d-flex">
-                                            <div class="">
-                                                <p><strong>Skor : </strong></p>
-                                            </div>
-                                            <div class="px-2">
-                                                <p class="badge badge-info text-lg"><b>
-                                                        {{ $itemTextDua->skor_penyelia }}</b></p>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                                @foreach ($getKomentar as $itemKomentar)
+                            @if ($itemTextDua->status_skor == 1)
+                                <div class="p-3">
                                     <div class="row form-group sub pl-4">
                                         <label for="staticEmail" class="col-sm-3 col-form-label"></label>
                                         <label for="staticEmail" class="col-sm-1 col-form-label px-0">
@@ -293,17 +269,47 @@
                                         </label>
                                         <div class="col-sm-7">
                                             <div class="d-flex">
-                                                <div style="width: 15%">
-                                                    <p class="p-0 m-0"><strong>Komentar : </strong></p>
+                                                <div class="">
+                                                    <p><strong>Skor : </strong></p>
                                                 </div>
-                                                <h6 class="font-italic">{{ $itemKomentar->komentar }}</h6>
-                                                {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
+                                                <div class="px-2">
 
+
+                                                    <p class="badge badge-info text-lg"><b>
+                                                            {{ $itemTextDua->skor_penyelia }}</b></p>
+
+                                                </div>
                                             </div>
+
                                         </div>
                                     </div>
-                                @endforeach
-                            </div>
+                                    @if ($itemTextDua->is_commentable != null)
+                                        @foreach ($getKomentar as $itemKomentar)
+                                            <div class="row form-group sub pl-4">
+                                                <label for="staticEmail" class="col-sm-3 col-form-label"></label>
+                                                <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                                                    <div class="d-flex justify-content-end">
+                                                        <div style="width: 20px">
+
+                                                        </div>
+                                                    </div>
+                                                </label>
+                                                <div class="col-sm-7">
+                                                    <div class="d-flex">
+                                                        <div style="width: 15%">
+                                                            <p class="p-0 m-0"><strong>Komentar : </strong></p>
+                                                        </div>
+                                                        <h6 class="font-italic">{{ $itemKomentar->komentar }}</h6>
+                                                        {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @endif
+                                </div>
+                            @endif
+
                             <hr>
                         @endforeach
                     @endif
@@ -375,7 +381,7 @@
                                     @if (in_array($itemJawaban->id, $data))
                                         @if (isset($data))
                                             @php
-                                                $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
+                                                $dataDetailJawabanskor = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
                                                     ->where('id_pengajuan', $dataUmum->id)
                                                     ->where('id_jawaban', $itemJawaban->id)
                                                     ->get();
@@ -385,17 +391,18 @@
                                                     // ->where('detail_komentar.id_komentar', $comment->id_pengajuan)
                                                     ->get();
                                             @endphp
-                                            @foreach ($dataDetailJawaban as $item)
-                                                <div class="d-flex">
-                                                    <div class="">
-                                                        <p><strong>Skor : </strong></p>
+                                            @foreach ($dataDetailJawabanskor as $item)
+                                                @if ($item->skor_penyelia != null && $item->skor_penyelia != "")
+                                                    <div class="d-flex">
+                                                        <div class="">
+                                                            <p><strong>Skor : </strong></p>
+                                                        </div>
+                                                        <div class="px-2">
+                                                            <p class="badge badge-info text-lg"><b>
+                                                                    {{ $item->skor_penyelia }}</b></p>
+                                                        </div>
                                                     </div>
-                                                    <div class="px-2">
-                                                        <p class="badge badge-info text-lg"><b>
-                                                                {{ $item->skor_penyelia }}</b></p>
-                                                    </div>
-                                                </div>
-                                                {{-- <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ $item->skor_penyelia }}"> --}}
+                                                @endif
                                             @endforeach
                                         @endif
                                     @endif
@@ -427,11 +434,12 @@
                             </div>
                         @endforeach
                         <hr>
+
                     @endif
                     @foreach ($dataLevelTiga as $keyTiga => $itemTiga)
                         @if ($itemTiga->opsi_jawaban == 'input text')
                             @php
-                                $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
+                                $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama','item.is_commentable','item.status_skor')
                                     ->join('item', 'jawaban_text.id_jawaban', 'item.id')
                                     ->where('jawaban_text.id_pengajuan', $dataUmum->id)
                                     ->where('jawaban_text.id_jawaban', $itemTiga->id)
@@ -465,27 +473,28 @@
                                         <input type="hidden" name="id[]" value="{{ $itemAspek->id }}">
                                     </div>
                                 </div>
-                                <div class="row form-group sub pl-5">
-                                    <label for="staticEmail" class="col-sm-3 col-form-label"></label>
-                                    <label for="staticEmail" class="col-sm-1 col-form-label px-0">
-                                        <div class="d-flex justify-content-end">
-                                            <div style="width: 20px">
+                                @if ($itemTextTiga->status_skor == 1)
+                                    <div class="row form-group sub pl-5">
+                                        <label for="staticEmail" class="col-sm-3 col-form-label"></label>
+                                        <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                                            <div class="d-flex justify-content-end">
+                                                <div style="width: 20px">
 
+                                                </div>
+                                            </div>
+                                        </label>
+                                        <div class="col-sm-7">
+                                            <div class="d-flex">
+                                                <div class="">
+                                                    <p><strong>Skor : </strong></p>
+                                                </div>
+                                                <div class="px-2">
+                                                    <p class="badge badge-info text-lg"><b>{{ $itemTextTiga->skor_penyelia }}</b></p>
+                                                </div>
                                             </div>
                                         </div>
-                                    </label>
-                                    <div class="col-sm-7">
-                                        <div class="d-flex">
-                                            <p><strong>Skor : </strong></p>
-                                        </div>
-                                        <div class="px-2">
-                                            <p class="badge badge-info text-lg"><b>
-                                                    {{ $itemTextTiga->skor_penyelia }}</b></p>
-                                        </div>
-                                        {{-- <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ $itemTextTiga->skor_penyelia }}"> --}}
-
                                     </div>
-                                </div>
+                                @endif
 
                                 @foreach ($getKomentar2 as $itemKomentar2)
                                     <div class="row form-group sub pl-5">
@@ -503,10 +512,7 @@
                                                     <p class="p-0 m-0"><strong>Komentar : </strong></p>
                                                 </div>
                                                 <h6 class="font-italic">{{ $itemKomentar2->komentar }}</h6>
-                                                {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
-
                                             </div>
-                                            {{-- <input type="text" readonly class="form-control-plaintext" id="komentar" value="{{ $itemKomentar2->komentar }}"> --}}
                                         </div>
                                     </div>
 
@@ -594,14 +600,17 @@
                                                         ->get();
                                                 @endphp
                                                 @foreach ($dataDetailJawabanTiga as $item)
-                                                    <div class="">
-                                                        <p><strong>Skor : </strong></p>
-                                                    </div>
-                                                    <div class="px-2">
-                                                        <p class="badge badge-info text-lg"><b>
-                                                                {{ $item->skor_penyelia }}</b></p>
-                                                    </div>
-                                                    {{-- <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ $item->skor_penyelia }}"> --}}
+                                                    @if ($item->skor_penyelia != null && $item->skor_penyelia != '')
+                                                        <div class="d-flex">
+                                                            <div class="">
+                                                                <p><strong>Skor : </strong></p>
+                                                            </div>
+                                                            <div class="px-2">
+                                                                <p class="badge badge-info text-lg"><b>
+                                                                        {{ $item->skor_penyelia }}</b></p>
+                                                            </div>
+                                                        </div>
+                                                    @endif
                                                 @endforeach
                                             @endif
                                         @endif
@@ -623,7 +632,7 @@
                                             <div style="width: 15%">
                                                 <p class="p-0 m-0"><strong>Komentar : </strong></p>
                                             </div>
-                                            <h6 class="font-italic">{{ $itemKomentar->komentar3 }}</h6>
+                                            <h6 class="font-italic">{{ $itemKomentar3->komentar }}</h6>
                                             {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
 
                                         </div>
@@ -637,7 +646,7 @@
                         @foreach ($dataLevelEmpat as $keyEmpat => $itemEmpat)
                             @if ($itemEmpat->opsi_jawaban == 'input text')
                                 @php
-                                    $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
+                                    $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama','item.is_commentable','item.status_skor')
                                         ->join('item', 'jawaban_text.id_jawaban', 'item.id')
                                         ->where('jawaban_text.id_pengajuan', $dataUmum->id)
                                         ->where('jawaban_text.id_jawaban', $itemEmpat->id)
@@ -667,26 +676,30 @@
                                             <input type="hidden" name="id[]" value="{{ $itemAspek->id }}">
                                         </div>
                                     </div>
-                                    <div class="row form-group sub" style="padding-left: 5rem !important">
-                                        <label for="staticEmail" class="col-sm-3 col-form-label"></label>
-                                        <label for="staticEmail" class="col-sm-1 col-form-label px-0">
-                                            <div class="d-flex justify-content-end">
-                                                <div style="width: 20px">
-                                                    :
+                                    @if ($itemTextEmpat->status_skor != null && $itemTextEmpat == false )
+                                        <div class="row form-group sub" style="padding-left: 5rem !important">
+                                            <label for="staticEmail" class="col-sm-3 col-form-label"></label>
+                                            <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                                                <div class="d-flex justify-content-end">
+                                                    <div style="width: 20px">
+                                                        :
+                                                    </div>
+                                                </div>
+                                            </label>
+                                            <div class="col-sm-7">
+                                                <div class="d-flex">
+                                                    <div class="">
+                                                        <p><strong>Skor : </strong></p>
+                                                    </div>
+                                                        <div class="px-2">
+                                                            <p class="badge badge-info text-lg"><b>
+                                                                    {{ $itemTextEmpat->skor_penyelia }}</b></p>
+                                                        </div>
                                                 </div>
                                             </div>
-                                        </label>
-                                        <div class="col-sm-7">
-                                            <div class="">
-                                                <p><strong></strong></p>
-                                            </div>
-                                            <div class="px-2">
-                                                <p class="badge badge-info text-lg"><b>
-                                                        {{ $itemTextEmpat->skor_penyelia }}</b></p>
-                                            </div>
-                                            {{-- <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ $itemTextEmpat->skor_penyelia }}"> --}}
                                         </div>
-                                    </div>
+                                    @endif
+
                                     @foreach ($getKomentar4 as $itemKomentar4)
                                         <div class="row form-group sub" style="padding-left: 5rem !important">
                                             <label for="staticEmail" class="col-sm-3 col-form-label"></label>
@@ -718,6 +731,7 @@
                                 $dataJawabanLevelEmpat = \App\Models\OptionModel::where('option', '!=', '-')
                                     ->where('id_item', $itemEmpat->id)
                                     ->get();
+
                                 $dataOptionEmpat = \App\Models\OptionModel::where('option', '=', '-')
                                     ->where('id_item', $itemEmpat->id)
                                     ->get();
@@ -792,14 +806,18 @@
                                                             ->get();
                                                     @endphp
                                                     @foreach ($dataDetailJawabanEmpat as $item)
-                                                        <div class="">
-                                                            <p><strong>Skor : </strong></p>
-                                                        </div>
-                                                        <div class="px-2">
-                                                            <p class="badge badge-info text-lg"><b>
-                                                                    {{ $item->skor_penyelia }}</b></p>
-                                                        </div>
-                                                        {{-- <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="{{ $item->skor_penyelia }}"> --}}
+                                                        @if ($item->skor_penyelia != null && $item->skor_penyelia != '')
+                                                            <div class="d-flex">
+                                                                <div class="">
+                                                                    <p><strong>Skor : </strong></p>
+                                                                </div>
+                                                                <div class="px-2">
+                                                                    <p class="badge badge-info text-lg"><b>
+                                                                            {{ $item->skor_penyelia }}</b></p>
+                                                                </div>
+                                                            </div>
+
+                                                        @endif
                                                     @endforeach
                                                 @endif
                                             @endif
@@ -822,12 +840,10 @@
                                                     <div style="width: 15%">
                                                         <p class="p-0 m-0"><strong>Komentar : </strong></p>
                                                     </div>
-                                                    <h6 class="font-italic">{{ $itemKomentar->komentar3 }}</h6>
+                                                    <h6 class="font-italic">{{ $itemKomentar5->komentar }}</h6>
                                                     {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
 
                                                 </div>
-                                                <input type="text" readonly class="form-control-plaintext" id="komentar"
-                                                    value="{{ $itemKomentar5->komentar }}">
                                             </div>
                                         </div>
                                     @endforeach
@@ -837,6 +853,55 @@
                         @endforeach
                     @endforeach
                 @endforeach
+                @php
+                    $pendapatUsulanStaf = \App\Models\PendapatPerAspek::select('*')
+                                    ->where('id_staf','!=',null)
+                                    ->where('id_aspek',$itemAspek->id)
+                                    ->where('id_pengajuan', $dataNasabah->id)->get();
+                    $pendapatUsulanPenyelia = \App\Models\PendapatPerAspek::select('*')
+                                    ->where('id_penyelia','!=',null)
+                                    ->where('id_pengajuan', $dataNasabah->id)->get();
+                @endphp
+                {{-- @php
+                    echo "<pre>"; print_r($pendapatUsulanStaf);echo "</pre>";
+                @endphp --}}
+                @foreach ($pendapatUsulanStaf as $item)
+                    @if ($item->id_aspek == $itemAspek->id)
+                        <div class="form-group row sub card-footer mt-5" style="">
+                            <label for="staticEmail" class="col-sm-3 col-form-label">Pendapat & Usulan <br> (Staff Penyelia)</label>
+                            <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                                <div class="d-flex justify-content-end">
+                                    <div style="width: 20px">
+                                        :
+                                    </div>
+                                </div>
+                            </label>
+                            <div class="col-sm-7">
+                                <textarea name="" class="form-control-plaintext" readonly id="" cols="5"
+                                    rows="2">{{ $item->pendapat_per_aspek }}</textarea>
+                            </div>
+                        </div>
+                    @endif
+                @endforeach
+                @foreach ($pendapatUsulanPenyelia as $item)
+                    @if ($item->id_aspek == $itemAspek->id)
+                        <div class="form-group row sub card-footer mt-5" style="">
+                            <label for="staticEmail" class="col-sm-3 col-form-label">Pendapat & Usulan <br> (Penyelia)</label>
+                            <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                                <div class="d-flex justify-content-end">
+                                    <div style="width: 20px">
+                                        :
+                                    </div>
+                                </div>
+                            </label>
+                            <div class="col-sm-7">
+                                <textarea name="" class="form-control-plaintext" readonly id="" cols="5"
+                                    rows="2">{{ $item->pendapat_per_aspek }}</textarea>
+                            </div>
+                        </div>
+                    @endif
+                @endforeach
+
             @endforeach
             <div class="form-group row">
                 <label for="komentar_pincab" class="col-sm-3 col-form-label">Pendapat Pemimpin Cabang</label>

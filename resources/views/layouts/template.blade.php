@@ -40,7 +40,7 @@
         <nav class="navbar navbar-expand-lg py-3 navbar-dark mt-4">
             <div class="container custom">
 
-                <a class="navbar-brand font-weight-bold" href="#"><img src="{{ asset('') }}img/logo.png" width="180px" class="mr-2" alt=""></a>
+                <a class="navbar-brand font-weight-bold" href="#"><img src="{{ asset('') }}img/logo2.png" height="80px" width="80px" class="mr-2" alt=""></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -127,7 +127,7 @@
 <script src="{{ asset('') }}build/please-wait.min.js"></script>
 <script type="text/javascript">
     var loading_screen = pleaseWait({
-        logo: "{{ asset('img/logo.png') }}",
+        logo: "{{ asset('img/logo2.png') }}",
         backgroundColor: '#112042f1',
         loadingHtml: "<div class='spinner'><div class='double-bounce1'></div><div class='double-bounce2'></div><div class='double-bounce3'></div></div>"
     });

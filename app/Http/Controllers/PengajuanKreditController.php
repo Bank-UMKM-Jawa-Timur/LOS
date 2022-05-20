@@ -958,6 +958,7 @@ class PengajuanKreditController extends Controller
         //                             ->where('jawaban.id_pengajuan',$id)
         //                             ->get();
 
+
         return view('pengajuan-kredit.detail-komentar-pengajuan', $param);
     }
     public function checkPincabStatusDetailPost(Request $request)
