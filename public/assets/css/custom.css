@@ -339,6 +339,9 @@ table.opsi-jawaban thead tr th {
 .color-darkBlue {
     color: var(--colorDarkBlue)
 }
+.color-white {
+    color: white
+}
 
 .select2 {
     width: 100% !important;
@@ -641,4 +644,7 @@ p .loading-content-detail {
         -webkit-transform: scale(1.0);
         transform: scale(1.0);
     }
+}
+.card-header[data-toggle='collapse']{
+    cursor : pointer;
 }

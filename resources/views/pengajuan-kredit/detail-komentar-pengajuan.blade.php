@@ -34,178 +34,211 @@
             @csrf
 
             {{-- calon nasabah --}}
-            <div class="form-group row">
-                <label for="staticEmail" class="col-sm-3 col-form-label">Nama Lengkap</label>
-                <label for="staticEmail" class="col-sm-1 col-form-label px-0">
-                    <div class="d-flex justify-content-end">
-                        <div style="width: 20px">
-                            :
-                        </div>
-                    </div>
-                </label>
-                <div class="col-sm-7">
-                    <input type="text" readonly class="form-control-plaintext" id="staticEmail"
-                        value="{{ $dataNasabah->nama }}">
+            <div class="card">
+                <div class="card-header bg-info color-white font-weight-bold" data-toggle="collapse" href="#cardDataUmum">
+                  Data Umum
                 </div>
-            </div>
-            <div class="form-group row">
-                {{-- alamat rumah --}}
-                <label for="staticEmail" class="col-sm-3 col-form-label">Alamat Rumah</label>
-                <label for="staticEmail" class="col-sm-1 col-form-label px-0">
-                    <div class="d-flex justify-content-end">
-                        <div style="width: 20px">
-                            :
-                        </div>
-                    </div>
-                </label>
-                <div class="col-sm-7">
-                    <textarea name="" class="form-control-plaintext" readonly id="" cols="5"
-                        rows="2">{{ $dataNasabah->alamat_rumah }}</textarea>
-                </div>
-
-                {{-- alamat usaha --}}
-                <label for="staticEmail" class="col-sm-3 col-form-label">Alamat Usaha</label>
-                <label for="staticEmail" class="col-sm-1 col-form-label px-0">
-                    <div class="d-flex justify-content-end">
-                        <div style="width: 20px">
-                            :
-                        </div>
-                    </div>
-                </label>
-                <div class="col-sm-7">
-                    <textarea name="" class="form-control-plaintext" readonly id="" cols="5"
-                        rows="2">{{ $dataNasabah->alamat_usaha }}</textarea>
-                </div>
-                {{-- No KTP --}}
-                <label for="staticEmail" class="col-sm-3 col-form-label">No. KTP</label>
-                <label for="staticEmail" class="col-sm-1 col-form-label px-0">
-                    <div class="d-flex justify-content-end">
-                        <div style="width: 20px">
-                            :
-                        </div>
-                    </div>
-                </label>
-                <div class="col-sm-7">
-                    <input type="text" readonly class="form-control-plaintext" id="staticEmail"
-                        value="{{ $dataNasabah->no_ktp }}">
-                </div>
-                {{-- Tempat tanggal lahir --}}
-                <label for="staticEmail" class="col-sm-3 col-form-label">Tempat, Tanggal lahir/Status</label>
-                <label for="staticEmail" class="col-sm-1 col-form-label px-0">
-                    <div class="d-flex justify-content-end">
-                        <div style="width: 20px">
-                            :
-                        </div>
-                    </div>
-                </label>
-                <div class="col-sm-7 ">
-                    <div class="d-flex justify-content-start ">
-                        <div class="m-0" style="width: 110px">
+                <div class="card-body collapse multi-collapse show" id="cardDataUmum">
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label">Nama Lengkap</label>
+                        <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                            <div class="d-flex justify-content-end">
+                                <div style="width: 20px">
+                                    :
+                                </div>
+                            </div>
+                        </label>
+                        <div class="col-sm-7">
                             <input type="text" readonly class="form-control-plaintext" id="staticEmail"
-                                value="{{ $dataNasabah->tempat_lahir . ',' }}">
+                                value="{{ $dataNasabah->nama }}">
                         </div>
-                        <div class="m-0" style="width: 100px">
+                    </div>
+                    <hr>
+                    <div class="form-group row">
+                        {{-- alamat rumah --}}
+                        <label for="staticEmail" class="col-sm-3 col-form-label">Alamat Rumah</label>
+                        <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                            <div class="d-flex justify-content-end">
+                                <div style="width: 20px">
+                                    :
+                                </div>
+                            </div>
+                        </label>
+                        <div class="col-sm-7">
                             <input type="text" readonly class="form-control-plaintext" id="staticEmail"
-                                value="{{ date('d-m-Y', strtotime($dataNasabah->tanggal_lahir)) }}">
+                                value="{{ $dataNasabah->alamat_rumah }}">
                         </div>
-                        <div class="m-0" style="width: 140px">
+                    </div>
+                    <hr>
+                    <div class="form-group row">
+                        {{-- alamat usaha --}}
+                        <label for="staticEmail" class="col-sm-3 col-form-label">Alamat Usaha</label>
+                        <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                            <div class="d-flex justify-content-end">
+                                <div style="width: 20px">
+                                    :
+                                </div>
+                            </div>
+                        </label>
+                        <div class="col-sm-7">
                             <input type="text" readonly class="form-control-plaintext" id="staticEmail"
-                                value="{{ '/ ' . $dataNasabah->status }}">
+                                value="{{ $dataNasabah->alamat_usaha }}">
                         </div>
                     </div>
-
-                </div>
-
-                <label for="staticEmail" class="col-sm-3 col-form-label">Sektor Kredit</label>
-                <label for="staticEmail" class="col-sm-1 col-form-label px-0">
-                    <div class="d-flex justify-content-end">
-                        <div style="width: 20px">
-                            :
+                    <hr>
+                    <div class="form-group row">
+                        {{-- No KTP --}}
+                        <label for="staticEmail" class="col-sm-3 col-form-label">No. KTP</label>
+                        <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                            <div class="d-flex justify-content-end">
+                                <div style="width: 20px">
+                                    :
+                                </div>
+                            </div>
+                        </label>
+                        <div class="col-sm-7">
+                            <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                                value="{{ $dataNasabah->no_ktp }}">
+                            </div>
+                    </div>
+                    <hr>
+                    <div class="form-group row">
+                        {{-- Tempat tanggal lahir --}}
+                        <label for="staticEmail" class="col-sm-3 col-form-label">Tempat, Tanggal lahir/Status</label>
+                        <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                            <div class="d-flex justify-content-end">
+                                <div style="width: 20px">
+                                    :
+                                </div>
+                            </div>
+                        </label>
+                        <div class="col-sm-7 ">
+                            <div class="d-flex justify-content-start ">
+                                <div class="m-0" style="width: 110px">
+                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                                    value="{{ $dataNasabah->tempat_lahir . ',' }}">
+                                </div>
+                                <div class="m-0" style="width: 100px">
+                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                                    value="{{ date('d-m-Y', strtotime($dataNasabah->tanggal_lahir)) }}">
+                                </div>
+                                <div class="m-0" style="width: 140px">
+                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                                    value="{{ '/ ' . $dataNasabah->status }}">
+                                </div>
+                            </div>
+        
                         </div>
                     </div>
-                </label>
-                <div class="col-sm-7">
-                    <input type="text" readonly class="form-control-plaintext" id="staticEmail"
-                        value="{{ $dataNasabah->sektor_kredit }}">
-                </div>
-                <label for="staticEmail" class="col-sm-3 col-form-label">Jenis Usaha</label>
-                <label for="staticEmail" class="col-sm-1 col-form-label px-0">
-                    <div class="d-flex justify-content-end">
-                        <div style="width: 20px">
-                            :
+                    <hr>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label">Sektor Kredit</label>
+                        <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                            <div class="d-flex justify-content-end">
+                                <div style="width: 20px">
+                                    :
+                                </div>
+                            </div>
+                        </label>
+                        <div class="col-sm-7">
+                            <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                            value="{{ $dataNasabah->sektor_kredit }}">
                         </div>
                     </div>
-                </label>
-                <div class="col-sm-7">
-                    <input type="text" readonly class="form-control-plaintext" id="staticEmail"
-                        value="{{ $dataNasabah->jenis_usaha }}">
-                </div>
-                <label for="staticEmail" class="col-sm-3 col-form-label">Jumlah Kredit yang diminta </label>
-                <label for="staticEmail" class="col-sm-1 col-form-label px-0">
-                    <div class="d-flex justify-content-end">
-                        <div style="width: 20px">
-                            :
+                    <hr>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label">Jenis Usaha</label>
+                        <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                            <div class="d-flex justify-content-end">
+                                <div style="width: 20px">
+                                    :
+                                </div>
+                            </div>
+                        </label>
+                        <div class="col-sm-7">
+                            <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                            value="{{ $dataNasabah->jenis_usaha }}">
                         </div>
                     </div>
-                </label>
-                <div class="col-sm-7">
-                    <input type="text" readonly class="form-control-plaintext" id="staticEmail"
-                        value="Rp.{{ number_format($dataNasabah->jumlah_kredit, 2, '.', ',') }}">
-                </div>
-                <label for="staticEmail" class="col-sm-3 col-form-label">Tujuan Kredit</label>
-                <label for="staticEmail" class="col-sm-1 col-form-label px-0">
-                    <div class="d-flex justify-content-end">
-                        <div style="width: 20px">
-                            :
+                    <hr>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label">Jumlah Kredit yang diminta </label>
+                        <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                            <div class="d-flex justify-content-end">
+                                <div style="width: 20px">
+                                    :
+                                </div>
+                            </div>
+                        </label>
+                        <div class="col-sm-7">
+                            <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                            value="Rp.{{ number_format($dataNasabah->jumlah_kredit, 2, '.', ',') }}">
                         </div>
                     </div>
-                </label>
-                <div class="col-sm-7">
-                    <textarea name="" class="form-control-plaintext" readonly id="" cols="5"
-                        rows="2">{{ $dataNasabah->tujuan_kredit }}</textarea>
-                </div>
-                <label for="staticEmail" class="col-sm-3 col-form-label">Jaminan yang disediakan</label>
-                <label for="staticEmail" class="col-sm-1 col-form-label px-0">
-                    <div class="d-flex justify-content-end">
-                        <div style="width: 20px">
-                            :
+                    <hr>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label">Tujuan Kredit</label>
+                        <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                            <div class="d-flex justify-content-end">
+                                <div style="width: 20px">
+                                    :
+                                </div>
+                            </div>
+                        </label>
+                        <div class="col-sm-7">
+                            <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                            value="{{ $dataNasabah->tujuan_kredit }}">
                         </div>
                     </div>
-                </label>
-                <div class="col-sm-7">
-                    <textarea name="" class="form-control-plaintext" readonly id="" cols="5"
-                        rows="2">{{ $dataNasabah->jaminan_kredit }}</textarea>
-                </div>
-                <label for="staticEmail" class="col-sm-3 col-form-label">Hubungan dengan Bank</label>
-                <label for="staticEmail" class="col-sm-1 col-form-label px-0">
-                    <div class="d-flex justify-content-end">
-                        <div style="width: 20px">
-                            :
+                    <hr>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label">Jaminan yang disediakan</label>
+                        <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                            <div class="d-flex justify-content-end">
+                                <div style="width: 20px">
+                                    :
+                                </div>
+                            </div>
+                        </label>
+                        <div class="col-sm-7">
+                            <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                            value="{{ $dataNasabah->jaminan_kredit }}">
                         </div>
                     </div>
-                </label>
-                <div class="col-sm-7">
-                    <textarea name="" class="form-control-plaintext" readonly id="" cols="5"
-                        rows="2">{{ $dataNasabah->hubungan_bank }}</textarea>
-                </div>
-                <label for="staticEmail" class="col-sm-3 col-form-label">Hasil Verifikasi Karakter Umum</label>
-                <label for="staticEmail" class="col-sm-1 col-form-label px-0">
-                    <div class="d-flex justify-content-end">
-                        <div style="width: 20px">
-                            :
+                    <hr>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label">Hubungan dengan Bank</label>
+                        <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                            <div class="d-flex justify-content-end">
+                                <div style="width: 20px">
+                                    :
+                                </div>
+                            </div>
+                        </label>
+                        <div class="col-sm-7">
+                            <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                            value="{{ $dataNasabah->hubungan_bank }}">
                         </div>
                     </div>
-                </label>
-                <div class="col-sm-7">
-                    <textarea name="" class="form-control-plaintext" readonly id="" cols="5"
-                        rows="2">{{ $dataNasabah->verifikasi_umum }}</textarea>
+                    <hr>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label">Hasil Verifikasi Karakter Umum</label>
+                        <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                            <div class="d-flex justify-content-end">
+                                <div style="width: 20px">
+                                    :
+                                </div>
+                            </div>
+                        </label>
+                        <div class="col-sm-7">
+                            <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                            value="{{ $dataNasabah->verifikasi_umum }}">
+                        </div>
+                    </div>
                 </div>
-
-
-
-            </div>
+            </div>          
+            <br>  
             {{-- aspek management --}}
-            <hr>
             @foreach ($dataAspek as $itemAspek)
                 @php
                     // check level 2
@@ -219,9 +252,11 @@
                         ->where('id_parent', $itemAspek->id)
                         ->get();
                 @endphp
-                <div class="form-group row">
-                    <label for="staticEmail" class="col-sm-3 col-form-label">{{ $itemAspek->nama }}</label>
-                </div>
+                <div class="card mb-3">
+                    <div class="card-header bg-info font-weight-bold color-white" data-toggle="collapse" href="#cardData{{$loop->iteration}}">
+                        {{ $itemAspek->nama }}                        
+                    </div>
+                    <div class="card-body collapse multi-collapse" id="cardData{{$loop->iteration}}">
                 @foreach ($dataLevelDua as $item)
                     @if ($item->opsi_jawaban == 'input text')
                         @php
@@ -861,6 +896,7 @@
                         @endforeach
                     @endforeach
                 @endforeach
+
                 @php
                     $pendapatUsulanStaf = \App\Models\PendapatPerAspek::select('*')
                                     ->where('id_staf','!=',null)
@@ -875,40 +911,46 @@
                 @endphp --}}
                 @foreach ($pendapatUsulanStaf as $item)
                     @if ($item->id_aspek == $itemAspek->id)
-                        <div class="form-group row sub card-footer mt-5" style="">
-                            <label for="staticEmail" class="col-sm-3 col-form-label">Pendapat & Usulan <br> (Staff Penyelia)</label>
-                            <label for="staticEmail" class="col-sm-1 col-form-label px-0">
-                                <div class="d-flex justify-content-end">
-                                    <div style="width: 20px">
-                                        :
+                    <div class="alert alert-success">
+                        <div class="form-group row sub mb-0" style="">
+                                <label for="staticEmail" class="col-sm-3 col-form-label font-weight-bold">Pendapat & Usulan <br> (Staff Penyelia)</label>
+                                <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                                    <div class="d-flex justify-content-end">
+                                        <div style="width: 20px">
+                                            :
+                                        </div>
                                     </div>
+                                </label>
+                                <div class="col-sm-7">
+                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                                    value="{{ $item->pendapat_per_aspek }}">
                                 </div>
-                            </label>
-                            <div class="col-sm-7">
-                                <textarea name="" class="form-control-plaintext" readonly id="" cols="5"
-                                    rows="2">{{ $item->pendapat_per_aspek }}</textarea>
                             </div>
                         </div>
                     @endif
                 @endforeach
                 @foreach ($pendapatUsulanPenyelia as $item)
                     @if ($item->id_aspek == $itemAspek->id)
-                        <div class="form-group row sub card-footer mt-5" style="">
-                            <label for="staticEmail" class="col-sm-3 col-form-label">Pendapat & Usulan <br> (Penyelia)</label>
-                            <label for="staticEmail" class="col-sm-1 col-form-label px-0">
-                                <div class="d-flex justify-content-end">
-                                    <div style="width: 20px">
-                                        :
+                    <div class="alert alert-success ">
+                        <div class="form-group row sub mb-0" style="">
+                                <label for="staticEmail" class="col-sm-3 col-form-label font-weight-bold">Pendapat & Usulan <br> (Penyelia)</label>
+                                <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                                    <div class="d-flex justify-content-end">
+                                        <div style="width: 20px">
+                                            :
+                                        </div>
                                     </div>
+                                </label>
+                                <div class="col-sm-7">
+                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                                    value="{{ $item->pendapat_per_aspek }}">
                                 </div>
-                            </label>
-                            <div class="col-sm-7">
-                                <textarea name="" class="form-control-plaintext" readonly id="" cols="5"
-                                    rows="2">{{ $item->pendapat_per_aspek }}</textarea>
                             </div>
                         </div>
                     @endif
                 @endforeach
+                </div>
+            </div>
 
             @endforeach
             <div class="form-group row">
