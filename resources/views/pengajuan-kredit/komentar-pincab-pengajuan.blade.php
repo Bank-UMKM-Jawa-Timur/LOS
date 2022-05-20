@@ -117,20 +117,23 @@
                                     <a href="{{ route('pengajuan.check.pincab.status.detail',$item->id_pengajuan) }}" class="btn btn-rgb-primary mr-2">
                                         Detail data
                                     </a>
-                                @endif
-                                @if ($item->posisi == "Selesai")
-                                    <button href="{{ route('pengajuan.change.pincab.status',$item->id_pengajuan) }}" class="btn btn-primary">Selesai</button>
-                                @else
-                                    <!-- Button trigger modal -->
-                                    <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#exampleModal">
-                                        Disetujui/Ditolak
-                                    </button>
+                                    @if ($item->posisi == "Selesai")
+                                        <button href="{{ route('pengajuan.change.pincab.status',$item->id_pengajuan) }}" class="btn btn-primary">Selesai</button>
+                                    @else
+                                        <!-- Button trigger modal -->
+                                        <button type="button" class="btn btn-warning" data-toggle="modal" data-id="{{ $item->id_pengajuan }}" data-target="#exampleModal">
+                                            Disetujui/Ditolak
+                                        </button>
+                                    @endif
                                 @endif
                                 <div class="px-2">
                                     <a href="{{ route('cetak',$item->id_pengajuan) }}" target="_blank" class="btn btn-info">Cetak</a>
                                 </div>
 
                             </div>
+                            @section('modal ')
+                                @include('layouts.modal')
+                            @endsection
                         @elseif ($item->posisi == 'Selesai')
                             <div class="d-flex p-2">
                                 <div class="px-2">
@@ -162,6 +165,6 @@
 </div>
 @endsection
 
-@section('modal ')
+{{-- @section('modal ')
     @include('layouts.modal')
-@endsection
+@endsection --}}
