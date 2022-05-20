@@ -26,8 +26,8 @@
         <div class="row justify-content-center">
             <div class="col-md-6 mt-5">
                 <div class="text-center" style="color:white">
-                    <h3 class="font-weight-bold">Login Here</h3>
-                    {{-- <img src="{{ asset('') }}img/logo.png" alt="logo.png" style="width:400px;margin-left:0px" class="mb-2"> --}}
+                    {{-- <h3 class="font-weight-bold">Login Here</h3> --}}
+                    <img src="{{ asset('img/login-2.png') }}" alt="logo.png" style="width:400px;margin-left:0px" class="mb-2">
                     <br>
                 </div>
                 <br>
