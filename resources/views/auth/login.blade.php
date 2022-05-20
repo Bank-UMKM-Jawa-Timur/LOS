@@ -9,8 +9,8 @@
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
       integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
       crossorigin="anonymous"
-    />    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />    
+    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <link rel="stylesheet" href="{{ asset('') }}css/custom.css" />
     <title>Login</title>
@@ -26,7 +26,8 @@
         <div class="row justify-content-center">
             <div class="col-md-6 mt-5">
                 <div class="text-center" style="color:white">
-                    <img src="{{ asset('') }}img/logo.png" alt="logo.png" style="width:400px;margin-left:0px" class="mb-2">
+                    <p class="fw-bold">Login Here</p>
+                    {{-- <img src="{{ asset('') }}img/logo.png" alt="logo.png" style="width:400px;margin-left:0px" class="mb-2"> --}}
                     <br>
                 </div>
                 <br>
@@ -51,7 +52,7 @@
                         <br>
                         <label for=""> Password</label>
                         <div class="input">
-                            <span class="fa fa-lock mr-2"></span>                            
+                            <span class="fa fa-lock mr-2"></span>
                             <input type="password" name="password" class="form-control" placeholder="Masukkan Password">
                         </div>
                         <br>
