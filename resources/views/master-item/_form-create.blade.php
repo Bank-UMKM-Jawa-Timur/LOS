@@ -49,6 +49,10 @@
                 <option value="kosong">Pilih Opsi Jawaban</option>
                 <option value="input text">Input Text</option>
                 <option value="option">Opsi</option>
+                <option value="number">Number</option>
+                <option value="persen">Persen</option>
+                <option value="long text">Long Text</option>
+                <option value="file">Upload File</option>
             </select>
             {{-- <input type="text" name="nama" class="form-control @error('nama') is-invalid @enderror" placeholder="Nama Item" value="{{old('nama')}}"> --}}
             @error('opsi_jawaban')
@@ -221,6 +225,7 @@
                 $('#form_opsi').hide();
                 $('#dapat_dikomentari').hide();
                 $('#status_skor_item').hide();
+                $('#status_skor').attr('disabled', true);
                 $('#opsi_jawaban').prop('disabled', true);
                 $('#opsi').hide();
                 $('#item_turunan_tiga').hide();
@@ -235,23 +240,25 @@
                 $('#form_opsi').show();
                 $('#dapat_dikomentari').show();
                 $('#status_skor_item').show();
+                $('#status_skor').removeAttr('disabled');
                 $('#opsi_jawaban').prop('disabled', false);
             }
             $('#opsi_jawaban').change(function(e) {
                 e.preventDefault();
                 let opsi_jawaban = $(this).val();
                 console.log(opsi_jawaban);
-                if (opsi_jawaban == "input text") {
-                    // console.log('input text');
+                if (opsi_jawaban == "option") {
+                    $('#opsi').show();
+                    $('#status_skor_item').show();
+                    $('#status_skor').removeAttr('disabled');
+                    $('#opsi_name').prop('disabled', false);
+                    $('#skor').prop('disabled', false);
+                } else {
                     $('#status_skor_item').hide();
+                    $('#status_skor').attr('disabled', true);
                     $('#opsi').hide();
                     $('#opsi_name').prop('disabled', true);
                     $('#skor').prop('disabled', true);
-                } else {
-                    $('#opsi').show();
-                    $('#status_skor_item').show();
-                    $('#opsi_name').prop('disabled', false);
-                    $('#skor').prop('disabled', false);
                 }
             })
             if (id_level == "2") {

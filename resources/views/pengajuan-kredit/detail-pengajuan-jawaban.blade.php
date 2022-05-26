@@ -234,13 +234,23 @@
                     </div>
                 @enderror
             </div>
-            <div class="form-group col-md-12">
+            <div class="form-group col-md-6">
                 <label for="">Jumlah Kredit yang diminta</label>
                 <input type="number" disabled name="jumlah_kredit"
                     class="form-control @error('jumlah_kredit') is-invalid @enderror" placeholder="Jumlah Kredit"
                     value="{{ old('jumlah_kredit', $dataUmumNasabah->jumlah_kredit) }}">
-                {{-- <textarea name="jumlah_kredit" class="form-control @error('jumlah_kredit') is-invalid @enderror"  id="" cols="30" rows="4" placeholder="Jumlah Kredit">{{ old('jumlah_kredit',$dataUmumNasabah->jumlah_kredit) }}</textarea> --}}
                 @error('jumlah_kredit')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
+            </div>
+            <div class="form-group col-md-6">
+                <label for="">Tenor Yang Diminta</label>
+                <input type="text" disabled name="tenor_yang_diminta"
+                    class="form-control @error('tenor_yang_diminta') is-invalid @enderror" placeholder="Tenor Yang Diminta"
+                    value="{{ old('tenor_yang_diminta', $dataUmumNasabah->tenor_yang_diminta) }}">
+                @error('tenor_yang_diminta')
                     <div class="invalid-feedback">
                         {{ $message }}
                     </div>

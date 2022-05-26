@@ -50,6 +50,7 @@ class PengajuanKreditController extends Controller
                 'pengajuan.status_by_sistem',
                 'pengajuan.id_cabang',
                 'pengajuan.average_by_sistem',
+                'pengajuan.average_by_penyelia',
                 'calon_nasabah.nama',
                 'calon_nasabah.jenis_usaha',
                 'calon_nasabah.id_pengajuan'
@@ -155,7 +156,39 @@ class PengajuanKreditController extends Controller
         return $subColumn;
     }
 
-    public function getItemJaminanByKategori(Request $request)
+    public function getItemJaminanByKategoriJaminanUtama(Request $request)
+    {
+        $kategori = $request->get('kategori');
+
+
+        if ($kategori == 'Tanah' || $kategori=='Tanah dan Bangunan') {
+            $item = ItemModel::with('option')->where('nama', $kategori)->first();
+
+            $itemBuktiPemilikan = ItemModel::with('option');
+
+            $itemBuktiPemilikan->whereIn('nama', ['SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C'])->where('id_parent', 96);
+        }
+        else if($kategori == 'Kendaraan Bermotor'){
+            $item = ItemModel::with('option')->where('nama', $kategori)->first();
+
+            $itemBuktiPemilikan = ItemModel::with('option');
+
+            $itemBuktiPemilikan->whereIn('nama', ['BPKB No', 'Atas Nama'])->where('id_parent', 96);
+        }
+        else{
+            $item = ItemModel::where('nama', $kategori)->first();
+
+            $itemBuktiPemilikan = ItemModel::where('nama', $kategori);
+        }
+        $data = [
+            'item' => $item,
+            'itemBuktiPemilikan' => $itemBuktiPemilikan->get()
+        ];
+
+        return json_encode($data);
+    }
+
+    public function getItemJaminanByKategoriJaminanTambahan(Request $request)
     {
         $kategori = $request->get('kategori');
 
@@ -163,14 +196,14 @@ class PengajuanKreditController extends Controller
 
         $itemBuktiPemilikan = ItemModel::with('option');
         if ($kategori == 'Tanah' || $kategori=='Tanah dan Bangunan') {
-            $itemBuktiPemilikan->whereIn('nama', ['SHM No', 'Atas Nama (SHM)', 'SHGB No', 'Atas Nama (SHGB)','Berakhir Hak (SHGB)','BPKB No','Atas Nama (BPKP)','Petok / Letter C']);
+            $itemBuktiPemilikan->whereIn('nama', ['SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C']);
         }
         else{
-            $itemBuktiPemilikan->whereIn('nama', ['BPKB No', 'Atas Nama (BPKP)']);
+            $itemBuktiPemilikan->whereIn('nama', ['BPKB No', 'Atas Nama']);
         }
         $data = [
             'item' => $item,
-            'itemBuktiPemilikan' => $itemBuktiPemilikan->get()
+            'itemBuktiPemilikan' => $itemBuktiPemilikan->where('id_parent', 114)->get()
         ];
 
         return json_encode($data);
@@ -203,11 +236,12 @@ class PengajuanKreditController extends Controller
             'sektor_kredit' => 'required',
             'jenis_usaha' => 'required',
             'jumlah_kredit' => 'required',
+            'tenor_yang_diminta' => 'required',
             'tujuan_kredit' => 'required',
             'jaminan' => 'required',
             'hubungan_bank' => 'required',
             'hasil_verifikasi' => 'required',
-            'komentar_staff' => 'required',
+            'komentar_staff' => 'required'
             // 'dataLevelDua.*' => $checkLevelDua,
             // 'dataLevelTiga.*' => $checkLevelTiga,
             // 'dataLevelEmpat.*' => $checkLevelEmpat,
@@ -235,6 +269,7 @@ class PengajuanKreditController extends Controller
             $addData->sektor_kredit = $request->sektor_kredit;
             $addData->jenis_usaha = $request->jenis_usaha;
             $addData->jumlah_kredit = $request->jumlah_kredit;
+            $addData->tenor_yang_diminta = $request->tenor_yang_diminta;
             $addData->tujuan_kredit = $request->tujuan_kredit;
             $addData->jaminan_kredit = $request->jaminan;
             $addData->hubungan_bank = $request->hubungan_bank;

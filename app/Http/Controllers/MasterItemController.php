@@ -33,7 +33,7 @@ class MasterItemController extends Controller
             ->leftJoin('item as i', 'i.id', 'item.id_parent')->orderBy('id','DESC');
 
             if ($keyword) {
-                $getItem->where('id', 'LIKE', "%{$keyword}%")->orWhere('nama', 'LIKE', "%{$keyword}%");
+                $getItem->where('item.nama', 'LIKE', "%{$keyword}%");
             }
 
             $this->param['item'] = $getItem->paginate(10);
@@ -123,7 +123,7 @@ class MasterItemController extends Controller
             // $addItem->id_parent = $request->level != 2 ? $request->item_turunan_dua : $request->item_turunan;
             $addItem->save();
 
-            if ($request->get('opsi_jawaban') != 'input text') {
+            if ($request->get('opsi_jawaban') == 'option') {
                 if ($request->level != 1) {
                     // return 'ada selain 1';
                     if ($request->level == 2) {

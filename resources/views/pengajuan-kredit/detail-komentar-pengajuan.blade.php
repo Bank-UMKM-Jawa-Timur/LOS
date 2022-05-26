@@ -36,7 +36,7 @@
             {{-- calon nasabah --}}
             <div class="card">
                 <div class="card-header bg-info color-white font-weight-bold" data-toggle="collapse" href="#cardDataUmum">
-                  Data Umum
+                    Data Umum
                 </div>
                 <div class="card-body collapse multi-collapse show" id="cardDataUmum">
                     <div class="form-group row">
@@ -127,7 +127,7 @@
                                     value="{{ '/ ' . $dataNasabah->status }}">
                                 </div>
                             </div>
-        
+
                         </div>
                     </div>
                     <hr>
@@ -236,8 +236,8 @@
                         </div>
                     </div>
                 </div>
-            </div>          
-            <br>  
+            </div>
+            <br>
             {{-- aspek management --}}
             @foreach ($dataAspek as $itemAspek)
                 @php
@@ -254,7 +254,7 @@
                 @endphp
                 <div class="card mb-3">
                     <div class="card-header bg-info font-weight-bold color-white" data-toggle="collapse" href="#cardData{{$loop->iteration}}">
-                        {{ $itemAspek->nama }}                        
+                        {{ $itemAspek->nama }}
                     </div>
                     <div class="card-body collapse multi-collapse" id="cardData{{$loop->iteration}}">
                 @foreach ($dataLevelDua as $item)

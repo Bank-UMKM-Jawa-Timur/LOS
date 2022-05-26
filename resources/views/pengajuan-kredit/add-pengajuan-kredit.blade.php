@@ -189,12 +189,29 @@
                         </div>
                     @enderror
                 </div>
-                <div class="form-group col-md-12">
+                <div class="form-group col-md-6">
                     <label for="">Jumlah Kredit yang diminta</label>
-                    <input type="number" name="jumlah_kredit" id="jumlah_kredit" class="form-control @error('jumlah_kredit') is-invalid @enderror" data-a-sign="" data-a-dec="," data-a-sep=".">
+                    <input type="number" name="jumlah_kredit" id="jumlah_kredit"
+                        class="form-control @error('jumlah_kredit') is-invalid @enderror" data-a-sign="" data-a-dec=","
+                        data-a-sep=".">
                     {{-- <textarea name="jumlah_kredit" class="form-control @error('jumlah_kredit') is-invalid @enderror" id="" cols="30"
                         rows="4" placeholder="Jumlah Kredit"></textarea> --}}
                     @error('jumlah_kredit')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="">Tenor Yang Diminta</label>
+                    <select name="tenor_yang_diminta" id="tenor_yang_diminta"
+                        class="form-control select2 @error('tenor_yang_diminta') is-invalid @enderror" required>
+                        <option value="">-- Pilih Tenor --</option>
+                        @for ($i = 1; $i <= 10; $i++)
+                            <option value="{{ $i }}"> {{ $i . ' tahun' }} </option>
+                        @endfor
+                    </select>
+                    @error('tenor_yang_diminta')
                         <div class="invalid-feedback">
                             {{ $message }}
                         </div>
@@ -243,6 +260,7 @@
             </div>
         </div>
         <input type="text" id="jumlahData" name="jumlahData" hidden value="{{ count($dataAspek) + 1 }}">
+
         @foreach ($dataAspek as $key => $value)
             @php
                 $key += 1;
@@ -262,9 +280,11 @@
 
                 <div class="row">
                     @foreach ($dataLevelDua as $item)
+                        @php
+                            $idLevelDua = str_replace(' ', '_', strtolower($item->nama));
+                        @endphp
                         {{-- item ijin usaha --}}
                         @if ($item->nama == 'Ijin Usaha')
-
                             <div class="form-group col-md-6">
                                 <label for="">{{ $item->nama }}</label>
                                 <select name="ijin_usaha" id="ijin_usaha" class="form-control" required>
@@ -277,8 +297,7 @@
                             <div class="form-group col-md-6" id="nib">
                                 <label for="">NIB</label>
                                 <input type="hidden" name="id_level[]" value="77" id="nib_id">
-                                <input type="hidden" name="opsi_jawaban[]" value="input text"
-                                    id="nib_opsi_jawaban">
+                                <input type="hidden" name="opsi_jawaban[]" value="input text" id="nib_opsi_jawaban">
                                 <input type="text" name="informasi[]" id="nib_text" placeholder="Masukkan informasi"
                                     class="form-control">
                             </div>
@@ -288,27 +307,55 @@
                                 <input type="hidden" name="id_level[]" value="78" id="surat_keterangan_usaha_id">
                                 <input type="hidden" name="opsi_jawaban[]" value="input text"
                                     id="surat_keterangan_usaha_opsi_jawaban">
-                                <input type="text" name="informasi[]" id="surat_keterangan_usaha_text" placeholder="Masukkan informasi"
-                                    class="form-control">
+                                <input type="text" name="informasi[]" id="surat_keterangan_usaha_text"
+                                    placeholder="Masukkan informasi" class="form-control">
                             </div>
                         @elseif($item->nama == 'NPWP')
                             <div class="form-group col-md-6">
                                 <label for="">NPWP</label>
                                 <input type="hidden" name="id_level[]" value="79" id="">
-                                <input type="hidden" name="opsi_jawaban[]" value="input text"
-                                    id="">
+                                <input type="hidden" name="opsi_jawaban[]" value="input text" id="">
                                 <input type="text" name="informasi[]" id="npwp" placeholder="Masukkan informasi"
                                     class="form-control">
                             </div>
                         @else
-
                             @if ($item->opsi_jawaban == 'input text')
                                 <div class="form-group col-md-6">
                                     <label for="">{{ $item->nama }}</label>
                                     <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" id="">
                                     <input type="hidden" name="id_level[]" value="{{ $item->id }}" id="">
-                                    <input type="text" name="informasi[]" id="" placeholder="Masukkan informasi"
-                                        class="form-control">
+                                    <input type="text" name="informasi[]" id=""
+                                        placeholder="Masukkan informasi {{ $item->nama }}" class="form-control">
+                                </div>
+                            @elseif ($item->opsi_jawaban == 'number')
+                                <div class="form-group col-md-6">
+                                    <label for="">{{ $item->nama }}</label>
+                                    <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" id="">
+                                    <input type="hidden" name="id_level[]" value="{{ $item->id }}" id="">
+                                    <input type="number" step="any" name="informasi[]" id=""
+                                        placeholder="Masukkan informasi {{ $item->nama }}" class="form-control">
+                                </div>
+                            @elseif ($item->opsi_jawaban == 'persen')
+                                <div class="form-group col-md-6">
+                                    <label for="">{{ $item->nama }}</label>
+                                    <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" id="">
+                                    <input type="hidden" name="id_level[]" value="{{ $item->id }}" id="">
+                                    <div class="input-group mb-3">
+                                        <input type="number" step="any" name="informasi[]" id=""
+                                            placeholder="Masukkan informasi {{ $item->nama }}" class="form-control"
+                                            aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text" id="basic-addon2">%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            @elseif ($item->opsi_jawaban == 'file')
+                                <div class="form-group col-md-6">
+                                    <label for="">{{ $item->nama }}</label>
+                                    <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" id="">
+                                    <input type="hidden" name="id_level[]" value="{{ $item->id }}" id="">
+                                    <input type="file" name="upload_file[]" id=""
+                                        placeholder="Masukkan informasi {{ $item->nama }}" class="form-control">
                                 </div>
                             @endif
 
@@ -341,7 +388,8 @@
                                         data-id_item={{ $item->id }}>
                                         <option value=""> --Pilih Data -- </option>
                                         @foreach ($dataJawaban as $itemJawaban)
-                                            <option value="{{ ($itemJawaban->skor == NULL ? 'kosong' : $itemJawaban->skor) . '-' . $itemJawaban->id }}">
+                                            <option
+                                                value="{{ ($itemJawaban->skor == null ? 'kosong' : $itemJawaban->skor) . '-' . $itemJawaban->id }}">
                                                 {{ $itemJawaban->option }}</option>
                                         @endforeach
                                     </select>
@@ -357,11 +405,37 @@
                             @endif
 
                             @foreach ($dataLevelTiga as $keyTiga => $itemTiga)
-                                @if ($itemTiga->nama == 'Kategori')
+                                @php
+                                    $idLevelTiga = str_replace(' ', '_', strtolower($itemTiga->nama));
+                                @endphp
+                                @if ($itemTiga->nama == 'Kategori Jaminan Utama')
                                     <div class="form-group col-md-6">
                                         <label for="">{{ $itemTiga->nama }}</label>
-                                        <select name="kategori_jaminan" id="kategori_jaminan" class="form-control" required>
-                                            <option value="">-- Pilih Kategori --</option>
+                                        <select name="kategori_jaminan_utama" id="kategori_jaminan_utama"
+                                            class="form-control" required>
+                                            <option value="">-- Pilih Kategori Jaminan Utama --</option>
+                                            <option value="Tanah">Tanah</option>
+                                            <option value="Kendaraan Bermotor">Kendaraan Bermotor</option>
+                                            <option value="Tanah dan Bangunan">Tanah dan Bangunan</option>
+                                            <option value="Stock">Stock</option>
+                                            <option value="Piutang">Piutang</option>
+                                        </select>
+                                        {{-- <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
+                                        <input type="hidden" name="opsi_jawaban[]" value="{{ $itemTiga->opsi_jawaban }}"
+                                            id="">
+                                        <input type="text" name="informasi[]" id="" placeholder="Masukkan informasi"
+                                            class="form-control"> --}}
+                                    </div>
+
+                                    <div class="form-group col-md-6" id="select_kategori_jaminan_utama">
+
+                                    </div>
+                                @elseif ($itemTiga->nama == 'Kategori Jaminan Tambahan')
+                                    <div class="form-group col-md-6">
+                                        <label for="">{{ $itemTiga->nama }}</label>
+                                        <select name="kategori_jaminan_tambahan" id="kategori_jaminan_tambahan"
+                                            class="form-control" required>
+                                            <option value="">-- Pilih Kategori Jaminan Tambahan --</option>
                                             <option value="Tanah">Tanah</option>
                                             <option value="Kendaraan Bermotor">Kendaraan Bermotor</option>
                                             <option value="Tanah dan Bangunan">Tanah dan Bangunan</option>
@@ -373,14 +447,21 @@
                                             class="form-control"> --}}
                                     </div>
 
-                                    <div class="form-group col-md-6" id="select_kategori">
+                                    <div class="form-group col-md-6" id="select_kategori_jaminan_tambahan">
 
                                     </div>
-                                @elseif ($itemTiga->nama == 'Bukti Pemilikan')
+                                @elseif ($itemTiga->nama == 'Bukti Pemilikan Jaminan Utama')
                                     <div class="form-group col-md-12">
                                         <h5>{{ $itemTiga->nama }}</h5>
                                     </div>
-                                    <div id="bukti_pemilikan" class="form-group col-md-12 row">
+                                    <div id="bukti_pemilikan_jaminan_utama" class="form-group col-md-12 row">
+
+                                    </div>
+                                @elseif ($itemTiga->nama == 'Bukti Pemilikan Jaminan Tambahan')
+                                    <div class="form-group col-md-12">
+                                        <h5>{{ $itemTiga->nama }}</h5>
+                                    </div>
+                                    <div id="bukti_pemilikan_jaminan_tambahan" class="form-group col-md-12 row">
 
                                     </div>
                                 @else
@@ -388,9 +469,45 @@
                                         <div class="form-group col-md-6">
                                             <label for="">{{ $itemTiga->nama }}</label>
                                             <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
-                                            <input type="hidden" name="opsi_jawaban[]" value="{{ $itemTiga->opsi_jawaban }}"
-                                                id="">
+                                            <input type="hidden" name="opsi_jawaban[]"
+                                                value="{{ $itemTiga->opsi_jawaban }}" id="">
                                             <input type="text" name="informasi[]" placeholder="Masukkan informasi"
+                                                class="form-control" id="{{$idLevelTiga}}">
+                                        </div>
+                                    @elseif ($itemTiga->opsi_jawaban == 'number')
+                                        <div class="form-group col-md-6">
+                                            <label for="">{{ $itemTiga->nama }}</label>
+                                            <input type="hidden" name="opsi_jawaban[]"
+                                                value="{{ $itemTiga->opsi_jawaban }}" id="">
+                                            <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
+                                            <input type="number" step="any" name="informasi[]" id="{{$idLevelTiga}}"
+                                                placeholder="Masukkan informasi {{ $itemTiga->nama }}"
+                                                class="form-control">
+                                        </div>
+                                    @elseif ($itemTiga->opsi_jawaban == 'persen')
+                                        <div class="form-group col-md-6">
+                                            <label for="">{{ $itemTiga->nama }}</label>
+                                            <input type="hidden" name="opsi_jawaban[]"
+                                                value="{{ $itemTiga->opsi_jawaban }}" id="">
+                                            <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
+                                            <div class="input-group mb-3">
+                                                <input type="number" step="any" name="informasi[]" id="{{$idLevelTiga}}"
+                                                    placeholder="Masukkan informasi {{ $itemTiga->nama }}"
+                                                    class="form-control" aria-label="Recipient's username"
+                                                    aria-describedby="basic-addon2">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" id="basic-addon2">%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @elseif ($itemTiga->opsi_jawaban == 'file')
+                                        <div class="form-group col-md-6">
+                                            <label for="">{{ $itemTiga->nama }}</label>
+                                            <input type="hidden" name="opsi_jawaban[]"
+                                                value="{{ $itemTiga->opsi_jawaban }}" id="">
+                                            <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
+                                            <input type="file" name="upload_file[]" id=""
+                                                placeholder="Masukkan informasi {{ $itemTiga->nama }}"
                                                 class="form-control">
                                         </div>
                                     @endif
@@ -425,14 +542,15 @@
                                     @endif
                                 @endforeach --}}
                                     @if (count($dataJawabanLevelTiga) != 0)
-                                        <div class="form-group col-md-6">
-                                            <label for="">{{ $itemTiga->nama }}</label>
-                                            <select name="dataLevelTiga[]" id="" class="form-control cek-sub-column"
+                                        <div class="{{ $idLevelTiga == 'ratio_tenor_asuransi_opsi' || $idLevelTiga == 'ratio_coverage_opsi' ? '' : "form-group col-md-6"}}">
+                                            <label for="" id="{{$idLevelTiga.'_label'}}">{{ $itemTiga->nama }}</label>
+
+                                            <select name="dataLevelTiga[]" id="{{$idLevelTiga}}" class="form-control cek-sub-column"
                                                 data-id_item={{ $itemTiga->id }}>
                                                 <option value=""> --Pilih Opsi-- </option>
-                                                @foreach ($dataJawabanLevelTiga as $itemJawabanTiga)
-                                                    <option
-                                                        value="{{ ($itemJawabanTiga->skor == NULL ? 'kosong' : $itemJawabanTiga->skor) . '-' . $itemJawabanTiga->id }}">
+                                                @foreach ($dataJawabanLevelTiga as $key => $itemJawabanTiga)
+                                                    <option id="{{$idLevelTiga.'_'.$key}}"
+                                                        value="{{ ($itemJawabanTiga->skor == null ? 'kosong' : $itemJawabanTiga->skor) . '-' . $itemJawabanTiga->id }}">
                                                         {{ $itemJawabanTiga->option }}</option>
                                                 @endforeach
                                             </select>
@@ -443,13 +561,58 @@
                                     @endif
 
                                     @foreach ($dataLevelEmpat as $keyEmpat => $itemEmpat)
+                                        @php
+                                            $idLevelEmpat = str_replace(' ', '_', strtolower($itemEmpat->nama));
+                                        @endphp
+
                                         @if ($itemEmpat->opsi_jawaban == 'input text')
                                             <div class="form-group col-md-6">
                                                 <label for="">{{ $itemEmpat->nama }}</label>
-                                                <input type="hidden" name="id_level[]" value="{{ $itemEmpat->id }}" id="">
+                                                <input type="hidden" name="id_level[]" value="{{ $itemEmpat->id }}"
+                                                    id="">
                                                 <input type="hidden" name="opsi_jawaban[]"
                                                     value="{{ $itemEmpat->opsi_jawaban }}" id="">
-                                                <input type="text" name="informasi[]" id="" placeholder="Masukkan informasi"
+                                                <input type="text" name="informasi[]" id="{{ $idLevelEmpat }}"
+                                                    placeholder="Masukkan informasi" class="form-control">
+                                            </div>
+                                        @elseif ($itemEmpat->opsi_jawaban == 'number')
+                                            <div class="form-group col-md-6">
+                                                <label for="">{{ $itemEmpat->nama }}</label>
+                                                <input type="hidden" name="opsi_jawaban[]"
+                                                    value="{{ $itemEmpat->opsi_jawaban }}" id="">
+                                                <input type="hidden" name="id_level[]" value="{{ $itemEmpat->id }}"
+                                                    id="">
+                                                <input type="number" step="any" name="informasi[]" id="{{ $idLevelEmpat }}"
+                                                    placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
+                                                    class="form-control">
+                                            </div>
+                                        @elseif ($itemEmpat->opsi_jawaban == 'persen')
+                                            <div class="form-group col-md-6">
+                                                <label for="">{{ $itemEmpat->nama }}</label>
+                                                <input type="hidden" name="opsi_jawaban[]"
+                                                    value="{{ $itemEmpat->opsi_jawaban }}" id="">
+                                                <input type="hidden" name="id_level[]" value="{{ $itemEmpat->id }}"
+                                                    id="">
+                                                <div class="input-group mb-3">
+                                                    <input type="number" step="any" name="informasi[]"
+                                                        id="{{ $idLevelEmpat }}"
+                                                        placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
+                                                        class="form-control" aria-label="Recipient's username"
+                                                        aria-describedby="basic-addon2">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text" id="basic-addon2">%</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @elseif ($itemEmpat->opsi_jawaban == 'file')
+                                            <div class="form-group col-md-6">
+                                                <label for="">{{ $itemEmpat->nama }}</label>
+                                                <input type="hidden" name="opsi_jawaban[]"
+                                                    value="{{ $itemEmpat->opsi_jawaban }}" id="">
+                                                <input type="hidden" name="id_level[]" value="{{ $itemEmpat->id }}"
+                                                    id="">
+                                                <input type="file" name="upload_file[]" id=""
+                                                    placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
                                                     class="form-control">
                                             </div>
                                         @endif
@@ -474,12 +637,12 @@
                                         @if (count($dataJawabanLevelEmpat) != 0)
                                             <div class="form-group col-md-6">
                                                 <label for="">{{ $itemEmpat->nama }}</label>
-                                                <select name="dataLevelEmpat[]" id="" class="form-control cek-sub-column"
+                                                <select name="dataLevelEmpat[]" id="{{$idLevelEmpat}}" class="form-control cek-sub-column"
                                                     data-id_item={{ $itemEmpat->id }}>
                                                     <option value=""> --Pilih Opsi -- </option>
                                                     @foreach ($dataJawabanLevelEmpat as $itemJawabanEmpat)
-                                                        <option
-                                                            value="{{ ($itemJawabanEmpat->skor == NULL ? 'kosong' : $itemJawabanEmpat->skor) . '-' . $itemJawabanEmpat->id }}">
+                                                        <option id="{{$idLevelEmpat.'_'.$key}}"
+                                                            value="{{ ($itemJawabanEmpat->skor == null ? 'kosong' : $itemJawabanEmpat->skor) . '-' . $itemJawabanEmpat->id }}">
                                                             {{ $itemJawabanEmpat->option }}</option>
                                                     @endforeach
                                                 </select>
@@ -491,15 +654,15 @@
                                     @endforeach
                                 @endif
                             @endforeach
-
                         @endif
-
                     @endforeach
+
                     <div class="form-group col-md-12">
-                        <label for="">Pendapat dan Usulan {{$value->nama}}</label>
-                        <input type="hidden" name="id_aspek[]" value="{{$value->id}}">
-                        <textarea name="pendapat_per_aspek[]" class="form-control @error('pendapat_per_aspek') is-invalid @enderror" id="" cols="30"
-                            rows="4" placeholder="Pendapat Per Aspek"></textarea>
+                        <hr style="border: 0.2px solid #E3E6EA;">
+                        <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
+                        <input type="hidden" name="id_aspek[]" value="{{ $value->id }}">
+                        <textarea name="pendapat_per_aspek[]" class="form-control @error('pendapat_per_aspek') is-invalid @enderror" id=""
+                            cols="30" rows="4" placeholder="Pendapat Per Aspek"></textarea>
                         @error('pendapat_per_aspek')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -540,14 +703,22 @@
 @endsection
 
 @push('custom-script')
-
     <script>
-
         $('#nib').hide();
         $('#surat_keterangan_usaha').hide();
+        //make ratio readonly
+        $('#ratio_coverage').attr('readonly', true);
+        $('#ratio_tenor_asuransi').attr('readonly', true);
+        // make ratio option hidden
+        $('#ratio_coverage_opsi_label').hide();
+        $('#ratio_tenor_asuransi_opsi_label').hide();
+        $('#ratio_coverage_opsi').hide();
+        $('#ratio_tenor_asuransi_opsi').hide();
 
         let urlCekSubColumn = "{{ route('cek-sub-column') }}";
-        let urlGetItemByKategori = "{{ route('get-item-jaminan-by-kategori') }}";
+        let urlGetItemByKategoriJaminanUtama =
+            "{{ route('get-item-jaminan-by-kategori-jaminan-utama') }}"; // jaminan tambahan
+        let urlGetItemByKategori = "{{ route('get-item-jaminan-by-kategori') }}"; // jaminan tambahan
 
         $('#kabupaten').change(function() {
             var kabID = $(this).val();
@@ -632,13 +803,134 @@
             });
         });
 
-        //item kategori jaminan cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
-        $('#kategori_jaminan').change(function(e) {
+        //item kategori jaminan utama cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
+        $('#kategori_jaminan_utama').change(function(e) {
             //clear item
-            $('#select_kategori').empty();
+            $('#select_kategori_jaminan_utama').empty();
 
             // clear bukti pemilikan
-            $('#bukti_pemilikan').empty();
+            $('#bukti_pemilikan_jaminan_utama').empty();
+
+            //get item by kategori
+            let kategoriJaminanUtama = $(this).val();
+
+            $.ajax({
+                type: "get",
+                url: `${urlGetItemByKategoriJaminanUtama}?kategori=${kategoriJaminanUtama}`,
+                dataType: "json",
+                success: function(response) {
+                    // jika kategori bukan stock dan piutang
+                    if (kategoriJaminanUtama != 'Stock' && kategoriJaminanUtama != 'Piutang') {
+                        // add item by kategori
+                        $('#select_kategori_jaminan_utama').append(`
+                            <label for="">${response.item.nama}</label>
+                            <select name="dataLevelEmpat[]" id="itemByKategoriJaminanUtama" class="form-control cek-sub-column"
+                                data-id_item="${response.item.id}">
+                                <option value=""> --Pilih Opsi -- </option>
+                                </select>
+
+                            <div id="item${response.item.id}">
+
+                            </div>
+                        `);
+                        // add opsi dari item
+                        $.each(response.item.option, function(i, valOption) {
+                            // console.log(valOption.skor);
+                            $('#itemByKategoriJaminanUtama').append(`
+                            <option value="${valOption.skor}-${valOption.id}">
+                            ${valOption.option}
+                            </option>`);
+                        });
+
+                        // add item bukti pemilikan
+                        var isCheck = kategoriJaminanUtama != 'Kendaraan Bermotor' &&
+                            kategoriJaminanUtama != 'Stock' && kategoriJaminanUtama != 'Piutang' ?
+                            "<input type='checkbox' class='checkKategoriJaminanUtama'>" : ""
+                        var isDisabled = kategoriJaminanUtama != 'Kendaraan Bermotor' &&
+                            kategoriJaminanUtama != 'Stock' && kategoriJaminanUtama != 'Piutang' ?
+                            'disabled' : ''
+                        $.each(response.itemBuktiPemilikan, function(i, valItem) {
+                            if (valItem.nama == 'Atas Nama') {
+                                $('#bukti_pemilikan_jaminan_utama').append(`
+                                <div class="form-group col-md-6 aspek_jaminan_kategori_jaminan_utama">
+                                    <label>${valItem.nama}</label>
+                                    <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input">
+                                    <input type="hidden" name="opsi_jawaban[]"
+                                        value="${valItem.opsi_jawaban}" id="" class="input">
+                                    <input type="text" name="informasi[]" placeholder="Masukkan informasi"
+                                        class="form-control input">
+                                </div>
+                            `);
+                            } else {
+                                $('#bukti_pemilikan_jaminan_utama').append(`
+                                <div class="form-group col-md-6 aspek_jaminan_kategori_jaminan_utama">
+                                    <label>${isCheck} ${valItem.nama}</label>
+                                    <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input" ${isDisabled}>
+                                    <input type="hidden" name="opsi_jawaban[]"
+                                        value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
+                                    <input type="text" name="informasi[]" placeholder="Masukkan informasi ${valItem.nama}"
+                                        class="form-control input" ${isDisabled}>
+                                </div>
+                            `);
+                            }
+                        });
+
+                        $(".checkKategoriJaminanUtama").click(function() {
+                            var input = $(this).closest('.form-group').find(".input")
+                            // var input_id = $(this).closest('.form-group').find("input_id").last()
+                            // var input_opsi_jawaban = $(this).closest('.form-group').find("input_opsi_jawaban").last()
+                            if ($(this).is(':checked')) {
+                                input.prop('disabled', false)
+                                // input_id.prop('disabled',false)
+                                // input_opsi_jawaban.prop('disabled',false)
+                            } else {
+                                input.val('')
+                                input.prop('disabled', true)
+                                // input_id.prop('disabled',true)
+                                // input_opsi_jawaban.prop('disabled',true)
+                            }
+                        })
+                    }
+                    // jika kategori = stock dan piutang
+                    else {
+                        $.each(response.itemBuktiPemilikan, function(i, valItem) {
+                            if (valItem.nama == 'Atas Nama') {
+                                $('#select_kategori_jaminan_utama').append(`
+                                <div class="aspek_jaminan_kategori_jaminan_utama">
+                                    <label>${valItem.nama}</label>
+                                    <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input">
+                                    <input type="hidden" name="opsi_jawaban[]"
+                                        value="${valItem.opsi_jawaban}" id="" class="input">
+                                    <input type="text" name="informasi[]" placeholder="Masukkan informasi"
+                                        class="form-control input">
+                                </div>
+                            `);
+                            } else {
+                                $('#select_kategori_jaminan_utama').append(`
+                                <div class="aspek_jaminan_kategori_jaminan_utama">
+                                    <label>${valItem.nama}</label>
+                                    <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input" >
+                                    <input type="hidden" name="opsi_jawaban[]"
+                                        value="${valItem.opsi_jawaban}" id="" class="input">
+                                    <input type="text" name="informasi[]" placeholder="Masukkan informasi ${valItem.nama}"
+                                        class="form-control input">
+                                </div>
+                            `);
+                            }
+                        });
+                    }
+                }
+            });
+        });
+        // end item kategori jaminan utama cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
+
+        //item kategori jaminan tambahan cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
+        $('#kategori_jaminan_tambahan').change(function(e) {
+            //clear item
+            $('#select_kategori_jaminan_tambahan').empty();
+
+            // clear bukti pemilikan
+            $('#bukti_pemilikan_jaminan_tambahan').empty();
 
             //get item by kategori
             let kategoriJaminan = $(this).val();
@@ -649,7 +941,7 @@
                 dataType: "json",
                 success: function(response) {
                     // add item by kategori
-                    $('#select_kategori').append(`
+                    $('#select_kategori_jaminan_tambahan').append(`
                         <label for="">${response.item.nama}</label>
                         <select name="dataLevelEmpat[]" id="itemByKategori" class="form-control cek-sub-column"
                             data-id_item="${response.item.id}">
@@ -670,33 +962,46 @@
                     });
 
                     // add item bukti pemilikan
-                    var isCheck =  kategoriJaminan != 'Kendaraan Bermotor' ? "<input type='checkbox' class='checkKategori'>" : ""
+                    var isCheck = kategoriJaminan != 'Kendaraan Bermotor' ?
+                        "<input type='checkbox' class='checkKategori'>" : ""
                     var isDisabled = kategoriJaminan != 'Kendaraan Bermotor' ? 'disabled' : ''
-                    $.each(response.itemBuktiPemilikan, function (i, valItem) {
-                        $('#bukti_pemilikan').append(`
-                            <div class="form-group col-md-6 aspek_jaminan_kategori">
-                                <label>${isCheck} ${valItem.nama}</label>
-                                <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input" ${isDisabled}>
-                                <input type="hidden" name="opsi_jawaban[]"
-                                    value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
-                                <input type="text" name="informasi[]" placeholder="Masukkan informasi"
-                                    class="form-control input" ${isDisabled}>
-                            </div>
-                        `);
+                    $.each(response.itemBuktiPemilikan, function(i, valItem) {
+                        if (valItem.nama == 'Atas Nama') {
+                            $('#bukti_pemilikan_jaminan_tambahan').append(`
+                                <div class="form-group col-md-6 aspek_jaminan_kategori">
+                                    <label>${valItem.nama}</label>
+                                    <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input">
+                                    <input type="hidden" name="opsi_jawaban[]"
+                                        value="${valItem.opsi_jawaban}" id="" class="input">
+                                    <input type="text" name="informasi[]" placeholder="Masukkan informasi"
+                                        class="form-control input">
+                                </div>
+                            `);
+                        } else {
+                            $('#bukti_pemilikan_jaminan_tambahan').append(`
+                                <div class="form-group col-md-6 aspek_jaminan_kategori">
+                                    <label>${isCheck} ${valItem.nama}</label>
+                                    <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input" ${isDisabled}>
+                                    <input type="hidden" name="opsi_jawaban[]"
+                                        value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
+                                    <input type="text" name="informasi[]" placeholder="Masukkan informasi"
+                                        class="form-control input" ${isDisabled}>
+                                </div>
+                            `);
+                        }
                     });
 
-                    $(".checkKategori").click(function(){
+                    $(".checkKategori").click(function() {
                         var input = $(this).closest('.form-group').find(".input")
                         // var input_id = $(this).closest('.form-group').find("input_id").last()
                         // var input_opsi_jawaban = $(this).closest('.form-group').find("input_opsi_jawaban").last()
-                        if($(this).is(':checked')){
-                            input.prop('disabled',false)
+                        if ($(this).is(':checked')) {
+                            input.prop('disabled', false)
                             // input_id.prop('disabled',false)
                             // input_opsi_jawaban.prop('disabled',false)
-                        }
-                        else{
+                        } else {
                             input.val('')
-                            input.prop('disabled',true)
+                            input.prop('disabled', true)
                             // input_id.prop('disabled',true)
                             // input_opsi_jawaban.prop('disabled',true)
                         }
@@ -704,10 +1009,10 @@
                 }
             });
         });
-        // end item kategori jaminan cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
+        // end item kategori jaminan tambahan cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
 
         // milih ijin usaha
-        $('#ijin_usaha').change(function (e) {
+        $('#ijin_usaha').change(function(e) {
             let ijinUsaha = $(this).val();
             if (ijinUsaha == 'nib') {
                 $('#surat_keterangan_usaha').hide();
@@ -719,8 +1024,7 @@
                 $('#nib_id').removeAttr('disabled');
                 $('#nib_text').removeAttr('disabled');
                 $('#nib_opsi_jawaban').removeAttr('disabled');
-            }
-            else if (ijinUsaha == 'surat_keterangan_usaha'){
+            } else if (ijinUsaha == 'surat_keterangan_usaha') {
                 $('#nib').hide();
                 $('#nib_id').attr('disabled', true);
                 $('#nib_text').attr('disabled', true);
@@ -730,8 +1034,7 @@
                 $('#surat_keterangan_usaha_id').removeAttr('disabled');
                 $('#surat_keterangan_usaha_text').removeAttr('disabled');
                 $('#surat_keterangan_usaha_opsi_jawaban').removeAttr('disabled');
-            }
-            else{
+            } else {
                 $('#nib').hide();
                 $('#nib_id').attr('disabled', true);
                 $('#nib_text').attr('disabled', true);
@@ -744,6 +1047,121 @@
             }
         });
         // end milih ijin usaha
+
+        //triger hitung ratio coverage
+        $('#thls').change(function (e) {
+            hitungRatioCoverage();
+        });
+        //end triger hitung ratio covarege
+
+        //triger hitung ratio coverage
+        $('#nilai_asuransi').change(function (e) {
+            hitungRatioCoverage();
+        });
+        //end triger hitung ratio covarege
+
+        //triger hitung ratio coverage
+        $('#jumlah_kredit').change(function (e) {
+            hitungRatioCoverage();
+        });
+        //end triger hitung ratio covarege
+
+        // hitung ratio covarege
+        function hitungRatioCoverage() {
+            let thls = parseInt($('#thls').val());
+            let nilaiAsuransi = parseInt($('#nilai_asuransi').val());
+            let kreditYangDiminta = parseInt($('#jumlah_kredit').val());
+
+            let ratioCoverage = (thls + nilaiAsuransi) / kreditYangDiminta * 100; //cek rumus nya lagi
+
+            $('#ratio_coverage').val(ratioCoverage);
+
+            if (ratioCoverage >= 150) {
+                $('#ratio_coverage_opsi_0').attr('selected', true);
+                $('#ratio_coverage_opsi_1').removeAttr('selected');
+                $('#ratio_coverage_opsi_2').removeAttr('selected');
+                $('#ratio_coverage_opsi_3').removeAttr('selected');
+            }
+            else if (ratioCoverage >= 131 && ratioCoverage < 150){
+                $('#ratio_coverage_opsi_0').removeAttr('selected');
+                $('#ratio_coverage_opsi_1').attr('selected', true);
+                $('#ratio_coverage_opsi_2').removeAttr('selected');
+                $('#ratio_coverage_opsi_3').removeAttr('selected');
+            }
+            else if (ratioCoverage >= 110 && ratioCoverage <=130){
+                $('#ratio_coverage_opsi_0').removeAttr('selected');
+                $('#ratio_coverage_opsi_1').removeAttr('selected');
+                $('#ratio_coverage_opsi_2').attr('selected', true);
+                $('#ratio_coverage_opsi_3').removeAttr('selected');
+            }
+            else if(ratioCoverage < 110 && isNaN(ratioCoverage)){
+                $('#ratio_coverage_opsi_0').removeAttr('selected');
+                $('#ratio_coverage_opsi_1').removeAttr('selected');
+                $('#ratio_coverage_opsi_2').removeAttr('selected');
+                $('#ratio_coverage_opsi_3').attr('selected', true);
+            }
+            else{
+                $('#ratio_coverage_opsi_0').removeAttr('selected');
+                $('#ratio_coverage_opsi_1').removeAttr('selected');
+                $('#ratio_coverage_opsi_2').removeAttr('selected');
+                $('#ratio_coverage_opsi_3').removeAttr('selected');
+            }
+        }
+        //end hitung ratio covarege
+
+        //triger hitung ratio Tenor Asuransi
+        $('#masa_berlaku_asuransi').change(function (e) {
+            hitungRatioTenorAsuransi();
+        });
+        //end triger hitung ratio Tenor Asuransi
+
+        //triger hitung ratio Tenor Asuransi
+        $('#tenor_yang_diminta').change(function (e) {
+            hitungRatioTenorAsuransi();
+        });
+        //end triger hitung ratio Tenor Asuransi
+
+        // hitung ratio Tenor Asuransi
+        function hitungRatioTenorAsuransi() {
+            let masaBerlakuAsuransi = parseInt($('#masa_berlaku_asuransi').val());
+            let tenorYangDiminta = parseInt($('#tenor_yang_diminta').val());
+
+            let ratioTenorAsuransi = masaBerlakuAsuransi / tenorYangDiminta * 100; //cek rumusnya lagi
+
+            $('#ratio_tenor_asuransi').val(ratioTenorAsuransi);
+
+            if (ratioTenorAsuransi >= 200) {
+                $('#ratio_tenor_asuransi_opsi_0').attr('selected', true);
+                $('#ratio_tenor_asuransi_opsi_1').removeAttr('selected');
+                $('#ratio_tenor_asuransi_opsi_2').removeAttr('selected');
+                $('#ratio_tenor_asuransi_opsi_3').removeAttr('selected');
+            }
+            else if (ratioTenorAsuransi >= 150 && ratioTenorAsuransi < 200){
+                $('#ratio_tenor_asuransi_opsi_0').removeAttr('selected');
+                $('#ratio_tenor_asuransi_opsi_1').attr('selected', true);
+                $('#ratio_tenor_asuransi_opsi_2').removeAttr('selected');
+                $('#ratio_tenor_asuransi_opsi_3').removeAttr('selected');
+            }
+            else if (ratioTenorAsuransi >= 100 && ratioTenorAsuransi < 150){
+                $('#ratio_tenor_asuransi_opsi_0').removeAttr('selected');
+                $('#ratio_tenor_asuransi_opsi_1').removeAttr('selected');
+                $('#ratio_tenor_asuransi_opsi_2').attr('selected', true);
+                $('#ratio_tenor_asuransi_opsi_3').removeAttr('selected');
+            }
+            else if(ratioTenorAsuransi < 100 && isNaN(ratioTenorAsuransi)){
+                $('#ratio_tenor_asuransi_opsi_0').removeAttr('selected');
+                $('#ratio_tenor_asuransi_opsi_1').removeAttr('selected');
+                $('#ratio_tenor_asuransi_opsi_2').removeAttr('selected');
+                $('#ratio_tenor_asuransi_opsi_3').attr('selected', true);
+            }
+            else{
+                $('#ratio_tenor_asuransi_opsi_0').removeAttr('selected');
+                $('#ratio_tenor_asuransi_opsi_1').removeAttr('selected');
+                $('#ratio_tenor_asuransi_opsi_2').removeAttr('selected');
+                $('#ratio_tenor_asuransi_opsi_3').removeAttr('selected');
+            }
+        }
+        //end hitung ratio covarege
     </script>
     <script src="{{ asset('') }}js/custom.js"></script>
 @endpush

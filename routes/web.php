@@ -41,8 +41,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('pengajuan-kredit/pincab/{id}', [PengajuanKreditController::class, "checkPincab"])->name('pengajuan.check.pincab');
     // cek -sub-column option
     Route::get('pengajuan-kredit/cek-sub-column', [PengajuanKreditController::class, "checkSubColumn"])->name('cek-sub-column');
-    // cek get-item-jaminan-by-kategori
-    Route::get('pengajuan-kredit/get-item-jaminan-by-kategori', [PengajuanKreditController::class, "getItemJaminanByKategori"])->name('get-item-jaminan-by-kategori');
+
+    // cek get-item-jaminan-by-kategori jaminan utama
+    Route::get('pengajuan-kredit/get-item-jaminan-by-kategori-jaminan-utama', [PengajuanKreditController::class, "getItemJaminanByKategoriJaminanUtama"])->name('get-item-jaminan-by-kategori-jaminan-utama');
+
+    // cek get-item-jaminan-by-kategori jaminan tambahan
+    Route::get('pengajuan-kredit/get-item-jaminan-by-kategori', [PengajuanKreditController::class, "getItemJaminanByKategoriJaminanTambahan"])->name('get-item-jaminan-by-kategori');
     // check Staf analisa
     Route::get('pengajuan-kredit/staf-analisa/{id}', [PengajuanKreditController::class, "checkStafAnalisa"])->name('pengajuan.check.stafanalisa');
     // check penyelia
