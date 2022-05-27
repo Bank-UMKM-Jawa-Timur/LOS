@@ -324,7 +324,7 @@
                                     <label for="">{{ $item->nama }}</label>
                                     <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" id="">
                                     <input type="hidden" name="id_level[]" value="{{ $item->id }}" id="">
-                                    <input type="text" name="informasi[]" id=""
+                                    <input type="text" name="informasi[]" id="{{ $idLevelDua }}"
                                         placeholder="Masukkan informasi {{ $item->nama }}" class="form-control">
                                 </div>
                             @elseif ($item->opsi_jawaban == 'number')
@@ -332,7 +332,7 @@
                                     <label for="">{{ $item->nama }}</label>
                                     <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" id="">
                                     <input type="hidden" name="id_level[]" value="{{ $item->id }}" id="">
-                                    <input type="number" step="any" name="informasi[]" id=""
+                                    <input type="number" step="any" name="informasi[]" id="{{ $idLevelDua }}"
                                         placeholder="Masukkan informasi {{ $item->nama }}" class="form-control">
                                 </div>
                             @elseif ($item->opsi_jawaban == 'persen')
@@ -341,7 +341,7 @@
                                     <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" id="">
                                     <input type="hidden" name="id_level[]" value="{{ $item->id }}" id="">
                                     <div class="input-group mb-3">
-                                        <input type="number" step="any" name="informasi[]" id=""
+                                        <input type="number" step="any" name="informasi[]" id="{{ $idLevelDua }}"
                                             placeholder="Masukkan informasi {{ $item->nama }}" class="form-control"
                                             aria-label="Recipient's username" aria-describedby="basic-addon2">
                                         <div class="input-group-append">
@@ -352,10 +352,19 @@
                             @elseif ($item->opsi_jawaban == 'file')
                                 <div class="form-group col-md-6">
                                     <label for="">{{ $item->nama }}</label>
-                                    <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" id="">
+                                    <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}"
+                                        id="{{ $idLevelDua }}">
                                     <input type="hidden" name="id_level[]" value="{{ $item->id }}" id="">
                                     <input type="file" name="upload_file[]" id=""
                                         placeholder="Masukkan informasi {{ $item->nama }}" class="form-control">
+                                </div>
+                            @elseif ($item->opsi_jawaban == 'long text')
+                                <div class="form-group col-md-6">
+                                    <label for="">{{ $item->nama }}</label>
+                                    <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" id="">
+                                    <input type="hidden" name="id_level[]" value="{{ $item->id }}" id="">
+                                    <textarea name="informasi[]" rows="4" id="{{ $idLevelDua }}" class="form-control"
+                                        placeholder="Masukkan informasi {{ $item->nama }}"></textarea>
                                 </div>
                             @endif
 
@@ -382,7 +391,7 @@
                             @endforeach
 
                             @if (count($dataJawaban) != 0)
-                                <div class="form-group col-md-6">
+                                {{-- <div class="form-group col-md-6">
                                     <label for="">{{ $item->nama }}</label>
                                     <select name="dataLevelDua[]" id="dataLevelDua" class="form-control cek-sub-column"
                                         data-id_item={{ $item->id }}>
@@ -401,6 +410,24 @@
                                             {{ $errors->first('dataLevelDua.' . $key) }}
                                         </div>
                                     @endif
+                                </div> --}}
+
+                                <div
+                                    class="{{ $idLevelDua == 'persentase_kebutuhan_kredit_opsi' || $idLevelDua == 'repayment_capacity_opsi' ? '' : 'form-group col-md-6' }}">
+                                    <label for="" id="{{ $idLevelDua . '_label' }}">{{ $item->nama }}</label>
+
+                                    <select name="dataLevelTiga[]" id="{{ $idLevelDua }}"
+                                        class="form-control cek-sub-column" data-id_item={{ $item->id }}>
+                                        <option value=""> --Pilih Opsi-- </option>
+                                        @foreach ($dataJawaban as $key => $itemJawaban)
+                                            <option id="{{ $idLevelDua . '_' . $key }}"
+                                                value="{{ ($itemJawaban->skor == null ? 'kosong' : $itemJawaban->skor) . '-' . $itemJawaban->id }}">
+                                                {{ $itemJawaban->option }}</option>
+                                        @endforeach
+                                    </select>
+                                    <div id="item{{ $item->id }}">
+
+                                    </div>
                                 </div>
                             @endif
 
@@ -472,7 +499,7 @@
                                             <input type="hidden" name="opsi_jawaban[]"
                                                 value="{{ $itemTiga->opsi_jawaban }}" id="">
                                             <input type="text" name="informasi[]" placeholder="Masukkan informasi"
-                                                class="form-control" id="{{$idLevelTiga}}">
+                                                class="form-control" id="{{ $idLevelTiga }}">
                                         </div>
                                     @elseif ($itemTiga->opsi_jawaban == 'number')
                                         <div class="form-group col-md-6">
@@ -480,7 +507,7 @@
                                             <input type="hidden" name="opsi_jawaban[]"
                                                 value="{{ $itemTiga->opsi_jawaban }}" id="">
                                             <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
-                                            <input type="number" step="any" name="informasi[]" id="{{$idLevelTiga}}"
+                                            <input type="number" step="any" name="informasi[]" id="{{ $idLevelTiga }}"
                                                 placeholder="Masukkan informasi {{ $itemTiga->nama }}"
                                                 class="form-control">
                                         </div>
@@ -491,7 +518,8 @@
                                                 value="{{ $itemTiga->opsi_jawaban }}" id="">
                                             <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
                                             <div class="input-group mb-3">
-                                                <input type="number" step="any" name="informasi[]" id="{{$idLevelTiga}}"
+                                                <input type="number" step="any" name="informasi[]"
+                                                    id="{{ $idLevelTiga }}"
                                                     placeholder="Masukkan informasi {{ $itemTiga->nama }}"
                                                     class="form-control" aria-label="Recipient's username"
                                                     aria-describedby="basic-addon2">
@@ -509,6 +537,15 @@
                                             <input type="file" name="upload_file[]" id=""
                                                 placeholder="Masukkan informasi {{ $itemTiga->nama }}"
                                                 class="form-control">
+                                        </div>
+                                    @elseif ($itemTiga->opsi_jawaban == 'long text')
+                                        <div class="form-group col-md-6">
+                                            <label for="">{{ $itemTiga->nama }}</label>
+                                            <input type="hidden" name="opsi_jawaban[]"
+                                                value="{{ $itemTiga->opsi_jawaban }}" id="">
+                                            <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
+                                            <textarea name="informasi[]" rows="4" id="{{ $idLevelTiga }}" class="form-control"
+                                                placeholder="Masukkan informasi {{ $itemTiga->nama }}"></textarea>
                                         </div>
                                     @endif
 
@@ -542,14 +579,16 @@
                                     @endif
                                 @endforeach --}}
                                     @if (count($dataJawabanLevelTiga) != 0)
-                                        <div class="{{ $idLevelTiga == 'ratio_tenor_asuransi_opsi' || $idLevelTiga == 'ratio_coverage_opsi' ? '' : "form-group col-md-6"}}">
-                                            <label for="" id="{{$idLevelTiga.'_label'}}">{{ $itemTiga->nama }}</label>
+                                        <div
+                                            class="{{ $idLevelTiga == 'ratio_tenor_asuransi_opsi' || $idLevelTiga == 'ratio_coverage_opsi' ? '' : 'form-group col-md-6' }}">
+                                            <label for=""
+                                                id="{{ $idLevelTiga . '_label' }}">{{ $itemTiga->nama }}</label>
 
-                                            <select name="dataLevelTiga[]" id="{{$idLevelTiga}}" class="form-control cek-sub-column"
-                                                data-id_item={{ $itemTiga->id }}>
+                                            <select name="dataLevelTiga[]" id="{{ $idLevelTiga }}"
+                                                class="form-control cek-sub-column" data-id_item={{ $itemTiga->id }}>
                                                 <option value=""> --Pilih Opsi-- </option>
                                                 @foreach ($dataJawabanLevelTiga as $key => $itemJawabanTiga)
-                                                    <option id="{{$idLevelTiga.'_'.$key}}"
+                                                    <option id="{{ $idLevelTiga . '_' . $key }}"
                                                         value="{{ ($itemJawabanTiga->skor == null ? 'kosong' : $itemJawabanTiga->skor) . '-' . $itemJawabanTiga->id }}">
                                                         {{ $itemJawabanTiga->option }}</option>
                                                 @endforeach
@@ -582,7 +621,8 @@
                                                     value="{{ $itemEmpat->opsi_jawaban }}" id="">
                                                 <input type="hidden" name="id_level[]" value="{{ $itemEmpat->id }}"
                                                     id="">
-                                                <input type="number" step="any" name="informasi[]" id="{{ $idLevelEmpat }}"
+                                                <input type="number" step="any" name="informasi[]"
+                                                    id="{{ $idLevelEmpat }}"
                                                     placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
                                                     class="form-control">
                                             </div>
@@ -615,6 +655,16 @@
                                                     placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
                                                     class="form-control">
                                             </div>
+                                        @elseif ($itemEmpat->opsi_jawaban == 'long text')
+                                            <div class="form-group col-md-6">
+                                                <label for="">{{ $itemEmpat->nama }}</label>
+                                                <input type="hidden" name="opsi_jawaban[]"
+                                                    value="{{ $itemEmpat->opsi_jawaban }}" id="">
+                                                <input type="hidden" name="id_level[]" value="{{ $itemEmpat->id }}"
+                                                    id="">
+                                                <textarea name="informasi[]" rows="4" id="{{ $idLevelEmpat }}" class="form-control"
+                                                    placeholder="Masukkan informasi {{ $itemEmpat->nama }}"></textarea>
+                                            </div>
                                         @endif
                                         @php
                                             // check level empat
@@ -637,11 +687,12 @@
                                         @if (count($dataJawabanLevelEmpat) != 0)
                                             <div class="form-group col-md-6">
                                                 <label for="">{{ $itemEmpat->nama }}</label>
-                                                <select name="dataLevelEmpat[]" id="{{$idLevelEmpat}}" class="form-control cek-sub-column"
+                                                <select name="dataLevelEmpat[]" id="{{ $idLevelEmpat }}"
+                                                    class="form-control cek-sub-column"
                                                     data-id_item={{ $itemEmpat->id }}>
                                                     <option value=""> --Pilih Opsi -- </option>
                                                     @foreach ($dataJawabanLevelEmpat as $itemJawabanEmpat)
-                                                        <option id="{{$idLevelEmpat.'_'.$key}}"
+                                                        <option id="{{ $idLevelEmpat . '_' . $key }}"
                                                             value="{{ ($itemJawabanEmpat->skor == null ? 'kosong' : $itemJawabanEmpat->skor) . '-' . $itemJawabanEmpat->id }}">
                                                             {{ $itemJawabanEmpat->option }}</option>
                                                     @endforeach
@@ -706,14 +757,21 @@
     <script>
         $('#nib').hide();
         $('#surat_keterangan_usaha').hide();
-        //make ratio readonly
+        //make input readonly
         $('#ratio_coverage').attr('readonly', true);
         $('#ratio_tenor_asuransi').attr('readonly', true);
-        // make ratio option hidden
+        $('#persentase_kebutuhan_kredit').attr('readonly', true);
+        $('#repayment_capacity').attr('readonly', true);
+
+        // make select option hidden
         $('#ratio_coverage_opsi_label').hide();
         $('#ratio_tenor_asuransi_opsi_label').hide();
         $('#ratio_coverage_opsi').hide();
         $('#ratio_tenor_asuransi_opsi').hide();
+        $('#persentase_kebutuhan_kredit_opsi_label').hide();
+        $('#persentase_kebutuhan_kredit_opsi').hide();
+        $('#repayment_capacity_opsi_label').hide();
+        $('#repayment_capacity_opsi').hide();
 
         let urlCekSubColumn = "{{ route('cek-sub-column') }}";
         let urlGetItemByKategoriJaminanUtama =
@@ -1049,19 +1107,19 @@
         // end milih ijin usaha
 
         //triger hitung ratio coverage
-        $('#thls').change(function (e) {
+        $('#thls').change(function(e) {
             hitungRatioCoverage();
         });
         //end triger hitung ratio covarege
 
         //triger hitung ratio coverage
-        $('#nilai_asuransi').change(function (e) {
+        $('#nilai_asuransi').change(function(e) {
             hitungRatioCoverage();
         });
         //end triger hitung ratio covarege
 
         //triger hitung ratio coverage
-        $('#jumlah_kredit').change(function (e) {
+        $('#jumlah_kredit').change(function(e) {
             hitungRatioCoverage();
         });
         //end triger hitung ratio covarege
@@ -1081,26 +1139,22 @@
                 $('#ratio_coverage_opsi_1').removeAttr('selected');
                 $('#ratio_coverage_opsi_2').removeAttr('selected');
                 $('#ratio_coverage_opsi_3').removeAttr('selected');
-            }
-            else if (ratioCoverage >= 131 && ratioCoverage < 150){
+            } else if (ratioCoverage >= 131 && ratioCoverage < 150) {
                 $('#ratio_coverage_opsi_0').removeAttr('selected');
                 $('#ratio_coverage_opsi_1').attr('selected', true);
                 $('#ratio_coverage_opsi_2').removeAttr('selected');
                 $('#ratio_coverage_opsi_3').removeAttr('selected');
-            }
-            else if (ratioCoverage >= 110 && ratioCoverage <=130){
+            } else if (ratioCoverage >= 110 && ratioCoverage <= 130) {
                 $('#ratio_coverage_opsi_0').removeAttr('selected');
                 $('#ratio_coverage_opsi_1').removeAttr('selected');
                 $('#ratio_coverage_opsi_2').attr('selected', true);
                 $('#ratio_coverage_opsi_3').removeAttr('selected');
-            }
-            else if(ratioCoverage < 110 && isNaN(ratioCoverage)){
+            } else if (ratioCoverage < 110 && !isNaN(ratioCoverage)) {
                 $('#ratio_coverage_opsi_0').removeAttr('selected');
                 $('#ratio_coverage_opsi_1').removeAttr('selected');
                 $('#ratio_coverage_opsi_2').removeAttr('selected');
                 $('#ratio_coverage_opsi_3').attr('selected', true);
-            }
-            else{
+            } else {
                 $('#ratio_coverage_opsi_0').removeAttr('selected');
                 $('#ratio_coverage_opsi_1').removeAttr('selected');
                 $('#ratio_coverage_opsi_2').removeAttr('selected');
@@ -1110,13 +1164,13 @@
         //end hitung ratio covarege
 
         //triger hitung ratio Tenor Asuransi
-        $('#masa_berlaku_asuransi').change(function (e) {
+        $('#masa_berlaku_asuransi').change(function(e) {
             hitungRatioTenorAsuransi();
         });
         //end triger hitung ratio Tenor Asuransi
 
         //triger hitung ratio Tenor Asuransi
-        $('#tenor_yang_diminta').change(function (e) {
+        $('#tenor_yang_diminta').change(function(e) {
             hitungRatioTenorAsuransi();
         });
         //end triger hitung ratio Tenor Asuransi
@@ -1135,26 +1189,22 @@
                 $('#ratio_tenor_asuransi_opsi_1').removeAttr('selected');
                 $('#ratio_tenor_asuransi_opsi_2').removeAttr('selected');
                 $('#ratio_tenor_asuransi_opsi_3').removeAttr('selected');
-            }
-            else if (ratioTenorAsuransi >= 150 && ratioTenorAsuransi < 200){
+            } else if (ratioTenorAsuransi >= 150 && ratioTenorAsuransi < 200) {
                 $('#ratio_tenor_asuransi_opsi_0').removeAttr('selected');
                 $('#ratio_tenor_asuransi_opsi_1').attr('selected', true);
                 $('#ratio_tenor_asuransi_opsi_2').removeAttr('selected');
                 $('#ratio_tenor_asuransi_opsi_3').removeAttr('selected');
-            }
-            else if (ratioTenorAsuransi >= 100 && ratioTenorAsuransi < 150){
+            } else if (ratioTenorAsuransi >= 100 && ratioTenorAsuransi < 150) {
                 $('#ratio_tenor_asuransi_opsi_0').removeAttr('selected');
                 $('#ratio_tenor_asuransi_opsi_1').removeAttr('selected');
                 $('#ratio_tenor_asuransi_opsi_2').attr('selected', true);
                 $('#ratio_tenor_asuransi_opsi_3').removeAttr('selected');
-            }
-            else if(ratioTenorAsuransi < 100 && isNaN(ratioTenorAsuransi)){
+            } else if (ratioTenorAsuransi < 100 && !isNaN(ratioTenorAsuransi)) {
                 $('#ratio_tenor_asuransi_opsi_0').removeAttr('selected');
                 $('#ratio_tenor_asuransi_opsi_1').removeAttr('selected');
                 $('#ratio_tenor_asuransi_opsi_2').removeAttr('selected');
                 $('#ratio_tenor_asuransi_opsi_3').attr('selected', true);
-            }
-            else{
+            } else {
                 $('#ratio_tenor_asuransi_opsi_0').removeAttr('selected');
                 $('#ratio_tenor_asuransi_opsi_1').removeAttr('selected');
                 $('#ratio_tenor_asuransi_opsi_2').removeAttr('selected');
@@ -1162,6 +1212,121 @@
             }
         }
         //end hitung ratio covarege
+
+        //triger hitung Persentase Kebutuhan Kredit
+        $('#kebutuhan_kredit').change(function(e) {
+            hitungPersentaseKebutuhanKredit();
+        });
+        //end triger hitung Persentase Kebutuhan Kredit
+
+        //triger hitung Persentase Kebutuhan Kredit
+        $('#jumlah_kredit').change(function(e) {
+            hitungPersentaseKebutuhanKredit();
+        });
+        //end triger hitung Persentase Kebutuhan Kredit
+
+        // hitung Persentase Kebutuhan Kredit
+        function hitungPersentaseKebutuhanKredit() {
+            let kebutuhanKredit = parseInt($('#kebutuhan_kredit').val());
+            let jumlahKredit = parseInt($('#jumlah_kredit').val());
+
+            let persentaseKebutuhanKredit = parseInt(jumlahKredit / kebutuhanKredit * 100); //cek rumusnya lagi
+
+            $('#persentase_kebutuhan_kredit').val(persentaseKebutuhanKredit);
+
+            if (persentaseKebutuhanKredit <= 80 && !isNaN(persentaseKebutuhanKredit)) {
+                $('#persentase_kebutuhan_kredit_opsi_0').attr('selected', true);
+                $('#persentase_kebutuhan_kredit_opsi_1').removeAttr('selected');
+                $('#persentase_kebutuhan_kredit_opsi_2').removeAttr('selected');
+                $('#persentase_kebutuhan_kredit_opsi_3').removeAttr('selected');
+            } else if (persentaseKebutuhanKredit >= 81 && persentaseKebutuhanKredit <= 89) {
+                $('#persentase_kebutuhan_kredit_opsi_0').removeAttr('selected');
+                $('#persentase_kebutuhan_kredit_opsi_1').attr('selected', true);
+                $('#persentase_kebutuhan_kredit_opsi_2').removeAttr('selected');
+                $('#persentase_kebutuhan_kredit_opsi_3').removeAttr('selected');
+            } else if (persentaseKebutuhanKredit >= 90 && persentaseKebutuhanKredit <= 100) {
+                $('#persentase_kebutuhan_kredit_opsi_0').removeAttr('selected');
+                $('#persentase_kebutuhan_kredit_opsi_1').removeAttr('selected');
+                $('#persentase_kebutuhan_kredit_opsi_2').attr('selected', true);
+                $('#persentase_kebutuhan_kredit_opsi_3').removeAttr('selected');
+            } else if (persentaseKebutuhanKredit > 100 && !isNaN(persentaseKebutuhanKredit)) {
+                $('#persentase_kebutuhan_kredit_opsi_0').removeAttr('selected');
+                $('#persentase_kebutuhan_kredit_opsi_1').removeAttr('selected');
+                $('#persentase_kebutuhan_kredit_opsi_2').removeAttr('selected');
+                $('#persentase_kebutuhan_kredit_opsi_3').attr('selected', true);
+            } else {
+                $('#persentase_kebutuhan_kredit_opsi_0').removeAttr('selected');
+                $('#persentase_kebutuhan_kredit_opsi_1').removeAttr('selected');
+                $('#persentase_kebutuhan_kredit_opsi_2').removeAttr('selected');
+                $('#persentase_kebutuhan_kredit_opsi_3').removeAttr('selected');
+            }
+        }
+        //end Persentase Kebutuhan Kredit
+
+        //triger hitung Repayment Capacity
+        $('#persentase_net_income').change(function(e) {
+            hitungRepaymentCapacity();
+        });
+        //end triger hitung Repayment Capacity
+
+        //triger hitung Repayment Capacity
+        $('#omzet_penjualan').change(function(e) {
+            hitungRepaymentCapacity();
+        });
+        //end triger hitung Repayment Capacity
+
+        //triger hitung Repayment Capacity
+        $('#rencana_peningkatan').change(function(e) {
+            hitungRepaymentCapacity();
+        });
+        //end triger hitung Repayment Capacity
+
+        //triger hitung Repayment Capacity
+        $('#installment').change(function(e) {
+            hitungRepaymentCapacity();
+        });
+        //end triger hitung Repayment Capacity
+
+        // hitung Repayment Capacity
+        function hitungRepaymentCapacity() {
+            let persentaseNetIncome = parseInt($('#persentase_net_income').val()) / 100;
+            let omzetPenjualan = parseInt($('#omzet_penjualan').val());
+            let rencanaPeningkatan = parseInt($('#rencana_peningkatan').val()) / 100;
+            let installment = parseInt($('#installment').val());
+
+            let repaymentCapacity = parseFloat(persentaseNetIncome * omzetPenjualan * (1 + rencanaPeningkatan) /
+                installment); //cek rumusnya lagi
+
+            $('#repayment_capacity').val(repaymentCapacity);
+
+            if (repaymentCapacity > 2) {
+                $('#repayment_capacity_opsi_0').attr('selected', true);
+                $('#repayment_capacity_opsi_1').removeAttr('selected');
+                $('#repayment_capacity_opsi_2').removeAttr('selected');
+                $('#repayment_capacity_opsi_3').removeAttr('selected');
+            } else if (repaymentCapacity >= 1.5 && repaymentCapacity < 2) {
+                $('#repayment_capacity_opsi_0').removeAttr('selected');
+                $('#repayment_capacity_opsi_1').attr('selected', true);
+                $('#repayment_capacity_opsi_2').removeAttr('selected');
+                $('#repayment_capacity_opsi_3').removeAttr('selected');
+            } else if (repaymentCapacity >= 1.25 && repaymentCapacity < 1.5) {
+                $('#repayment_capacity_opsi_0').removeAttr('selected');
+                $('#repayment_capacity_opsi_1').removeAttr('selected');
+                $('#repayment_capacity_opsi_2').attr('selected', true);
+                $('#repayment_capacity_opsi_3').removeAttr('selected');
+            } else if (repaymentCapacity < 1.25 && !isNaN(repaymentCapacity)) {
+                $('#repayment_capacity_opsi_0').removeAttr('selected');
+                $('#repayment_capacity_opsi_1').removeAttr('selected');
+                $('#repayment_capacity_opsi_2').removeAttr('selected');
+                $('#repayment_capacity_opsi_3').attr('selected', true);
+            } else {
+                $('#repayment_capacity_opsi_0').removeAttr('selected');
+                $('#repayment_capacity_opsi_1').removeAttr('selected');
+                $('#repayment_capacity_opsi_2').removeAttr('selected');
+                $('#repayment_capacity_opsi_3').removeAttr('selected');
+            }
+        }
+        //end Repayment Capacity
     </script>
     <script src="{{ asset('') }}js/custom.js"></script>
 @endpush
