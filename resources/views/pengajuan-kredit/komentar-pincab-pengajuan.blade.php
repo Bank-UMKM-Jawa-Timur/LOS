@@ -103,7 +103,7 @@
                     </td>
                     <td>
                         @if ($item->posisi == 'Selesai')
-                            <p class="text-success">Selesai</p>
+                            <p class="text-success">Disetujui</p>
                         @elseif ($item->posisi == 'Ditolak')
                             <p class="text-danger">Ditolak</p>
                         @else
@@ -131,23 +131,20 @@
                                 </div>
 
                             </div>
-                            @section('modal ')
-                                @include('layouts.modal')
-                            @endsection
                         @elseif ($item->posisi == 'Selesai')
                             <div class="d-flex p-2">
-                                <div class="px-2">
+                                {{-- <div class="px-2">
                                     <button disabled href="" class="btn btn-success" >Selesai </button>
-                                </div>
+                                </div> --}}
                                 <div class="">
                                     <a href="{{ route('cetak',$item->id_pengajuan) }}" class="btn btn-info" target="_blank">Cetak</a>
                                 </div>
                             </div>
                         @elseif ($item->posisi == 'Ditolak')
                             <div class="d-flex p-2">
-                                <div class="px-2">
+                                {{-- <div class="px-2">
                                     <button disabled href="" class="btn btn-danger" >Ditolak </button>
-                                </div>
+                                </div> --}}
                                 <div class="">
                                     <a href="{{ route('cetak',$item->id_pengajuan) }}" class="btn btn-info" target="_blank">Cetak</a>
                                 </div>
@@ -163,8 +160,9 @@
     <div class="pull-right">
     </div>
 </div>
+@include('layouts.modal')
 @endsection
 
-{{-- @section('modal ')
+@section('modal ')
     @include('layouts.modal')
-@endsection --}}
+@endsection

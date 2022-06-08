@@ -15,4 +15,6 @@ class PendapatPerAspek extends Model
     {
         return $this->belongsTo('\App\Models\PengajuanModel', 'id_pengajuan');
     }
+
+    protected $fillable = ['id', 'id_pengajuan', 'id_staf', 'id_penyelia', 'id_pincab', 'id_aspek','pendapat_per_aspek', 'created_at', 'updated_at'];
 }

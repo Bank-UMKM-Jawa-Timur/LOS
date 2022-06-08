@@ -46,7 +46,7 @@
         </div>
     </div>
     <br>
-    <h5 class="color-darkBlue font-weight-bold">Pengajuan Lama Belum Ditindak Lanjuti</h5>
+    <h5 class="color-darkBlue font-weight-bold">Pengajuan Belum Ditindak Lanjuti</h5>
     <hr>
     <div class="row">
         <div class="col-md-12">
