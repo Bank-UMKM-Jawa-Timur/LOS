@@ -100,7 +100,7 @@
                 <tr>
                     <th>Opsi</th>
                     <th>Skor</th>
-                    <th>Kolom Turunan</th>
+                    {{-- <th>Kolom Turunan</th> --}}
                     <th>Action</th>
                 </tr>
             </thead>
@@ -181,9 +181,9 @@
                                 @enderror
                             </div>
                         </td>
-                        <td>
+                        {{-- <td>
                             <div class="">
-                                {{-- <label>Skor</label> --}}
+                                <label>Skor</label>
                                 <input type="text" id="sub_column" name="opsi[1][sub_column]" class="form-control"
                                     placeholder="Nama Kolom Turunan">
                                 <span class="text-muted text-danger">*abaikan jika tidak terdapat kolom turunan</span>
@@ -193,7 +193,7 @@
                                     </div>
                                 @enderror
                             </div>
-                        </td>
+                        </td> --}}
                         <td>
                             <div class="">
                                 <button type="button" class="btn btn-success plus"> <i class="fa fa-plus"></i>
@@ -392,10 +392,6 @@
                         </td>\
                         <td>\
                             <input type="number" id="skor" name="opsi[' + i + '][skor]" class="form-control skor_option" placeholder="Skor" >\
-                            </td>\
-                        <td>\
-                            <input type="text" id="sub_column" name="opsi[' + i + '][sub_column]" class="form-control" placeholder="Nama kolom turunan" >\
-                            <span class="text-muted text-danger">*abaikan jika tidak terdapat kolom turunan</span>\
                             </td>\
                         <td class="">\
                             <button type="button" class="btn btn-success plus"> <i class="fa fa-plus"></i> </button>\

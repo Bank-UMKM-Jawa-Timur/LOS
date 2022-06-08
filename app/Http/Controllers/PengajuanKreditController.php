@@ -23,6 +23,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Image;
 
 class PengajuanKreditController extends Controller
 {
@@ -162,21 +163,21 @@ class PengajuanKreditController extends Controller
 
 
         if ($kategori == 'Tanah' || $kategori=='Tanah dan Bangunan') {
-            $item = ItemModel::with('option')->where('nama', $kategori)->first();
+            $item = ItemModel::with('option')->where('nama', $kategori)->where('id_parent', 95)->first();
 
             $itemBuktiPemilikan = ItemModel::with('option');
 
             $itemBuktiPemilikan->whereIn('nama', ['SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C'])->where('id_parent', 96);
         }
         else if($kategori == 'Kendaraan Bermotor'){
-            $item = ItemModel::with('option')->where('nama', $kategori)->first();
+            $item = ItemModel::with('option')->where('nama', $kategori)->where('id_parent', 95)->first();
 
             $itemBuktiPemilikan = ItemModel::with('option');
 
             $itemBuktiPemilikan->whereIn('nama', ['BPKB No', 'Atas Nama'])->where('id_parent', 96);
         }
         else{
-            $item = ItemModel::where('nama', $kategori)->first();
+            $item = ItemModel::where('nama', $kategori)->where('id_parent', 95)->first();
 
             $itemBuktiPemilikan = ItemModel::where('nama', $kategori);
         }
@@ -192,7 +193,7 @@ class PengajuanKreditController extends Controller
     {
         $kategori = $request->get('kategori');
 
-        $item = ItemModel::with('option')->where('nama', $kategori)->first();
+        $item = ItemModel::with('option')->where('nama', $kategori)->where('id_parent', 110)->first();
 
         $itemBuktiPemilikan = ItemModel::with('option');
         if ($kategori == 'Tanah' || $kategori=='Tanah dan Bangunan') {
@@ -217,6 +218,7 @@ class PengajuanKreditController extends Controller
      */
     public function store(Request $request)
     {
+        // return $_POST;
         // return 'jumlah id level = ' . count($request->get('id_level')) . '; jumlah input = ' . count($request->get('informasi'));
         // $checkLevelDua = $request->dataLevelDua != null ? 'required' : '';
         // $checkLevelTiga = $request->dataLevelTiga != null ? 'required' : '';
@@ -225,7 +227,7 @@ class PengajuanKreditController extends Controller
             'name' => 'required',
             'alamat_rumah' => 'required',
             'alamat_usaha' => 'required',
-            'no_ktp' => 'required|unique:calon_nasabah,no_ktp|max:16',
+            'no_ktp' => 'required',
             'kabupaten' => 'required',
             'kec' => 'required',
             'desa' => 'required',
@@ -282,16 +284,39 @@ class PengajuanKreditController extends Controller
             $addData->save();
             $id_calon_nasabah = $addData->id;
 
-            if ($request->opsi_jawaban != 'input text') {
-                foreach ($request->id_level as $key => $value) {
-                    $dataJawabanText = new JawabanTextModel;
-                    $dataJawabanText->id_pengajuan = $id_pengajuan;
-                    $dataJawabanText->id_jawaban = $request->get('id_level')[$key];
-                    $dataJawabanText->opsi_text = $request->get('informasi')[$key];
-                    // $dataJawabanText->opsi_text = $request->get('informasi')[$key] == null ? '-' : $request->get('informasi')[$key];
-                    $dataJawabanText->save();
+            //untuk jawaban yg teks, number, persen, long text
+            foreach ($request->id_level as $key => $value) {
+                $dataJawabanText = new JawabanTextModel;
+                $dataJawabanText->id_pengajuan = $id_pengajuan;
+                $dataJawabanText->id_jawaban = $request->get('id_level')[$key];
+                $dataJawabanText->opsi_text = $request->get('informasi')[$key];
+                // $dataJawabanText->opsi_text = $request->get('informasi')[$key] == null ? '-' : $request->get('informasi')[$key];
+                $dataJawabanText->save();
+            }
+            //untuk upload file
+            foreach ($request->id_item_file as $key => $value) {
+                $image = $request->file('upload_file')[$key];
+                $imageName = $key.time().'.'.$image->getClientOriginalExtension();
+
+                $filePath = public_path() . '/upload/' . $id_pengajuan . '/'. $value;
+                // $filePath = public_path() . '/upload';
+                if (!\File::isDirectory($filePath)) {
+                    \File::makeDirectory($filePath, 493, true);
                 }
-            } else {
+                $img = Image::make($image->getRealPath());
+                $img->resize(800, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                })->save($filePath.'/'.$imageName);
+
+                // $filePath = public_path('/images');
+                $image->move($filePath, $imageName);
+
+                $dataJawabanText = new JawabanTextModel;
+                $dataJawabanText->id_pengajuan = $id_pengajuan;
+                $dataJawabanText->id_jawaban =  $value;
+                $dataJawabanText->opsi_text = $imageName;
+                $dataJawabanText->save();
             }
 
             $finalArray = array();
@@ -778,7 +803,8 @@ class PengajuanKreditController extends Controller
                 'calon_nasabah.verifikasi_umum',
                 'calon_nasabah.id_kabupaten',
                 'calon_nasabah.id_kecamatan',
-                'calon_nasabah.id_desa'
+                'calon_nasabah.id_desa',
+                'calon_nasabah.tenor_yang_diminta',
             )
                 ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
                 ->find($id);
@@ -787,6 +813,8 @@ class PengajuanKreditController extends Controller
             $param['allDesa'] = Desa::where('id_kecamatan', $param['dataUmumNasabah']->id_kecamatan)->get();
             $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia')
                 ->find($id);
+            $param['pendapatDanUsulanStaf'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff')->first();
+            $param['pendapatDanUsulanPenyelia'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_penyelia')->first();
 
             // $param['jawabanpengajuan'] = JawabanPengajuanModel::select('jawaban.id','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','option.id as id_option','option.option as name_option','option.id_item','item.id as id_item','item.nama','item.level','item.id_parent')
             //                             ->join('option','option.id','jawaban.id_jawaban')
@@ -890,12 +918,21 @@ class PengajuanKreditController extends Controller
 
             // pendapat penyelia
             foreach ($request->get('id_aspek') as $key => $value) {
-                $addPendapat = new PendapatPerAspek;
-                $addPendapat->id_pengajuan = $request->get('id_pengajuan');
-                $addPendapat->id_penyelia = Auth::user()->id;
-                $addPendapat->id_aspek = $value;
-                $addPendapat->pendapat_per_aspek = $request->get('pendapat_per_aspek')[$key];
-                $addPendapat->save();
+                PendapatPerAspek::where('id_pengajuan', $request->get('id_pengajuan'))
+                ->where('id_aspek', $value)
+                ->where('id_penyelia', Auth::user()->id)
+                ->updateOrCreate([
+                    'id_pengajuan' => $request->get('id_pengajuan'),
+                    'id_aspek' => $value,
+                    'id_penyelia' => Auth::user()->id,
+                    'pendapat_per_aspek' => $request->get('pendapat_per_aspek')[$key]
+                ]);
+                // $addPendapat = new PendapatPerAspek;
+                // $addPendapat->id_pengajuan = $request->get('id_pengajuan');
+                // $addPendapat->id_penyelia = Auth::user()->id;
+                // $addPendapat->id_aspek = $value;
+                // $addPendapat->pendapat_per_aspek = $request->get('pendapat_per_aspek')[$key];
+                // $addPendapat->save();
             }
             return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil menambahkan data');
         } catch (Exception $e) {
@@ -972,7 +1009,14 @@ class PengajuanKreditController extends Controller
     {
 
         $param['pageTitle'] = "Dashboard";
-        $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->get();
+        // $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->get();
+        $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->where('nama','!=','Data Umum')->get();
+        $param['itemSlik'] = ItemModel::join('option as o', 'o.id_item', 'item.id')
+                                ->join('jawaban as j', 'j.id_jawaban', 'o.id')
+                                ->join('pengajuan as p', 'p.id', 'j.id_pengajuan')
+                                ->where('p.id', $id)
+                                ->where('nama', 'SLIK')
+                                ->first();
         // $param['jawabanpengajuan'] = JawabanPengajuanModel::select('jawaban.id','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','option.id as id_option','option.option as name_option','option.id_item','item.id as id_item','item.nama','item.level','item.id_parent')
         //                             ->join('option','option.id','jawaban.id_jawaban')
         //                             ->join('item','item.id','option.id_item')
@@ -992,7 +1036,7 @@ class PengajuanKreditController extends Controller
         //                             ->join('item','item.id','option.id_item')
         //                             ->where('jawaban.id_pengajuan',$id)
         //                             ->get();
-
+        $param['pendapatDanUsulan'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff', 'komentar_penyelia','komentar_pincab')->first();
 
         return view('pengajuan-kredit.detail-komentar-pengajuan', $param);
     }

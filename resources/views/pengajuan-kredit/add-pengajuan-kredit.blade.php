@@ -28,7 +28,7 @@
         }
 
     </style>
-    <form id="pengajuan_kredit" action="{{ route('pengajuan-kredit.store') }}" method="post">
+    <form id="pengajuan_kredit" action="{{ route('pengajuan-kredit.store') }}" method="post" enctype="multipart/form-data">
         @csrf
         <input type="hidden" name="progress" class="progress">
         <div class="form-wizard active" data-index='0' data-done='true'>
@@ -352,9 +352,9 @@
                             @elseif ($item->opsi_jawaban == 'file')
                                 <div class="form-group col-md-6">
                                     <label for="">{{ $item->nama }}</label>
-                                    <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}"
-                                        id="{{ $idLevelDua }}">
-                                    <input type="hidden" name="id_level[]" value="{{ $item->id }}" id="">
+                                    {{-- <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" --}}
+                                        {{-- id="{{ $idLevelDua }}"> --}}
+                                    <input type="hidden" name="id_item_file[]" value="{{ $item->id }}" id="">
                                     <input type="file" name="upload_file[]" id=""
                                         placeholder="Masukkan informasi {{ $item->nama }}" class="form-control">
                                 </div>
@@ -416,7 +416,7 @@
                                     class="{{ $idLevelDua == 'persentase_kebutuhan_kredit_opsi' || $idLevelDua == 'repayment_capacity_opsi' ? '' : 'form-group col-md-6' }}">
                                     <label for="" id="{{ $idLevelDua . '_label' }}">{{ $item->nama }}</label>
 
-                                    <select name="dataLevelTiga[]" id="{{ $idLevelDua }}"
+                                    <select name="dataLevelDua[]" id="{{ $idLevelDua }}"
                                         class="form-control cek-sub-column" data-id_item={{ $item->id }}>
                                         <option value=""> --Pilih Opsi-- </option>
                                         @foreach ($dataJawaban as $key => $itemJawaban)
@@ -531,9 +531,9 @@
                                     @elseif ($itemTiga->opsi_jawaban == 'file')
                                         <div class="form-group col-md-6">
                                             <label for="">{{ $itemTiga->nama }}</label>
-                                            <input type="hidden" name="opsi_jawaban[]"
-                                                value="{{ $itemTiga->opsi_jawaban }}" id="">
-                                            <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
+                                            {{-- <input type="hidden" name="opsi_jawaban[]"
+                                                value="{{ $itemTiga->opsi_jawaban }}" id=""> --}}
+                                            <input type="hidden" name="id_item_file[]" value="{{ $itemTiga->id }}" id="">
                                             <input type="file" name="upload_file[]" id=""
                                                 placeholder="Masukkan informasi {{ $itemTiga->nama }}"
                                                 class="form-control">
@@ -647,9 +647,9 @@
                                         @elseif ($itemEmpat->opsi_jawaban == 'file')
                                             <div class="form-group col-md-6">
                                                 <label for="">{{ $itemEmpat->nama }}</label>
-                                                <input type="hidden" name="opsi_jawaban[]"
-                                                    value="{{ $itemEmpat->opsi_jawaban }}" id="">
-                                                <input type="hidden" name="id_level[]" value="{{ $itemEmpat->id }}"
+                                                {{-- <input type="hidden" name="opsi_jawaban[]"
+                                                    value="{{ $itemEmpat->opsi_jawaban }}" id=""> --}}
+                                                <input type="hidden" name="id_item_file[]" value="{{ $itemEmpat->id }}"
                                                     id="">
                                                 <input type="file" name="upload_file[]" id=""
                                                     placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
@@ -1130,7 +1130,7 @@
             let nilaiAsuransi = parseInt($('#nilai_asuransi').val());
             let kreditYangDiminta = parseInt($('#jumlah_kredit').val());
 
-            let ratioCoverage = (thls + nilaiAsuransi) / kreditYangDiminta * 100; //cek rumus nya lagi
+            let ratioCoverage = parseInt((thls + nilaiAsuransi) / kreditYangDiminta * 100); //cek rumus nya lagi
 
             $('#ratio_coverage').val(ratioCoverage);
 
@@ -1180,7 +1180,7 @@
             let masaBerlakuAsuransi = parseInt($('#masa_berlaku_asuransi').val());
             let tenorYangDiminta = parseInt($('#tenor_yang_diminta').val());
 
-            let ratioTenorAsuransi = masaBerlakuAsuransi / tenorYangDiminta * 100; //cek rumusnya lagi
+            let ratioTenorAsuransi = parseInt(masaBerlakuAsuransi / tenorYangDiminta * 100); //cek rumusnya lagi
 
             $('#ratio_tenor_asuransi').val(ratioTenorAsuransi);
 
