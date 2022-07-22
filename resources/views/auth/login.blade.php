@@ -60,7 +60,7 @@
                     </form>
                 </div>
                 <br>
-                <p style="color:white" class="text-center">Copyright {{date('Y')}} Bank UMKM Jatim</p>
+                <p style="color:white" class="text-center">Copyright {{date('Y')}}</p>
             </div>
         </div>
     </div>

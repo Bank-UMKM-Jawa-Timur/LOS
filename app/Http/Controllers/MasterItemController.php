@@ -217,8 +217,8 @@ class MasterItemController extends Controller
     {
        $request->validate([
            'nama' => 'required',
-           'option.*' => 'required',
-           'skor.*' => 'required',
+        //    'option.*' => 'required',
+        //    'skor.*' => 'required',
        ]);
         try {
             $updateItem = ItemModel::find($id);
@@ -233,14 +233,14 @@ class MasterItemController extends Controller
                         OptionModel::where('id',$request->id_detail[$key])->update([
                             'option' => $request->option[$key],
                             'skor' => $request->skor[$key],
-                            'sub_column' => $request->sub_column[$key],
+                            // 'sub_column' => $request->sub_column[$key],
                         ]);
                     }else{
                         $newOptionItem = new OptionModel;
                         $newOptionItem->id_item = $request->get('id_item');
                         $newOptionItem->option = $request->get('option')[$key];
                         $newOptionItem->skor = $request->get('skor')[$key];
-                        $newOptionItem->sub_column = $request->get('sub_column')[$key];
+                        // $newOptionItem->sub_column = $request->get('sub_column')[$key];
                         $newOptionItem->save();
                     }
 
