@@ -1213,54 +1213,54 @@
         }
         //end hitung ratio covarege
 
-        //triger hitung Persentase Kebutuhan Kredit
-        $('#kebutuhan_kredit').change(function(e) {
-            hitungPersentaseKebutuhanKredit();
-        });
-        //end triger hitung Persentase Kebutuhan Kredit
+        // //triger hitung Persentase Kebutuhan Kredit
+        // $('#kebutuhan_kredit').change(function(e) {
+        //     hitungPersentaseKebutuhanKredit();
+        // });
+        // //end triger hitung Persentase Kebutuhan Kredit
 
-        //triger hitung Persentase Kebutuhan Kredit
-        $('#jumlah_kredit').change(function(e) {
-            hitungPersentaseKebutuhanKredit();
-        });
+        // //triger hitung Persentase Kebutuhan Kredit
+        // $('#jumlah_kredit').change(function(e) {
+        //     hitungPersentaseKebutuhanKredit();
+        // });
         //end triger hitung Persentase Kebutuhan Kredit
 
         // hitung Persentase Kebutuhan Kredit
-        function hitungPersentaseKebutuhanKredit() {
-            let kebutuhanKredit = parseInt($('#kebutuhan_kredit').val());
-            let jumlahKredit = parseInt($('#jumlah_kredit').val());
+        // function hitungPersentaseKebutuhanKredit() {
+        //     let kebutuhanKredit = parseInt($('#kebutuhan_kredit').val());
+        //     let jumlahKredit = parseInt($('#jumlah_kredit').val());
 
-            let persentaseKebutuhanKredit = parseInt(jumlahKredit / kebutuhanKredit * 100); //cek rumusnya lagi
+        //     let persentaseKebutuhanKredit = parseInt(jumlahKredit / kebutuhanKredit * 100); //cek rumusnya lagi
 
-            $('#persentase_kebutuhan_kredit').val(persentaseKebutuhanKredit);
+        //     $('#persentase_kebutuhan_kredit').val(persentaseKebutuhanKredit);
 
-            if (persentaseKebutuhanKredit <= 80 && !isNaN(persentaseKebutuhanKredit)) {
-                $('#persentase_kebutuhan_kredit_opsi_0').attr('selected', true);
-                $('#persentase_kebutuhan_kredit_opsi_1').removeAttr('selected');
-                $('#persentase_kebutuhan_kredit_opsi_2').removeAttr('selected');
-                $('#persentase_kebutuhan_kredit_opsi_3').removeAttr('selected');
-            } else if (persentaseKebutuhanKredit >= 81 && persentaseKebutuhanKredit <= 89) {
-                $('#persentase_kebutuhan_kredit_opsi_0').removeAttr('selected');
-                $('#persentase_kebutuhan_kredit_opsi_1').attr('selected', true);
-                $('#persentase_kebutuhan_kredit_opsi_2').removeAttr('selected');
-                $('#persentase_kebutuhan_kredit_opsi_3').removeAttr('selected');
-            } else if (persentaseKebutuhanKredit >= 90 && persentaseKebutuhanKredit <= 100) {
-                $('#persentase_kebutuhan_kredit_opsi_0').removeAttr('selected');
-                $('#persentase_kebutuhan_kredit_opsi_1').removeAttr('selected');
-                $('#persentase_kebutuhan_kredit_opsi_2').attr('selected', true);
-                $('#persentase_kebutuhan_kredit_opsi_3').removeAttr('selected');
-            } else if (persentaseKebutuhanKredit > 100 && !isNaN(persentaseKebutuhanKredit)) {
-                $('#persentase_kebutuhan_kredit_opsi_0').removeAttr('selected');
-                $('#persentase_kebutuhan_kredit_opsi_1').removeAttr('selected');
-                $('#persentase_kebutuhan_kredit_opsi_2').removeAttr('selected');
-                $('#persentase_kebutuhan_kredit_opsi_3').attr('selected', true);
-            } else {
-                $('#persentase_kebutuhan_kredit_opsi_0').removeAttr('selected');
-                $('#persentase_kebutuhan_kredit_opsi_1').removeAttr('selected');
-                $('#persentase_kebutuhan_kredit_opsi_2').removeAttr('selected');
-                $('#persentase_kebutuhan_kredit_opsi_3').removeAttr('selected');
-            }
-        }
+        //     if (persentaseKebutuhanKredit <= 80 && !isNaN(persentaseKebutuhanKredit)) {
+        //         $('#persentase_kebutuhan_kredit_opsi_0').attr('selected', true);
+        //         $('#persentase_kebutuhan_kredit_opsi_1').removeAttr('selected');
+        //         $('#persentase_kebutuhan_kredit_opsi_2').removeAttr('selected');
+        //         $('#persentase_kebutuhan_kredit_opsi_3').removeAttr('selected');
+        //     } else if (persentaseKebutuhanKredit >= 81 && persentaseKebutuhanKredit <= 89) {
+        //         $('#persentase_kebutuhan_kredit_opsi_0').removeAttr('selected');
+        //         $('#persentase_kebutuhan_kredit_opsi_1').attr('selected', true);
+        //         $('#persentase_kebutuhan_kredit_opsi_2').removeAttr('selected');
+        //         $('#persentase_kebutuhan_kredit_opsi_3').removeAttr('selected');
+        //     } else if (persentaseKebutuhanKredit >= 90 && persentaseKebutuhanKredit <= 100) {
+        //         $('#persentase_kebutuhan_kredit_opsi_0').removeAttr('selected');
+        //         $('#persentase_kebutuhan_kredit_opsi_1').removeAttr('selected');
+        //         $('#persentase_kebutuhan_kredit_opsi_2').attr('selected', true);
+        //         $('#persentase_kebutuhan_kredit_opsi_3').removeAttr('selected');
+        //     } else if (persentaseKebutuhanKredit > 100 && !isNaN(persentaseKebutuhanKredit)) {
+        //         $('#persentase_kebutuhan_kredit_opsi_0').removeAttr('selected');
+        //         $('#persentase_kebutuhan_kredit_opsi_1').removeAttr('selected');
+        //         $('#persentase_kebutuhan_kredit_opsi_2').removeAttr('selected');
+        //         $('#persentase_kebutuhan_kredit_opsi_3').attr('selected', true);
+        //     } else {
+        //         $('#persentase_kebutuhan_kredit_opsi_0').removeAttr('selected');
+        //         $('#persentase_kebutuhan_kredit_opsi_1').removeAttr('selected');
+        //         $('#persentase_kebutuhan_kredit_opsi_2').removeAttr('selected');
+        //         $('#persentase_kebutuhan_kredit_opsi_3').removeAttr('selected');
+        //     }
+        // }
         //end Persentase Kebutuhan Kredit
 
         //triger hitung Repayment Capacity
