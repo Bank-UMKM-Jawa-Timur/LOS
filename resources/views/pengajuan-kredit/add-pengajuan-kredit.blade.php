@@ -34,26 +34,6 @@
         <div class="form-wizard active" data-index='0' data-done='true'>
             <div class="row">
                 <div class="form-group col-md-6">
-                    <label for="">{{ $itemSP->nama }}</label>
-                    <input type="hidden" name="id_item_file[]" value="{{ $itemSP->id }}" id="">
-                    <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-control">
-                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
-                        <div class="invalid-feedback">
-                            {{ $errors->first('dataLevelDua.' . $key) }}
-                        </div>
-                    @endif
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="">{{ $itemP->nama }}</label>
-                    <input type="hidden" name="id_item_file[]" value="{{ $itemP->id }}" id="">
-                    <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-control">
-                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
-                        <div class="invalid-feedback">
-                            {{ $errors->first('dataLevelDua.' . $key) }}
-                        </div>
-                    @endif
-                </div>
-                <div class="form-group col-md-12">
                     <label for="">Nama Lengkap</label>
                     <input type="text" name="name" id="nama" class="form-control @error('name') is-invalid @enderror"
                         placeholder="Nama sesuai dengan KTP">
@@ -62,6 +42,16 @@
                             {{ $message }}
                         </div>
                     @enderror
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="">{{ $itemSP->nama }}</label>
+                    <input type="hidden" name="id_item_file[]" value="{{ $itemSP->id }}" id="">
+                    <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-control">
+                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('dataLevelDua.' . $key) }}
+                        </div>
+                    @endif
                 </div>
                 <div class="form-group col-md-4">
                     <label for="">Kabupaten</label>
@@ -165,7 +155,7 @@
                         </div>
                     @enderror
                 </div>
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-12">
                     <label for="">Sektor Kredit</label>
                     <select name="sektor_kredit" id=""
                         class="form-control @error('sektor_kredit') is-invalid @enderror select2">
@@ -193,6 +183,16 @@
                     <div id="item{{ $itemSlik->id }}">
 
                     </div>
+                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('dataLevelDua.' . $key) }}
+                        </div>
+                    @endif
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="">{{ $itemP->nama }}</label>
+                    <input type="hidden" name="id_item_file[]" value="{{ $itemP->id }}" id="">
+                    <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-control">
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
                             {{ $errors->first('dataLevelDua.' . $key) }}
@@ -932,6 +932,7 @@
                             kategoriJaminanUtama != 'Stock' && kategoriJaminanUtama != 'Piutang' ?
                             'disabled' : ''
                         $.each(response.itemBuktiPemilikan, function(i, valItem) {
+                            console.log(valItem.nama);
                             if (valItem.nama == 'Atas Nama') {
                                 $('#bukti_pemilikan_jaminan_utama').append(`
                                 <div class="form-group col-md-6 aspek_jaminan_kategori_jaminan_utama">
@@ -944,16 +945,25 @@
                                 </div>
                             `);
                             } else {
-                                $('#bukti_pemilikan_jaminan_utama').append(`
-                                <div class="form-group col-md-6 aspek_jaminan_kategori_jaminan_utama">
-                                    <label>${isCheck} ${valItem.nama}</label>
-                                    <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input" ${isDisabled}>
-                                    <input type="hidden" name="opsi_jawaban[]"
-                                        value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
-                                    <input type="text" name="informasi[]" placeholder="Masukkan informasi ${valItem.nama}"
-                                        class="form-control input" ${isDisabled}>
-                                </div>
-                            `);
+                                if(valItem.nama == 'Foto') {
+                                    $('#bukti_pemilikan_jaminan_utama').append(`
+                                    <div class="form-group col-md-6 aspek_jaminan_kategori_jaminan_utama">
+                                        <label>${valItem.nama}</label>
+                                        <input type="hidden" name="id_item_file[]" value="${valItem.id}" id="" class="input">
+                                        <input type="file" name="upload_file[]" id="" class="form-control">
+                                    </div>`);
+                                }
+                                else {
+                                    $('#bukti_pemilikan_jaminan_utama').append(`
+                                    <div class="form-group col-md-6 aspek_jaminan_kategori_jaminan_utama">
+                                        <label>${isCheck} ${valItem.nama}</label>
+                                        <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input" ${isDisabled}>
+                                        <input type="hidden" name="opsi_jawaban[]"
+                                            value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
+                                        <input type="text" name="informasi[]" placeholder="Masukkan informasi ${valItem.nama}"
+                                            class="form-control input" ${isDisabled}>
+                                    </div>`);
+                                }
                             }
                         });
 
@@ -1060,16 +1070,25 @@
                                 </div>
                             `);
                         } else {
-                            $('#bukti_pemilikan_jaminan_tambahan').append(`
+                            if(valItem.nama == 'Foto') {
+                                $('#bukti_pemilikan_jaminan_tambahan').append(`
                                 <div class="form-group col-md-6 aspek_jaminan_kategori">
-                                    <label>${isCheck} ${valItem.nama}</label>
-                                    <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input" ${isDisabled}>
-                                    <input type="hidden" name="opsi_jawaban[]"
-                                        value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
-                                    <input type="text" name="informasi[]" placeholder="Masukkan informasi"
-                                        class="form-control input" ${isDisabled}>
-                                </div>
-                            `);
+                                    <label>${valItem.nama}</label>
+                                    <input type="hidden" name="id_item_file[]" value="${valItem.id}" id="" class="input">
+                                    <input type="file" name="upload_file[]" id="" class="form-control">
+                                </div>`);
+                            } else {
+                                $('#bukti_pemilikan_jaminan_tambahan').append(`
+                                    <div class="form-group col-md-6 aspek_jaminan_kategori">
+                                        <label>${isCheck} ${valItem.nama}</label>
+                                        <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input" ${isDisabled}>
+                                        <input type="hidden" name="opsi_jawaban[]"
+                                            value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
+                                        <input type="text" name="informasi[]" placeholder="Masukkan informasi"
+                                            class="form-control input" ${isDisabled}>
+                                    </div>
+                                `);
+                            }
                         }
                     });
 

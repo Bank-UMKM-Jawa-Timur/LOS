@@ -169,14 +169,14 @@ class PengajuanKreditController extends Controller
 
             $itemBuktiPemilikan = ItemModel::with('option');
 
-            $itemBuktiPemilikan->whereIn('nama', ['SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C'])->where('id_parent', 96);
+            $itemBuktiPemilikan->whereIn('nama', ['SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C', 'Foto'])->where('id_parent', 96);
         }
         else if($kategori == 'Kendaraan Bermotor'){
             $item = ItemModel::with('option')->where('nama', $kategori)->where('id_parent', 95)->first();
 
             $itemBuktiPemilikan = ItemModel::with('option');
 
-            $itemBuktiPemilikan->whereIn('nama', ['BPKB No', 'Atas Nama'])->where('id_parent', 96);
+            $itemBuktiPemilikan->whereIn('nama', ['BPKB No', 'Atas Nama', 'Foto'])->where('id_parent', 96);
         }
         else{
             $item = ItemModel::where('nama', $kategori)->where('id_parent', 95)->first();
@@ -199,10 +199,10 @@ class PengajuanKreditController extends Controller
 
         $itemBuktiPemilikan = ItemModel::with('option');
         if ($kategori == 'Tanah' || $kategori=='Tanah dan Bangunan') {
-            $itemBuktiPemilikan->whereIn('nama', ['SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C']);
+            $itemBuktiPemilikan->whereIn('nama', ['SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C', 'Foto']);
         }
         else{
-            $itemBuktiPemilikan->whereIn('nama', ['BPKB No', 'Atas Nama']);
+            $itemBuktiPemilikan->whereIn('nama', ['BPKB No', 'Atas Nama', 'Foto']);
         }
         $data = [
             'item' => $item,

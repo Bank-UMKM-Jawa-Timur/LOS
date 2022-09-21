@@ -732,8 +732,8 @@
                                                 <b>Jawaban:</b>
                                                 <div class="mt-2 pl-3">
                                                     @if ($itemEmpat->opsi_jawaban == 'file')
-                                                        <img src="{{ public_path() . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
-                                                            alt="">
+                                                        <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
+                                                            alt="" width="800px">
                                                     @else
                                                         <p class="badge badge-info text-lg"><b>
                                                                 {{ $itemTextEmpat->opsi_text }}
