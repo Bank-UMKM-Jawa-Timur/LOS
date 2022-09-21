@@ -33,6 +33,37 @@
         @csrf
         <div class="form-wizard active" data-index='0' data-done='true'>
             <div class="row">
+                    @php
+                        // $key += 1;
+                        // check level 2
+                        $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+                            ->where('level', 2)
+                            ->where('id_parent', $itemSP->id)
+                            ->where('nama', 'Surat Permohonan')
+                            ->get();
+                    @endphp
+                    @foreach ($dataLevelDua as $item)
+                        @if ($item->opsi_jawaban == 'file')
+                            @php
+                                $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
+                                    ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                    ->where('jawaban_text.id_pengajuan', $dataUmum->id)
+                                    ->where('jawaban_text.id_jawaban', $item->id)
+                                    ->get();
+                            @endphp
+                            @foreach ($dataDetailJawabanText as $itemTextDua)
+                                <div class="form-group col-md-12">
+                                <label for="">{{ $item->nama }}</label>
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <b>Jawaban:</b>
+                                    <div class="mt-2 pl-3">
+                                        <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="800px">
+                                    </div>
+                                </div>
+                            @endforeach
+                        @endif
+                    @endforeach
                 <div class="form-group col-md-12">
                     <label for="">Nama Lengkap</label>
                     <input type="text" disabled name="name" id="nama"
@@ -223,6 +254,37 @@
                         </div>
                     </div>
                 </div>
+                @php
+                    // $key += 1;
+                    // check level 2
+                    $dataLS = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+                        ->where('level', 2)
+                        ->where('id_parent', $itemSP->id)
+                        ->where('nama', 'Laporan SLIK')
+                        ->get();
+                @endphp
+                @foreach ($dataLS as $item)
+                    @if ($item->opsi_jawaban == 'file')
+                        @php
+                            $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
+                                ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                ->where('jawaban_text.id_pengajuan', $dataUmum->id)
+                                ->where('jawaban_text.id_jawaban', $item->id)
+                                ->get();
+                        @endphp
+                        @foreach ($dataDetailJawabanText as $itemTextDua)
+                            <div class="form-group col-md-12">
+                            <label for="">{{ $item->nama }}</label>
+                            </div>
+                            <div class="col-md-12 form-group">
+                                <b>Jawaban:</b>
+                                <div class="mt-2 pl-3">
+                                    <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="800px">
+                                </div>
+                            </div>
+                        @endforeach
+                    @endif
+                @endforeach
                 <div class="form-group col-md-12">
                     <label for="">Jenis Usaha</label>
                     <textarea disabled name="jenis_usaha" class="form-control @error('jenis_usaha') is-invalid @enderror" id="" cols="30"

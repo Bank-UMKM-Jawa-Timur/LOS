@@ -144,6 +144,8 @@ class PengajuanKreditController extends Controller
         $param['dataKabupaten'] = Kabupaten::all();
         $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->where('nama','!=','Data Umum')->get();
         $param['itemSlik'] = ItemModel::with('option')->where('nama', 'SLIK')->first();
+        $param['itemSP'] = ItemModel::where('nama','Surat Permohonan')->first();
+        $param['itemP'] = ItemModel::where('nama','Permohonan SLIK')->first();
 
         $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
 
@@ -772,13 +774,13 @@ class PengajuanKreditController extends Controller
         if (auth()->user()->role == 'Penyelia Kredit') {
             $param['pageTitle'] = "Dashboard";
             $param['dataAspek'] = ItemModel::where('level', 1)->where('nama', '!=','Data Umum')->get();
-
             $param['itemSlik'] = ItemModel::join('option as o', 'o.id_item', 'item.id')
                                 ->join('jawaban as j', 'j.id_jawaban', 'o.id')
                                 ->join('pengajuan as p', 'p.id', 'j.id_pengajuan')
                                 ->where('p.id', $id)
                                 ->where('nama', 'SLIK')
                                 ->first();
+            $param['itemSP'] = ItemModel::where('level', 1)->where('nama', '=','Data Umum')->first();
 
             $param['dataUmumNasabah'] = PengajuanModel::select(
                 'pengajuan.id',

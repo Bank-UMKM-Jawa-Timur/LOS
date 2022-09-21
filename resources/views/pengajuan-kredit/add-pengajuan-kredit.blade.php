@@ -33,6 +33,26 @@
         <input type="hidden" name="progress" class="progress">
         <div class="form-wizard active" data-index='0' data-done='true'>
             <div class="row">
+                <div class="form-group col-md-6">
+                    <label for="">{{ $itemSP->nama }}</label>
+                    <input type="hidden" name="id_item_file[]" value="{{ $itemSP->id }}" id="">
+                    <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-control">
+                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('dataLevelDua.' . $key) }}
+                        </div>
+                    @endif
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="">{{ $itemP->nama }}</label>
+                    <input type="hidden" name="id_item_file[]" value="{{ $itemP->id }}" id="">
+                    <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-control">
+                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('dataLevelDua.' . $key) }}
+                        </div>
+                    @endif
+                </div>
                 <div class="form-group col-md-12">
                     <label for="">Nama Lengkap</label>
                     <input type="text" name="name" id="nama" class="form-control @error('name') is-invalid @enderror"
@@ -814,7 +834,7 @@
             if (kecID) {
                 $.ajax({
                     type: "GET",
-                    url: "/getdesa?kecID=" + kecID,
+                    url: "/analisa_kredit/getdesa?kecID=" + kecID,
                     dataType: 'JSON',
                     success: function(res) {
                         //    console.log(res);
