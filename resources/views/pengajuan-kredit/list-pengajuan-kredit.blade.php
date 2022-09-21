@@ -114,7 +114,7 @@
                         <div class="d-flex">
                         @if ($item->posisi == 'Review Penyelia')
                                 <a href="{{ route('pengajuan.detailjawaban',$item->id_pengajuan) }}" class="btn btn-rgb-primary mr-2">
-                                    Detail data
+                                    Review
                                 </a>
                                 <a href="{{ route('pengajuan.check.pincab',$item->id_pengajuan) }}" class="btn btn-info">Tindak lanjut Pincab</a>
                         @endif
