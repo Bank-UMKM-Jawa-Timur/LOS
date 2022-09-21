@@ -533,6 +533,9 @@
                                         </div>
                                     @elseif ($itemTiga->opsi_jawaban == 'persen')
                                         <div class="form-group col-md-6">
+                                            @if ($itemTiga->nama == 'Ratio Tenor Asuransi')
+                                            
+                                            @else
                                             <label for="">{{ $itemTiga->nama }}</label>
                                             <input type="hidden" name="opsi_jawaban[]"
                                                 value="{{ $itemTiga->opsi_jawaban }}" id="">
@@ -547,6 +550,7 @@
                                                     <span class="input-group-text" id="basic-addon2">%</span>
                                                 </div>
                                             </div>
+                                            @endif
                                         </div>
                                     @elseif ($itemTiga->opsi_jawaban == 'file')
                                         <div class="form-group col-md-6">
