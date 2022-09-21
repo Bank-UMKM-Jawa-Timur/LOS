@@ -803,7 +803,7 @@
             if (kabID) {
                 $.ajax({
                     type: "GET",
-                    url: "/analisa_kredit/getkecamatan?kabID=" + kabID,
+                    url: "/getkecamatan?kabID=" + kabID,
                     dataType: 'JSON',
                     success: function(res) {
                         //    console.log(res);
@@ -834,7 +834,7 @@
             if (kecID) {
                 $.ajax({
                     type: "GET",
-                    url: "/analisa_kredit/getdesa?kecID=" + kecID,
+                    url: "/getdesa?kecID=" + kecID,
                     dataType: 'JSON',
                     success: function(res) {
                         //    console.log(res);
