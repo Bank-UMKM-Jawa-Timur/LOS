@@ -41,7 +41,7 @@
             <div class="container custom">
 
                 <a class="navbar-brand font-weight-bold " href="#">
-                    <p class="p-0 m-0">LOGO HERE</p>
+                    <p class="p-0 m-0"><img src="{{ asset('img/logo.png') }}" alt="logo.png" style="width:200px;"></p>
                     {{-- <img src="{{ asset('') }}img/logo2.png" height="50px" width="150px" class="mr-2" alt=""> --}}
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">

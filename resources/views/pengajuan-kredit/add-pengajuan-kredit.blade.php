@@ -783,7 +783,7 @@
             if (kabID) {
                 $.ajax({
                     type: "GET",
-                    url: "/getkecamatan?kabID=" + kabID,
+                    url: "/analisa_kredit/getkecamatan?kabID=" + kabID,
                     dataType: 'JSON',
                     success: function(res) {
                         //    console.log(res);
@@ -1295,7 +1295,7 @@
             let installment = parseInt($('#installment').val());
 
             let repaymentCapacity = parseFloat(persentaseNetIncome * omzetPenjualan * (1 + rencanaPeningkatan) /
-                installment); //cek rumusnya lagi
+                (installment*12)); //cek rumusnya lagi
 
             $('#repayment_capacity').val(repaymentCapacity);
 
