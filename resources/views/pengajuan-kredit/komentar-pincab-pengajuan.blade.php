@@ -115,7 +115,7 @@
                             <div class="d-flex">
                                 @if (auth()->user()->role == 'Pincab')
                                     <a href="{{ route('pengajuan.check.pincab.status.detail',$item->id_pengajuan) }}" class="btn btn-rgb-primary mr-2">
-                                        Detail data
+                                        Review
                                     </a>
                                     @if ($item->posisi == "Selesai")
                                         <button href="{{ route('pengajuan.change.pincab.status',$item->id_pengajuan) }}" class="btn btn-primary">Selesai</button>

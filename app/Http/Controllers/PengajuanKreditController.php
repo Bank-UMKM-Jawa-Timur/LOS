@@ -1019,6 +1019,7 @@ class PengajuanKreditController extends Controller
                                 ->where('p.id', $id)
                                 ->where('nama', 'SLIK')
                                 ->first();
+        $param['itemSP'] = ItemModel::where('level', 1)->where('nama', '=','Data Umum')->first();
         // $param['jawabanpengajuan'] = JawabanPengajuanModel::select('jawaban.id','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','option.id as id_option','option.option as name_option','option.id_item','item.id as id_item','item.nama','item.level','item.id_parent')
         //                             ->join('option','option.id','jawaban.id_jawaban')
         //                             ->join('item','item.id','option.id_item')

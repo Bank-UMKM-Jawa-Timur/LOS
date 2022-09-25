@@ -544,39 +544,43 @@
                                         ->get();
                                 @endphp
                                 @foreach ($dataDetailJawabanText as $itemTextTiga)
-                                    <div class="row">
-                                        <div class="form-group col-md-12 mb-0">
-                                            <label for="">{{ $itemTextTiga->nama }}</label>
-                                        </div>
-                                        <div class="col-md-12 form-group">
-                                            <b>Jawaban:</b>
-                                            <div class="mt-2 pl-3">
-                                                <p class="badge badge-info text-lg"><b>
-                                                        {{ $itemTextTiga->opsi_text }}
-                                                        {{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</b></p>
-                                                @if ($item->is_commentable == 'Ya')
-                                                    <div class="input-k-bottom">
-                                                        <input type="hidden" name="id_item[]" value="{{ $item->id }}">
-                                                        <input type="text" class="form-control komentar"
-                                                            name="komentar_penyelia[]" placeholder="Masukkan Komentar">
+                                    @if ($itemTextTiga->nama != 'Ratio Tenor Asuransi')    
+                                        <div class="row">
+                                            <div class="form-group col-md-12 mb-0">
+                                                <label for="">{{ $itemTextTiga->nama }}</label>
+                                            </div>
+                                            <div class="col-md-12 form-group">
+                                                <b>Jawaban:</b>
+                                                <div class="mt-2 pl-3">
+                                                    <p class="badge badge-info text-lg"><b>
+                                                            {{ $itemTextTiga->opsi_text }}
+                                                            {{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</b></p>
+                                                    @if ($item->is_commentable == 'Ya')
+                                                        <div class="input-k-bottom">
+                                                            <input type="hidden" name="id_item[]" value="{{ $item->id }}">
+                                                            <input type="text" class="form-control komentar"
+                                                                name="komentar_penyelia[]" placeholder="Masukkan Komentar">
 
-                                                        {{-- <div class="input-skor">
-                                    <input type="number" class="form-control" placeholder="" name="skor_penyelia_text[]" value="">
+                                                            {{-- <div class="input-skor">
+                                        <input type="number" class="form-control" placeholder="" name="skor_penyelia_text[]" value="">
 
-                                    </div> --}}
-                                                    </div>
-                                                @endif
+                                        </div> --}}
+                                                        </div>
+                                                    @endif
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <input type="hidden" class="form-control mb-3" placeholder="Masukkan komentar"
-                                        name="komentar_penyelia" value="{{ $itemTextTiga->nama }}" disabled>
-                                    <input type="hidden" class="form-control mb-3" placeholder="Masukkan komentar"
-                                        name="komentar_penyelia" value="{{ $itemTextTiga->opsi_text }}" disabled>
+                                        <input type="hidden" class="form-control mb-3" placeholder="Masukkan komentar"
+                                            name="komentar_penyelia" value="{{ $itemTextTiga->nama }}" disabled>
+                                        <input type="hidden" class="form-control mb-3" placeholder="Masukkan komentar"
+                                            name="komentar_penyelia" value="{{ $itemTextTiga->opsi_text }}" disabled>
 
-                                    <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextTiga->id }}">
-                                    <input type="hidden" name="id[]" value="{{ $itemTextTiga->id_item }}">
+                                        <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextTiga->id }}">
+                                        <input type="hidden" name="id[]" value="{{ $itemTextTiga->id_item }}">
+                                    @else
+                                        
+                                    @endif
                                 @endforeach
                             @endif
                             @php
@@ -609,99 +613,103 @@
                             @endforeach
 
                             @if (count($dataJawabanLevelTiga) != 0)
-                                <div class="row">
-                                    <div class="form-group col-md-12">
-                                        <label for="">{{ $itemTiga->nama }}</label>
+                                @if ($itemTiga->nama == 'Ratio Tenor Asuransi Opsi')
+                                    
+                                @else
+                                    <div class="row">
+                                        <div class="form-group col-md-12">
+                                            <label for="">{{ $itemTiga->nama }}</label>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    @foreach ($dataJawabanLevelTiga as $key => $itemJawabanLevelTiga)
-                                        @php
-                                            $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
-                                                ->where('id_pengajuan', $dataUmum->id)
-                                                ->get();
+                                    <div class="row">
+                                        @foreach ($dataJawabanLevelTiga as $key => $itemJawabanLevelTiga)
+                                            @php
+                                                $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
+                                                    ->where('id_pengajuan', $dataUmum->id)
+                                                    ->get();
 
-                                            $getSkorPenyelia = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
-                                                ->where('id_pengajuan', $dataUmum->id)
-                                                ->where('id_jawaban', $itemJawabanLevelTiga->id)
-                                                ->first();
-                                            $count = count($dataDetailJawaban);
-                                            for ($i = 0; $i < $count; $i++) {
-                                                $data[] = $dataDetailJawaban[$i]['id_jawaban'];
-                                            }
-                                        @endphp
-                                        @if (in_array($itemJawabanLevelTiga->id, $data))
-                                            @if (isset($data))
-                                                <div class="col-md-12 form-group">
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <b>Jawaban : </b>
-                                                            <div class="mt-2 pl-2">
-                                                                <p class="badge badge-info text-lg">
-                                                                    <b>{{ $itemJawabanLevelTiga->option }}</b>
-                                                                </p>
+                                                $getSkorPenyelia = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
+                                                    ->where('id_pengajuan', $dataUmum->id)
+                                                    ->where('id_jawaban', $itemJawabanLevelTiga->id)
+                                                    ->first();
+                                                $count = count($dataDetailJawaban);
+                                                for ($i = 0; $i < $count; $i++) {
+                                                    $data[] = $dataDetailJawaban[$i]['id_jawaban'];
+                                                }
+                                            @endphp
+                                            @if (in_array($itemJawabanLevelTiga->id, $data))
+                                                @if (isset($data))
+                                                    <div class="col-md-12 form-group">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <b>Jawaban : </b>
+                                                                <div class="mt-2 pl-2">
+                                                                    <p class="badge badge-info text-lg">
+                                                                        <b>{{ $itemJawabanLevelTiga->option }}</b>
+                                                                    </p>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    {{-- @if ($jawabanTurunan)
-                                                        <div class="col-md-6">
-                                                            <b>{{ $itemJawaban->sub_column }} :</b>
-                                                            <div class="mt-2 pl-2">
-                                                                <p class="badge badge-info text-lg">
-                                                                    <b>{{ $jawabanTurunan->jawaban_sub_column }}</b>
-                                                                </p>
+                                                        {{-- @if ($jawabanTurunan)
+                                                            <div class="col-md-6">
+                                                                <b>{{ $itemJawaban->sub_column }} :</b>
+                                                                <div class="mt-2 pl-2">
+                                                                    <p class="badge badge-info text-lg">
+                                                                        <b>{{ $jawabanTurunan->jawaban_sub_column }}</b>
+                                                                    </p>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    @endif --}}
-                                                    {{-- <div class="input-group input-b-bottom">
-                                                        @if ($item->is_commentable)
-                                                            <div class="input-group input-b-bottom">
+                                                        @endif --}}
+                                                        {{-- <div class="input-group input-b-bottom">
+                                                            @if ($item->is_commentable)
+                                                                <div class="input-group input-b-bottom">
 
-                                                                <input type="hidden" name="id_item[]"
-                                                                    value="{{ $item->id }}">
-                                                                <input type="text" class="form-control komentar"
-                                                                    name="komentar_penyelia[]"
-                                                                    placeholder="Masukkan Komentar">
-                                                            </div>
-                                                        @endif
+                                                                    <input type="hidden" name="id_item[]"
+                                                                        value="{{ $item->id }}">
+                                                                    <input type="text" class="form-control komentar"
+                                                                        name="komentar_penyelia[]"
+                                                                        placeholder="Masukkan Komentar">
+                                                                </div>
+                                                            @endif
 
-                                                        <div class="input-skor">
-                                                            <input type="number" class="form-control" placeholder=""
-                                                                name="skor_penyelia[]"
-                                                                value="{{ $itemJawabanLevelTiga->skor != null ? $itemJawabanLevelTiga->skor : '' }}">
-
-                                                        </div>
-                                                    </div> --}}
-                                                    <div class="input-group input-b-bottom">
-                                                        @if ($itemTiga->is_commentable == 'Ya')
-                                                            <input type="hidden" name="id_item[]"
-                                                                value="{{ $itemTiga->id }}">
-                                                            <input type="hidden" name="id_option[]"
-                                                                value="{{ $itemJawabanLevelTiga->id }}">
-                                                            <input type="text" class="form-control komentar"
-                                                                name="komentar_penyelia[]" placeholder="Masukkan Komentar"
-                                                                value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                             <div class="input-skor">
                                                                 <input type="number" class="form-control" placeholder=""
                                                                     name="skor_penyelia[]"
-                                                                    {{ $itemTiga->status_skor == 0 ? 'readonly' : '' }}
-                                                                    value="{{ $getSkorPenyelia->skor_penyelia != null ? $getSkorPenyelia->skor_penyelia : $itemJawabanLevelTiga->skor }}">
+                                                                    value="{{ $itemJawabanLevelTiga->skor != null ? $itemJawabanLevelTiga->skor : '' }}">
 
                                                             </div>
-                                                        @endif
+                                                        </div> --}}
+                                                        <div class="input-group input-b-bottom">
+                                                            @if ($itemTiga->is_commentable == 'Ya')
+                                                                <input type="hidden" name="id_item[]"
+                                                                    value="{{ $itemTiga->id }}">
+                                                                <input type="hidden" name="id_option[]"
+                                                                    value="{{ $itemJawabanLevelTiga->id }}">
+                                                                <input type="text" class="form-control komentar"
+                                                                    name="komentar_penyelia[]" placeholder="Masukkan Komentar"
+                                                                    value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
+                                                                <div class="input-skor">
+                                                                    <input type="number" class="form-control" placeholder=""
+                                                                        name="skor_penyelia[]"
+                                                                        {{ $itemTiga->status_skor == 0 ? 'readonly' : '' }}
+                                                                        value="{{ $getSkorPenyelia->skor_penyelia != null ? $getSkorPenyelia->skor_penyelia : $itemJawabanLevelTiga->skor }}">
+
+                                                                </div>
+                                                            @endif
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <input type="text" hidden class="form-control mb-3"
-                                                    placeholder="Masukkan komentar" name="komentar_penyelia"
-                                                    value="{{ $itemJawabanLevelTiga->option }}" disabled>
-                                                <input type="text" hidden class="form-control mb-3"
-                                                    placeholder="Masukkan komentar" name="skor_penyelia"
-                                                    value="{{ $itemJawabanLevelTiga->skor }}" disabled>
-                                                <input type="hidden" name="id[]" value="{{ $itemTiga->id }}">
+                                                    <input type="text" hidden class="form-control mb-3"
+                                                        placeholder="Masukkan komentar" name="komentar_penyelia"
+                                                        value="{{ $itemJawabanLevelTiga->option }}" disabled>
+                                                    <input type="text" hidden class="form-control mb-3"
+                                                        placeholder="Masukkan komentar" name="skor_penyelia"
+                                                        value="{{ $itemJawabanLevelTiga->skor }}" disabled>
+                                                    <input type="hidden" name="id[]" value="{{ $itemTiga->id }}">
+                                                @endif
                                             @endif
-                                        @endif
-                                    @endforeach
-                                </div>
+                                        @endforeach
+                                    </div>
+                                @endif
                             @endif
                             @foreach ($dataLevelEmpat as $keyEmpat => $itemEmpat)
                                 {{-- @php

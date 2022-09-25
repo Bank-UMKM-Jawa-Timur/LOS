@@ -39,6 +39,44 @@
                     Data Umum
                 </div>
                 <div class="card-body collapse multi-collapse show" id="cardDataUmum">
+                    @php
+                        $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+                        ->where('level', 2)
+                        ->where('id_parent', $itemSP->id)
+                        ->where('nama', 'Surat Permohonan')
+                        ->get();
+                    @endphp
+                    @foreach ($dataLevelDua as $item)
+                        @php
+                            $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
+                                ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                ->where('jawaban_text.id_pengajuan', $dataUmum->id)
+                                ->where('jawaban_text.id_jawaban', $item->id)
+                                ->get();
+                        @endphp
+                        @foreach ($dataDetailJawabanText as $itemTextDua)
+                            <div class="form-group row">
+                                <label for="staticEmail" class="col-sm-3 col-form-label">{{ $item->nama }}</label>
+                                <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                                    <div class="d-flex justify-content-end">
+                                        <div style="width: 20px">
+                                            :
+                                        </div>
+                                    </div>
+                                </label>
+                                <div class="col-sm-7">
+                                    @php
+                                        $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                                    @endphp
+                                    @if ($file_parts['extension'] == 'pdf')
+                                        <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" width="100%" height="700px"></iframe>
+                                    @else
+                                        <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="700px">
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    @endforeach
                     <div class="form-group row">
                         <label for="staticEmail" class="col-sm-3 col-form-label">Nama Lengkap</label>
                         <label for="staticEmail" class="col-sm-1 col-form-label px-0">
@@ -217,6 +255,44 @@
 
 
                     </div>
+                    @php
+                        $dataLaporanSLIK = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+                        ->where('level', 2)
+                        ->where('id_parent', $itemSP->id)
+                        ->where('nama', 'Laporan SLIK')
+                        ->get();
+                    @endphp
+                    @foreach ($dataLaporanSLIK as $item)
+                        @php
+                            $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
+                                ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                ->where('jawaban_text.id_pengajuan', $dataUmum->id)
+                                ->where('jawaban_text.id_jawaban', $item->id)
+                                ->get();
+                        @endphp
+                        @foreach ($dataDetailJawabanText as $itemTextDua)
+                            <div class="form-group row">
+                                <label for="staticEmail" class="col-sm-3 col-form-label">{{ $item->nama }}</label>
+                                <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                                    <div class="d-flex justify-content-end">
+                                        <div style="width: 20px">
+                                            :
+                                        </div>
+                                    </div>
+                                </label>
+                                <div class="col-sm-7">
+                                    @php
+                                        $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                                    @endphp
+                                    @if ($file_parts['extension'] == 'pdf')
+                                        <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" width="100%" height="700px"></iframe>
+                                    @else
+                                        <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="700px">
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    @endforeach
 
                     <hr>
                     <div class="form-group row">
@@ -375,8 +451,14 @@
                                         <div class="col-sm-7">
                                             @if ($item->opsi_jawaban == 'file')
                                             <br>
-                                                <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
-                                                    alt="" width="700px">
+                                                @php
+                                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                                                @endphp
+                                                @if ($file_parts['extension'] == 'pdf')
+                                                    <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" width="100%" height="700px"></iframe>
+                                                @else    
+                                                    <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="700px">
+                                                @endif
                                             @else
                                                 <input type="text" readonly class="form-control-plaintext font-weight-bold"
                                                     id="staticEmail" value="{{ $itemTextDua->opsi_text }} {{$itemTiga->opsi_jawaban == 'persen' ? '%' : ''}} {{$item->opsi_jawaban == 'persen' ? '%' : ''}}">
@@ -601,8 +683,14 @@
                                             <div class="col-sm-7">
                                                 @if ($item->opsi_jawaban == 'file')
                                                 <br>
-                                                    <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextTiga->opsi_text }}"
-                                                        alt="" width="700px">
+                                                    @php
+                                                        $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextTiga->opsi_text);
+                                                    @endphp
+                                                    @if ($file_parts['extension'] == 'pdf')
+                                                        <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextTiga->opsi_text }}" width="100%" height="700px"></iframe>
+                                                    @else   
+                                                        <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextTiga->opsi_text }}" alt="" width="700px">
+                                                    @endif
                                                 @else
                                                     <input type="text" readonly class="form-control-plaintext font-weight-bold"
                                                         id="staticEmail" value="{{ $itemTextTiga->opsi_text }} {{$itemTiga->opsi_jawaban == 'persen' ? '%' : ''}}">
@@ -673,90 +761,41 @@
                                 @endphp
 
                                 @if (count($dataJawabanLevelTiga) != 0)
-                                    <div class="row form-group sub pl-5">
-                                        <label for="staticEmail"
-                                            class="col-sm-3 col-form-label">{{ $itemTiga->nama }}</label>
-                                        <label for="staticEmail" class="col-sm-1 col-form-label px-0">
-                                            <div class="d-flex justify-content-end">
-                                                <div style="width: 20px">
-                                                    :
+                                    @if ($itemTiga->nama == 'Ratio Tenor Asuransi Opsi')
+                                        
+                                    @else
+                                        <div class="row form-group sub pl-5">
+                                            <label for="staticEmail"
+                                                class="col-sm-3 col-form-label">{{ $itemTiga->nama }}</label>
+                                            <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                                                <div class="d-flex justify-content-end">
+                                                    <div style="width: 20px">
+                                                        :
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </label>
-                                        <div class="col-sm-7">
-                                            @foreach ($dataJawabanLevelTiga as $key => $itemJawabanLevelTiga)
-                                                @php
-                                                    $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor')
-                                                        ->where('id_pengajuan', $dataUmum->id)
-                                                        ->get();
-                                                    $count = count($dataDetailJawaban);
-                                                    for ($i = 0; $i < $count; $i++) {
-                                                        $data[] = $dataDetailJawaban[$i]['id_jawaban'];
-                                                    }
-                                                @endphp
-                                                @if (in_array($itemJawabanLevelTiga->id, $data))
-                                                    @if (isset($data))
-                                                        <input type="text" readonly
-                                                            class="form-control-plaintext font-weight-bold"
-                                                            id="staticEmail" value="{{ $itemJawabanLevelTiga->option }}">
-                                                        <input type="hidden" name="id[]" value="{{ $itemAspek->id }}">
+                                            </label>
+                                            <div class="col-sm-7">
+                                                @foreach ($dataJawabanLevelTiga as $key => $itemJawabanLevelTiga)
+                                                    @php
+                                                        $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor')
+                                                            ->where('id_pengajuan', $dataUmum->id)
+                                                            ->get();
+                                                        $count = count($dataDetailJawaban);
+                                                        for ($i = 0; $i < $count; $i++) {
+                                                            $data[] = $dataDetailJawaban[$i]['id_jawaban'];
+                                                        }
+                                                    @endphp
+                                                    @if (in_array($itemJawabanLevelTiga->id, $data))
+                                                        @if (isset($data))
+                                                            <input type="text" readonly
+                                                                class="form-control-plaintext font-weight-bold"
+                                                                id="staticEmail" value="{{ $itemJawabanLevelTiga->option }}">
+                                                            <input type="hidden" name="id[]" value="{{ $itemAspek->id }}">
+                                                        @endif
                                                     @endif
-                                                @endif
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                    <div class="row form-group sub pl-5">
-                                        <label for="staticEmail" class="col-sm-3 col-form-label"></label>
-                                        <label for="staticEmail" class="col-sm-1 col-form-label px-0">
-                                            <div class="d-flex justify-content-end">
-                                                <div style="width: 20px">
-
-                                                </div>
+                                                @endforeach
                                             </div>
-                                        </label>
-                                        <div class="col-sm-7">
-                                            @foreach ($dataJawabanLevelTiga as $key => $itemJawabanTiga)
-                                                @php
-                                                    $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
-                                                        ->where('id_pengajuan', $dataUmum->id)
-                                                        ->get();
-                                                    $count = count($dataDetailJawaban);
-                                                    for ($i = 0; $i < $count; $i++) {
-                                                        $data[] = $dataDetailJawaban[$i]['id_jawaban'];
-                                                    }
-                                                @endphp
-                                                @if (in_array($itemJawabanTiga->id, $data))
-                                                    @if (isset($data))
-                                                        @php
-                                                            $dataDetailJawabanTiga = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
-                                                                ->where('id_pengajuan', $dataUmum->id)
-                                                                ->where('id_jawaban', $itemJawabanTiga->id)
-                                                                ->get();
-                                                            $getKomentar3 = \App\Models\DetailKomentarModel::select('*')
-                                                                ->join('komentar', 'komentar.id', 'detail_komentar.id_komentar')
-                                                                ->where('id_item', $itemJawabanTiga->id_item)
-                                                                ->where('komentar.id_pengajuan', $comment->id_pengajuan)
-                                                                ->get();
-                                                        @endphp
-                                                        @foreach ($dataDetailJawabanTiga as $item)
-                                                            @if ($item->skor_penyelia != null && $item->skor_penyelia != '')
-                                                                <div class="d-flex">
-                                                                    <div class="">
-                                                                        <p><strong>Skor : </strong></p>
-                                                                    </div>
-                                                                    <div class="px-2">
-                                                                        <p class="badge badge-info text-lg"><b>
-                                                                                {{ $item->skor_penyelia }}</b></p>
-                                                                    </div>
-                                                                </div>
-                                                            @endif
-                                                        @endforeach
-                                                    @endif
-                                                @endif
-                                            @endforeach
                                         </div>
-                                    </div>
-                                    @foreach ($getKomentar3 as $itemKomentar3)
                                         <div class="row form-group sub pl-5">
                                             <label for="staticEmail" class="col-sm-3 col-form-label"></label>
                                             <label for="staticEmail" class="col-sm-1 col-form-label px-0">
@@ -767,19 +806,72 @@
                                                 </div>
                                             </label>
                                             <div class="col-sm-7">
-                                                <div class="d-flex">
-                                                    <div style="width: 15%">
-                                                        <p class="p-0 m-0"><strong>Komentar : </strong></p>
-                                                    </div>
-                                                    <h6 class="font-italic">{{ $itemKomentar3->komentar }}</h6>
-                                                    {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
-
-                                                </div>
-                                                {{-- <input type="text" readonly class="form-control-plaintext" id="komentar" value="{{ $itemKomentar3->komentar }}"> --}}
+                                                @foreach ($dataJawabanLevelTiga as $key => $itemJawabanTiga)
+                                                    @php
+                                                        $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
+                                                            ->where('id_pengajuan', $dataUmum->id)
+                                                            ->get();
+                                                        $count = count($dataDetailJawaban);
+                                                        for ($i = 0; $i < $count; $i++) {
+                                                            $data[] = $dataDetailJawaban[$i]['id_jawaban'];
+                                                        }
+                                                    @endphp
+                                                    @if (in_array($itemJawabanTiga->id, $data))
+                                                        @if (isset($data))
+                                                            @php
+                                                                $dataDetailJawabanTiga = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
+                                                                    ->where('id_pengajuan', $dataUmum->id)
+                                                                    ->where('id_jawaban', $itemJawabanTiga->id)
+                                                                    ->get();
+                                                                $getKomentar3 = \App\Models\DetailKomentarModel::select('*')
+                                                                    ->join('komentar', 'komentar.id', 'detail_komentar.id_komentar')
+                                                                    ->where('id_item', $itemJawabanTiga->id_item)
+                                                                    ->where('komentar.id_pengajuan', $comment->id_pengajuan)
+                                                                    ->get();
+                                                            @endphp
+                                                            @foreach ($dataDetailJawabanTiga as $item)
+                                                                @if ($item->skor_penyelia != null && $item->skor_penyelia != '')
+                                                                    <div class="d-flex">
+                                                                        <div class="">
+                                                                            <p><strong>Skor : </strong></p>
+                                                                        </div>
+                                                                        <div class="px-2">
+                                                                            <p class="badge badge-info text-lg"><b>
+                                                                                    {{ $item->skor_penyelia }}</b></p>
+                                                                        </div>
+                                                                    </div>
+                                                                @endif
+                                                            @endforeach
+                                                        @endif
+                                                    @endif
+                                                @endforeach
                                             </div>
                                         </div>
-                                    @endforeach
-                                    <hr>
+                                        @foreach ($getKomentar3 as $itemKomentar3)
+                                            <div class="row form-group sub pl-5">
+                                                <label for="staticEmail" class="col-sm-3 col-form-label"></label>
+                                                <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                                                    <div class="d-flex justify-content-end">
+                                                        <div style="width: 20px">
+
+                                                        </div>
+                                                    </div>
+                                                </label>
+                                                <div class="col-sm-7">
+                                                    <div class="d-flex">
+                                                        <div style="width: 15%">
+                                                            <p class="p-0 m-0"><strong>Komentar : </strong></p>
+                                                        </div>
+                                                        <h6 class="font-italic">{{ $itemKomentar3->komentar }}</h6>
+                                                        {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
+
+                                                    </div>
+                                                    {{-- <input type="text" readonly class="form-control-plaintext" id="komentar" value="{{ $itemKomentar3->komentar }}"> --}}
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                        <hr>
+                                    @endif
                                 @endif
 
                                 @foreach ($dataLevelEmpat as $keyEmpat => $itemEmpat)
@@ -810,10 +902,17 @@
                                                     </div>
                                                 </label>
                                                 <div class="col-sm-7">
-                                                    @if ($item->opsi_jawaban == 'file')
+                                                    @if ($itemEmpat->opsi_jawaban == 'file')
                                                     <br>
-                                                        <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextEmpat->opsi_text }}"
-                                                            alt="" width="700px">
+                                                        @php
+                                                            $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text);
+                                                        @endphp
+                                                        @if ($file_parts['extension'] == 'pdf')
+                                                            <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}" width="100%" height="700px"></iframe>    
+                                                        @else    
+                                                            <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
+                                                                alt="" width="700px">
+                                                        @endif
                                                     @else
                                                         <input type="text" readonly
                                                             class="form-control-plaintext font-weight-bold" id="staticEmail"
