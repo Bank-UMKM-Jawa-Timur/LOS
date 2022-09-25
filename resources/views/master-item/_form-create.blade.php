@@ -311,7 +311,7 @@
         function turunanSatu(id_level) {
             $.ajax({
                 type: "GET",
-                url: "/data-item-satu?itemSatu=" + id_level,
+                url: "/analisa_kredit/data-item-satu?itemSatu=" + id_level,
                 dataType: 'JSON',
                 success: function(res) {
                     // console.log(res);
@@ -333,7 +333,7 @@
         function turunanDua(id_turunan) {
             $.ajax({
                 type: "GET",
-                url: "/data-item-tiga?itemTiga=" + id_turunan,
+                url: "/analisa_kredit/data-item-tiga?itemTiga=" + id_turunan,
                 dataType: 'JSON',
                 success: function(res) {
                     // console.log(res);
@@ -359,7 +359,7 @@
         function turunanTiga(id_turunan) {
             $.ajax({
                 type: "GET",
-                url: "/data-item-empat?itemEmpat=" + id_turunan,
+                url: "/analisa_kredit/data-item-empat?itemEmpat=" + id_turunan,
                 dataType: 'JSON',
                 success: function(res) {
                     // console.log(res);
