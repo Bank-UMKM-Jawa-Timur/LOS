@@ -52,13 +52,20 @@
                                     ->get();
                             @endphp
                             @foreach ($dataDetailJawabanText as $itemTextDua)
+                                @php
+                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                                @endphp
                                 <div class="form-group col-md-12">
                                 <label for="">{{ $item->nama }}</label>
                                 </div>
                                 <div class="col-md-12 form-group">
                                     <b>Jawaban:</b>
                                     <div class="mt-2 pl-3">
-                                        <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="800px">
+                                        @if ($file_parts['extension'] == 'pdf')
+                                            <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" width="100%" height="800px"></iframe>
+                                        @else
+                                            <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="800px">
+                                        @endif
                                     </div>
                                 </div>
                             @endforeach
@@ -273,13 +280,20 @@
                                 ->get();
                         @endphp
                         @foreach ($dataDetailJawabanText as $itemTextDua)
+                            @php
+                                $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                            @endphp
                             <div class="form-group col-md-12">
                             <label for="">{{ $item->nama }}</label>
                             </div>
                             <div class="col-md-12 form-group">
                                 <b>Jawaban:</b>
                                 <div class="mt-2 pl-3">
-                                    <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="800px">
+                                    @if ($file_parts['extension'] == 'pdf')
+                                        <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" width="100%" height="800px"></iframe>
+                                    @else
+                                        <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="800px">
+                                    @endif
                                 </div>
                             </div>
                         @endforeach
@@ -416,8 +430,14 @@
                                         <b>Jawaban:</b>
                                         <div class="mt-2 pl-3">
                                             @if ($item->opsi_jawaban == 'file')
-                                                <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
-                                                    alt="" width="800px">
+                                                @php
+                                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                                                @endphp
+                                                @if ($file_parts['extension'] == 'pdf')
+                                                    <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" width="100%" height="800px"></iframe>
+                                                @else
+                                                    <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="800px">
+                                                @endif
                                             @else
                                                 <p class="badge badge-info text-lg"><b> {{ $itemTextDua->opsi_text }}
                                                         {{ $item->opsi_jawaban == 'persen' ? '%' : '' }}</b></p>
@@ -740,7 +760,14 @@
                                                 <b>Jawaban:</b>
                                                 <div class="mt-2 pl-3">
                                                     @if ($itemEmpat->opsi_jawaban == 'file')
-                                                        <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
+                                                        @php
+                                                            $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text);
+                                                        @endphp
+                                                        @if ()
+                                                            <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}" width="100%" height="700px"></iframe>
+                                                        @else
+                                                            <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
+                                                        @endif
                                                             alt="" width="800px">
                                                     @else
                                                         <p class="badge badge-info text-lg"><b>
