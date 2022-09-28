@@ -67,8 +67,8 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $item->nama }}</td>
-                                <td>{{ $item->jenis_usaha }}</td>
                                 <td>{{ $item->sektor_kredit }}</td>
+                                <td>{{ $item->jenis_usaha }}</td>
                                 <td>Rp.{{ number_format($item->jumlah_kredit, 2, '.', ',') }}</td>
                                 <td>{{ date('d-m-Y',strtotime( $item->tanggal ) ) }}</td>
                             </tr>
