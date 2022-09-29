@@ -1156,7 +1156,7 @@
         //end triger hitung ratio covarege
 
         //triger hitung ratio coverage
-        $('#nilai_asuransi').change(function(e) {
+        $('#nilai_asuransi_penjaminan').change(function(e) {
             hitungRatioCoverage();
         });
         //end triger hitung ratio covarege
@@ -1170,11 +1170,10 @@
         // hitung ratio covarege
         function hitungRatioCoverage() {
             let thls = parseInt($('#thls').val());
-            let nilaiAsuransi = parseInt($('#nilai_asuransi').val());
+            let nilaiAsuransi = parseInt($('#nilai_asuransi_penjaminan').val());
             let kreditYangDiminta = parseInt($('#jumlah_kredit').val());
 
-            let ratioCoverage = parseInt((thls + nilaiAsuransi) / kreditYangDiminta * 100); //cek rumus nya lagi
-
+            let ratioCoverage = (thls + nilaiAsuransi) / kreditYangDiminta * 100; //cek rumus nya lagi
             $('#ratio_coverage').val(ratioCoverage);
 
             if (ratioCoverage >= 150) {
@@ -1207,7 +1206,7 @@
         //end hitung ratio covarege
 
         //triger hitung ratio Tenor Asuransi
-        $('#masa_berlaku_asuransi').change(function(e) {
+        $('#masa_berlaku_asuransi_penjaminan').change(function(e) {
             hitungRatioTenorAsuransi();
         });
         //end triger hitung ratio Tenor Asuransi
@@ -1220,7 +1219,7 @@
 
         // hitung ratio Tenor Asuransi
         function hitungRatioTenorAsuransi() {
-            let masaBerlakuAsuransi = parseInt($('#masa_berlaku_asuransi').val());
+            let masaBerlakuAsuransi = parseInt($('#masa_berlaku_asuransi_penjaminan').val());
             let tenorYangDiminta = parseInt($('#tenor_yang_diminta').val());
 
             let ratioTenorAsuransi = parseInt(masaBerlakuAsuransi / tenorYangDiminta * 100); //cek rumusnya lagi
