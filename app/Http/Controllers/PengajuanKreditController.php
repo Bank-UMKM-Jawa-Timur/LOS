@@ -305,11 +305,11 @@ class PengajuanKreditController extends Controller
                 if (!\File::isDirectory($filePath)) {
                     \File::makeDirectory($filePath, 493, true);
                 }
-                $img = Image::make($image->getRealPath());
-                $img->resize(800, null, function ($constraint) {
-                    $constraint->aspectRatio();
-                    $constraint->upsize();
-                })->save($filePath.'/'.$imageName);
+                // $img = Image::make($image->getRealPath());
+                // $img->resize(800, null, function ($constraint) {
+                //     $constraint->aspectRatio();
+                //     $constraint->upsize();
+                // })->save($filePath.'/'.$imageName);
 
                 // $filePath = public_path('/images');
                 $image->move($filePath, $imageName);
@@ -488,9 +488,11 @@ class PengajuanKreditController extends Controller
 
         $param['pageTitle'] = "Dashboard";
 
-        $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->get();
+        $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->where('nama','!=','Data Umum')->get();
 
         $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
+
+        $param['itemSlik'] = ItemModel::with('option')->where('nama', 'SLIK')->first();
 
         $param['dataUmum'] = PengajuanModel::select(
             'pengajuan.id',
@@ -515,13 +517,15 @@ class PengajuanKreditController extends Controller
             'calon_nasabah.verifikasi_umum',
             'calon_nasabah.id_kabupaten',
             'calon_nasabah.id_kecamatan',
-            'calon_nasabah.id_desa'
+            'calon_nasabah.id_desa',
+            'calon_nasabah.tenor_yang_diminta'
         )
             ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
             ->find($id);
         $param['allKab'] = Kabupaten::get();
         $param['allKec'] = Kecamatan::where('id_kabupaten', $param['dataUmum']->id_kabupaten)->get();
         $param['allDesa'] = Desa::where('id_kecamatan', $param['dataUmum']->id_kecamatan)->get();
+        $param['pendapatDanUsulanStaf'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff')->first();
         // 'jawaban.id as id_jawaban','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','jawaban.skor_penyelia'
 
         // return $param['jawabanpengajuan'] = JawabanPengajuanModel::select('jawaban.id','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','option.id as id_option','option.option as name_option','option.id_item','item.id as id_item','item.nama','item.level','item.id_parent')
