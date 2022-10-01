@@ -34,7 +34,11 @@
                             Pengajuan Belum Ditindak Lanjuti
                         </div>
                         <div class="col-md-4 pl-0 text-center">
-                            <h1>{{ \App\Models\PengajuanModel::where('posisi', 'Review Penyelia')->where('posisi','Proses Input Data')->where('id_cabang', auth()->user()->id_cabang)->count() }}</h1>
+                            @if (auth()->user()->role = "Staf Analis Kredit")
+                                <h1>{{ \App\Models\PengajuanModel::where('posisi','Proses Input Data')->where('id_cabang', auth()->user()->id_cabang)->count() }}</h1>
+                            @else
+                                
+                            @endif
                             {{-- <h1>{{ \App\Models\Penugasan::where('status', 'Batal')->count() }}</h1> --}}
                         </div>
                     </div>
