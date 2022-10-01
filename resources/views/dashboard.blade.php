@@ -16,7 +16,6 @@
                             Pengajuan Telah Ditinjak Lanjuti
                         </div>
                         <div class="col-md-4 pr-0 text-center">
-                            <h1>{{ \App\Models\PengajuanModel::whereIn('posisi', ['Selesai', 'Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->count() }}</h1>
                             @if (auth()->user()->role = "Staf Analis Kredit")
                                 <h1>{{ \App\Models\PengajuanModel::whereIn('posisi',['Review Penyelia', 'Pincab', 'Selesai', 'Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->count() }}</h1>
                             @elseif (auth()->user()->role = "Penyelia Kredit")
