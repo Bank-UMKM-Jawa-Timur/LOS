@@ -35,9 +35,9 @@
                         </div>
                         <div class="col-md-4 pl-0 text-center">
                             @if (auth()->user()->role = "Staf Analis Kredit")
-                                <h1>{{ \App\Models\PengajuanModel::where('posisi','Proses Input Data')->where('id_cabang', auth()->user()->id_cabang)->count() }}</h1>
-                            @else
-                                
+                                <h1>{{ \App\Models\PengajuanModel::whereIn('posisi',['Proses Input Data', 'Review Penyelia', 'Selesai'])->where('id_cabang', auth()->user()->id_cabang)->count() }}</h1>
+                            @elseif (auth()->user()->role = "Penyelia Kredit")
+                                <h1>{{ \App\Models\PengajuanModel::where('posisi','Review Penyelia')->where('id_cabang', auth()->user()->id_cabang)->count() }}</h1>
                             @endif
                             {{-- <h1>{{ \App\Models\Penugasan::where('status', 'Batal')->count() }}</h1> --}}
                         </div>
