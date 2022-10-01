@@ -31,6 +31,7 @@
     {{-- <link href="assets/build/css/default.css" rel="stylesheet"> --}}
 
     <link rel="stylesheet" href="{{ asset('') }}css/custom.css" />
+    <link rel="icon" href="{{ asset('') }}img/favicon.png" type="image/gif" sizes="16x6" />
     <script src="https://cdn.jsdelivr.net/npm/autonumeric@4.5.4"></script>
 </head>
 <body ng-controller="MainCtrl">
@@ -80,7 +81,12 @@
             <ul class="navbar-nav">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      <span class="fa fa-user"></span> {{auth()->user()->role}}
+                        @php
+                            $cabang = DB::table('cabang')->where('id', auth()->user()->id_cabang)->get();
+                        @endphp
+                        @foreach ($cabang as $item)
+                            <span class="fa fa-user"></span> {{auth()->user()->role}} - {{ $item->cabang }}
+                        @endforeach
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                       <a class="dropdown-item" href="{{ route('change_password') }}">Ganti Password</a>
