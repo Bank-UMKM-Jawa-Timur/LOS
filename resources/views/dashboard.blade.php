@@ -1,11 +1,15 @@
 @extends('layouts.template')
 @section('content')
+    @php
+        $user = DB::table('users')->where('id', auth()->user()->id)->first();
+        $cabang = DB::table('cabang')->where('id', $user->id_cabang)->first();
+    @endphp
     <div class="row mt-4">
         <div class="col">
             <div class="alert alert-primary font-weight-bold">Selamat Datang Di Aplikasi Analisa Kredit</div>
         </div>
     </div>
-    {{-- @if (auth()->user()->level == 'Administrator' || auth()->user()->level == 'Admin' || auth()->user()->level == 'Kasat') --}}
+    {{-- @if ($user->level == 'Administrator' || $user->level == 'Admin' || $user->level == 'Kasat') --}}
     <div class="row">
         <div class="col-md-3 mb-4">
             <div class="card bg-rgb-primary border border-primary">
@@ -16,12 +20,14 @@
                             Pengajuan Telah Ditinjak Lanjuti
                         </div>
                         <div class="col-md-4 pr-0 text-center">
-                            @if (auth()->user()->role = "Staf Analis Kredit")
-                                <h1>{{ \App\Models\PengajuanModel::whereIn('posisi',['Review Penyelia', 'Pincab', 'Selesai', 'Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->count() }}</h1>
-                            @elseif (auth()->user()->role = "Penyelia Kredit")
-                                <h1>{{ \App\Models\PengajuanModel::whereIn('posisi',['Pincab', 'Selesai', 'Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->count() }}</h1>
+                            @if (auth()->user()->role == "Pincab")
+                                <h1>{{ \App\Models\PengajuanModel::where('posisi', ['Selesai','Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->count() }}</h1>
+                            @elseif (auth()->user()->role == "Penyelia Kredit")
+                                <h1>{{ \App\Models\PengajuanModel::where('posisi', ['Pincab','Selesai','Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->count() }}</h1>
+                            @elseif (auth()->user()->role == "Staf Analis Kredit")
+                                <h1>{{ \App\Models\PengajuanModel::where('posisi', ['Review Penyelia','Pincab','Selesai', 'Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->count() }}</h1>
                             @else
-                                <h1>{{ \App\Models\PengajuanModel::whereIn('posisi',['Selesai', 'Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->count() }}</h1>
+                                <h1>{{ \App\Models\PengajuanModel::where('posisi', ['Selesai', 'Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->count() }}</h1>
                             @endif
                         </div>
                     </div>
@@ -40,14 +46,15 @@
                             Pengajuan Belum Ditindak Lanjuti
                         </div>
                         <div class="col-md-4 pl-0 text-center">
-                            @if (auth()->user()->role = "Staf Analis Kredit")
-                                <h1>{{ \App\Models\PengajuanModel::where('posisi','Proses Input Data')->where('id_cabang', auth()->user()->id_cabang)->count() }}</h1>
-                            @elseif (auth()->user()->role = "Penyelia Kredit")
-                                <h1>{{ \App\Models\PengajuanModel::where('posisi','Review Penyelia')->where('id_cabang', auth()->user()->id_cabang)->count() }}</h1>
+                            @if (auth()->user()->role == "Staf Analis Kredit")
+                                <h1>{{ \App\Models\PengajuanModel::where('posisi','Proses Input Data')->where('id_cabang', $user->id_cabang)->count() }}</h1>
+                            @elseif (auth()->user()->role == "Penyelia Kredit")
+                                <h1>{{ \App\Models\PengajuanModel::where('posisi','Review Penyelia')->where('id_cabang', $user->id_cabang)->count() }}</h1>
+                            @elseif (auth()->user()->role == "Pincab")
+                                <h1>{{ \App\Models\PengajuanModel::where('posisi','Pincab')->where('id_cabang', $user->id_cabang)->count() }}</h1>
                             @else
-                                <h1>{{ \App\Models\PengajuanModel::whereIn('posisi','Pincab')->where('id_cabang', auth()->user()->id_cabang)->count() }}</h1>
+                                <h1>0</h1>
                             @endif
-                            {{-- <h1>{{ \App\Models\Penugasan::where('status', 'Batal')->count() }}</h1> --}}
                         </div>
                     </div>
                     <hr>

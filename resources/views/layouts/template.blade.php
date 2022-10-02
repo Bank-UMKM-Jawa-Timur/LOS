@@ -35,6 +35,10 @@
     <script src="https://cdn.jsdelivr.net/npm/autonumeric@4.5.4"></script>
 </head>
 <body ng-controller="MainCtrl">
+    @php
+        $user = DB::table('users')->where('id', auth()->user()->id)->first();
+        $cabang = DB::table('cabang')->where('id', $user->id_cabang)->first();
+    @endphp
     <div class="inner" ng-view>
     </div>
     <div class="container custom">
@@ -81,12 +85,12 @@
             <ul class="navbar-nav">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        @php
-                            $cabang = DB::table('cabang')->where('id', auth()->user()->id_cabang)->get();
-                        @endphp
-                        @foreach ($cabang as $item)
-                            <span class="fa fa-user"></span> {{auth()->user()->role}} - {{ $item->cabang }}
-                        @endforeach
+                        <span class="fa fa-user"></span> 
+                        @if (auth()->user()->role == 'Administrator')
+                            {{auth()->user()->role}}
+                        @else
+                            {{auth()->user()->role}} - {{$cabang->cabang}}
+                        @endif
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                       <a class="dropdown-item" href="{{ route('change_password') }}">Ganti Password</a>

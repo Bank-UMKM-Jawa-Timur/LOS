@@ -40,7 +40,18 @@
                                 $result_rentang = $interval->format('%a');
                             @endphp
                             {{-- {{ $rentangPenyelia }} --}}
-                            {{ $result_rentang.' hari' }}
+                            {{-- {{ $result_rentang.' hari' }} --}}
+                            @if ($result_rentang != 0)
+                                @if ($result_rentang == 1 || $result_rentang == 2 || $result_rentang == 3)
+                                    <font class="text-success">{{ $result_rentang.' hari' }}</font>
+                                @elseif ($result_rentang == 4 || $result_rentang == 5 || $result_rentang == 6)
+                                    <font class="text-warning">{{ $result_rentang.' hari' }}</font>
+                                @else
+                                    <font class="text-danger">{{ $result_rentang.' hari' }}</font>
+                                @endif
+                            @else
+                                {{ '-' }}
+                            @endif
                         @elseif ($item->posisi == 'Review Penyelia')
                             @php
                                 $rentangPenyelia = \App\Models\PengajuanModel::find($item->id);
@@ -49,7 +60,19 @@
                                 $interval = $awal->diff($akhir);
                                 $result_rentang = $interval->format('%a');
                             @endphp
-                                {{ $item->tanggal_review_penyelia != null ? $result_rentang.' hari' : '-' }}
+                            @if ($item->tanggal_review_penyelia != null)
+                                @if ($result_rentang != 0)
+                                    @if ($result_rentang == 1 || $result_rentang == 2 || $result_rentang == 3)
+                                        <font class="text-success">{{ $result_rentang.' hari' }}</font>
+                                    @elseif ($result_rentang == 4 || $result_rentang == 5 || $result_rentang == 6)
+                                        <font class="text-warning">{{ $result_rentang.' hari' }}</font>
+                                    @else
+                                        <font class="text-danger">{{ $result_rentang.' hari' }}</font>
+                                    @endif
+                                @else
+                                    {{ '-' }}
+                                @endif
+                            @endif
                         @else
                             @php
                                 $rentangPincab = \App\Models\PengajuanModel::find($item->id);
@@ -58,56 +81,68 @@
                                 $interval = $awal->diff($akhir);
                                 $result_rentang_pincab = $interval->format('%a');
                             @endphp
-                            {{ $item->tanggal_review_pincab != null ? $result_rentang_pincab.' hari' : '-' }}
+                            @if ($item->tanggal_review_pincab != null)
+                                @if ($result_rentang_pincab != 0)
+                                    @if ($result_rentang_pincab == 1 || $result_rentang_pincab == 2 || $result_rentang_pincab == 3)
+                                        <font class="text-success">{{ $result_rentang_pincab.' hari' }}</font>
+                                    @elseif ($result_rentang_pincab == 4 || $result_rentang_pincab == 5 || $result_rentang_pincab == 6)
+                                        <font class="text-warning">{{ $result_rentang_pincab.' hari' }}</font>
+                                    @else
+                                        <font class="text-danger">{{ $result_rentang_pincab.' hari' }}</font>
+                                    @endif
+                                @else
+                                    {{ '-' }}
+                                @endif
+                            @endif
                         @endif
 
                     </td>
                     <td>
                         @if ($item->average_by_penyelia != null)
                             @if ($item->status == 'hijau')
-                                <p class="text-success">
+                                <font class="text-success">
                                     {{ $item->average_by_penyelia }}
-                                </p>
+                                </font>
                             @elseif ($item->status == 'kuning')
-                                <p class="text-warning">
+                                <font class="text-warning">
                                     {{ $item->average_by_penyelia }}
-                                </p>
+                                </font>
                             @elseif ($item->status == 'merah')
-                                <p class="text-danger">
+                                <font class="text-danger">
                                     {{ $item->average_by_penyelia }}
-                                </p>
+                                </font>
                             @else
-                                <p class="text-secondary">
+                                <font class="text-secondary">
                                     {{ $item->average_by_penyelia }}
-                                </p>
+                                </font>
                             @endif
                         @else
                             @if ($item->status_by_sistem == 'hijau')
-                                <p class="text-success">
+                                <font class="text-success">
                                     {{ $item->average_by_sistem }}
-                                </p>
+                                </font>
                             @elseif ($item->status_by_sistem == 'kuning')
-                                <p class="text-warning">
+                                <font class="text-warning">
                                     {{ $item->average_by_sistem }}
-                                </p>
+                                </font>
                             @elseif ($item->status_by_sistem == 'merah')
-                                <p class="text-danger">
+                                <font class="text-danger">
                                     {{ $item->average_by_sistem }}
-                                </p>
+                                </font>
                             @else
-                                <p class="text-secondary">
+                                <font class="text-secondary">
                                     {{ $item->average_by_sistem }}
-                                </p>
+                                </font>
                             @endif
                         @endif
                     </td>
                     <td>
                         @if ($item->posisi == 'Selesai')
-                            <p class="text-success">Selesai</p>
+                            <font class="text-success">Selesai</font>
                         @elseif ($item->posisi == 'Ditolak')
-                            <p class="text-danger">Ditolak</p>
+                            <font class="text-success">Ditolak</font>
                         @else
-                            <p class="text-warning">On Progress</p>
+                            <font class="text-warning">On Progress</font>
                         @endif
                     </td>
                     <td>

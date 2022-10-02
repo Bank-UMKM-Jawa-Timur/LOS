@@ -55,16 +55,16 @@
                             {{-- {{ $rentangPenyelia }} --}}
                             {{-- {{ $result_rentang.' hari' }} --}}
                             @if ($result_rentang != 0)
-                                        @if ($result_rentang == 1 || $result_rentang == 2 || $result_rentang == 3)
-                                            <font class="text-success">{{ $result_rentang.' hari' }}</font>
-                                        @elseif ($result_rentang == 4 || $result_rentang == 5 || $result_rentang == 6)
-                                            <font class="text-warning">{{ $result_rentang.' hari' }}</font>
-                                        @else
-                                            <font class="text-danger">{{ $result_rentang.' hari' }}</font>
-                                        @endif
-                                    @else
-                                        {{ '-' }}
-                                    @endif
+                                @if ($result_rentang == 1 || $result_rentang == 2 || $result_rentang == 3)
+                                    <font class="text-success">{{ $result_rentang.' hari' }}</font>
+                                @elseif ($result_rentang == 4 || $result_rentang == 5 || $result_rentang == 6)
+                                    <font class="text-warning">{{ $result_rentang.' hari' }}</font>
+                                @else
+                                    <font class="text-danger">{{ $result_rentang.' hari' }}</font>
+                                @endif
+                            @else
+                                {{ '-' }}
+                            @endif
                         @elseif ($item->posisi == 'Review Penyelia')
                             @php
                                 $rentangPenyelia = \App\Models\PengajuanModel::find($item->id);
@@ -151,8 +151,10 @@
                         @endif
                     </td>
                     <td>
-                        @if ($item->posisi === 'Selesai')
+                        @if ($item->posisi == 'Selesai')
                             <font class="text-success">Selesai</font>
+                        @elseif ($item->posisi == 'Ditolak')
+                            <font class="text-success">Ditolak</font>
                         @else
                             <font class="text-warning">On Progress</font>
                         @endif
