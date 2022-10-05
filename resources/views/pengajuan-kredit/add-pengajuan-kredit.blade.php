@@ -211,9 +211,8 @@
                 </div>
                 <div class="form-group col-md-6">
                     <label for="">Jumlah Kredit yang diminta</label>
-                    <input type="number" name="jumlah_kredit" id="jumlah_kredit"
-                        class="form-control @error('jumlah_kredit') is-invalid @enderror" data-a-sign="" data-a-dec=","
-                        data-a-sep=".">
+                    <input type="text" name="jumlah_kredit" id="jumlah_kredit"
+                        class="form-control rupiah">
                     {{-- <textarea name="jumlah_kredit" class="form-control @error('jumlah_kredit') is-invalid @enderror" id="" cols="30"
                         rows="4" placeholder="Jumlah Kredit"></textarea> --}}
                     @error('jumlah_kredit')
@@ -348,13 +347,23 @@
                                         placeholder="Masukkan informasi {{ $item->nama }}" class="form-control">
                                 </div>
                             @elseif ($item->opsi_jawaban == 'number')
-                                <div class="form-group col-md-6">
-                                    <label for="">{{ $item->nama }}</label>
-                                    <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" id="">
-                                    <input type="hidden" name="id_level[]" value="{{ $item->id }}" id="">
-                                    <input type="number" step="any" name="informasi[]" id="{{ $idLevelDua }}"
-                                        placeholder="Masukkan informasi {{ $item->nama }}" class="form-control">
-                                </div>
+                                @if ($item->nama == 'Repayment Capacity')
+                                    <div class="form-group col-md-6">
+                                        <label for="">{{ $item->nama }}</label>
+                                        <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" id="">
+                                        <input type="hidden" name="id_level[]" value="{{ $item->id }}" id="">
+                                        <input type="text" name="informasi[]" id="{{ $idLevelDua }}"
+                                            placeholder="Masukkan informasi {{ $item->nama }}" class="form-control">
+                                    </div>
+                                @else    
+                                    <div class="form-group col-md-6">
+                                        <label for="">{{ $item->nama }}</label>
+                                        <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" id="">
+                                        <input type="hidden" name="id_level[]" value="{{ $item->id }}" id="">
+                                        <input type="text" step="any" name="informasi[]" id="{{ $idLevelDua }}"
+                                            placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah">
+                                    </div>
+                                @endif
                             @elseif ($item->opsi_jawaban == 'persen')
                                 <div class="form-group col-md-6">
                                     <label for="">{{ $item->nama }}</label>
@@ -527,9 +536,9 @@
                                             <input type="hidden" name="opsi_jawaban[]"
                                                 value="{{ $itemTiga->opsi_jawaban }}" id="">
                                             <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
-                                            <input type="number" step="any" name="informasi[]" id="{{ $idLevelTiga }}"
+                                            <input type="text" step="any" name="informasi[]" id="{{ $idLevelTiga }}"
                                                 placeholder="Masukkan informasi {{ $itemTiga->nama }}"
-                                                class="form-control">
+                                                class="form-control rupiah">
                                         </div>
                                     @elseif ($itemTiga->opsi_jawaban == 'persen')
                                         <div class="form-group col-md-6">
@@ -645,10 +654,10 @@
                                                     value="{{ $itemEmpat->opsi_jawaban }}" id="">
                                                 <input type="hidden" name="id_level[]" value="{{ $itemEmpat->id }}"
                                                     id="">
-                                                <input type="number" step="any" name="informasi[]"
+                                                <input type="text" step="any" name="informasi[]"
                                                     id="{{ $idLevelEmpat }}"
                                                     placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
-                                                    class="form-control">
+                                                    class="form-control rupiah">
                                             </div>
                                         @elseif ($itemEmpat->opsi_jawaban == 'persen')
                                             <div class="form-group col-md-6">
@@ -1332,12 +1341,12 @@
         // hitung Repayment Capacity
         function hitungRepaymentCapacity() {
             let persentaseNetIncome = parseInt($('#persentase_net_income').val()) / 100;
-            let omzetPenjualan = parseInt($('#omzet_penjualan').val());
+            let omzetPenjualan = parseInt($('#omzet_penjualan').val().split('.').join(''));
             let rencanaPeningkatan = parseInt($('#rencana_peningkatan').val()) / 100;
-            let installment = parseInt($('#installment').val());
+            let installment = parseInt($('#installment').val().split('.').join(''));
 
             let repaymentCapacity = parseFloat(persentaseNetIncome * omzetPenjualan * (1 + rencanaPeningkatan) /
-                (installment*12)); //cek rumusnya lagi
+                installment); //cek rumusnya lagi
 
             $('#repayment_capacity').val(repaymentCapacity);
 
@@ -1369,6 +1378,29 @@
             }
         }
         //end Repayment Capacity
+        
+        $('.rupiah').keyup(function(e){
+            var input = $(this).val()
+            $(this).val(formatrupiah(input))
+        });
+
+        function formatrupiah(angka, prefix) {
+            var number_string = angka.replace(/[^,\d]/g, '').toString(),
+			split   		= number_string.split(','),
+			sisa     		= split[0].length % 3,
+			rupiah     		= split[0].substr(0, sisa),
+			ribuan     		= split[0].substr(sisa).match(/\d{3}/gi);
+ 
+			// tambahkan titik jika yang di input sudah menjadi angka ribuan
+			if(ribuan){
+				separator = sisa ? '.' : '';
+				rupiah += separator + ribuan.join('.');
+			}
+ 
+			rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+			return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
+        }
+        // End Format Rupiah
     </script>
     <script src="{{ asset('') }}js/custom.js"></script>
 @endpush
