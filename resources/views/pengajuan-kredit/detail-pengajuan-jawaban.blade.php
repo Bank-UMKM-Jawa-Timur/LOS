@@ -255,7 +255,7 @@
                             placeholder="Masukkan Komentar"
                             value="{{ isset($komentarSlik->komentar) ? $komentarSlik->komentar : '' }}">
                         <div class="input-skor">
-                            <input type="number" class="form-control" placeholder="" name="skor_penyelia[]" min="0" max="4" onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
+                            <input type="number" class="form-control" placeholder="" name="skor_penyelia[]" onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
                                 {{ $itemSlik->status_skor == 0 ? 'readonly' : '' }}
                                 value="{{ $itemSlik->skor_penyelia != null ? $itemSlik->skor_penyelia : $itemSlik->skor }}">
                         </div>
@@ -534,7 +534,7 @@
                                                             value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                         <div class="input-skor">
                                                             <input type="number" class="form-control" placeholder=""
-                                                                name="skor_penyelia[]"
+                                                                name="skor_penyelia[]"  onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
                                                                 {{ $item->status_skor == 0 ? 'readonly' : '' }}
                                                                 value="{{ $getSkorPenyelia->skor_penyelia != null ? $getSkorPenyelia->skor_penyelia : $itemJawaban->skor }}">
 
@@ -710,7 +710,7 @@
                                                                     value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                 <div class="input-skor">
                                                                     <input type="number" class="form-control" placeholder=""
-                                                                        name="skor_penyelia[]"
+                                                                        name="skor_penyelia[]" onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
                                                                         {{ $itemTiga->status_skor == 0 ? 'readonly' : '' }}
                                                                         value="{{ $getSkorPenyelia->skor_penyelia != null ? $getSkorPenyelia->skor_penyelia : $itemJawabanLevelTiga->skor }}">
 
@@ -868,7 +868,7 @@
                                                                     value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                 <div class="input-skor">
                                                                     <input type="number" class="form-control"
-                                                                        placeholder="" name="skor_penyelia[]"
+                                                                        placeholder="" name="skor_penyelia[]" onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
                                                                         {{ $itemEmpat->status_skor == 0 ? 'readonly' : '' }}
                                                                         value="{{ $getSkorPenyelia->skor_penyelia != null ? $getSkorPenyelia->skor_penyelia : $itemJawabanLevelEmpat->skor }}">
                                                                 </div>

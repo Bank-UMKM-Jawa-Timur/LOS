@@ -362,6 +362,7 @@ class PengajuanKreditController extends Controller
         // $checkLevelDua = $request->dataLevelDua != null ? 'required' : '';
         // $checkLevelTiga = $request->dataLevelTiga != null ? 'required' : '';
         // $checkLevelEmpat = $request->dataLevelEmpat != null ? 'required' : '';
+        $find = array('Rp ', '.');
         $request->validate([
             'name' => 'required',
             'alamat_rumah' => 'required',
@@ -409,7 +410,7 @@ class PengajuanKreditController extends Controller
             $addData->status = $request->status;
             $addData->sektor_kredit = $request->sektor_kredit;
             $addData->jenis_usaha = $request->jenis_usaha;
-            $addData->jumlah_kredit = $request->jumlah_kredit;
+            $addData->jumlah_kredit = str_replace($find,"",$request->jumlah_kredit);
             $addData->tenor_yang_diminta = $request->tenor_yang_diminta;
             $addData->tujuan_kredit = $request->tujuan_kredit;
             $addData->jaminan_kredit = $request->jaminan;
@@ -428,7 +429,7 @@ class PengajuanKreditController extends Controller
                 $dataJawabanText = new JawabanTextModel;
                 $dataJawabanText->id_pengajuan = $id_pengajuan;
                 $dataJawabanText->id_jawaban = $request->get('id_level')[$key];
-                $dataJawabanText->opsi_text = $request->get('informasi')[$key];
+                $dataJawabanText->opsi_text = str_replace($find,'',$request->get('informasi')[$key]);
                 // $dataJawabanText->opsi_text = $request->get('informasi')[$key] == null ? '-' : $request->get('informasi')[$key];
                 $dataJawabanText->save();
             }

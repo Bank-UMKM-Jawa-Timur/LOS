@@ -70,8 +70,68 @@
             var input = $(form + " input")
             var select = $(form + " select")
             var textarea = $(form + " textarea")
+            var hidden = $(form + " input[type=hidden]")
 
-            var ttlInput = 0;
+            if (form == ".form-wizard[data-index='2']") {
+                var ttlInput = -1;
+            } else if (form == ".form-wizard[data-index='3']") {
+                var checkbox = $(form + " input[type=checkbox]:checked").length;
+                if ($(form + " select[name=kategori_jaminan_utama]").find(':selected').val() == 'Tanah' || $(form + " select[name=kategori_jaminan_utama]").find(':selected').val() == 'Tanah dan Bangunan') {
+                    if ($(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah' || $(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah dan Bangunan') {
+                        if (checkbox == 2) {
+                            var ttlInput = -5
+                        } else if (checkbox == 3){
+                            var ttlInput = -4
+                        } else if (checkbox == 4){
+                            var ttlInput = -3
+                        } else if (checkbox == 5) {
+                            var ttlInput = -2
+                        } else {
+                            if (checkbox == 6) {
+                                var ttlInput = -1
+                            } else {
+                                var ttlInput = -7
+                            }
+                        }
+                    } else {
+                        if (checkbox == 1) {
+                            var ttlInput = -3;
+                        } else if (checkbox == 2) {
+                            var ttlInput = -2;
+                        } else {
+                            if (checkbox == 3) {
+                                var ttlInput = -1;
+                            } else {
+                                var ttlInput = -4;
+                            }
+                        }
+                    }
+                    // var ttlInput = -1;
+                }
+                else {
+                    if ($(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah' || $(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah dan Bangunan') {
+                        if (checkbox == 1) {
+                            var ttlInput = -3;
+                        } else if (checkbox == 2) {
+                            var ttlInput = -2;
+                        } else {
+                            if (checkbox == 3) {
+                                var ttlInput = -1;
+                            } else {
+                                var ttlInput = -4;
+                            }
+                        }
+                    } else {
+                        var ttlInput = 0;
+                    }
+                }
+            }
+            else if (form == ".form-wizard[data-index='6']"){
+                var ttlInput = -1;
+            } else {
+                var ttlInput = 0;
+            }
+
             var ttlInputFilled = 0;
             $.each(input, function(i, v) {
                 ttlInput++
@@ -97,8 +157,17 @@
                 }
             })
 
-            var allInput = ttlInput + ttlSelect + ttlTextarea
-            var allInputFilled = ttlInputFilled + ttlSelectFilled + ttlTextareaFilled
+            var ttlHidden = 0;
+            var ttlHiddenFilled = 0;
+            $.each(hidden, function(i, v) {
+                ttlHidden++
+                if (v.value != '') {
+                    ttlHiddenFilled++
+                }
+            })
+
+            var allInput = ttlInput + ttlSelect + ttlTextarea - ttlHidden
+            var allInputFilled = ttlInputFilled + ttlSelectFilled + ttlTextareaFilled - ttlHiddenFilled
 
             var percentage = parseInt(allInputFilled / allInput * 100);
             percentage = percentage.isNan ? 0 : percentage;
@@ -116,28 +185,6 @@
 
             var result = parseInt(allInputFilledTotal / allInputTotal * 100);
             $('.progress').val(result);
-            // $(".side-wizard li[data-index='"+index+"'] input.answerFilled").val(allInputFilled);
-
-            // var a = 0
-            // $(".answerFilled").change(function(){
-            // $(".answerFilled").each(function(){
-            //     var hasil =  a += parseInt($(this).val())
-            //     console.log(hasil)
-            // })
-            // })
-
-            // var allInputTotalFilled = 0;
-            // $(".side-wizard li input.answerFilled").change(function(){
-            //     $(".side-wizard li input.answerFilled").each(function(){
-            //         allInputTotalFilled += Number($(this).val());
-            //     });
-            //     console.log(allInputTotalFilled);
-            // });
-            // $(".side-wizard li[data-index='"+formIndex+"'] input:text").val(allInput);
-            // var result = 0;
-            // var hasil = result + parseInt(test);
-            // // result.push(test);
-
         }
 
         function cekNpwp(indexNow) {
