@@ -47,6 +47,7 @@
                     <label for="">{{ $itemSP->nama }}</label>
                     <input type="hidden" name="id_item_file[]" value="{{ $itemSP->id }}" id="">
                     <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-control limit-size" required>
+                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
                             {{ $errors->first('dataLevelDua.' . $key) }}
@@ -193,6 +194,7 @@
                     <label for="">{{ $itemP->nama }}</label>
                     <input type="hidden" name="id_item_file[]" value="{{ $itemP->id }}" id="">
                     <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-control limit-size">
+                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
                             {{ $errors->first('dataLevelDua.' . $key) }}
@@ -387,6 +389,7 @@
                                     <input type="hidden" name="id_item_file[]" value="{{ $item->id }}" id="">
                                     <input type="file" name="upload_file[]" id=""
                                         placeholder="Masukkan informasi {{ $item->nama }}" class="form-control limit-size">
+                                        <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                                 </div>
                             @elseif ($item->opsi_jawaban == 'long text')
                                 <div class="form-group col-md-6">
@@ -571,6 +574,7 @@
                                             <input type="file" name="upload_file[]" id=""
                                                 placeholder="Masukkan informasi {{ $itemTiga->nama }}"
                                                 class="form-control limit-size">
+                                                <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                                         </div>
                                     @elseif ($itemTiga->opsi_jawaban == 'long text')
                                         <div class="form-group col-md-6">
@@ -688,6 +692,7 @@
                                                 <input type="file" name="upload_file[]" id=""
                                                     placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
                                                     class="form-control limit-size">
+                                                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                                             </div>
                                         @elseif ($itemEmpat->opsi_jawaban == 'long text')
                                             <div class="form-group col-md-6">
@@ -960,6 +965,7 @@
                                         <label>${valItem.nama}</label>
                                         <input type="hidden" name="id_item_file[]" value="${valItem.id}" id="" class="input">
                                         <input type="file" name="upload_file[]" id="" class="form-control limit-size">
+                                        <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                                     </div>`);
                                 }
                                 else {
@@ -1085,6 +1091,7 @@
                                     <label>${valItem.nama}</label>
                                     <input type="hidden" name="id_item_file[]" value="${valItem.id}" id="" class="input">
                                     <input type="file" name="upload_file[]" id="" class="form-control limit-size">
+                                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                                 </div>`);
                             } else {
                                 $('#bukti_pemilikan_jaminan_tambahan').append(`
@@ -1406,9 +1413,7 @@
         $('.limit-size').on('change', function() {
             var size = (this.files[0].size / 1024 / 1024).toFixed(2)
             if (size > 15) {
-                // alert("Minimum upload file size is 5 MB")
-                $('<span class="invalid-tooltip" style="display: block">Maximum upload file size is 15 MB</span>').insertAfter(this)
-                // $('<div class="alert alert-danger mt-2" style="" role="alert">Maximum file upload is 5 MB<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>').insertAfter(this)
+                $(this).next().css({"display": "block"});
                 this.value = ''
             } else {
                 $(this).next().css({"display": "none"});
