@@ -72,8 +72,66 @@
             var textarea = $(form + " textarea")
             var hidden = $(form + " input[type=hidden]")
 
+            if (form == ".form-wizard[data-index='2']") {
+                var ttlInput = -1;
+            } else if (form == ".form-wizard[data-index='3']") {
+                var checkbox = $(form + " input[type=checkbox]:checked").length;
+                if ($(form + " select[name=kategori_jaminan_utama]").find(':selected').val() == 'Tanah' || $(form + " select[name=kategori_jaminan_utama]").find(':selected').val() == 'Tanah dan Bangunan') {
+                    if ($(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah' || $(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah dan Bangunan') {
+                        if (checkbox == 2) {
+                            var ttlInput = -5
+                        } else if (checkbox == 3){
+                            var ttlInput = -4
+                        } else if (checkbox == 4){
+                            var ttlInput = -3
+                        } else if (checkbox == 5) {
+                            var ttlInput = -2
+                        } else {
+                            if (checkbox == 6) {
+                                var ttlInput = -1
+                            } else {
+                                var ttlInput = -7
+                            }
+                        }
+                    } else {
+                        if (checkbox == 1) {
+                            var ttlInput = -3;
+                        } else if (checkbox == 2) {
+                            var ttlInput = -2;
+                        } else {
+                            if (checkbox == 3) {
+                                var ttlInput = -1;
+                            } else {
+                                var ttlInput = -4;
+                            }
+                        }
+                    }
+                    // var ttlInput = -1;
+                }
+                else {
+                    if ($(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah' || $(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah dan Bangunan') {
+                        if (checkbox == 1) {
+                            var ttlInput = -3;
+                        } else if (checkbox == 2) {
+                            var ttlInput = -2;
+                        } else {
+                            if (checkbox == 3) {
+                                var ttlInput = -1;
+                            } else {
+                                var ttlInput = -4;
+                            }
+                        }
+                    } else {
+                        var ttlInput = 0;
+                    }
+                }
+            }
+            else if (form == ".form-wizard[data-index='6']"){
+                var ttlInput = -1;
+            } else {
+                var ttlInput = 0;
+            }
 
-            var ttlInput = 0;
             var ttlInputFilled = 0;
             $.each(input, function(i, v) {
                 ttlInput++
@@ -107,7 +165,7 @@
                     ttlHiddenFilled++
                 }
             })
-            
+
             var allInput = ttlInput + ttlSelect + ttlTextarea - ttlHidden
             var allInputFilled = ttlInputFilled + ttlSelectFilled + ttlTextareaFilled - ttlHiddenFilled
 
