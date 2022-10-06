@@ -149,6 +149,11 @@ class PengajuanKreditController extends Controller
 
         $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
 
+        // dump($param['dataAspek']);
+        // dump($param['itemSlik']);
+        // dump($param['itemSP']);
+        // dump($param['dataPertanyaanSatu']);
+        // dd($param['itemP']);
         return view('pengajuan-kredit.add-pengajuan-kredit', $param);
     }
 
@@ -167,12 +172,29 @@ class PengajuanKreditController extends Controller
         if ($kategori == 'Tanah' || $kategori=='Tanah dan Bangunan') {
             $item = ItemModel::with('option')->where('nama', $kategori)->where('id_parent', 95)->first();
 
+            $dataDetailJawabanText = \App\Models\JawabanTextModel::where('id_pengajuan', $request->id)
+                                        ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
+                                        ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                        ->where('jawaban_text.id_pengajuan', $request->id)
+                                        ->where('id_parent', 95)
+                                        ->orderBy('id', 'ASC')->whereIn('nama', ['SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C', 'Foto'])
+                                        ->get();
+
             $itemBuktiPemilikan = ItemModel::with('option');
 
             $itemBuktiPemilikan->whereIn('nama', ['SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C', 'Foto'])->where('id_parent', 96);
         }
         else if($kategori == 'Kendaraan Bermotor'){
             $item = ItemModel::with('option')->where('nama', $kategori)->where('id_parent', 95)->first();
+            
+            $dataDetailJawabanText = DB::table('jawaban_text')
+                                        ->where('id_pengajuan', $request->id)
+                                        ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
+                                        ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                        ->orderBy('id', 'ASC')
+                                        ->whereIn('nama', ['BPKB No', 'Atas Nama', 'Foto'])
+                                        ->where('id_parent', 96)
+                                        ->get();
 
             $itemBuktiPemilikan = ItemModel::with('option');
 
@@ -180,12 +202,21 @@ class PengajuanKreditController extends Controller
         }
         else{
             $item = ItemModel::where('nama', $kategori)->where('id_parent', 95)->first();
+            
+            $dataDetailJawabanText = \App\Models\JawabanTextModel::where('id_pengajuan', $request->id)
+                                        ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
+                                        ->distinct('nama')
+                                        ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                        ->orderBy('id', 'ASC')
+                                        ->where('nama', $kategori)
+                                        ->get();
 
             $itemBuktiPemilikan = ItemModel::where('nama', $kategori);
         }
         $data = [
             'item' => $item,
-            'itemBuktiPemilikan' => $itemBuktiPemilikan->get()
+            'itemBuktiPemilikan' => $itemBuktiPemilikan->get(),
+            'dataDetailJawabanText' => $dataDetailJawabanText
         ];
 
         return json_encode($data);
@@ -199,14 +230,120 @@ class PengajuanKreditController extends Controller
 
         $itemBuktiPemilikan = ItemModel::with('option');
         if ($kategori == 'Tanah' || $kategori=='Tanah dan Bangunan') {
+            
+            $dataDetailJawabanText = \App\Models\JawabanTextModel::where('id_pengajuan', $request->id)
+                                        ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
+                                        ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                        ->orderBy('id', 'ASC')
+                                        ->whereIn('nama', ['SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C', 'Foto']);
+
             $itemBuktiPemilikan->whereIn('nama', ['SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C', 'Foto']);
         }
         else{
+            
+            $dataDetailJawabanText = \App\Models\JawabanTextModel::where('id_pengajuan', $request->id)
+                                        ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
+                                        ->distinct()
+                                        ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                        ->orderBy('id', 'ASC')
+                                        ->whereIn('nama', ['BPKB No', 'Atas Nama', 'Foto']);
+
             $itemBuktiPemilikan->whereIn('nama', ['BPKB No', 'Atas Nama', 'Foto']);
         }
         $data = [
+            'dataDetailJawabanText' => $dataDetailJawabanText->where('id_parent', 114)->get(),
             'item' => $item,
             'itemBuktiPemilikan' => $itemBuktiPemilikan->where('id_parent', 114)->get()
+        ];
+
+        return json_encode($data);
+    }
+
+    public function getEditJaminanKategori(Request $request)
+    {
+        $kategori = $request->get('kategori');
+
+        if ($kategori == 'Tanah' || $kategori=='Tanah dan Bangunan') {
+            $item = ItemModel::with('option')->where('nama', $kategori)->where('id_parent', 95)->first();
+
+            $dataDetailJawabanText = \App\Models\JawabanTextModel::where('id_pengajuan', $request->id)
+                                        ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
+                                        ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                        ->where('jawaban_text.id_pengajuan', $request->id)
+                                        ->groupBy('nama')
+                                        ->orderBy('id', 'ASC')
+                                        ->get();
+
+            $itemBuktiPemilikan = ItemModel::with('option');
+
+            $itemBuktiPemilikan->whereIn('nama', ['SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C', 'Foto'])->where('id_parent', 96);
+        }
+        else if($kategori == 'Kendaraan Bermotor'){
+            $item = ItemModel::with('option')->where('nama', $kategori)->where('id_parent', 95)->first();
+            
+            $dataDetailJawabanText = \App\Models\JawabanTextModel::where('id_pengajuan', $request->id)
+                                        ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
+                                        ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                        ->groupBy('nama')
+                                        ->orderBy('id', 'ASC')
+                                        ->first();
+
+            $itemBuktiPemilikan = ItemModel::with('option');
+
+            $itemBuktiPemilikan->whereIn('nama', ['BPKB No', 'Atas Nama', 'Foto'])->where('id_parent', 96);
+        }
+        else{
+            $item = ItemModel::where('nama', $kategori)->where('id_parent', 95)->first();
+            
+            $dataDetailJawabanText = \App\Models\JawabanTextModel::where('id_pengajuan', $request->id)
+                                        ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
+                                        ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                        ->groupBy('nama')
+                                        ->orderBy('id', 'ASC')
+                                        ->get();
+
+            $itemBuktiPemilikan = ItemModel::where('nama', $kategori);
+        }
+
+        $data = [
+            'item' => $item,
+            'itemBuktiPemilikan' => $itemBuktiPemilikan->get(),
+            'dataDetailJawabanText' => $dataDetailJawabanText
+        ];
+
+        return json_encode($data);
+    }
+
+    public function getEditJaminanKategoriTambahan(Request $request)
+    {
+        $kategori = $request->get('kategori');
+
+        $item = ItemModel::with('option')->where('nama', $kategori)->where('id_parent', 110)->first();
+
+        $itemBuktiPemilikan = ItemModel::with('option');
+        if ($kategori == 'Tanah' || $kategori=='Tanah dan Bangunan') {
+            $itemBuktiPemilikan->whereIn('nama', ['SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C', 'Foto']);
+            
+            $dataDetailJawabanText = \App\Models\JawabanTextModel::where('id_pengajuan', $request->id)
+                                        ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
+                                        ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                        ->groupBy('nama')
+                                        ->orderBy('id', 'DESC');
+        }
+        else{
+            $itemBuktiPemilikan->whereIn('nama', ['BPKB No', 'Atas Nama', 'Foto']);
+            
+            $dataDetailJawabanText = \App\Models\JawabanTextModel::where('id_pengajuan', $request->id)
+                                        ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
+                                        ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                        ->groupBy('nama')
+                                        ->orderBy('id', 'DESC');
+                                        
+        }
+        $data = [
+            'dataDetailJawabanText' => $dataDetailJawabanText->get(),
+            'item' => $item,
+            'itemBuktiPemilikan' => $itemBuktiPemilikan->where('id_parent', 114)->get(),
         ];
 
         return json_encode($data);
@@ -526,6 +663,12 @@ class PengajuanKreditController extends Controller
         $param['allKec'] = Kecamatan::where('id_kabupaten', $param['dataUmum']->id_kabupaten)->get();
         $param['allDesa'] = Desa::where('id_kecamatan', $param['dataUmum']->id_kecamatan)->get();
         $param['pendapatDanUsulanStaf'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff')->first();
+            
+        $dataDetailJawabanText = \App\Models\JawabanTextModel::where('id_pengajuan', 11)
+                                        ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
+                                        ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                        ->orderBy('id', 'DESC');
+        
         // 'jawaban.id as id_jawaban','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','jawaban.skor_penyelia'
 
         // return $param['jawabanpengajuan'] = JawabanPengajuanModel::select('jawaban.id','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','option.id as id_option','option.option as name_option','option.id_item','item.id as id_item','item.nama','item.level','item.id_parent')
@@ -533,6 +676,10 @@ class PengajuanKreditController extends Controller
         //                             ->join('item','item.id','option.id_item')
         //                             ->where('jawaban.id_pengajuan',$id)
         //                             ->get();
+
+        // dd($param['dataAspek']);
+        // dump($param['itemSlik']);
+        // dd($dataDetailJawabanText->get());
 
         return view('pengajuan-kredit.edit-pengajuan-kredit', $param);
     }
@@ -546,6 +693,7 @@ class PengajuanKreditController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // dd($request);
         // return $request;
         $request->validate([
             'name' => 'required',
@@ -612,11 +760,17 @@ class PengajuanKreditController extends Controller
             $rata_rata = array();
 
             foreach ($request->id_text as $key => $value) {
+                if($request->skor_penyelia_text[$key] == 'null'){
+                    $skor[$key] = null;
+                }
+                else{
+                    $skor[$key] = $request->skor_penyelia_text[$key];
+                }
                array_push($finalArray_text,array(
                     'id_pengajuan' => $id_pengajuan,
                     'id_jawaban' => $request->id_text[$key],
-                    'opsi_text' => $request->opsi_text[$key],
-                    'skor_penyelia' => $request->skor_penyelia_text[$key],
+                    'opsi_text' => $request->info_text[$key],
+                    'skor_penyelia' => $skor[$key],
                     'updated_at' => date("Y-m-d H:i:s"),
                ));
             };
@@ -627,8 +781,18 @@ class PengajuanKreditController extends Controller
                 $result_dua = array_values(array_filter($data));
                 foreach ($result_dua as $key => $value) {
                     $data_level_dua = $this->getDataLevel($value);
-                    $skor[$key] = $data_level_dua[0];
-                    $id_jawaban[$key] = $data_level_dua[1];
+                    if($value != null){
+                        if($data_level_dua[0] == null){
+                            $skor[$key] = null;
+                            $id_jawaban[$key] =$data_level_dua[1];
+                        }else{
+                            $skor[$key] = null;
+                            $id_jawaban[$key] =$data_level_dua[1];
+                        }
+                    }else{
+                        $skor[$key] = null;
+                        $id_jawaban[$key] =$data_level_dua[1];
+                    }
                     array_push($rata_rata, $skor[$key]);
                     array_push(
                         $finalArray,
@@ -648,8 +812,18 @@ class PengajuanKreditController extends Controller
                 $result_tiga = array_values(array_filter($data));
                 foreach ($result_tiga as $key => $value) {
                     $data_level_tiga = $this->getDataLevel($value);
-                    $skor[$key] = $data_level_tiga[0];
-                    $id_jawaban[$key] = $data_level_tiga[1];
+                    if($value != null){
+                        if($data_level_tiga[0] == null){
+                            $skor[$key] = null;
+                            $id_jawaban[$key] =$data_level_tiga[1];
+                        }else{
+                            $skor[$key] = null;
+                            $id_jawaban[$key] =$data_level_tiga[1];
+                        }
+                    }else{
+                        $skor[$key] = null;
+                        $id_jawaban[$key] =$data_level_tiga[1];
+                    }
                     array_push($rata_rata, $skor[$key]);
                     array_push(
                         $finalArray,
@@ -669,8 +843,18 @@ class PengajuanKreditController extends Controller
                 $result_empat = array_values(array_filter($data));
                 foreach ($result_empat as $key => $value) {
                     $data_level_empat = $this->getDataLevel($value);
-                    $skor[$key] = $data_level_empat[0];
-                    $id_jawaban[$key] = $data_level_empat[1];
+                    if($value != null){
+                        if($data_level_empat[0] == null){
+                            $skor[$key] = null;
+                            $id_jawaban[$key] =$data_level_empat[1];
+                        }else{
+                            $skor[$key] = null;
+                            $id_jawaban[$key] =$data_level_empat[1];
+                        }
+                    }else{
+                        $skor[$key] = null;
+                        $id_jawaban[$key] =$data_level_empat[1];
+                    }
                     array_push($rata_rata, $skor[$key]);
                     array_push(
                         $finalArray,
@@ -738,10 +922,10 @@ class PengajuanKreditController extends Controller
             return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil mengupdate data.');
         } catch (Exception $e) {
             DB::rollBack();
-            return redirect()->back()->withError('Terjadi kesalahan.');
+            return redirect()->back()->withError('Terjadi kesalahan.'.$e);
         } catch (QueryException $e) {
             DB::rollBack();
-            return redirect()->back()->withError('Terjadi kesalahan');
+            return redirect()->back()->withError('Terjadi kesalahan'.$e);
         }
     }
 

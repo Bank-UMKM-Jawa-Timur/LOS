@@ -76,6 +76,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Cetak Surat
     Route::get('cetak-surat/{id}', [CetakSuratController::class, 'cetak'])->name('cetak');
     // Route::gety('cetak-surat', CetakSuratController::class);
+
+    Route::get('/pengajuan-kredit/get-item-jaminan-by-kategori-jaminan-utama-edit', [PengajuanKreditController::class, 'getEditJaminanKategori'])->name('get-item-jaminan-by-kategori-jaminan-utama-edit');
+    Route::get('/pengajuan-kredit/get-item-jaminan-by-kategori-jaminan-tambahan-edit', [PengajuanKreditController::class, 'getEditJaminanKategoriTambahan'])->name('get-item-jaminan-by-kategori-edit');
 });
 
 require __DIR__ . '/auth.php';
