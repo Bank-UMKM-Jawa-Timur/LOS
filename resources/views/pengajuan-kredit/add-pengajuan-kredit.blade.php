@@ -1355,7 +1355,7 @@
             let repaymentCapacity = parseFloat(persentaseNetIncome * omzetPenjualan * (1 + rencanaPeningkatan) /
                 installment); //cek rumusnya lagi
 
-            $('#repayment_capacity').val(repaymentCapacity);
+            $('#repayment_capacity').val(repaymentCapacity.toFixed(2));
 
             if (repaymentCapacity > 2) {
                 $('#repayment_capacity_opsi_0').attr('selected', true);
