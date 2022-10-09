@@ -1357,8 +1357,8 @@
 
         // hitung Repayment Capacity
         function hitungRepaymentCapacity() {
-            let persentaseNetIncome = parseInt($('#persentase_net_income').val()) / 100;
             let omzetPenjualan = parseInt($('#omzet_penjualan').val().split('.').join(''));
+            let persentaseNetIncome = parseInt($('#persentase_net_income').val()) / 100;
             let rencanaPeningkatan = parseInt($('#rencana_peningkatan').val()) / 100;
             let installment = parseInt($('#installment').val().split('.').join(''));
 
