@@ -922,14 +922,6 @@
                     <span>
                         {{ $pendapatDanUsulanStaf->komentar_staff }}
                     </span>
-                    {{-- <textarea name="komentar_staf_keseluruhan"
-                        class="form-control @error('komentar_staf_keseluruhan') is-invalid @enderror" id=""
-                        cols="30" rows="4" placeholder="Pendapat dan Usulan Penyelia Kredit"></textarea>
-                    @error('komentar_staf_keseluruhan')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror --}}
                     <hr>
                 </div>
                 <div class="form-group col-md-12">
