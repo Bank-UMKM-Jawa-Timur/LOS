@@ -989,10 +989,10 @@
 
             var percentage = parseInt(allInputFilled / allInput * 100);
             if (index == 7) {
-                if ($("#komentar_penyelia_kesuluruhan").val() != '') {
-                    $(".side-wizard li[data-index='" + index + "'] a span i").html("100%")
-                } else {
+                if ($("textarea[name=komentar_penyelia_keseluruhan]").val() == '') {
                     $(".side-wizard li[data-index='" + index + "'] a span i").html("0%")
+                } else {
+                    $(".side-wizard li[data-index='" + index + "'] a span i").html("100%")
                 }
             }
             else{
