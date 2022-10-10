@@ -132,20 +132,20 @@
             </td>
         </tr>
         <tr>
-            <td style="width: 40%" >
+            <td style="width: 40%; vertical-align: top" >
                 <label>Hubungan Dengan Bank</label>
             </td>
-            <td>:</td>
-            <td style="padding-left: 17px">
+            <td style="vertical-align: top">:</td>
+            <td style="padding-left: 17px; vertical-align: top">
                 {{ $dataNasabah->hubungan_bank }}
             </td>
         </tr>
         <tr>
-            <td style="width: 40%" >
+            <td style="width: 40%; vertical-align: top" >
                 <label>Hasil Verifikasi Karakter Umum</label>
             </td>
-            <td>:</td>
-            <td style="padding-left: 17px">
+            <td style="vertical-align: top">:</td>
+            <td style="padding-left: 17px; vertical-align: top">
                 {{ $dataNasabah->verifikasi_umum }}
             </td>
         </tr>
