@@ -185,7 +185,7 @@
                                     <tr>
                                         <td style="width: 40%; padding-left: 33px">{{  $item->nama }}</td>
                                         <td>:</td>
-                                        <td>{{ number_format($itemTextDua->opsi_text,2) }}</td>
+                                        <td>{{ round($itemTextDua->opsi_text,2) }}</td>
                                     </tr>
                                 @else
                                     @if ($item->nama == 'Omzet Penjualan' || $item->nama == 'Installment')    
@@ -635,7 +635,7 @@
                                                                                             ->where('jawaban_text.id_pengajuan',$dataUmum->id)->where('jawaban_text.id_jawaban',$itemTiga->id)->get();
                                 @endphp
                                 @foreach ($dataDetailJawabanText as $itemTextTiga)
-                                    @if ($itemTiga->nama == 'NIB' || $itemTiga->nama == 'Surat Keterangan Usaha')    
+                                    @if ($itemTiga->nama == 'NIB' || $itemTiga->nama == 'Surat Keterangan Usaha')
                                         <tr>
                                             <td style="width: 40%; padding-left: 33px">Ijin Usaha</td>
                                             <td>: </td>
