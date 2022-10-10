@@ -50,7 +50,7 @@
                     <select name="kabupaten" class="form-control @error('name') is-invalid @enderror select2" id="kabupaten">
                         <option value="">---Pilih Kabupaten----</option>
                         @foreach ($allKab as $item)
-                            <option value="{{ old('id', $item->id) }} }}"
+                            <option value="{{ old('id', $item->id) }}"
                                 {{ old('id', $item->id) == $dataUmum->id_kabupaten ? 'selected' : '' }}>
                                 {{ $item->kabupaten }}</option>
                         @endforeach
@@ -281,26 +281,16 @@
                         @php
                             $idLevelDua = str_replace(' ', '_', strtolower($item->nama));
 
-                            $dataDetailJawabanTextsku = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
-                                    ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-                                    ->where('jawaban_text.id_pengajuan', $dataUmum->id)
-                                    // ->where('jawaban_text.id_jawaban', $item->id)
-                                    ->where('item.nama', 'Surat Keterangan Usaha')
-                                    ->first();
+                            $dataIjin = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
+                                        ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
+                                        ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                        ->orderBy('id', 'DESC')
+                                        ->whereIn('item.nama', ['nib', 'surat keterangan usaha'])->first();
 
-                            $dataDetailJawabanTextnib = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
-                                    ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-                                    ->where('jawaban_text.id_pengajuan', $dataUmum->id)
-                                    ->where('jawaban_text.id_jawaban', $item->id)
-                                    ->where('item.nama', 'nib')
-                                    ->first(); 
-
-                            $dataDetailJawabanTextnpwp = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
-                                    ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-                                    ->where('jawaban_text.id_pengajuan', $dataUmum->id)
-                                    ->where('jawaban_text.id_jawaban', $item->id)
-                                    ->where('item.nama', 'npwp')
-                                    ->first();       
+                            $dataDetailJawabanTextnpwp = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
+                                        ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
+                                        ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                        ->where('item.nama', 'npwp')->first();            
 
                             // dump($dataDetailJawabanText);
                         @endphp
@@ -310,91 +300,54 @@
                                 <label for="">{{ $item->nama }}</label>
                                 <select name="ijin_usaha" id="ijin_usaha" class="form-control" required>
                                     <option value="">-- Pilih Ijin Usaha --</option>
-                                    <option value="nib">NIB</option>
-                                    <option value="surat_keterangan_usaha">Surat Keterangan Usaha</option>
+                                    <option value="nib" {{ ($dataIjin->nama == 'nib') ? 'selected' : '' }}>NIB</option>
+                                    <option value="surat_keterangan_usaha" {{ ($dataIjin->nama != 'nib') ? 'selected' : '' }}>Surat Keterangan Usaha</option>
                                 </select>
                             </div>
+                            
+                            <div class="form-group col-md-6" id="nib">
+                                <label for="">NIB</label>
+                                <input type="hidden" name="id_level[]" value="77" id="nib_id">
+                                <input type="hidden" name="opsi_jawaban[]" value="input text" id="nib_opsi_jawaban">
+                                <input type="text" name="info_text[]" id="nib_text"value="{{  ($dataIjin->nama == 'nib') ? $dataIjin->opsi_text : ''}}" placeholder="Masukkan informasi"
+                                    class="form-control" value="{{  ($dataIjin->nama != 'nib') ? $dataIjin->opsi_text : '' }}">
+                                <input type="hidden"{{ ($dataIjin->nama == 'nib') ? 'name="id_text[]" id="nib_text"' : ''  }} value="{{  ($dataIjin->nama == 'nib') ? $dataIjin->id : '' }}" >
+                                <input type="hidden" {{ ($dataIjin->nama == 'nib') ? 'name="skor_penyelia_text[]" id="nib_text" ' : ''  }} value="{{  ($dataIjin->nama == 'nib') ? $dataIjin->skor_penyelia : '' }}" >
+                                <input type="hidden" {{ ($dataIjin->nama == 'nib') ? 'name="id_jawaban_text[]" id="nib_text"' : ''  }} value="{{  ($dataIjin->nama == 'nib') ? $dataIjin->id : '' }}" >
+                            </div>
 
-                            @if($dataDetailJawabanTextnib != null)
-                                <div class="form-group col-md-6" id="nib">
-                                    <label for="">NIB</label>
-                                    <input type="hidden" name="id_level[]" value="77" id="nib_id">
-                                    <input type="hidden" name="opsi_jawaban[]" value="input text" id="nib_opsi_jawaban">
-                                    <input type="hidden" name="id_text[]" value="{{ ($dataDetailJawabanTextnib != null) ? $item->id_item : null }}">
-                                    <input type="hidden" name="skor_penyelia_text[]"
-                                        value="{{ ($dataDetailJawabanTextnib != null) ? $dataDetailJawabanTextnib->skor_penyelia : null  }}">
-                                    <input type="hidden" name="id_jawaban_text[]" value="{{ ($dataDetailJawabanTextnib != null) ? 
-                                        $item->id : null }}">
-                                    <input type="text" name="info_text[]" id="nib_text" placeholder="Masukkan informasi"
-                                        class="form-control" value="{{ ($dataDetailJawabanTextnib != null) ? $dataDetailJawabanTextnib->opsi_text : "" }}">
-                                </div> 
-                                <div class="form-group col-md-6" id="surat_keterangan_usaha">
-                                    <label for="">Surat Keterangan Usaha</label>
-                                    <input type="hidden" name="id_level[]" value="78" id="surat_keterangan_usaha_id">
-                                    <input type="hidden" name="opsi_jawaban[]" value="input text"
-                                        id="surat_keterangan_usaha_opsi_jawaban">
-                                    <input type="text" name="info_text[]" id="surat_keterangan_usaha_text"
-                                        placeholder="Masukkan informasi" value="{{ ($dataDetailJawabanTextsku != null) ? $dataDetailJawabanTextsku->opsi_text : "" }}" class="form-control">
-                                    <input type="hidden" value="{{ ($dataDetailJawabanTextsku != null) ?       
-                                        $item->id_item : null }}">
-                                    <input type="hidden">
-                                    <input type="hidden" name="id_text[]" value="{{ ($dataDetailJawabanTextsku != null) ?       
-                                        $item->id_item : null }}">
-                                    <input type="hidden" name="skor_penyelia_text[]" value="{{ ($dataDetailJawabanTextsku != null) ? 
-                                        $dataDetailJawabanTextsku->skor_penyelia : null }}">
-                                </div>
-                            @elseif($dataDetailJawabanTextsku != null)
-                                <div class="form-group col-md-6" id="surat_keterangan_usaha">
-                                    <label for="">Surat Keterangan Usaha</label>
-                                    <input type="hidden" name="id_level[]" value="78" id="surat_keterangan_usaha_id">
-                                    <input type="hidden" name="opsi_jawaban[]" value="input text"
-                                        id="surat_keterangan_usaha_opsi_jawaban">
-                                    <input type="text" name="info_text[]" id="surat_keterangan_usaha_text"
-                                        placeholder="Masukkan informasi" value="{{ ($dataDetailJawabanTextsku != null) ? $dataDetailJawabanTextsku->opsi_text : "" }}" class="form-control">
-                                    <input type="hidden" name="id_text[]" value="{{ ($dataDetailJawabanTextsku != null) ?       
-                                        $item->id_item : null }}">
-                                    <input type="hidden" name="id_jawaban_text[]" value="{{ ($dataDetailJawabanTextsku != null) ? 
-                                        $item->id : null }}">
-                                    <input type="hidden" name="skor_penyelia_text[]" value="{{ ($dataDetailJawabanTextsku != null) ? 
-                                        $dataDetailJawabanTextsku->skor_penyelia : null }}">
-                                </div>
-                                <div class="form-group col-md-6" id="nib">
-                                    <label for="">NIB</label>
-                                    <input type="hidden" name="id_level[]" value="77" id="nib_id">
-                                    <input type="hidden" name="opsi_jawaban[]" value="input text" id="nib_opsi_jawaban">
-                                    <input type="hidden"value="{{ ($dataDetailJawabanTextnib != null) ? $item->id_item : null }}">
-                                    <input type="hidden" name="skor_penyelia_text[]"
-                                        value="{{ ($dataDetailJawabanTextnib != null) ? $dataDetailJawabanTextnib->skor_penyelia : null  }}">
-                                    <input type="hidden">
-                                    <input type="hidden" name="id_text[]" value="{{ ($dataDetailJawabanTextsku != null) ?       
-                                        $item->id_item : null }}">
-                                    <input type="text" name="info_text[]" id="nib_text" placeholder="Masukkan informasi"
-                                        class="form-control" value="{{ ($dataDetailJawabanTextnib != null) ? $dataDetailJawabanTextnib->opsi_text : "" }}">
-                                </div> 
-                            @endif
+                            <div class="form-group col-md-6" id="surat_keterangan_usaha">
+                                <label for="">Surat Keterangan Usaha</label>
+                                <input type="hidden" name="id_level[]" value="78" id="surat_keterangan_usaha_id">
+                                <input type="text" name="info_text[]" id="surat_keterangan_usaha_text" placeholder="Masukkan informasi"
+                                    class="form-control" value="{{  ($dataIjin->nama != 'nib') ? $dataIjin->opsi_text : '' }}">
+                                <input type="hidden"{{ ($dataIjin->nama != 'nib') ? 'name="id_text[]" id="nib_text"' : '' }} value="{{  ($dataIjin->nama == 'nib') ? $dataIjin->id_item : '' }}">
+                                <input type="hidden" {{ ($dataIjin->nama != 'nib') ? 'name="skor_penyelia_text[]" id="nib_text"' : ''  }} value="{{  ($dataIjin->nama != 'nib') ? $dataIjin->skor_penyelia : '' }}" >
+                                    <input type="hidden" {{ ($dataIjin->nama != 'nib') ? 'name="id_jawaban_text[]" id="nib_text"' : ''  }} value="{{  ($dataIjin->nama != 'nib') ? $dataIjin->id : '' }}" >
+                            </div>
 
                         @elseif($item->nama == 'NPWP')
                             <div class="form-group col-md-6">
                                 <label for="">NPWP</label>
                                 <input type="hidden" name="id_level[]" value="79" id="">
                                 <input type="hidden" name="opsi_jawaban[]" value="input text" id="">
-                                <input type="hidden" name="id_text[]" value="{{ ($dataDetailJawabanTextnpwp != null) ? $item->id_item : null }}">
+                                <input type="hidden" name="id_text[]" value="{{ $dataDetailJawabanTextnpwp->id_item }}">
                                 <input type="text" name="info_text[]" id="npwp" placeholder="Masukkan informasi"
                                     class="form-control" value="{{ ($dataDetailJawabanTextnpwp != null) ? $dataDetailJawabanTextnpwp->opsi_text : "" }}">
                                 <input type="hidden" name="skor_penyelia_text[]"
                                     value="{{ $dataDetailJawabanTextnpwp->skor_penyelia }}">
                                     <input type="hidden" name="id_jawaban_text[]" value="{{ ($dataDetailJawabanTextnpwp != null) ? 
-                                        $item->id : null }}">
+                                        $dataDetailJawabanTextnpwp->id : null }}">
                             </div>
                         @else
+                            @php
+                                $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
+                                    ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                    ->where('jawaban_text.id_pengajuan', $dataUmum->id)
+                                    ->where('jawaban_text.id_jawaban', $item->id)
+                                    ->get();
+                            @endphp
                             @if ($item->opsi_jawaban == 'input text')
-                                @php
-                                    $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
-                                        ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-                                        ->where('jawaban_text.id_pengajuan', $dataUmum->id)
-                                        ->where('jawaban_text.id_jawaban', $item->id)
-                                        ->get();
-                                @endphp
                                 @foreach ($dataDetailJawabanText as $itemTextDua)
                                     <div class="form-group col-md-6">
                                         <label for="">{{ $item->nama }}</label>
@@ -446,7 +399,7 @@
                                             {{-- id="{{ $idLevelDua }}"> --}}
                                         <input type="hidden" name="id_text[]" value="{{ $itemTextDua->id_item }}">
                                         <input type="file" name="info_text[]" id="{{ $idLevelDua }}"
-                                            placeholder="Masukkan informasi {{ $item->nama }}" value="{{ ($itemTextDua != null) ? $itemTextDua->opsi_text : null }}" class="form-control">
+                                            placeholder=" {{ old($item->nama, $itemTextDua->opsi_text) }}" value=" {{ ($itemTextDua != null) ? $itemTextDua->opsi_text : null }} " class="form-control">
                                         <input type="hidden" name="skor_penyelia_text[]"
                                             value="{{ $itemTextDua->skor_penyelia }}">
                                         <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextDua->id }}">
@@ -519,6 +472,20 @@
                             @foreach ($dataLevelTiga as $keyTiga => $itemTiga)
                                 @php
                                     $idLevelTiga = str_replace(' ', '_', strtolower($itemTiga->nama));
+
+                                    $jaminanUtama = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
+                                        ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
+                                        ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                        ->orderBy('id', 'DESC')
+                                        ->whereIn('item.id', [101, 102, 103, 104, 105, 106, 107])
+                                        ->get();
+
+                                    $jaminanTambahan = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
+                                        ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
+                                        ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                        ->orderBy('id', 'DESC')
+                                        ->whereIn('item.id', [115, 116, 117, 118, 119])
+                                        ->get();
                                 @endphp
                                 
                                 @if ($itemTiga->nama == 'Kategori Jaminan Utama')
@@ -527,11 +494,11 @@
                                         <select name="kategori_jaminan_utama" id="kategori_jaminan_utama"
                                             class="form-control" required>
                                             <option value="">-- Pilih Kategori Jaminan Utama --</option>
-                                            <option value="Tanah">Tanah</option>
-                                            <option value="Kendaraan Bermotor">Kendaraan Bermotor</option>
-                                            <option value="Tanah dan Bangunan">Tanah dan Bangunan</option>
-                                            <option value="Stock">Stock</option>
-                                            <option value="Piutang">Piutang</option>
+                                            <option value="Tanah"{{ ($jaminanUtama[0]->id_item == 103 ||$jaminanUtama[0]->id_item == 104 ||$jaminanUtama[0]->id_item == 105 || $jaminanUtama[0]->id_item == 107) ? 'selected' : '' }}>Tanah</option>
+                                            <option value="Kendaraan Bermotor"{{ ($jaminanUtama[0]->id_item == 106) ? 'selected' : '' }}>Kendaraan Bermotor</option>
+                                            <option value="Tanah dan Bangunan" {{ ($jaminanUtama[0]->id_item == 103 ||$jaminanUtama[0]->id_item == 104 ||$jaminanUtama[0]->id_item == 105 || $jaminanUtama[0]->id_item == 107) ? 'selected' : '' }}>Tanah dan Bangunan</option>
+                                            <option value="Stock" {{ ($jaminanUtama[0]->id_item == 101) ? 'selected' : '' }}>Stock</option>
+                                            <option value="Piutang" {{ ($jaminanUtama[0]->id_item == 102) ? 'selected' : '' }}>Piutang</option>
                                         </select>
                                         {{-- <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
                                         <input type="hidden" name="opsi_jawaban[]" value="{{ $itemTiga->opsi_jawaban }}"
@@ -549,9 +516,9 @@
                                         <select name="kategori_jaminan_tambahan" id="kategori_jaminan_tambahan"
                                             class="form-control" required>
                                             <option value="">-- Pilih Kategori Jaminan Tambahan --</option>
-                                            <option value="Tanah">Tanah</option>
-                                            <option value="Kendaraan Bermotor">Kendaraan Bermotor</option>
-                                            <option value="Tanah dan Bangunan">Tanah dan Bangunan</option>
+                                            <option value="Tanah" {{ ($jaminanTambahan[0]->id_item == 115 ||$jaminanTambahan[0]->id_item == 116 ||$jaminanTambahan[0]->id_item == 117 || $jaminanTambahan[0]->id_item == 119) ? 'selected' : '' }}>Tanah</option>
+                                            <option value="Kendaraan Bermotor" {{ ($jaminanTambahan[0]->id_item == 118 ) ? 'selected' : '' }}>Kendaraan Bermotor</option>
+                                            <option value="Tanah dan Bangunan" {{ ($jaminanTambahan[0]->id_item == 115 ||$jaminanTambahan[0]->id_item == 116 ||$jaminanTambahan[0]->id_item == 117 || $jaminanTambahan[0]->id_item == 119) ? 'selected' : '' }}>Tanah dan Bangunan</option>
                                         </select>
                                         {{-- <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
                                         <input type="hidden" name="opsi_jawaban[]" value="{{ $itemTiga->opsi_jawaban }}"
@@ -578,20 +545,20 @@
 
                                     </div>
                                 @else
+                                    @php
+                                        $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
+                                            ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                            ->where('jawaban_text.id_pengajuan', $dataUmum->id)
+                                            ->where('jawaban_text.id_jawaban', $itemTiga->id)
+                                            ->get();
+                                    @endphp
                                     @if ($itemTiga->opsi_jawaban == 'input text')
                                         <div class="form-group col-md-6">
-                                            @php
-                                                $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
-                                                    ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-                                                    ->where('jawaban_text.id_pengajuan', $dataUmum->id)
-                                                    ->where('jawaban_text.id_jawaban', $itemTiga->id)
-                                                    ->get();
-                                            @endphp
                                             @foreach ($dataDetailJawabanText as $itemTextTiga)
                                                 <label for="">{{ $itemTiga->nama }}</label>
                                                 <input type="hidden" name="id_text[]" value="{{ $itemTextTiga->id_item }}">
                                                 <input type="text" name="info_text[]" placeholder="Masukkan informasi"
-                                                    class="form-control" id="{{ $idLevelTiga }}" value="{{ $itemTextTiga->opsi_text }}">
+                                                    class="form-control" id="{{ $idLevelTiga }}" value="{{ ($itemTextTiga->opsi_text != null) ? $itemTextTiga->opsi_text : null }}">
                                                 <input type="hidden" name="skor_penyelia_text[]"
                                                     value="{{ $itemTextTiga->skor_penyelia }}">
                                                 <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextTiga->id }}">
@@ -603,7 +570,7 @@
                                                 <label for="">{{ $itemTiga->nama }}</label>
                                                 <input type="hidden" name="id_text[]" value="{{ $itemTextTiga->id_item }}">
                                                 <input type="number" name="info_text[]" placeholder="Masukkan informasi"
-                                                    class="form-control" id="{{ $idLevelTiga }}" value="{{ $itemTextTiga->opsi_text }}">
+                                                    class="form-control" id="{{ $idLevelTiga }}" value="{{ ($itemTextTiga->opsi_text != null) ? $itemTextTiga->opsi_text : null }}">
                                                 <input type="hidden" name="skor_penyelia_text[]"
                                                     value="{{ $itemTextTiga->skor_penyelia }}">
                                                 <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextTiga->id }}">
@@ -621,8 +588,7 @@
                                                         id="{{ $idLevelTiga }}"
                                                         placeholder="Masukkan informasi {{ $itemTiga->nama }}"
                                                         class="form-control" aria-label="Recipient's username"
-                                                        aria-describedby="basic-addon2" value="{{ $itemTextTiga->opsi_text }}">
-                                                        <input type="hidden" name="id_text[]" value="{{ $itemTextTiga->id_item }}">
+                                                        aria-describedby="basic-addon2" value="{{ ($itemTextTiga->opsi_text != null) ? $itemTextTiga->opsi_text : null }}">
                                                     <input type="hidden" name="skor_penyelia_text[]"
                                                         value="{{ $itemTextTiga->skor_penyelia }}">
                                                     <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextTiga->id }}">
@@ -641,7 +607,7 @@
                                                 {{-- <input type="hidden" name="opsi_jawaban[]"
                                                     value="{{ $itemTiga->opsi_jawaban }}" id=""> --}}
                                                 <input type="file" name="info_text[]" placeholder="Masukkan informasi"
-                                                class="form-control" id="{{ $idLevelTiga }}" value="{{ $itemTextTiga->opsi_text }}">
+                                                class="form-control" id="{{ $idLevelTiga }}" value="{{ ($itemTextTiga->opsi_text != null) ? $itemTextTiga->opsi_text : null }}">
                                                 <input type="hidden" name="id_text[]" value="{{ $itemTextTiga->id_item }}">
                                                 <input type="hidden" name="skor_penyelia_text[]"
                                                     value="{{ $itemTextTiga->skor_penyelia }}">
@@ -653,7 +619,7 @@
                                             <div class="form-group col-md-6">
                                                 <label for="">{{ $itemTiga->nama }}</label>
                                                 <textarea name="info_text[]" rows="4" id="{{ $idLevelTiga }}" class="form-control"
-                                                    placeholder="Masukkan informasi {{ $itemTiga->nama }}">{{ $itemTextTiga->opsi_text }}</textarea>
+                                                    placeholder="Masukkan informasi {{ $itemTiga->nama }}">{{ ($itemTextTiga->opsi_text != null) ? $itemTextTiga->opsi_text : null }}</textarea>
                                                     <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextTiga->id }}">
                                                     <input type="hidden" name="skor_penyelia_text[]"
                                                         value="{{ $itemTextTiga->skor_penyelia }}">
@@ -733,7 +699,7 @@
                                                 <div class="form-group col-md-6">
                                                     <label for="">{{ $itemEmpat->nama }}</label>
                                                     <input type="text" name="info_text[]" id="{{ $idLevelEmpat }}"
-                                                        placeholder="Masukkan informasi" class="form-control" value="{{ $itemTextEmpat->opsi_text }}">
+                                                        placeholder="Masukkan informasi" class="form-control" value="{{ ($itemTextEmpat->opsi_text != null) ? $itemTextEmpat->opsi_text : null }}">
                                                     <input type="hidden" name="skor_penyelia_text[]"
                                                         value="{{ $itemTextEmpat->skor_penyelia }}">
                                                     <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextEmpat->id }}">
@@ -746,7 +712,7 @@
                                                 <div class="form-group col-md-6">
                                                     <label for="">{{ $itemEmpat->nama }}</label>
                                                         <input type="number" name="info_text[]" id="{{ $idLevelEmpat }}"
-                                                            placeholder="Masukkan informasi" class="form-control" value="{{ $itemTextEmpat->opsi_text }}">
+                                                            placeholder="Masukkan informasi" class="form-control" value="{{ ($itemTextEmpat->opsi_text != null) ? $itemTextEmpat->opsi_text : null }}">
                                                         <input type="hidden" name="skor_penyelia_text[]"
                                                             value="{{ $itemTextEmpat->skor_penyelia }}">
                                                         <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextEmpat->id }}">
@@ -762,7 +728,7 @@
                                                             id="{{ $idLevelEmpat }}"
                                                             placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
                                                             class="form-control" aria-label="Recipient's username"
-                                                            aria-describedby="basic-addon2"value="{{ $itemTextEmpat->opsi_text }}">
+                                                            aria-describedby="basic-addon2"value="{{ ($itemTextEmpat->opsi_text != null) ? $itemTextEmpat->opsi_text : null }}">
                                                         <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextEmpat->id }}">
                                                         <div class="input-group-append">
                                                             <span class="input-group-text" id="basic-addon2">%</span>
@@ -770,8 +736,6 @@
                                                         <input type="hidden" name="skor_penyelia_text[]"
                                                             value="{{ $itemTextTiga->skor_penyelia }}">
                                                         <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextEmpat->id }}">
-                                                        
-                                                    <input type="hidden" name="id_text[]" value="{{ $itemTextEmpat->id_item }}">
                                                     </div>
                                                 </div>
                                             @endforeach
@@ -783,7 +747,7 @@
                                                         value="{{ $itemEmpat->opsi_jawaban }}" id=""> --}}
                                                         <input type="hidden" name="id_text[]" value="{{ $itemTextEmpat->id_item }}">
                                                         <input type="file" name="info_text[]" id="{{ $idLevelEmpat }}"
-                                                            placeholder="Masukkan informasi" class="form-control" value="{{ $itemTextEmpat->opsi_text }}">
+                                                            placeholder="Masukkan informasi" class="form-control" value="{{ ($itemTextEmpat->opsi_text != null) ? $itemTextEmpat->opsi_text : null }}">
                                                         <input type="hidden" name="skor_penyelia_text[]"
                                                             value="{{ $itemTextEmpat->skor_penyelia }}">
                                                         <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextEmpat->id }}">
@@ -794,7 +758,7 @@
                                                 <div class="form-group col-md-6">
                                                     <label for="">{{ $itemEmpat->nama }}</label>
                                                     <textarea name="info_text[]" rows="4" id="{{ $idLevelEmpat }}" class="form-control"
-                                                        placeholder="Masukkan informasi {{ $itemEmpat->nama }}">{{ $itemTextEmpat->opsi_text }}</textarea>
+                                                        placeholder="Masukkan informasi {{ $itemEmpat->nama }}">{{ ($itemTextEmpat->opsi_text != null) ? $itemTextEmpat->opsi_text : null }}</textarea>
                                                     <input type="hidden" name="skor_penyelia_text[]"
                                                         value="{{ $itemTextEmpat->skor_penyelia }}">
                                                     <input type="hidden" name="id_text[]" value="{{ $itemTextEmpat->id_item }}">
@@ -906,8 +870,12 @@
         "{{ route('get-item-jaminan-by-kategori-jaminan-utama') }}"; 
     // jaminan tambahan
     let urlGetItemByKategori = "{{ route('get-item-jaminan-by-kategori') }}";
+    let urlGetIjin = "{{ route('get-ijin-usaha') }}";
     let id = parseInt("{{ $dataUmum->id }}");
      // jaminan tambahan
+    getJaminanutama();
+    getJaminanTambahan();
+    getIjinUsaha();
 
     $('#kabupaten').change(function() {
         var kabID = $(this).val();
@@ -994,8 +962,42 @@
         });
     });
 
-    //item kategori jaminan utama cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
-    $('#kategori_jaminan_utama').change(function(e) {
+    function getIjinUsaha(){
+        let ijinUsaha = $('#ijin_usaha').val();
+        if (ijinUsaha == 'nib') {
+            $('#surat_keterangan_usaha').hide();
+            $('#surat_keterangan_usaha_id').attr('disabled', true);
+            $('#surat_keterangan_usaha_text').attr('disabled', true);
+            $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
+
+            $('#nib').show();
+            $('#nib_id').removeAttr('disabled');
+            $('#nib_text').removeAttr('disabled');
+            $('#nib_opsi_jawaban').removeAttr('disabled');
+        } else if (ijinUsaha == 'surat_keterangan_usaha') {
+            $('#nib').hide()
+            $('#nib_id').attr('disabled', true);
+            $('#nib_text').attr('disabled', true);
+            $('#nib_opsi_jawaban').attr('disabled', true);
+
+            $('#surat_keterangan_usaha').show();
+            $('#surat_keterangan_usaha_id').removeAttr('disabled');
+            $('#surat_keterangan_usaha_text').removeAttr('disabled');
+            $('#surat_keterangan_usaha_opsi_jawaban').removeAttr('disabled');
+        } else {
+            $('#nib').hide();
+            $('#nib_id').attr('disabled', true);
+            $('#nib_text').attr('disabled', true);
+            $('#nib_opsi_jawaban').attr('disabled', true);
+
+            $('#surat_keterangan_usaha').hide();
+            $('#surat_keterangan_usaha_id').attr('disabled', true);
+            $('#surat_keterangan_usaha_text').attr('disabled', true);
+            $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
+        }
+    }
+
+    function getJaminanutama(){
         //clear item
         $('#select_kategori_jaminan_utama').empty();
 
@@ -1003,7 +1005,7 @@
         $('#bukti_pemilikan_jaminan_utama').empty();
 
         //get item by kategori
-        let kategoriJaminanUtama = $(this).val();
+        let kategoriJaminanUtama = $('#kategori_jaminan_utama').val();
 
         $.ajax({
             type: "get",
@@ -1054,7 +1056,8 @@
                                             <input type="text" name="info_text[]" placeholder="Masukkan informasi"
                                             class="form-control input" value="${valItem.opsi_text}">
                                         <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
-                                        <input type="hidden" name="id_jawaban_text[]" value="${valItem.id_jawaban}">
+                                        <input type="hidden" name="id_jawaban_text[]" value="${valItem.id}">
+                                    <input type="hidden" name="id_text[]" value="${valItem.id_item}">
                                     </div>
                                 `);
                             } else {
@@ -1063,9 +1066,10 @@
                                     <div class="form-group col-md-6 aspek_jaminan_kategori_jaminan_utama">
                                         <label>${valItem.nama}</label>
                                         <input type="hidden" name="id_item_file[]" value="${valItem.id}" id="" class="input">
-                                        <input type="file" name="upload_file[]"  value="${valItem.opsi_text}" id="" class="form-control">
+                                        <input type="file" name="info_text[]"  value="${valItem.opsi_text}" id="" class="form-control">
                                         <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
-                                        <input type="hidden" name="id_jawaban_text[]" value="${valItem.id_jawaban}">
+                                        <input type="hidden" name="id_jawaban_text[]" value="${valItem.id}">
+                                    <input type="hidden" name="id_text[]" value="${valItem.id_item}">
                                     </div>`);
                                 }
                                 else {
@@ -1078,7 +1082,8 @@
                                         <input type="text" name="info_text[]"
                                             class="form-control input" value="${valItem.opsi_text}">
                                         <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
-                                        <input type="hidden" name="id_jawaban_text[]" value="${valItem.id_jawaban}">
+                                        <input type="hidden" name="id_jawaban_text[]" value="${valItem.id}">
+                                    <input type="hidden" name="id_text[]" value="${valItem.id_item}">
                                     </div>`);
                                 }
                             }
@@ -1135,11 +1140,14 @@
                                 $('#bukti_pemilikan_jaminan_utama').append(`
                                 <div class="form-group col-md-6 aspek_jaminan_kategori_jaminan_utama">
                                     <label>${valItem.nama}</label>
-                                    <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input">
-                                    <input type="hidden" name="opsi_jawaban[]"
-                                        value="${valItem.opsi_jawaban}" id="" class="input">
-                                    <input type="text" name="info_text[]" placeholder="Masukkan informasi"
-                                        class="form-control input">
+                                        <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input">
+                                        <input type="hidden" name="opsi_jawaban[]"
+                                            value="${valItem.opsi_jawaban}" id="" class="input">
+                                            <input type="text" name="info_text[]" placeholder="Masukkan informasi"
+                                            class="form-control input" value="">
+                                        <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
+                                        <input type="hidden" name="id_jawaban_text[]" value="">
+                                    <input type="hidden" name="id_text[]" value="${valItem.id}">
                                 </div>
                             `);
                             } else {
@@ -1160,6 +1168,8 @@
                                             value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
                                         <input type="text" name="info_text[]" placeholder="Masukkan informasi ${valItem.nama}"
                                             class="form-control input" ${isDisabled}>
+                                        <input type="hidden" name="id_jawaban_text[]" value="">
+                                    <input type="hidden" name="id_text[]" value="${valItem.id}">
                                     </div>`);
                                 }
                             }
@@ -1184,33 +1194,33 @@
                 }
                 // jika kategori = stock dan piutang
                 else {
-                    $.each(response.itemBuktiPemilikan, function(i, valItem) {
+                    $.each(response.dataDetailJawabanText, function(i, valItem) {
                         if (valItem.nama == 'Atas Nama') {
                             $('#select_kategori_jaminan_utama').append(`
                             <div class="aspek_jaminan_kategori_jaminan_utama">
                                 <label>${valItem.nama}</label>
-                                <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input">
-                                <input type="hidden" name="opsi_jawaban[]"
-                                    value="${valItem.opsi_jawaban}" id="" class="input">
-                                <input type="text" name="info_text[]" placeholder="Masukkan informasi"
-                                    class="form-control input">
-                                        <input type="hidden" name="skor_penyelia_text[]"
-                                            value="">
-                                        <input type="hidden" name="id_jawaban_text[]" value="">
+                                        <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input">
+                                        <input type="hidden" name="opsi_jawaban[]"
+                                            value="${valItem.opsi_jawaban}" id="" class="input">
+                                            <input type="text" name="info_text[]" placeholder="Masukkan informasi"
+                                            class="form-control input" value="${valItem.opsi_text}">
+                                        <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
+                                        <input type="hidden" name="id_jawaban_text[]" value="${valItem.id}">
+                                    <input type="hidden" name="id_text[]" value="${valItem.id_item}">
                             </div>
                                 `);
                         } else {
                                 $('#select_kategori_jaminan_utama').append(`
                                 <div class="aspek_jaminan_kategori_jaminan_utama">
                                     <label>${valItem.nama}</label>
-                                    <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input" >
-                                    <input type="hidden" name="opsi_jawaban[]"
-                                        value="${valItem.opsi_jawaban}" id="" class="input">
-                                    <input type="text" name="info_text[]" placeholder="Masukkan informasi ${valItem.nama}"
-                                        class="form-control input">
-                                            <input type="hidden" name="skor_penyelia_text[]"
-                                                value="">
-                                            <input type="hidden" name="id_jawaban_text[]" value="">
+                                        <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input">
+                                        <input type="hidden" name="opsi_jawaban[]"
+                                            value="${valItem.opsi_jawaban}" id="" class="input">
+                                            <input type="text" name="info_text[]" placeholder="Masukkan informasi"
+                                            class="form-control input" value="${valItem.opsi_text}">
+                                        <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
+                                        <input type="hidden" name="id_jawaban_text[]" value="${valItem.id}">
+                                    <input type="hidden" name="id_text[]" value="${valItem.id_item}">
                                 </div>
                                 `);
                         }
@@ -1218,11 +1228,10 @@
                 }
             }
         });
-    });
-    // end item kategori jaminan utama cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
+    }
 
-    //item kategori jaminan tambahan cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
-    $('#kategori_jaminan_tambahan').change(function(e) {
+    function getJaminanTambahan(){
+
         //clear item
         $('#select_kategori_jaminan_tambahan').empty();
 
@@ -1230,7 +1239,7 @@
         $('#bukti_pemilikan_jaminan_tambahan').empty();
 
         //get item by kategori
-        let kategoriJaminan = $(this).val();
+        let kategoriJaminan = $('#kategori_jaminan_tambahan').val();
 
         $.ajax({
             type: "get",
@@ -1276,7 +1285,8 @@
                                         <input type="text" name="info_text[]"
                                             class="form-control input" value="${valItem.opsi_text}">
                                         <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
-                                        <input type="hidden" name="id_jawaban_text[]" value="${valItem.id_jawaban}"
+                                        <input type="hidden" name="id_jawaban_text[]" value="${valItem.id}">
+                                    <input type="hidden" name="id_text[]" value="${valItem.id_item}">
                                             
                                     </div>
                                 `);
@@ -1286,10 +1296,9 @@
                                     <div class="form-group col-md-6 aspek_jaminan_kategori">
                                         <label>${valItem.nama}</label>
                                         <input type="hidden" name="id_item_file[]" value="${valItem.id}" id="" class="input">
-                                        <input type="file" name="info_text[]"
+                                        <input type="file" name="upload_file[]"
                                             class="form-control input" value="${valItem.opsi_text}">
                                         <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
-                                        <input type="hidden" name="id_jawaban_text[]" value="${valItem.id_jawaban}"
                                     </div>`);
                                 } else {
                                     $('#bukti_pemilikan_jaminan_tambahan').append(`
@@ -1301,7 +1310,8 @@
                                             <input type="text" name="info_text[]"
                                                 class="form-control input" value="${valItem.opsi_text}">
                                             <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
-                                            <input type="hidden" name="id_jawaban_text[]" value="${valItem.id_jawaban}"
+                                            <input type="hidden" name="id_jawaban_text[]" value="${valItem.id}">
+                                    <input type="hidden" name="id_text[]" value="${valItem.id_item}">
                                         </div>
                                     `);
                                 }
@@ -1341,11 +1351,14 @@
                             $('#bukti_pemilikan_jaminan_tambahan').append(`
                                 <div class="form-group col-md-6 aspek_jaminan_kategori">
                                     <label>${valItem.nama}</label>
-                                    <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input">
-                                    <input type="hidden" name="opsi_jawaban[]"
-                                        value="${valItem.opsi_jawaban}" id="" class="input">
-                                    <input type="text" name="info_text[]" placeholder="Masukkan informasi"
-                                        class="form-control input">
+                                        <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input">
+                                        <input type="hidden" name="opsi_jawaban[]"
+                                            value="${valItem.opsi_jawaban}" id="" class="input">
+                                            <input type="text" name="info_text[]" placeholder="Masukkan informasi"
+                                            class="form-control input" value="${valItem.opsi_text}">
+                                        <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
+                                        <input type="hidden" name="id_jawaban_text[]" value="${valItem.id}">
+                                    <input type="hidden" name="id_text[]" value="${valItem.id}">
                                 </div>
                             `);
                         } else {
@@ -1353,18 +1366,25 @@
                                 $('#bukti_pemilikan_jaminan_tambahan').append(`
                                 <div class="form-group col-md-6 aspek_jaminan_kategori">
                                     <label>${valItem.nama}</label>
-                                    <input type="hidden" name="id_item_file[]" value="${valItem.id}" id="" class="input">
-                                    <input type="file" name="upload_file[]" id="" class="form-control">
+                                        <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input">
+                                        <input type="hidden" name="opsi_jawaban[]"
+                                            value="${valItem.opsi_jawaban}" id="" class="input">
+                                            <input type="file" name="info_text[]" placeholder="Masukkan informasi"
+                                            class="form-control input" value="${valItem.opsi_text}">
+                                        <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
                                 </div>`);
                             } else {
                                 $('#bukti_pemilikan_jaminan_tambahan').append(`
                                     <div class="form-group col-md-6 aspek_jaminan_kategori">
-                                        <label>${isCheck} ${valItem.nama}</label>
-                                        <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input" ${isDisabled}>
+                                        <label>${valItem.nama}</label>
+                                        <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input">
                                         <input type="hidden" name="opsi_jawaban[]"
-                                            value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
-                                        <input type="text" name="info_text[]" placeholder="Masukkan informasi"
-                                            class="form-control input" ${isDisabled}>
+                                            value="${valItem.opsi_jawaban}" id="" class="input">
+                                            <input type="text" name="info_text[]" placeholder="Masukkan informasi"
+                                            class="form-control input" value="${valItem.opsi_text}">
+                                        <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
+                                        <input type="hidden" name="id_jawaban_text[]" value="">
+                                    <input type="hidden" name="id_text[]" value="${valItem.id}">
                                     </div>
                                 `);
                             }
@@ -1389,43 +1409,32 @@
                     }
             }
         });
+    }
+
+    //item kategori jaminan utama cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
+    $('#kategori_jaminan_utama').change(function(e) {
+        //clear item
+        $('#select_kategori_jaminan_utama').empty();
+
+        // clear bukti pemilikan
+        $('#bukti_pemilikan_jaminan_utama').empty();
+
+        //get item by kategori
+        let kategoriJaminanUtama = $(this).val();
+
+        getJaminanutama();
+    });
+    // end item kategori jaminan utama cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
+
+    //item kategori jaminan tambahan cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
+    $('#kategori_jaminan_tambahan').change(function(e) {
+        getJaminanTambahan();
     });
     // end item kategori jaminan tambahan cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
 
     // milih ijin usaha
     $('#ijin_usaha').change(function(e) {
-        let ijinUsaha = $(this).val();
-        if (ijinUsaha == 'nib') {
-            $('#surat_keterangan_usaha').hide();
-            $('#surat_keterangan_usaha_id').attr('disabled', true);
-            $('#surat_keterangan_usaha_text').attr('disabled', true);
-            $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
-
-            $('#nib').show();
-            $('#nib_id').removeAttr('disabled');
-            $('#nib_text').removeAttr('disabled');
-            $('#nib_opsi_jawaban').removeAttr('disabled');
-        } else if (ijinUsaha == 'surat_keterangan_usaha') {
-            $('#nib').hide();
-            $('#nib_id').attr('disabled', true);
-            $('#nib_text').attr('disabled', true);
-            $('#nib_opsi_jawaban').attr('disabled', true);
-
-            $('#surat_keterangan_usaha').show();
-            $('#surat_keterangan_usaha_id').removeAttr('disabled');
-            $('#surat_keterangan_usaha_text').removeAttr('disabled');
-            $('#surat_keterangan_usaha_opsi_jawaban').removeAttr('disabled');
-        } else {
-            $('#nib').hide();
-            $('#nib_id').attr('disabled', true);
-            $('#nib_text').attr('disabled', true);
-            $('#nib_opsi_jawaban').attr('disabled', true);
-
-            $('#surat_keterangan_usaha').hide();
-            $('#surat_keterangan_usaha_id').attr('disabled', true);
-            $('#surat_keterangan_usaha_text').attr('disabled', true);
-            $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
-        }
+        getIjinUsaha();
     });
     // end milih ijin usaha
 
@@ -1838,7 +1847,7 @@
         $(".btn-next").click(function(e) {
             e.preventDefault();
             var indexNow = $(".form-wizard.active").data('index')
-            var next = parseInt(indexNow) + 1
+            var next = parseInt(indexNow) 
             // console.log($(".form-wizard[data-index='"+next+"']").length==1);
             // console.log($(".form-wizard[data-index='"+  +"']"));
             if ($(".form-wizard[data-index='" + next + "']").length == 1) {
