@@ -185,7 +185,7 @@
                                     <tr>
                                         <td style="width: 40%; padding-left: 33px">{{  $item->nama }}</td>
                                         <td>:</td>
-                                        <td>{{ $itemTextDua->opsi_text }}</td>
+                                        <td>{{ round($itemTextDua->opsi_text,2) }}</td>
                                     </tr>
                                 @else
                                     @if ($item->nama == 'Omzet Penjualan' || $item->nama == 'Installment')    
