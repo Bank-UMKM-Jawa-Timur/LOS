@@ -1048,14 +1048,7 @@ class PengajuanKreditController extends Controller
     // insert komentar
     public function getInsertKomentar(Request $request)
     {
-        // return count($request->skor_penyelia_text);
-        // return count($request->id);
-        // return count($request->komentar_penyelia);
-        // $request->validate([
-        //     // 'komentar_penyelia_text.*'=> 'required',
-        //     'komentar_penyelia.*' => 'required',
-        //     'skor_penyelia.*' => 'required',
-        // ]);
+
         // return $request->skor_penyelia;
         try {
             $finalArray = array();
@@ -1068,11 +1061,6 @@ class PengajuanKreditController extends Controller
                     ]);
                 }
             };
-            // foreach ($request->skor_penyelia_text as $key => $value) {
-            //     array_push($finalArray_text, [
-            //         'skor_penyelia' => $value
-            //     ]);
-            // };
             // return $finalArray;
             $sum_select = array_sum($request->skor_penyelia);
             // $sum_text = array_sum($request->skor_penyelia_text);
@@ -1097,12 +1085,6 @@ class PengajuanKreditController extends Controller
                     'skor_penyelia' => $request->get('skor_penyelia')[$key]
                 ]);
             }
-            // for ($i = 0; $i < count($finalArray); $i++) {
-            //     JawabanPengajuanModel::where('id', $request->id_jawaban[$i])->update($finalArray[$i]);
-            // }
-            // for ($i = 0; $i < count($finalArray_text); $i++) {
-            //     JawabanTextModel::where('id', $request->id_jawaban_text[$i])->update($finalArray_text[$i]);
-            // }
             $updateData->status = $status;
             $updateData->average_by_penyelia = $result;
             $updateData->update();
@@ -1116,43 +1098,43 @@ class PengajuanKreditController extends Controller
                 ]
             );
 
-            foreach ($request->id_item as $key => $value) {
-                DetailKomentarModel::where('id_komentar', $idKomentar->id)
-                ->where('id_user', Auth::user()->id)
-                ->where('id_item', $value)
-                ->updateOrCreate([
-                    'id_komentar' => $idKomentar->id,
-                    'id_user' => Auth::user()->id,
-                    'id_item' => $value,
-                    'komentar' => $_POST['komentar_penyelia'][$key]
-                ]);
-                // $addDetailKomentar = new DetailKomentarModel;
-                // $addDetailKomentar->id_komentar = $idKomentar->id;
-                // $addDetailKomentar->id_user = Auth::user()->id;
-                // $addDetailKomentar->id_item = $value;
-                // $addDetailKomentar->komentar = $_POST['komentar_penyelia'][$key];
-                // $addDetailKomentar->save();
+            $countDK = DetailKomentarModel::where('id_komentar', $idKomentar->id)->count();
+            if ($countDK > 0) {
+                foreach ($request->id_item as $key => $value) {
+                    $dk = DetailKomentarModel::where('id_komentar', $idKomentar->id)->where('id_user', Auth::user()->id)->where('id_item', $value)->first();
+                    $dk->komentar = $_POST['komentar_penyelia'][$key];
+                    $dk->save();
+                }
+            } else {
+                foreach ($request->id_item as $key => $value) {
+                    $dk = new DetailKomentarModel;
+                    $dk->id_komentar = $idKomentar->id;
+                    $dk->id_user = Auth::user()->id;
+                    $dk->id_item = $value;
+                    $dk->komentar = $_POST['komentar_penyelia'][$key];
+                    $dk->save();
+                }
             }
 
             // pendapat penyelia
-            foreach ($request->get('id_aspek') as $key => $value) {
-                PendapatPerAspek::where('id_pengajuan', $request->get('id_pengajuan'))
-                ->where('id_aspek', $value)
-                ->where('id_penyelia', Auth::user()->id)
-                ->updateOrCreate([
-                    'id_pengajuan' => $request->get('id_pengajuan'),
-                    'id_aspek' => $value,
-                    'id_penyelia' => Auth::user()->id,
-                    'pendapat_per_aspek' => $request->get('pendapat_per_aspek')[$key]
-                ]);
-                // $addPendapat = new PendapatPerAspek;
-                // $addPendapat->id_pengajuan = $request->get('id_pengajuan');
-                // $addPendapat->id_penyelia = Auth::user()->id;
-                // $addPendapat->id_aspek = $value;
-                // $addPendapat->pendapat_per_aspek = $request->get('pendapat_per_aspek')[$key];
-                // $addPendapat->save();
+            $countpendapat = PendapatPerAspek::where('id_pengajuan', $request->get('id_pengajuan'))->where('id_penyelia', Auth::user()->id)->count();
+            if($countpendapat > 0){
+                foreach ($request->get('id_aspek') as $key => $value) {
+                    $pendapatperaspekpenyelia = PendapatPerAspek::where('id_pengajuan', $request->get('id_pengajuan'))->where('id_aspek', $value)->where('id_penyelia', Auth::user()->id)->first();
+                    $pendapatperaspekpenyelia->pendapat_per_aspek = $_POST['pendapat_per_aspek'][$key];
+                    $pendapatperaspekpenyelia->save();
+                }
+            } else {
+                foreach ($request->get('id_aspek') as $key => $value) {
+                    $pendapatperaspekpenyelia = new PendapatPerAspek;
+                    $pendapatperaspekpenyelia->id_pengajuan = $request->get('id_pengajuan');
+                    $pendapatperaspekpenyelia->id_penyelia = Auth::user()->id;
+                    $pendapatperaspekpenyelia->id_aspek = $value;
+                    $pendapatperaspekpenyelia->pendapat_per_aspek = $request->get('pendapat_per_aspek')[$key];
+                    $pendapatperaspekpenyelia->save();
+                }
             }
-            return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil menambahkan data');
+            return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil Mereview');
         } catch (Exception $e) {
             // return $e;
             return redirect()->back()->withError('Terjadi kesalahan.'. $e->getMessage());

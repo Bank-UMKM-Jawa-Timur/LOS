@@ -358,14 +358,24 @@
                                         <input type="text" name="informasi[]" id="{{ $idLevelDua }}"
                                             placeholder="Masukkan informasi {{ $item->nama }}" class="form-control">
                                     </div>
-                                @else    
-                                    <div class="form-group col-md-6">
-                                        <label for="">{{ $item->nama }}</label>
-                                        <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" id="">
-                                        <input type="hidden" name="id_level[]" value="{{ $item->id }}" id="">
-                                        <input type="text" step="any" name="informasi[]" id="{{ $idLevelDua }}"
-                                            placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah">
-                                    </div>
+                                @else
+                                    @if ($item->nama == 'Omzet Penjualan' || $item->nama == 'Installment')    
+                                        <div class="form-group col-md-6">
+                                            <label for="">{{ $item->nama }}(Perbulan)</label>
+                                            <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" id="">
+                                            <input type="hidden" name="id_level[]" value="{{ $item->id }}" id="">
+                                            <input type="text" step="any" name="informasi[]" id="{{ $idLevelDua }}"
+                                                placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah">
+                                        </div>
+                                    @else    
+                                        <div class="form-group col-md-6">
+                                            <label for="">{{ $item->nama }}</label>
+                                            <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" id="">
+                                            <input type="hidden" name="id_level[]" value="{{ $item->id }}" id="">
+                                            <input type="text" step="any" name="informasi[]" id="{{ $idLevelDua }}"
+                                                placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah">
+                                        </div>
+                                    @endif    
                                 @endif
                             @elseif ($item->opsi_jawaban == 'persen')
                                 <div class="form-group col-md-6">
@@ -1347,16 +1357,16 @@
 
         // hitung Repayment Capacity
         function hitungRepaymentCapacity() {
-            let persentaseNetIncome = parseInt($('#persentase_net_income').val()) / 100;
             let omzetPenjualan = parseInt($('#omzet_penjualan').val().split('.').join(''));
+            let persentaseNetIncome = parseInt($('#persentase_net_income').val()) / 100;
             let rencanaPeningkatan = parseInt($('#rencana_peningkatan').val()) / 100;
             let installment = parseInt($('#installment').val().split('.').join(''));
 
             let repaymentCapacity = parseFloat(persentaseNetIncome * omzetPenjualan * (1 + rencanaPeningkatan) /
                 installment); //cek rumusnya lagi
-
+            
             $('#repayment_capacity').val(repaymentCapacity.toFixed(2));
-
+            
             if (repaymentCapacity > 2) {
                 $('#repayment_capacity_opsi_0').attr('selected', true);
                 $('#repayment_capacity_opsi_1').removeAttr('selected');

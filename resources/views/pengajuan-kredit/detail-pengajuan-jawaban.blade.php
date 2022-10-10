@@ -565,7 +565,7 @@
                                 @endphp
                                 @foreach ($dataDetailJawabanText as $itemTextTiga)
                                     @if ($itemTextTiga->nama != 'Ratio Tenor Asuransi')    
-                                        <div class="row">
+                                        <div class="row col-md-6">
                                             <div class="form-group col-md-12 mb-0">
                                                 <label for="">{{ $itemTextTiga->nama }}</label>
                                             </div>
@@ -580,11 +580,6 @@
                                                             <input type="hidden" name="id_item[]" value="{{ $item->id }}">
                                                             <input type="text" class="form-control komentar"
                                                                 name="komentar_penyelia[]" placeholder="Masukkan Komentar">
-
-                                                            {{-- <div class="input-skor">
-                                        <input type="number" class="form-control" placeholder="" name="skor_penyelia_text[]" value="">
-
-                                        </div> --}}
                                                         </div>
                                                     @endif
                                                 </div>
@@ -670,35 +665,6 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        {{-- @if ($jawabanTurunan)
-                                                            <div class="col-md-6">
-                                                                <b>{{ $itemJawaban->sub_column }} :</b>
-                                                                <div class="mt-2 pl-2">
-                                                                    <p class="badge badge-info text-lg">
-                                                                        <b>{{ $jawabanTurunan->jawaban_sub_column }}</b>
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                        @endif --}}
-                                                        {{-- <div class="input-group input-b-bottom">
-                                                            @if ($item->is_commentable)
-                                                                <div class="input-group input-b-bottom">
-
-                                                                    <input type="hidden" name="id_item[]"
-                                                                        value="{{ $item->id }}">
-                                                                    <input type="text" class="form-control komentar"
-                                                                        name="komentar_penyelia[]"
-                                                                        placeholder="Masukkan Komentar">
-                                                                </div>
-                                                            @endif
-
-                                                            <div class="input-skor">
-                                                                <input type="number" class="form-control" placeholder=""
-                                                                    name="skor_penyelia[]"
-                                                                    value="{{ $itemJawabanLevelTiga->skor != null ? $itemJawabanLevelTiga->skor : '' }}">
-
-                                                            </div>
-                                                        </div> --}}
                                                         <div class="input-group input-b-bottom">
                                                             @if ($itemTiga->is_commentable == 'Ya')
                                                                 <input type="hidden" name="id_item[]"
@@ -922,14 +888,6 @@
                     <span>
                         {{ $pendapatDanUsulanStaf->komentar_staff }}
                     </span>
-                    {{-- <textarea name="komentar_staf_keseluruhan"
-                        class="form-control @error('komentar_staf_keseluruhan') is-invalid @enderror" id=""
-                        cols="30" rows="4" placeholder="Pendapat dan Usulan Penyelia Kredit"></textarea>
-                    @error('komentar_staf_keseluruhan')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror --}}
                     <hr>
                 </div>
                 <div class="form-group col-md-12">
@@ -963,7 +921,7 @@
 @push('custom-script')
     <script>
         var jumlahData = $('#jumlahData').val();
-        for (let index = 0; index < jumlahData; index++) {
+        for (let index = 0; index <= jumlahData; index++) {
             for (let index = 0; index <= parseInt(jumlahData); index++) {
                 var selected = index == parseInt(jumlahData) ? ' selected' : ''
                 $(".side-wizard li[data-index='" + index + "']").addClass('active' + selected)
@@ -977,7 +935,6 @@
             var form = ".form-wizard[data-index='" + index + "']"
 
             var input = $(form + " input:disabled");
-
             var select = $(form + " select")
             var textarea = $(form + " textarea")
 
@@ -1015,11 +972,32 @@
                     ttlInputFilled++
                 }
             })
-            var allInput = ttlInput
-            var allInputFilled = ttlInputFilled
+            if (index == 1) {
+                var allInput = ttlInput - 1
+                var allInputFilled = ttlInputFilled
+            }
+            else if (index == 3 || index == 5) {
+                var allInput = ttlInput - 2
+                var allInputFilled = ttlInputFilled
+            }
+            else{
+                var allInput = ttlInput
+                var allInputFilled = ttlInputFilled
+            }
+            console.log(ttlInput);
+            console.log(ttlInputFilled);
 
             var percentage = parseInt(allInputFilled / allInput * 100);
-            $(".side-wizard li[data-index='" + index + "'] a span i").html(isNaN(percentage) ? 0 + "%" : percentage + "%")
+            if (index == 7) {
+                if ($("textarea[name=komentar_penyelia_keseluruhan]").val() == '') {
+                    $(".side-wizard li[data-index='" + index + "'] a span i").html("0%")
+                } else {
+                    $(".side-wizard li[data-index='" + index + "'] a span i").html("100%")
+                }
+            }
+            else{
+                $(".side-wizard li[data-index='" + index + "'] a span i").html(isNaN(percentage) ? 0 + "%" : percentage + "%")
+            }
             // $(".side-wizard li[data-index='"+index+"'] input.answer").val(allInput);
             // $(".side-wizard li[data-index='"+index+"'] input.answerFilled").val(allInputFilled);
         }
