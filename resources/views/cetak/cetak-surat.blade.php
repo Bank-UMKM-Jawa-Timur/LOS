@@ -10,6 +10,9 @@
             border: 1px solid;
         }
 
+        td{
+            vertical-align: top;
+        }
     </style>
 </head>
 <body>
