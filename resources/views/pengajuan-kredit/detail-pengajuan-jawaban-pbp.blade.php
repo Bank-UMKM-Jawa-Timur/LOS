@@ -249,13 +249,13 @@
                     <div class="input-group input-b-bottom">
                         <input type="hidden" name="id_item[]" value="{{ $itemSlik->id_item }}">
                         <input type="hidden" name="id_option[]" value="{{ $itemSlik->id_jawaban }}">
-                        <input type="text" class="form-control komentar" name="komentar_penyelia[]"
+                        <input type="text" class="form-control komentar" name="komentar_pbp[]"
                             placeholder="Masukkan Komentar"
                             value="{{ isset($komentarSlik->komentar) ? $komentarSlik->komentar : '' }}">
                         <div class="input-skor">
-                            <input type="number" class="form-control" placeholder="" name="skor_penyelia[]" onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
+                            <input type="number" class="form-control" placeholder="" name="skor_pbp[]" onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
                                 {{ $itemSlik->status_skor == 0 ? 'readonly' : '' }}
-                                value="{{ $itemSlik->skor_penyelia != null ? $itemSlik->skor_penyelia : $itemSlik->skor }}">
+                                value="{{ $itemSlik->skor_pbp != null ? $itemSlik->skor_pbp : $itemSlik->skor_penyelia }}">
                         </div>
                     </div>
                 </div>
@@ -447,7 +447,7 @@
                                                     <div class="input-k-bottom">
                                                         <input type="hidden" name="id_item[]" value="{{ $item->id }}">
                                                         <input type="text" class="form-control komentar"
-                                                            name="komentar_penyelia[]" placeholder="Masukkan Komentar">
+                                                            name="komentar_pbp[]" placeholder="Masukkan Komentar">
                                                     </div>
                                                 @endif
                                             @endif
@@ -456,9 +456,9 @@
                                 </div>
 
                                 <input type="text" hidden class="form-control mb-3" placeholder="Masukkan komentar"
-                                    name="komentar_penyelia" value="{{ $itemTextDua->nama }}" disabled>
+                                    name="komentar_pbp" value="{{ $itemTextDua->nama }}" disabled>
                                 <input type="text" hidden class="form-control mb-3" placeholder="Masukkan komentar"
-                                    name="komentar_penyelia" value="{{ $itemTextDua->opsi_text }}" disabled>
+                                    name="komentar_pbp" value="{{ $itemTextDua->opsi_text }}" disabled>
                                 <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextDua->id }}">
                                 <input type="hidden" name="id[]" value="{{ $itemTextDua->id_item }}">
                             @endforeach
@@ -502,14 +502,14 @@
                             <div class="row">
                                 @foreach ($dataJawaban as $key => $itemJawaban)
                                     @php
-                                        $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
+                                        $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia', 'skor_pbp')
                                             ->where('id_pengajuan', $dataUmum->id)
                                             ->get();
                                         $count = count($dataDetailJawaban);
                                         for ($i = 0; $i < $count; $i++) {
                                             $data[] = $dataDetailJawaban[$i]['id_jawaban'];
                                         }
-                                        $getSkorPenyelia = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
+                                        $getSkorPBP = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia', 'skor_pbp')
                                             ->where('id_pengajuan', $dataUmum->id)
                                             ->where('id_jawaban', $itemJawaban->id)
                                             ->first();
@@ -533,23 +533,23 @@
                                                         <input type="hidden" name="id_option[]"
                                                             value="{{ $itemJawaban->id }}">
                                                         <input type="text" class="form-control komentar"
-                                                            name="komentar_penyelia[]" placeholder="Masukkan Komentar"
+                                                            name="komentar_pbp[]" placeholder="Masukkan Komentar"
                                                             value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                         <div class="input-skor">
                                                             <input type="number" class="form-control" placeholder=""
-                                                                name="skor_penyelia[]"  onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
+                                                                name="skor_pbp[]"  onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
                                                                 {{ $item->status_skor == 0 ? 'readonly' : '' }}
-                                                                value="{{ $getSkorPenyelia->skor_penyelia != null ? $getSkorPenyelia->skor_penyelia : $itemJawaban->skor }}">
+                                                                value="{{ $getSkorPBP->skor_pbp != null ? $getSkorPBP->skor_pbp : $getSkorPBP->skor_penyelia }}">
 
                                                         </div>
                                                     @endif
                                                 </div>
                                             </div>
                                             <input type="text" hidden class="form-control mb-3"
-                                                placeholder="Masukkan komentar" name="komentar_penyelia"
+                                                placeholder="Masukkan komentar" name="komentar_pbp"
                                                 value="{{ $itemJawaban->option }}" disabled>
                                             <input type="text" hidden class="form-control mb-3"
-                                                placeholder="Masukkan komentar" name="komentar_penyelia"
+                                                placeholder="Masukkan komentar" name="komentar_pbp"
                                                 value="{{ $itemJawaban->skor }}" disabled>
                                             <input type="hidden" name="id[]" value="{{ $item->id }}">
                                         @endif
@@ -582,7 +582,7 @@
                                                         <div class="input-k-bottom">
                                                             <input type="hidden" name="id_item[]" value="{{ $item->id }}">
                                                             <input type="text" class="form-control komentar"
-                                                                name="komentar_penyelia[]" placeholder="Masukkan Komentar">
+                                                                name="komentar_pbp[]" placeholder="Masukkan Komentar">
                                                         </div>
                                                     @endif
                                                 </div>
@@ -590,9 +590,9 @@
                                         </div>
 
                                         <input type="hidden" class="form-control mb-3" placeholder="Masukkan komentar"
-                                            name="komentar_penyelia" value="{{ $itemTextTiga->nama }}" disabled>
+                                            name="komentar_pbp" value="{{ $itemTextTiga->nama }}" disabled>
                                         <input type="hidden" class="form-control mb-3" placeholder="Masukkan komentar"
-                                            name="komentar_penyelia" value="{{ $itemTextTiga->opsi_text }}" disabled>
+                                            name="komentar_pbp" value="{{ $itemTextTiga->opsi_text }}" disabled>
 
                                         <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextTiga->id }}">
                                         <input type="hidden" name="id[]" value="{{ $itemTextTiga->id_item }}">
@@ -642,11 +642,11 @@
                                     <div class="row">
                                         @foreach ($dataJawabanLevelTiga as $key => $itemJawabanLevelTiga)
                                             @php
-                                                $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
+                                                $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia', 'skor_pbp')
                                                     ->where('id_pengajuan', $dataUmum->id)
                                                     ->get();
 
-                                                $getSkorPenyelia = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
+                                                $getSkorPBP = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia', 'skor_pbp')
                                                     ->where('id_pengajuan', $dataUmum->id)
                                                     ->where('id_jawaban', $itemJawabanLevelTiga->id)
                                                     ->first();
@@ -675,24 +675,24 @@
                                                                 <input type="hidden" name="id_option[]"
                                                                     value="{{ $itemJawabanLevelTiga->id }}">
                                                                 <input type="text" class="form-control komentar"
-                                                                    name="komentar_penyelia[]" placeholder="Masukkan Komentar"
+                                                                    name="komentar_pbp[]" placeholder="Masukkan Komentar"
                                                                     value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                 <div class="input-skor">
                                                                     <input type="number" class="form-control" placeholder=""
-                                                                        name="skor_penyelia[]" onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
+                                                                        name="skor_pbp[]" onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
                                                                         {{ $itemTiga->status_skor == 0 ? 'readonly' : '' }}
-                                                                        value="{{ $getSkorPenyelia->skor_penyelia != null ? $getSkorPenyelia->skor_penyelia : $itemJawabanLevelTiga->skor }}">
+                                                                        value="{{ $getSkorPBP->skor_pbp != null ? $getSkorPBP->skor_pbp : $getSkorPBP->skor_penyelia }}">
 
                                                                 </div>
                                                             @endif
                                                         </div>
                                                     </div>
                                                     <input type="text" hidden class="form-control mb-3"
-                                                        placeholder="Masukkan komentar" name="komentar_penyelia"
+                                                        placeholder="Masukkan komentar" name="komentar_pbp"
                                                         value="{{ $itemJawabanLevelTiga->option }}" disabled>
                                                     <input type="text" hidden class="form-control mb-3"
                                                         placeholder="Masukkan komentar" name="skor_penyelia"
-                                                        value="{{ $itemJawabanLevelTiga->skor }}" disabled>
+                                                        value="{{ $getSkorPBP->skor_penyelia }}" disabled>
                                                     <input type="hidden" name="id[]" value="{{ $itemTiga->id }}">
                                                 @endif
                                             @endif
@@ -748,7 +748,7 @@
                                                                 <input type="hidden" name="id_item[]"
                                                                     value="{{ $item->id }}">
                                                                 <input type="text" class="form-control komentar"
-                                                                    name="komentar_penyelia[]"
+                                                                    name="komentar_pbp[]"
                                                                     placeholder="Masukkan Komentar">
                                                             </div>
                                                         @endif
@@ -758,9 +758,9 @@
                                         </div>
 
                                         <input type="hidden" class="form-control mb-3" placeholder="Masukkan komentar"
-                                            name="komentar_penyelia" value="{{ $itemTextEmpat->nama }}" disabled>
+                                            name="komentar_pbp" value="{{ $itemTextEmpat->nama }}" disabled>
                                         <input type="hidden" class="form-control mb-3" placeholder="Masukkan komentar"
-                                            name="komentar_penyelia" value="{{ $itemTextEmpat->opsi_text }}" disabled>
+                                            name="komentar_pbp" value="{{ $itemTextEmpat->opsi_text }}" disabled>
                                         <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextEmpat->id }}">
                                         <input type="hidden" name="id[]" value="{{ $itemTextEmpat->id_item }}">
                                     @endforeach
@@ -800,14 +800,14 @@
                                     <div class="row">
                                         @foreach ($dataJawabanLevelEmpat as $key => $itemJawabanLevelEmpat)
                                             @php
-                                                $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
+                                                $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia', 'skor_pbp')
                                                     ->where('id_pengajuan', $dataUmum->id)
                                                     ->get();
                                                 $count = count($dataDetailJawaban);
                                                 for ($i = 0; $i < $count; $i++) {
                                                     $data[] = $dataDetailJawaban[$i]['id_jawaban'];
                                                 }
-                                                $getSkorPenyelia = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
+                                                $getSkorPBP = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia', 'skor_pbp')
                                                     ->where('id_pengajuan', $dataUmum->id)
                                                     ->where('id_jawaban', $itemJawabanLevelEmpat->id)
                                                     ->first();
@@ -832,20 +832,20 @@
                                                                 <input type="hidden" name="id_option[]"
                                                                     value="{{ $itemJawabanLevelEmpat->id }}">
                                                                 <input type="text" class="form-control komentar"
-                                                                    name="komentar_penyelia[]"
+                                                                    name="komentar_pbp[]"
                                                                     placeholder="Masukkan Komentar"
                                                                     value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                 <div class="input-skor">
                                                                     <input type="number" class="form-control"
-                                                                        placeholder="" name="skor_penyelia[]" onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
+                                                                        placeholder="" name="skor_pbp[]" onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
                                                                         {{ $itemEmpat->status_skor == 0 ? 'readonly' : '' }}
-                                                                        value="{{ $getSkorPenyelia->skor_penyelia != null ? $getSkorPenyelia->skor_penyelia : $itemJawabanLevelEmpat->skor }}">
+                                                                        value="{{ $getSkorPBP->skor_pbp != null ? $getSkorPBP->skor_pbp : $getSkorPBP->skor_penyelia }}">
                                                                 </div>
                                                             @endif
                                                         </div>
                                                     </div>
                                                     <input type="hidden" class="form-control mb-3"
-                                                        placeholder="Masukkan komentar" name="komentar_penyelia"
+                                                        placeholder="Masukkan komentar" name="komentar_pbp"
                                                         value="{{ $itemJawabanLevelEmpat->option }}" disabled>
                                                     <input type="hidden" name="id[]" value="{{ $itemEmpat->id }}">
                                                 @endif
@@ -1061,7 +1061,7 @@
 
             var percentage = parseInt(allInputFilled / allInput * 100);
             if (index == 7) {
-                if ($("textarea[name=komentar_penyelia_keseluruhan]").val() == '') {
+                if ($("textarea[name=komentar_pbp_keseluruhan]").val() == '') {
                     $(".side-wizard li[data-index='" + index + "'] a span i").html("0%")
                 } else {
                     $(".side-wizard li[data-index='" + index + "'] a span i").html("100%")

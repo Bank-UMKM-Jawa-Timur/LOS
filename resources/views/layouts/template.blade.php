@@ -120,7 +120,15 @@
                     @include('layouts.penyelia-side-card')
                 @endif
             @else
-                @include('layouts.full-card')
+                @if (Request::segment(1) == 'pengajuan-kredit' && auth()->user()->role == 'PBP')
+                    @if (request()->routeIs('pengajuan-kredit.index') == 'pengajuan-kredit')
+                        @include('layouts.full-card')
+                    @else
+                        @include('layouts.pbp-side-card')
+                    @endif
+                @else
+                    @include('layouts.full-card')
+                @endif
             @endif
 
         @endif
