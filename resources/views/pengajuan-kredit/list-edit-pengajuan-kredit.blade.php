@@ -39,6 +39,8 @@
                             Staff
                         @elseif ($item->posisi == 'Review Penyelia')
                             Penyelia
+                        @elseif ($item->posisi == 'PBP')
+                            PBP
                         @else
                             Pincab
                         @endif
@@ -87,6 +89,27 @@
                                     @endif
                                 @endif
                                 {{-- {{ $item->tanggal_review_penyelia != null ? $result_rentang.' hari' : '-' }} --}}
+                        @elseif ($item->posisi == 'PBP')
+                            @php
+                                $rentangpbp = \App\Models\PengajuanModel::find($item->id);
+                                $awal = date_create(date(now()));
+                                $akhir = date_create($rentangpbp->tanggal_review_pbp);
+                                $interval = $awal->diff($akhir);
+                                $result_rentang = $interval->format('%a');
+                            @endphp
+                            @if ($item->tanggal_review_pbp != null)
+                                @if ($result_rentang != 0)
+                                    @if ($result_rentang == 1 || $result_rentang == 2 || $result_rentang == 3)
+                                        <font class="text-success">{{ $result_rentang.' hari' }}</font>
+                                    @elseif ($result_rentang == 4 || $result_rentang == 5 || $result_rentang == 6)
+                                        <font class="text-warning">{{ $result_rentang.' hari' }}</font>
+                                    @else
+                                        <font class="text-danger">{{ $result_rentang.' hari' }}</font>
+                                    @endif
+                                @else
+                                    {{ '-' }}
+                                @endif
+                            @endif
                         @else
                             @php
                                 $rentangPincab = \App\Models\PengajuanModel::find($item->id);

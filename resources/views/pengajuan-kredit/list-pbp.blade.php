@@ -170,15 +170,11 @@
                     </td>
                     <td>
                         <div class="d-flex">
-                        @if ($item->posisi == 'Review Penyelia')
+                        @if ($item->posisi == 'PBP')
                                 <a href="{{ route('pengajuan.detailjawaban',$item->id_pengajuan) }}" class="btn btn-rgb-primary mr-2">
                                     Review
                                 </a>
-                                @if (auth()->user()->id_cabang == '1')
-                                    <a href="{{ route('pengajuan.check.pincab',$item->id_pengajuan) }}" class="btn btn-info">Tindak lanjut PBP</a>
-                                @else
-                                    <a href="{{ route('pengajuan.check.pincab',$item->id_pengajuan) }}" class="btn btn-info">Tindak lanjut Pincab</a>
-                                @endif
+                                <a href="{{ route('pengajuan.check.pincab',$item->id_pengajuan) }}" class="btn btn-info">Tindak lanjut Pincab</a>
                         @endif
                                 <div class="px-2">
                                     <a target="_blank" href="{{ route('cetak',$item->id_pengajuan) }}" class="btn btn-info" >Cetak</a>

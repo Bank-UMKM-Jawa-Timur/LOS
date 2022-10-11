@@ -738,6 +738,12 @@
                             <td style="padding: 0px 0px 10px 0px; vertical-align: top">:</td>
                             <td style="padding: 0px 0px 10px 0px; vertical-align: top">{{$pendapatuser->pendapat_per_aspek}}</td>
                         </tr>
+                    @elseif ($pendapatuser->id_pbp != null)
+                        <tr>
+                            <td style="width: 40%; padding: 0px 0px 10px 33px; vertical-align: top">KESIMPULAN PBP</td>
+                            <td style="padding: 0px 0px 10px 0px; vertical-align: top">:</td>
+                            <td style="padding: 0px 0px 10px 0px; vertical-align: top">{{$pendapatuser->pendapat_per_aspek}}</td>
+                        </tr>
                     @elseif ($pendapatuser->id_pincab != null)
                         <tr>
                             <td style="width: 40%; padding: 20px 0px 20px 33px; vertical-align: top">KESIMPULAN PINCAB</td>
@@ -772,6 +778,18 @@
             <td>{{$komentar->komentar_penyelia}}</td>
         </tr>
     </table>
+    @if (Auth::user()->id_cabang == '1')
+        <br>
+        <table style="border-spacing:10px;">
+            <tr>
+                <td style="width: 100%;" ><b><u><span>PENDAPAT dan USULAN PBP</span></u></b>
+                </td>
+            </tr>
+            <tr>
+                <td>{{$komentar->komentar_pbp}}</td>
+            </tr>
+        </table>
+    @endif
     <br>
     <table style="border-spacing:10px;">
         <tr>

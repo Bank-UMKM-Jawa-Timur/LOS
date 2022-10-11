@@ -23,6 +23,12 @@
                             @if (auth()->user()->role == "Pincab")
                                 <h1>{{ \App\Models\PengajuanModel::whereIn('posisi', ['Selesai','Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->count() }}</h1>
                             @elseif (auth()->user()->role == "Penyelia Kredit")
+                                @if (auth()->user()->id_cabang == '1')
+                                    <h1>{{ \App\Models\PengajuanModel::whereIn('posisi', ['PBP','Pincab','Selesai','Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->count() }}</h1>
+                                @else
+                                    <h1>{{ \App\Models\PengajuanModel::whereIn('posisi', ['Pincab','Selesai','Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->count() }}</h1>   
+                                @endif
+                            @elseif (auth()->user()->role == "PBP")
                                 <h1>{{ \App\Models\PengajuanModel::whereIn('posisi', ['Pincab','Selesai','Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->count() }}</h1>
                             @elseif (auth()->user()->role == "Staf Analis Kredit")
                                 <h1>{{ \App\Models\PengajuanModel::whereIn('posisi', ['Review Penyelia','Pincab','Selesai', 'Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->count() }}</h1>
@@ -50,6 +56,8 @@
                                 <h1>{{ \App\Models\PengajuanModel::where('posisi','Proses Input Data')->where('id_cabang', $user->id_cabang)->count() }}</h1>
                             @elseif (auth()->user()->role == "Penyelia Kredit")
                                 <h1>{{ \App\Models\PengajuanModel::where('posisi','Review Penyelia')->where('id_cabang', $user->id_cabang)->count() }}</h1>
+                            @elseif (auth()->user()->role == "PBP")
+                                <h1>{{ \App\Models\PengajuanModel::where('posisi','PBP')->where('id_cabang', $user->id_cabang)->count() }}</h1>
                             @elseif (auth()->user()->role == "Pincab")
                                 <h1>{{ \App\Models\PengajuanModel::where('posisi','Pincab')->where('id_cabang', $user->id_cabang)->count() }}</h1>
                             @else
