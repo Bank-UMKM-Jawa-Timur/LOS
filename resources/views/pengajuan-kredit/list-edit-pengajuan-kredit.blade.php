@@ -185,9 +185,9 @@
                     <td>
                         <div class="d-flex">
                         @if ($item->posisi == 'Proses Input Data')
-                            {{-- <a href="{{ route('pengajuan-kredit.edit',$item->id_pengajuan) }}" class="btn btn-rgb-primary mr-2">
+                            <a href="{{ route('pengajuan-kredit.edit',$item->id_pengajuan) }}" class="btn btn-rgb-primary mr-2">
                                 Edit data
-                            </a> --}}
+                            </a>
                             <a href="{{ route('pengajuan.check.penyeliakredit',$item->id_pengajuan) }}" class="btn btn-warning">Tindak lanjut Review Penyelia</a>
                         @endif
                             <div class="px-2">
