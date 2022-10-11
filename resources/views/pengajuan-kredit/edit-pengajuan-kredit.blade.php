@@ -812,17 +812,45 @@
                         @endif
                     @endforeach
 
+                    @php
+                        $dataPendapatAspek = \App\Models\PendapatPerAspek::where('id_pengajuan', $dataUmum->id)
+                                            ->join('item', 'item.id', 'pendapat_dan_usulan_per_aspek.id_aspek')
+                                            ->select('pendapat_dan_usulan_per_aspek.id', 'pendapat_dan_usulan_per_aspek.id_aspek', 'pendapat_dan_usulan_per_aspek.pendapat_per_aspek', 'item.id as id_item', 'item.nama')
+                                            ->where('item.id', $value->id)
+                                            ->first();
+                    @endphp
+
+                    <div class="form-group col-md-12">
+                        <hr style="border: 0.2px solid #E3E6EA;">
+                        <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
+                        <input type="hidden" name="id_aspek[]" value="{{ $value->id }}">
+                        <textarea name="pendapat_per_aspek[]" class="form-control @error('pendapat_per_aspek') is-invalid @enderror" id=""
+                            cols="30" rows="4" placeholder="Pendapat Per Aspek">{{ $dataPendapatAspek->pendapat_per_aspek }}</textarea>
+                        <input type="hidden" name="id_jawaban_aspek[]" value="{{ $dataPendapatAspek->id }}">
+                        @error('pendapat_per_aspek')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+
                 </div>
 
             </div>
         @endforeach
         {{-- pendapat dan usulan --}}
+
+        @php
+            $detailKomentar = \App\Models\KomentarModel::where('id_pengajuan', $dataUmum->id)
+                            ->first();
+        @endphp
         <div class="form-wizard" data-index='{{ count($dataAspek) + 1 }}' data-done='true'>
             <div class="row">
                 <div class="form-group col-md-12">
                     <label for="">Pendapat dan Usulan</label>
                     <textarea name="komentar_staff" class="form-control @error('komentar_staff') is-invalid @enderror" id="" cols="30"
-                        rows="4" placeholder="Pendapat dan Usulan Staf/Analis Kredit" required></textarea>
+                        rows="4" placeholder="Pendapat dan Usulan Staf/Analis Kredit" required>{{ $detailKomentar->komentar_staff }}</textarea>
+                        <input type="hidden" name="id_komentar_staff_text" value="{{ $detailKomentar->id }}">
                     @error('komentar_staff')
                         <div class="invalid-feedback">
                             {{ $message }}

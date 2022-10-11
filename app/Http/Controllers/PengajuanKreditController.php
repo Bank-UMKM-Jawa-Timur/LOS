@@ -940,6 +940,28 @@ class PengajuanKreditController extends Controller
                 // }
             }
 
+            for($i = 0; $i < count($request->pendapat_per_aspek); $i++){
+                $data = DB::table('pendapat_dan_usulan_per_aspek');
+                if($request->id_jawaban_text[$i] != null){
+                    $data->where('id', $request->get('id_jawaban_aspek')[$i])->update(['pendapat_per_aspek' => $request->get('pendapat_per_aspek')[$i]]);
+                }
+                else{
+                    $data->insert([
+                        'id_pengajuan' => $id_pengajuan,
+                        'id_staf' => auth()->user()->id,
+                        'id_penyelia' => null,
+                        'id_pincab' => null,
+                        'id_aspek' => $request->get('id_aspek'),
+                        'pendapat_per_aspek' => $request->get('pendapat_per_aspek'),
+                        'created_at' => date('YYYY-MM-DD HH:ii:ss')
+                    ]);
+                }
+            }
+
+            $id = $request->get('id_komentar_staff_text');
+            $updateKomentar = KomentarModel::find($id);
+            $updateKomentar->komentar_staff;
+            $updateKomentar->update();
 
             $updateData->posisi = 'Proses Input Data';
             $updateData->status_by_sistem = $status;
