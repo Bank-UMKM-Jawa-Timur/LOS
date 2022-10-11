@@ -456,7 +456,7 @@
                                                 $data[] = $dataDetailJawaban[$i]['id_jawaban'];
                                             }
                                         @endphp
-                                        <option value="{{ $itemJawaban->skor . '-' . $itemJawaban->id }}"
+                                        <option value="{{ ($itemJawaban->skor == null ? 'kosong' : $itemJawaban->skor) . '-' . $itemJawaban->id }}"
                                             {{ in_array($itemJawaban->id, $data) ? 'selected' : '' }}>
                                             {{ $itemJawaban->option }}</option>
                                     @endforeach
@@ -674,7 +674,7 @@
                                                         $dataTiga[] = $dataDetailJawabanTiga[$i]['id_jawaban'];
                                                     }
                                                 @endphp
-                                                <option value="{{ $itemJawabanTiga->skor . '-' . $itemJawabanTiga->id }}"
+                                                <option value="{{ ($itemJawabanTiga->skor == null ? 'kosong' : $itemJawabanTiga->skor) . '-' . $itemJawabanTiga->id }}"
                                                     {{ in_array($itemJawabanTiga->id, $dataTiga) ? 'selected' : '' }}>
                                                     {{ $itemJawabanTiga->option }}</option>
                                             @endforeach
@@ -799,7 +799,7 @@
                                                                 $dataEmpat[] = $dataDetailJawabanEmpat[$i]['id_jawaban'];
                                                             }
                                                         @endphp
-                                                        <option value="{{ $itemJawabanEmpat->skor . '-' . $itemJawabanEmpat->id }}"
+                                                        <option value="{{ ($itemJawabanEmpat->skor == null ? 'kosong' : $itemJawabanEmpat->skor) . '-' . $itemJawabanEmpat->id }}"
                                                             {{ in_array($itemJawabanEmpat->id, $dataEmpat) ? 'selected' : '' }}>
                                                             {{ $itemJawabanEmpat->option }}</option>
                                                     @endforeach
