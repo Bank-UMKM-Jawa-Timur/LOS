@@ -806,19 +806,14 @@ class PengajuanKreditController extends Controller
                 $result_dua = array_values(array_filter($data));
                 foreach ($result_dua as $key => $value) {
                     $data_level_dua = $this->getDataLevel($value);
-                    if($value != null){
-                        if($data_level_dua[0] == null){
-                            $skor[$key] = null;
-                            $id_jawaban[$key] =$data_level_dua[1];
-                        }else{
-                            $skor[$key] = null;
-                            $id_jawaban[$key] =$data_level_dua[1];
-                        }
-                    }else{
-                        $skor[$key] = null;
-                        $id_jawaban[$key] =$data_level_dua[1];
+                    $skor[$key] = $data_level_dua[0];
+                    $id_jawaban[$key] = $data_level_dua[1];
+                    if($skor[$key] != 'kosong'){
+                        array_push($rata_rata, $skor[$key]);
                     }
-                    array_push($rata_rata, $skor[$key]);
+                    else{
+                        $skor[$key] = null;
+                    }
                     array_push(
                         $finalArray,
                         array(
@@ -837,19 +832,14 @@ class PengajuanKreditController extends Controller
                 $result_tiga = array_values(array_filter($data));
                 foreach ($result_tiga as $key => $value) {
                     $data_level_tiga = $this->getDataLevel($value);
-                    if($value != null){
-                        if($data_level_tiga[0] == null){
-                            $skor[$key] = null;
-                            $id_jawaban[$key] =$data_level_tiga[1];
-                        }else{
-                            $skor[$key] = null;
-                            $id_jawaban[$key] =$data_level_tiga[1];
-                        }
-                    }else{
-                        $skor[$key] = null;
-                        $id_jawaban[$key] =$data_level_tiga[1];
+                    $skor[$key] = $data_level_tiga[0];
+                    $id_jawaban[$key] = $data_level_tiga[1];
+                    if($skor[$key] != 'kosong'){
+                        array_push($rata_rata, $skor[$key]);
                     }
-                    array_push($rata_rata, $skor[$key]);
+                    else{
+                        $skor[$key] = null;
+                    }
                     array_push(
                         $finalArray,
                         array(
@@ -868,19 +858,14 @@ class PengajuanKreditController extends Controller
                 $result_empat = array_values(array_filter($data));
                 foreach ($result_empat as $key => $value) {
                     $data_level_empat = $this->getDataLevel($value);
-                    if($value != null){
-                        if($data_level_empat[0] == null){
-                            $skor[$key] = null;
-                            $id_jawaban[$key] =$data_level_empat[1];
-                        }else{
-                            $skor[$key] = null;
-                            $id_jawaban[$key] =$data_level_empat[1];
-                        }
-                    }else{
-                        $skor[$key] = null;
-                        $id_jawaban[$key] =$data_level_empat[1];
+                    $skor[$key] = $data_level_empat[0];
+                    $id_jawaban[$key] = $data_level_empat[1];
+                    if($skor[$key] != 'kosong'){
+                        array_push($rata_rata, $skor[$key]);
                     }
-                    array_push($rata_rata, $skor[$key]);
+                    else{
+                        $skor[$key] = null;
+                    }
                     array_push(
                         $finalArray,
                         array(
