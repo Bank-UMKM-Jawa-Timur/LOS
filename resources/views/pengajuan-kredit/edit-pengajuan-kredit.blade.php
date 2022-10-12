@@ -82,7 +82,7 @@
                         <option value="">---Pilih Desa----</option>
                         @foreach ($allDesa as $desa)
                             <option value="{{ $desa->id }}"
-                                {{ $desa->id == $dataUmum->id_kecamatan ? 'selected' : '' }}>{{ $desa->desa }}</option>
+                                {{ $desa->id == $dataUmum->id_desa ? 'selected' : '' }}>{{ $desa->desa }}</option>
                         @endforeach
                     </select>
                     @error('desa')
@@ -1867,6 +1867,8 @@
 
             var allInput = ttlInput + ttlSelect + ttlTextarea
             var allInputFilled = ttlInputFilled + ttlSelectFilled + ttlTextareaFilled
+            console.log("AllInput : " + allInput);
+            console.log("AllInputFilled : " + allInputFilled);
 
             var percentage = parseInt(allInputFilled / allInput * 100);
             $(".side-wizard li[data-index='" + formIndex + "'] a span i").html(percentage + "%")
