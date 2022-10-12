@@ -208,6 +208,11 @@ class PengajuanKreditController extends Controller
                                         ->orderBy('id', 'ASC')->whereIn('nama', ['SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C', 'Foto'])
                                         ->get();
 
+            $detailJawabanOption = \App\Models\JawabanPengajuanModel::where('id_pengajuan', $request->id)
+                                        ->whereIn('id_jawaban', [136, 137, 141, 142])
+                                        ->select('id_jawaban')
+                                        ->orderBy('id', 'DESC');
+
             $itemBuktiPemilikan = ItemModel::with('option');
 
             $itemBuktiPemilikan->whereIn('nama', ['SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C', 'Foto'])->where('id_parent', 96);
@@ -223,6 +228,11 @@ class PengajuanKreditController extends Controller
                                         ->whereIn('nama', ['BPKB No', 'Atas Nama', 'Foto'])
                                         ->where('id_parent', 96)
                                         ->get();
+
+            $detailJawabanOption = \App\Models\JawabanPengajuanModel::where('id_pengajuan', $request->id)
+                                        ->whereIn('id_jawaban', [138, 139, 140])
+                                        ->select('id_jawaban')
+                                        ->orderBy('id', 'DESC');
 
             $itemBuktiPemilikan = ItemModel::with('option');
 
@@ -244,6 +254,7 @@ class PengajuanKreditController extends Controller
         $data = [
             'item' => $item,
             'itemBuktiPemilikan' => $itemBuktiPemilikan->get(),
+            'detailJawabanOption' => $detailJawabanOption->first(),
             'dataDetailJawabanText' => $dataDetailJawabanText
         ];
 
@@ -265,6 +276,11 @@ class PengajuanKreditController extends Controller
                                         ->orderBy('id', 'ASC')
                                         ->whereIn('nama', ['SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C', 'Foto']);
 
+            $detailJawabanOption = \App\Models\JawabanPengajuanModel::where('id_pengajuan', $request->id)
+                                        ->whereIn('id_jawaban', [145, 146, 150, 151])
+                                        ->select('id_jawaban')
+                                        ->orderBy('id', 'DESC');
+
             $itemBuktiPemilikan->whereIn('nama', ['SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C', 'Foto']);
         }
         else{
@@ -276,9 +292,15 @@ class PengajuanKreditController extends Controller
                                         ->orderBy('id', 'ASC')
                                         ->whereIn('nama', ['BPKB No', 'Atas Nama', 'Foto']);
 
+            $detailJawabanOption = \App\Models\JawabanPengajuanModel::where('id_pengajuan', $request->id)
+                                        ->whereIn('id_jawaban', [147, 148, 149])
+                                        ->select('id_jawaban')
+                                        ->orderBy('id', 'DESC');
+
             $itemBuktiPemilikan->whereIn('nama', ['BPKB No', 'Atas Nama', 'Foto']);
         }
         $data = [
+            'detailJawabanOption' => $detailJawabanOption->first(),
             'dataDetailJawabanText' => $dataDetailJawabanText->where('id_parent', 114)->get(),
             'item' => $item,
             'itemBuktiPemilikan' => $itemBuktiPemilikan->where('id_parent', 114)->get()
@@ -802,16 +824,17 @@ class PengajuanKreditController extends Controller
             $rata_rata = array();
 
             foreach ($request->id_jawaban_text as $key => $value) {
-                if($request->id_jawaban_text[$key] == null){
+                if($request->id_jawaban_text[$key] == null && $request->info_text[$key] != null){
                     $data_baru = new JawabanTextModel();
                     $data_baru->id_pengajuan = $id_pengajuan;
-                    $data_baru->id_jawaban = $request->get('id_text')[$key];
-                    $data_baru->opsi_text = $request->get('info_text')[$key];
+                    $data_baru->id_jawaban = $request->id_text[$key];
+                    $data_baru->opsi_text = $request->info_text[$key];
                     $data_baru->skor_penyelia = null;
                     $data_baru->skor = null;
                     $data_baru->save();
                 }
                 else{
+                    $skor = array();
                     if($request->skor_penyelia_text[$key] == 'null'){
                         $skor[$key] = null;
                     }
@@ -964,9 +987,9 @@ class PengajuanKreditController extends Controller
                         'id_staf' => auth()->user()->id,
                         'id_penyelia' => null,
                         'id_pincab' => null,
-                        'id_aspek' => $request->get('id_aspek'),
-                        'pendapat_per_aspek' => $request->get('pendapat_per_aspek'),
-                        'created_at' => date('YYYY-MM-DD HH:ii:ss')
+                        'id_aspek' => $request->get('id_aspek')[$i],
+                        'pendapat_per_aspek' => $request->get('pendapat_per_aspek')[$i],
+                        'created_at' => date('Y-m-d H:i:s')
                     ]);
                 }
             }
