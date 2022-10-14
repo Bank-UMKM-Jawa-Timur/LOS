@@ -687,6 +687,8 @@ class PengajuanKreditController extends Controller
         $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
 
         $param['itemSlik'] = ItemModel::with('option')->where('nama', 'SLIK')->first();
+        
+        $param['itemSP'] = ItemModel::where('nama','Surat Permohonan')->first();
 
         $param['dataUmum'] = PengajuanModel::select(
             'pengajuan.id',
@@ -726,6 +728,11 @@ class PengajuanKreditController extends Controller
                                         ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama', 'item.opsi_jawaban')
                                         ->join('item', 'jawaban_text.id_jawaban', 'item.id')
                                         ->where('item.level', 2);
+
+        // $dataSlik = JawabanPengajuanModel::where('id_pengajuan', 14)
+        //                                 ->join('option', 'option.id', 'jawaban.id_jawaban')
+        //                                 ->whereIn('option.id', [71, 72, 73, 74])
+        //                                 ->first();
         
         // 'jawaban.id as id_jawaban','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','jawaban.skor_penyelia'
 
@@ -735,7 +742,7 @@ class PengajuanKreditController extends Controller
         //                             ->where('jawaban.id_pengajuan',$id)
         //                             ->get();
 
-        // dd($param['dataAspek']);
+        // dd($dataSlik);
         // dump($param['itemSlik']);
         // dd($dataDetailJawabanText->get());
 
@@ -751,7 +758,7 @@ class PengajuanKreditController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // dd($request);
+        dd($request);
         // return $request;
         $request->validate([
             'name' => 'required',
@@ -781,7 +788,6 @@ class PengajuanKreditController extends Controller
         DB::beginTransaction();
         try {
             $updatePengajuan = PengajuanModel::find($id);
-            $updatePengajuan->tanggal = date(now());
             $updatePengajuan->id_cabang = auth()->user()->id_cabang;
             $updatePengajuan->progress_pengajuan_data = $request->progress;
             $updatePengajuan->save();
@@ -816,6 +822,24 @@ class PengajuanKreditController extends Controller
             $finalArray = array();
             $finalArray_text = array();
             $rata_rata = array();
+
+            if(count($request->file('update_file')) > 0){
+                foreach($request->file('update_file') as $key => $value){
+                    $image = $value;
+                    $imageName = $request->id_update_file[$key].time().'.'.$image->getClientOriginalExtension();
+    
+                    $filePath = public_path() . '/upload/' . $id_pengajuan . '/'. $request->id_update_file[$key];
+                    // $filePath = public_path() . '/upload';
+                    if (!\File::isDirectory($filePath)) {
+                        \File::makeDirectory($filePath, 493, true);
+                    }
+
+                    $image->move($filePath, $imageName);
+
+                    $imgUpdate = DB::table('jawaban_text');
+                    $imgUpdate->where('id', $request->get('id_update_file')[$key])->update(['opsi_text' => $imageName]);
+                }
+            }
 
             foreach ($request->id_jawaban_text as $key => $value) {
                 if($request->id_jawaban_text[$key] == null && $request->info_text[$key] != null){
