@@ -28,14 +28,14 @@
         }
 
     </style>
-    <form id="pengajuan_kredit" action="{{ route('pengajuan-kredit.update', $dataUmum->id) }}" method="post">
+    <form id="pengajuan_kredit" action="{{ route('pengajuan-kredit.update', $dataUmum->id) }}" enctype="multipart/form-data" method="post">
         @method('PUT')
         @csrf
         <input type="hidden" name="progress" class="progress">
         <input type="hidden" name="id_nasabah" value="{{ $dataUmum->id_calon_nasabah }}">
         <div class="form-wizard active" data-index='0' data-done='true'>
             <div class="row">
-                <div class="form-group col-md-12">
+                <div class="form-group col-md-6">
                     <label for="">Nama Lengkap</label>
                     <input type="text" name="name" id="nama" class="form-control @error('name') is-invalid @enderror"
                         value="{{ old('name', $dataUmum->nama) }}" placeholder="Nama sesuai dengan KTP">
@@ -44,6 +44,23 @@
                             {{ $message }}
                         </div>
                     @enderror
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="">{{ $itemSP->nama }}</label>
+                    @php
+                        $jawabanFotoSP = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
+                                        ->where('id_jawaban', 145)
+                                        ->first();
+                    @endphp
+                    <input type="hidden" name="id_item_file[]" value="{{ $itemSP->id }}" id="">
+                    <input style="display: none" type="file" name="upload_file[]" value="{{ $jawabanFotoSP->opsi_text }}" id="sp" placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-control limit-size" >
+                    <label class="form-control" for="sp"><span>Choose File</span>   {{ ($jawabanFotoSP != null) ? $jawabanFotoSP->opsi_text : null }}</label>
+                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('dataLevelDua.' . $key) }}
+                        </div>
+                    @endif
                 </div>
                 <div class="form-group col-md-4">
                     <label for="">Kabupaten</label>
@@ -183,6 +200,56 @@
                             {{ $message }}
                         </div>
                     @enderror
+                </div><div class="form-group col-md-6">
+                    <label for="">{{ $itemSlik->nama }}</label>
+                    @php
+                        $jawabanSlik = \App\Models\JawabanPengajuanModel::whereIn('id_jawaban', [71, 72, 73, 74])
+                                        ->orderBy('id', "DESC")
+                                        ->where('id_pengajuan', $dataUmum->id)
+                                        ->get();
+
+                        for ($i=0; $i < count($jawabanSlik); $i++) { 
+                            $data[] = $jawabanSlik[$i]['id_jawaban'];
+                        }
+                        if (count($jawabanSlik) == 0) {
+                            $data[] = null;
+                        }
+                    @endphp
+                    <select name="dataLevelDua[]" id="dataLevelDua" class="form-control select2"
+                        data-id_item={{ $itemSlik->id }}>
+                        <option value=""> --Pilih Data -- </option>
+                        @foreach ($itemSlik->option as $itemJawaban)
+                            <option value="{{ $itemJawaban->skor . '-' . $itemJawaban->id }}"
+                                {{ (in_array($itemJawaban->id, $data)) ? 'selected' : '' }}>
+                                {{ $itemJawaban->option }}</option>
+                        @endforeach
+                    </select>
+                    <div id="item{{ $itemSlik->id }}">
+
+                    </div>
+                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('dataLevelDua.' . $key) }}
+                        </div>
+                    @endif
+                </div>
+                <div class="form-group col-md-6">
+                    @php
+                        $jawabanLaporanSlik = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
+                                        ->where('id_jawaban', 146)
+                                        ->first();
+                    @endphp
+                    <label for="">Laporan SLIK</label>
+                    <input type="hidden" name="id_item_file[]" value="146" id="">
+                    <input style="display: none" type="file" name="upload_file[]" id="laporan_slik" placeholder="Masukkan informasi Laporan SLIK" class="form-control limit-size">
+                    <label class="form-control" for="laporan_slik"><span>Choose File</span>   {{ ($jawabanLaporanSlik != null) ? $jawabanLaporanSlik->opsi_text : null }}</label>
+                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('dataLevelDua.' . $key) }}
+                        </div>
+                    @endif
+                    {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Jenis Usaha</label>
@@ -194,12 +261,26 @@
                         </div>
                     @enderror
                 </div>
-                <div class="form-group col-md-12">
+                <div class="form-group col-md-6">
                     <label for="">Jumlah Kredit yang diminta</label>
-                    <textarea name="jumlah_kredit" class="form-control @error('jumlah_kredit') is-invalid @enderror" id="jumlah_kredit" cols="30"
+                    <input type="text" name="jumlah_kredit" class="form-control @error('jumlah_kredit') is-invalid @enderror" id="jumlah_kredit" cols="30"
                         rows="4"
-                        placeholder="Jumlah Kredit">{{ old('jumlah_kredit', $dataUmum->jumlah_kredit) }}</textarea>
+                        placeholder="Jumlah Kredit" value="{{ old('jumlah_kredit', $dataUmum->jumlah_kredit) }}">
                     @error('jumlah_kredit')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div><div class="form-group col-md-6">
+                    <label for="">Tenor Yang Diminta</label>
+                    <select name="tenor_yang_diminta" id="tenor_yang_diminta"
+                        class="form-control select2 @error('tenor_yang_diminta') is-invalid @enderror" required>
+                        <option value="">-- Pilih Tenor --</option>
+                        @for ($i = 1; $i <= 10; $i++)
+                            <option value="{{ $i }}" {{ ($dataUmum->tenor_yang_diminta) ? 'selected' : '' }}> {{ $i . ' tahun' }} </option>
+                        @endfor
+                    </select>
+                    @error('tenor_yang_diminta')
                         <div class="invalid-feedback">
                             {{ $message }}
                         </div>
@@ -397,13 +478,13 @@
                                         <label for="">{{ $item->nama }}</label>
                                         {{-- <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" --}}
                                             {{-- id="{{ $idLevelDua }}"> --}}
-                                        <input type="hidden" name="id_text[]" value="{{ $itemTextDua->id_item }}">
-                                        <input type="file" name="info_text[]" style="display: none" id="{{ $idLevelDua . 'file' }}"
+                                        <input type="hidden" name="id_file_text[]" value="{{ $itemTextDua->id_item }}">
+                                        <input type="file" name="update_file[]" style="display: none" id="{{ $idLevelDua . 'file' }}"
                                             placeholder=" {{ old($item->nama, $itemTextDua->opsi_text) }}" style="display: none"  value=" {{ ($itemTextDua != null) ? $itemTextDua->opsi_text : null }} " class="form-control" title="{{ $item->opsi_text }}">
                                         <label class="form-control" for="{{ $idLevelDua . 'file' }}"><span>Choose File</span>   {{ ($itemTextDua != null) ? $itemTextDua->opsi_text : null }}</label>
                                         <input type="hidden" name="skor_penyelia_text[]"
                                             value="{{ $itemTextDua->skor_penyelia }}">
-                                        <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextDua->id }}">
+                                        <input type="hidden" name="id_update_file[]" value="{{ $itemTextDua->id }}">
                                     </div>
                                 @endforeach
                             @elseif ($item->opsi_jawaban == 'long text')
@@ -610,10 +691,10 @@
                                                 <input type="file" name="info_text[]" placeholder="Masukkan informasi"
                                                 class="form-control" id="{{ $idLevelTiga . 'file' }}" style="display: none"  value="{{ ($itemTextTiga->opsi_text != null) ? $itemTextTiga->opsi_text : null }}" title="{{ $itemTextTiga->opsi_text }}" style="display: none;">
                                                 <label class="form-control" for="{{ $idLevelTiga . 'file' }}"><span>Choose File</span>   {{ ($itemTextTiga != null) ? $itemTextTiga->opsi_text : null }}</label>
-                                                <input type="hidden" name="id_text[]" value="{{ $itemTextTiga->id_item }}">
+                                                <input type="hidden" name="id_file_text[]" value="{{ $itemTextTiga->id_item }}">
                                                 <input type="hidden" name="skor_penyelia_text[]"
                                                     value="{{ $itemTextTiga->skor_penyelia }}">
-                                                <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextTiga->id }}">
+                                                <input type="hidden" name="id_update_file[]" value="{{ $itemTextTiga->id }}">
                                             </div>
                                         @endforeach
                                     @elseif ($itemTiga->opsi_jawaban == 'long text')
@@ -747,13 +828,13 @@
                                                     <label for="">{{ $itemEmpat->nama }}</label>
                                                     {{-- <input type="hidden" name="opsi_jawaban[]"
                                                         value="{{ $itemEmpat->opsi_jawaban }}" id=""> --}}
-                                                        <input type="hidden" name="id_text[]" value="{{ $itemTextEmpat->id_item }}">
-                                                        <input type="file" name="info_text[]" id="{{ $idLevelEmpat . 'file' }}"
+                                                        <input type="hidden" name="id_file_text[]" value="{{ $itemTextEmpat->id_item }}">
+                                                        <input type="file" name="update_file[]" id="{{ $idLevelEmpat . 'file' }}"
                                                             placeholder="Masukkan informasi" class="form-control hidden" value="{{ ($itemTextEmpat->opsi_text != null) ? $itemTextEmpat->opsi_text : null }}" title="{{ $itemTextEmpat->opsi_text }}" style="display: none;">
                                                         <label for="{{ $idLevelEmpat . 'file' }}"><span>Choose File</span>  {{ $idLevelEmpat->opsi_text }}</label>
                                                         <input type="hidden" name="skor_penyelia_text[]"
                                                             value="{{ $itemTextEmpat->skor_penyelia }}">
-                                                        <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextEmpat->id }}">
+                                                        <input type="hidden" name="id_update_file[]" value="{{ $itemTextEmpat->id }}">
                                                 </div>
                                             @endforeach
                                         @elseif ($itemEmpat->opsi_jawaban == 'long text')
@@ -1103,11 +1184,11 @@
                                     $('#bukti_pemilikan_jaminan_utama').append(`
                                     <div class="form-group col-md-6 aspek_jaminan_kategori_jaminan_utama">
                                         <label>${valItem.nama}</label>
-                                        <input type="hidden" name="id_text[]" value="${valItem.id_item}" id="" class="input">
-                                        <input type="file" name="info_text[]" style="display: none" value="${valItem.opsi_text}" id="${valItem.nama}file" class="form-control">
+                                        <input type="hidden" name="id_file_text[]" value="${valItem.id_item}" id="" class="input">
+                                        <input type="file" name="update_file[]" style="display: none" value="${valItem.opsi_text}" id="${valItem.nama}file" class="form-control">
                                                         <label class="form-control" for="${valItem.nama}file"><span>Choose File</span>  ${valItem.opsi_text}</label>
                                         <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
-                                        <input type="hidden" name="id_jawaban_text[]" value="${valItem.id}">
+                                        <input type="hidden" name="id_update_file[]" value="${valItem.id}">
                                     </div>`);
                                 }
                                 else {
@@ -1194,7 +1275,7 @@
                                     <div class="form-group col-md-6 aspek_jaminan_kategori_jaminan_utama">
                                         <label>${valItem.nama}</label>
                                         <input type="hidden" name="id_jawaban_text[]" value="" id="" class="input">
-                                        <input type="hidden" name="id_text[]" value="${valItem.id}" id="" class="input">
+                                        <input type="hidden" name="id_file_text[]" value="${valItem.id}" id="" class="input">
                                         <input type="file" name="upload_file[]" id="" class="form-control">
                                     </div>`);
                                 }
@@ -1334,9 +1415,9 @@
                                     $('#bukti_pemilikan_jaminan_tambahan').append(`
                                     <div class="form-group col-md-6 aspek_jaminan_kategori">
                                         <label>${valItem.nama}</label>
-                                        <input type="hidden" name="id_jawaban_text[]" value="${valItem.id}" id="" class="input">
-                                        <input type="hidden" name="id_text[]" value="${valItem.id_item}" id="" class="input">
-                                        <input type="file" name="info_text[]" style="display: none" value="${valItem.opsi_text}" id="${valItem.nama}file" class="form-control">
+                                        <input type="hidden" name="id_update_file[]" value="${valItem.id}" id="" class="input">
+                                        <input type="hidden" name="id_file_text[]" value="${valItem.id_item}" id="" class="input">
+                                        <input type="file" name="update_file[]" style="display: none" value="${valItem.opsi_text}" id="${valItem.nama}file" class="form-control">
                                                         <label class="form-control" for="${valItem.nama}file"><span>Choose File</span>  ${valItem.opsi_text}</label>
                                         <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
                                     </div>`);
@@ -1406,11 +1487,11 @@
                                 $('#bukti_pemilikan_jaminan_tambahan').append(`
                                 <div class="form-group col-md-6 aspek_jaminan_kategori">
                                     <label>${valItem.nama}</label>
-                                        <input type="hidden" name="id_jawaban_text[]" value="" id="" class="input">
-                                        <input type="hidden" name="id_text[]" value="${valItem.id_item}" id="" class="input">
+                                        <input type="hidden" name="id_update_file[]" value="" id="" class="input">
+                                        <input type="hidden" name="id_file_text[]" value="${valItem.id_item}" id="" class="input">
                                         <input type="hidden" name="opsi_jawaban[]"
                                             value="${valItem.opsi_jawaban}" id="" class="input">
-                                            <input type="file" name="info_text[]" placeholder="Masukkan informasi"
+                                            <input type="file" name="update_file[]" placeholder="Masukkan informasi"
                                             class="form-control input" value="${valItem.opsi_text}">
                                         <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
                                 </div>`);
@@ -1910,7 +1991,7 @@
         $(".btn-prev").click(function(e) {
             event.preventDefault(e);
             var indexNow = $(".form-wizard.active").data('index')
-            var prev = parseInt(indexNow) - 1
+            var prev = parseInt(indexNow)
             if ($(".form-wizard[data-index='" + prev + "']").length == 1) {
                 $(".form-wizard").removeClass('active')
                 $(".form-wizard[data-index='" + prev + "']").addClass('active')
