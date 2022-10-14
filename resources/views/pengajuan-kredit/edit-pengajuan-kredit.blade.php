@@ -1749,7 +1749,7 @@
         let installment = parseInt($('#installment').val());
 
         let repaymentCapacity = parseFloat(persentaseNetIncome * omzetPenjualan * (1 + rencanaPeningkatan) /
-            (installment*12)); //cek rumusnya lagi
+            installment; //cek rumusnya lagi
 
         $('#repayment_capacity').val(repaymentCapacity);
 
