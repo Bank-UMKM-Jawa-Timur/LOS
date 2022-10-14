@@ -501,17 +501,11 @@ class PengajuanKreditController extends Controller
                 $imageName = $key.time().'.'.$image->getClientOriginalExtension();
 
                 $filePath = public_path() . '/upload/' . $id_pengajuan . '/'. $value;
-                // $filePath = public_path() . '/upload';
+                
                 if (!\File::isDirectory($filePath)) {
                     \File::makeDirectory($filePath, 493, true);
                 }
-                // $img = Image::make($image->getRealPath());
-                // $img->resize(800, null, function ($constraint) {
-                //     $constraint->aspectRatio();
-                //     $constraint->upsize();
-                // })->save($filePath.'/'.$imageName);
-
-                // $filePath = public_path('/images');
+                
                 $image->move($filePath, $imageName);
 
                 $dataJawabanText = new JawabanTextModel;
@@ -1581,4 +1575,58 @@ class PengajuanKreditController extends Controller
             return redirect()->back()->withError('Terjadi kesalahan'.$e->getMessage());
         }
     }
+
+    public function partial(Request $request) {
+        $find = array('.');
+        DB::beginTransaction();
+        try {
+            $addPengajuan = new PengajuanModel;
+            $addPengajuan->tanggal = date(now());
+            $addPengajuan->progress_pengajuan_data = $request->progress;
+            $addPengajuan->save();
+            $id_pengajuan = $addPengajuan->id;
+
+            $addData = new CalonNasabah;
+            $addData->nama = $request->name;
+            $addData->alamat_rumah = $request->alamat_rumah;
+            $addData->alamat_usaha = $request->alamat_usaha;
+            $addData->no_ktp = $request->no_ktp;
+            $addData->tempat_lahir = $request->tempat_lahir;
+            $addData->tanggal_lahir = $request->tanggal_lahir;
+            $addData->status = $request->status;
+            $addData->sektor_kredit = $request->sektor_kredit;
+            $addData->jenis_usaha = $request->jenis_usaha;
+            $addData->jumlah_kredit = str_replace($find,"",$request->jumlah_kredit);
+            $addData->tenor_yang_diminta = $request->tenor_yang_diminta;
+            $addData->tujuan_kredit = $request->tujuan_kredit;
+            $addData->jaminan_kredit = $request->jaminan;
+            $addData->hubungan_bank = $request->hubungan_bank;
+            $addData->verifikasi_umum = $request->hasil_verifikasi;
+            $addData->id_user = auth()->user()->id;
+            $addData->id_pengajuan = $id_pengajuan;
+            $addData->id_desa = $request->desa;
+            $addData->id_kecamatan = $request->kec;
+            $addData->id_kabupaten = $request->kabupaten;
+            $addData->save();
+            $id_calon_nasabah = $addData->id;
+
+            //untuk jawaban yg teks, number, persen, long text
+            foreach ($request->id_level as $key => $value) {
+                $dataJawabanText = new JawabanTextModel;
+                $dataJawabanText->id_pengajuan = $id_pengajuan;
+                $dataJawabanText->id_jawaban = $request->get('id_level')[$key];
+                $dataJawabanText->opsi_text = str_replace($find,'',$request->get('informasi')[$key]);
+                // $dataJawabanText->opsi_text = $request->get('informasi')[$key] == null ? '-' : $request->get('informasi')[$key];
+                $dataJawabanText->save();
+            }
+        } catch (Exception $e) {
+            DB::rollBack();
+            // return $e->getMessage();
+            return redirect()->route('pengajuan-kredit.index')->withError('Terjadi kesalahan.'.$e->getMessage());
+        } catch (QueryException $e) {
+            DB::rollBack();
+            // return $e->getMessage();
+            return redirect()->route('pengajuan-kredit.index')->withError('Terjadi kesalahan'.$e->getMessage());
+        }
+    } 
 }
