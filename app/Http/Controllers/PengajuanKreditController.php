@@ -764,7 +764,7 @@ class PengajuanKreditController extends Controller
      */
     public function update(Request $request, $id)
     {
-        dd($request);
+        // dd($request);
         // return $request;
         $request->validate([
             'name' => 'required',
@@ -829,7 +829,7 @@ class PengajuanKreditController extends Controller
             $finalArray_text = array();
             $rata_rata = array();
 
-            if(count($request->file('update_file')) > 0){
+            if(count($request->file()) > 0){
                 foreach($request->file('update_file') as $key => $value){
                     $image = $value;
                     $imageName = $request->id_update_file[$key].time().'.'.$image->getClientOriginalExtension();

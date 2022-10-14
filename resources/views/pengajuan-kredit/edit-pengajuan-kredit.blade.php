@@ -52,10 +52,11 @@
                                         ->where('id_jawaban', 145)
                                         ->first();
                     @endphp
-                    <input type="hidden" name="id_item_file[]" value="{{ $itemSP->id }}" id="">
-                    <input style="display: none" type="file" name="upload_file[]" value="{{ $jawabanFotoSP->opsi_text }}" id="sp" placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-control limit-size" >
+                    <input type="hidden" name="id_file_text[]" value="{{ $jawabanFotoSP->id_item }}">
+                    <input style="display: none" type="file" name="update_file[]" value="{{ $jawabanFotoSP->opsi_text }}" id="sp" placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-control limit-size" >
                     <label class="form-control" for="sp"><span>Choose File</span>   {{ ($jawabanFotoSP != null) ? $jawabanFotoSP->opsi_text : null }}</label>
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                    <input type="hidden" name="id_update_file[]" value="{{ $jawabanFotoSP->id }}">
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
                             {{ $errors->first('dataLevelDua.' . $key) }}
