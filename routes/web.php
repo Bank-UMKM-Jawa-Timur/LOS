@@ -59,6 +59,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('getdesa', [PengajuanKreditController::class, "getdesa"]);
 
     Route::resource('pengajuan-kredit', PengajuanKreditController::class);
+    // Route::post('pengajuan-kredit/create', PengajuanKreditController::class);
 
     Route::resource('kabupaten', KabupatenController::class);
     Route::resource('kecamatan', KecamatanController::class);

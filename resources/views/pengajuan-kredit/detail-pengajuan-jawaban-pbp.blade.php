@@ -939,7 +939,7 @@
                         <label for="">Pendapat dan Usulan PBP</label>
                         <textarea name="komentar_pbp_keseluruhan"
                             class="form-control @error('komentar_pbp_keseluruhan') is-invalid @enderror" id=""
-                            cols="30" rows="4" placeholder="Pendapat dan Usulan Penyelia Kredit"
+                            cols="30" rows="4" placeholder="Pendapat dan Usulan Pemimpin Bidang Pemasaran"
                             required>{{ isset($pendapatDanUsulanPBP->komentar_pbp) ? $pendapatDanUsulanPBP->komentar_pbp : '' }}</textarea>
                         @error('komentar_pbp_keseluruhan')
                             <div class="invalid-feedback">
@@ -965,7 +965,7 @@
                         <label for="">Pendapat dan Usulan Penyelia</label>
                         <textarea name="komentar_penyelia_keseluruhan"
                             class="form-control @error('komentar_penyelia_keseluruhan') is-invalid @enderror" id=""
-                            cols="30" rows="4" placeholder="Pendapat dan Usulan Pemimpin Bidang Pemasaran"
+                            cols="30" rows="4" placeholder="Pendapat dan Usulan Penyelia"
                             required>{{ isset($pendapatDanUsulanPenyelia->komentar_penyelia) ? $pendapatDanUsulanPenyelia->komentar_penyelia : '' }}</textarea>
                         @error('komentar_penyelia_keseluruhan')
                             <div class="invalid-feedback">
