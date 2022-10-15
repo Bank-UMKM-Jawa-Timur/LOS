@@ -1775,15 +1775,15 @@
 
     // hitung Repayment Capacity
     function hitungRepaymentCapacity() {
-        let persentaseNetIncome = parseInt($('#persentase_net_income').val()) / 100;
         let omzetPenjualan = parseInt($('#omzet_penjualan').val());
+        let persentaseNetIncome = parseInt($('#persentase_net_income').val()) / 100;
         let rencanaPeningkatan = parseInt($('#rencana_peningkatan').val()) / 100;
         let installment = parseInt($('#installment').val());
 
         let repaymentCapacity = parseFloat(persentaseNetIncome * omzetPenjualan * (1 + rencanaPeningkatan) /
-            (installment*12)); //cek rumusnya lagi
+            installment); //cek rumusnya lagi
 
-        $('#repayment_capacity').val(repaymentCapacity);
+        $('#repayment_capacity').val(repaymentCapacity.tofixed(2));
 
         if (repaymentCapacity > 2) {
             $('#repayment_capacity_opsi_0').attr('selected', true);
