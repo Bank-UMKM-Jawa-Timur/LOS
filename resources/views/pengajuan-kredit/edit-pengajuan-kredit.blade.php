@@ -264,7 +264,7 @@
                 </div>
                 <div class="form-group col-md-6">
                     <label for="">Jumlah Kredit yang diminta</label>
-                    <input type="text" name="jumlah_kredit" class="form-control @error('jumlah_kredit') is-invalid @enderror" id="jumlah_kredit" cols="30"
+                    <input type="text" name="jumlah_kredit" class="form-control rupiah @error('jumlah_kredit') is-invalid @enderror" id="jumlah_kredit" cols="30"
                         rows="4"
                         placeholder="Jumlah Kredit" value="{{ old('jumlah_kredit', $dataUmum->jumlah_kredit) }}">
                     @error('jumlah_kredit')
@@ -435,7 +435,7 @@
                                         <label for="">{{ $item->nama }}</label>
                                         <input type="hidden" name="id_text[]" value="{{ $itemTextDua->id_item }}">
                                         <input type="text" name="info_text[]" id="{{ $idLevelDua }}"
-                                            placeholder="Masukkan informasi {{ $item->nama }}" value="{{ ($itemTextDua != null) ? $itemTextDua->opsi_text : null }}" class="form-control">
+                                            placeholder="Masukkan informasi {{ $item->nama }}" value="{{ ($itemTextDua != null) ? $itemTextDua->opsi_text : null }}" class="form-control {{ ($item->nama == 'Modal Awal Sendiri' || $item->nama == 'Modal Pinjaman') ? 'rupiah' : '' }}">
                                         <input type="hidden" name="skor_penyelia_text[]"
                                             value="{{ $itemTextDua->skor_penyelia }}">
                                             <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextDua->id }}">
@@ -445,15 +445,27 @@
                                 
                             @elseif ($item->opsi_jawaban == 'number')
                                 @foreach ($dataDetailJawabanText as $itemTextDua)
-                                    <div class="form-group col-md-6">
-                                        <label for="">{{ $item->nama }}</label>
-                                        <input type="number" name="info_text[]" id="{{ $idLevelDua }}"
-                                            placeholder="Masukkan informasi {{ $item->nama }}" value="{{ ($itemTextDua != null) ? $itemTextDua->opsi_text : null }}" class="form-control">
-                                        <input type="hidden" name="skor_penyelia_text[]"
-                                            value="{{ $itemTextDua->skor_penyelia }}">
-                                        <input type="hidden" name="id_text[]" value="{{ $itemTextDua->id_item }}">
-                                        <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextDua->id }}">
-                                    </div>
+                                    @if ($itemTextDua->nama == 'Omzet Penjualan' || $itemTextDua->nama == 'Installment')
+                                            <div class="form-group col-md-6">
+                                                <label for="">{{ $item->nama }}</label>
+                                                <input type="hidden" name="id_text[]" value="{{ $itemTextDua->id_item }}">
+                                                <input type="text" name="info_text[]" id="{{ $idLevelDua }}"
+                                                    placeholder="Masukkan informasi {{ $item->nama }}" value="{{ ($itemTextDua != null) ? $itemTextDua->opsi_text : null }}" class="form-control rupiah">
+                                                <input type="hidden" name="skor_penyelia_text[]"
+                                                    value="{{ $itemTextDua->skor_penyelia }}">
+                                                    <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextDua->id }}">
+                                            </div>
+                                        @else
+                                            <div class="form-group col-md-6">
+                                                <label for="">{{ $item->nama }}</label>
+                                                <input type="text" name="info_text[]" id="{{ $idLevelDua }}"
+                                                    placeholder="Masukkan informasi {{ $item->nama }}" value="{{ ($itemTextDua != null) ? $itemTextDua->opsi_text : null }}" class="form-control rupiah">
+                                                <input type="hidden" name="skor_penyelia_text[]"
+                                                    value="{{ $itemTextDua->skor_penyelia }}">
+                                                <input type="hidden" name="id_text[]" value="{{ $itemTextDua->id_item }}">
+                                                <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextDua->id }}">
+                                        </div>
+                                    @endif
                                 @endforeach
                             @elseif ($item->opsi_jawaban == 'persen')
                                 @foreach ($dataDetailJawabanText as $itemTextDua)
@@ -461,7 +473,7 @@
                                         <label for="">{{ $item->nama }}</label>
                                         <div class="input-group mb-3">
                                             <input type="number" step="any" name="info_text[]" id="{{ $idLevelDua }}"
-                                                placeholder="Masukkan informasi {{ $item->nama }}" class="form-control"
+                                                placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah"
                                                 aria-label="Recipient's username" aria-describedby="basic-addon2" value="{{ ($itemTextDua != null) ? $itemTextDua->opsi_text : null }}">
                                             <input type="hidden" name="skor_penyelia_text[]"
                                                 value="{{ $itemTextDua->skor_penyelia }}">
@@ -652,8 +664,8 @@
                                             <div class="form-group col-md-6">
                                                 <label for="">{{ $itemTiga->nama }}</label>
                                                 <input type="hidden" name="id_text[]" value="{{ $itemTextTiga->id_item }}">
-                                                <input type="number" name="info_text[]" placeholder="Masukkan informasi"
-                                                    class="form-control" id="{{ $idLevelTiga }}" value="{{ ($itemTextTiga->opsi_text != null) ? $itemTextTiga->opsi_text : null }}">
+                                                <input type="text" name="info_text[]" placeholder="Masukkan informasi"
+                                                    class="form-control rupiah" id="{{ $idLevelTiga }}" value="{{ ($itemTextTiga->opsi_text != null) ? $itemTextTiga->opsi_text : null }}">
                                                 <input type="hidden" name="skor_penyelia_text[]"
                                                     value="{{ $itemTextTiga->skor_penyelia }}">
                                                 <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextTiga->id }}">
@@ -795,8 +807,8 @@
                                             @foreach ($dataDetailJawabanTextEmpat as $itemTextEmpat)
                                                 <div class="form-group col-md-6">
                                                     <label for="">{{ $itemEmpat->nama }}</label>
-                                                        <input type="number" name="info_text[]" id="{{ $idLevelEmpat }}"
-                                                            placeholder="Masukkan informasi" class="form-control" value="{{ ($itemTextEmpat->opsi_text != null) ? $itemTextEmpat->opsi_text : null }}">
+                                                        <input type="text" name="info_text[]" id="{{ $idLevelEmpat }}"
+                                                            placeholder="Masukkan informasi" class="form-control rupiah" value="{{ ($itemTextEmpat->opsi_text != null) ? $itemTextEmpat->opsi_text : null }}">
                                                         <input type="hidden" name="skor_penyelia_text[]"
                                                             value="{{ $itemTextEmpat->skor_penyelia }}">
                                                         <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextEmpat->id }}">
@@ -996,6 +1008,26 @@
     hitungRatioCoverage();
     hitungRatioTenorAsuransi();
     hitungRepaymentCapacity();
+    $('.rupiah').val(formatrupiah());
+
+    function formatrupiah( prefix) {
+        var number_string = $('.rupiah').val().replace(/[^,\d]/g, '').toString(),
+        split   		= number_string.split(','),
+        sisa     		= split[0].length % 3,
+        rupiah     		= split[0].substr(0, sisa),
+        ribuan     		= split[0].substr(sisa).match(/\d{3}/gi);
+
+        // tambahkan titik jika yang di input sudah menjadi angka ribuan
+        if(ribuan){
+            separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
+        }
+
+        rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+        return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
+    }
+        // End Format Rupiah
+
 
     $('#kabupaten').change(function() {
         var kabID = $(this).val();
@@ -1914,14 +1946,73 @@
         })
 
         function setPercentage(formIndex) {
-            console.log(formIndex);
             var form = ".form-wizard[data-index='" + formIndex + "']"
 
             var input = $(form + " input")
             var select = $(form + " select")
             var textarea = $(form + " textarea")
+            var hidden = $(form + " input[type=hidden]")
 
-            var ttlInput = 0;
+            if (form == ".form-wizard[data-index='2']") {
+                var ttlInput = -1;
+            } else if (form == ".form-wizard[data-index='3']") {
+                var checkbox = $(form + " input[type=checkbox]:checked").length;
+                if ($(form + " select[name=kategori_jaminan_utama]").find(':selected').val() == 'Tanah' || $(form + " select[name=kategori_jaminan_utama]").find(':selected').val() == 'Tanah dan Bangunan') {
+                    if ($(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah' || $(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah dan Bangunan') {
+                        if (checkbox == 2) {
+                            var ttlInput = -5
+                        } else if (checkbox == 3){
+                            var ttlInput = -4
+                        } else if (checkbox == 4){
+                            var ttlInput = -3
+                        } else if (checkbox == 5) {
+                            var ttlInput = -2
+                        } else {
+                            if (checkbox == 6) {
+                                var ttlInput = -1
+                            } else {
+                                var ttlInput = -7
+                            }
+                        }
+                    } else {
+                        if (checkbox == 1) {
+                            var ttlInput = -3;
+                        } else if (checkbox == 2) {
+                            var ttlInput = -2;
+                        } else {
+                            if (checkbox == 3) {
+                                var ttlInput = -1;
+                            } else {
+                                var ttlInput = -4;
+                            }
+                        }
+                    }
+                    // var ttlInput = -1;
+                }
+                else {
+                    if ($(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah' || $(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah dan Bangunan') {
+                        if (checkbox == 1) {
+                            var ttlInput = -3;
+                        } else if (checkbox == 2) {
+                            var ttlInput = -2;
+                        } else {
+                            if (checkbox == 3) {
+                                var ttlInput = -1;
+                            } else {
+                                var ttlInput = -4;
+                            }
+                        }
+                    } else {
+                        var ttlInput = 0;
+                    }
+                }
+            }
+            else if (form == ".form-wizard[data-index='6']"){
+                var ttlInput = -1;
+            } else {
+                var ttlInput = 0;
+            }
+
             var ttlInputFilled = 0;
             $.each(input, function(i, v) {
                 ttlInput++
@@ -1947,8 +2038,17 @@
                 }
             })
 
-            var allInput = ttlInput + ttlSelect + ttlTextarea
-            var allInputFilled = ttlInputFilled + ttlSelectFilled + ttlTextareaFilled
+            var ttlHidden = 0;
+            var ttlHiddenFilled = 0;
+            $.each(hidden, function(i, v) {
+                ttlHidden++
+                if (v.value != '') {
+                    ttlHiddenFilled++
+                }
+            })
+
+            var allInput = ttlInput + ttlSelect + ttlTextarea - ttlHidden
+            var allInputFilled = ttlInputFilled + ttlSelectFilled + ttlTextareaFilled - ttlHiddenFilled
             console.log("AllInput : " + allInput);
             console.log("AllInputFilled : " + allInputFilled);
 
