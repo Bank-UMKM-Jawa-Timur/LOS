@@ -1667,8 +1667,8 @@ class PengajuanKreditController extends Controller
             // return $e->getMessage();
             return redirect()->route('pengajuan-kredit.index')->withError('Terjadi kesalahan'.$e->getMessage());
         }
-    } 
-
+    }
+    
     public function backToInputProses($id)
     {
         try {

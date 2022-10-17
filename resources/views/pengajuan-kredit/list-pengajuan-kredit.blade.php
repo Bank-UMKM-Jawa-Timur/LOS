@@ -179,7 +179,7 @@
                                     <a href="{{ route('pengajuan.check.pincab',$item->id_pengajuan) }}" class="btn btn-info">Tindak lanjut PBP</a>
                                 @else
                                     <a href="{{ route('pengajuan.backToInputProses',$item->id_pengajuan) }}" class="btn btn-info mr-1">Proses input</a>
-                                    <a href="{{ route('pengajuan.check.pincab',$item->id_pengajuan) }}" class="btn btn-info">Tindak lanjut PBP</a>
+                                    <a href="{{ route('pengajuan.check.pincab',$item->id_pengajuan) }}" class="btn btn-info">Tindak lanjut Pincab</a>
                                 @endif
                         @endif
                                 <div class="px-2">
