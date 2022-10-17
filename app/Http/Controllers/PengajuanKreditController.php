@@ -1653,4 +1653,18 @@ class PengajuanKreditController extends Controller
             return redirect()->route('pengajuan-kredit.index')->withError('Terjadi kesalahan'.$e->getMessage());
         }
     } 
+
+    public function backToInputProses($id)
+    {
+        try {
+            $statusPenyelia = PengajuanModel::find($id);
+            $statusPenyelia->posisi = "Proses Input Data";
+            $statusPenyelia->update();
+            return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+        } catch (Exception $e) {
+            return redirect()->back()->withError('Terjadi kesalahan.');
+        } catch (QueryException $e) {
+            return redirect()->back()->withError('Terjadi kesalahan');
+        }
+    }
 }

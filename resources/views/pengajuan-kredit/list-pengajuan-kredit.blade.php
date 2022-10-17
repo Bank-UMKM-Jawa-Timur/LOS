@@ -175,9 +175,11 @@
                                     Review
                                 </a>
                                 @if (auth()->user()->id_cabang == '1')
+                                    <a href="{{ route('pengajuan.backToInputProses',$item->id_pengajuan) }}" class="btn btn-info mr-1">Proses input</a>
                                     <a href="{{ route('pengajuan.check.pincab',$item->id_pengajuan) }}" class="btn btn-info">Tindak lanjut PBP</a>
                                 @else
-                                    <a href="{{ route('pengajuan.check.pincab',$item->id_pengajuan) }}" class="btn btn-info">Tindak lanjut Pincab</a>
+                                    <a href="{{ route('pengajuan.backToInputProses',$item->id_pengajuan) }}" class="btn btn-info mr-1">Proses input</a>
+                                    <a href="{{ route('pengajuan.check.pincab',$item->id_pengajuan) }}" class="btn btn-info">Tindak lanjut PBP</a>
                                 @endif
                         @endif
                                 <div class="px-2">
