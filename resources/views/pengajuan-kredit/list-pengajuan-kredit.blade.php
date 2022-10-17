@@ -175,11 +175,25 @@
                                     Review
                                 </a>
                                 @if (auth()->user()->id_cabang == '1')
-                                    <a href="{{ route('pengajuan.backToInputProses',$item->id_pengajuan) }}" class="btn btn-info mr-1">Proses input</a>
-                                    <a href="{{ route('pengajuan.check.pincab',$item->id_pengajuan) }}" class="btn btn-info">Tindak lanjut PBP</a>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Aksi
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a href="{{ route('pengajuan.backToInputProses',$item->id_pengajuan) }}" class="dropdown-item">Proses input</a>
+                                            <a href="{{ route('pengajuan.check.pincab',$item->id_pengajuan) }}" class="dropdown-item">Tindak lanjut PBP</a>
+                                        </div>
+                                    </div>
                                 @else
-                                    <a href="{{ route('pengajuan.backToInputProses',$item->id_pengajuan) }}" class="btn btn-info mr-1">Proses input</a>
-                                    <a href="{{ route('pengajuan.check.pincab',$item->id_pengajuan) }}" class="btn btn-info">Tindak lanjut Pincab</a>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Aksi
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a href="{{ route('pengajuan.backToInputProses',$item->id_pengajuan) }}" class="dropdown-item">Proses input</a>
+                                            <a href="{{ route('pengajuan.check.pincab',$item->id_pengajuan) }}" class="dropdown-item">Tindak lanjut PBP</a>
+                                        </div>
+                                    </div>
                                 @endif
                         @endif
                                 <div class="px-2">
