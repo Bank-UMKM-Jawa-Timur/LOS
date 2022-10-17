@@ -1379,7 +1379,9 @@ class PengajuanKreditController extends Controller
         try {
             $statusPenyelia = PengajuanModel::find($id);
             $statusPenyelia->posisi = "Review Penyelia";
-            $statusPenyelia->tanggal_review_penyelia = date(now());
+            if($statusPenyelia->tanggal_review_penyelia == null){
+                $statusPenyelia->tanggal_review_penyelia = date(now());
+            }
             $statusPenyelia->update();
             return redirect()->back()->withStatus('Berhasil mengganti posisi.');
         } catch (Exception $e) {
