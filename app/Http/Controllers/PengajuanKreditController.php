@@ -216,6 +216,13 @@ class PengajuanKreditController extends Controller
             $itemBuktiPemilikan = ItemModel::with('option');
 
             $itemBuktiPemilikan->whereIn('nama', ['SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C', 'Foto'])->where('id_parent', 96);
+
+            $data = [
+                'item' => $item,
+                'itemBuktiPemilikan' => $itemBuktiPemilikan->get(),
+                'detailJawabanOption' => $detailJawabanOption->first(),
+                'dataDetailJawabanText' => $dataDetailJawabanText
+            ];
         }
         else if($kategori == 'Kendaraan Bermotor'){
             $item = ItemModel::with('option')->where('nama', $kategori)->where('id_parent', 95)->first();
@@ -237,6 +244,13 @@ class PengajuanKreditController extends Controller
             $itemBuktiPemilikan = ItemModel::with('option');
 
             $itemBuktiPemilikan->whereIn('nama', ['BPKB No', 'Atas Nama', 'Foto'])->where('id_parent', 96);
+
+            $data = [
+                'item' => $item,
+                'itemBuktiPemilikan' => $itemBuktiPemilikan->get(),
+                'detailJawabanOption' => $detailJawabanOption->first(),
+                'dataDetailJawabanText' => $dataDetailJawabanText
+            ];
         }
         else{
             $item = ItemModel::where('nama', $kategori)->where('id_parent', 95)->first();
@@ -250,13 +264,14 @@ class PengajuanKreditController extends Controller
                                         ->get();
 
             $itemBuktiPemilikan = ItemModel::where('nama', $kategori);
+
+            $data = [
+                'item' => $item,
+                'itemBuktiPemilikan' => $itemBuktiPemilikan->get(),
+                // 'detailJawabanOption' => $detailJawabanOption->first(),
+                'dataDetailJawabanText' => $dataDetailJawabanText
+            ];
         }
-        $data = [
-            'item' => $item,
-            'itemBuktiPemilikan' => $itemBuktiPemilikan->get(),
-            'detailJawabanOption' => $detailJawabanOption->first(),
-            'dataDetailJawabanText' => $dataDetailJawabanText
-        ];
 
         return json_encode($data);
     }
