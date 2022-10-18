@@ -171,34 +171,45 @@
                     <td>
                         <div class="d-flex">
                         @if ($item->posisi == 'Review Penyelia')
-                                <a href="{{ route('pengajuan.detailjawaban',$item->id_pengajuan) }}" class="btn btn-rgb-primary mr-2">
-                                    Review
-                                </a>
-                                @if (auth()->user()->id_cabang == '1')
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Aksi
+                                <div class="btn-group">
+                                    @if (auth()->user()->id_cabang == '1')    
+                                        <button type="button" data-toggle="dropdown" class="btn btn-link">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16" style="color: black">
+                                                <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                                            </svg>
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a href="{{ route('pengajuan.backToInputProses',$item->id_pengajuan) }}" class="dropdown-item">Proses input</a>
-                                            <a href="{{ route('pengajuan.check.pincab',$item->id_pengajuan) }}" class="dropdown-item">Tindak lanjut PBP</a>
+                                            <a href="{{ route('pengajuan.detailjawaban',$item->id_pengajuan) }}" class="dropdown-item">Review</a>
+                                            <a href="{{ route('pengajuan.backToInputProses',$item->id_pengajuan) }}" class="dropdown-item">Kembalikan Ke Staff</a>
+                                            <a href="{{ route('pengajuan.check.pincab',$item->id_pengajuan) }}" class="dropdown-item">Lanjutkan Ke PBP</a>
+                                            <a target="_blank" href="{{ route('cetak',$item->id_pengajuan) }}" class="dropdown-item" >Cetak</a>
                                         </div>
-                                    </div>
-                                @else
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Aksi
+                                    @else
+                                        <button type="button" class="btn btn-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16" style="color: black">
+                                                <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                                            </svg>
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a href="{{ route('pengajuan.backToInputProses',$item->id_pengajuan) }}" class="dropdown-item">Proses input</a>
-                                            <a href="{{ route('pengajuan.check.pincab',$item->id_pengajuan) }}" class="dropdown-item">Tindak lanjut PBP</a>
+                                            <a href="{{ route('pengajuan.detailjawaban',$item->id_pengajuan) }}" class="dropdown-item">Review</a>
+                                            <a href="{{ route('pengajuan.backToInputProses',$item->id_pengajuan) }}" class="dropdown-item">Kembalikan Ke Staff</a>
+                                            <a href="{{ route('pengajuan.check.pincab',$item->id_pengajuan) }}" class="dropdown-item">Lanjutkan Ke Pincab</a>
+                                            <a target="_blank" href="{{ route('cetak',$item->id_pengajuan) }}" class="dropdown-item" >Cetak</a>
                                         </div>
-                                    </div>
-                                @endif
-                        @endif
-                                <div class="px-2">
-                                    <a target="_blank" href="{{ route('cetak',$item->id_pengajuan) }}" class="btn btn-info" >Cetak</a>
+                                    @endif
                                 </div>
+                        @else
+                            <div class="btn-group">
+                                <button type="button" data-toggle="dropdown" class="btn btn-link">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16" style="color: black">
+                                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                                    </svg>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a target="_blank" href="{{ route('cetak',$item->id_pengajuan) }}" class="dropdown-item" >Cetak</a>
+                                </div>
+                            </div>
+                        @endif
                         </div>
                     </td>
                 @empty
