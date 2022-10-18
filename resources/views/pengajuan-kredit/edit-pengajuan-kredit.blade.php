@@ -1945,6 +1945,10 @@
             }
         })
 
+        for(let i = 0; i <= parseInt(jumlahData); i++){
+            setPercentage(i);
+        }
+
         function setPercentage(formIndex) {
             var form = ".form-wizard[data-index='" + formIndex + "']"
 
@@ -1952,6 +1956,7 @@
             var select = $(form + " select")
             var textarea = $(form + " textarea")
             var hidden = $(form + " input[type=hidden]")
+            var file = $(form + " input[type=file]")
 
             if (form == ".form-wizard[data-index='2']") {
                 var ttlInput = -1;
@@ -2047,8 +2052,17 @@
                 }
             })
 
-            var allInput = ttlInput + ttlSelect + ttlTextarea - ttlHidden
-            var allInputFilled = ttlInputFilled + ttlSelectFilled + ttlTextareaFilled - ttlHiddenFilled
+            var ttlFile = 0;
+            var ttlFileFilled = 0;
+            $.each(file, function(i, v) {
+                ttlFile++
+                if (v.value != '') {
+                    ttlFileFilled++
+                }
+            })
+
+            var allInput = ttlInput + ttlSelect + ttlTextarea - ttlHidden - ttlFile
+            var allInputFilled = ttlInputFilled + ttlSelectFilled + ttlTextareaFilled - ttlHiddenFilled - ttlFileFilled
             console.log("AllInput : " + allInput);
             console.log("AllInputFilled : " + allInputFilled);
 
