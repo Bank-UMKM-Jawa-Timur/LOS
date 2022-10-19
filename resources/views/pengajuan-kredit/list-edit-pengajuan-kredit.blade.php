@@ -197,8 +197,9 @@
                                     </a>
                                     <a href="{{ route('pengajuan.check.penyeliakredit',$item->id_pengajuan) }}" class="dropdown-item">Tindak lanjut Review Penyelia</a>
                                     <a target="_blank" href="{{ route('cetak',$item->id_pengajuan) }}" class="dropdown-item">Cetak</a>
-                                @endif
+                                @else
                                     <a target="_blank" href="{{ route('cetak',$item->id_pengajuan) }}" class="dropdown-item">Cetak</a>
+                                @endif
                                 </div>
                             </div>
                         </div>
