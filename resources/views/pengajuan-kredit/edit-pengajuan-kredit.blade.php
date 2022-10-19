@@ -53,7 +53,7 @@
                                         ->first();
                     @endphp
                     <input type="hidden" name="id_file_text[]" value="{{ $jawabanFotoSP->id_jawaban }}">
-                    <label for="" style="display: none" id="nama_file">{{ $jawabanFotoSP->opsi_text }}</label>
+                    <label for="update_file" style="display: none" id="nama_file">{{ $jawabanFotoSP->opsi_text }}</label>
                     <input type="file" name="update_file[]" value="{{ $jawabanFotoSP->opsi_text }}" id="sp" placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-control limit-size" >
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                     <input type="hidden" name="id_update_file[]" value="{{ $jawabanFotoSP->id }}">
@@ -242,8 +242,8 @@
                     @endphp
                     <label for="">Laporan SLIK</label>
                     <input type="hidden" name="id_item_file[]" value="146" id="">
-                    <input style="display: none" type="file" name="upload_file[]" id="laporan_slik" placeholder="Masukkan informasi Laporan SLIK" class="form-control limit-size">
-                    <label class="form-control" for="laporan_slik"><span>Choose File</span>   {{ ($jawabanLaporanSlik != null) ? $jawabanLaporanSlik->opsi_text : null }}</label>
+                    <label for="update_file" style="display: none" id="nama_file">{{ $jawabanLaporanSlik->opsi_text }}</label>
+                    <input type="file" name="upload_file[]" id="laporan_slik" placeholder="Masukkan informasi Laporan SLIK" class="form-control limit-size" value="{{ $jawabanLaporanSlik->opsi_text }}">
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
@@ -492,7 +492,7 @@
                                         {{-- <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" --}}
                                             {{-- id="{{ $idLevelDua }}"> --}}
                                         <input type="hidden" name="id_file_text[]" value="{{ $itemTextDua->id_item }}">
-                                        <label for="" style="display: none" id="nama_file">{{ $itemTextDua->opsi_text }}</label>
+                                        <label for="update_file" style="display: none" id="nama_file">{{ $itemTextDua->opsi_text }}</label>
                                         <input type="file" name="update_file[]" id="{{ $idLevelDua . 'file' }}"
                                             placeholder=" {{ old($item->nama, $itemTextDua->opsi_text) }}"  value=" {{ ($itemTextDua != null) ? $itemTextDua->opsi_text : null }} " class="form-control" title="{{ $item->opsi_text }}">
                                         <input type="hidden" name="skor_penyelia_text[]"
@@ -701,7 +701,7 @@
                                                 <label for="">{{ $itemTiga->nama }}</label>
                                                 {{-- <input type="hidden" name="opsi_jawaban[]"
                                                     value="{{ $itemTiga->opsi_jawaban }}" id=""> --}}
-                                                <label for="" style="display: none" id="nama_file">{{ $itemTextTiga->opsi_text }}</label>
+                                                <label for="update_file" style="display: none" id="nama_file">{{ $itemTextTiga->opsi_text }}</label>
                                                 <input type="file" name="info_text[]" placeholder="Masukkan informasi"
                                                 class="form-control" id="{{ $idLevelTiga . 'file' }}"  value="{{ ($itemTextTiga->opsi_text != null) ? $itemTextTiga->opsi_text : null }}" title="{{ $itemTextTiga->opsi_text }}" >
                                                 <input type="hidden" name="id_file_text[]" value="{{ $itemTextTiga->id_item }}">
@@ -842,7 +842,7 @@
                                                     {{-- <input type="hidden" name="opsi_jawaban[]"
                                                         value="{{ $itemEmpat->opsi_jawaban }}" id=""> --}}
                                                         <input type="hidden" name="id_file_text[]" value="{{ $itemTextEmpat->id_item }}">
-                                                        <label for="" style="display: none" id="nama_file">{{ $itemTextEmpat->opsi_text }}</label>
+                                                        <label for="update_file" style="display: none" id="nama_file">{{ $itemTextEmpat->opsi_text }}</label>
                                                         <input type="file" name="update_file[]" id="{{ $idLevelEmpat . 'file' }}"
                                                             placeholder="Masukkan informasi" class="form-control hidden" value="{{ ($itemTextEmpat->opsi_text != null) ? $itemTextEmpat->opsi_text : null }}" title="{{ $itemTextEmpat->opsi_text }}">
                                                         <input type="hidden" name="skor_penyelia_text[]"
@@ -1199,7 +1199,7 @@
                                     <div class="form-group col-md-6 aspek_jaminan_kategori_jaminan_utama">
                                         <label>${valItem.nama}</label>
                                         <input type="hidden" name="id_file_text[]" value="${valItem.id_item}" id="" class="input">
-                                        <label for="" style="display: none" id="nama_file">${valItem.opsi_text}</label>
+                                        <label for="update_file" style="display: none" id="nama_file">${valItem.opsi_text}</label>
                                         <input type="file" name="update_file[]" value="${valItem.opsi_text}" id="${valItem.nama}file" class="form-control">
                                         <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
                                         <input type="hidden" name="id_update_file[]" value="${valItem.id}">
@@ -1430,7 +1430,7 @@
                                     <div class="form-group col-md-6 aspek_jaminan_kategori">
                                         <label>${valItem.nama}</label>
                                         <input type="hidden" name="id_update_file[]" value="${valItem.id}" id="" class="input">
-                                        <label for="" style="display: none" id="nama_file">${valItem.opsi_text}</label>
+                                        <label for="update_file" style="display: none" id="nama_file">${valItem.opsi_text}</label>
                                         <input type="hidden" name="id_file_text[]" value="${valItem.id_item}" id="" class="input">
                                         <input type="file" name="update_file[]" value="${valItem.opsi_text}" id="${valItem.nama}file" class="form-control">
                                         <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
@@ -1817,6 +1817,33 @@
         }
             // End Format Rupiah
         var jumlahData = $('#jumlahData').val();
+        
+        showFile();
+
+        function showFile(){
+            var label = document.querySelectorAll('label[for="update_file"]')
+            var labelContent = []
+            const fileInput = document.querySelectorAll('input[type="file"]');
+
+            for(i = 0; i < label.length; i++){
+                labelContent.push(label[i].textContent)
+            }
+
+            for(i = 0; i < fileInput.length; i++){
+            // Create a new File object
+            const myFile = new File(['Hello World!'], labelContent[i], {
+                type: 'text/plain',
+                lastModified: new Date(),
+            });
+
+            // Now let's create a DataTransfer to get a FileList
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(myFile);
+            fileInput[i].files = dataTransfer.files;
+
+            }
+        }
+
         for (let index = 0; index < jumlahData + 1; index++) {
             for (let index = 0; index <= parseInt(jumlahData); index++) {
                 var selected = index == parseInt(jumlahData) ? ' selected' : ''
