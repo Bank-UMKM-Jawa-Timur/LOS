@@ -738,11 +738,10 @@ class PengajuanKreditController extends Controller
         $param['allDesa'] = Desa::where('id_kecamatan', $param['dataUmum']->id_kecamatan)->get();
         $param['pendapatDanUsulanStaf'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff')->first();
             
-        $dataDetailJawabanText = \App\Models\JawabanTextModel::where('id_pengajuan', 4)
-                                        ->distinct()
-                                        ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama', 'item.opsi_jawaban')
-                                        ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-                                        ->where('item.level', 2);
+        // return JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama', 'item.opsi_jawaban')
+        //                                 ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+        //                                 ->where('id_pengajuan', $id)
+        //                                 ->get();
 
         // $dataSlik = JawabanPengajuanModel::where('id_pengajuan', 14)
         //                                 ->join('option', 'option.id', 'jawaban.id_jawaban')
@@ -841,9 +840,19 @@ class PengajuanKreditController extends Controller
             if(count($request->file()) > 0){
                 foreach($request->file('update_file') as $key => $value){
                     $image = $value;
-                    $imageName = $request->id_update_file[$key].time().'.'.$image->getClientOriginalExtension();
+                    $imageName = $request->id_file_text[$key].time().'.'.$image->getClientOriginalExtension();
+
+                    $imageLama = JawabanTextModel::where('id_jawaban', $request->get('id_file_text')[$key])
+                                    ->select('opsi_text', 'id_jawaban')
+                                    ->where('opsi_text', '!=', null)
+                                    ->get();
+                    // return $imageLama;
+                    foreach($imageLama as $imageKey => $imageValue){
+                        $pathLama = public_path() . '/upload/' . $id_pengajuan . '/' . $imageValue->id_jawaban .'/' . $imageValue->opsi_text;
+                        \File::delete($pathLama);
+                    }
     
-                    $filePath = public_path() . '/upload/' . $id_pengajuan . '/'. $request->id_update_file[$key];
+                    $filePath = public_path() . '/upload/' . $id_pengajuan . '/'. $request->id_file_text[$key];
                     // $filePath = public_path() . '/upload';
                     if (!\File::isDirectory($filePath)) {
                         \File::makeDirectory($filePath, 493, true);

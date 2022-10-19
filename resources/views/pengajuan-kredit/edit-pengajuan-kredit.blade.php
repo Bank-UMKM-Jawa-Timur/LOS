@@ -52,9 +52,9 @@
                                         ->where('id_jawaban', 145)
                                         ->first();
                     @endphp
-                    <input type="hidden" name="id_file_text[]" value="{{ $jawabanFotoSP->id_item }}">
-                    <input style="display: none" type="file" name="update_file[]" value="{{ $jawabanFotoSP->opsi_text }}" id="sp" placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-control limit-size" >
-                    <label class="form-control" for="sp"><span>Choose File</span>   {{ ($jawabanFotoSP != null) ? $jawabanFotoSP->opsi_text : null }}</label>
+                    <input type="hidden" name="id_file_text[]" value="{{ $jawabanFotoSP->id_jawaban }}">
+                    <label for="" style="display: none" id="nama_file">{{ $jawabanFotoSP->opsi_text }}</label>
+                    <input type="file" name="update_file[]" value="{{ $jawabanFotoSP->opsi_text }}" id="sp" placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-control limit-size" >
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                     <input type="hidden" name="id_update_file[]" value="{{ $jawabanFotoSP->id }}">
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
@@ -459,7 +459,7 @@
                                             <div class="form-group col-md-6">
                                                 <label for="">{{ $item->nama }}</label>
                                                 <input type="text" name="info_text[]" id="{{ $idLevelDua }}"
-                                                    placeholder="Masukkan informasi {{ $item->nama }}" value="{{ ($itemTextDua != null) ? $itemTextDua->opsi_text : null }}" class="form-control rupiah">
+                                                    placeholder="Masukkan informasi {{ $item->nama }}" value="{{ ($itemTextDua != null) ? $itemTextDua->opsi_text : null }}" class="form-control">
                                                 <input type="hidden" name="skor_penyelia_text[]"
                                                     value="{{ $itemTextDua->skor_penyelia }}">
                                                 <input type="hidden" name="id_text[]" value="{{ $itemTextDua->id_item }}">
@@ -473,7 +473,7 @@
                                         <label for="">{{ $item->nama }}</label>
                                         <div class="input-group mb-3">
                                             <input type="number" step="any" name="info_text[]" id="{{ $idLevelDua }}"
-                                                placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah"
+                                                placeholder="Masukkan informasi {{ $item->nama }}" class="form-control"
                                                 aria-label="Recipient's username" aria-describedby="basic-addon2" value="{{ ($itemTextDua != null) ? $itemTextDua->opsi_text : null }}">
                                             <input type="hidden" name="skor_penyelia_text[]"
                                                 value="{{ $itemTextDua->skor_penyelia }}">
@@ -492,9 +492,9 @@
                                         {{-- <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" --}}
                                             {{-- id="{{ $idLevelDua }}"> --}}
                                         <input type="hidden" name="id_file_text[]" value="{{ $itemTextDua->id_item }}">
-                                        <input type="file" name="update_file[]" style="display: none" id="{{ $idLevelDua . 'file' }}"
-                                            placeholder=" {{ old($item->nama, $itemTextDua->opsi_text) }}" style="display: none"  value=" {{ ($itemTextDua != null) ? $itemTextDua->opsi_text : null }} " class="form-control" title="{{ $item->opsi_text }}">
-                                        <label class="form-control" for="{{ $idLevelDua . 'file' }}"><span>Choose File</span>   {{ ($itemTextDua != null) ? $itemTextDua->opsi_text : null }}</label>
+                                        <label for="" style="display: none" id="nama_file">{{ $itemTextDua->opsi_text }}</label>
+                                        <input type="file" name="update_file[]" id="{{ $idLevelDua . 'file' }}"
+                                            placeholder=" {{ old($item->nama, $itemTextDua->opsi_text) }}"  value=" {{ ($itemTextDua != null) ? $itemTextDua->opsi_text : null }} " class="form-control" title="{{ $item->opsi_text }}">
                                         <input type="hidden" name="skor_penyelia_text[]"
                                             value="{{ $itemTextDua->skor_penyelia }}">
                                         <input type="hidden" name="id_update_file[]" value="{{ $itemTextDua->id }}">
@@ -701,9 +701,9 @@
                                                 <label for="">{{ $itemTiga->nama }}</label>
                                                 {{-- <input type="hidden" name="opsi_jawaban[]"
                                                     value="{{ $itemTiga->opsi_jawaban }}" id=""> --}}
+                                                <label for="" style="display: none" id="nama_file">{{ $itemTextTiga->opsi_text }}</label>
                                                 <input type="file" name="info_text[]" placeholder="Masukkan informasi"
-                                                class="form-control" id="{{ $idLevelTiga . 'file' }}" style="display: none"  value="{{ ($itemTextTiga->opsi_text != null) ? $itemTextTiga->opsi_text : null }}" title="{{ $itemTextTiga->opsi_text }}" style="display: none;">
-                                                <label class="form-control" for="{{ $idLevelTiga . 'file' }}"><span>Choose File</span>   {{ ($itemTextTiga != null) ? $itemTextTiga->opsi_text : null }}</label>
+                                                class="form-control" id="{{ $idLevelTiga . 'file' }}"  value="{{ ($itemTextTiga->opsi_text != null) ? $itemTextTiga->opsi_text : null }}" title="{{ $itemTextTiga->opsi_text }}" >
                                                 <input type="hidden" name="id_file_text[]" value="{{ $itemTextTiga->id_item }}">
                                                 <input type="hidden" name="skor_penyelia_text[]"
                                                     value="{{ $itemTextTiga->skor_penyelia }}">
@@ -842,9 +842,9 @@
                                                     {{-- <input type="hidden" name="opsi_jawaban[]"
                                                         value="{{ $itemEmpat->opsi_jawaban }}" id=""> --}}
                                                         <input type="hidden" name="id_file_text[]" value="{{ $itemTextEmpat->id_item }}">
+                                                        <label for="" style="display: none" id="nama_file">{{ $itemTextEmpat->opsi_text }}</label>
                                                         <input type="file" name="update_file[]" id="{{ $idLevelEmpat . 'file' }}"
-                                                            placeholder="Masukkan informasi" class="form-control hidden" value="{{ ($itemTextEmpat->opsi_text != null) ? $itemTextEmpat->opsi_text : null }}" title="{{ $itemTextEmpat->opsi_text }}" style="display: none;">
-                                                        <label for="{{ $idLevelEmpat . 'file' }}"><span>Choose File</span>  {{ $idLevelEmpat->opsi_text }}</label>
+                                                            placeholder="Masukkan informasi" class="form-control hidden" value="{{ ($itemTextEmpat->opsi_text != null) ? $itemTextEmpat->opsi_text : null }}" title="{{ $itemTextEmpat->opsi_text }}">
                                                         <input type="hidden" name="skor_penyelia_text[]"
                                                             value="{{ $itemTextEmpat->skor_penyelia }}">
                                                         <input type="hidden" name="id_update_file[]" value="{{ $itemTextEmpat->id }}">
@@ -1008,25 +1008,6 @@
     hitungRatioCoverage();
     hitungRatioTenorAsuransi();
     hitungRepaymentCapacity();
-    $('.rupiah').val(formatrupiah());
-
-    function formatrupiah( prefix) {
-        var number_string = $('.rupiah').val().replace(/[^,\d]/g, '').toString(),
-        split   		= number_string.split(','),
-        sisa     		= split[0].length % 3,
-        rupiah     		= split[0].substr(0, sisa),
-        ribuan     		= split[0].substr(sisa).match(/\d{3}/gi);
-
-        // tambahkan titik jika yang di input sudah menjadi angka ribuan
-        if(ribuan){
-            separator = sisa ? '.' : '';
-            rupiah += separator + ribuan.join('.');
-        }
-
-        rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-        return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
-    }
-        // End Format Rupiah
 
 
     $('#kabupaten').change(function() {
@@ -1218,8 +1199,8 @@
                                     <div class="form-group col-md-6 aspek_jaminan_kategori_jaminan_utama">
                                         <label>${valItem.nama}</label>
                                         <input type="hidden" name="id_file_text[]" value="${valItem.id_item}" id="" class="input">
-                                        <input type="file" name="update_file[]" style="display: none" value="${valItem.opsi_text}" id="${valItem.nama}file" class="form-control">
-                                                        <label class="form-control" for="${valItem.nama}file"><span>Choose File</span>  ${valItem.opsi_text}</label>
+                                        <label for="" style="display: none" id="nama_file">${valItem.opsi_text}</label>
+                                        <input type="file" name="update_file[]" value="${valItem.opsi_text}" id="${valItem.nama}file" class="form-control">
                                         <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
                                         <input type="hidden" name="id_update_file[]" value="${valItem.id}">
                                     </div>`);
@@ -1449,9 +1430,9 @@
                                     <div class="form-group col-md-6 aspek_jaminan_kategori">
                                         <label>${valItem.nama}</label>
                                         <input type="hidden" name="id_update_file[]" value="${valItem.id}" id="" class="input">
+                                        <label for="" style="display: none" id="nama_file">${valItem.opsi_text}</label>
                                         <input type="hidden" name="id_file_text[]" value="${valItem.id_item}" id="" class="input">
-                                        <input type="file" name="update_file[]" style="display: none" value="${valItem.opsi_text}" id="${valItem.nama}file" class="form-control">
-                                                        <label class="form-control" for="${valItem.nama}file"><span>Choose File</span>  ${valItem.opsi_text}</label>
+                                        <input type="file" name="update_file[]" value="${valItem.opsi_text}" id="${valItem.nama}file" class="form-control">
                                         <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
                                     </div>`);
                                 } else {
@@ -1816,6 +1797,25 @@
     //end Repayment Capacity
 </script>
     <script>
+        $('.rupiah').val(formatrupiah());
+    
+        function formatrupiah( prefix) {
+            var number_string = $('.rupiah').val().replace(/[^,\d]/g, '').toString(),
+            split   		= number_string.split(','),
+            sisa     		= split[0].length % 3,
+            rupiah     		= split[0].substr(0, sisa),
+            ribuan     		= split[0].substr(sisa).match(/\d{3}/gi);
+    
+            // tambahkan titik jika yang di input sudah menjadi angka ribuan
+            if(ribuan){
+                separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+    
+            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+            return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
+        }
+            // End Format Rupiah
         var jumlahData = $('#jumlahData').val();
         for (let index = 0; index < jumlahData + 1; index++) {
             for (let index = 0; index <= parseInt(jumlahData); index++) {
