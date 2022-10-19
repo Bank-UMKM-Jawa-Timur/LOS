@@ -1204,6 +1204,7 @@
                                         <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
                                         <input type="hidden" name="id_update_file[]" value="${valItem.id}">
                                     </div>`);
+                                    showFile();
                                 }
                                 else {
                                     $('#bukti_pemilikan_jaminan_utama').append(`
@@ -1435,6 +1436,7 @@
                                         <input type="file" name="update_file[]" value="${valItem.opsi_text}" id="${valItem.nama}file" class="form-control">
                                         <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
                                     </div>`);
+                                    showFile();
                                 } else {
                                     $('#bukti_pemilikan_jaminan_tambahan').append(`
                                         <div class="form-group col-md-6 aspek_jaminan_kategori">
@@ -1915,23 +1917,22 @@
 
             $(".btn-prev").hide()
             $(".btn-simpan").hide()
-            $(".progress").prop('disabled', true);
 
+            $(".progress").prop('disabled', true);
             if ($(".form-wizard[data-index='" + prev + "']").length == 1) {
                 $(".btn-prev").show()
             }
-            if (indexNow == jumlahData) {
+            if (parseInt(indexNow) == parseInt(jumlahData)) {
+                // $(".btn-next").click(function(e) {
+                //     if (parseInt(indexNow) != parseInt(jumlahData)) {
+                //         $(".btn-next").show()
 
-                $(".btn-next").click(function(e) {
-                    if (parseInt(indexNow) != parseInt(jumlahData)) {
-                        $(".btn-next").show()
-
-                    }
-                    $(".btn-simpan").show()
-                    $(".progress").prop('disabled', false);
-                    $(".btn-next").hide()
-                });
-                $(".btn-next").show()
+                //     }
+                $(".btn-simpan").show()
+                $(".progress").prop('disabled', false);
+                $(".btn-next").hide()
+                    // });
+                    // $(".btn-next").show()
 
             } else {
                 $(".btn-next").show()
@@ -1942,7 +1943,7 @@
 
         function cekWizard(isNext = false) {
             var indexNow = $(".form-wizard.active").data('index')
-            // console.log(indexNow);
+                // console.log(indexNow);
             if (isNext) {
                 $(".side-wizard li").removeClass('active')
             }
@@ -1952,9 +1953,8 @@
             for (let index = 0; index <= parseInt(indexNow); index++) {
                 var selected = index == parseInt(indexNow) ? ' selected' : ''
                 $(".side-wizard li[data-index='" + index + "']").addClass('active' + selected)
-                // $(".side-wizard li[data-index='"+index+"'] a span i").removeClass('fa fa-ban')
-                if ($(".side-wizard li[data-index='" + index + "'] a span i").html() == '' || $(
-                        ".side-wizard li[data-index='" + index + "'] a span i").html() == '0%') {
+                $(".side-wizard li[data-index='" + index + "'] a span i").removeClass('fa fa-ban')
+                if ($(".side-wizard li[data-index='" + index + "'] a span i").html() == '' || $(".side-wizard li[data-index='" + index + "'] a span i").html() == '0%') {
                     $(".side-wizard li[data-index='" + index + "'] a span i").html('0%')
                 }
             }
@@ -1969,14 +1969,15 @@
                 $(".form-wizard").removeClass('active')
                 $(".form-wizard[data-index='" + dataIndex + "']").addClass('active')
                 cekWizard()
+                cekBtn()
             }
         })
 
         for(let i = 0; i <= parseInt(jumlahData); i++){
-            setPercentage(i);
+            setPercent(i);
         }
 
-        function setPercentage(formIndex) {
+        function setPercent(formIndex) {
             var form = ".form-wizard[data-index='" + formIndex + "']"
 
             var input = $(form + " input")
@@ -1987,35 +1988,46 @@
 
             if (form == ".form-wizard[data-index='2']") {
                 var ttlInput = -1;
+                var ttlInputFilled = 0;
             } else if (form == ".form-wizard[data-index='3']") {
                 var checkbox = $(form + " input[type=checkbox]:checked").length;
                 if ($(form + " select[name=kategori_jaminan_utama]").find(':selected').val() == 'Tanah' || $(form + " select[name=kategori_jaminan_utama]").find(':selected').val() == 'Tanah dan Bangunan') {
                     if ($(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah' || $(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah dan Bangunan') {
                         if (checkbox == 2) {
                             var ttlInput = -5
+                            var ttlInputFilled = -5
                         } else if (checkbox == 3){
                             var ttlInput = -4
+                            var ttlInputFilled = -4
                         } else if (checkbox == 4){
                             var ttlInput = -3
+                            var ttlInputFilled = -3
                         } else if (checkbox == 5) {
                             var ttlInput = -2
+                            var ttlInputFilled = -2
                         } else {
                             if (checkbox == 6) {
                                 var ttlInput = -1
+                                var ttlInputFilled = -1
                             } else {
                                 var ttlInput = -7
+                                var ttlInputFilled = -7
                             }
                         }
                     } else {
                         if (checkbox == 1) {
                             var ttlInput = -3;
+                            var ttlInputFilled = -3;
                         } else if (checkbox == 2) {
                             var ttlInput = -2;
+                            var ttlInputFilled = -2;
                         } else {
                             if (checkbox == 3) {
                                 var ttlInput = -1;
+                                var ttlInputFilled = -1;
                             } else {
                                 var ttlInput = -4;
+                                var ttlInputFilled = -4;
                             }
                         }
                     }
@@ -2025,27 +2037,33 @@
                     if ($(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah' || $(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah dan Bangunan') {
                         if (checkbox == 1) {
                             var ttlInput = -3;
+                            var ttlInputFilled = -3;
                         } else if (checkbox == 2) {
                             var ttlInput = -2;
+                            var ttlInputFilled = -2;
                         } else {
                             if (checkbox == 3) {
                                 var ttlInput = -1;
+                                var ttlInputFilled = -1;
                             } else {
                                 var ttlInput = -4;
+                                var ttlInputFilled = -4;
                             }
                         }
                     } else {
                         var ttlInput = 0;
+                        var ttlInputFilled = 0;
                     }
                 }
-            }
+            } 
             else if (form == ".form-wizard[data-index='6']"){
                 var ttlInput = -1;
+                var ttlInputFilled = 0;
             } else {
                 var ttlInput = 0;
+                var ttlInputFilled = 0;
             }
 
-            var ttlInputFilled = 0;
             $.each(input, function(i, v) {
                 ttlInput++
                 if (v.value != '') {
@@ -2093,29 +2111,21 @@
             console.log("AllInput : " + allInput);
             console.log("AllInputFilled : " + allInputFilled);
 
-            var percentage = parseInt(allInputFilled / allInput * 100);
-            $(".side-wizard li[data-index='" + formIndex + "'] a span i").html(percentage + "%")
+            var result = parseInt((allInputFilled / allInput) * 100);
+            console.log("result : "+ result)
+            $(".side-wizard li[data-index='" + formIndex + "'] a span i").html(result + "%")
             $(".side-wizard li[data-index='" + formIndex + "'] input.answer").val(allInput);
             $(".side-wizard li[data-index='" + formIndex + "'] input.answerFilled").val(allInputFilled);
-            var allInputTotal = 0;
-            var allInputFilledTotal = 0;
-            $(".side-wizard li input.answer").each(function() {
-                allInputTotal += Number($(this).val());
-            });
-            $(".side-wizard li input.answerFilled").each(function() {
-                allInputFilledTotal += Number($(this).val());
-            });
 
-            var result = parseInt(allInputFilledTotal / allInputTotal * 100);
             $('.progress').val(result);
         }
 
         $(".btn-next").click(function(e) {
             e.preventDefault();
             var indexNow = $(".form-wizard.active").data('index')
-            var next = parseInt(indexNow) 
-            // console.log($(".form-wizard[data-index='"+next+"']").length==1);
-            // console.log($(".form-wizard[data-index='"+  +"']"));
+            var next = parseInt(indexNow) + 1
+                // console.log($(".form-wizard[data-index='"+next+"']").length==1);
+                // console.log($(".form-wizard[data-index='"+  +"']"));
             if ($(".form-wizard[data-index='" + next + "']").length == 1) {
                 // console.log(indexNow);
                 $(".form-wizard").removeClass('active')
@@ -2126,14 +2136,13 @@
 
             cekWizard()
             cekBtn(true)
-            setPercentage(indexNow)
+            setPercent(indexNow)
         })
-        setPercentage(0)
 
         $(".btn-prev").click(function(e) {
             event.preventDefault(e);
             var indexNow = $(".form-wizard.active").data('index')
-            var prev = parseInt(indexNow)
+            var prev = parseInt(indexNow) - 1
             if ($(".form-wizard[data-index='" + prev + "']").length == 1) {
                 $(".form-wizard").removeClass('active')
                 $(".form-wizard[data-index='" + prev + "']").addClass('active')
@@ -2143,5 +2152,4 @@
             e.preventDefault();
         })
     </script>
-    <script src="{{ asset('') }}js/custom.js"></script>
 @endpush
