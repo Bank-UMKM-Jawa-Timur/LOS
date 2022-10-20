@@ -506,7 +506,11 @@ class PengajuanKreditController extends Controller
                 $dataJawabanText = new JawabanTextModel;
                 $dataJawabanText->id_pengajuan = $id_pengajuan;
                 $dataJawabanText->id_jawaban = $request->get('id_level')[$key];
-                $dataJawabanText->opsi_text = str_replace($find,'',$request->get('informasi')[$key]);
+                if ($request->get('id_level')[$key] == '143') {
+                    $dataJawabanText->opsi_text = $request->get('informasi')[$key];
+                } else {
+                    $dataJawabanText->opsi_text = str_replace($find,'',$request->get('informasi')[$key]);
+                }
                 // $dataJawabanText->opsi_text = $request->get('informasi')[$key] == null ? '-' : $request->get('informasi')[$key];
                 $dataJawabanText->save();
             }
