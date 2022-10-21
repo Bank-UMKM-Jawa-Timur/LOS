@@ -6,6 +6,9 @@
         <thead>
             <tr class="table-primary">
                 <th class="text-center">#</th>
+                @if (Auth::user()->role == 'Administrator')
+                    <th class="text-center">id_p</th>
+                @endif
                 <th>Tanggal Pengajuan</th>
                 <th>Nama Nasabah</th>
                 <th>Posisi</th>
@@ -19,6 +22,7 @@
             @forelse ($data_pengajuan as $item)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
+                    <td>{{ $item->id }}</td>
                     <td>{{ $item->tanggal }}</td>
                     <td>{{ $item->nama }}</td>
                     <td>
