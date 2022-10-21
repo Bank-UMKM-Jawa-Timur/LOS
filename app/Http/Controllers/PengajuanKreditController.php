@@ -204,9 +204,19 @@ class PengajuanKreditController extends Controller
                                         ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
                                         ->join('item', 'jawaban_text.id_jawaban', 'item.id')
                                         ->where('jawaban_text.id_pengajuan', $request->id)
-                                        ->where('id_parent', 95)
+                                        ->whereIn('id_jawaban', [103, 104, 107, 108, 147])
                                         ->orderBy('id', 'ASC')->whereIn('nama', ['SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C', 'Foto'])
                                         ->get();
+
+            $belumDiisi = array();
+            foreach($dataDetailJawabanText as $key => $val){
+                array_push($belumDiisi, $val->id_jawaban);
+            }
+
+            $belum = ItemModel::whereNotIn('id', $belumDiisi)
+                    ->orderBy('id', 'ASC')
+                    ->whereIn('nama', ['SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C', 'Foto'])
+                    ->where('id_parent', 96);
 
             $detailJawabanOption = \App\Models\JawabanPengajuanModel::where('id_pengajuan', $request->id)
                                         ->whereIn('id_jawaban', [136, 137, 141, 142])
@@ -219,6 +229,7 @@ class PengajuanKreditController extends Controller
 
             $data = [
                 'item' => $item,
+                'belum' => $belum->get(),
                 'itemBuktiPemilikan' => $itemBuktiPemilikan->get(),
                 'detailJawabanOption' => $detailJawabanOption->first(),
                 'dataDetailJawabanText' => $dataDetailJawabanText
@@ -289,12 +300,25 @@ class PengajuanKreditController extends Controller
                                         ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
                                         ->join('item', 'jawaban_text.id_jawaban', 'item.id')
                                         ->orderBy('id', 'ASC')
-                                        ->whereIn('nama', ['SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C', 'Foto']);
+                                        ->whereIn('nama', ['SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C', 'Foto'])
+                                        ->where('id_parent', 114)
+                                        ->get();
 
             $detailJawabanOption = \App\Models\JawabanPengajuanModel::where('id_pengajuan', $request->id)
                                         ->whereIn('id_jawaban', [145, 146, 150, 151])
                                         ->select('id_jawaban')
                                         ->orderBy('id', 'DESC');
+
+            $blm = array();
+            foreach($dataDetailJawabanText as $key => $val){
+                array_push($blm, $val->id_item);
+            }
+
+            $belum = ItemModel::whereNotIn('id', $blm)
+                    ->orderBy('id', 'ASC')
+                    ->whereIn('nama', ['SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C', 'Foto'])
+                    ->where('id_parent', 114)
+                    ->get();
 
             $itemBuktiPemilikan->whereIn('nama', ['SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C', 'Foto']);
         }
@@ -313,11 +337,13 @@ class PengajuanKreditController extends Controller
                                         ->orderBy('id', 'DESC');
 
             $itemBuktiPemilikan->whereIn('nama', ['BPKB No', 'Atas Nama', 'Foto']);
+            $belum = null;
         }
         $data = [
             'detailJawabanOption' => $detailJawabanOption->first(),
-            'dataDetailJawabanText' => $dataDetailJawabanText->where('id_parent', 114)->get(),
+            'dataDetailJawabanText' => $dataDetailJawabanText,
             'item' => $item,
+            'belum' => $belum,
             'itemBuktiPemilikan' => $itemBuktiPemilikan->where('id_parent', 114)->get()
         ];
 

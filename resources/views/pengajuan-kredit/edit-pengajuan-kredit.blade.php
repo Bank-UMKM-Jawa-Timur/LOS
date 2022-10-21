@@ -450,7 +450,7 @@
                                                 <label for="">{{ $item->nama }}</label>
                                                 <input type="hidden" name="id_text[]" value="{{ $itemTextDua->id_item }}">
                                                 <input type="text" name="info_text[]" id="{{ $idLevelDua }}"
-                                                    placeholder="Masukkan informasi {{ $item->nama }}" value="{{ ($itemTextDua != null) ? $itemTextDua->opsi_text : null }}" class="form-control rupiah">
+                                                    placeholder="Masukkan informasi {{ $item->nama }}" value="{{ $itemTextDua->opsi_text }}" class="form-control rupiah">
                                                 <input type="hidden" name="skor_penyelia_text[]"
                                                     value="{{ $itemTextDua->skor_penyelia }}">
                                                     <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextDua->id }}">
@@ -575,11 +575,23 @@
                                         ->whereIn('item.id', [101, 102, 103, 104, 105, 106, 107])
                                         ->get();
 
+                                    $detailJawabanOption = \App\Models\JawabanPengajuanModel::where('id_pengajuan', $dataUmum->id)
+                                        ->whereIn('id_jawaban', [136, 137, 141, 142])
+                                        ->select('id_jawaban')
+                                        ->orderBy('id', 'ASC')
+                                        ->get();
+
                                     $jaminanTambahan = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
                                         ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
                                         ->join('item', 'jawaban_text.id_jawaban', 'item.id')
                                         ->orderBy('id', 'DESC')
                                         ->whereIn('item.id', [115, 116, 117, 118, 119])
+                                        ->get();
+
+                                    $detailJawabanOptionTambahan = \App\Models\JawabanPengajuanModel::where('id_pengajuan', $dataUmum->id)
+                                        ->whereIn('id_jawaban', [145, 146, 150, 151])
+                                        ->select('id_jawaban')
+                                        ->orderBy('id', 'DESC')
                                         ->get();
                                 @endphp
                                 
@@ -589,9 +601,14 @@
                                         <select name="kategori_jaminan_utama" id="kategori_jaminan_utama"
                                             class="form-control" required>
                                             <option value="">-- Pilih Kategori Jaminan Utama --</option>
-                                            <option value="Tanah"{{ ($jaminanUtama[0]->id_item == 103 ||$jaminanUtama[0]->id_item == 104 ||$jaminanUtama[0]->id_item == 105 || $jaminanUtama[0]->id_item == 107) ? 'selected' : '' }}>Tanah</option>
+                                            @if (count($detailJawabanOption) > 0)
+                                                <option value="Tanah"{{ ($detailJawabanOption[0]->id_jawaban == 136 || $detailJawabanOption[0]->id_jawaban == 137) ? 'selected' : '' }}>Tanah</option>
+                                                <option value="Tanah dan Bangunan" {{ ($detailJawabanOption[0]->id_jawaban == 141 || $detailJawabanOption[0]->id_jawaban == 142) ? 'selected' : '' }}>Tanah dan Bangunan</option>
+                                            @else
+                                                <option value="Tanah">Tanah</option>
+                                                <option value="Tanah dan Bangunan">Tanah dan Bangunan</option>
+                                            @endif
                                             <option value="Kendaraan Bermotor"{{ ($jaminanUtama[0]->id_item == 106) ? 'selected' : '' }}>Kendaraan Bermotor</option>
-                                            <option value="Tanah dan Bangunan" {{ ($jaminanUtama[0]->id_item == 103 ||$jaminanUtama[0]->id_item == 104 ||$jaminanUtama[0]->id_item == 105 || $jaminanUtama[0]->id_item == 107) ? 'selected' : '' }}>Tanah dan Bangunan</option>
                                             <option value="Stock" {{ ($jaminanUtama[0]->id_item == 101) ? 'selected' : '' }}>Stock</option>
                                             <option value="Piutang" {{ ($jaminanUtama[0]->id_item == 102) ? 'selected' : '' }}>Piutang</option>
                                         </select>
@@ -611,9 +628,14 @@
                                         <select name="kategori_jaminan_tambahan" id="kategori_jaminan_tambahan"
                                             class="form-control" required>
                                             <option value="">-- Pilih Kategori Jaminan Tambahan --</option>
-                                            <option value="Tanah" {{ ($jaminanTambahan[0]->id_item == 115 ||$jaminanTambahan[0]->id_item == 116 ||$jaminanTambahan[0]->id_item == 117 || $jaminanTambahan[0]->id_item == 119) ? 'selected' : '' }}>Tanah</option>
+                                            @if (count($detailJawabanOptionTambahan) > 0)
+                                                <option value="Tanah" {{ ($detailJawabanOptionTambahan[0]->id_jawaban == 145 || $detailJawabanOptionTambahan[0]->id_jawaban == 146) ? 'selected' : '' }}>Tanah</option>
+                                                <option value="Tanah dan Bangunan" {{ ($detailJawabanOptionTambahan[0]->id_jawaban == 150 || $detailJawabanOptionTambahan[0]->id_jawaban == 151) ? 'selected' : '' }}>Tanah dan Bangunan</option>
+                                            @else
+                                                <option value="Tanah" >Tanah</option>
+                                                <option value="Tanah dan Bangunan">Tanah dan Bangunan</option>
+                                            @endif
                                             <option value="Kendaraan Bermotor" {{ ($jaminanTambahan[0]->id_item == 118 ) ? 'selected' : '' }}>Kendaraan Bermotor</option>
-                                            <option value="Tanah dan Bangunan" {{ ($jaminanTambahan[0]->id_item == 115 ||$jaminanTambahan[0]->id_item == 116 ||$jaminanTambahan[0]->id_item == 117 || $jaminanTambahan[0]->id_item == 119) ? 'selected' : '' }}>Tanah dan Bangunan</option>
                                         </select>
                                         {{-- <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
                                         <input type="hidden" name="opsi_jawaban[]" value="{{ $itemTiga->opsi_jawaban }}"
@@ -1165,7 +1187,7 @@
                         $.each(response.item.option, function(i, valOption) {
                             // console.log(valOption.skor);
                             $('#itemByKategoriJaminanUtama').append(`
-                            <option value="${valOption.skor}-${valOption.id}"` + (valOption.id === response.detailJawabanOption.id_jawaban ? 'selected="selected"' : '') +`>
+                            <option value="${valOption.skor}-${valOption.id}"` + (valOption.id !== response.detailJawabanOption.id_jawaban ? '' : 'selected="selected"') +`>
                             ${valOption.option}
                             </option>`)
                         });
@@ -1174,6 +1196,9 @@
                         var isCheck = kategoriJaminanUtama != 'Kendaraan Bermotor' &&
                             kategoriJaminanUtama != 'Stock' && kategoriJaminanUtama != 'Piutang' ?
                             "<input type='checkbox' class='checkKategoriJaminanUtama'>" : ""
+                        var isChecked = kategoriJaminanUtama != 'Kendaraan Bermotor' &&
+                            kategoriJaminanUtama != 'Stock' && kategoriJaminanUtama != 'Piutang' ?
+                            "<input type='checkbox' checked class='checkKategoriJaminanUtama'>" : ""
                         var isDisabled = kategoriJaminanUtama != 'Kendaraan Bermotor' &&
                             kategoriJaminanUtama != 'Stock' && kategoriJaminanUtama != 'Piutang' ?
                             'disabled' : ''
@@ -1209,12 +1234,12 @@
                                 else {
                                     $('#bukti_pemilikan_jaminan_utama').append(`
                                     <div class="form-group col-md-6 aspek_jaminan_kategori_jaminan_utama">
-                                        <label>${isCheck} ${valItem.nama}</label>
+                                        <label>${isChecked} ${valItem.nama}</label>
                                         <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input" ${isDisabled}>
                                         <input type="hidden" name="opsi_jawaban[]"
                                             value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
                                         <input type="text" name="info_text[]"
-                                            class="form-control input" value="${valItem.opsi_text}">
+                                            class="form-control input" placeholder="Masukkan informasi ${valItem.nama}" value="${valItem.opsi_text}">
                                         <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
                                         <input type="hidden" name="id_jawaban_text[]" value="${valItem.id}">
                                     <input type="hidden" name="id_text[]" value="${valItem.id_item}">
@@ -1222,6 +1247,22 @@
                                 }
                             }
                         });
+                        
+                        if(response.belum.length > 0){
+                            $.each(response.belum, function(i, valItem){
+                                $('#bukti_pemilikan_jaminan_utama').append(`
+                                    <div class="form-group col-md-6 aspek_jaminan_kategori_jaminan_utama">
+                                        <label>${isCheck} ${valItem.nama}</label>
+                                        <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input" ${isDisabled}>
+                                        <input type="hidden" name="opsi_jawaban[]"
+                                            value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
+                                        <input type="text" name="info_text[]" placeholder="Masukkan informasi ${valItem.nama}"
+                                            class="form-control input" ${isDisabled}>
+                                        <input type="hidden" name="id_jawaban_text[]" class="input" value="">
+                                        <input type="hidden" name="id_text[]" class="input" value="${valItem.id}">
+                                    </div>`);
+                            })
+                        }
     
                         $(".checkKategoriJaminanUtama").click(function() {
                             var input = $(this).closest('.form-group').find(".input")
@@ -1234,6 +1275,7 @@
                             } else {
                                 input.val('')
                                 input.prop('disabled', true)
+                                inputHidden.prop('disabled', true)
                                 // input_id.prop('disabled',true)
                                 // input_opsi_jawaban.prop('disabled',true)
                             }
@@ -1256,7 +1298,7 @@
                         $.each(response.item.option, function(i, valOption) {
                             // console.log(valOption.skor);
                             $('#itemByKategoriJaminanUtama').append(`
-                            <option value="${valOption.skor}-${valOption.id}"` + (valOption.id === response.detailJawabanOption.id_jawaban ? 'selected="selected"' : '') +`>
+                            <option value="${valOption.skor}-${valOption.id}"` + (valOption.id === response.detailJawabanOption[0].id_jawaban ? 'selected="selected"' : '') +`>
                             ${valOption.option}
                             </option>`);
                         });
@@ -1405,6 +1447,8 @@
                     // add item bukti pemilikan
                     var isCheck = kategoriJaminan != 'Kendaraan Bermotor' ?
                         "<input type='checkbox' class='checkKategori'>" : ""
+                    var isChecked = kategoriJaminan != 'Kendaraan Bermotor' ?
+                        "<input type='checkbox' checked class='checkKategoriJaminanUtama'>" : ""
                     var isDisabled = kategoriJaminan != 'Kendaraan Bermotor' ? 'disabled' : ''
 
                     if(response.dataDetailJawabanText.length > 0){
@@ -1440,7 +1484,7 @@
                                 } else {
                                     $('#bukti_pemilikan_jaminan_tambahan').append(`
                                         <div class="form-group col-md-6 aspek_jaminan_kategori">
-                                            <label>${isCheck} ${valItem.nama}</label>
+                                            <label>${isChecked} ${valItem.nama}</label>
                                             <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input" ${isDisabled}>
                                             <input type="hidden" name="opsi_jawaban[]"
                                                 value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
@@ -1454,6 +1498,21 @@
                                 }
                             }
                         });
+                        
+                        if(response.belum.length > 0){
+                            $.each(response.belum, function(i, valItem){
+                                $('#bukti_pemilikan_jaminan_tambahan').append(`
+                                    <div class="form-group col-md-6 aspek_jaminan_kategori">
+                                        <label>${isCheck} ${valItem.nama}</label>
+                                        <input type="hidden" name="id_text[]" value="${valItem.id}" id="" class="input" ${isDisabled}>
+                                        <input type="hidden" name="opsi_jawaban[]"
+                                            value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
+                                        <input type="text" name="info_text[]" placeholder="Masukkan informasi ${valItem.nama}"
+                                            class="form-control input" ${isDisabled}>
+                                        <input type="hidden" name="id_jawaban_text[]" class="input" value="" ${isDisabled}>
+                                    </div>`);
+                            })
+                        }
 
                         $(".checkKategori").click(function() {
                             var input = $(this).closest('.form-group').find(".input")
@@ -1799,10 +1858,18 @@
     //end Repayment Capacity
 </script>
     <script>
-        $('.rupiah').val(formatrupiah());
+        $('.rupiah').each(function(){
+            var inp = $(this).val()
+            $(this).val(formatrupiah(inp))
+        })
+
+        $('.rupiah').keyup(function(e){
+            var input = $(this).val()
+            $(this).val(formatrupiah(input))
+        });
     
-        function formatrupiah( prefix) {
-            var number_string = $('.rupiah').val().replace(/[^,\d]/g, '').toString(),
+        function formatrupiah(angka, prefix) {
+            var number_string = angka.replace(/[^,\d]/g, '').toString(),
             split   		= number_string.split(','),
             sisa     		= split[0].length % 3,
             rupiah     		= split[0].substr(0, sisa),
