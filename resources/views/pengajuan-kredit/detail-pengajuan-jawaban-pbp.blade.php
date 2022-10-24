@@ -120,7 +120,7 @@
                         <option value="">---Pilih Desa----</option>
                         @foreach ($allDesa as $desa)
                             <option value="{{ $desa->id }}"
-                                {{ $desa->id == $dataUmumNasabah->id_kecamatan ? 'selected' : '' }}>{{ $desa->desa }}
+                                {{ $desa->id == $dataUmumNasabah->id_desa ? 'selected' : '' }}>{{ $desa->desa }}
                             </option>
                         @endforeach
                     </select>
