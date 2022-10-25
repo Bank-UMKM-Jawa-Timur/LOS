@@ -595,6 +595,8 @@ class PengajuanKreditController extends Controller
                         )
                     );
                 }
+            } else {
+
             }
 
             // data level tiga
@@ -622,6 +624,8 @@ class PengajuanKreditController extends Controller
                         )
                     );
                 }
+            } else {
+
             }
 
             // data level empat
@@ -649,6 +653,8 @@ class PengajuanKreditController extends Controller
                         )
                     );
                 }
+            } else {
+
             }
             $average = array_sum($rata_rata) / count($rata_rata);
             $result = round($average, 2);
@@ -673,32 +679,30 @@ class PengajuanKreditController extends Controller
             $updateData->average_by_sistem = $result;
             $updateData->update();
 
-            //save to jawaban sub column
-            // foreach ($request->get('id_option_sub_column') as $key => $value) {
-            //     $getIdOption = $this->getDataLevel($value);
-            //     $idOption = $getIdOption[1];
-            //     $addJawabanSubColumn = new JawabanSubColumnModel;
-            //     $addJawabanSubColumn->jawaban_sub_column = $request->get('jawaban_sub_column')[$key];
-            //     $addJawabanSubColumn->id_option = $idOption;
-            //     $addJawabanSubColumn->id_pengajuan = $id_pengajuan;
-            //     $addJawabanSubColumn->save();
-            // }
-
             //save pendapat per aspek
             foreach ($request->get('id_aspek') as $key => $value) {
-                $addPendapat = new PendapatPerAspek;
-                $addPendapat->id_pengajuan = $id_pengajuan;
-                $addPendapat->id_staf = Auth::user()->id;
-                $addPendapat->id_aspek = $value;
-                $addPendapat->pendapat_per_aspek = $request->get('pendapat_per_aspek')[$key];
-                $addPendapat->save();
+                if ($request->get('pendapat_per_aspek')[$key] == '') {
+                    # code...
+                } else {
+                    $addPendapat = new PendapatPerAspek;
+                    $addPendapat->id_pengajuan = $id_pengajuan;
+                    $addPendapat->id_staf = Auth::user()->id;
+                    $addPendapat->id_aspek = $value;
+                    $addPendapat->pendapat_per_aspek = $request->get('pendapat_per_aspek')[$key];
+                    $addPendapat->save();
+                }
             }
 
-            $addKomentar = new KomentarModel;
-            $addKomentar->id_pengajuan = $id_pengajuan;
-            $addKomentar->komentar_staff = $request->get('komentar_staff');
-            $addKomentar->id_staff = Auth::user()->id;
-            $addKomentar->save();
+            if ($request->get('komentar_staff') == '') {
+                # code...
+            } else {
+                $addKomentar = new KomentarModel;
+                $addKomentar->id_pengajuan = $id_pengajuan;
+                $addKomentar->komentar_staff = $request->get('komentar_staff');
+                $addKomentar->id_staff = Auth::user()->id;
+                $addKomentar->save();
+            }
+            
 
             DB::commit();
             return redirect()->route('pengajuan-kredit.index')->withStatus('Data berhasil disimpan.');
