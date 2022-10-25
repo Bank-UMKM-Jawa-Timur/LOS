@@ -1266,8 +1266,8 @@
                                     $('#bukti_pemilikan_jaminan_tambahan').append(`
                                     <div class="form-group col-md-6 aspek_jaminan_kategori">
                                         <label>${valItem.nama}</label>
-                                        <input type="hidden" name="id_update_file[]" value="${valItem.id_item}" id="" class="input">
-                                        <input type="hidden" name="id_file_text[]" value="" id="" class="input">
+                                        <input type="hidden" name="id_update_file[]" value="" id="" class="input">
+                                        <input type="hidden" name="id_file_text[]" value="${valItem.id}" id="" class="input">
                                         <input type="file" name="update_file[]" value="" id="${valItem.nama}file" class="form-control">
                                         <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
                                     </div>`);
@@ -1529,7 +1529,7 @@
                                     <div class="form-group col-md-6 aspek_jaminan_kategori">
                                         <label>${valItem.nama}</label>
                                         <input type="hidden" name="id_update_file[]" value="" id="" class="input">
-                                        <input type="hidden" name="id_file_text[]" value="" id="" class="input">
+                                        <input type="hidden" name="id_file_text[]" value="${valItem.id}" id="" class="input">
                                         <input type="file" name="update_file[]" value="" id="${valItem.nama}file" class="form-control">
                                         <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
                                     </div>`);
@@ -1633,15 +1633,6 @@
 
     //item kategori jaminan utama cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
     $('#kategori_jaminan_utama').change(function(e) {
-        //clear item
-        $('#select_kategori_jaminan_utama').empty();
-
-        // clear bukti pemilikan
-        $('#bukti_pemilikan_jaminan_utama').empty();
-
-        //get item by kategori
-        let kategoriJaminanUtama = $(this).val();
-
         getJaminanutama();
     });
     // end item kategori jaminan utama cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
