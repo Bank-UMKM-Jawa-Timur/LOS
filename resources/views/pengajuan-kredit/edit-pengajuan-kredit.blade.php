@@ -445,7 +445,7 @@
                                 
                             @elseif ($item->opsi_jawaban == 'number')
                                 @foreach ($dataDetailJawabanText as $itemTextDua)
-                                    @if ($itemTextDua->nama == 'Omzet Penjualan' || $itemTextDua->nama == 'Installment')
+                                    @if ($itemTextDua->nama == 'Omzet Penjualan' || $itemTextDua->nama == 'Installment' || $itemTextDua->nama == 'Kebutuhan Kredit')
                                             <div class="form-group col-md-6">
                                                 <label for="">{{ $item->nama }}</label>
                                                 <input type="hidden" name="id_text[]" value="{{ $itemTextDua->id_item }}">
@@ -1250,17 +1250,28 @@
                         
                         if(response.belum.length > 0){
                             $.each(response.belum, function(i, valItem){
-                                $('#bukti_pemilikan_jaminan_utama').append(`
-                                    <div class="form-group col-md-6 aspek_jaminan_kategori_jaminan_utama">
-                                        <label>${isCheck} ${valItem.nama}</label>
-                                        <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input" ${isDisabled}>
-                                        <input type="hidden" name="opsi_jawaban[]"
-                                            value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
-                                        <input type="text" name="info_text[]" placeholder="Masukkan informasi ${valItem.nama}"
-                                            class="form-control input" ${isDisabled}>
-                                        <input type="hidden" name="id_jawaban_text[]" class="input" value="">
-                                        <input type="hidden" name="id_text[]" class="input" value="${valItem.id}">
+                                if(valItem.nama != 'Foto'){
+                                    $('#bukti_pemilikan_jaminan_tambahan').append(`
+                                        <div class="form-group col-md-6 aspek_jaminan_kategori">
+                                            <label>${isCheck} ${valItem.nama}</label>
+                                            <input type="hidden" name="id_text[]" value="${valItem.id}" id="" class="input" ${isDisabled}>
+                                            <input type="hidden" name="opsi_jawaban[]"
+                                                value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
+                                            <input type="text" name="info_text[]" placeholder="Masukkan informasi ${valItem.nama}"
+                                                class="form-control input" ${isDisabled}>
+                                            <input type="hidden" name="id_jawaban_text[]" class="input" value="" ${isDisabled}>
+                                        </div>`);
+                                }
+                                else{
+                                    $('#bukti_pemilikan_jaminan_tambahan').append(`
+                                    <div class="form-group col-md-6 aspek_jaminan_kategori">
+                                        <label>${valItem.nama}</label>
+                                        <input type="hidden" name="id_update_file[]" value="${valItem.id_item}" id="" class="input">
+                                        <input type="hidden" name="id_file_text[]" value="" id="" class="input">
+                                        <input type="file" name="update_file[]" value="" id="${valItem.nama}file" class="form-control">
+                                        <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
                                     </div>`);
+                                }
                             })
                         }
     
@@ -1501,16 +1512,28 @@
                         
                         if(response.belum.length > 0){
                             $.each(response.belum, function(i, valItem){
-                                $('#bukti_pemilikan_jaminan_tambahan').append(`
+                                if(valItem.nama != 'Foto'){
+                                    $('#bukti_pemilikan_jaminan_tambahan').append(`
+                                        <div class="form-group col-md-6 aspek_jaminan_kategori">
+                                            <label>${isCheck} ${valItem.nama}</label>
+                                            <input type="hidden" name="id_text[]" value="${valItem.id}" id="" class="input" ${isDisabled}>
+                                            <input type="hidden" name="opsi_jawaban[]"
+                                                value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
+                                            <input type="text" name="info_text[]" placeholder="Masukkan informasi ${valItem.nama}"
+                                                class="form-control input" ${isDisabled}>
+                                            <input type="hidden" name="id_jawaban_text[]" class="input" value="" ${isDisabled}>
+                                        </div>`);
+                                }
+                                else{
+                                    $('#bukti_pemilikan_jaminan_tambahan').append(`
                                     <div class="form-group col-md-6 aspek_jaminan_kategori">
-                                        <label>${isCheck} ${valItem.nama}</label>
-                                        <input type="hidden" name="id_text[]" value="${valItem.id}" id="" class="input" ${isDisabled}>
-                                        <input type="hidden" name="opsi_jawaban[]"
-                                            value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
-                                        <input type="text" name="info_text[]" placeholder="Masukkan informasi ${valItem.nama}"
-                                            class="form-control input" ${isDisabled}>
-                                        <input type="hidden" name="id_jawaban_text[]" class="input" value="" ${isDisabled}>
+                                        <label>${valItem.nama}</label>
+                                        <input type="hidden" name="id_update_file[]" value="" id="" class="input">
+                                        <input type="hidden" name="id_file_text[]" value="" id="" class="input">
+                                        <input type="file" name="update_file[]" value="" id="${valItem.nama}file" class="form-control">
+                                        <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
                                     </div>`);
+                                }
                             })
                         }
 

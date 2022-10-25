@@ -299,9 +299,9 @@ class PengajuanKreditController extends Controller
             $dataDetailJawabanText = \App\Models\JawabanTextModel::where('id_pengajuan', $request->id)
                                         ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
                                         ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-                                        ->orderBy('id', 'ASC')
                                         ->whereIn('nama', ['SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C', 'Foto'])
                                         ->where('id_parent', 114)
+                                        ->orderBy('id', 'DESC')
                                         ->get();
 
             $detailJawabanOption = \App\Models\JawabanPengajuanModel::where('id_pengajuan', $request->id)
@@ -328,8 +328,9 @@ class PengajuanKreditController extends Controller
                                         ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
                                         ->distinct()
                                         ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-                                        ->orderBy('id', 'ASC')
-                                        ->whereIn('nama', ['BPKB No', 'Atas Nama', 'Foto']);
+                                        ->where('id_parent', 114)
+                                        ->orderBy('id', 'DESC')
+                                        ->get();
 
             $detailJawabanOption = \App\Models\JawabanPengajuanModel::where('id_pengajuan', $request->id)
                                         ->whereIn('id_jawaban', [147, 148, 149])
@@ -337,7 +338,16 @@ class PengajuanKreditController extends Controller
                                         ->orderBy('id', 'DESC');
 
             $itemBuktiPemilikan->whereIn('nama', ['BPKB No', 'Atas Nama', 'Foto']);
-            $belum = null;
+            $blm = array();
+            foreach($dataDetailJawabanText as $key => $val){
+                array_push($blm, $val->id_item);
+            }
+
+            $belum = ItemModel::whereNotIn('id', $blm)
+                    ->orderBy('id', 'ASC')
+                    ->whereIn('nama', ['BPKB No', 'Atas Nama', 'Foto'])
+                    ->where('id_parent', 114)
+                    ->get();
         }
         $data = [
             'detailJawabanOption' => $detailJawabanOption->first(),
@@ -361,7 +371,6 @@ class PengajuanKreditController extends Controller
                                         ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
                                         ->join('item', 'jawaban_text.id_jawaban', 'item.id')
                                         ->where('jawaban_text.id_pengajuan', $request->id)
-                                        ->groupBy('nama')
                                         ->orderBy('id', 'ASC')
                                         ->get();
 
@@ -427,12 +436,11 @@ class PengajuanKreditController extends Controller
             $dataDetailJawabanText = \App\Models\JawabanTextModel::where('id_pengajuan', $request->id)
                                         ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
                                         ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-                                        ->groupBy('nama')
                                         ->orderBy('id', 'DESC');
                                         
         }
         $data = [
-            'dataDetailJawabanText' => $dataDetailJawabanText->get(),
+            'dataDetailJawabanText' => $dataDetailJawabanText->where('id_parent', 114)->get(),
             'item' => $item,
             'itemBuktiPemilikan' => $itemBuktiPemilikan->where('id_parent', 114)->get(),
         ];
@@ -788,7 +796,14 @@ class PengajuanKreditController extends Controller
 
         // dd($dataSlik);
         // dump($param['itemSlik']);
-        // dd($dataDetailJawabanText->get());
+        // // dd($dataDetailJawabanText->get());
+        // $dataDetailJawabanText = \App\Models\JawabanTextModel::where('id_pengajuan', 1)
+        //                                 ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
+        //                                 ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+        //                                 ->where('id_parent', 114)
+        //                                 ->orderBy('id', 'DESC');
+
+        //                                 return $dataDetailJawabanText->get();
 
         return view('pengajuan-kredit.edit-pengajuan-kredit', $param);
     }
@@ -802,8 +817,9 @@ class PengajuanKreditController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // dd($request);
+        dd($request);
         // return $request;
+        $find = array('Rp.', '.');
         $request->validate([
             'name' => 'required',
             'alamat_rumah' => 'required',
@@ -847,7 +863,7 @@ class PengajuanKreditController extends Controller
             $updateData->status = $request->status;
             $updateData->sektor_kredit = $request->sektor_kredit;
             $updateData->jenis_usaha = $request->jenis_usaha;
-            $updateData->jumlah_kredit = $request->jumlah_kredit;
+            $updateData->jumlah_kredit = str_replace($find, "", $request->jumlah_kredit);
             $updateData->tujuan_kredit = $request->tujuan_kredit;
             $updateData->jaminan_kredit = $request->jaminan;
             $updateData->hubungan_bank = $request->hubungan_bank;
@@ -869,29 +885,33 @@ class PengajuanKreditController extends Controller
 
             if(count($request->file()) > 0){
                 foreach($request->file('update_file') as $key => $value){
-                    $image = $value;
-                    $imageName = $request->id_file_text[$key].time().'.'.$image->getClientOriginalExtension();
-
-                    $imageLama = JawabanTextModel::where('id_jawaban', $request->get('id_file_text')[$key])
-                                    ->select('opsi_text', 'id_jawaban')
-                                    ->where('opsi_text', '!=', null)
-                                    ->get();
-                    // return $imageLama;
-                    foreach($imageLama as $imageKey => $imageValue){
-                        $pathLama = public_path() . '/upload/' . $id_pengajuan . '/' . $imageValue->id_jawaban .'/' . $imageValue->opsi_text;
-                        \File::delete($pathLama);
-                    }
+                    if($request->id_file_text[$key] != null){
+                        $image = $value;
+                        $imageName = $request->id_file_text[$key].time().'.'.$image->getClientOriginalExtension();
     
-                    $filePath = public_path() . '/upload/' . $id_pengajuan . '/'. $request->id_file_text[$key];
-                    // $filePath = public_path() . '/upload';
-                    if (!\File::isDirectory($filePath)) {
-                        \File::makeDirectory($filePath, 493, true);
+                        $imageLama = JawabanTextModel::where('id_jawaban', $request->get('id_file_text')[$key])
+                                        ->select('opsi_text', 'id_jawaban')
+                                        ->where('opsi_text', '!=', null)
+                                        ->get();
+                        // return $imageLama;
+                        foreach($imageLama as $imageKey => $imageValue){
+                            $pathLama = public_path() . '/upload/' . $id_pengajuan . '/' . $imageValue->id_jawaban .'/' . $imageValue->opsi_text;
+                            \File::delete($pathLama);
+                        }
+        
+                        $filePath = public_path() . '/upload/' . $id_pengajuan . '/'. $request->id_file_text[$key];
+                        // $filePath = public_path() . '/upload';
+                        if (!\File::isDirectory($filePath)) {
+                            \File::makeDirectory($filePath, 493, true);
+                        }
+    
+                        $image->move($filePath, $imageName);
+    
+                        $imgUpdate = DB::table('jawaban_text');
+                        $imgUpdate->where('id', $request->get('id_update_file')[$key])->update(['opsi_text' => $imageName]);
+                    }else {
+                        
                     }
-
-                    $image->move($filePath, $imageName);
-
-                    $imgUpdate = DB::table('jawaban_text');
-                    $imgUpdate->where('id', $request->get('id_update_file')[$key])->update(['opsi_text' => $imageName]);
                 }
             }
 
@@ -900,7 +920,7 @@ class PengajuanKreditController extends Controller
                     $data_baru = new JawabanTextModel();
                     $data_baru->id_pengajuan = $id_pengajuan;
                     $data_baru->id_jawaban = $request->id_text[$key];
-                    $data_baru->opsi_text = $request->info_text[$key];
+                    $data_baru->opsi_text = str_replace($find, "",$request->info_text[$key]);
                     $data_baru->skor_penyelia = null;
                     $data_baru->skor = null;
                     $data_baru->save();
@@ -916,7 +936,7 @@ class PengajuanKreditController extends Controller
                    array_push($finalArray_text,array(
                         'id_pengajuan' => $id_pengajuan,
                         'id_jawaban' => $request->id_text[$key],
-                        'opsi_text' => $request->info_text[$key],
+                        'opsi_text' => str_replace($find, "",$request->info_text[$key]),
                         'skor_penyelia' => $skor[$key],
                         'updated_at' => date("Y-m-d H:i:s"),
                    ));
@@ -1040,7 +1060,7 @@ class PengajuanKreditController extends Controller
                 */
                 $data = DB::table('jawaban_text');
                 if($request->id_jawaban_text[$i] != null){
-                    $data->where('id', $request->get('id_jawaban_text')[$i])->update(['opsi_text' => $request->get('info_text')[$i]] );
+                    $data->where('id', $request->get('id_jawaban_text')[$i])->update(['opsi_text' => str_replace($find, "",$request->info_text[$i])] );
                 }
                 // if (!empty($request->id_jawaban_text[$i])) {
                 // } else {
