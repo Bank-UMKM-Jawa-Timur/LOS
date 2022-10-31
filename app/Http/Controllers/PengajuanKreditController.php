@@ -301,7 +301,6 @@ class PengajuanKreditController extends Controller
                                         ->join('item', 'jawaban_text.id_jawaban', 'item.id')
                                         ->whereIn('nama', ['SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C', 'Foto'])
                                         ->where('id_parent', 114)
-                                        ->orderBy('id', 'DESC')
                                         ->get();
 
             $detailJawabanOption = \App\Models\JawabanPengajuanModel::where('id_pengajuan', $request->id)
@@ -329,7 +328,6 @@ class PengajuanKreditController extends Controller
                                         ->distinct()
                                         ->join('item', 'jawaban_text.id_jawaban', 'item.id')
                                         ->where('id_parent', 114)
-                                        ->orderBy('id', 'DESC')
                                         ->get();
 
             $detailJawabanOption = \App\Models\JawabanPengajuanModel::where('id_pengajuan', $request->id)
@@ -821,7 +819,7 @@ class PengajuanKreditController extends Controller
      */
     public function update(Request $request, $id)
     {
-        dd($request);
+        // dd($request);
         // return $request;
         $find = array('Rp.', '.');
         $request->validate([
@@ -889,7 +887,7 @@ class PengajuanKreditController extends Controller
 
             if(count($request->file()) > 0){
                 foreach($request->file('update_file') as $key => $value){
-                    if($request->id_file_text[$key] != null){
+                    if($request->id_update_file[$key] != null){
                         $image = $value;
                         $imageName = $request->id_file_text[$key].time().'.'.$image->getClientOriginalExtension();
     
@@ -914,7 +912,22 @@ class PengajuanKreditController extends Controller
                         $imgUpdate = DB::table('jawaban_text');
                         $imgUpdate->where('id', $request->get('id_update_file')[$key])->update(['opsi_text' => $imageName]);
                     }else {
+                        $image = $request->file('update_file')[$key];
+                        $imageName = $request->id_file_text[$key].time().'.'.$image->getClientOriginalExtension();
+
+                        $filePath = public_path() . '/upload/' . $id_pengajuan . '/'. $request->id_file_text[$key];
                         
+                        if (!\File::isDirectory($filePath)) {
+                            \File::makeDirectory($filePath, 493, true);
+                        }
+                        
+                        $image->move($filePath, $imageName);
+
+                        $dataJawabanText = new JawabanTextModel;
+                        $dataJawabanText->id_pengajuan = $id_pengajuan;
+                        $dataJawabanText->id_jawaban =  $request->id_file_text[$key];
+                        $dataJawabanText->opsi_text = $imageName;
+                        $dataJawabanText->save();
                     }
                 }
             }
