@@ -1594,9 +1594,9 @@ class PengajuanKreditController extends Controller
     public function checkPincabStatusChange($id)
     {
         $statusPincab = PengajuanModel::find($id);
-        $review_pincab = $statusPincab->tanggal_review_pincab;
+        $komentarPincab = KomentarModel::where('id_pengajuan',$id)->first();
         if (auth()->user()->role == 'Pincab') {
-            if ($review_pincab != null) {
+            if ($komentarPincab->komentar_pincab != null) {
                 $statusPincab->posisi = "Selesai";
                 $statusPincab->tanggal_review_pincab = date(now());
                 $statusPincab->update();
@@ -1611,9 +1611,9 @@ class PengajuanKreditController extends Controller
     public function checkPincabStatusChangeTolak($id)
     {
         $statusPincab = PengajuanModel::find($id);
-        $review_pincab = $statusPincab->tanggal_review_pincab;
+        $komentarPincab = KomentarModel::where('id_pengajuan',$id)->first();
         if (auth()->user()->role == 'Pincab') {
-            if ($review_pincab != null) {
+            if ($komentarPincab->komentar_pincab != null) {
                 $statusPincab->posisi = "Ditolak";
                 $statusPincab->tanggal_review_pincab = date(now());
                 $statusPincab->update();

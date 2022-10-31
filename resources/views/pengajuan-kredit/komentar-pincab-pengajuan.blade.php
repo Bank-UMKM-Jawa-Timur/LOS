@@ -19,7 +19,7 @@
             </tr>
         </thead>
         <tbody>
-            @forelse ($data_pengajuan as $item)
+            @foreach ($data_pengajuan as $item)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $item->tanggal }}</td>
@@ -35,8 +35,12 @@
                             Staff
                         @elseif ($item->posisi == 'Review Penyelia')
                             Penyelia
-                        @else
+                        @elseif ($item->posisi == 'PBP')
+                            PBP
+                        @elseif ($item->posisi == 'Pincab')
                             Pincab
+                        @else
+                            Selesai
                         @endif
                     </td>
                     <td>
@@ -81,6 +85,48 @@
                                         {{ '-' }}
                                     @endif
                                 @endif
+                        @elseif ($item->posisi == 'PBP')
+                            @php
+                                $rentangpbp = \App\Models\PengajuanModel::find($item->id);
+                                $awal = date_create(date(now()));
+                                $akhir = date_create($rentangpbp->tanggal_review_pbp);
+                                $interval = $awal->diff($akhir);
+                                $result_rentang = $interval->format('%a');
+                            @endphp
+                            @if ($item->tanggal_review_pbp != null)
+                                @if ($result_rentang != 0)
+                                    @if ($result_rentang == 1 || $result_rentang == 2 || $result_rentang == 3)
+                                        <font class="text-success">{{ $result_rentang.' hari' }}</font>
+                                    @elseif ($result_rentang == 4 || $result_rentang == 5 || $result_rentang == 6)
+                                        <font class="text-warning">{{ $result_rentang.' hari' }}</font>
+                                    @else
+                                        <font class="text-danger">{{ $result_rentang.' hari' }}</font>
+                                    @endif
+                                @else
+                                    {{ '-' }}
+                                @endif
+                            @endif
+                            @elseif ($item->posisi == 'PBP')
+                            @php
+                                $rentangpbp = \App\Models\PengajuanModel::find($item->id);
+                                $awal = date_create(date(now()));
+                                $akhir = date_create($rentangpbp->tanggal_review_pbp);
+                                $interval = $awal->diff($akhir);
+                                $result_rentang = $interval->format('%a');
+                            @endphp
+                            @if ($item->tanggal_review_pbp != null)
+                                @if ($result_rentang != 0)
+                                    @if ($result_rentang == 1 || $result_rentang == 2 || $result_rentang == 3)
+                                        <font class="text-success">{{ $result_rentang.' hari' }}</font>
+                                    @elseif ($result_rentang == 4 || $result_rentang == 5 || $result_rentang == 6)
+                                        <font class="text-warning">{{ $result_rentang.' hari' }}</font>
+                                    @else
+                                        <font class="text-danger">{{ $result_rentang.' hari' }}</font>
+                                    @endif
+                                @else
+                                    {{ '-' }}
+                                @endif
+                            @endif
                         @else
                             @php
                                 $rentangPincab = \App\Models\PengajuanModel::find($item->id);
@@ -103,7 +149,6 @@
                                 @endif
                             @endif
                         @endif
-
                     </td>
                     <td>
                         @if ($item->average_by_penyelia != null)
@@ -146,66 +191,48 @@
                     </td>
                     <td>
                         @if ($item->posisi == 'Selesai')
-                            <font class="text-success">Selesai</font>
+                            <font class="text-success">Disetujui</font>
                         @elseif ($item->posisi == 'Ditolak')
-                            <font class="text-success">Ditolak</font>
+                            <font class="text-danger">Ditolak</font>
                         @else
                             <font class="text-warning">On Progress</font>
                         @endif
                     </td>
                     <td>
-                        @if ($item->posisi == 'Pincab')
-                            <div class="d-flex">
-                                @if (auth()->user()->role == 'Pincab')
-                                    <a href="{{ route('pengajuan.check.pincab.status.detail',$item->id_pengajuan) }}" class="btn btn-rgb-primary mr-2">
-                                        Review
-                                    </a>
-                                    @if ($item->posisi == "Selesai")
-                                        <button href="{{ route('pengajuan.change.pincab.status',$item->id_pengajuan) }}" class="btn btn-primary">Selesai</button>
-                                    @else
-                                        <!-- Button trigger modal -->
-                                        <button type="button" class="btn btn-warning" data-toggle="modal" data-id="{{ $item->id_pengajuan }}" data-target="#exampleModal">
-                                            Disetujui/Ditolak
-                                        </button>
-                                    @endif
-                                @endif
-                                <div class="px-2">
-                                    <a href="{{ route('cetak',$item->id_pengajuan) }}" target="_blank" class="btn btn-info">Cetak</a>
+                        <div class="d-flex">
+                            @if ($item->posisi == "Pincab")
+                                <div class="btn-gtoup">
+                                    <button type="button" data-toggle="dropdown" class="btn btn-link">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16" style="color: black">
+                                            <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                                        </svg>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a href="{{ route('pengajuan.check.pincab.status.detail',$item->id_pengajuan) }}" class="dropdown-item">Review</a>
+                                        <a href="#" class="dropdown-item" data-toggle="modal" data-id="{{ $item->id_pengajuan }}" data-target="#exampleModal-{{$item->id_pengajuan}}">Disetujui / Ditolak</a>
+                                        <a target="_blank" href="{{ route('cetak',$item->id_pengajuan) }}" class="dropdown-item" >Cetak</a>
+                                    </div>
                                 </div>
-
-                            </div>
-                        @elseif ($item->posisi == 'Selesai')
-                            <div class="d-flex p-2">
-                                {{-- <div class="px-2">
-                                    <button disabled href="" class="btn btn-success" >Selesai </button>
-                                </div> --}}
-                                <div class="">
-                                    <a href="{{ route('cetak',$item->id_pengajuan) }}" class="btn btn-info" target="_blank">Cetak</a>
+                            @else
+                                <div class="btn-group">
+                                    <button type="button" data-toggle="dropdown" class="btn btn-link">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16" style="color: black">
+                                            <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                                        </svg>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a target="_blank" href="{{ route('cetak',$item->id_pengajuan) }}" class="dropdown-item" >Cetak</a>
+                                    </div>
                                 </div>
-                            </div>
-                        @elseif ($item->posisi == 'Ditolak')
-                            <div class="d-flex p-2">
-                                {{-- <div class="px-2">
-                                    <button disabled href="" class="btn btn-danger" >Ditolak </button>
-                                </div> --}}
-                                <div class="">
-                                    <a href="{{ route('cetak',$item->id_pengajuan) }}" class="btn btn-info" target="_blank">Cetak</a>
-                                </div>
-                            </div>
-                        @endif
+                            @endif
+                        </div>
                     </td>
-                @empty
-                    <td colspan="7" class="text-center" style="background: rgba(71, 145,254,0.05) !important">Data Kosong</td>
                 </tr>
-                @endforelse
+            @endforeach
         </tbody>
     </table>
     <div class="pull-right">
     </div>
 </div>
 @include('layouts.modal')
-@endsection
-
-@section('modal ')
-    @include('layouts.modal')
 @endsection
