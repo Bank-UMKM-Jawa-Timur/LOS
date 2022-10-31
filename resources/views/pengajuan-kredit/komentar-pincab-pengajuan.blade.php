@@ -8,6 +8,9 @@
                 <th class="text-center">#</th>
                 <th>Tanggal Pengajuan</th>
                 <th>Nama Nasabah</th>
+                @if (auth()->user()->role == "Administrator")
+                    <th>Cabang</th>
+                @endif
                 <th>Posisi</th>
                 <th>Durasi</th>
                 <th>Skor</th>
@@ -21,6 +24,12 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $item->tanggal }}</td>
                     <td>{{ $item->nama }}</td>
+                    @if (auth()->user()->role == "Administrator")
+                        @php
+                            $c = \App\Models\Cabang::where('id', $item->id_cabang)->first();
+                        @endphp
+                        <td>{{$c->cabang}}</td>
+                    @endif
                     <td>
                         @if ($item->posisi == 'Proses Input Data')
                             Staff

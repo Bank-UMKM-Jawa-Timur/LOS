@@ -204,45 +204,49 @@
             </div>
         @endif
     </div>
-    {{-- <br>
-    <h5 class="color-darkBlue font-weight-bold">Pengajuan Belum Ditindak Lanjuti</h5>
-    <hr>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="table-responsive">
-                <table class="table table-hover table-custom">
-                    <thead>
-                        <tr class="table-primary">
-                            <th>#</th>
-                            <th>Nama Lengkap</th>
-                            <th>Sektor Kredit</th>
-                            <th>Jenis Usaha</th>
-                            <th>Jumlah Kredit yang diminta</th>
-                            <th>Tanggal Pengajuan</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($data as $item)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $item->nama }}</td>
-                                <td>{{ $item->sektor_kredit }}</td>
-                                <td>{{ $item->jenis_usaha }}</td>
-                                <td>Rp.{{ number_format($item->jumlah_kredit, 2, '.', ',') }}</td>
-                                <td>{{ date('d-m-Y',strtotime( $item->tanggal ) ) }}</td>
+    @if (auth()->user()->role == "Administrator")
+        
+    @else    
+        <br>
+        <h5 class="color-darkBlue font-weight-bold">Pengajuan Belum Ditindak Lanjuti</h5>
+        <hr>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-hover table-custom">
+                        <thead>
+                            <tr class="table-primary">
+                                <th>#</th>
+                                <th>Nama Lengkap</th>
+                                <th>Sektor Kredit</th>
+                                <th>Jenis Usaha</th>
+                                <th>Jumlah Kredit yang diminta</th>
+                                <th>Tanggal Pengajuan</th>
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="7" class="text-center" style="background: rgba(71, 145,254,0.05) !important">Data Kosong</td>
-                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($data as $item)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $item->nama }}</td>
+                                    <td>{{ $item->sektor_kredit }}</td>
+                                    <td>{{ $item->jenis_usaha }}</td>
+                                    <td>Rp.{{ number_format($item->jumlah_kredit, 2, '.', ',') }}</td>
+                                    <td>{{ date('d-m-Y',strtotime( $item->tanggal ) ) }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="7" class="text-center" style="background: rgba(71, 145,254,0.05) !important">Data Kosong</td>
+                                </tr>
 
-                        @endforelse
-                    </tbody>
+                            @endforelse
+                        </tbody>
 
-                </table>
+                    </table>
+                </div>
             </div>
         </div>
-    </div> --}}
+    @endif
     {{-- @endif --}}
     {{-- <div class="row">
         <div class="col-md-6">
