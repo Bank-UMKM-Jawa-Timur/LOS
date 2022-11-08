@@ -113,7 +113,7 @@
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">No. KTP</label>
-                    <input type="text" name="no_ktp" class="form-control @error('no_ktp') is-invalid @enderror" id=""
+                    <input type="number" maxlength="16" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" name="no_ktp" class="form-control @error('no_ktp') is-invalid @enderror" id=""
                         placeholder="Masukkan 16 digit No. KTP">
                     @error('no_ktp')
                         <div class="invalid-feedback">
