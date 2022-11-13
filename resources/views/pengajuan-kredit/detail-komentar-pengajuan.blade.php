@@ -1296,16 +1296,16 @@
                             $pendapatUsulanStaf = \App\Models\PendapatPerAspek::select('*')
                                 ->where('id_staf', '!=', null)
                                 ->where('id_aspek', $itemAspek->id)
-                                ->where('id_pengajuan', $dataNasabah->id)
+                                ->where('id_pengajuan', $dataUmum->id)
                                 ->get();
                             $pendapatUsulanPenyelia = \App\Models\PendapatPerAspek::select('*')
                                 ->where('id_penyelia', '!=', null)
-                                ->where('id_pengajuan', $dataNasabah->id)
+                                ->where('id_pengajuan', $dataUmum->id)
                                 ->get();
                             if ($dataUmum->id_cabang == 1) {
                                 $pendapatUsulanPBP = \App\Models\PendapatPerAspek::select('*')
                                     ->where('id_pbp', '!=', null)
-                                    ->where('id_pengajuan', $dataNasabah->id)
+                                    ->where('id_pengajuan', $dataUmum->id)
                                     ->get();
                             }
                         @endphp
