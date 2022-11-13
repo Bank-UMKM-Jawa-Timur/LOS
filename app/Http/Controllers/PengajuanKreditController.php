@@ -1496,7 +1496,7 @@ class PengajuanKreditController extends Controller
             }
         } elseif (auth()->user()->role == 'PBP') {
             $dataPenyelia = PengajuanModel::find($id);
-                $status = $dataPenyelia->status;
+            $status = $dataPenyelia->average_by_pbp;
                 if ($status != null) {
                     $dataPenyelia->tanggal_review_pincab = date(now());
                     $dataPenyelia->posisi = "Pincab";
@@ -1560,7 +1560,7 @@ class PengajuanKreditController extends Controller
             ->join('desa', 'desa.id', 'calon_nasabah.id_desa')
             ->where('calon_nasabah.id_pengajuan', $id)
             ->first();
-        $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia')
+        $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang')
             ->find($id);
         $param['comment'] = KomentarModel::where('id_pengajuan', $id)->first();
         // $param['jawabanpengajuan'] = JawabanPengajuanModel::select('jawaban.id','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','option.id as id_option','option.option as name_option','option.id_item','item.id as id_item','item.nama','item.level','item.id_parent')
@@ -1568,7 +1568,7 @@ class PengajuanKreditController extends Controller
         //                             ->join('item','item.id','option.id_item')
         //                             ->where('jawaban.id_pengajuan',$id)
         //                             ->get();
-        $param['pendapatDanUsulan'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff', 'komentar_penyelia','komentar_pincab')->first();
+        $param['pendapatDanUsulan'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff', 'komentar_penyelia','komentar_pincab','komentar_pbp')->first();
 
         return view('pengajuan-kredit.detail-komentar-pengajuan', $param);
     }

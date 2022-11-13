@@ -181,8 +181,9 @@
                                         <a href="{{ route('pengajuan.detailjawaban',$item->id_pengajuan) }}" class="dropdown-item">Review</a>
                                         <a href="{{ route('pengajuan.check.pincab',$item->id_pengajuan) }}" class="dropdown-item">Tindak lanjut Pincab</a>
                                         <a target="_blank" href="{{ route('cetak',$item->id_pengajuan) }}" class="dropdown-item" >Cetak</a>
-                                    @endif
+                                    @else
                                         <a target="_blank" href="{{ route('cetak',$item->id_pengajuan) }}" class="dropdown-item" >Cetak</a>
+                                    @endif
                                 </div>
                             </div>
                         </div>
