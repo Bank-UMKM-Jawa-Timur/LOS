@@ -194,7 +194,15 @@
                 @endforelse
         </tbody>
     </table>
-    {{$data_pengajuan->links()}}
+    <div>
+        {{$data_pengajuan->links()}}
+        Menampilkan 
+        {{$data_pengajuan->firstItem()}}
+         - 
+        {{$data_pengajuan->lastItem()}}
+         dari 
+        {{$data_pengajuan->total()}} Data
+    </div>
     <div class="pull-right">
     </div>
 </div>
