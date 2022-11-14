@@ -59,7 +59,7 @@ class PengajuanKreditController extends Controller
             )
                 ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
                 ->where('pengajuan.id_cabang', $id_cabang)
-                ->get();
+                ->paginate(5);
             // return view('pengajuan-kredit.add-pengajuan-kredit',$param);
             return view('pengajuan-kredit.list-edit-pengajuan-kredit', $param);
         } elseif (auth()->user()->role == 'Penyelia Kredit') {
@@ -85,7 +85,7 @@ class PengajuanKreditController extends Controller
             )
                 ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
                 ->where('pengajuan.id_cabang', $id_cabang)
-                ->get();
+                ->paginate(5);
             return view('pengajuan-kredit.list-pengajuan-kredit', $param);
         } elseif (auth()->user()->role == 'PBP') {
             $id_cabang = Auth::user()->id_cabang;
@@ -108,7 +108,7 @@ class PengajuanKreditController extends Controller
             )
                 ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
                 ->where('pengajuan.id_cabang', $id_cabang)
-                ->get();
+                ->paginate(5);
             return view('pengajuan-kredit.list-pbp', $param);
         } 
         elseif (auth()->user()->role == 'Pincab') {
@@ -131,7 +131,7 @@ class PengajuanKreditController extends Controller
             )
                 ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
                 ->where('pengajuan.id_cabang', Auth::user()->id_cabang)
-                ->get();
+                ->paginate(5);
             return view('pengajuan-kredit.komentar-pincab-pengajuan', $param);
         } else {
             $id_cabang = Auth::user()->id_cabang;
@@ -153,7 +153,7 @@ class PengajuanKreditController extends Controller
                 'calon_nasabah.id_pengajuan'
             )
                 ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
-                ->get();
+                ->paginate(5);
             return view('pengajuan-kredit.komentar-pincab-pengajuan', $param);
         }
     }

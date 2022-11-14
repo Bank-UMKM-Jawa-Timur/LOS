@@ -218,6 +218,7 @@
                 @endforelse
         </tbody>
     </table>
+    {{$data_pengajuan->links()}}
     <div class="pull-right">
     </div>
 </div>
