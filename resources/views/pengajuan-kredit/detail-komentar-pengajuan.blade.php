@@ -1006,13 +1006,13 @@
                                             @endphp
                                             @if ($itemEmpat->id_parent == '95')    
                                                 <div class="row form-group sub pl-4">
-                                                    <label for="staticEmail" class="col-sm-3 col-form-label">Jaminan Utama</label>
+                                                    <label for="staticEmail" class="col-sm-3 col-form-label font-weight-bold">Jaminan Utama</label>
                                                     {{-- @elseif ($itemEmpat->id_paret == '110')
                                                     <label for="staticEmail" class="col-sm-3 col-form-label">Jaminan Tambahan</label> --}}
                                                     <label for="staticEmail" class="col-sm-1 col-form-label px-0">
                                             @else
                                                 <div class="row form-group sub pl-5">
-                                                    <label for="staticEmail" class="col-sm-3 col-form-label">{{ $itemEmpat->nama }}</label>
+                                                    <label for="staticEmail" class="col-sm-3 col-form-label">{{ $itemEmpat->nama }}tes</label>
                                                     <label for="staticEmail" class="col-sm-1 col-form-label">
                                             @endif
                                                     <div class="d-flex justify-content-end">

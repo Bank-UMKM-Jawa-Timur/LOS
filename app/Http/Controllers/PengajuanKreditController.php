@@ -131,6 +131,7 @@ class PengajuanKreditController extends Controller
             )
                 ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
                 ->where('pengajuan.id_cabang', Auth::user()->id_cabang)
+                ->whereIn('pengajuan.posisi', ['Pincab', 'Selesai', 'Ditolak'])
                 ->paginate(5);
             return view('pengajuan-kredit.komentar-pincab-pengajuan', $param);
         } else {
