@@ -1140,7 +1140,7 @@
                                                     </div>
                                                 </label>
                                                 <div class="col-sm-7" style="padding: 0px">
-                                                    <label for="staticEmail" class="col-sm-3 col-form-label font-weight-bold">{{ $itemEmpat->nama }}</label>
+                                                    <label for="staticEmail" class="col-sm-4 col-form-label font-weight-bold">{{ $itemEmpat->nama }}</label>
                                                 </div>
                                             </div>
                                             <div class="row form-group sub pl-4">
