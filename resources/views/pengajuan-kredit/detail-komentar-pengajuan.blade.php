@@ -1012,7 +1012,7 @@
                                                     <label for="staticEmail" class="col-sm-1 col-form-label px-0">
                                             @else
                                                 <div class="row form-group sub pl-5">
-                                                    <label for="staticEmail" class="col-sm-3 col-form-label">{{ $itemEmpat->nama }}tes</label>
+                                                    <label for="staticEmail" class="col-sm-3 col-form-label">{{ $itemEmpat->nama }}</label>
                                                     <label for="staticEmail" class="col-sm-1 col-form-label">
                                             @endif
                                                     <div class="d-flex justify-content-end">
@@ -1127,6 +1127,8 @@
                                             <div class="row form-group sub pl-4">
                                                 @if ($itemEmpat->id_parent == '110')
                                                     <label for="staticEmail" class="col-sm-3 col-form-label font-weight-bold">Jaminan Tambahan</label>
+                                                @elseif ($itemEmpat->id_parent == '95')
+                                                    <label for="staticEmail" class="col-sm-3 col-form-label font-weight-bold">Jaminan Utama</label>
                                                 @else
                                                     <label for="staticEmail" class="col-sm-3 col-form-label">{{ $itemEmpat->nama }}</label>
                                                 @endif
