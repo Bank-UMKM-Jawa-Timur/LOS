@@ -479,7 +479,7 @@
                                     $idLevelTiga = str_replace(' ', '_', strtolower($itemTiga->nama));
                                 @endphp
                                 @if ($itemTiga->nama == 'Kategori Jaminan Utama')
-                                    <div class="form-group col-md-6">
+                                    {{-- <div class="form-group col-md-6">
                                         <label for="">{{ $itemTiga->nama }}</label>
                                         <select name="kategori_jaminan_utama" id="kategori_jaminan_utama"
                                             class="form-control" required>
@@ -494,12 +494,12 @@
                                         <input type="hidden" name="opsi_jawaban[]" value="{{ $itemTiga->opsi_jawaban }}"
                                             id="">
                                         <input type="text" name="informasi[]" id="" placeholder="Masukkan informasi"
-                                            class="form-control"> --}}
+                                            class="form-control">
                                     </div>
 
                                     <div class="form-group col-md-6" id="select_kategori_jaminan_utama">
 
-                                    </div>
+                                    </div> --}}
                                 @elseif ($itemTiga->nama == 'Kategori Jaminan Tambahan')
                                     <div class="form-group col-md-6">
                                         <label for="">{{ $itemTiga->nama }}</label>
@@ -521,12 +521,12 @@
 
                                     </div>
                                 @elseif ($itemTiga->nama == 'Bukti Pemilikan Jaminan Utama')
-                                    <div class="form-group col-md-12">
+                                    {{-- <div class="form-group col-md-12">
                                         <h5>{{ $itemTiga->nama }}</h5>
                                     </div>
                                     <div id="bukti_pemilikan_jaminan_utama" class="form-group col-md-12 row">
 
-                                    </div>
+                                    </div> --}}
                                 @elseif ($itemTiga->nama == 'Bukti Pemilikan Jaminan Tambahan')
                                     <div class="form-group col-md-12">
                                         <h5>{{ $itemTiga->nama }}</h5>
@@ -627,24 +627,26 @@
                                     @endif
                                 @endforeach --}}
                                     @if (count($dataJawabanLevelTiga) != 0)
-                                        <div
-                                            class="{{ $idLevelTiga == 'ratio_tenor_asuransi_opsi' || $idLevelTiga == 'ratio_coverage_opsi' ? '' : 'form-group col-md-6' }}">
-                                            <label for=""
-                                                id="{{ $idLevelTiga . '_label' }}">{{ $itemTiga->nama }}</label>
+                                        @if ($itemTiga->nama != 'Pengikatan Jaminan Utama')    
+                                            <div
+                                                class="{{ $idLevelTiga == 'ratio_tenor_asuransi_opsi' || $idLevelTiga == 'ratio_coverage_opsi' ? '' : 'form-group col-md-6' }}">
+                                                <label for=""
+                                                    id="{{ $idLevelTiga . '_label' }}">{{ $itemTiga->nama }}</label>
 
-                                            <select name="dataLevelTiga[]" id="{{ $idLevelTiga }}"
-                                                class="form-control cek-sub-column" data-id_item={{ $itemTiga->id }}>
-                                                <option value=""> --Pilih Opsi-- </option>
-                                                @foreach ($dataJawabanLevelTiga as $key => $itemJawabanTiga)
-                                                    <option id="{{ $idLevelTiga . '_' . $key }}"
-                                                        value="{{ ($itemJawabanTiga->skor == null ? 'kosong' : $itemJawabanTiga->skor) . '-' . $itemJawabanTiga->id }}">
-                                                        {{ $itemJawabanTiga->option }}</option>
-                                                @endforeach
-                                            </select>
-                                            <div id="item{{ $itemTiga->id }}">
+                                                <select name="dataLevelTiga[]" id="{{ $idLevelTiga }}"
+                                                    class="form-control cek-sub-column" data-id_item={{ $itemTiga->id }}>
+                                                    <option value=""> --Pilih Opsi-- </option>
+                                                    @foreach ($dataJawabanLevelTiga as $key => $itemJawabanTiga)
+                                                        <option id="{{ $idLevelTiga . '_' . $key }}"
+                                                            value="{{ ($itemJawabanTiga->skor == null ? 'kosong' : $itemJawabanTiga->skor) . '-' . $itemJawabanTiga->id }}">
+                                                            {{ $itemJawabanTiga->option }}</option>
+                                                    @endforeach
+                                                </select>
+                                                <div id="item{{ $itemTiga->id }}">
 
+                                                </div>
                                             </div>
-                                        </div>
+                                        @endif
                                     @endif
 
                                     @foreach ($dataLevelEmpat as $keyEmpat => $itemEmpat)
