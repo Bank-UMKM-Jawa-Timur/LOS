@@ -135,7 +135,7 @@ class MasterItemController extends Controller
                             $addDataOption->id_item = $addItem->id;
                             $addDataOption->option = $value['opsi_name'] != null ? $value['opsi_name'] : '-';
                             $addDataOption->skor = $value['skor'];
-                            $addDataOption->sub_column = $value['sub_column'];
+                            // $addDataOption->sub_column = $value['sub_column'];
                             $addDataOption->save();
                         }
                     }elseif ($request->level == 3) {
@@ -146,7 +146,7 @@ class MasterItemController extends Controller
                             $addDataOption->id_item = $addItem->id;
                             $addDataOption->option = $value['opsi_name'] != null ? $value['opsi_name'] : '-';
                             $addDataOption->skor = $value['skor'];
-                            $addDataOption->sub_column = $value['sub_column'];
+                            // $addDataOption->sub_column = $value['sub_column'];
                             $addDataOption->save();
                         }
                     }else{
@@ -156,7 +156,7 @@ class MasterItemController extends Controller
                             $addDataOption->id_item = $addItem->id;
                             $addDataOption->option = $value['opsi_name'] != null ? $value['opsi_name'] : '-';
                             $addDataOption->skor = $value['skor'];
-                            $addDataOption->sub_column = $value['sub_column'];
+                            // $addDataOption->sub_column = $value['sub_column'];
                             $addDataOption->save();
                         }
                     }
