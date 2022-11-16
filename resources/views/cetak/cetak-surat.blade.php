@@ -300,104 +300,118 @@
                         <tr>
                             <td style="width: 40%; padding-left: 33px">{{ $item->nama }}</td>
                         </tr>
-                        @foreach ($dataLevelTiga as $keyTiga => $itemTiga)
-                            @php
-                                $dataLevelEmpat = \App\Models\ItemModel::select('id','nama','opsi_jawaban','level','id_parent')->where('level',4)->where('id_parent',$itemTiga->id)->get();
-                            @endphp
-                            @if ($itemTiga->nama == 'Kategori Jaminan Utama')
-                                <tr>
-                                    <td style="width: 40%; padding-left: 50px">Barang Jaminan</td>
-                                    <td style="width: 5%; padding-top: 1px">:</td>
-                                    <td>
-                                        <table style="width: 100%">
-                                            @foreach ($dataLevelEmpat as $keyEmpat => $itemEmpat)
-                                                @if ($itemEmpat->opsi_jawaban == 'option')
-                                                    @php
-                                                        $dataJawabanLevelEmpat = \App\Models\OptionModel::where('option',"!=","-")->where('id_item',$itemEmpat->id)->get();
-                                                        $dataOptionEmpat = \App\Models\OptionModel::where('option',"=","-")->where('id_item',$itemEmpat->id)->get();
-                                                    @endphp
-                                                    @if (count($dataJawabanLevelEmpat) != 0)
-                                                        @foreach ($dataJawabanLevelEmpat as $key => $itemJawabanLevelEmpat)
-                                                            @php
-                                                                $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id','id_jawaban','skor')->where('id_pengajuan',$dataUmum->id)->get();
-                                                                $count = count($dataDetailJawaban);
-                                                                for ($i=0; $i < $count; $i++) {
-                                                                    $data[] = $dataDetailJawaban[$i]['id_jawaban'];
-                                                                }
-                                                            @endphp
-                                                            @if (in_array($itemJawabanLevelEmpat->id,$data))
-                                                                    @if (isset($data))
-                                                                    <td style="width: 40%; padding-top: 1px">{{ $itemEmpat->nama }}</td>
-                                                                    <td style="width: 3%; padding-top: 1px">:</td>
-                                                                    <td style="padding-top: 1px">{{ $itemJawabanLevelEmpat->option }}</td>
-                                                                    @endif
-                                                            @endif
-                                                        @endforeach
-                                                    @endif
-                                                @else    
-                                                    @php
-                                                        $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id','jawaban_text.id_pengajuan','jawaban_text.id_jawaban','jawaban_text.opsi_text','jawaban_text.skor_penyelia','item.id as id_item','item.nama')->join('item','jawaban_text.id_jawaban','item.id')->where('jawaban_text.id_pengajuan',$dataUmum->id)->where('jawaban_text.id_jawaban',$itemEmpat->id)->get();
-                                                    @endphp
-                                                    @foreach ($dataDetailJawabanText as $itemTextEmpat)
-                                                        <td style="width: 40%; padding-top: 1px">{{ $itemEmpat->nama }}</td>
-                                                        <td style="width: 3%; padding-top: 1px">:</td>
-                                                        <td style="padding-top: 1px">{{ $itemTextEmpat->opsi_text }}</td>
-                                                    @endforeach
-                                                @endif
-                                            @endforeach
-                                        </table>
-                                    </td>
-                                </tr>
-                            @elseif ($itemTiga->nama == 'Bukti Pemilikan Jaminan Utama')
-                                <tr>
-                                    <td style="width: 40%; padding-left: 50px; vertical-align: top">Bukti Pemilikan</td>
-                                    <td style="width: 5%; padding-top: 1px; vertical-align: top">:</td>
-                                    <td>
-                                        <table style="width: 100%">
-                                            @foreach ($dataLevelEmpat as $keyEmpat => $itemEmpat)
-                                                @if ($itemEmpat->opsi_jawaban == 'input text')
-                                                    @php
-                                                        $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id','jawaban_text.id_pengajuan','jawaban_text.id_jawaban','jawaban_text.opsi_text','jawaban_text.skor_penyelia','item.id as id_item','item.nama')->join('item','jawaban_text.id_jawaban','item.id')->where('jawaban_text.id_pengajuan',$dataUmum->id)->where('jawaban_text.id_jawaban',$itemEmpat->id)->get();
-                                                    @endphp
-                                                    @foreach ($dataDetailJawabanText as $itemTextEmpat)
-                                                        <tr>
+                        @php
+                            $checkJawabanKelayakan = \App\Models\JawabanPengajuanModel::select('id','id_jawaban','skor')->where('id_pengajuan',$dataUmum->id)->whereIn('id_jawaban', ['183','184'])->first();
+                        @endphp
+                        @if (isset($checkJawabanKelayakan))
+                            <tr>
+                                <td style="width: 40%; padding-left: 50px">Kelayakan Usaha</td>
+                                <td style="width: 5%; padding-top: 1px">:</td>
+                                @php
+                                    $jawabanKelayakan = \App\Models\OptionModel::where('id', $checkJawabanKelayakan->id_jawaban)->first();
+                                @endphp
+                                <td>{{$jawabanKelayakan->option}}</td>
+                            </tr>
+                        @else
+                            @foreach ($dataLevelTiga as $keyTiga => $itemTiga)
+                                @php
+                                    $dataLevelEmpat = \App\Models\ItemModel::select('id','nama','opsi_jawaban','level','id_parent')->where('level',4)->where('id_parent',$itemTiga->id)->get();
+                                @endphp                               
+                                @if ($itemTiga->nama == 'Kategori Jaminan Utama')
+                                    <tr>
+                                        <td style="width: 40%; padding-left: 50px">Barang Jaminan</td>
+                                        <td style="width: 5%; padding-top: 1px">:</td>
+                                        <td>
+                                            <table style="width: 100%">
+                                                @foreach ($dataLevelEmpat as $keyEmpat => $itemEmpat)
+                                                    @if ($itemEmpat->opsi_jawaban == 'option')
+                                                        @php
+                                                            $dataJawabanLevelEmpat = \App\Models\OptionModel::where('option',"!=","-")->where('id_item',$itemEmpat->id)->get();
+                                                            $dataOptionEmpat = \App\Models\OptionModel::where('option',"=","-")->where('id_item',$itemEmpat->id)->get();
+                                                        @endphp
+                                                        @if (count($dataJawabanLevelEmpat) != 0)
+                                                            @foreach ($dataJawabanLevelEmpat as $key => $itemJawabanLevelEmpat)
+                                                                @php
+                                                                    $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id','id_jawaban','skor')->where('id_pengajuan',$dataUmum->id)->get();
+                                                                    $count = count($dataDetailJawaban);
+                                                                    for ($i=0; $i < $count; $i++) {
+                                                                        $data[] = $dataDetailJawaban[$i]['id_jawaban'];
+                                                                    }
+                                                                @endphp
+                                                                @if (in_array($itemJawabanLevelEmpat->id,$data))
+                                                                        @if (isset($data))
+                                                                        <td style="width: 40%; padding-top: 1px">{{ $itemEmpat->nama }}</td>
+                                                                        <td style="width: 3%; padding-top: 1px">:</td>
+                                                                        <td style="padding-top: 1px">{{ $itemJawabanLevelEmpat->option }}</td>
+                                                                        @endif
+                                                                @endif
+                                                            @endforeach
+                                                        @endif
+                                                    @else    
+                                                        @php
+                                                            $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id','jawaban_text.id_pengajuan','jawaban_text.id_jawaban','jawaban_text.opsi_text','jawaban_text.skor_penyelia','item.id as id_item','item.nama')->join('item','jawaban_text.id_jawaban','item.id')->where('jawaban_text.id_pengajuan',$dataUmum->id)->where('jawaban_text.id_jawaban',$itemEmpat->id)->get();
+                                                        @endphp
+                                                        @foreach ($dataDetailJawabanText as $itemTextEmpat)
                                                             <td style="width: 40%; padding-top: 1px">{{ $itemEmpat->nama }}</td>
                                                             <td style="width: 3%; padding-top: 1px">:</td>
                                                             <td style="padding-top: 1px">{{ $itemTextEmpat->opsi_text }}</td>
-                                                        </tr>
-                                                    @endforeach
+                                                        @endforeach
+                                                    @endif
+                                                @endforeach
+                                            </table>
+                                        </td>
+                                    </tr>
+                                @elseif ($itemTiga->nama == 'Bukti Pemilikan Jaminan Utama')
+                                    <tr>
+                                        <td style="width: 40%; padding-left: 50px; vertical-align: top">Bukti Pemilikan</td>
+                                        <td style="width: 5%; padding-top: 1px; vertical-align: top">:</td>
+                                        <td>
+                                            <table style="width: 100%">
+                                                @foreach ($dataLevelEmpat as $keyEmpat => $itemEmpat)
+                                                    @if ($itemEmpat->opsi_jawaban == 'input text')
+                                                        @php
+                                                            $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id','jawaban_text.id_pengajuan','jawaban_text.id_jawaban','jawaban_text.opsi_text','jawaban_text.skor_penyelia','item.id as id_item','item.nama')->join('item','jawaban_text.id_jawaban','item.id')->where('jawaban_text.id_pengajuan',$dataUmum->id)->where('jawaban_text.id_jawaban',$itemEmpat->id)->get();
+                                                        @endphp
+                                                        @foreach ($dataDetailJawabanText as $itemTextEmpat)
+                                                            <tr>
+                                                                <td style="width: 40%; padding-top: 1px">{{ $itemEmpat->nama }}</td>
+                                                                <td style="width: 3%; padding-top: 1px">:</td>
+                                                                <td style="padding-top: 1px">{{ $itemTextEmpat->opsi_text }}</td>
+                                                            </tr>
+                                                        @endforeach
+                                                    @endif
+                                                @endforeach
+                                            </table>
+                                        </td>
+                                    </tr>
+                                @elseif($itemTiga->nama == 'Pengikatan Jaminan Utama')
+                                    <tr>
+                                        <td style="width: 40%; padding-left: 50px; vertical-align: top">Pengikatan</td>
+                                        <td style="width: 5%; padding-top: 1px; vertical-align: top">:</td>
+                                        @php
+                                            $dataJawabanLevelTiga = \App\Models\OptionModel::where('option',"!=","-")->where('id_item',$itemTiga->id)->get();
+                                            $dataOptionTiga = \App\Models\OptionModel::where('option',"=","-")->where('id_item',$itemTiga->id)->get();
+                                        @endphp
+                                        @if (count($dataJawabanLevelTiga) != 0)
+                                            @foreach ($dataJawabanLevelTiga as $key => $itemJawabanLevelTiga)
+                                                @php
+                                                    $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id','id_jawaban','skor')->where('id_pengajuan',$dataUmum->id)->get();
+                                                    $count = count($dataDetailJawaban);
+                                                    for ($i=0; $i < $count; $i++) {
+                                                        $data[] = $dataDetailJawaban[$i]['id_jawaban'];
+                                                    }
+                                                @endphp
+                                                @if (in_array($itemJawabanLevelTiga->id,$data))
+                                                    @if (isset($data))
+                                                        <td style="padding-left: 3px">{{ $itemJawabanLevelTiga->option }}</td>
+                                                    @endif
                                                 @endif
                                             @endforeach
-                                        </table>
-                                    </td>
-                                </tr>
-                            @elseif($itemTiga->nama == 'Pengikatan Jaminan Utama')
-                                <tr>
-                                    <td style="width: 40%; padding-left: 50px; vertical-align: top">Pengikatan</td>
-                                    <td style="width: 5%; padding-top: 1px; vertical-align: top">:</td>
-                                    @php
-                                        $dataJawabanLevelTiga = \App\Models\OptionModel::where('option',"!=","-")->where('id_item',$itemTiga->id)->get();
-                                        $dataOptionTiga = \App\Models\OptionModel::where('option',"=","-")->where('id_item',$itemTiga->id)->get();
-                                    @endphp
-                                    @if (count($dataJawabanLevelTiga) != 0)
-                                        @foreach ($dataJawabanLevelTiga as $key => $itemJawabanLevelTiga)
-                                            @php
-                                                $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id','id_jawaban','skor')->where('id_pengajuan',$dataUmum->id)->get();
-                                                $count = count($dataDetailJawaban);
-                                                for ($i=0; $i < $count; $i++) {
-                                                    $data[] = $dataDetailJawaban[$i]['id_jawaban'];
-                                                }
-                                            @endphp
-                                            @if (in_array($itemJawabanLevelTiga->id,$data))
-                                                @if (isset($data))
-                                                    <td style="padding-left: 3px">{{ $itemJawabanLevelTiga->option }}</td>
-                                                @endif
-                                            @endif
-                                        @endforeach
-                                    @endif  
-                                </tr>
-                            @endif
-                        @endforeach
+                                        @endif  
+                                    </tr>
+                                @endif
+                            @endforeach
+                        @endif
                     @elseif ($item->nama == 'Jaminan Tambahan')
                         <tr>
                             <td style="width: 40%; padding-left: 33px">{{ $item->nama }}</td>
