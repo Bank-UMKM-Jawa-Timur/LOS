@@ -597,21 +597,36 @@
                                 
                                 @if ($itemTiga->nama == 'Kategori Jaminan Utama')
                                     <div class="form-group col-md-6">
-                                        <label for="">{{ $itemTiga->nama }}</label>
-                                        <select name="kategori_jaminan_utama" id="kategori_jaminan_utama"
-                                            class="form-control" required>
-                                            <option value="">-- Pilih Kategori Jaminan Utama --</option>
-                                            @if (count($detailJawabanOption) > 0)
-                                                <option value="Tanah"{{ ($detailJawabanOption[0]->id_jawaban == 136 || $detailJawabanOption[0]->id_jawaban == 137) ? 'selected' : '' }}>Tanah</option>
-                                                <option value="Tanah dan Bangunan" {{ ($detailJawabanOption[0]->id_jawaban == 141 || $detailJawabanOption[0]->id_jawaban == 142) ? 'selected' : '' }}>Tanah dan Bangunan</option>
-                                            @else
-                                                <option value="Tanah">Tanah</option>
-                                                <option value="Tanah dan Bangunan">Tanah dan Bangunan</option>
-                                            @endif
-                                            <option value="Kendaraan Bermotor"{{ ($jaminanUtama[0]->id_item == 106) ? 'selected' : '' }}>Kendaraan Bermotor</option>
-                                            <option value="Stock" {{ ($jaminanUtama[0]->id_item == 101) ? 'selected' : '' }}>Stock</option>
-                                            <option value="Piutang" {{ ($jaminanUtama[0]->id_item == 102) ? 'selected' : '' }}>Piutang</option>
-                                        </select>
+                                        @php
+                                            $checkKelayakan = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor')
+                                                ->where('id_pengajuan', $dataUmum->id)
+                                                ->whereIn('id_jawaban', ['183','184'])
+                                                ->first();
+                                        @endphp
+                                        @if (isset($checkKelayakan))
+                                            <label for="">Kelayakan Usaha</label>
+                                            <select name="dataLevelTiga[]" id="kelayakan_usaha" class="form-control cek-sub-column" data-id_item={{ $itemTiga->id }}>
+                                                <option value="kosong-183" {{ $checkKelayakan->id_jawaban == 183 ? 'selected' : '' }}>Layak</option>
+                                                <option value="kosong-184" {{ $checkKelayakan->id_jawaban == 184 ? 'selected' : '' }}>Tidak Layak</option>
+                                            </select>
+                                        @else
+                                            <label for="">{{ $itemTiga->nama }}</label>
+                                            <select name="kategori_jaminan_utama" id="kategori_jaminan_utama"
+                                                class="form-control" required>
+                                                <option value="">-- Pilih Kategori Jaminan Utama --</option>
+                                                @if (count($detailJawabanOption) > 0)
+                                                    <option value="Tanah"{{ ($detailJawabanOption[0]->id_jawaban == 136 || $detailJawabanOption[0]->id_jawaban == 137) ? 'selected' : '' }}>Tanah</option>
+                                                    <option value="Tanah dan Bangunan" {{ ($detailJawabanOption[0]->id_jawaban == 141 || $detailJawabanOption[0]->id_jawaban == 142) ? 'selected' : '' }}>Tanah dan Bangunan</option>
+                                                @else
+                                                    <option value="Tanah">Tanah</option>
+                                                    <option value="Tanah dan Bangunan">Tanah dan Bangunan</option>
+                                                @endif
+                                                <option value="Kendaraan Bermotor"{{ ($jaminanUtama[0]->id_item == 106) ? 'selected' : '' }}>Kendaraan Bermotor</option>
+                                                <option value="Stock" {{ ($jaminanUtama[0]->id_item == 101) ? 'selected' : '' }}>Stock</option>
+                                                <option value="Piutang" {{ ($jaminanUtama[0]->id_item == 102) ? 'selected' : '' }}>Piutang</option>
+                                            </select>
+                                            
+                                        @endif
                                         {{-- <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
                                         <input type="hidden" name="opsi_jawaban[]" value="{{ $itemTiga->opsi_jawaban }}"
                                             id="">
