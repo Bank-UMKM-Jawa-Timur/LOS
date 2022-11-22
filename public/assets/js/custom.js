@@ -111,14 +111,14 @@
                 else {
                     if ($(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah' || $(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah dan Bangunan') {
                         if (checkbox == 1) {
-                            var ttlInput = -3;
-                        } else if (checkbox == 2) {
                             var ttlInput = -2;
+                        } else if (checkbox == 2) {
+                            var ttlInput = -1;
                         } else {
                             if (checkbox == 3) {
-                                var ttlInput = -1;
+                                var ttlInput = 0;
                             } else {
-                                var ttlInput = -4;
+                                var ttlInput = -3;
                             }
                         }
                     } else {
@@ -185,6 +185,8 @@
 
             var result = parseInt(allInputFilledTotal / allInputTotal * 100);
             $('.progress').val(result);
+            console.log(allInput);
+            console.log(allInputFilled);
         }
 
         function cekNpwp(indexNow) {
