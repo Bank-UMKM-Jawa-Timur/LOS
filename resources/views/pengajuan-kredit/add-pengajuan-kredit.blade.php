@@ -121,6 +121,28 @@
                         </div>
                     @enderror
                 </div>
+                <div class="form-group col-md-6">
+                    <label for="">{{ $itemKTPSu->nama }}</label>
+                    <input type="hidden" name="id_item_file[]" value="{{ $itemKTPSu->id }}" id="">
+                    <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size">
+                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('dataLevelDua.' . $key) }}
+                        </div>
+                    @endif
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="">{{ $itemKTPIs->nama }}</label>
+                    <input type="hidden" name="id_item_file[]" value="{{ $itemKTPIs->id }}" id="">
+                    <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size">
+                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('dataLevelDua.' . $key) }}
+                        </div>
+                    @endif
+                </div>
                 <div class="form-group col-md-4">
                     <label for="">Tempat Lahir</label>
                     <input type="text" name="tempat_lahir" id=""
@@ -307,38 +329,70 @@
                         @endphp
                         {{-- item ijin usaha --}}
                         @if ($item->nama == 'Ijin Usaha')
-                            <div class="form-group col-md-6">
-                                <label for="">{{ $item->nama }}</label>
-                                <select name="ijin_usaha" id="ijin_usaha" class="form-control" required>
-                                    <option value="">-- Pilih Ijin Usaha --</option>
-                                    <option value="nib">NIB</option>
-                                    <option value="surat_keterangan_usaha">Surat Keterangan Usaha</option>
-                                </select>
+                            <div class="row col-md-12">
+                                <div class="form-group col-md-6">
+                                    <label for="">{{ $item->nama }}</label>
+                                    <select name="ijin_usaha" id="ijin_usaha" class="form-control" required>
+                                        <option value="">-- Pilih Ijin Usaha --</option>
+                                        <option value="nib">NIB</option>
+                                        <option value="surat_keterangan_usaha">Surat Keterangan Usaha</option>
+                                        <option value="tidak_ada_legalitas_usaha">Tidak Ada Legalitas Usaha</option>
+                                    </select>
+                                </div>
                             </div>
 
-                            <div class="form-group col-md-6" id="nib">
-                                <label for="">NIB</label>
-                                <input type="hidden" name="id_level[]" value="77" id="nib_id">
-                                <input type="hidden" name="opsi_jawaban[]" value="input text" id="nib_opsi_jawaban">
-                                <input type="text" name="informasi[]" id="nib_text" placeholder="Masukkan informasi"
-                                    class="form-control">
+                            <div class="row col-md-12">
+                                <div class="form-group col-md-6" id="nib">
+                                    <label for="">NIB</label>
+                                    <input type="hidden" name="id_level[]" value="77" id="nib_id">
+                                    <input type="hidden" name="opsi_jawaban[]" value="input text" id="nib_opsi_jawaban">
+                                    <input type="text" name="informasi[]" id="nib_text" placeholder="Masukkan informasi"
+                                        class="form-control">
+                                </div>
+
+                                <div class="form-group col-md-6" id="docNIB">
+                                    <label for="">{{ $itemNIB->nama }}</label>
+                                    <input type="hidden" name="id_item_file[]" value="{{ $itemNIB->id }}" id="docNIB_id">
+                                    <input type="file" name="upload_file[]" id="docNIB_upload_file" placeholder="Masukkan informasi {{ $itemNIB->nama }}" class="form-control limit-size">
+                                    <span class="invalid-tooltip" style="display: none" id="docNIB_text">Maximum upload file size is 15 MB</span>
+                                    @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('dataLevelTiga.' . $key) }}
+                                        </div>
+                                    @endif
+                                </div>
+    
+                                <div class="form-group col-md-6" id="surat_keterangan_usaha">
+                                    <label for="">Surat Keterangan Usaha</label>
+                                    <input type="hidden" name="id_level[]" value="78" id="surat_keterangan_usaha_id">
+                                    <input type="hidden" name="opsi_jawaban[]" value="input text"
+                                        id="surat_keterangan_usaha_opsi_jawaban">
+                                    <input type="text" name="informasi[]" id="surat_keterangan_usaha_text"
+                                        placeholder="Masukkan informasi" class="form-control">
+                                </div>
                             </div>
 
-                            <div class="form-group col-md-6" id="surat_keterangan_usaha">
-                                <label for="">Surat Keterangan Usaha</label>
-                                <input type="hidden" name="id_level[]" value="78" id="surat_keterangan_usaha_id">
-                                <input type="hidden" name="opsi_jawaban[]" value="input text"
-                                    id="surat_keterangan_usaha_opsi_jawaban">
-                                <input type="text" name="informasi[]" id="surat_keterangan_usaha_text"
-                                    placeholder="Masukkan informasi" class="form-control">
-                            </div>
                         @elseif($item->nama == 'NPWP')
-                            <div class="form-group col-md-6">
-                                <label for="">NPWP</label>
-                                <input type="hidden" name="id_level[]" value="79" id="">
-                                <input type="hidden" name="opsi_jawaban[]" value="input text" id="">
-                                <input type="text" name="informasi[]" id="npwp" placeholder="Masukkan informasi"
-                                    class="form-control">
+                            <div class="row col-md-12">
+                                <div class="form-group col-md-6" id="npwp">
+                                    <label for="">NPWP</label>
+                                    <input type="hidden" name="id_level[]" value="79" id="npwp_id">
+                                    <input type="hidden" name="opsi_jawaban[]" value="input text" id="npwp_opsi_jawaban">
+                                    <input type="text" name="informasi[]" id="npwp_text" placeholder="Masukkan informasi"
+                                        class="form-control">
+                                </div>
+
+                                <div class="form-group col-md-6" id="docNPWP">
+                                    <label for="">{{ $itemNPWP->nama }}</label>
+                                    <input type="hidden" name="id_item_file[]" value="{{ $itemNPWP->id }}" id="docNPWP_id">
+                                    <input type="file" name="upload_file[]" id="docNPWP_upload_file" placeholder="Masukkan informasi {{ $itemNPWP->nama }}" class="form-control limit-size">
+                                    <span class="invalid-tooltip" style="display: none" id="docNPWP_text">Maximum upload file size is 15 MB</span>
+                                    @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('dataLevelTiga.' . $key) }}
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
                         @else
                             @if ($item->opsi_jawaban == 'input text')
@@ -807,6 +861,7 @@
 @push('custom-script')
     <script>
         $('#nib').hide();
+        $('#docNIB').hide();
         $('#surat_keterangan_usaha').hide();
         //make input readonly
         $('#ratio_coverage').attr('readonly', true);
@@ -1153,26 +1208,96 @@
                 $('#nib_id').removeAttr('disabled');
                 $('#nib_text').removeAttr('disabled');
                 $('#nib_opsi_jawaban').removeAttr('disabled');
+
+                $('#docNIB').show();
+                $('#docNIB_id').removeAttr('disabled');
+                $('#docNIB_text').removeAttr('disabled');
+                $('#docNIB_upload_file').removeAttr('disabled');
+
+                $('#npwp').show();
+                $('#npwp_id').removeAttr('disabled');
+                $('#npwp_text').removeAttr('disabled');
+                $('#npwp_opsi_jawaban').removeAttr('disabled');
+
+                $('#docNPWP').show();
+                $('#docNPWP_id').removeAttr('disabled');
+                $('#docNPWP_text').removeAttr('disabled');
+                $('#docNPWP_upload_file').removeAttr('disabled');
             } else if (ijinUsaha == 'surat_keterangan_usaha') {
                 $('#nib').hide();
                 $('#nib_id').attr('disabled', true);
                 $('#nib_text').attr('disabled', true);
                 $('#nib_opsi_jawaban').attr('disabled', true);
 
+                $('#docNIB').hide();
+                $('#docNIB_id').attr('disabled', true);
+                $('#docNIB_text').attr('disabled', true);
+                $('#docNIB_upload_file').attr('disabled', true);
+
                 $('#surat_keterangan_usaha').show();
                 $('#surat_keterangan_usaha_id').removeAttr('disabled');
                 $('#surat_keterangan_usaha_text').removeAttr('disabled');
                 $('#surat_keterangan_usaha_opsi_jawaban').removeAttr('disabled');
+
+                $('#npwp').show();
+                $('#npwp_id').removeAttr('disabled');
+                $('#npwp_text').removeAttr('disabled');
+                $('#npwp_opsi_jawaban').removeAttr('disabled');
+
+                $('#docNPWP').show();
+                $('#docNPWP_id').removeAttr('disabled');
+                $('#docNPWP_text').removeAttr('disabled');
+                $('#docNPWP_upload_file').removeAttr('disabled');
+            } else if (ijinUsaha == 'tidak_ada_legalitas_usaha') {
+                $('#nib').hide();
+                $('#nib_id').attr('disabled', true);
+                $('#nib_text').attr('disabled', true);
+                $('#nib_opsi_jawaban').attr('disabled', true);
+
+                $('#docNIB').hide();
+                $('#docNIB_id').attr('disabled', true);
+                $('#docNIB_text').attr('disabled', true);
+                $('#docNIB_upload_file').attr('disabled', true);
+
+                $('#surat_keterangan_usaha').hide();
+                $('#surat_keterangan_usaha_id').attr('disabled', true);
+                $('#surat_keterangan_usaha_text').attr('disabled', true);
+                $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
+
+                $('#npwp').hide();
+                $('#npwp_id').attr('disabled', true);
+                $('#npwp_text').attr('disabled', true);
+                $('#npwp_opsi_jawaban').attr('disabled', true);
+
+                $('#docNPWP').hide();
+                $('#docNPWP_id').attr('disabled', true);
+                $('#docNPWP_text').attr('disabled', true);
+                $('#docNPWP_upload_file').attr('disabled', true);
             } else {
                 $('#nib').hide();
                 $('#nib_id').attr('disabled', true);
                 $('#nib_text').attr('disabled', true);
                 $('#nib_opsi_jawaban').attr('disabled', true);
 
+                $('#docNIB').hide();
+                $('#docNIB_id').attr('disabled', true);
+                $('#docNIB_text').attr('disabled', true);
+                $('#docNIB_upload_file').attr('disabled', true);
+
                 $('#surat_keterangan_usaha').hide();
                 $('#surat_keterangan_usaha_id').attr('disabled', true);
                 $('#surat_keterangan_usaha_text').attr('disabled', true);
                 $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
+
+                $('#npwp').show();
+                $('#npwp_id').removeAttr('disabled');
+                $('#npwp_text').removeAttr('disabled');
+                $('#npwp_opsi_jawaban').removeAttr('disabled');
+
+                $('#docNPWP').show();
+                $('#docNPWP_id').removeAttr('disabled');
+                $('#docNPWP_text').removeAttr('disabled');
+                $('#docNPWP_upload_file').removeAttr('disabled');
             }
         });
         // end milih ijin usaha
