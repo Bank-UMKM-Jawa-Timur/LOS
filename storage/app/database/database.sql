@@ -94,7 +94,7 @@ CREATE TABLE `calon_nasabah` (
   KEY `calon_nasabah_id_kecamatan_foreign` (`id_kecamatan`),
   KEY `calon_nasabah_id_desa_foreign` (`id_desa`),
   KEY `calon_nasabah_id_pengajuan_foreign` (`id_pengajuan`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `calon_nasabah` WRITE;
@@ -107,7 +107,9 @@ INSERT INTO `calon_nasabah` VALUES
 (11,'Arsyad Arthan N','Jl. Brigpol Sudarlan RT.08 RW.03','Jl. Brigpol Sudarlan RT.08 RW.03','3511111706990007','Bandung','1999-06-17','menikah','perdagangan','dwad','10000000','dwad','dwad','dwa','wda',5,3511,351101,3511012001,'2022-10-05 10:50:29','2022-10-11 07:23:42',11,1),
 (12,'Ananda Dian P L','Jl. Kembang','Jl. Kembang','3578060705920002','Bandung','1999-06-17','menikah','perdagangan','dwa','10000000','wda','dwad','dwa','wdad',5,3526,352601,3526011001,'2022-10-11 15:04:03','2022-10-13 02:30:02',12,1),
 (18,'Arsyad Arthan N','Jl. Brigpol Sudarlan RT.08 RW.03','Jl. Brigpol Sudarlan RT.08 RW.03','3511111706990007','Bandung','1999-06-17','menikah','perdagangan','dwda','10000000','dwa','dwa','dwa','dwa',5,3511,351101,3511012001,'2022-11-15 06:48:08','2022-11-15 06:48:08',20,1),
-(19,'Maulana Malik Ibrahim','Perum Pancoran mas blok F1 desa Pancoran, kecamatan Bondowoso, kabupaten Bondowoso','Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua','245354376246','Bondowoso','2022-11-16','belum menikah','perindustrian','Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua','50000000','Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua','Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua','Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua','Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',5,3511,351111,3511112001,'2022-11-17 03:21:24','2022-11-17 03:21:24',21,3);
+(19,'Maulana Malik Ibrahim','Perum Pancoran mas blok F1 desa Pancoran, kecamatan Bondowoso, kabupaten Bondowoso','Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua','245354376246','Bondowoso','2022-11-16','belum menikah','perindustrian','Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua','50000000','Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua','Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua','Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua','Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',5,3511,351111,3511112001,'2022-11-17 03:21:24','2022-11-17 03:21:24',21,3),
+(20,'Hafidz Fadhillah Febrianto','Jln Nangka','Jln Nangka','3445576878979878','Lumajang','2004-02-21','belum menikah','perdagangan','Gatau','100000000','Gatau','Gatau','Gatau','Gatau',5,3508,350810,3508101012,'2023-01-14 15:03:12','2023-01-14 15:03:12',22,1),
+(21,'Budi','Jln. Nangka, Kepuharjo, Lumajang, RW 03 RT 03','Jln. Nangka, Kepuharjo, Lumajang, RW 03 RT 03','3614893174134813','Lumajang','0004-02-21','menikah','perdagangan','Gatau','1000000','Gatau','Gatau','Gatau','Gatau',5,3503,350301,3503012001,'2023-01-16 02:25:40','2023-01-16 02:25:40',24,1);
 /*!40000 ALTER TABLE `calon_nasabah` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `desa`;
@@ -8732,7 +8734,7 @@ CREATE TABLE `item` (
   `is_commentable` tinyint(1) DEFAULT 0,
   `status_skor` tinyint(1) DEFAULT 0,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=151 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=156 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `item` WRITE;
@@ -8832,7 +8834,12 @@ INSERT INTO `item` VALUES
 (146,'Laporan SLIK','2',13,'file','2022-09-21 04:29:32','2022-09-21 07:51:11',NULL,NULL),
 (147,'Foto','4',96,'file','2022-09-21 12:48:37','2022-09-21 12:48:37',NULL,NULL),
 (148,'Foto','4',114,'file','2022-09-21 13:16:52','2022-09-21 13:16:52',NULL,NULL),
-(149,'Kelayakan Usaha','3',94,'option','2022-11-14 03:56:35','2022-11-14 03:56:35',NULL,NULL);
+(149,'Kelayakan Usaha','3',94,'option','2022-11-14 03:56:35','2022-11-14 03:56:35',NULL,NULL),
+(151,'Foto KTP Suami','2',13,'file','2023-01-14 12:32:48','2023-01-14 12:32:48',NULL,NULL),
+(152,'Foto KTP Istri','2',13,'file','2023-01-14 12:33:13','2023-01-14 12:33:13',NULL,NULL),
+(153,'Dokumen NIB','3',76,'file','2023-01-14 13:45:29','2023-01-14 13:45:29',NULL,NULL),
+(154,'Dokumen NPWP','3',79,'file','2023-01-14 13:46:30','2023-01-14 13:46:30',NULL,NULL),
+(155,'Tidak Ada Legalitas Usaha','3',76,'input text','2023-01-16 02:00:13','2023-01-16 02:00:13',NULL,NULL);
 /*!40000 ALTER TABLE `item` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `jawaban`;
@@ -8850,7 +8857,7 @@ CREATE TABLE `jawaban` (
   PRIMARY KEY (`id`),
   KEY `jawaban_id_pengajuan_foreign` (`id_pengajuan`),
   KEY `jawaban_id_jawaban_foreign` (`id_jawaban`)
-) ENGINE=InnoDB AUTO_INCREMENT=139 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=171 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `jawaban` WRITE;
@@ -8993,7 +9000,39 @@ INSERT INTO `jawaban` VALUES
 (135,21,31,4,NULL,NULL,'2022-11-17 03:21:24','2022-11-17 12:13:58'),
 (136,21,44,3,NULL,NULL,'2022-11-17 03:21:24','2022-11-17 12:13:58'),
 (137,21,176,4,NULL,NULL,'2022-11-17 03:21:24','2022-11-17 12:13:58'),
-(138,21,147,4,NULL,NULL,NULL,'2022-11-17 12:13:58');
+(138,21,147,4,NULL,NULL,NULL,'2022-11-17 12:13:58'),
+(139,22,73,3,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 17:48:22'),
+(140,22,11,1,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 17:48:22'),
+(141,22,91,NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 17:48:22'),
+(142,22,63,4,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 17:48:22'),
+(143,22,112,NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 17:48:22'),
+(144,22,119,4,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 17:48:22'),
+(145,22,116,4,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 17:48:22'),
+(146,22,124,NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 17:48:22'),
+(147,22,170,4,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 17:48:22'),
+(148,22,183,NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 17:48:22'),
+(149,22,183,NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 17:48:22'),
+(150,22,153,NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 17:48:22'),
+(151,22,161,1,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 17:48:22'),
+(152,22,31,4,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 17:48:22'),
+(153,22,43,4,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 17:48:22'),
+(154,22,174,2,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 17:48:22'),
+(155,22,145,4,NULL,NULL,NULL,'2023-01-14 17:48:22'),
+(156,24,72,2,NULL,NULL,'2023-01-16 02:25:41',NULL),
+(157,24,11,1,NULL,NULL,'2023-01-16 02:25:41',NULL),
+(158,24,91,NULL,NULL,NULL,'2023-01-16 02:25:41',NULL),
+(159,24,63,4,NULL,NULL,'2023-01-16 02:25:41',NULL),
+(160,24,112,NULL,NULL,NULL,'2023-01-16 02:25:41',NULL),
+(161,24,119,4,NULL,NULL,'2023-01-16 02:25:41',NULL),
+(162,24,115,4,NULL,NULL,'2023-01-16 02:25:41',NULL),
+(163,24,123,NULL,NULL,NULL,'2023-01-16 02:25:41',NULL),
+(164,24,173,1,NULL,NULL,'2023-01-16 02:25:41',NULL),
+(165,24,183,NULL,NULL,NULL,'2023-01-16 02:25:41',NULL),
+(166,24,182,NULL,NULL,NULL,'2023-01-16 02:25:41',NULL),
+(167,24,161,1,NULL,NULL,'2023-01-16 02:25:41',NULL),
+(168,24,31,4,NULL,NULL,'2023-01-16 02:25:41',NULL),
+(169,24,43,4,NULL,NULL,'2023-01-16 02:25:41',NULL),
+(170,24,174,2,NULL,NULL,'2023-01-16 02:25:41',NULL);
 /*!40000 ALTER TABLE `jawaban` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `jawaban_sub_column`;
@@ -9032,7 +9071,7 @@ CREATE TABLE `jawaban_text` (
   PRIMARY KEY (`id`),
   KEY `jawaban_text_id_pengajuan_foreign` (`id_pengajuan`),
   KEY `jawaban_text_id_jawaban_foreign` (`id_jawaban`)
-) ENGINE=InnoDB AUTO_INCREMENT=636 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=713 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `jawaban_text` WRITE;
@@ -9333,7 +9372,82 @@ INSERT INTO `jawaban_text` VALUES
 (632,21,148,'1481668687238.jpg',NULL,NULL,NULL,'2022-11-17 03:21:24','2022-11-17 03:21:24'),
 (633,21,135,'1351668687238.png',NULL,NULL,NULL,'2022-11-17 03:21:24','2022-11-17 03:21:24'),
 (634,21,137,'1371668687238.png',NULL,NULL,NULL,'2022-11-17 03:21:24','2022-11-17 03:21:24'),
-(635,21,139,'1391668687238.png',NULL,NULL,NULL,'2022-11-17 03:21:24','2022-11-17 03:21:24');
+(635,21,139,'1391668687238.png',NULL,NULL,NULL,'2022-11-17 03:21:24','2022-11-17 03:21:24'),
+(636,22,73,'100000',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(637,22,74,'100000',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(638,22,75,'100',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(639,22,77,'Gatau',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(640,22,79,'Gatau',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(641,22,115,'Gatau',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(642,22,116,'Gatau',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(643,22,119,'Gatau',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(644,22,120,'Gatau',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(645,22,123,'100000',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(646,22,124,'100000',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(647,22,126,'Gatau',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(648,22,129,'100000',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(649,22,130,'Gatau',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(650,22,131,'02',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(651,22,25,'Gatau',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(652,22,31,'Gatau',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(653,22,39,'Gatau',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(654,22,42,'Gatau',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(655,22,44,'Gatau',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(656,22,47,'Gatau',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(657,22,49,'Gatau',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(658,22,54,'Gatau',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(659,22,23,'Gatau',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(660,22,89,'100000',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(661,22,90,'100',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(662,22,91,'Gatau',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(663,22,92,'Gatau',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(664,22,136,'100000',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(665,22,138,'100',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(666,22,140,'100',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(667,22,143,'200000',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(668,22,145,'1451673718502.jpg',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(669,22,151,'11673708592.png',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(670,22,152,'21673708592.jpg',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(671,22,146,'31673708592.png',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(672,22,153,'41673708592.png',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(673,22,154,'51673708592.jpg',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(674,22,148,'1481673718502.jpg',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(675,22,135,'1351673718502.png',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(676,22,137,'1371673718502.jpg',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(677,22,139,'1391673718502.jpeg',NULL,NULL,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(678,24,73,'100000',NULL,NULL,NULL,'2023-01-16 02:25:40','2023-01-16 02:25:40'),
+(679,24,74,'1000000',NULL,NULL,NULL,'2023-01-16 02:25:40','2023-01-16 02:25:40'),
+(680,24,75,'Gatau',NULL,NULL,NULL,'2023-01-16 02:25:40','2023-01-16 02:25:40'),
+(681,24,123,'10000',NULL,NULL,NULL,'2023-01-16 02:25:40','2023-01-16 02:25:40'),
+(682,24,124,'10000',NULL,NULL,NULL,'2023-01-16 02:25:40','2023-01-16 02:25:40'),
+(683,24,126,'gatau',NULL,NULL,NULL,'2023-01-16 02:25:40','2023-01-16 02:25:40'),
+(684,24,129,'10000',NULL,NULL,NULL,'2023-01-16 02:25:40','2023-01-16 02:25:40'),
+(685,24,130,'Gatau',NULL,NULL,NULL,'2023-01-16 02:25:40','2023-01-16 02:25:40'),
+(686,24,131,'2',NULL,NULL,NULL,'2023-01-16 02:25:40','2023-01-16 02:25:40'),
+(687,24,25,'100000',NULL,NULL,NULL,'2023-01-16 02:25:40','2023-01-16 02:25:40'),
+(688,24,31,'Gatau',NULL,NULL,NULL,'2023-01-16 02:25:40','2023-01-16 02:25:40'),
+(689,24,39,'100000',NULL,NULL,NULL,'2023-01-16 02:25:40','2023-01-16 02:25:40'),
+(690,24,42,'Gatau',NULL,NULL,NULL,'2023-01-16 02:25:40','2023-01-16 02:25:40'),
+(691,24,44,'Gatau',NULL,NULL,NULL,'2023-01-16 02:25:40','2023-01-16 02:25:40'),
+(692,24,47,'Gatau',NULL,NULL,NULL,'2023-01-16 02:25:40','2023-01-16 02:25:40'),
+(693,24,49,'Gatau',NULL,NULL,NULL,'2023-01-16 02:25:40','2023-01-16 02:25:40'),
+(694,24,54,'Gatau',NULL,NULL,NULL,'2023-01-16 02:25:40','2023-01-16 02:25:40'),
+(695,24,23,'Gatau',NULL,NULL,NULL,'2023-01-16 02:25:40','2023-01-16 02:25:40'),
+(696,24,89,'Gatau',NULL,NULL,NULL,'2023-01-16 02:25:40','2023-01-16 02:25:40'),
+(697,24,90,'100',NULL,NULL,NULL,'2023-01-16 02:25:40','2023-01-16 02:25:40'),
+(698,24,91,'Gatau',NULL,NULL,NULL,'2023-01-16 02:25:40','2023-01-16 02:25:40'),
+(699,24,92,'Gatau',NULL,NULL,NULL,'2023-01-16 02:25:40','2023-01-16 02:25:40'),
+(700,24,136,'Gatau',NULL,NULL,NULL,'2023-01-16 02:25:40','2023-01-16 02:25:40'),
+(701,24,138,'100',NULL,NULL,NULL,'2023-01-16 02:25:41','2023-01-16 02:25:41'),
+(702,24,140,'Gatau',NULL,NULL,NULL,'2023-01-16 02:25:41','2023-01-16 02:25:41'),
+(703,24,143,NULL,NULL,NULL,NULL,'2023-01-16 02:25:41','2023-01-16 02:25:41'),
+(704,24,145,'01673835941.jpg',NULL,NULL,NULL,'2023-01-16 02:25:41','2023-01-16 02:25:41'),
+(705,24,151,'11673835941.png',NULL,NULL,NULL,'2023-01-16 02:25:41','2023-01-16 02:25:41'),
+(706,24,152,'21673835941.jpg',NULL,NULL,NULL,'2023-01-16 02:25:41','2023-01-16 02:25:41'),
+(707,24,146,'31673835941.png',NULL,NULL,NULL,'2023-01-16 02:25:41','2023-01-16 02:25:41'),
+(708,24,135,'41673835941.jpeg',NULL,NULL,NULL,'2023-01-16 02:25:41','2023-01-16 02:25:41'),
+(709,24,137,'51673835941.png',NULL,NULL,NULL,'2023-01-16 02:25:41','2023-01-16 02:25:41'),
+(710,24,139,'61673835941.jpg',NULL,NULL,NULL,'2023-01-16 02:25:41','2023-01-16 02:25:41');
 /*!40000 ALTER TABLE `jawaban_text` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `kabupaten`;
@@ -10093,7 +10207,7 @@ CREATE TABLE `komentar` (
   `id_pbp` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `komentar_id_pengajuan_foreign` (`id_pengajuan`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `komentar` WRITE;
@@ -10106,7 +10220,9 @@ INSERT INTO `komentar` VALUES
 (5,11,NULL,'2022-10-05 10:50:29','2022-10-05 10:50:29',NULL,'dwadwa',5,NULL,NULL,NULL,NULL),
 (6,12,NULL,'2022-10-11 15:04:03','2022-10-11 15:04:03',NULL,'dwadw',5,NULL,NULL,NULL,NULL),
 (7,20,NULL,'2022-11-15 06:48:08','2022-11-15 06:48:08',NULL,'wdwad',5,NULL,NULL,NULL,NULL),
-(8,21,NULL,'2022-11-17 03:21:24','2022-11-17 03:21:24',NULL,'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',5,NULL,NULL,NULL,NULL);
+(8,21,NULL,'2022-11-17 03:21:24','2022-11-17 03:21:24',NULL,'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',5,NULL,NULL,NULL,NULL),
+(9,22,NULL,'2023-01-14 15:03:12','2023-01-14 15:03:12',NULL,'Gatau',5,NULL,NULL,NULL,NULL),
+(10,24,NULL,'2023-01-16 02:25:41','2023-01-16 02:25:41',NULL,'Gatau',5,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `komentar` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `migrations`;
@@ -10332,7 +10448,7 @@ CREATE TABLE `pendapat_dan_usulan_per_aspek` (
   PRIMARY KEY (`id`),
   KEY `pendapat_dan_usulan_per_aspek_id_pengajuan_foreign` (`id_pengajuan`),
   KEY `pendapat_dan_usulan_per_aspek_id_aspek_foreign` (`id_aspek`)
-) ENGINE=InnoDB AUTO_INCREMENT=126 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=139 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `pendapat_dan_usulan_per_aspek` WRITE;
@@ -10414,7 +10530,20 @@ INSERT INTO `pendapat_dan_usulan_per_aspek` VALUES
 (122,21,5,NULL,NULL,NULL,10,'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua','2022-11-17 03:21:24','2022-11-17 03:21:24'),
 (123,21,5,NULL,NULL,NULL,11,'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua','2022-11-17 03:21:24','2022-11-17 03:21:24'),
 (124,21,5,NULL,NULL,NULL,12,'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua','2022-11-17 03:21:24','2022-11-17 03:21:24'),
-(125,21,5,NULL,NULL,NULL,11,'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua','2022-11-17 12:13:58',NULL);
+(125,21,5,NULL,NULL,NULL,11,'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua','2022-11-17 12:13:58',NULL),
+(126,22,5,NULL,NULL,NULL,1,'Gatau','2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(127,22,5,NULL,NULL,NULL,7,'Gatau','2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(128,22,5,NULL,NULL,NULL,9,'Gatau','2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(129,22,5,NULL,NULL,NULL,10,'Gatau','2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(130,22,5,NULL,NULL,NULL,11,'Gatau','2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(131,22,5,NULL,NULL,NULL,12,'Gatau','2023-01-14 15:03:12','2023-01-14 15:03:12'),
+(132,22,5,NULL,NULL,NULL,11,'Gatau','2023-01-14 17:48:22',NULL),
+(133,24,5,NULL,NULL,NULL,1,'Gatau','2023-01-16 02:25:41','2023-01-16 02:25:41'),
+(134,24,5,NULL,NULL,NULL,7,'Gatau','2023-01-16 02:25:41','2023-01-16 02:25:41'),
+(135,24,5,NULL,NULL,NULL,9,'Gatau','2023-01-16 02:25:41','2023-01-16 02:25:41'),
+(136,24,5,NULL,NULL,NULL,10,'Gatau','2023-01-16 02:25:41','2023-01-16 02:25:41'),
+(137,24,5,NULL,NULL,NULL,11,'Gatau','2023-01-16 02:25:41','2023-01-16 02:25:41'),
+(138,24,5,NULL,NULL,NULL,12,'Gatau','2023-01-16 02:25:41','2023-01-16 02:25:41');
 /*!40000 ALTER TABLE `pendapat_dan_usulan_per_aspek` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `pengajuan`;
@@ -10437,7 +10566,7 @@ CREATE TABLE `pengajuan` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `pengajuan` WRITE;
@@ -10450,7 +10579,9 @@ INSERT INTO `pengajuan` VALUES
 (11,'2022-10-11','Proses Input Data',95,NULL,NULL,NULL,'kuning',NULL,2.91,NULL,NULL,1,'2022-10-05 10:50:29','2022-10-11 15:00:38'),
 (12,'2022-10-13','Proses Input Data',92,NULL,NULL,NULL,'kuning',NULL,2.75,NULL,NULL,1,'2022-10-11 15:04:03','2022-10-14 03:32:04'),
 (20,'2022-11-15','Proses Input Data',100,'2022-11-17',NULL,NULL,'hijau',NULL,3.42,NULL,NULL,1,'2022-11-15 06:48:08','2022-11-17 02:39:19'),
-(21,'2022-11-17','Proses Input Data',100,NULL,NULL,NULL,'kuning',NULL,2.50,NULL,NULL,1,'2022-11-17 03:21:24','2022-11-17 12:13:58');
+(21,'2022-11-17','Proses Input Data',100,NULL,NULL,NULL,'kuning',NULL,2.50,NULL,NULL,1,'2022-11-17 03:21:24','2022-11-17 12:13:58'),
+(22,'2023-01-14','Proses Input Data',100,NULL,NULL,NULL,'hijau',NULL,3.18,NULL,NULL,1,'2023-01-14 15:03:12','2023-01-14 17:48:22'),
+(24,'2023-01-16','Proses Input Data',96,NULL,NULL,NULL,'kuning',NULL,2.70,NULL,NULL,1,'2023-01-16 02:25:40','2023-01-16 02:25:41');
 /*!40000 ALTER TABLE `pengajuan` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `personal_access_tokens`;
