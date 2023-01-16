@@ -148,8 +148,13 @@
                     @endphp
                     <label for="">Foto KTP Suami</label>
                     <input type="hidden" name="id_item_file[]" value="151" id="">
-                    <label for="update_file" style="display: none" id="nama_file">{{ $jawabanFotoKTPSu->opsi_text }}</label>
-                    <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi Foto KTP Suami" class="form-control limit-size" value="{{ $jawabanFotoKTPSu->opsi_text }}">
+                        @if (isset($jawabanFotoKTPSu->opsi_text) != null)
+                            <label for="update_file" style="display: none" id="nama_file">{{ $jawabanFotoKTPSu->opsi_text }}</label>
+                            <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi Foto KTP Suami" class="form-control limit-size" value="{{ $jawabanFotoKTPSu->opsi_text }}">
+                        @else
+                            <label for="update_file" style="display: none" id="nama_file">Belum Upload Foto KTP Suami</label>
+                            <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi Foto KTP Suami" class="form-control limit-size" value="Belum Upload Foto KTP Suami">
+                        @endif
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
@@ -166,8 +171,13 @@
                     @endphp
                     <label for="">Foto KTP Istri</label>
                     <input type="hidden" name="id_item_file[]" value="152" id="">
-                    <label for="update_file" style="display: none" id="nama_file">{{ $jawabanFotoKTPIs->opsi_text }}</label>
-                    <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi Foto KTP Istri" class="form-control limit-size" value="{{ $jawabanFotoKTPIs->opsi_text }}">
+                        @if (isset($jawabanFotoKTPSu->opsi_text) != null)
+                            <label for="update_file" style="display: none" id="nama_file">{{ $jawabanFotoKTPIs->opsi_text }}</label>
+                            <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi Foto KTP Istri" class="form-control limit-size" value="{{ $jawabanFotoKTPIs->opsi_text }}">
+                        @else
+                            <label for="update_file" style="display: none" id="nama_file">Belum Upload Foto KTP Istri</label>
+                            <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi Foto KTP Istri" class="form-control limit-size" value="Belum Upload Foto KTP Istri">
+                        @endif
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
@@ -417,7 +427,7 @@
                             <div class="row col-md-12">
                                 <div class="form-group col-md-6">
                                     <label for="">{{ $item->nama }}</label>
-                                    <select name="ijin_usaha" id="ijin_usaha" class="form-control" required>
+                                    <select name="ijin_usaha" id="ijin_usaha" class="form-control" required> 
                                         <option value="">-- Pilih Ijin Usaha --</option>
                                         <option value="nib" {{ ($dataIjin->nama == 'NIB') ? 'selected' : '' }}>NIB</option>
                                         <option value="surat_keterangan_usaha" {{ ($dataIjin->nama == 'Surat Keterangan Usaha') ? 'selected' : '' }}>Surat Keterangan Usaha</option>
@@ -446,8 +456,13 @@
                                     @endphp
                                     <label for="">Dokumen NIB</label>
                                     <input type="hidden" name="id_item_file[]" value="153" id="">
-                                    <label for="update_file" style="display: none" id="nama_file">{{ $jawabanDokNIB->opsi_text }}</label>
-                                    <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi Dokumen NIB" class="form-control limit-size" value="{{ $jawabanDokNIB->opsi_text }}">
+                                        @if (isset($jawabanDokNIB->opsi_text) != null)
+                                            <label for="update_file" style="display: none" id="nama_file">{{ $jawabanDokNIB->opsi_text }}</label>
+                                            <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi Dokumen NIB" class="form-control limit-size" value="{{ $jawabanDokNIB->opsi_text }}">
+                                        @else
+                                            <label for="update_file" style="display: none" id="nama_file">Belum Upload Dokumen NIB</label>
+                                            <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi Dokumen NIB" class="form-control limit-size" value="Belum Upload Dokumen NIB">
+                                        @endif
                                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
@@ -491,8 +506,13 @@
                                     @endphp
                                     <label for="">Dokumen NPWP</label>
                                     <input type="hidden" name="id_item_file[]" value="154" id="">
-                                    <label for="update_file" style="display: none" id="nama_file">{{ $jawabanDokNPWP->opsi_text }}</label>
-                                    <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi Dokumen NPWP" class="form-control limit-size" value="{{ $jawabanDokNPWP->opsi_text }}">
+                                        @if (isset($jawabanDokNIB->opsi_text) != null)
+                                            <label for="update_file" style="display: none" id="nama_file">{{ $jawabanDokNPWP->opsi_text }}</label>
+                                            <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi Dokumen NPWP" class="form-control limit-size" value="{{ $jawabanDokNPWP->opsi_text }}">
+                                        @else
+                                            <label for="update_file" style="display: none" id="nama_file">Belum Upload Dokumen NPWP</label>
+                                            <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi Dokumen NPWP" class="form-control limit-size" value="Belum Upload Dokumen NPWP">
+                                        @endif
                                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
@@ -1218,7 +1238,7 @@
         if (ijinUsaha == 'nib') {
             $('#surat_keterangan_usaha').hide();
             $('#surat_keterangan_usaha_id').attr('disabled', true);
-            // $('#surat_keterangan_usaha_text').attr('disabled', true);
+            $('#surat_keterangan_usaha_text').attr('disabled', true);
             $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
 
             $('#nib').show();
@@ -1228,7 +1248,7 @@
         } else if (ijinUsaha == 'surat_keterangan_usaha') {
             $('#nib').hide()
             $('#nib_id').attr('disabled', true);
-            // $('#nib_text').attr('disabled', true);
+            $('#nib_text').attr('disabled', true);
             $('#nib_opsi_jawaban').attr('disabled', true);
 
             $('#surat_keterangan_usaha').show();
