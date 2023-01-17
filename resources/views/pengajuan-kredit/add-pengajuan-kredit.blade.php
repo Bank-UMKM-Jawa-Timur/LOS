@@ -829,6 +829,8 @@
             "{{ route('get-item-jaminan-by-kategori-jaminan-utama') }}"; // jaminan tambahan
         let urlGetItemByKategori = "{{ route('get-item-jaminan-by-kategori') }}"; // jaminan tambahan
 
+        var x = 1;
+
         $('#kabupaten').change(function() {
             var kabID = $(this).val();
             if (kabID) {
@@ -1101,9 +1103,19 @@
                                 $('#bukti_pemilikan_jaminan_tambahan').append(`
                                 <div class="form-group col-md-6 aspek_jaminan_kategori">
                                     <label>${valItem.nama}</label>
-                                    <input type="hidden" name="id_item_file[]" value="${valItem.id}" id="" class="input">
-                                    <input type="file" name="upload_file[]" id="" class="form-control limit-size">
-                                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                                    <div class="row">
+                                        <div class="col-md-9">
+                                            <input type="hidden" name="id_item_file[]" value="${valItem.id}" id="" class="input">
+                                            <input type="file" name="upload_file[]" id="" class="form-control limit-size">
+                                            <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <button class="btn btn-success plus" id="btnTambahBukti"><i class="fa fa-plus"></i></button>
+                                        </div>
+                                        <div class="col-md-1 ml-1">
+                                            <button class="btn btn-danger minus" id="btnHapusBukti"><i class="fa fa-minus"></i></button>
+                                        </div>
+                                    </div>
                                 </div>`);
                             } else {
                                 $('#bukti_pemilikan_jaminan_tambahan').append(`
@@ -1119,6 +1131,34 @@
                             }
                         }
                     });
+
+                    $("#bukti_pemilikan_jaminan_tambahan").on("click", "#btnTambahBukti", function(){
+                        $("#bukti_pemilikan_jaminan_tambahan").append(`
+                        <div class="form-group col-md-6 aspek_jaminan_kategori">
+                            <label>Foto</label>
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <input type="hidden" name="id_item_file[]" value="148" id="" class="input">
+                                    <input type="file" name="upload_file[]" id="" class="form-control limit-size">
+                                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                                </div>
+                                <div class="col-md-1">
+                                    <button class="btn btn-success plus" id="btnTambahBukti"><i class="fa fa-plus"></i></button>
+                                </div>
+                                <div class="col-md-1 ml-1">
+                                    <button class="btn btn-danger minus" id="btnHapusBukti"><i class="fa fa-minus"></i></button>
+                                </div>
+                            </div>
+                        </div>`);
+                        x++
+                    })
+
+                    $("#bukti_pemilikan_jaminan_tambahan").on("click", "#btnHapusBukti", function(){
+                        if(x > 1){
+                            $(this).closest('.aspek_jaminan_kategori').remove();
+                            x--
+                        }  
+                    })
 
                     $(".checkKategori").click(function() {
                         var input = $(this).closest('.form-group').find(".input")

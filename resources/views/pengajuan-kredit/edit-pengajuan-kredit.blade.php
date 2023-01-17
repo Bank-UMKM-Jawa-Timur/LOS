@@ -241,9 +241,10 @@
                                         ->first();
                     @endphp
                     <label for="">Laporan SLIK</label>
-                    <input type="hidden" name="id_item_file[]" value="146" id="">
+                    <input type="hidden" name="id_file_text[]" value="146" id="">
                     <label for="update_file" style="display: none" id="nama_file">{{ $jawabanLaporanSlik->opsi_text }}</label>
-                    <input type="file" name="upload_file[]" id="laporan_slik" placeholder="Masukkan informasi Laporan SLIK" class="form-control limit-size" value="{{ $jawabanLaporanSlik->opsi_text }}">
+                    <input type="file" name="update_file[]" id="laporan_slik" placeholder="Masukkan informasi Laporan SLIK" class="form-control limit-size" value="{{ $jawabanLaporanSlik->opsi_text }}">
+                    <input type="hidden" name="id_update_file[]" value="{{ $jawabanLaporanSlik->id }}">
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
@@ -1038,6 +1039,8 @@
     let urlGetItemByKategori = "{{ route('get-item-jaminan-by-kategori') }}";
     let urlGetIjin = "{{ route('get-ijin-usaha') }}";
     let id = parseInt("{{ $dataUmum->id }}");
+
+    let x = 1;
      // jaminan tambahan
     getJaminanutama();
     getJaminanTambahan();
@@ -1185,84 +1188,6 @@
                 // jika kategori bukan stock dan piutang
                 if (kategoriJaminanUtama != 'Stock' && kategoriJaminanUtama != 'Piutang') {
                     if(response.dataDetailJawabanText.length > 0){
-                        
-                        // add item by kategori
-                        $('#select_kategori_jaminan_utama').append(`
-                            <label for="">${response.item.nama}</label>
-                            <select name="dataLevelEmpat[]" id="itemByKategoriJaminanUtama" class="form-control cek-sub-column"
-                                data-id_item="${response.item.id}">
-                                <option value=""> --Pilih Opsi -- </option>
-                                </select>
-    
-                            <div id="item${response.item.id}">
-    
-                            </div>
-                        `);
-                        // add opsi dari item
-                        $.each(response.item.option, function(i, valOption) {
-                            // console.log(valOption.skor);
-                            $('#itemByKategoriJaminanUtama').append(`
-                            <option value="${valOption.skor}-${valOption.id}"` + (valOption.id !== response.detailJawabanOption.id_jawaban ? '' : 'selected="selected"') +`>
-                            ${valOption.option}
-                            </option>`)
-                        });
-    
-                        // add item bukti pemilikan
-                        var isCheck = kategoriJaminanUtama != 'Kendaraan Bermotor' &&
-                            kategoriJaminanUtama != 'Stock' && kategoriJaminanUtama != 'Piutang' ?
-                            "<input type='checkbox' class='checkKategoriJaminanUtama'>" : ""
-                        var isChecked = kategoriJaminanUtama != 'Kendaraan Bermotor' &&
-                            kategoriJaminanUtama != 'Stock' && kategoriJaminanUtama != 'Piutang' ?
-                            "<input type='checkbox' checked class='checkKategoriJaminanUtama'>" : ""
-                        var isDisabled = kategoriJaminanUtama != 'Kendaraan Bermotor' &&
-                            kategoriJaminanUtama != 'Stock' && kategoriJaminanUtama != 'Piutang' ?
-                            'disabled' : ''
-                        $.each(response.dataDetailJawabanText, function(i, valItem) {
-                            console.log(valItem.nama);
-                            if (valItem.nama == 'Atas Nama') {
-                                $('#bukti_pemilikan_jaminan_utama').append(`
-                                    <div class="form-group col-md-6 aspek_jaminan_kategori_jaminan_utama">
-                                        <label>${valItem.nama}</label>
-                                        <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input">
-                                        <input type="hidden" name="opsi_jawaban[]"
-                                            value="${valItem.opsi_jawaban}" id="" class="input">
-                                            <input type="text" name="info_text[]" placeholder="Masukkan informasi"
-                                            class="form-control input" value="${valItem.opsi_text}">
-                                        <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
-                                        <input type="hidden" name="id_jawaban_text[]" value="${valItem.id}">
-                                    <input type="hidden" name="id_text[]" value="${valItem.id_item}">
-                                    </div>
-                                `);
-                            } else {
-                                if(valItem.nama == 'Foto') {
-                                    $('#bukti_pemilikan_jaminan_utama').append(`
-                                    <div class="form-group col-md-6 aspek_jaminan_kategori_jaminan_utama">
-                                        <label>${valItem.nama}</label>
-                                        <input type="hidden" name="id_file_text[]" value="${valItem.id_item}" id="" class="input">
-                                        <label for="update_file" style="display: none" id="nama_file">${valItem.opsi_text}</label>
-                                        <input type="file" name="update_file[]" value="${valItem.opsi_text}" id="${valItem.nama}file" class="form-control">
-                                        <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
-                                        <input type="hidden" name="id_update_file[]" value="${valItem.id}">
-                                    </div>`);
-                                    showFile();
-                                }
-                                else {
-                                    $('#bukti_pemilikan_jaminan_utama').append(`
-                                    <div class="form-group col-md-6 aspek_jaminan_kategori_jaminan_utama">
-                                        <label>${isChecked} ${valItem.nama}</label>
-                                        <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input" ${isDisabled}>
-                                        <input type="hidden" name="opsi_jawaban[]"
-                                            value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
-                                        <input type="text" name="info_text[]"
-                                            class="form-control input" placeholder="Masukkan informasi ${valItem.nama}" value="${valItem.opsi_text}">
-                                        <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
-                                        <input type="hidden" name="id_jawaban_text[]" value="${valItem.id}">
-                                    <input type="hidden" name="id_text[]" value="${valItem.id_item}">
-                                    </div>`);
-                                }
-                            }
-                        });
-                        
                         if(response.belum.length > 0){
                             $.each(response.belum, function(i, valItem){
                                 if(valItem.nama != 'Foto'){
@@ -1289,145 +1214,7 @@
                                 }
                             })
                         }
-    
-                        $(".checkKategoriJaminanUtama").click(function() {
-                            var input = $(this).closest('.form-group').find(".input")
-                            // var input_id = $(this).closest('.form-group').find("input_id").last()
-                            // var input_opsi_jawaban = $(this).closest('.form-group').find("input_opsi_jawaban").last()
-                            if ($(this).is(':checked')) {
-                                input.prop('disabled', false)
-                                // input_id.prop('disabled',false)
-                                // input_opsi_jawaban.prop('disabled',false)
-                            } else {
-                                input.val('')
-                                input.prop('disabled', true)
-                                inputHidden.prop('disabled', true)
-                                // input_id.prop('disabled',true)
-                                // input_opsi_jawaban.prop('disabled',true)
-                            }
-                        })
                     }
-                    else{
-                        // add item by kategori
-                        $('#select_kategori_jaminan_utama').append(`
-                            <label for="">${response.item.nama}</label>
-                            <select name="dataLevelEmpat[]" id="itemByKategoriJaminanUtama" class="form-control cek-sub-column"
-                                data-id_item="${response.item.id}">
-                                <option value=""> --Pilih Opsi -- </option>
-                                </select>
-
-                            <div id="item${response.item.id}">
-
-                            </div>
-                        `);
-                        // add opsi dari item
-                        $.each(response.item.option, function(i, valOption) {
-                            // console.log(valOption.skor);
-                            $('#itemByKategoriJaminanUtama').append(`
-                            <option value="${valOption.skor}-${valOption.id}"` + (valOption.id === response.detailJawabanOption[0].id_jawaban ? 'selected="selected"' : '') +`>
-                            ${valOption.option}
-                            </option>`);
-                        });
-
-                        // add item bukti pemilikan
-                        var isCheck = kategoriJaminanUtama != 'Kendaraan Bermotor' &&
-                            kategoriJaminanUtama != 'Stock' && kategoriJaminanUtama != 'Piutang' ?
-                            "<input type='checkbox' class='checkKategoriJaminanUtama'>" : ""
-                        var isDisabled = kategoriJaminanUtama != 'Kendaraan Bermotor' &&
-                            kategoriJaminanUtama != 'Stock' && kategoriJaminanUtama != 'Piutang' ?
-                            'disabled' : ''
-                        $.each(response.itemBuktiPemilikan, function(i, valItem) {
-                            console.log(valItem.nama);
-                            if (valItem.nama == 'Atas Nama') {
-                                $('#bukti_pemilikan_jaminan_utama').append(`
-                                <div class="form-group col-md-6 aspek_jaminan_kategori_jaminan_utama">
-                                    <label>${valItem.nama}</label>
-                                        <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input">
-                                        <input type="hidden" name="opsi_jawaban[]"
-                                            value="${valItem.opsi_jawaban}" id="" class="input">
-                                            <input type="text" name="info_text[]" placeholder="Masukkan informasi"
-                                            class="form-control input" value="">
-                                        <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
-                                        <input type="hidden" name="id_jawaban_text[]" value="">
-                                    <input type="hidden" name="id_text[]" value="${valItem.id}">
-                                </div>
-                            `);
-                            } else {
-                                if(valItem.nama == 'Foto') {
-                                    $('#bukti_pemilikan_jaminan_utama').append(`
-                                    <div class="form-group col-md-6 aspek_jaminan_kategori_jaminan_utama">
-                                        <label>${valItem.nama}</label>
-                                        <input type="hidden" name="id_jawaban_text[]" value="" id="" class="input">
-                                        <input type="hidden" name="id_file_text[]" value="${valItem.id}" id="" class="input">
-                                        <input type="file" name="upload_file[]" id="" class="form-control">
-                                    </div>`);
-                                }
-                                else {
-                                    $('#bukti_pemilikan_jaminan_utama').append(`
-                                    <div class="form-group col-md-6 aspek_jaminan_kategori_jaminan_utama">
-                                        <label>${isCheck} ${valItem.nama}</label>
-                                        <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input" ${isDisabled}>
-                                        <input type="hidden" name="opsi_jawaban[]"
-                                            value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
-                                        <input type="text" name="info_text[]" placeholder="Masukkan informasi ${valItem.nama}"
-                                            class="form-control input" ${isDisabled}>
-                                        <input type="hidden" name="id_jawaban_text[]" value="">
-                                    <input type="hidden" name="id_text[]" value="${valItem.id}">
-                                    </div>`);
-                                }
-                            }
-                        });
-
-                        $(".checkKategoriJaminanUtama").click(function() {
-                            var input = $(this).closest('.form-group').find(".input")
-                            // var input_id = $(this).closest('.form-group').find("input_id").last()
-                            // var input_opsi_jawaban = $(this).closest('.form-group').find("input_opsi_jawaban").last()
-                            if ($(this).is(':checked')) {
-                                input.prop('disabled', false)
-                                // input_id.prop('disabled',false)
-                                // input_opsi_jawaban.prop('disabled',false)
-                            } else {
-                                input.val('')
-                                input.prop('disabled', true)
-                                // input_id.prop('disabled',true)
-                                // input_opsi_jawaban.prop('disabled',true)
-                            }
-                        })
-                    }
-                }
-                // jika kategori = stock dan piutang
-                else {
-                    $.each(response.dataDetailJawabanText, function(i, valItem) {
-                        if (valItem.nama == 'Atas Nama') {
-                            $('#select_kategori_jaminan_utama').append(`
-                            <div class="aspek_jaminan_kategori_jaminan_utama">
-                                <label>${valItem.nama}</label>
-                                        <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input">
-                                        <input type="hidden" name="opsi_jawaban[]"
-                                            value="${valItem.opsi_jawaban}" id="" class="input">
-                                            <input type="text" name="info_text[]" placeholder="Masukkan informasi"
-                                            class="form-control input" value="${valItem.opsi_text}">
-                                        <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
-                                        <input type="hidden" name="id_jawaban_text[]" value="${valItem.id}">
-                                    <input type="hidden" name="id_text[]" value="${valItem.id_item}">
-                            </div>
-                                `);
-                        } else {
-                                $('#select_kategori_jaminan_utama').append(`
-                                <div class="aspek_jaminan_kategori_jaminan_utama">
-                                    <label>${valItem.nama}</label>
-                                        <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input">
-                                        <input type="hidden" name="opsi_jawaban[]"
-                                            value="${valItem.opsi_jawaban}" id="" class="input">
-                                            <input type="text" name="info_text[]" placeholder="Masukkan informasi"
-                                            class="form-control input" value="${valItem.opsi_text}">
-                                        <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
-                                        <input type="hidden" name="id_jawaban_text[]" value="${valItem.id}">
-                                    <input type="hidden" name="id_text[]" value="${valItem.id_item}">
-                                </div>
-                                `);
-                        }
-                    });
                 }
             }
         });
@@ -1500,12 +1287,23 @@
                                     $('#bukti_pemilikan_jaminan_tambahan').append(`
                                     <div class="form-group col-md-6 aspek_jaminan_kategori">
                                         <label>${valItem.nama}</label>
-                                        <input type="hidden" name="id_update_file[]" value="${valItem.id}" id="" class="input">
-                                        <label for="update_file" style="display: none" id="nama_file">${valItem.opsi_text}</label>
-                                        <input type="hidden" name="id_file_text[]" value="${valItem.id_item}" id="" class="input">
-                                        <input type="file" name="update_file[]" value="${valItem.opsi_text}" id="${valItem.nama}file" class="form-control">
-                                        <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
+                                        <div class="row">
+                                            <div class="col-md-9">
+                                                <input type="hidden" name="id_update_file[]" value="${valItem.id}" id="" class="input">
+                                                <label for="update_file" style="display: none" id="nama_file">${valItem.opsi_text}</label>
+                                                <input type="hidden" name="id_file_text[]" value="${valItem.id_item}" id="" class="input">
+                                                <input type="file" name="update_file[]" value="${valItem.opsi_text}" id="${valItem.nama}file" class="form-control">
+                                                <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
+                                            </div>
+                                            <div class="col-md-1">
+                                                <button type="button" class="btn btn-success plus" id="btnTambahBukti"><i class="fa fa-plus"></i></button>
+                                            </div>
+                                            <div class="col-md-1 ml-1">
+                                                <button type="button" class="btn btn-danger minus" id="btnHapusBukti"><i class="fa fa-minus"></i></button>
+                                            </div>
+                                        </div>
                                     </div>`);
+                                    x++;
                                     showFile();
                                 } else {
                                     $('#bukti_pemilikan_jaminan_tambahan').append(`
@@ -1543,11 +1341,22 @@
                                     $('#bukti_pemilikan_jaminan_tambahan').append(`
                                     <div class="form-group col-md-6 aspek_jaminan_kategori">
                                         <label>${valItem.nama}</label>
-                                        <input type="hidden" name="id_update_file[]" value="" id="" class="input">
-                                        <input type="hidden" name="id_file_text[]" value="${valItem.id}" id="" class="input">
-                                        <input type="file" name="update_file[]" value="" id="${valItem.nama}file" class="form-control">
-                                        <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
+                                        <div class="row">
+                                            <div class="col-md-9">
+                                                <input type="hidden" name="id_update_file[]" value="" id="" class="input">
+                                                <input type="hidden" name="id_file_text[]" value="${valItem.id}" id="" class="input">
+                                                <input type="file" name="update_file[]" value="" id="${valItem.nama}file" class="form-control">
+                                                <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
+                                            </div>
+                                            <div class="col-md-1">
+                                                <button type="button" class="btn btn-success plus" id="btnTambahBukti"><i class="fa fa-plus"></i></button>
+                                            </div>
+                                            <div class="col-md-1 ml-1">
+                                                <button type="button" class="btn btn-danger minus" id="btnHapusBukti"><i class="fa fa-minus"></i></button>
+                                            </div>
+                                        </div>
                                     </div>`);
+                                    x++;
                                 }
                             })
                         }
@@ -1600,14 +1409,25 @@
                                 $('#bukti_pemilikan_jaminan_tambahan').append(`
                                 <div class="form-group col-md-6 aspek_jaminan_kategori">
                                     <label>${valItem.nama}</label>
-                                        <input type="hidden" name="id_update_file[]" value="" id="" class="input">
-                                        <input type="hidden" name="id_file_text[]" value="${valItem.id_item}" id="" class="input">
-                                        <input type="hidden" name="opsi_jawaban[]"
-                                            value="${valItem.opsi_jawaban}" id="" class="input">
-                                            <input type="file" name="update_file[]" placeholder="Masukkan informasi"
-                                            class="form-control input" value="${valItem.opsi_text}">
-                                        <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
+                                    <div class="row">
+                                        <div class="col-md-9">
+                                            <input type="hidden" name="id_update_file[]" value="" id="" class="input">
+                                            <input type="hidden" name="id_file_text[]" value="${valItem.id_item}" id="" class="input">
+                                            <input type="hidden" name="opsi_jawaban[]"
+                                                value="${valItem.opsi_jawaban}" id="" class="input">
+                                                <input type="file" name="update_file[]" placeholder="Masukkan informasi"
+                                                class="form-control input" value="${valItem.opsi_text}">
+                                            <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
+                                        </div>
+                                        <div class="col-md-1">
+                                            <button type="button" class="btn btn-success plus" id="btnTambahBukti"><i class="fa fa-plus"></i></button>
+                                        </div>
+                                        <div class="col-md-1 ml-1">
+                                            <button type="button" class="btn btn-danger minus" id="btnHapusBukti"><i class="fa fa-minus"></i></button>
+                                        </div>
+                                    </div>
                                 </div>`);
+                                x++;
                             } else {
                                 $('#bukti_pemilikan_jaminan_tambahan').append(`
                                     <div class="form-group col-md-6 aspek_jaminan_kategori">
@@ -2247,5 +2067,38 @@
             cekBtn()
             e.preventDefault();
         })
+        
+
+    $("#bukti_pemilikan_jaminan_tambahan").on("click", "#btnTambahBukti", function(){
+        $("#bukti_pemilikan_jaminan_tambahan").append(`
+        <div class="form-group col-md-6 aspek_jaminan_kategori">
+            <label>Foto</label>
+            <div class="row">
+                <div class="col-md-9">
+                    <input type="hidden" name="id_update_file[]" value="" id="" class="input">
+                    <input type="hidden" name="id_file_text[]" value="148" id="" class="input">
+                    <input type="hidden" name="opsi_jawaban[]"
+                        value="foto" id="" class="input">
+                        <input type="file" name="update_file[]" placeholder="Masukkan informasi"
+                        class="form-control input" value="">
+                    <input type="hidden" name="skor_penyelia_text[]" value="">
+                </div>
+                <div class="col-md-1">
+                    <button type="button" class="btn btn-success plus" id="btnTambahBukti"><i class="fa fa-plus"></i></button>
+                </div>
+                <div class="col-md-1 ml-1">
+                    <button type="button" class="btn btn-danger minus" id="btnHapusBukti"><i class="fa fa-minus"></i></button>
+                </div>
+            </div>
+        </div>`);
+        x++
+    })
+
+    $("#bukti_pemilikan_jaminan_tambahan").on("click", "#btnHapusBukti", function(){
+        if(x > 1){
+            $(this).closest('.aspek_jaminan_kategori').remove();
+            x--
+        }  
+    })
     </script>
 @endpush

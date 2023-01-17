@@ -890,11 +890,12 @@ class PengajuanKreditController extends Controller
                 foreach($request->file('update_file') as $key => $value){
                     if($request->id_update_file[$key] != null){
                         $image = $value;
-                        $imageName = $request->id_file_text[$key].time().'.'.$image->getClientOriginalExtension();
+                        $imageName = $key.time().'.'.$image->getClientOriginalExtension();
     
-                        $imageLama = JawabanTextModel::where('id_jawaban', $request->get('id_file_text')[$key])
+                        $imageLama = JawabanTextModel::where('id_jawaban', $request->get('id_update_file')[$key])
                                         ->select('opsi_text', 'id_jawaban')
                                         ->where('opsi_text', '!=', null)
+                                        ->orderBy('id', 'desc')
                                         ->get();
                         // return $imageLama;
                         foreach($imageLama as $imageKey => $imageValue){
@@ -914,7 +915,7 @@ class PengajuanKreditController extends Controller
                         $imgUpdate->where('id', $request->get('id_update_file')[$key])->update(['opsi_text' => $imageName]);
                     }else {
                         $image = $request->file('update_file')[$key];
-                        $imageName = $request->id_file_text[$key].time().'.'.$image->getClientOriginalExtension();
+                        $imageName = $key.time().'.'.$image->getClientOriginalExtension();
 
                         $filePath = public_path() . '/upload/' . $id_pengajuan . '/'. $request->id_file_text[$key];
                         
