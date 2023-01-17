@@ -618,15 +618,21 @@
                                     ->where('level', 4)
                                     ->where('id_parent', $itemTiga->id)
                                     ->get();
+                                // check jawaban kelayakan
+                                $checkJawabanKelayakan = \App\Models\JawabanPengajuanModel::select('id','id_jawaban','skor')->where('id_pengajuan', $dataUmum->id)->whereIn('id_jawaban', ['183','184'])->first();
                             @endphp
 
                             @foreach ($dataOptionTiga as $itemOptionTiga)
                                 @if ($itemOptionTiga->option == '-')
-                                    <div class="row">
-                                        <div class="form-group col-md-12">
-                                            <h5> {{ $itemTiga->nama }}</h5>
+                                    @if (isset($checkJawabanKelayakan))
+                                        
+                                    @else    
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <h5> {{ $itemTiga->nama }}</h5>
+                                            </div>
                                         </div>
-                                    </div>
+                                    @endif
                                 @endif
                             @endforeach
 
@@ -634,11 +640,27 @@
                                 @if ($itemTiga->nama == 'Ratio Tenor Asuransi Opsi')
                                     
                                 @else
-                                    <div class="row">
-                                        <div class="form-group col-md-12">
-                                            <label for="">{{ $itemTiga->nama }}</label>
-                                        </div>
-                                    </div>
+                                    @if (isset($checkJawabanKelayakan))
+                                        @if ($itemTiga->nama != 'Kelayakan Usaha')
+                                            
+                                        @else    
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <label for="">{{ $itemTiga->nama }}</label>
+                                                </div>
+                                            </div>
+                                        @endif
+                                    @else
+                                        @if ($itemTiga->nama != 'Kelayakan Usaha')    
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <label for="">{{ $itemTiga->nama }}</label>
+                                                </div>
+                                            </div>
+                                        @else
+                                            
+                                        @endif
+                                    @endif
                                     <div class="row">
                                         @foreach ($dataJawabanLevelTiga as $key => $itemJawabanLevelTiga)
                                             @php
@@ -735,9 +757,8 @@
                                                         @if ($file_parts['extension']=='pdf')
                                                             <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}" width="100%" height="700px"></iframe>
                                                         @else
-                                                            <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
+                                                            <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}" alt="" width="800px">
                                                         @endif
-                                                            alt="" width="800px">
                                                     @else
                                                         <p class="badge badge-info text-lg"><b>
                                                                 {{ $itemTextEmpat->opsi_text }}

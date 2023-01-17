@@ -175,6 +175,10 @@ class PengajuanKreditController extends Controller
         $param['itemSlik'] = ItemModel::with('option')->where('nama', 'SLIK')->first();
         $param['itemSP'] = ItemModel::where('nama','Surat Permohonan')->first();
         $param['itemP'] = ItemModel::where('nama','Laporan SLIK')->first();
+        $param['itemKTPSu'] = ItemModel::where('nama','Foto KTP Suami')->first();
+        $param['itemKTPIs'] = ItemModel::where('nama','Foto KTP Istri')->first();
+        $param['itemNIB'] = ItemModel::where('nama','Dokumen NIB')->first();
+        $param['itemNPWP'] = ItemModel::where('nama','Dokumen NPWP')->first();
 
         $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
 
