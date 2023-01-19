@@ -255,7 +255,7 @@
                                         ->where('id_pengajuan', $dataUmum->id)
                                         ->get();
 
-                        for ($i=0; $i < count($jawabanSlik); $i++) { 
+                        for ($i=0; $i < count($jawabanSlik); $i++) {
                             $data[] = $jawabanSlik[$i]['id_jawaban'];
                         }
                         if (count($jawabanSlik) == 0) {
@@ -419,7 +419,7 @@
                             $dataDetailJawabanTextnpwp = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
                                         ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
                                         ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-                                        ->where('item.nama', 'npwp')->first();            
+                                        ->where('item.nama', 'npwp')->first();
 
                             // dump($dataIjin);
                         @endphp
@@ -428,7 +428,7 @@
                             <div class="row col-md-12">
                                 <div class="form-group col-md-6">
                                     <label for="">{{ $item->nama }}</label>
-                                    <select name="ijin_usaha" id="ijin_usaha" class="form-control" required> 
+                                    <select name="ijin_usaha" id="ijin_usaha" class="form-control" required>
                                         <option value="">-- Pilih Ijin Usaha --</option>
                                             <option value="nib" {{ ($dataIjin->nama == 'NIB') ? 'selected' : '' }}>NIB</option>
                                             <option value="surat_keterangan_usaha" {{ ($dataIjin->nama == 'Surat Keterangan Usaha') ? 'selected' : '' }}>Surat Keterangan Usaha</option>
@@ -436,13 +436,13 @@
                                     </select>
                                 </div>
                             </div>
-                            
+
                             <div class="row col-md-12">
                                 <div class="form-group col-md-6" id="nib">
                                     <label for="">NIB</label>
                                     <input type="hidden" name="id_level[]" value="77" id="nib_id">
                                     <input type="hidden" name="opsi_jawaban[]" value="input text" id="nib_opsi_jawaban">
-                                    <input type="text" name="info_text[]" id="nib_text" placeholder="Masukkan informasi"
+                                    <input type="text" name="info_text[]" id="" placeholder="Masukkan informasi"
                                         class="form-control" value="{{  ($dataIjin->nama == 'NIB') ? $dataIjin->opsi_text : '' }}">
                                     <input type="hidden" name="skor_penyelia_text[]" id="nib_text" value="{{  ($dataIjin->nama == 'NIB') ? $dataIjin->skor_penyelia : null }}" >
                                     <input type="hidden"name="id_text[]" id="nib_text" value="77" >
@@ -506,7 +506,7 @@
                                     @endif
                                     {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
                                 </div>
-                            </div>    
+                            </div>
 
                         @elseif($item->nama == 'NPWP')
                             <div class="row col-md-12">
@@ -566,7 +566,7 @@
                                     </div>
 
                                 @endforeach
-                                
+
                             @elseif ($item->opsi_jawaban == 'number')
                                 @foreach ($dataDetailJawabanText as $itemTextDua)
                                     @if ($itemTextDua->nama == 'Omzet Penjualan' || $itemTextDua->nama == 'Installment' || $itemTextDua->nama == 'Kebutuhan Kredit')
@@ -718,7 +718,7 @@
                                         ->orderBy('id', 'DESC')
                                         ->get();
                                 @endphp
-                                
+
                                 @if ($itemTiga->nama == 'Kategori Jaminan Utama')
                                     <div class="form-group col-md-6">
                                         @php
@@ -749,7 +749,7 @@
                                                 <option value="Stock" {{ ($jaminanUtama[0]->id_item == 101) ? 'selected' : '' }}>Stock</option>
                                                 <option value="Piutang" {{ ($jaminanUtama[0]->id_item == 102) ? 'selected' : '' }}>Piutang</option>
                                             </select>
-                                            
+
                                         @endif
                                         {{-- <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
                                         <input type="hidden" name="opsi_jawaban[]" value="{{ $itemTiga->opsi_jawaban }}"
@@ -791,7 +791,7 @@
                                         <h5>{{ $itemTiga->nama }}</h5>
                                     </div>
                                     <div id="bukti_pemilikan_jaminan_utama" class="form-group col-md-12 row">
-                                        
+
                                     </div>
                                 @elseif ($itemTiga->nama == 'Bukti Pemilikan Jaminan Tambahan')
                                     <div class="form-group col-md-12">
@@ -836,7 +836,7 @@
                                         @foreach ($dataDetailJawabanText as $itemTextTiga)
                                             <div class="form-group col-md-6">
                                                 {{-- @if ($itemTiga->nama == 'Ratio Tenor Asuransi')
-                                                
+
                                                 @else --}}
                                                 <label for="">{{ $itemTiga->nama }}</label>
                                                 <div class="input-group mb-3">
@@ -881,7 +881,7 @@
                                                     <input type="hidden" name="skor_penyelia_text[]"
                                                         value="{{ $itemTextTiga->skor_penyelia }}">
                                                     <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextTiga->id }}">
-                                                
+
                                             <input type="hidden" name="id_text[]" value="{{ $itemTextTiga->id_item }}">
                                             </div>
                                         @endforeach
@@ -961,7 +961,7 @@
                                                         value="{{ $itemTextEmpat->skor_penyelia }}">
                                                     <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextEmpat->id }}">
                                                     <input type="hidden" name="id_text[]" value="{{ $itemTextEmpat->id_item }}">
-                                                    
+
                                                 </div>
                                             @endforeach
                                         @elseif ($itemEmpat->opsi_jawaban == 'number')
@@ -1159,7 +1159,7 @@
 
     let urlCekSubColumn = "{{ route('cek-sub-column') }}";
     let urlGetItemByKategoriJaminanUtama =
-        "{{ route('get-item-jaminan-by-kategori-jaminan-utama') }}"; 
+        "{{ route('get-item-jaminan-by-kategori-jaminan-utama') }}";
     // jaminan tambahan
     let urlGetItemByKategori = "{{ route('get-item-jaminan-by-kategori') }}";
     let urlGetIjin = "{{ route('get-ijin-usaha') }}";
@@ -1434,7 +1434,7 @@
                                         <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
                                         <input type="hidden" name="id_jawaban_text[]" value="${valItem.id}">
                                     <input type="hidden" name="id_text[]" value="${valItem.id_item}">
-                                            
+
                                     </div>
                                 `);
                             } else {
@@ -1477,7 +1477,7 @@
                                 }
                             }
                         });
-                        
+
                         if(response.belum.length > 0){
                             $.each(response.belum, function(i, valItem){
                                 if(valItem.nama != 'Foto'){
@@ -1858,7 +1858,7 @@
             $('#repayment_capacity_opsi_3').removeAttr('selected');
         }
     }
-    
+
     //end Repayment Capacity
 </script>
     <script>
@@ -1871,26 +1871,26 @@
             var input = $(this).val()
             $(this).val(formatrupiah(input))
         });
-    
+
         function formatrupiah(angka, prefix) {
             var number_string = angka.replace(/[^,\d]/g, '').toString(),
             split   		= number_string.split(','),
             sisa     		= split[0].length % 3,
             rupiah     		= split[0].substr(0, sisa),
             ribuan     		= split[0].substr(sisa).match(/\d{3}/gi);
-    
+
             // tambahkan titik jika yang di input sudah menjadi angka ribuan
             if(ribuan){
                 separator = sisa ? '.' : '';
                 rupiah += separator + ribuan.join('.');
             }
-    
+
             rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
             return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
         }
             // End Format Rupiah
         var jumlahData = $('#jumlahData').val();
-        
+
         showFile();
 
         function showFile(){
@@ -2126,7 +2126,7 @@
                         var ttlInputFilled = 0;
                     }
                 }
-            } 
+            }
             else if (form == ".form-wizard[data-index='6']"){
                 var ttlInput = -1;
                 var ttlInputFilled = 0;
@@ -2222,7 +2222,7 @@
             cekBtn()
             e.preventDefault();
         })
-        
+
 
     $("#bukti_pemilikan_jaminan_tambahan").on("click", "#btnTambahBukti", function(){
         $("#bukti_pemilikan_jaminan_tambahan").append(`
@@ -2253,7 +2253,7 @@
         if(x > 1){
             $(this).closest('.aspek_jaminan_kategori').remove();
             x--
-        }  
+        }
     })
     </script>
 @endpush
