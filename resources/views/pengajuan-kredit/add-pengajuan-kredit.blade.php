@@ -370,6 +370,18 @@
                                     <input type="text" name="informasi[]" id="surat_keterangan_usaha_text"
                                         placeholder="Masukkan informasi" class="form-control">
                                 </div>
+
+                                <div class="form-group col-md-6" id="docSKU">
+                                    <label for="">{{ $itemSKU->nama }}</label>
+                                    <input type="hidden" name="id_item_file[]" value="{{ $itemSKU->id }}" id="docSKU_id">
+                                    <input type="file" name="upload_file[]" id="docSKU_upload_file" placeholder="Masukkan informasi {{ $itemSKU->nama }}" class="form-control limit-size">
+                                    <span class="invalid-tooltip" style="display: none" id="docSKU_text">Maximum upload file size is 15 MB</span>
+                                    @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('dataLevelTiga.' . $key) }}
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
 
                         @elseif($item->nama == 'NPWP')
@@ -876,6 +888,7 @@
     <script>
         $('#nib').hide();
         $('#docNIB').hide();
+        $('#docSKU').hide();
         $('#surat_keterangan_usaha').hide();
         //make input readonly
         $('#ratio_coverage').attr('readonly', true);
@@ -1259,6 +1272,11 @@
                 $('#surat_keterangan_usaha_text').val("");
                 $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
 
+                $('#docSKU').hide();
+                $('#docSKU_id').attr('disabled', true);
+                $('#docSKU_text').attr('disabled', true);
+                $('#docSKU_upload_file').attr('disabled', true);
+
                 $('#nib').show();
                 $('#nib_id').removeAttr('disabled');
                 $('#nib_text').removeAttr('disabled');
@@ -1300,6 +1318,11 @@
                 $('#surat_keterangan_usaha_text').val('');
                 $('#surat_keterangan_usaha_opsi_jawaban').removeAttr('disabled');
 
+                $('#docSKU').show();
+                $('#docSKU_id').removeAttr('disabled');
+                $('#docSKU_text').removeAttr('disabled');
+                $('#docSKU_upload_file').removeAttr('disabled');
+
                 $('#npwp').show();
                 $('#npwp_id').removeAttr('disabled');
                 $('#npwp_text').removeAttr('disabled');
@@ -1329,6 +1352,11 @@
                 $('#surat_keterangan_usaha_text').attr('disabled', true);
                 $('#surat_keterangan_usaha_text').val('');
                 $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
+
+                $('#docSKU').hide();
+                $('#docSKU_id').attr('disabled', true);
+                $('#docSKU_text').attr('disabled', true);
+                $('#docSKU_upload_file').attr('disabled', true);
 
                 $('#npwp').hide();
                 $('#npwp_id').attr('disabled', true);

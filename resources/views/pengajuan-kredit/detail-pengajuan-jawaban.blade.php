@@ -164,6 +164,78 @@
                         </div>
                     @enderror
                 </div>
+                @php
+                    $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+                        ->where('level', 2)
+                        ->where('id_parent', $itemKTPSu->id)
+                        ->where('nama', 'Foto KTP Suami')
+                        ->get();
+                @endphp
+                @foreach ($dataLevelDua as $item)
+                    @if ($item->opsi_jawaban == 'file')
+                        @php
+                            $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
+                                ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                ->where('jawaban_text.id_pengajuan', $dataUmum->id)
+                                ->where('jawaban_text.id_jawaban', $item->id)
+                                ->get();
+                        @endphp
+                        @foreach ($dataDetailJawabanText as $itemTextDua)
+                            @php
+                                $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                            @endphp
+                            <div class="form-group col-md-6">
+                                <label for="">{{ $item->nama }}</label>
+                                <div class="col-md-6 form-group">
+                                    <b>Jawaban:</b>
+                                    <div class="mt-2">
+                                        @if ($file_parts['extension'] == 'pdf')
+                                            <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" width="100%" height="400px"></iframe>
+                                        @else
+                                            <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="400px">
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    @endif
+                @endforeach
+                @php
+                    $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+                        ->where('level', 2)
+                        ->where('id_parent', $itemKTPSu->id)
+                        ->where('nama', 'Foto KTP Istri')
+                        ->get();
+                @endphp
+                @foreach ($dataLevelDua as $item)
+                    @if ($item->opsi_jawaban == 'file')
+                        @php
+                            $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
+                                ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                ->where('jawaban_text.id_pengajuan', $dataUmum->id)
+                                ->where('jawaban_text.id_jawaban', $item->id)
+                                ->get();
+                        @endphp
+                        @foreach ($dataDetailJawabanText as $itemTextDua)
+                            @php
+                                $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                            @endphp
+                            <div class="form-group col-md-6">
+                                <label for="">{{ $item->nama }}</label>
+                                <div class="col-md-6 form-group">
+                                    <b>Jawaban:</b>
+                                    <div class="mt-2">
+                                        @if ($file_parts['extension'] == 'pdf')
+                                            <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" width="100%" height="400px"></iframe>
+                                        @else
+                                            <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="400px">
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    @endif
+                @endforeach
                 <div class="form-group col-md-4">
                     <label for="">Tempat</label>
                     <input disabled type="text" name="tempat_lahir" id=""
@@ -429,7 +501,7 @@
                                         <label for="">{{ $item->nama }}</label>
                                     </div>
                                     <div class="col-md-12 form-group">
-                                        <b>Jawaban:</b>
+                                        <b>Jawaban: </b>
                                         <div class="mt-2 pl-3">
                                             @if ($item->opsi_jawaban == 'file')
                                                 @php
@@ -573,7 +645,7 @@
                                                 <label for="">{{ $itemTextTiga->nama }}</label>
                                             </div>
                                             <div class="col-md-12 form-group">
-                                                <b>Jawaban:</b>
+                                                <b>Jawaban: A</b>
                                                 <div class="mt-2 pl-3">
                                                     <p class="badge badge-info text-lg"><b>
                                                             {{ $itemTextTiga->opsi_text }}
@@ -597,7 +669,7 @@
                                         <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextTiga->id }}">
                                         <input type="hidden" name="id[]" value="{{ $itemTextTiga->id_item }}">
                                     @else
-                                        
+                                    
                                     @endif
                                 @endforeach
                             @endif
@@ -742,42 +814,38 @@
                                         print($dataDetailJawabanTextEmpat);
                                     echo "</pre>";
                                 @endphp --}}
-                                    @foreach ($dataDetailJawabanTextEmpat as $keyEmpat => $itemTextEmpat)
+                                    @foreach ($dataDetailJawabanTextEmpat as $itemTextEmpat)
                                         <div class="row">
-                                            <div class="form-group col-md-12 mb-0">
-                                                @if ($itemTextEmpat->id_jawaban == 148)
-                                                    <label for="">{{ $itemTextEmpat->nama .' '. $keyEmpat + 1 }}</label>
-                                                @else
-                                                    <label for="">{{ $itemTextEmpat->nama }}</label>
-                                                @endif
-                                            </div>
-                                            <div class="col-md-12 form-group">
-                                                <b>Jawaban:</b>
-                                                <div class="mt-2 pl-3">
-                                                    @if ($itemEmpat->opsi_jawaban == 'file')
-                                                        @php
-                                                            $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text);
-                                                        @endphp
-                                                        @if ($file_parts['extension']=='pdf')
-                                                            <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}" width="100%" height="700px"></iframe>
+                                            <div class="form-group col-md-6 mb-0">
+                                                <label for="">{{ $itemTextEmpat->nama }}</label>
+                                                <div class="col-md-6 form-group">
+                                                    <b>Jawaban:</b>
+                                                    <div class="mt-2">
+                                                        @if ($itemEmpat->opsi_jawaban == 'file')
+                                                            @php
+                                                                $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text);
+                                                            @endphp
+                                                            @if ($file_parts['extension']=='pdf')
+                                                                <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}" width="100%" height="500px"></iframe>
+                                                            @else
+                                                                <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}" alt="" width="500px">
+                                                            @endif
                                                         @else
-                                                            <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}" alt="" width="800px">
+                                                            <p class="badge badge-info text-lg"><b>
+                                                                    {{ $itemTextEmpat->opsi_text }}
+                                                                    {{ $itemEmpat->opsi_jawaban == 'persen' ? '%' : '' }}</b>
+                                                            </p>
+                                                            @if ($itemTextEmpat->is_commentable == 'Ya')
+                                                                <div class="input-k-bottom">
+                                                                    <input type="hidden" name="id_item[]"
+                                                                        value="{{ $item->id }}">
+                                                                    <input type="text" class="form-control komentar"
+                                                                        name="komentar_penyelia[]"
+                                                                        placeholder="Masukkan Komentar">
+                                                                </div>
+                                                            @endif
                                                         @endif
-                                                    @else
-                                                        <p class="badge badge-info text-lg"><b>
-                                                                {{ $itemTextEmpat->opsi_text }}
-                                                                {{ $itemEmpat->opsi_jawaban == 'persen' ? '%' : '' }}</b>
-                                                        </p>
-                                                        @if ($itemTextEmpat->is_commentable == 'Ya')
-                                                            <div class="input-k-bottom">
-                                                                <input type="hidden" name="id_item[]"
-                                                                    value="{{ $item->id }}">
-                                                                <input type="text" class="form-control komentar"
-                                                                    name="komentar_penyelia[]"
-                                                                    placeholder="Masukkan Komentar">
-                                                            </div>
-                                                        @endif
-                                                    @endif
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
