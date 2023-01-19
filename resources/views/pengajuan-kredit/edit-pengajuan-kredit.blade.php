@@ -858,17 +858,32 @@
                                             @endforeach
                                     @elseif ($itemTiga->opsi_jawaban == 'file')
                                         @foreach ($dataDetailJawabanText as $itemTextTiga)
-                                            <div class="form-group col-md-6">
+                                            <div class="form-group col-md-6 file-wrapper">
                                                 <label for="">{{ $itemTiga->nama }}</label>
-                                                {{-- <input type="hidden" name="opsi_jawaban[]"
-                                                    value="{{ $itemTiga->opsi_jawaban }}" id=""> --}}
-                                                <label for="update_file" style="display: none" id="nama_file">{{ $itemTextTiga->opsi_text }}</label>
-                                                <input type="file" name="update_file[]" placeholder="Masukkan informasi"
-                                                class="form-control" id="{{ $idLevelTiga . 'file' }}"  value="{{ ($itemTextTiga->opsi_text != null) ? $itemTextTiga->opsi_text : null }}" title="{{ $itemTextTiga->opsi_text }}" >
-                                                <input type="hidden" name="id_file_text[]" value="{{ $itemTextTiga->id_item }}">
-                                                <input type="hidden" name="skor_penyelia_text[]"
-                                                    value="{{ $itemTextTiga->skor_penyelia }}">
-                                                <input type="hidden" name="id_update_file[]" value="{{ $itemTextTiga->id }}">
+
+                                                <div class="row file-input">
+                                                    <div class="col-md-9">
+                                                        <label for="update_file" style="display: none" id="nama_file">{{ $itemTextTiga->opsi_text }}</label>
+                                                        <input type="file" name="update_file[]" placeholder="Masukkan informasi"
+                                                        class="form-control" id="{{ $idLevelTiga . 'file' }}"  value="{{ ($itemTextTiga->opsi_text != null) ? $itemTextTiga->opsi_text : null }}" title="{{ $itemTextTiga->opsi_text }}" >
+                                                        <input type="hidden" name="id_file_text[]" value="{{ $itemTextTiga->id_item }}">
+                                                        <input type="hidden" name="skor_penyelia_text[]"
+                                                            value="{{ $itemTextTiga->skor_penyelia }}">
+                                                        <input type="hidden" name="id_update_file[]" value="{{ $itemTextTiga->id }}">
+                                                    </div>
+                                                    @if(in_array(trim($itemTiga->nama), $multipleFiles))
+                                                    <div class="col-1">
+                                                        <button class="btn btn-sm btn-success btn-add-file" type="button" data-id="{{ $itemTiga->id }}">
+                                                            <i class="fa fa-plus"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="col-1">
+                                                        <button class="btn btn-sm btn-danger btn-del-file" type="button" data-id="{{ $itemTiga->id }}">
+                                                            <i class="fa fa-minus"></i>
+                                                        </button>
+                                                    </div>
+                                                    @endif
+                                                </div>
                                             </div>
                                         @endforeach
                                     @elseif ($itemTiga->opsi_jawaban == 'long text')
@@ -2255,5 +2270,27 @@
             x--
         }
     })
+
+    $('body').on('click', '.file-wrapper .btn-add-file', function(e) {
+            const wrapper = $(this).parent().parent().parent();
+            const $clone = wrapper.clone();
+
+            $clone.find('[type="file"]').val('');
+            $clone.find('[name="id_update_file[]"]').val('');
+            $clone.insertAfter(wrapper);
+        });
+
+    $('body').on('click', '.file-wrapper .btn-del-file', function(e) {
+        if($('.file-wrapper').get().length < 2) return;
+
+        const wrapper = $(this).parent().parent().parent();
+        const formKredit = $('#pengajuan_kredit');
+        const fileID = wrapper.find('input[name="id_update_file[]"]').val();
+
+        wrapper.remove();
+        formKredit.append(`
+            <input type="hidden" name="id_delete_file[]" value="${fileID}">
+        `);
+    });
     </script>
 @endpush

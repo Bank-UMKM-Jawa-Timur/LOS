@@ -751,6 +751,7 @@ class PengajuanKreditController extends Controller
     {
 
         $param['pageTitle'] = "Dashboard";
+        $param['multipleFiles'] = $this->isMultipleFiles;
 
         $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->where('nama','!=','Data Umum')->get();
 
@@ -902,7 +903,10 @@ class PengajuanKreditController extends Controller
 
             if(count($request->file()) > 0){
                 foreach($request->file('update_file') as $key => $value){
-                    if(str_contains($value->getMimeType(), 'text')) continue;
+                    if(
+                        str_contains($value->getMimeType(), 'text') ||
+                        str_contains($value->getMimeType(), 'x-empty')
+                    ) continue;
 
                     if($request->id_update_file[$key] != null){
                         $image = $value;
@@ -949,6 +953,12 @@ class PengajuanKreditController extends Controller
                     }
                 }
             }
+
+            // Delete multiple deleted file
+            array_map(
+                fn($fileId) => JawabanTextModel::find($fileId)?->delete(),
+                $request->id_delete_file ?? []
+            );
 
             foreach ($request->id_jawaban_text as $key => $value) {
                 if($request->id_jawaban_text[$key] == null && $request->info_text[$key] != null){
