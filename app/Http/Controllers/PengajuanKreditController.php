@@ -27,6 +27,14 @@ use Image;
 
 class PengajuanKreditController extends Controller
 {
+    private $isMultipleFiles = [];
+
+    public function __construct()
+    {
+        $this->isMultipleFiles = [
+            'Foto Usaha'
+        ];
+    }
     /**
      * Display a listing of the resource.
      *
@@ -110,7 +118,7 @@ class PengajuanKreditController extends Controller
                 ->where('pengajuan.id_cabang', $id_cabang)
                 ->paginate(5);
             return view('pengajuan-kredit.list-pbp', $param);
-        } 
+        }
         elseif (auth()->user()->role == 'Pincab') {
             $param['data_pengajuan'] = PengajuanModel::select(
                 'pengajuan.id',
@@ -167,6 +175,7 @@ class PengajuanKreditController extends Controller
     public function create()
     {
         $param['pageTitle'] = "Dashboard";
+        $param['multipleFiles'] = $this->isMultipleFiles;
 
         $param['dataDesa'] = Desa::all();
         $param['dataKecamatan'] = Kecamatan::all();
@@ -242,7 +251,7 @@ class PengajuanKreditController extends Controller
         }
         else if($kategori == 'Kendaraan Bermotor'){
             $item = ItemModel::with('option')->where('nama', $kategori)->where('id_parent', 95)->first();
-            
+
             $dataDetailJawabanText = DB::table('jawaban_text')
                                         ->where('id_pengajuan', $request->id)
                                         ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
@@ -270,7 +279,7 @@ class PengajuanKreditController extends Controller
         }
         else{
             $item = ItemModel::where('nama', $kategori)->where('id_parent', 95)->first();
-            
+
             $dataDetailJawabanText = \App\Models\JawabanTextModel::where('id_pengajuan', $request->id)
                                         ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
                                         ->distinct('nama')
@@ -300,7 +309,7 @@ class PengajuanKreditController extends Controller
 
         $itemBuktiPemilikan = ItemModel::with('option');
         if ($kategori == 'Tanah' || $kategori=='Tanah dan Bangunan') {
-            
+
             $dataDetailJawabanText = \App\Models\JawabanTextModel::where('id_pengajuan', $request->id)
                                         ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
                                         ->join('item', 'jawaban_text.id_jawaban', 'item.id')
@@ -327,7 +336,7 @@ class PengajuanKreditController extends Controller
             $itemBuktiPemilikan->whereIn('nama', ['SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C', 'Foto']);
         }
         else{
-            
+
             $dataDetailJawabanText = \App\Models\JawabanTextModel::where('id_pengajuan', $request->id)
                                         ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
                                         ->distinct()
@@ -383,7 +392,7 @@ class PengajuanKreditController extends Controller
         }
         else if($kategori == 'Kendaraan Bermotor'){
             $item = ItemModel::with('option')->where('nama', $kategori)->where('id_parent', 95)->first();
-            
+
             $dataDetailJawabanText = \App\Models\JawabanTextModel::where('id_pengajuan', $request->id)
                                         ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
                                         ->join('item', 'jawaban_text.id_jawaban', 'item.id')
@@ -397,7 +406,7 @@ class PengajuanKreditController extends Controller
         }
         else{
             $item = ItemModel::where('nama', $kategori)->where('id_parent', 95)->first();
-            
+
             $dataDetailJawabanText = \App\Models\JawabanTextModel::where('id_pengajuan', $request->id)
                                         ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
                                         ->join('item', 'jawaban_text.id_jawaban', 'item.id')
@@ -426,7 +435,7 @@ class PengajuanKreditController extends Controller
         $itemBuktiPemilikan = ItemModel::with('option');
         if ($kategori == 'Tanah' || $kategori=='Tanah dan Bangunan') {
             $itemBuktiPemilikan->whereIn('nama', ['SHM No', 'Atas Nama', 'SHGB No', 'Berakhir Hak (SHGB)', 'Petok / Letter C', 'Foto']);
-            
+
             $dataDetailJawabanText = \App\Models\JawabanTextModel::where('id_pengajuan', $request->id)
                                         ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
                                         ->join('item', 'jawaban_text.id_jawaban', 'item.id')
@@ -435,12 +444,12 @@ class PengajuanKreditController extends Controller
         }
         else{
             $itemBuktiPemilikan->whereIn('nama', ['BPKB No', 'Atas Nama', 'Foto']);
-            
+
             $dataDetailJawabanText = \App\Models\JawabanTextModel::where('id_pengajuan', $request->id)
                                         ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
                                         ->join('item', 'jawaban_text.id_jawaban', 'item.id')
                                         ->orderBy('id', 'DESC');
-                                        
+
         }
         $data = [
             'dataDetailJawabanText' => $dataDetailJawabanText->where('id_parent', 114)->get(),
@@ -557,11 +566,11 @@ class PengajuanKreditController extends Controller
                 $imageName = $key.time().'.'.$image->getClientOriginalExtension();
 
                 $filePath = public_path() . '/upload/' . $id_pengajuan . '/'. $value;
-                
+
                 if (!\File::isDirectory($filePath)) {
                     \File::makeDirectory($filePath, 493, true);
                 }
-                
+
                 $image->move($filePath, $imageName);
 
                 $dataJawabanText = new JawabanTextModel;
@@ -705,7 +714,7 @@ class PengajuanKreditController extends Controller
                 $addKomentar->id_staff = Auth::user()->id;
                 $addKomentar->save();
             }
-            
+
 
             DB::commit();
             return redirect()->route('pengajuan-kredit.index')->withStatus('Data berhasil disimpan.');
@@ -747,7 +756,7 @@ class PengajuanKreditController extends Controller
         $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
 
         $param['itemSlik'] = ItemModel::with('option')->where('nama', 'SLIK')->first();
-        
+
         $param['itemSP'] = ItemModel::where('nama','Surat Permohonan')->first();
 
         $param['dataUmum'] = PengajuanModel::select(
@@ -782,7 +791,7 @@ class PengajuanKreditController extends Controller
         $param['allKec'] = Kecamatan::where('id_kabupaten', $param['dataUmum']->id_kabupaten)->get();
         $param['allDesa'] = Desa::where('id_kecamatan', $param['dataUmum']->id_kecamatan)->get();
         $param['pendapatDanUsulanStaf'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff')->first();
-            
+
         // return JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama', 'item.opsi_jawaban')
         //                                 ->join('item', 'jawaban_text.id_jawaban', 'item.id')
         //                                 ->where('id_pengajuan', $id)
@@ -792,7 +801,7 @@ class PengajuanKreditController extends Controller
         //                                 ->join('option', 'option.id', 'jawaban.id_jawaban')
         //                                 ->whereIn('option.id', [71, 72, 73, 74])
         //                                 ->first();
-        
+
         // 'jawaban.id as id_jawaban','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','jawaban.skor_penyelia'
 
         // return $param['jawabanpengajuan'] = JawabanPengajuanModel::select('jawaban.id','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','option.id as id_option','option.option as name_option','option.id_item','item.id as id_item','item.nama','item.level','item.id_parent')
@@ -895,7 +904,7 @@ class PengajuanKreditController extends Controller
                     if($request->id_update_file[$key] != null){
                         $image = $value;
                         $imageName = $key.time().'.'.$image->getClientOriginalExtension();
-    
+
                         $imageLama = JawabanTextModel::where('id_jawaban', $request->get('id_update_file')[$key])
                                         ->select('opsi_text', 'id_jawaban')
                                         ->where('opsi_text', '!=', null)
@@ -906,15 +915,15 @@ class PengajuanKreditController extends Controller
                             $pathLama = public_path() . '/upload/' . $id_pengajuan . '/' . $imageValue->id_jawaban .'/' . $imageValue->opsi_text;
                             \File::delete($pathLama);
                         }
-        
+
                         $filePath = public_path() . '/upload/' . $id_pengajuan . '/'. $request->id_file_text[$key];
                         // $filePath = public_path() . '/upload';
                         if (!\File::isDirectory($filePath)) {
                             \File::makeDirectory($filePath, 493, true);
                         }
-    
+
                         $image->move($filePath, $imageName);
-    
+
                         $imgUpdate = DB::table('jawaban_text');
                         $imgUpdate->where('id', $request->get('id_update_file')[$key])->update(['opsi_text' => $imageName]);
                     }else {
@@ -922,11 +931,11 @@ class PengajuanKreditController extends Controller
                         $imageName = $key.time().'.'.$image->getClientOriginalExtension();
 
                         $filePath = public_path() . '/upload/' . $id_pengajuan . '/'. $request->id_file_text[$key];
-                        
+
                         if (!\File::isDirectory($filePath)) {
                             \File::makeDirectory($filePath, 493, true);
                         }
-                        
+
                         $image->move($filePath, $imageName);
 
                         $dataJawabanText = new JawabanTextModel;
@@ -1268,7 +1277,7 @@ class PengajuanKreditController extends Controller
             try {
                 $finalArray = array();
                 $finalArray_text = array();
-    
+
                 foreach ($request->skor_pbp as $key => $value) {
                     if ($value != '' || $value != null) {
                         array_push($finalArray, [
@@ -1293,7 +1302,7 @@ class PengajuanKreditController extends Controller
                 } else {
                     $status = "merah";
                 }
-    
+
                 foreach ($request->get('id_option') as $key => $value) {
                     JawabanPengajuanModel::where('id_jawaban', $value)->where('id_pengajuan', $request->get('id_pengajuan'))
                     ->update([
@@ -1303,7 +1312,7 @@ class PengajuanKreditController extends Controller
                 $updateData->status = $status;
                 $updateData->average_by_pbp = $result;
                 $updateData->update();
-    
+
                 $idKomentar = KomentarModel::where('id_pengajuan', $request->id_pengajuan)->first();
                 KomentarModel::where('id', $idKomentar->id)->update(
                     [
@@ -1312,7 +1321,7 @@ class PengajuanKreditController extends Controller
                         'updated_at' => date('Y-m-d H:i:s')
                     ]
                 );
-    
+
                 $countDK = DetailKomentarModel::where('id_komentar', $idKomentar->id)->where('id_user', Auth::user()->id)->count();
                 if ($countDK > 0) {
                     foreach ($request->id_item as $key => $value) {
@@ -1330,7 +1339,7 @@ class PengajuanKreditController extends Controller
                         $dk->save();
                     }
                 }
-    
+
                 // pendapat penyelia
                 $countpendapat = PendapatPerAspek::where('id_pengajuan', $request->get('id_pengajuan'))->where('id_pbp', Auth::user()->id)->count();
                 if($countpendapat > 0){
@@ -1361,7 +1370,7 @@ class PengajuanKreditController extends Controller
             try {
                 $finalArray = array();
                 $finalArray_text = array();
-    
+
                 foreach ($request->skor_penyelia as $key => $value) {
                     if ($value != '' || $value != null) {
                         array_push($finalArray, [
@@ -1386,7 +1395,7 @@ class PengajuanKreditController extends Controller
                 } else {
                     $status = "merah";
                 }
-    
+
                 foreach ($request->get('id_option') as $key => $value) {
                     JawabanPengajuanModel::where('id_jawaban', $value)->where('id_pengajuan', $request->get('id_pengajuan'))
                     ->update([
@@ -1396,7 +1405,7 @@ class PengajuanKreditController extends Controller
                 $updateData->status = $status;
                 $updateData->average_by_penyelia = $result;
                 $updateData->update();
-    
+
                 $idKomentar = KomentarModel::where('id_pengajuan', $request->id_pengajuan)->first();
                 KomentarModel::where('id', $idKomentar->id)->update(
                     [
@@ -1405,7 +1414,7 @@ class PengajuanKreditController extends Controller
                         'updated_at' => date('Y-m-d H:i:s')
                     ]
                 );
-    
+
                 $countDK = DetailKomentarModel::where('id_komentar', $idKomentar->id)->count();
                 if ($countDK > 0) {
                     foreach ($request->id_item as $key => $value) {
@@ -1423,7 +1432,7 @@ class PengajuanKreditController extends Controller
                         $dk->save();
                     }
                 }
-    
+
                 // pendapat penyelia
                 $countpendapat = PendapatPerAspek::where('id_pengajuan', $request->get('id_pengajuan'))->where('id_penyelia', Auth::user()->id)->count();
                 if($countpendapat > 0){
@@ -1451,7 +1460,7 @@ class PengajuanKreditController extends Controller
                 return redirect()->back()->withError('Terjadi kesalahan.'. $e->getMessage());
             }
         }
-        
+
         // return $request->skor_penyelia;
     }
 
@@ -1752,7 +1761,7 @@ class PengajuanKreditController extends Controller
             return redirect()->route('pengajuan-kredit.index')->withError('Terjadi kesalahan'.$e->getMessage());
         }
     }
-    
+
     public function backToInputProses($id)
     {
         try {

@@ -361,7 +361,7 @@
                                         </div>
                                     @endif
                                 </div>
-    
+
                                 <div class="form-group col-md-6" id="surat_keterangan_usaha">
                                     <label for="">Surat Keterangan Usaha</label>
                                     <input type="hidden" name="id_level[]" value="78" id="surat_keterangan_usaha_id">
@@ -413,7 +413,7 @@
                                             placeholder="Masukkan informasi {{ $item->nama }}" class="form-control">
                                     </div>
                                 @else
-                                    @if ($item->nama == 'Omzet Penjualan' || $item->nama == 'Installment')    
+                                    @if ($item->nama == 'Omzet Penjualan' || $item->nama == 'Installment')
                                         <div class="form-group col-md-6">
                                             <label for="">{{ $item->nama }}(Perbulan)</label>
                                             <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" id="">
@@ -421,7 +421,7 @@
                                             <input type="text" step="any" name="informasi[]" id="{{ $idLevelDua }}"
                                                 placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah">
                                         </div>
-                                    @else    
+                                    @else
                                         <div class="form-group col-md-6">
                                             <label for="">{{ $item->nama }}</label>
                                             <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" id="">
@@ -429,7 +429,7 @@
                                             <input type="text" step="any" name="informasi[]" id="{{ $idLevelDua }}"
                                                 placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah">
                                         </div>
-                                    @endif    
+                                    @endif
                                 @endif
                             @elseif ($item->opsi_jawaban == 'persen')
                                 <div class="form-group col-md-6">
@@ -611,7 +611,7 @@
                                     @elseif ($itemTiga->opsi_jawaban == 'persen')
                                         <div class="form-group col-md-6">
                                             @if ($itemTiga->nama == 'Ratio Tenor Asuransi')
-                                            
+
                                             @else
                                             <label for="">{{ $itemTiga->nama }}</label>
                                             <input type="hidden" name="opsi_jawaban[]"
@@ -630,15 +630,29 @@
                                             @endif
                                         </div>
                                     @elseif ($itemTiga->opsi_jawaban == 'file')
-                                        <div class="form-group col-md-6">
+                                        <div class="form-group col-md-6 file-wrapper item-{{ $itemTiga->id }}">
                                             <label for="">{{ $itemTiga->nama }}</label>
-                                            {{-- <input type="hidden" name="opsi_jawaban[]"
-                                                value="{{ $itemTiga->opsi_jawaban }}" id=""> --}}
-                                            <input type="hidden" name="id_item_file[]" value="{{ $itemTiga->id }}" id="">
-                                            <input type="file" name="upload_file[]" id=""
-                                                placeholder="Masukkan informasi {{ $itemTiga->nama }}"
-                                                class="form-control limit-size">
-                                                <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                                            <div class="row file-input">
+                                                <div class="col-md-9">
+                                                    <input type="hidden" name="id_item_file[]" value="{{ $itemTiga->id }}" id="">
+                                                    <input type="file" name="upload_file[]" id=""
+                                                        placeholder="Masukkan informasi {{ $itemTiga->nama }}"
+                                                        class="form-control limit-size">
+                                                        <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                                                </div>
+                                                @if(in_array(trim($itemTiga->nama), $multipleFiles))
+                                                <div class="col-1">
+                                                    <button class="btn btn-sm btn-success btn-add-file" type="button" data-id="{{ $itemTiga->id }}">
+                                                        <i class="fa fa-plus"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="col-1">
+                                                    <button class="btn btn-sm btn-danger btn-del-file" type="button" data-id="{{ $itemTiga->id }}">
+                                                        <i class="fa fa-minus"></i>
+                                                    </button>
+                                                </div>
+                                                @endif
+                                            </div>
                                         </div>
                                     @elseif ($itemTiga->opsi_jawaban == 'long text')
                                         <div class="form-group col-md-6">
@@ -681,7 +695,7 @@
                                     @endif
                                 @endforeach --}}
                                     @if (count($dataJawabanLevelTiga) != 0)
-                                        @if ($itemTiga->nama != 'Pengikatan Jaminan Utama')    
+                                        @if ($itemTiga->nama != 'Pengikatan Jaminan Utama')
                                             <div
                                                 class="{{ $idLevelTiga == 'ratio_tenor_asuransi_opsi' || $idLevelTiga == 'ratio_coverage_opsi' ? '' : 'form-group col-md-6' }}">
                                                 <label for=""
@@ -1212,7 +1226,7 @@
                         if(x > 1){
                             $(this).closest('.aspek_jaminan_kategori').remove();
                             x--
-                        }  
+                        }
                     })
 
                     $(".checkKategori").click(function() {
@@ -1550,9 +1564,9 @@
 
             let repaymentCapacity = parseFloat(persentaseNetIncome * omzetPenjualan * (1 + rencanaPeningkatan) /
                 installment); //cek rumusnya lagi
-            
+
             $('#repayment_capacity').val(repaymentCapacity.toFixed(2));
-            
+
             if (repaymentCapacity > 2) {
                 $('#repayment_capacity_opsi_0').attr('selected', true);
                 $('#repayment_capacity_opsi_1').removeAttr('selected');
@@ -1581,7 +1595,7 @@
             }
         }
         //end Repayment Capacity
-        
+
         $('.rupiah').keyup(function(e){
             var input = $(this).val()
             $(this).val(formatrupiah(input))
@@ -1593,13 +1607,13 @@
 			sisa     		= split[0].length % 3,
 			rupiah     		= split[0].substr(0, sisa),
 			ribuan     		= split[0].substr(sisa).match(/\d{3}/gi);
- 
+
 			// tambahkan titik jika yang di input sudah menjadi angka ribuan
 			if(ribuan){
 				separator = sisa ? '.' : '';
 				rupiah += separator + ribuan.join('.');
 			}
- 
+
 			rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
 			return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
         }
@@ -1615,6 +1629,23 @@
                 $(this).next().css({"display": "none"});
             }
         })
+
+        $('.file-wrapper').on('click', '.btn-add-file', function(e) {
+            const fileInput = $(this).parent().parent();
+            const wrapper = fileInput.parent();
+            const $clone = fileInput.clone();
+
+            $clone.find('[type="file"]').val('');
+            wrapper.append($clone);
+        });
+
+        $('.file-wrapper').on('click', '.btn-del-file', function(e) {
+            const fileInput = $(this).parent().parent();
+            const wrapper = fileInput.parent();
+
+            if(wrapper.find('.file-input').length < 2) return;
+            fileInput.remove();
+        });
         // End Limit Upload
     </script>
     <script src="{{ asset('') }}js/custom.js"></script>
