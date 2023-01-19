@@ -1242,11 +1242,13 @@
                 $('#surat_keterangan_usaha').hide();
                 $('#surat_keterangan_usaha_id').attr('disabled', true);
                 $('#surat_keterangan_usaha_text').attr('disabled', true);
+                $('#surat_keterangan_usaha_text').val("");
                 $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
 
                 $('#nib').show();
                 $('#nib_id').removeAttr('disabled');
                 $('#nib_text').removeAttr('disabled');
+                $('#nib_text').val('');
                 $('#nib_opsi_jawaban').removeAttr('disabled');
 
                 $('#docNIB').show();
@@ -1257,86 +1259,103 @@
                 $('#npwp').show();
                 $('#npwp_id').removeAttr('disabled');
                 $('#npwp_text').removeAttr('disabled');
+                $('#npwp_text').val('');
                 $('#npwp_opsi_jawaban').removeAttr('disabled');
 
                 $('#docNPWP').show();
                 $('#docNPWP_id').removeAttr('disabled');
                 $('#docNPWP_text').removeAttr('disabled');
+                $('#docNPWP_text').val('');
                 $('#docNPWP_upload_file').removeAttr('disabled');
             } else if (ijinUsaha == 'surat_keterangan_usaha') {
                 $('#nib').hide();
                 $('#nib_id').attr('disabled', true);
                 $('#nib_text').attr('disabled', true);
+                $('#nib_text').val('');
                 $('#nib_opsi_jawaban').attr('disabled', true);
 
                 $('#docNIB').hide();
                 $('#docNIB_id').attr('disabled', true);
                 $('#docNIB_text').attr('disabled', true);
+                $('#docNIB_text').val('');
                 $('#docNIB_upload_file').attr('disabled', true);
 
                 $('#surat_keterangan_usaha').show();
                 $('#surat_keterangan_usaha_id').removeAttr('disabled');
                 $('#surat_keterangan_usaha_text').removeAttr('disabled');
+                $('#surat_keterangan_usaha_text').val('');
                 $('#surat_keterangan_usaha_opsi_jawaban').removeAttr('disabled');
 
                 $('#npwp').show();
                 $('#npwp_id').removeAttr('disabled');
                 $('#npwp_text').removeAttr('disabled');
+                $('#npwp_text').val('');
                 $('#npwp_opsi_jawaban').removeAttr('disabled');
 
                 $('#docNPWP').show();
                 $('#docNPWP_id').removeAttr('disabled');
                 $('#docNPWP_text').removeAttr('disabled');
+                $('#docNPWP_text').val('');
                 $('#docNPWP_upload_file').removeAttr('disabled');
             } else if (ijinUsaha == 'tidak_ada_legalitas_usaha') {
                 $('#nib').hide();
                 $('#nib_id').attr('disabled', true);
                 $('#nib_text').attr('disabled', true);
+                $('#nib_text').val('');
                 $('#nib_opsi_jawaban').attr('disabled', true);
 
                 $('#docNIB').hide();
                 $('#docNIB_id').attr('disabled', true);
                 $('#docNIB_text').attr('disabled', true);
+                $('#docNIB_text').val('');
                 $('#docNIB_upload_file').attr('disabled', true);
 
                 $('#surat_keterangan_usaha').hide();
                 $('#surat_keterangan_usaha_id').attr('disabled', true);
                 $('#surat_keterangan_usaha_text').attr('disabled', true);
+                $('#surat_keterangan_usaha_text').val('');
                 $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
 
                 $('#npwp').hide();
                 $('#npwp_id').attr('disabled', true);
                 $('#npwp_text').attr('disabled', true);
+                $('#npwp_text').attr('');
                 $('#npwp_opsi_jawaban').attr('disabled', true);
 
                 $('#docNPWP').hide();
                 $('#docNPWP_id').attr('disabled', true);
                 $('#docNPWP_text').attr('disabled', true);
+                $('#docNPWP_text').val('');
                 $('#docNPWP_upload_file').attr('disabled', true);
             } else {
                 $('#nib').hide();
                 $('#nib_id').attr('disabled', true);
                 $('#nib_text').attr('disabled', true);
+                $('#nib_text').val('');
                 $('#nib_opsi_jawaban').attr('disabled', true);
 
                 $('#docNIB').hide();
                 $('#docNIB_id').attr('disabled', true);
                 $('#docNIB_text').attr('disabled', true);
+                $('#docNIB_text').val('');
                 $('#docNIB_upload_file').attr('disabled', true);
 
                 $('#surat_keterangan_usaha').hide();
                 $('#surat_keterangan_usaha_id').attr('disabled', true);
                 $('#surat_keterangan_usaha_text').attr('disabled', true);
+                $('#surat_keterangan_usaha_text').val('');
                 $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
 
                 $('#npwp').show();
                 $('#npwp_id').removeAttr('disabled');
                 $('#npwp_text').removeAttr('disabled');
+                $('#npwp_text').val('');
                 $('#npwp_opsi_jawaban').removeAttr('disabled');
 
                 $('#docNPWP').show();
                 $('#docNPWP_id').removeAttr('disabled');
                 $('#docNPWP_text').removeAttr('disabled');
+                $('#docNPWP_text').val('');
                 $('#docNPWP_upload_file').removeAttr('disabled');
             }
         });

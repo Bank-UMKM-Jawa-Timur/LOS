@@ -742,10 +742,14 @@
                                         print($dataDetailJawabanTextEmpat);
                                     echo "</pre>";
                                 @endphp --}}
-                                    @foreach ($dataDetailJawabanTextEmpat as $itemTextEmpat)
+                                    @foreach ($dataDetailJawabanTextEmpat as $keyEmpat => $itemTextEmpat)
                                         <div class="row">
                                             <div class="form-group col-md-12 mb-0">
-                                                <label for="">{{ $itemTextEmpat->nama }}</label>
+                                                @if ($itemTextEmpat->id_jawaban == 148)
+                                                    <label for="">{{ $itemTextEmpat->nama .' '. $keyEmpat + 1 }}</label>
+                                                @else
+                                                    <label for="">{{ $itemTextEmpat->nama }}</label>
+                                                @endif
                                             </div>
                                             <div class="col-md-12 form-group">
                                                 <b>Jawaban:</b>
