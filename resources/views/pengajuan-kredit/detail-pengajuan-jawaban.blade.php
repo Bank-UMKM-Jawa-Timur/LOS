@@ -53,17 +53,19 @@
                                 @php
                                     $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
                                 @endphp
-                                <div class="form-group col-md-12">
-                                <label for="">{{ $item->nama }}</label>
-                                </div>
-                                <div class="col-md-12 form-group">
-                                    <b>Jawaban:</b>
-                                    <div class="mt-2 pl-3">
-                                        @if ($file_parts['extension'] == 'pdf')
-                                            <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" width="100%" height="800px"></iframe>
-                                        @else
-                                            <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="800px">
-                                        @endif
+                                <div class="row col-md-6">
+                                    <div class="form-group col-md-12 mb-0">
+                                        <label for="">{{ $item->nama }}</label>
+                                    </div>
+                                    <div class="col-md-12 form-group">
+                                        <b>Jawaban:</b>
+                                        <div class="mt-2 pl-3">
+                                            @if ($file_parts['extension'] == 'pdf')
+                                                <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" width="100%" height="800px"></iframe>
+                                            @else
+                                                <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="800px">
+                                            @endif
+                                        </div>
                                     </div>
                                 </div>
                             @endforeach
@@ -645,11 +647,11 @@
                                                 <label for="">{{ $itemTextTiga->nama }}</label>
                                             </div>
                                             <div class="col-md-12 form-group">
-                                                <b>Jawaban: A</b>
+                                                <b>Jawaban: </b>
                                                 <div class="mt-2 pl-3">
                                                     <p class="badge badge-info text-lg"><b>
-                                                            {{ $itemTextTiga->opsi_text }}
-                                                            {{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</b></p>
+                                                        {{ $itemTextTiga->opsi_text }}
+                                                        {{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</b></p>
                                                     @if ($item->is_commentable == 'Ya')
                                                         <div class="input-k-bottom">
                                                             <input type="hidden" name="id_item[]" value="{{ $item->id }}">
@@ -657,9 +659,16 @@
                                                                 name="komentar_penyelia[]" placeholder="Masukkan Komentar">
                                                         </div>
                                                     @endif
+
+                                                    @if ($file_parts['extension'] == 'pdf')
+                                                        <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}" width="100%" height="600px"></iframe>
+                                                    @else
+                                                        <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}" alt="" width="600px">
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>
+
 
                                         <input type="hidden" class="form-control mb-3" placeholder="Masukkan komentar"
                                             name="komentar_penyelia" value="{{ $itemTextTiga->nama }}" disabled>
@@ -668,8 +677,6 @@
 
                                         <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextTiga->id }}">
                                         <input type="hidden" name="id[]" value="{{ $itemTextTiga->id_item }}">
-                                    @else
-                                    
                                     @endif
                                 @endforeach
                             @endif
