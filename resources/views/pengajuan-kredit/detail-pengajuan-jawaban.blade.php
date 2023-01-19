@@ -668,14 +668,8 @@
 
                                         <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextTiga->id }}">
                                         <input type="hidden" name="id[]" value="{{ $itemTextTiga->id_item }}">
-                                    @elseif ($itemTextTiga->nama == 'Dokumen NIB') 
-                                        @php
-                                            $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text);
-                                        @endphp
-                                        @if ($file_parts['extension'] == 'pdf')
-                                            <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}" width="100%" height="800px"></iframe>
-                                        @else
-                                            <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}" alt="" width="800px">
+                                    @else
+                                    
                                     @endif
                                 @endforeach
                             @endif
@@ -820,14 +814,10 @@
                                         print($dataDetailJawabanTextEmpat);
                                     echo "</pre>";
                                 @endphp --}}
-                                    @foreach ($dataDetailJawabanTextEmpat as $keyEmpat => $itemTextEmpat)
+                                    @foreach ($dataDetailJawabanTextEmpat as $itemTextEmpat)
                                         <div class="row">
                                             <div class="form-group col-md-6 mb-0">
-                                                @if ($itemTextEmpat->id_jawaban == 148)
-                                                    <label for="">{{ $itemTextEmpat->nama .' '. $keyEmpat + 1 }}</label>
-                                                @else
-                                                    <label for="">{{ $itemTextEmpat->nama }}</label>
-                                                @endif
+                                                <label for="">{{ $itemTextEmpat->nama }}</label>
                                                 <div class="col-md-6 form-group">
                                                     <b>Jawaban:</b>
                                                     <div class="mt-2">
