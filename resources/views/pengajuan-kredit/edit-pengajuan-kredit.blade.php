@@ -863,7 +863,7 @@
                                                 {{-- <input type="hidden" name="opsi_jawaban[]"
                                                     value="{{ $itemTiga->opsi_jawaban }}" id=""> --}}
                                                 <label for="update_file" style="display: none" id="nama_file">{{ $itemTextTiga->opsi_text }}</label>
-                                                <input type="file" name="info_text[]" placeholder="Masukkan informasi"
+                                                <input type="file" name="update_file[]" placeholder="Masukkan informasi"
                                                 class="form-control" id="{{ $idLevelTiga . 'file' }}"  value="{{ ($itemTextTiga->opsi_text != null) ? $itemTextTiga->opsi_text : null }}" title="{{ $itemTextTiga->opsi_text }}" >
                                                 <input type="hidden" name="id_file_text[]" value="{{ $itemTextTiga->id_item }}">
                                                 <input type="hidden" name="skor_penyelia_text[]"

@@ -902,6 +902,8 @@ class PengajuanKreditController extends Controller
 
             if(count($request->file()) > 0){
                 foreach($request->file('update_file') as $key => $value){
+                    if(str_contains($value->getMimeType(), 'text')) continue;
+
                     if($request->id_update_file[$key] != null){
                         $image = $value;
                         $imageName = $key.time().'.'.$image->getClientOriginalExtension();
