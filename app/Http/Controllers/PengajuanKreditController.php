@@ -1194,7 +1194,6 @@ class PengajuanKreditController extends Controller
             $param['itemSP'] = ItemModel::where('level', 1)->where('nama', '=','Data Umum')->first();
             $param['itemKTPSu'] = ItemModel::where('level', 1)->where('nama', '=','Data Umum')->first();
             $param['itemKTPIs'] = ItemModel::where('level', 1)->where('nama', '=','Data Umum')->first();
-            $param['itemSKU'] = ItemModel::where('level', 1)->where('nama', '=','Aspek Hukum')->first();
 
             $param['dataUmumNasabah'] = PengajuanModel::select(
                 'pengajuan.id',
