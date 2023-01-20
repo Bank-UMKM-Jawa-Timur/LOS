@@ -427,11 +427,11 @@
                         @if ($item->nama == 'Ijin Usaha')
                             <div class="row col-md-12">
                                 <div class="form-group col-md-6">
-                                    <label for="">{{ $item->nama }}</label>
+                                    <label for="">{{ $item?->nama }}</label>
                                     <select name="ijin_usaha" id="ijin_usaha" class="form-control" required>
                                         <option value="">-- Pilih Ijin Usaha --</option>
-                                            <option value="nib" {{ ($dataIjin->nama == 'NIB') ? 'selected' : '' }}>NIB</option>
-                                            <option value="surat_keterangan_usaha" {{ ($dataIjin->nama == 'Surat Keterangan Usaha') ? 'selected' : '' }}>Surat Keterangan Usaha</option>
+                                            <option value="nib" {{ ($dataIjin?->nama == 'NIB') ? 'selected' : '' }}>NIB</option>
+                                            <option value="surat_keterangan_usaha" {{ ($dataIjin?->nama == 'Surat Keterangan Usaha') ? 'selected' : '' }}>Surat Keterangan Usaha</option>
                                             <option value="tidak_ada_legalitas_usaha">Tidak Ada Legalitas Usaha</option>
                                     </select>
                                 </div>
@@ -443,10 +443,10 @@
                                     <input type="hidden" name="id_level[]" value="77" id="nib_id">
                                     <input type="hidden" name="opsi_jawaban[]" value="input text" id="nib_opsi_jawaban">
                                     <input type="text" name="info_text[]" id="" placeholder="Masukkan informasi"
-                                        class="form-control" value="{{  ($dataIjin->nama == 'NIB') ? $dataIjin->opsi_text : '' }}">
-                                    <input type="hidden" name="skor_penyelia_text[]" id="nib_text" value="{{  ($dataIjin->nama == 'NIB') ? $dataIjin->skor_penyelia : null }}" >
+                                        class="form-control" value="{{  ($dataIjin?->nama == 'NIB') ? $dataIjin?->opsi_text : '' }}">
+                                    <input type="hidden" name="skor_penyelia_text[]" value="{{  ($dataIjin?->nama == 'NIB') ? $dataIjin?->skor_penyelia : null }}" >
                                     <input type="hidden"name="id_text[]" id="nib_text" value="77" >
-                                    <input type="hidden" name="id_jawaban_text[]" id="nib_text" value="{{  ($dataIjin->nama == 'NIB') ? $dataIjin->id : '' }}" >
+                                    <input type="hidden" name="id_jawaban_text[]" id="nib_text" value="{{  ($dataIjin?->nama == 'NIB') ? $dataIjin?->id : '' }}" >
                                 </div>
 
                                 <div class="form-group col-md-6" id="docNIB">
@@ -476,11 +476,11 @@
                                 <div class="form-group col-md-6" id="surat_keterangan_usaha">
                                     <label for="">Surat Keterangan Usaha</label>
                                     <input type="hidden" name="id_level[]" value="78" id="surat_keterangan_usaha_id">
-                                    <input type="text" name="info_text[]" id="surat_keterangan_usaha_text" placeholder="Masukkan informasi"
-                                        class="form-control" value="{{  ($dataIjin->nama == 'Surat Keterangan Usaha') ? $dataIjin->opsi_text : null }}">
-                                    <input type="hidden" name="skor_penyelia_text[]" id="surat_keterangan_usaha_text" value="{{  ($dataIjin->nama == 'Surat Keterangan Usaha') ? $dataIjin->skor_penyelia : null }}" >
+                                    <input type="text" name="info_text[]" placeholder="Masukkan informasi"
+                                        class="form-control" value="{{  ($dataIjin?->nama == 'Surat Keterangan Usaha') ? $dataIjin?->opsi_text : null }}">
+                                    <input type="hidden" name="skor_penyelia_text[]" id="surat_keterangan_usaha_text" value="{{  ($dataIjin?->nama == 'Surat Keterangan Usaha') ? $dataIjin?->skor_penyelia : null }}" >
                                     <input type="hidden" name="id_text[]" id="surat_keterangan_usaha_text"  value="78">
-                                    <input type="hidden" name="id_jawaban_text[]" id="surat_keterangan_usaha_text" value="{{  ($dataIjin->nama == 'Surat Keterangan Usaha') ? $dataIjin->id : '' }}" >
+                                    <input type="hidden" name="id_jawaban_text[]" id="surat_keterangan_usaha_text" value="{{  ($dataIjin?->nama == 'Surat Keterangan Usaha') ? $dataIjin?->id : '' }}" >
                                 </div>
 
                                 <div class="form-group col-md-6" id="docSKU">
@@ -514,10 +514,10 @@
                                     <label for="">NPWP</label>
                                     <input type="hidden" name="id_level[]" value="79" id="">
                                     <input type="hidden" name="opsi_jawaban[]" value="input text" id="">
-                                    <input type="hidden" name="id_text[]" value="{{ $dataDetailJawabanTextnpwp->id_item }}">
+                                    <input type="hidden" name="id_text[]" value="{{ $dataDetailJawabanTextnpwp?->id_item }}">
                                     <input type="text" name="info_text[]" id="npwp" placeholder="Masukkan informasi"
-                                        class="form-control" value="{{ ($dataDetailJawabanTextnpwp != null) ? $dataDetailJawabanTextnpwp->opsi_text : "" }}">
-                                    <input type="hidden" name="skor_penyelia_text[]" value="{{ $dataDetailJawabanTextnpwp->skor_penyelia }}">
+                                        class="form-control" value="{{ ($dataDetailJawabanTextnpwp != null) ? $dataDetailJawabanTextnpwp?->opsi_text : "" }}">
+                                    <input type="hidden" name="skor_penyelia_text[]" value="{{ $dataDetailJawabanTextnpwp?->skor_penyelia }}">
                                     <input type="hidden" name="id_jawaban_text[]" value="{{ ($dataDetailJawabanTextnpwp != null) ? $dataDetailJawabanTextnpwp->id : null }}">
                                 </div>
 

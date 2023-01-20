@@ -961,6 +961,8 @@ class PengajuanKreditController extends Controller
             );
 
             foreach ($request->id_jawaban_text as $key => $value) {
+                if($request->info_text[$key] == null) continue;
+
                 if($request->id_jawaban_text[$key] == null && $request->info_text[$key] != null){
                     $data_baru = new JawabanTextModel();
                     $data_baru->id_pengajuan = $id_pengajuan;
