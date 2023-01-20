@@ -1767,15 +1767,17 @@
 
     // hitung Repayment Capacity
     function hitungRepaymentCapacity() {
-        let omzetPenjualan = parseInt($('#omzet_penjualan').val());
+        let omzetPenjualan = parseInt($('#omzet_penjualan').val().split('.').join(''));
         let persentaseNetIncome = parseInt($('#persentase_net_income').val()) / 100;
         let rencanaPeningkatan = parseInt($('#rencana_peningkatan').val()) / 100;
-        let installment = parseInt($('#installment').val());
+        let installment = parseInt($('#installment').val().split('.').join(''));
+
+        console.log(omzetPenjualan);
 
         let repaymentCapacity = parseFloat(persentaseNetIncome * omzetPenjualan * (1 + rencanaPeningkatan) /
-            installment); //cek rumusnya lagi
+            installment).toFixed(2); //cek rumusnya lagi
 
-        $('#repayment_capacity').val(repaymentCapacity.tofixed(2));
+        $('#repayment_capacity').val(repaymentCapacity);
 
         if (repaymentCapacity > 2) {
             $('#repayment_capacity_opsi_0').attr('selected', true);
@@ -2004,8 +2006,13 @@
             var file = $(form + " input[type=file]")
 
             if (form == ".form-wizard[data-index='2']") {
-                var ttlInput = -1;
-                var ttlInputFilled = 0;
+                var ijin = $(form + " select[name=ijin_usaha]");
+                if(ijin.val() == "nib" || ijin.val() == "sku"){
+                    console.log('a');
+                    var ttlInput = -2
+                } else if(ijin.val() == "tidak_ada_legalitas_usaha"){
+                    var ttlInput = -6
+                }
             } else if (form == ".form-wizard[data-index='3']") {
                 var checkbox = $(form + " input[type=checkbox]:checked").length;
                 if ($(form + " select[name=kategori_jaminan_utama]").find(':selected').val() == 'Tanah' || $(form + " select[name=kategori_jaminan_utama]").find(':selected').val() == 'Tanah dan Bangunan') {

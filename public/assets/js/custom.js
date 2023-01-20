@@ -73,7 +73,13 @@
             var hidden = $(form + " input[type=hidden]")
 
             if (form == ".form-wizard[data-index='2']") {
-                var ttlInput = -1;
+                var ijin = $(form + " select[name=ijin_usaha]");
+                if(ijin.val() == "nib" || ijin.val() == "sku"){
+                    console.log('a');
+                    var ttlInput = -2
+                } else if(ijin.val() == "tidak_ada_legalitas_usaha"){
+                    var ttlInput = -6
+                }
             } else if (form == ".form-wizard[data-index='3']") {
                 var checkbox = $(form + " input[type=checkbox]:checked").length;
                 if ($(form + " select[name=kategori_jaminan_utama]").find(':selected').val() == 'Tanah' || $(form + " select[name=kategori_jaminan_utama]").find(':selected').val() == 'Tanah dan Bangunan') {
