@@ -1356,6 +1356,7 @@
                 $('#docSKU').hide();
                 $('#docSKU_id').attr('disabled', true);
                 $('#docSKU_text').attr('disabled', true);
+                $('#docSKU_text').val('');
                 $('#docSKU_upload_file').attr('disabled', true);
 
                 $('#npwp').hide();

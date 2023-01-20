@@ -74,11 +74,13 @@
 
             if (form == ".form-wizard[data-index='2']") {
                 var ijin = $(form + " select[name=ijin_usaha]");
-                if(ijin.val() == "nib" || ijin.val() == "sku"){
-                    console.log('a');
+                if(ijin.val() == "nib"){
                     var ttlInput = -2
                 } else if(ijin.val() == "tidak_ada_legalitas_usaha"){
                     var ttlInput = -6
+                    console.log(ttlInput);
+                } else if(ijin.val() == "surat_keterangan_usaha"){
+                    var ttlInput = -2
                 }
             } else if (form == ".form-wizard[data-index='3']") {
                 var checkbox = $(form + " input[type=checkbox]:checked").length;
