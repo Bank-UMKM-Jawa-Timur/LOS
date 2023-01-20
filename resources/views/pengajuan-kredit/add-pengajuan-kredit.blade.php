@@ -1658,21 +1658,17 @@
             }
         })
 
-        $('.file-wrapper').on('click', '.btn-add-file', function(e) {
-            const fileInput = $(this).parent().parent();
-            const wrapper = fileInput.parent();
-            const $clone = fileInput.clone();
+        $('body').on('click', '.file-wrapper .btn-add-file', function(e) {
+            const wrapper = $(this).parent().parent().parent();
+            const $clone = wrapper.clone();
 
             $clone.find('[type="file"]').val('');
-            wrapper.append($clone);
+            $clone.insertAfter(wrapper);
         });
 
-        $('.file-wrapper').on('click', '.btn-del-file', function(e) {
-            const fileInput = $(this).parent().parent();
-            const wrapper = fileInput.parent();
-
-            if(wrapper.find('.file-input').length < 2) return;
-            fileInput.remove();
+        $('body').on('click', '.file-wrapper .btn-del-file', function(e) {
+            if($('.file-wrapper').get().length < 2) return;
+            $(this).parent().parent().parent().remove();
         });
         // End Limit Upload
     </script>
