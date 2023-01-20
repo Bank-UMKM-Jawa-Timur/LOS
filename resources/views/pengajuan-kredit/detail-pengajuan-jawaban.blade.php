@@ -27,8 +27,8 @@
             font-size: 16px;
             /* border-bottom: 1px solid #dc3545; */
         }
-
     </style>
+    
     <form id="pengajuan_kredit" action="{{ route('pengajuan.insertkomentar') }}" method="post">
         @csrf
         <div class="form-wizard active" data-index='0' data-done='true'>
@@ -59,7 +59,7 @@
                                     </div>
                                     <div class="col-md-12 form-group">
                                         <b>Jawaban:</b>
-                                        <div class="mt-2 pl-3">
+                                        <div class="mt-2">
                                             @if ($file_parts['extension'] == 'pdf')
                                                 <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" width="100%" height="800px"></iframe>
                                             @else
@@ -648,27 +648,31 @@
                                             </div>
                                             <div class="col-md-12 form-group">
                                                 <b>Jawaban: </b>
-                                                <div class="mt-2 pl-3">
-                                                    <p class="badge badge-info text-lg"><b>
-                                                        {{ $itemTextTiga->opsi_text }}
-                                                        {{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</b></p>
-                                                    @if ($item->is_commentable == 'Ya')
-                                                        <div class="input-k-bottom">
-                                                            <input type="hidden" name="id_item[]" value="{{ $item->id }}">
-                                                            <input type="text" class="form-control komentar"
-                                                                name="komentar_penyelia[]" placeholder="Masukkan Komentar">
-                                                        </div>
-                                                    @endif
-
-                                                    @if ($file_parts['extension'] == 'pdf')
-                                                        <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}" width="100%" height="600px"></iframe>
-                                                    @else
-                                                        <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}" alt="" width="600px">
+                                                <div class="mt-2">
+                                                    @if ($itemTiga->opsi_jawaban == 'file')
+                                                        @php
+                                                            $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text);
+                                                        @endphp
+                                                        @if ($file_parts['extension'] == 'pdf')
+                                                            <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}" width="100%" height="800px"></iframe>
+                                                        @else
+                                                            <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}" alt="" width="800px">
+                                                        @endif
+                                                    @else    
+                                                        <p class="badge badge-info text-lg"><b>
+                                                            {{ $itemTextTiga->opsi_text }}
+                                                            {{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</b></p>
+                                                        @if ($item->is_commentable == 'Ya')
+                                                            <div class="input-k-bottom">
+                                                                <input type="hidden" name="id_item[]" value="{{ $item->id }}">
+                                                                <input type="text" class="form-control komentar"
+                                                                    name="komentar_penyelia[]" placeholder="Masukkan Komentar">
+                                                            </div>
+                                                        @endif
                                                     @endif
                                                 </div>
                                             </div>
                                         </div>
-
 
                                         <input type="hidden" class="form-control mb-3" placeholder="Masukkan komentar"
                                             name="komentar_penyelia" value="{{ $itemTextTiga->nama }}" disabled>
@@ -827,20 +831,31 @@
                                                 <label for="">{{ $itemTextEmpat->nama }}</label>
                                                 <div class="col-md-6 form-group">
                                                     <b>Jawaban:</b>
-                                                    <div class="mt-2">
+                                                    <div class="mt-2 pl-3">
                                                         @if ($itemEmpat->opsi_jawaban == 'file')
-                                                            @php
-                                                                $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text);
-                                                            @endphp
-                                                            @if ($file_parts['extension']=='pdf')
-                                                                <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}" width="100%" height="500px"></iframe>
+                                                            @if (intval($itemTextEmpat->opsi_text) > 1)
+                                                                @php
+                                                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text);
+                                                                @endphp
+                                                                @if ($file_parts['extension']=='pdf')
+                                                                    <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}" width="100%" height="400"></iframe>
+                                                                @else
+                                                                    <img style="border: 5px solid #c2c7cf" src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}" alt="" width="400">
+                                                                @endif
                                                             @else
-                                                                <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}" alt="" width="500px">
+                                                                @php
+                                                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text);
+                                                                @endphp
+                                                                @if ($file_parts['extension']=='pdf')
+                                                                    <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}" width="100%" height="500px"></iframe>
+                                                                @else
+                                                                    <img style="border: 5px solid #c2c7cf" src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}" alt="" width="500px">
+                                                                @endif
                                                             @endif
                                                         @else
                                                             <p class="badge badge-info text-lg"><b>
-                                                                    {{ $itemTextEmpat->opsi_text }}
-                                                                    {{ $itemEmpat->opsi_jawaban == 'persen' ? '%' : '' }}</b>
+                                                                {{ $itemTextEmpat->opsi_text }}
+                                                                {{ $itemEmpat->opsi_jawaban == 'persen' ? '%' : '' }}</b>
                                                             </p>
                                                             @if ($itemTextEmpat->is_commentable == 'Ya')
                                                                 <div class="input-k-bottom">
@@ -864,6 +879,7 @@
                                         <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextEmpat->id }}">
                                         <input type="hidden" name="id[]" value="{{ $itemTextEmpat->id_item }}">
                                     @endforeach
+
                                 @endif
                                 @php
                                     // check level empat
