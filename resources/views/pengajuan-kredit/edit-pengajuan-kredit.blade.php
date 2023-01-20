@@ -255,7 +255,7 @@
                                         ->where('id_pengajuan', $dataUmum->id)
                                         ->get();
 
-                        for ($i=0; $i < count($jawabanSlik); $i++) { 
+                        for ($i=0; $i < count($jawabanSlik); $i++) {
                             $data[] = $jawabanSlik[$i]['id_jawaban'];
                         }
                         if (count($jawabanSlik) == 0) {
@@ -419,7 +419,7 @@
                             $dataDetailJawabanTextnpwp = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
                                         ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
                                         ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-                                        ->where('item.nama', 'npwp')->first();            
+                                        ->where('item.nama', 'npwp')->first();
 
                             // dump($dataIjin);
                         @endphp
@@ -427,42 +427,42 @@
                         @if ($item->nama == 'Ijin Usaha')
                             <div class="row col-md-12">
                                 <div class="form-group col-md-6">
-                                    <label for="">{{ $item->nama }}</label>
-                                    <select name="ijin_usaha" id="ijin_usaha" class="form-control" required> 
+                                    <label for="">{{ $item?->nama }}</label>
+                                    <select name="ijin_usaha" id="ijin_usaha" class="form-control" required>
                                         <option value="">-- Pilih Ijin Usaha --</option>
-                                        <option value="nib" {{ ($dataIjin->nama == 'NIB') ? 'selected' : '' }}>NIB</option>
-                                        <option value="surat_keterangan_usaha" {{ ($dataIjin->nama == 'Surat Keterangan Usaha') ? 'selected' : '' }}>Surat Keterangan Usaha</option>
-                                        <option value="tidak_ada_legalitas_usaha" {{ ($dataIjin->nama == 'Tidak Ada Legalitas Usaha') ? 'selected' : '' }}>Tidak Ada Legalitas Usaha</option>
+                                            <option value="nib" {{ ($dataIjin?->nama == 'NIB') ? 'selected' : '' }}>NIB</option>
+                                            <option value="surat_keterangan_usaha" {{ ($dataIjin?->nama == 'Surat Keterangan Usaha') ? 'selected' : '' }}>Surat Keterangan Usaha</option>
+                                            <option value="tidak_ada_legalitas_usaha">Tidak Ada Legalitas Usaha</option>
                                     </select>
                                 </div>
                             </div>
-                            
+
                             <div class="row col-md-12">
                                 <div class="form-group col-md-6" id="nib">
                                     <label for="">NIB</label>
                                     <input type="hidden" name="id_level[]" value="77" id="nib_id">
                                     <input type="hidden" name="opsi_jawaban[]" value="input text" id="nib_opsi_jawaban">
-                                    <input type="text" name="info_text[]" id="nib_text" placeholder="Masukkan informasi"
-                                        class="form-control" value="{{  ($dataIjin->nama == 'NIB') ? $dataIjin->opsi_text : '' }}">
+                                    <input type="text" name="info_text[]" id="" placeholder="Masukkan informasi"
+                                        class="form-control" value="{{  ($dataIjin?->nama == 'NIB') ? $dataIjin?->opsi_text : '' }}">
+                                    <input type="hidden" name="skor_penyelia_text[]" value="{{  ($dataIjin?->nama == 'NIB') ? $dataIjin?->skor_penyelia : null }}" >
                                     <input type="hidden"name="id_text[]" id="nib_text" value="77" >
-                                    <input type="hidden" name="skor_penyelia_text[]" id="nib_text" value="{{  ($dataIjin->nama == 'NIB') ? $dataIjin->skor_penyelia : null }}" >
-                                    <input type="hidden" name="id_jawaban_text[]" id="nib_text" value="{{  ($dataIjin->nama == 'NIB') ? $dataIjin->id : '' }}" >
+                                    <input type="hidden" name="id_jawaban_text[]" id="nib_text" value="{{  ($dataIjin?->nama == 'NIB') ? $dataIjin?->id : '' }}" >
                                 </div>
 
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-6" id="docNIB">
                                     @php
                                         $jawabanDokNIB = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
                                                         ->where('id_jawaban', 153)
                                                         ->first();
                                     @endphp
                                     <label for="">Dokumen NIB</label>
-                                    <input type="hidden" name="id_item_file[]" value="153" id="">
+                                    <input type="hidden" name="id_item_file[]" value="153" id="docNIB_id">
                                         @if (isset($jawabanDokNIB->opsi_text) != null)
-                                            <label for="update_file" style="display: none" id="nama_file">{{ $jawabanDokNIB->opsi_text }}</label>
-                                            <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi Dokumen NIB" class="form-control limit-size" value="{{ $jawabanDokNIB->opsi_text }}">
+                                            <label for="update_file" style="display: none" id="docNIBnama_file">{{ $jawabanDokNIB->opsi_text }}</label>
+                                            <input type="file" name="upload_file[]" id="docNIB_upload_file" placeholder="Masukkan informasi Dokumen NIB" class="form-control limit-size" value="{{ $jawabanDokNIB->opsi_text }}">
                                         @else
-                                            <label for="update_file" style="display: none" id="nama_file">Belum Upload Dokumen NIB</label>
-                                            <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi Dokumen NIB" class="form-control limit-size" value="Belum Upload Dokumen NIB">
+                                            <label for="update_file" style="display: none" id="docNIBnama_file">Belum Upload Dokumen NIB</label>
+                                            <input type="file" name="upload_file[]" id="docNIB_upload_file" placeholder="Masukkan informasi Dokumen NIB" class="form-control limit-size" value="Belum Upload Dokumen NIB">
                                         @endif
                                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
@@ -476,13 +476,37 @@
                                 <div class="form-group col-md-6" id="surat_keterangan_usaha">
                                     <label for="">Surat Keterangan Usaha</label>
                                     <input type="hidden" name="id_level[]" value="78" id="surat_keterangan_usaha_id">
-                                    <input type="text" name="info_text[]" id="surat_keterangan_usaha_text" placeholder="Masukkan informasi"
-                                        class="form-control" value="{{  ($dataIjin->nama == 'Surat Keterangan Usaha') ? $dataIjin->opsi_text : null }}">
+                                    <input type="text" name="info_text[]" placeholder="Masukkan informasi"
+                                        class="form-control" value="{{  ($dataIjin?->nama == 'Surat Keterangan Usaha') ? $dataIjin?->opsi_text : null }}">
+                                    <input type="hidden" name="skor_penyelia_text[]" id="surat_keterangan_usaha_text" value="{{  ($dataIjin?->nama == 'Surat Keterangan Usaha') ? $dataIjin?->skor_penyelia : null }}" >
                                     <input type="hidden" name="id_text[]" id="surat_keterangan_usaha_text"  value="78">
-                                    <input type="hidden" name="skor_penyelia_text[]" id="surat_keterangan_usaha_text" value="{{  ($dataIjin->nama == 'Surat Keterangan Usaha') ? $dataIjin->skor_penyelia : null }}" >
-                                        <input type="hidden" name="id_jawaban_text[]" id="surat_keterangan_usaha_text" value="{{  ($dataIjin->nama == 'Surat Keterangan Usaha') ? $dataIjin->id : '' }}" >
+                                    <input type="hidden" name="id_jawaban_text[]" id="surat_keterangan_usaha_text" value="{{  ($dataIjin?->nama == 'Surat Keterangan Usaha') ? $dataIjin?->id : '' }}" >
                                 </div>
-                            </div>    
+
+                                <div class="form-group col-md-6" id="docSKU">
+                                    @php
+                                        $jawabanDokSKU = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
+                                                        ->where('id_jawaban', 157)
+                                                        ->first();
+                                    @endphp
+                                    <label for="">Surat Keterangan Usaha</label>
+                                    <input type="hidden" name="id_item_file[]" value="157" id="docSKU_id">
+                                        @if (isset($jawabanDokSKU->opsi_text) != null)
+                                            <label for="update_file" style="display: none" id="docSKUnama_file">{{ $jawabanDokSKU->opsi_text }}</label>
+                                            <input type="file" name="upload_file[]" id="docSKU_upload_file" placeholder="Masukkan informasi Dokumen SKU" class="form-control limit-size" value="{{ $jawabanDokSKU->opsi_text }}">
+                                        @else
+                                            <label for="update_file" style="display: none" id="docSKUnama_file">Belum Upload Dokumen SKU</label>
+                                            <input type="file" name="upload_file[]" id="docSKU_upload_file" placeholder="Masukkan informasi Dokumen SKU" class="form-control limit-size" value="Belum Upload Dokumen SKU">
+                                        @endif
+                                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                                    @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
+                                        <div class="invalid-feedback">
+                                            {{ $errors->first('dataLevelTiga.' . $key) }}
+                                        </div>
+                                    @endif
+                                    {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
+                                </div>
+                            </div>
 
                         @elseif($item->nama == 'NPWP')
                             <div class="row col-md-12">
@@ -490,29 +514,27 @@
                                     <label for="">NPWP</label>
                                     <input type="hidden" name="id_level[]" value="79" id="">
                                     <input type="hidden" name="opsi_jawaban[]" value="input text" id="">
-                                    <input type="hidden" name="id_text[]" value="{{ $dataDetailJawabanTextnpwp->id_item }}">
+                                    <input type="hidden" name="id_text[]" value="{{ $dataDetailJawabanTextnpwp?->id_item }}">
                                     <input type="text" name="info_text[]" id="npwp" placeholder="Masukkan informasi"
-                                        class="form-control" value="{{ ($dataDetailJawabanTextnpwp != null) ? $dataDetailJawabanTextnpwp->opsi_text : "" }}">
-                                    <input type="hidden" name="skor_penyelia_text[]"
-                                        value="{{ $dataDetailJawabanTextnpwp->skor_penyelia }}">
-                                        <input type="hidden" name="id_jawaban_text[]" value="{{ ($dataDetailJawabanTextnpwp != null) ? 
-                                            $dataDetailJawabanTextnpwp->id : null }}">
+                                        class="form-control" value="{{ ($dataDetailJawabanTextnpwp != null) ? $dataDetailJawabanTextnpwp?->opsi_text : "" }}">
+                                    <input type="hidden" name="skor_penyelia_text[]" value="{{ $dataDetailJawabanTextnpwp?->skor_penyelia }}">
+                                    <input type="hidden" name="id_jawaban_text[]" value="{{ ($dataDetailJawabanTextnpwp != null) ? $dataDetailJawabanTextnpwp->id : null }}">
                                 </div>
 
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-6" id="docNPWP">
                                     @php
                                         $jawabanDokNPWP = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
                                                         ->where('id_jawaban', 154)
                                                         ->first();
                                     @endphp
                                     <label for="">Dokumen NPWP</label>
-                                    <input type="hidden" name="id_item_file[]" value="154" id="">
-                                        @if (isset($jawabanDokNIB->opsi_text) != null)
-                                            <label for="update_file" style="display: none" id="nama_file">{{ $jawabanDokNPWP->opsi_text }}</label>
-                                            <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi Dokumen NPWP" class="form-control limit-size" value="{{ $jawabanDokNPWP->opsi_text }}">
+                                    <input type="hidden" name="id_item_file[]" value="154" id="docNPWP_id">
+                                        @if (isset($jawabanDokNPWP->opsi_text) != null)
+                                            <label for="update_file" style="display: none" id="docNPWPnama_file">{{ $jawabanDokNPWP->opsi_text }}</label>
+                                            <input type="file" name="upload_file[]" id="docNPWP_upload_file" placeholder="Masukkan informasi Dokumen NPWP" class="form-control limit-size" value="{{ $jawabanDokNPWP->opsi_text }}">
                                         @else
-                                            <label for="update_file" style="display: none" id="nama_file">Belum Upload Dokumen NPWP</label>
-                                            <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi Dokumen NPWP" class="form-control limit-size" value="Belum Upload Dokumen NPWP">
+                                            <label for="update_file" style="display: none" id="docNPWPnama_file">Belum Upload Dokumen NPWP</label>
+                                            <input type="file" name="upload_file[]" id="docNPWP_upload_file" placeholder="Masukkan informasi Dokumen NPWP" class="form-control limit-size" value="Belum Upload Dokumen NPWP">
                                         @endif
                                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
@@ -544,7 +566,7 @@
                                     </div>
 
                                 @endforeach
-                                
+
                             @elseif ($item->opsi_jawaban == 'number')
                                 @foreach ($dataDetailJawabanText as $itemTextDua)
                                     @if ($itemTextDua->nama == 'Omzet Penjualan' || $itemTextDua->nama == 'Installment' || $itemTextDua->nama == 'Kebutuhan Kredit')
@@ -696,7 +718,7 @@
                                         ->orderBy('id', 'DESC')
                                         ->get();
                                 @endphp
-                                
+
                                 @if ($itemTiga->nama == 'Kategori Jaminan Utama')
                                     <div class="form-group col-md-6">
                                         @php
@@ -727,7 +749,7 @@
                                                 <option value="Stock" {{ ($jaminanUtama[0]->id_item == 101) ? 'selected' : '' }}>Stock</option>
                                                 <option value="Piutang" {{ ($jaminanUtama[0]->id_item == 102) ? 'selected' : '' }}>Piutang</option>
                                             </select>
-                                            
+
                                         @endif
                                         {{-- <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
                                         <input type="hidden" name="opsi_jawaban[]" value="{{ $itemTiga->opsi_jawaban }}"
@@ -769,7 +791,7 @@
                                         <h5>{{ $itemTiga->nama }}</h5>
                                     </div>
                                     <div id="bukti_pemilikan_jaminan_utama" class="form-group col-md-12 row">
-                                        
+
                                     </div>
                                 @elseif ($itemTiga->nama == 'Bukti Pemilikan Jaminan Tambahan')
                                     <div class="form-group col-md-12">
@@ -814,7 +836,7 @@
                                         @foreach ($dataDetailJawabanText as $itemTextTiga)
                                             <div class="form-group col-md-6">
                                                 {{-- @if ($itemTiga->nama == 'Ratio Tenor Asuransi')
-                                                
+
                                                 @else --}}
                                                 <label for="">{{ $itemTiga->nama }}</label>
                                                 <div class="input-group mb-3">
@@ -836,17 +858,32 @@
                                             @endforeach
                                     @elseif ($itemTiga->opsi_jawaban == 'file')
                                         @foreach ($dataDetailJawabanText as $itemTextTiga)
-                                            <div class="form-group col-md-6">
+                                            <div class="form-group col-md-6 file-wrapper">
                                                 <label for="">{{ $itemTiga->nama }}</label>
-                                                {{-- <input type="hidden" name="opsi_jawaban[]"
-                                                    value="{{ $itemTiga->opsi_jawaban }}" id=""> --}}
-                                                <label for="update_file" style="display: none" id="nama_file">{{ $itemTextTiga->opsi_text }}</label>
-                                                <input type="file" name="info_text[]" placeholder="Masukkan informasi"
-                                                class="form-control" id="{{ $idLevelTiga . 'file' }}"  value="{{ ($itemTextTiga->opsi_text != null) ? $itemTextTiga->opsi_text : null }}" title="{{ $itemTextTiga->opsi_text }}" >
-                                                <input type="hidden" name="id_file_text[]" value="{{ $itemTextTiga->id_item }}">
-                                                <input type="hidden" name="skor_penyelia_text[]"
-                                                    value="{{ $itemTextTiga->skor_penyelia }}">
-                                                <input type="hidden" name="id_update_file[]" value="{{ $itemTextTiga->id }}">
+
+                                                <div class="row file-input">
+                                                    <div class="col-md-9">
+                                                        <label for="update_file" style="display: none" id="nama_file">{{ $itemTextTiga->opsi_text }}</label>
+                                                        <input type="file" name="update_file[]" placeholder="Masukkan informasi"
+                                                        class="form-control" id="{{ $idLevelTiga . 'file' }}"  value="{{ ($itemTextTiga->opsi_text != null) ? $itemTextTiga->opsi_text : null }}" title="{{ $itemTextTiga->opsi_text }}" >
+                                                        <input type="hidden" name="id_file_text[]" value="{{ $itemTextTiga->id_item }}">
+                                                        <input type="hidden" name="skor_penyelia_text[]"
+                                                            value="{{ $itemTextTiga->skor_penyelia }}">
+                                                        <input type="hidden" name="id_update_file[]" value="{{ $itemTextTiga->id }}">
+                                                    </div>
+                                                    @if(in_array(trim($itemTiga->nama), $multipleFiles))
+                                                    <div class="col-1">
+                                                        <button class="btn btn-sm btn-success btn-add-file" type="button" data-id="{{ $itemTiga->id }}">
+                                                            <i class="fa fa-plus"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="col-1">
+                                                        <button class="btn btn-sm btn-danger btn-del-file" type="button" data-id="{{ $itemTiga->id }}">
+                                                            <i class="fa fa-minus"></i>
+                                                        </button>
+                                                    </div>
+                                                    @endif
+                                                </div>
                                             </div>
                                         @endforeach
                                     @elseif ($itemTiga->opsi_jawaban == 'long text')
@@ -859,7 +896,7 @@
                                                     <input type="hidden" name="skor_penyelia_text[]"
                                                         value="{{ $itemTextTiga->skor_penyelia }}">
                                                     <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextTiga->id }}">
-                                                
+
                                             <input type="hidden" name="id_text[]" value="{{ $itemTextTiga->id_item }}">
                                             </div>
                                         @endforeach
@@ -939,7 +976,7 @@
                                                         value="{{ $itemTextEmpat->skor_penyelia }}">
                                                     <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextEmpat->id }}">
                                                     <input type="hidden" name="id_text[]" value="{{ $itemTextEmpat->id_item }}">
-                                                    
+
                                                 </div>
                                             @endforeach
                                         @elseif ($itemEmpat->opsi_jawaban == 'number')
@@ -1112,7 +1149,9 @@
 @push('custom-script')
 <script>
     $('#nib').hide();
+    $('#docNIB').hide();
     $('#surat_keterangan_usaha').hide();
+    $('#docSKU').hide();
     //make input readonly
     $('#ratio_coverage').attr('readonly', true);
     $('#ratio_tenor_asuransi').attr('readonly', true);
@@ -1135,7 +1174,7 @@
 
     let urlCekSubColumn = "{{ route('cek-sub-column') }}";
     let urlGetItemByKategoriJaminanUtama =
-        "{{ route('get-item-jaminan-by-kategori-jaminan-utama') }}"; 
+        "{{ route('get-item-jaminan-by-kategori-jaminan-utama') }}";
     // jaminan tambahan
     let urlGetItemByKategori = "{{ route('get-item-jaminan-by-kategori') }}";
     let urlGetIjin = "{{ route('get-ijin-usaha') }}";
@@ -1244,30 +1283,60 @@
             $('#surat_keterangan_usaha_text').attr('disabled', true);
             $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
 
+            $('#docSKU').hide();
+            $('#docSKU_id').attr('disabled', true);
+            $('#docSKUnama_file').attr('disabled', true);
+            $('#docSKU_upload_file').attr('disabled', true);
+
             $('#nib').show();
             $('#nib_id').removeAttr('disabled');
             $('#nib_text').removeAttr('disabled');
             $('#nib_opsi_jawaban').removeAttr('disabled');
+
+            $('#docNIB').show();
+            $('#docNIB_id').removeAttr('disabled');
+            $('#docSKUnama_file').removeAttr('disabled');
+            $('#docNIB_upload_file').removeAttr('disabled');
         } else if (ijinUsaha == 'surat_keterangan_usaha') {
             $('#nib').hide()
             $('#nib_id').attr('disabled', true);
             $('#nib_text').attr('disabled', true);
             $('#nib_opsi_jawaban').attr('disabled', true);
 
+            $('#docNIB').hide();
+            $('#docNIB_id').attr('disabled', true);
+            $('#docNIBnama_file').attr('disabled', true);
+            $('#docNIB_upload_file').attr('disabled', true);
+
             $('#surat_keterangan_usaha').show();
             $('#surat_keterangan_usaha_id').removeAttr('disabled');
             $('#surat_keterangan_usaha_text').removeAttr('disabled');
             $('#surat_keterangan_usaha_opsi_jawaban').removeAttr('disabled');
+
+            $('#docSKU').show();
+            $('#docSKU_id').removeAttr('disabled');
+            $('#docSKU_text').removeAttr('disabled');
+            $('#docSKU_upload_file').removeAttr('disabled');
         } else {
             $('#nib').hide();
             $('#nib_id').attr('disabled', true);
             $('#nib_text').attr('disabled', true);
             $('#nib_opsi_jawaban').attr('disabled', true);
 
+            $('#docNIB').hide();
+            $('#docNIB_id').attr('disabled', true);
+            $('#docNIBnama_file').attr('disabled', true);
+            $('#docNIB_upload_file').attr('disabled', true);
+
             $('#surat_keterangan_usaha').hide();
             $('#surat_keterangan_usaha_id').attr('disabled', true);
             $('#surat_keterangan_usaha_text').attr('disabled', true);
             $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
+
+            $('#docSKU').hide();
+            $('#docSKU_id').attr('disabled', true);
+            $('#docSKUnama_file').attr('disabled', true);
+            $('#docSKU_upload_file').attr('disabled', true);
         }
     }
 
@@ -1380,7 +1449,7 @@
                                         <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
                                         <input type="hidden" name="id_jawaban_text[]" value="${valItem.id}">
                                     <input type="hidden" name="id_text[]" value="${valItem.id_item}">
-                                            
+
                                     </div>
                                 `);
                             } else {
@@ -1423,7 +1492,7 @@
                                 }
                             }
                         });
-                        
+
                         if(response.belum.length > 0){
                             $.each(response.belum, function(i, valItem){
                                 if(valItem.nama != 'Foto'){
@@ -1806,7 +1875,7 @@
             $('#repayment_capacity_opsi_3').removeAttr('selected');
         }
     }
-    
+
     //end Repayment Capacity
 </script>
     <script>
@@ -1819,26 +1888,26 @@
             var input = $(this).val()
             $(this).val(formatrupiah(input))
         });
-    
+
         function formatrupiah(angka, prefix) {
             var number_string = angka.replace(/[^,\d]/g, '').toString(),
             split   		= number_string.split(','),
             sisa     		= split[0].length % 3,
             rupiah     		= split[0].substr(0, sisa),
             ribuan     		= split[0].substr(sisa).match(/\d{3}/gi);
-    
+
             // tambahkan titik jika yang di input sudah menjadi angka ribuan
             if(ribuan){
                 separator = sisa ? '.' : '';
                 rupiah += separator + ribuan.join('.');
             }
-    
+
             rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
             return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
         }
             // End Format Rupiah
         var jumlahData = $('#jumlahData').val();
-        
+
         showFile();
 
         function showFile(){
@@ -2079,7 +2148,7 @@
                         var ttlInputFilled = 0;
                     }
                 }
-            } 
+            }
             else if (form == ".form-wizard[data-index='6']"){
                 var ttlInput = -1;
                 var ttlInputFilled = 0;
@@ -2175,7 +2244,7 @@
             cekBtn()
             e.preventDefault();
         })
-        
+
 
     $("#bukti_pemilikan_jaminan_tambahan").on("click", "#btnTambahBukti", function(){
         $("#bukti_pemilikan_jaminan_tambahan").append(`
@@ -2206,7 +2275,29 @@
         if(x > 1){
             $(this).closest('.aspek_jaminan_kategori').remove();
             x--
-        }  
+        }
     })
+
+    $('body').on('click', '.file-wrapper .btn-add-file', function(e) {
+            const wrapper = $(this).parent().parent().parent();
+            const $clone = wrapper.clone();
+
+            $clone.find('[type="file"]').val('');
+            $clone.find('[name="id_update_file[]"]').val('');
+            $clone.insertAfter(wrapper);
+        });
+
+    $('body').on('click', '.file-wrapper .btn-del-file', function(e) {
+        if($('.file-wrapper').get().length < 2) return;
+
+        const wrapper = $(this).parent().parent().parent();
+        const formKredit = $('#pengajuan_kredit');
+        const fileID = wrapper.find('input[name="id_update_file[]"]').val();
+
+        wrapper.remove();
+        formKredit.append(`
+            <input type="hidden" name="id_delete_file[]" value="${fileID}">
+        `);
+    });
     </script>
 @endpush
