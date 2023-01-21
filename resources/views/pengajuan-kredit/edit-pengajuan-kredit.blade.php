@@ -429,10 +429,9 @@
                                 <div class="form-group col-md-6">
                                     <label for="">{{ $item?->nama }}</label>
                                     <select name="ijin_usaha" id="ijin_usaha" class="form-control" required>
-                                        <option value="">-- Pilih Ijin Usaha --</option>
-                                            <option value="nib" {{ ($dataIjin?->nama == 'NIB') ? 'selected' : '' }}>NIB</option>
-                                            <option value="surat_keterangan_usaha" {{ ($dataIjin?->nama == 'Surat Keterangan Usaha') ? 'selected' : '' }}>Surat Keterangan Usaha</option>
-                                            <option value="tidak_ada_legalitas_usaha">Tidak Ada Legalitas Usaha</option>
+                                        <option value="tidak_ada_legalitas_usaha">Tidak Ada Legalitas Usaha</option>
+                                        <option value="nib" {{ ($dataIjin?->nama == 'NIB') ? 'selected' : '' }}>NIB</option>
+                                        <option value="surat_keterangan_usaha" {{ ($dataIjin?->nama == 'Surat Keterangan Usaha') ? 'selected' : '' }}>Surat Keterangan Usaha</option>
                                     </select>
                                 </div>
                             </div>
@@ -774,7 +773,11 @@
                                                 <option value="Tanah" >Tanah</option>
                                                 <option value="Tanah dan Bangunan">Tanah dan Bangunan</option>
                                             @endif
-                                            <option value="Kendaraan Bermotor" {{ ($jaminanTambahan[0]->id_item == 118 ) ? 'selected' : '' }}>Kendaraan Bermotor</option>
+                                            @php
+                                                $jTambahan = isset($jaminanTambahan[0]) ? $jaminanTambahan[0] : null;
+                                                $jTambahan = (!$jTambahan) ? false : $jaminanTambahan[0]->id_item == 118;
+                                            @endphp
+                                            <option value="Kendaraan Bermotor" @selected($jTambahan)>Kendaraan Bermotor</option>
                                         </select>
                                         {{-- <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
                                         <input type="hidden" name="opsi_jawaban[]" value="{{ $itemTiga->opsi_jawaban }}"
