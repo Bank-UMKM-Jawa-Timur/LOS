@@ -1356,12 +1356,13 @@
                 $('#docSKU').hide();
                 $('#docSKU_id').attr('disabled', true);
                 $('#docSKU_text').attr('disabled', true);
+                $('#docSKU_text').val('');
                 $('#docSKU_upload_file').attr('disabled', true);
 
                 $('#npwp').hide();
                 $('#npwp_id').attr('disabled', true);
                 $('#npwp_text').attr('disabled', true);
-                $('#npwp_text').attr('');
+                $('#npwp_text').val('');
                 $('#npwp_opsi_jawaban').attr('disabled', true);
 
                 $('#docNPWP').hide();
