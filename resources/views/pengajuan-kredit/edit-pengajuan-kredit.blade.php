@@ -414,7 +414,7 @@
                                         ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
                                         ->join('item', 'jawaban_text.id_jawaban', 'item.id')
                                         ->orderBy('id', 'DESC')
-                                        ->whereIn('item.nama', ['nib', 'surat keterangan usaha'])->first();
+                                        ->whereIn('item.nama', ['nib', 'surat keterangan usaha', 'tidak ada legalitas usaha'])->first();
 
                             $dataDetailJawabanTextnpwp = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
                                         ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
@@ -432,7 +432,7 @@
                                         <option value="">-- Pilih Ijin Usaha --</option>
                                             <option value="nib" {{ ($dataIjin?->nama == 'NIB') ? 'selected' : '' }}>NIB</option>
                                             <option value="surat_keterangan_usaha" {{ ($dataIjin?->nama == 'Surat Keterangan Usaha') ? 'selected' : '' }}>Surat Keterangan Usaha</option>
-                                            <option value="tidak_ada_legalitas_usaha">Tidak Ada Legalitas Usaha</option>
+                                            <option value="tidak_ada_legalitas_usaha" {{ ($dataIjin?->nama == 'Tidak Ada Legalitas Usaha') ? 'selected' : '' }}>Tidak Ada Legalitas Usaha</option>
                                     </select>
                                 </div>
                             </div>
@@ -509,16 +509,16 @@
                             </div>
 
                         @elseif($item->nama == 'NPWP')
-                            <div class="row col-md-12">
+                            <div class="row col-md-12" id="npwp">
                                 <div class="form-group col-md-6">
                                     <label for="">NPWP</label>
-                                    <input type="hidden" name="id_level[]" value="79" id="">
-                                    <input type="hidden" name="opsi_jawaban[]" value="input text" id="">
+                                    <input type="hidden" name="id_level[]" value="79" id="npwp_id">
+                                    <input type="hidden" name="opsi_jawaban[]" value="input text" id="npwp_opsi_jawaban">
                                     <input type="hidden" name="id_text[]" value="{{ $dataDetailJawabanTextnpwp?->id_item }}">
-                                    <input type="text" name="info_text[]" id="npwp" placeholder="Masukkan informasi"
+                                    <input type="text" name="info_text[]" id="npwp_text" placeholder="Masukkan informasi"
                                         class="form-control" value="{{ ($dataDetailJawabanTextnpwp != null) ? $dataDetailJawabanTextnpwp?->opsi_text : "" }}">
-                                    <input type="hidden" name="skor_penyelia_text[]" value="{{ $dataDetailJawabanTextnpwp?->skor_penyelia }}">
-                                    <input type="hidden" name="id_jawaban_text[]" value="{{ ($dataDetailJawabanTextnpwp != null) ? $dataDetailJawabanTextnpwp->id : null }}">
+                                    <input type="hidden" name="skor_penyelia_text[]" id="npwp_text" value="{{ $dataDetailJawabanTextnpwp?->skor_penyelia }}">
+                                    <input type="hidden" name="id_jawaban_text[]" id="npwp_text" value="{{ ($dataDetailJawabanTextnpwp != null) ? $dataDetailJawabanTextnpwp->id : null }}">
                                 </div>
 
                                 <div class="form-group col-md-6" id="docNPWP">
@@ -1150,8 +1150,8 @@
 <script>
     $('#nib').hide();
     $('#docNIB').hide();
-    $('#surat_keterangan_usaha').hide();
     $('#docSKU').hide();
+    $('#surat_keterangan_usaha').hide();
     //make input readonly
     $('#ratio_coverage').attr('readonly', true);
     $('#ratio_tenor_asuransi').attr('readonly', true);
@@ -1297,6 +1297,16 @@
             $('#docNIB_id').removeAttr('disabled');
             $('#docSKUnama_file').removeAttr('disabled');
             $('#docNIB_upload_file').removeAttr('disabled');
+
+            $('#npwp').show();
+            $('#npwp_id').removeAttr('disabled', true);
+            $('#npwp_text').removeAttr('disabled', true);
+            $('#npwp_opsi_jawaban').removeAttr('disabled', true);
+
+            $('#docNPWP').show();
+            $('#docNPWP_id').removeAttr('disabled', true);
+            $('#docNPWPnama_file').removeAttr('disabled', true);
+            $('#docNPWP_upload_file').removeAttr('disabled', true);
         } else if (ijinUsaha == 'surat_keterangan_usaha') {
             $('#nib').hide()
             $('#nib_id').attr('disabled', true);
@@ -1317,6 +1327,46 @@
             $('#docSKU_id').removeAttr('disabled');
             $('#docSKU_text').removeAttr('disabled');
             $('#docSKU_upload_file').removeAttr('disabled');
+
+            $('#npwp').show();
+            $('#npwp_id').removeAttr('disabled', true);
+            $('#npwp_text').removeAttr('disabled', true);
+            $('#npwp_opsi_jawaban').removeAttr('disabled', true);
+
+            $('#docNPWP').show();
+            $('#docNPWP_id').removeAttr('disabled', true);
+            $('#docNPWPnama_file').removeAttr('disabled', true);
+            $('#docNPWP_upload_file').removeAttr('disabled', true);
+        } else if (ijinUsaha == 'tidak_ada_legalitas_usaha') {
+            $('#nib').hide();
+            $('#nib_id').attr('disabled', true);
+            $('#nib_text').attr('disabled', true);
+            $('#nib_opsi_jawaban').attr('disabled', true);
+
+            $('#docNIB').hide();
+            $('#docNIB_id').attr('disabled', true);
+            $('#docNIBnama_file').attr('disabled', true);
+            $('#docNIB_upload_file').attr('disabled', true);
+
+            $('#surat_keterangan_usaha').hide();
+            $('#surat_keterangan_usaha_id').attr('disabled', true);
+            $('#surat_keterangan_usaha_text').attr('disabled', true);
+            $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
+
+            $('#docSKU').hide();
+            $('#docSKU_id').attr('disabled', true);
+            $('#docSKUnama_file').attr('disabled', true);
+            $('#docSKU_upload_file').attr('disabled', true);
+
+            $('#npwp').hide();
+            $('#npwp_id').attr('disabled', true);
+            $('#npwp_text').attr('disabled', true);
+            $('#npwp_opsi_jawaban').attr('disabled', true);
+
+            $('#docNPWP').hide();
+            $('#docNPWP_id').attr('disabled', true);
+            $('#docNPWPnama_file').attr('disabled', true);
+            $('#docNPWP_upload_file').attr('disabled', true);
         } else {
             $('#nib').hide();
             $('#nib_id').attr('disabled', true);
@@ -1337,6 +1387,16 @@
             $('#docSKU_id').attr('disabled', true);
             $('#docSKUnama_file').attr('disabled', true);
             $('#docSKU_upload_file').attr('disabled', true);
+
+            $('#npwp').show();
+            $('#npwp_id').removeAttr('disabled', true);
+            $('#npwp_text').removeAttr('disabled', true);
+            $('#npwp_opsi_jawaban').removeAttr('disabled', true);
+
+            $('#docNPWP').show();
+            $('#docNPWP_id').removeAttr('disabled', true);
+            $('#docNPWPnama_file').removeAttr('disabled', true);
+            $('#docNPWP_upload_file').removeAttr('disabled', true);
         }
     }
 

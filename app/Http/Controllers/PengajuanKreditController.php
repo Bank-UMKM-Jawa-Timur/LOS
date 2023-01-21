@@ -468,7 +468,7 @@ class PengajuanKreditController extends Controller
         $dataDetailJawabanText = \App\Models\JawabanTextModel::where('id_pengajuan', $id)
                                         ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
                                         ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-                                        ->whereIn('item.nama', ['nib', 'surat keterangan usaha']);
+                                        ->whereIn('item.nama', ['nib', 'surat keterangan usaha', 'tidak ada legalitas usaha']);
 
         return response()->json($dataDetailJawabanText);
     }
@@ -1135,7 +1135,7 @@ class PengajuanKreditController extends Controller
 
             $id = $request->get('id_komentar_staff_text');
             $updateKomentar = KomentarModel::find($id);
-            $updateKomentar->komentar_staff;
+            $updateKomentar->komentar_staff = $request->get('komentar_staff');
             $updateKomentar->update();
 
             $updateData->posisi = 'Proses Input Data';
