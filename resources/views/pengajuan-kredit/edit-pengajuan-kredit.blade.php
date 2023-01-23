@@ -442,11 +442,11 @@
                                     <label for="">NIB</label>
                                     <input type="hidden" name="id_level[]" value="77" id="nib_id">
                                     <input type="hidden" name="opsi_jawaban[]" value="input text" id="nib_opsi_jawaban">
-                                    <input type="text" name="info_text[]" id="" placeholder="Masukkan informasi"
+                                    <input type="text" name="info_text[]" id="nib_text" id="" placeholder="Masukkan informasi"
                                         class="form-control" value="{{  ($dataIjin?->nama == 'NIB') ? $dataIjin?->opsi_text : '' }}">
                                     <input type="hidden" name="skor_penyelia_text[]" value="{{  ($dataIjin?->nama == 'NIB') ? $dataIjin?->skor_penyelia : null }}" >
-                                    <input type="hidden"name="id_text[]" id="nib_text" value="77" >
-                                    <input type="hidden" name="id_jawaban_text[]" id="nib_text" value="{{  ($dataIjin?->nama == 'NIB') ? $dataIjin?->id : '' }}" >
+                                    <input type="hidden"name="id_text[]" id="id_nib_text" value="77" >
+                                    <input type="hidden" name="id_jawaban_text[]" id="id_jawaban_nib" value="{{  ($dataIjin?->nama == 'NIB') ? $dataIjin?->id : '' }}" >
                                 </div>
 
                                 <div class="form-group col-md-6" id="docNIB">
@@ -476,11 +476,11 @@
                                 <div class="form-group col-md-6" id="surat_keterangan_usaha">
                                     <label for="">Surat Keterangan Usaha</label>
                                     <input type="hidden" name="id_level[]" value="78" id="surat_keterangan_usaha_id">
-                                    <input type="text" name="info_text[]" placeholder="Masukkan informasi"
+                                    <input type="text" name="info_text[]" placeholder="Masukkan informasi" id="surat_keterangan_usaha_text"
                                         class="form-control" value="{{  ($dataIjin?->nama == 'Surat Keterangan Usaha') ? $dataIjin?->opsi_text : null }}">
                                     <input type="hidden" name="skor_penyelia_text[]" id="surat_keterangan_usaha_text" value="{{  ($dataIjin?->nama == 'Surat Keterangan Usaha') ? $dataIjin?->skor_penyelia : null }}" >
-                                    <input type="hidden" name="id_text[]" id="surat_keterangan_usaha_text"  value="78">
-                                    <input type="hidden" name="id_jawaban_text[]" id="surat_keterangan_usaha_text" value="{{  ($dataIjin?->nama == 'Surat Keterangan Usaha') ? $dataIjin?->id : '' }}" >
+                                    <input type="hidden" name="id_text[]" id="id_surat_keterangan_usaha_text"  value="78">
+                                    <input type="hidden" name="id_jawaban_text[]" id="id_jawaban_surat_keterangan_usaha" value="{{  ($dataIjin?->nama == 'Surat Keterangan Usaha') ? $dataIjin?->id : '' }}" >
                                 </div>
 
                                 <div class="form-group col-md-6" id="docSKU">
@@ -1281,6 +1281,9 @@
             $('#surat_keterangan_usaha').hide();
             $('#surat_keterangan_usaha_id').attr('disabled', true);
             $('#surat_keterangan_usaha_text').attr('disabled', true);
+            $('#surat_keterangan_usaha_text').attr('disabled', true);
+            $('#id_surat_keterangan_usaha_text').attr('disabled', true);
+            $('#id_jawaban_surat_keterangan_usaha').attr('disabled', true);
             $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
 
             $('#docSKU').hide();
@@ -1311,6 +1314,8 @@
             $('#nib').hide()
             $('#nib_id').attr('disabled', true);
             $('#nib_text').attr('disabled', true);
+            $('#id_nib_text').attr('disabled', true);
+            $('#id_jawaban_nib').attr('disabled', true);
             $('#nib_opsi_jawaban').attr('disabled', true);
 
             $('#docNIB').hide();
