@@ -382,6 +382,14 @@
                                         </div>
                                     @endif
                                 </div>
+
+                                <div class="form-group col-md-6" id="tlgs">
+                                    <label for="">Tidak Ada Legalitas Usaha</label>
+                                    <input type="hidden" name="id_level[]" value="158" id="tlgs_id">
+                                    <input type="hidden" name="opsi_jawaban[]" value="input text" id="tlgs_opsi_jawaban">
+                                    <input type="text" name="informasi[]" id="tlgs_text" placeholder="Masukkan informasi" value="Tidak Ada Legalitas Usaha"
+                                        class="form-control">
+                                </div>
                             </div>
 
                         @elseif($item->nama == 'NPWP')
@@ -890,6 +898,7 @@
         $('#docNIB').hide();
         $('#docSKU').hide();
         $('#surat_keterangan_usaha').hide();
+        $('#tlgs').hide();
         //make input readonly
         $('#ratio_coverage').attr('readonly', true);
         $('#ratio_tenor_asuransi').attr('readonly', true);

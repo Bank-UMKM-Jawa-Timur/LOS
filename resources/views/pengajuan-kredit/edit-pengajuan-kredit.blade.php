@@ -476,6 +476,7 @@
                                 <div class="form-group col-md-6" id="surat_keterangan_usaha">
                                     <label for="">Surat Keterangan Usaha</label>
                                     <input type="hidden" name="id_level[]" value="78" id="surat_keterangan_usaha_id">
+                                    <input type="hidden" name="opsi_jawaban[]" value="input text" id="surat_keterangan_usaha_opsi_jawaban">
                                     <input type="text" name="info_text[]" placeholder="Masukkan informasi" id="surat_keterangan_usaha_text"
                                         class="form-control" value="{{  ($dataIjin?->nama == 'Surat Keterangan Usaha') ? $dataIjin?->opsi_text : null }}">
                                     <input type="hidden" name="skor_penyelia_text[]" id="surat_keterangan_usaha_text" value="{{  ($dataIjin?->nama == 'Surat Keterangan Usaha') ? $dataIjin?->skor_penyelia : null }}" >
@@ -506,6 +507,17 @@
                                     @endif
                                     {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
                                 </div>
+
+                                <div class="form-group col-md-6" id="tlgs">
+                                    <label for="">Tidak Ada Legalitas Usaha</label>
+                                    <input type="hidden" name="id_level[]" value="158" id="tlgs_id">
+                                    <input type="hidden" name="opsi_jawaban[]" value="input text" id="tlgs_opsi_jawaban">
+                                    <input type="text" name="info_text[]" id="tlgs_text" id="" placeholder="Masukkan informasi"
+                                        class="form-control" value="{{  ($dataIjin?->nama == 'Tidak Ada Legalitas Usaha') ? $dataIjin?->opsi_text : '' }}">
+                                    <input type="hidden" name="skor_penyelia_text[]" value="{{  ($dataIjin?->nama == 'Tidak Ada Legalitas Usaha') ? $dataIjin?->skor_penyelia : null }}" >
+                                    <input type="hidden"name="id_text[]" id="id_tlgs_text" value="158" >
+                                    <input type="hidden" name="id_jawaban_text[]" id="id_jawaban_tlgs" value="{{  ($dataIjin?->nama == 'Tidak Ada Legalitas Usaha') ? $dataIjin?->id : '' }}" >
+                                </div>
                             </div>
 
                         @elseif($item->nama == 'NPWP')
@@ -518,7 +530,7 @@
                                     <input type="text" name="info_text[]" id="npwp_text" placeholder="Masukkan informasi"
                                         class="form-control" value="{{ ($dataDetailJawabanTextnpwp != null) ? $dataDetailJawabanTextnpwp?->opsi_text : "" }}">
                                     <input type="hidden" name="skor_penyelia_text[]" id="npwp_text" value="{{ $dataDetailJawabanTextnpwp?->skor_penyelia }}">
-                                    <input type="hidden" name="id_jawaban_text[]" id="npwp_text" value="{{ ($dataDetailJawabanTextnpwp != null) ? $dataDetailJawabanTextnpwp->id : null }}">
+                                    <input type="hidden" name="id_jawaban_text[]" id="npwp_text" value="{{ ($dataDetailJawabanTextnpwp != null) ? $dataDetailJawabanTextnpwp->id : '' }}">
                                 </div>
 
                                 <div class="form-group col-md-6" id="docNPWP">
@@ -1152,6 +1164,7 @@
     $('#docNIB').hide();
     $('#docSKU').hide();
     $('#surat_keterangan_usaha').hide();
+    $('#tlgs').hide();
     //make input readonly
     $('#ratio_coverage').attr('readonly', true);
     $('#ratio_tenor_asuransi').attr('readonly', true);
@@ -1281,7 +1294,6 @@
             $('#surat_keterangan_usaha').hide();
             $('#surat_keterangan_usaha_id').attr('disabled', true);
             $('#surat_keterangan_usaha_text').attr('disabled', true);
-            $('#surat_keterangan_usaha_text').attr('disabled', true);
             $('#id_surat_keterangan_usaha_text').attr('disabled', true);
             $('#id_jawaban_surat_keterangan_usaha').attr('disabled', true);
             $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
@@ -1290,6 +1302,13 @@
             $('#docSKU_id').attr('disabled', true);
             $('#docSKUnama_file').attr('disabled', true);
             $('#docSKU_upload_file').attr('disabled', true);
+
+            $('#tlgs').hide();
+            $('#tlgs_id').attr('disabled', true);
+            $('#tlgs_text').attr('disabled', true);
+            $('#id_tlgs_text').attr('disabled', true);
+            $('#id_jawaban_tlgs').attr('disabled', true);
+            $('#tlgs_opsi_jawaban').attr('disabled', true);
 
             $('#nib').show();
             $('#nib_id').removeAttr('disabled');
@@ -1323,6 +1342,13 @@
             $('#docNIBnama_file').attr('disabled', true);
             $('#docNIB_upload_file').attr('disabled', true);
 
+            $('#tlgs').hide();
+            $('#tlgs_id').attr('disabled', true);
+            $('#tlgs_text').attr('disabled', true);
+            $('#id_tlgs_text').attr('disabled', true);
+            $('#id_jawaban_tlgs').attr('disabled', true);
+            $('#tlgs_opsi_jawaban').attr('disabled', true);
+
             $('#surat_keterangan_usaha').show();
             $('#surat_keterangan_usaha_id').removeAttr('disabled');
             $('#surat_keterangan_usaha_text').removeAttr('disabled');
@@ -1343,9 +1369,16 @@
             $('#docNPWPnama_file').removeAttr('disabled', true);
             $('#docNPWP_upload_file').removeAttr('disabled', true);
         } else if (ijinUsaha == 'tidak_ada_legalitas_usaha') {
-            $('#nib').hide();
+            $('#tlgs').show();
+            $('#tlgs_id').removeAttr('disabled', true);
+            $('#tlgs_text').removeAttr('disabled', true);
+            $('#tlgs_opsi_jawaban').removeAttr('disabled', true);
+
+            $('#nib').hide()
             $('#nib_id').attr('disabled', true);
             $('#nib_text').attr('disabled', true);
+            $('#id_nib_text').attr('disabled', true);
+            $('#id_jawaban_nib').attr('disabled', true);
             $('#nib_opsi_jawaban').attr('disabled', true);
 
             $('#docNIB').hide();
@@ -1356,6 +1389,8 @@
             $('#surat_keterangan_usaha').hide();
             $('#surat_keterangan_usaha_id').attr('disabled', true);
             $('#surat_keterangan_usaha_text').attr('disabled', true);
+            $('#id_surat_keterangan_usaha_text').attr('disabled', true);
+            $('#id_jawaban_surat_keterangan_usaha').attr('disabled', true);
             $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
 
             $('#docSKU').hide();
@@ -1373,9 +1408,11 @@
             $('#docNPWPnama_file').attr('disabled', true);
             $('#docNPWP_upload_file').attr('disabled', true);
         } else {
-            $('#nib').hide();
+            $('#nib').hide()
             $('#nib_id').attr('disabled', true);
             $('#nib_text').attr('disabled', true);
+            $('#id_nib_text').attr('disabled', true);
+            $('#id_jawaban_nib').attr('disabled', true);
             $('#nib_opsi_jawaban').attr('disabled', true);
 
             $('#docNIB').hide();
@@ -1386,12 +1423,21 @@
             $('#surat_keterangan_usaha').hide();
             $('#surat_keterangan_usaha_id').attr('disabled', true);
             $('#surat_keterangan_usaha_text').attr('disabled', true);
+            $('#id_surat_keterangan_usaha_text').attr('disabled', true);
+            $('#id_jawaban_surat_keterangan_usaha').attr('disabled', true);
             $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
 
             $('#docSKU').hide();
             $('#docSKU_id').attr('disabled', true);
             $('#docSKUnama_file').attr('disabled', true);
             $('#docSKU_upload_file').attr('disabled', true);
+
+            $('#tlgs').hide();
+            $('#tlgs_id').attr('disabled', true);
+            $('#tlgs_text').attr('disabled', true);
+            $('#id_tlgs_text').attr('disabled', true);
+            $('#id_jawaban_tlgs').attr('disabled', true);
+            $('#tlgs_opsi_jawaban').attr('disabled', true);
 
             $('#npwp').show();
             $('#npwp_id').removeAttr('disabled', true);
@@ -2145,8 +2191,8 @@
                     var ttlInput = -2
                     var ttlInputFilled = -1
                 } else if(ijin.val() == "tidak_ada_legalitas_usaha"){
-                    var ttlInput = -6
-                    var ttlInputFilled = -5
+                    var ttlInput = -2
+                    var ttlInputFilled = -1
                     console.log(ttlInput);
                 } else if(ijin.val() == "surat_keterangan_usaha"){
                     console.log(2);
