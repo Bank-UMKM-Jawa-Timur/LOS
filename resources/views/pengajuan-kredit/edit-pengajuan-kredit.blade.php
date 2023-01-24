@@ -433,7 +433,7 @@
                             <div class="row col-md-12">
                                 <div class="form-group col-md-6">
                                     <label for="">{{ $item?->nama }}</label>
-                                    <input type="hidden" name="id_text[]" value="77">
+                                    <input type="hidden" name="id_text[]" value="76">
                                     <input type="hidden" name="id_jawaban_text[]" value="{{ $dataIjin?->id }}">
                                     <select name="info_text[]" id="ijin_usaha" class="form-control" required>
                                             <option>-- Pilih Ijin Usaha --</option>
@@ -516,15 +516,20 @@
                                     {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
                                 </div>
 
+                                @php
+                                     $jawabanTlgs = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
+                                                        ->where('id_jawaban', 158)
+                                                        ->first();
+                                @endphp
                                 <div class="form-group col-md-6" id="tlgs">
                                     <label for="">Tidak Ada Legalitas Usaha</label>
                                     <input type="hidden" name="id_level[]" value="158" id="tlgs_id">
                                     <input type="hidden" name="opsi_jawaban[]" value="input text" id="tlgs_opsi_jawaban">
                                     <input type="text" name="info_text[]" id="tlgs_text" id="" placeholder="Masukkan informasi"
-                                        class="form-control" value="{{  ($dataIjin?->nama == 'Tidak Ada Legalitas Usaha') ? $dataIjin?->opsi_text : '' }}">
-                                    <input type="hidden" name="skor_penyelia_text[]" value="{{  ($dataIjin?->nama == 'Tidak Ada Legalitas Usaha') ? $dataIjin?->skor_penyelia : null }}" >
+                                        class="form-control" value="{{ $jawabanTlgs?->opsi_text }}">
+                                    <input type="hidden" name="skor_penyelia_text[]" value="{{  ($jawabanTlgs?->nama == 'Tidak Ada Legalitas Usaha') ? $jawabanTlgs?->skor_penyelia : null }}" >
                                     <input type="hidden"name="id_text[]" value="158" >
-                                    <input type="hidden" name="id_jawaban_text[]" id="id_jawaban_tlgs" value="{{ $dataIjin?->id }}" >
+                                    <input type="hidden" name="id_jawaban_text[]" id="id_jawaban_tlgs" value="{{ $jawabanTlgs?->id }}" >
                                 </div>
                             </div>
 

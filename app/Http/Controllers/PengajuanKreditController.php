@@ -946,6 +946,12 @@ class PengajuanKreditController extends Controller
                 $request->id_delete_file ?? []
             );
 
+            // dd(
+            //     $request->id_jawaban_text,
+            //     $request->id_text,
+            //     $request->info_text
+            // );
+
             foreach ($request->id_jawaban_text as $key => $value) {
                 if ($request->info_text[$key] == null) continue;
 
