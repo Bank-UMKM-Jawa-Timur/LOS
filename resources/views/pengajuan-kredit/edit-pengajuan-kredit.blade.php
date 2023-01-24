@@ -532,7 +532,7 @@
                                     <label for="">NPWP</label>
                                     <input type="hidden" name="id_level[]" value="79" id="npwp_id">
                                     <input type="hidden" name="opsi_jawaban[]" value="input text" id="npwp_opsi_jawaban">
-                                    <input type="hidden" name="id_text[]" value="{{ $dataDetailJawabanTextnpwp?->id_item }}">
+                                    <input type="hidden" name="id_text[]" value="{{ $dataDetailJawabanTextnpwp?->id_item ?? '79' }}">
                                     <input type="text" name="info_text[]" id="npwp_text" placeholder="Masukkan informasi"
                                         class="form-control" value="{{ ($dataDetailJawabanTextnpwp != null) ? $dataDetailJawabanTextnpwp?->opsi_text : "" }}">
                                     <input type="hidden" name="skor_penyelia_text[]" id="npwp_text" value="{{ $dataDetailJawabanTextnpwp?->skor_penyelia }}">
@@ -546,13 +546,15 @@
                                                         ->first();
                                     @endphp
                                     <label for="">Dokumen NPWP</label>
-                                    <input type="hidden" name="id_item_file[]" value="154" id="docNPWP_id">
+                                        <input type="hidden" name="id_file_text[]" value="154">
                                         @if (isset($jawabanDokNPWP->opsi_text) != null)
+                                            <input type="hidden" name="id_update_file[]" value="{{ $jawabanDokNPWP?->id }}" id="docNPWP_id">
                                             <label for="update_file" style="display: none" id="docNPWPnama_file">{{ $jawabanDokNPWP->opsi_text }}</label>
-                                            <input type="file" name="upload_file[]" id="docNPWP_upload_file" placeholder="Masukkan informasi Dokumen NPWP" class="form-control limit-size" value="{{ $jawabanDokNPWP->opsi_text }}">
+                                            <input type="file" name="update_file[]" id="docNPWP_upload_file" placeholder="Masukkan informasi Dokumen NPWP" class="form-control limit-size" value="{{ $jawabanDokNPWP->opsi_text }}">
                                         @else
+                                            <input type="hidden" name="id_update_file[]" value="" id="docNPWP_id">
                                             <label for="update_file" style="display: none" id="docNPWPnama_file">Belum Upload Dokumen NPWP</label>
-                                            <input type="file" name="upload_file[]" id="docNPWP_upload_file" placeholder="Masukkan informasi Dokumen NPWP" class="form-control limit-size" value="Belum Upload Dokumen NPWP">
+                                            <input type="file" name="update_file[]" id="docNPWP_upload_file" placeholder="Masukkan informasi Dokumen NPWP" class="form-control limit-size" value="Belum Upload Dokumen NPWP">
                                         @endif
                                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
