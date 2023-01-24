@@ -434,7 +434,7 @@
                                 <div class="form-group col-md-6">
                                     <label for="">{{ $item?->nama }}</label>
                                     <input type="hidden" name="id_text[]" value="77">
-                                    <input type="hidden" name="id_jawaban_text[]" value="{{ $dataIjin?->id }}}">
+                                    <input type="hidden" name="id_jawaban_text[]" value="{{ $dataIjin?->id }}">
                                     <select name="info_text[]" id="ijin_usaha" class="form-control" required>
                                             <option>-- Pilih Ijin Usaha --</option>
                                             @php $opsiText = strtolower($dataIjin?->opsi_text ?? ''); @endphp
@@ -485,7 +485,7 @@
                                     <label for="">Surat Keterangan Usaha</label>
                                     <input type="hidden" name="id_level[]" value="78" id="surat_keterangan_usaha_id">
                                     <input type="hidden" name="opsi_jawaban[]" value="input text" id="surat_keterangan_usaha_opsi_jawaban">
-                                    <input type="text" name="info_text[]" placeholder="Masukkan informasi" id="surat_keterangan_usaha_text"
+                                    <input type="text" name="info_text[]" placeholder="Masukkan informasi"
                                         class="form-control" value="{{  ($dataIjin?->nama == 'Surat Keterangan Usaha') ? $dataIjin?->opsi_text : null }}">
                                     <input type="hidden" name="skor_penyelia_text[]" id="surat_keterangan_usaha_text" value="{{  ($dataIjin?->nama == 'Surat Keterangan Usaha') ? $dataIjin?->skor_penyelia : null }}" >
                                     <input type="hidden" name="id_text[]" id="id_surat_keterangan_usaha_text"  value="78">
@@ -523,8 +523,8 @@
                                     <input type="text" name="info_text[]" id="tlgs_text" id="" placeholder="Masukkan informasi"
                                         class="form-control" value="{{  ($dataIjin?->nama == 'Tidak Ada Legalitas Usaha') ? $dataIjin?->opsi_text : '' }}">
                                     <input type="hidden" name="skor_penyelia_text[]" value="{{  ($dataIjin?->nama == 'Tidak Ada Legalitas Usaha') ? $dataIjin?->skor_penyelia : null }}" >
-                                    <input type="hidden"name="id_text[]" id="id_tlgs_text" value="158" >
-                                    <input type="hidden" name="id_jawaban_text[]" id="id_jawaban_tlgs" value="{{  ($dataIjin?->nama == 'Tidak Ada Legalitas Usaha') ? $dataIjin?->id : '' }}" >
+                                    <input type="hidden"name="id_text[]" value="158" >
+                                    <input type="hidden" name="id_jawaban_text[]" id="id_jawaban_tlgs" value="{{ $dataIjin?->id }}" >
                                 </div>
                             </div>
 
@@ -1302,162 +1302,162 @@
         let ijinUsaha = $('#ijin_usaha').val().toLowerCase();
         if (ijinUsaha == 'nib') {
             $('#surat_keterangan_usaha').hide();
-            $('#surat_keterangan_usaha_id').attr('disabled', true);
-            $('#surat_keterangan_usaha_text').attr('disabled', true);
-            $('#id_surat_keterangan_usaha_text').attr('disabled', true);
-            $('#id_jawaban_surat_keterangan_usaha').attr('disabled', true);
-            $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
+            $('#surat_keterangan_usaha_id').attr('readonly', true);
+            $('#surat_keterangan_usaha_text').attr('readonly', true);
+            $('#id_surat_keterangan_usaha_text').attr('readonly', true);
+            $('#id_jawaban_surat_keterangan_usaha').attr('readonly', true);
+            $('#surat_keterangan_usaha_opsi_jawaban').attr('readonly', true);
 
             $('#docSKU').hide();
-            $('#docSKU_id').attr('disabled', true);
-            $('#docSKUnama_file').attr('disabled', true);
-            $('#docSKU_upload_file').attr('disabled', true);
+            $('#docSKU_id').attr('readonly', true);
+            $('#docSKUnama_file').attr('readonly', true);
+            $('#docSKU_upload_file').attr('readonly', true);
 
             $('#tlgs').hide();
-            $('#tlgs_id').attr('disabled', true);
-            $('#tlgs_text').attr('disabled', true);
-            $('#id_tlgs_text').attr('disabled', true);
-            $('#id_jawaban_tlgs').attr('disabled', true);
-            $('#tlgs_opsi_jawaban').attr('disabled', true);
+            $('#tlgs_id').attr('readonly', true);
+            $('#tlgs_text').attr('readonly', true);
+            $('#id_tlgs_text').attr('readonly', true);
+            $('#id_jawaban_tlgs').attr('readonly', true);
+            $('#tlgs_opsi_jawaban').attr('readonly', true);
 
             $('#nib').show();
-            $('#nib_id').removeAttr('disabled');
-            $('#nib_text').removeAttr('disabled');
-            $('#nib_opsi_jawaban').removeAttr('disabled');
+            $('#nib_id').removeAttr('readonly');
+            $('#nib_text').removeAttr('readonly');
+            $('#nib_opsi_jawaban').removeAttr('readonly');
 
             $('#docNIB').show();
-            $('#docNIB_id').removeAttr('disabled');
-            $('#docSKUnama_file').removeAttr('disabled');
-            $('#docNIB_upload_file').removeAttr('disabled');
+            $('#docNIB_id').removeAttr('readonly');
+            $('#docSKUnama_file').removeAttr('readonly');
+            $('#docNIB_upload_file').removeAttr('readonly');
 
             $('#npwp').show();
-            $('#npwp_id').removeAttr('disabled', true);
-            $('#npwp_text').removeAttr('disabled', true);
-            $('#npwp_opsi_jawaban').removeAttr('disabled', true);
+            $('#npwp_id').removeAttr('readonly', true);
+            $('#npwp_text').removeAttr('readonly', true);
+            $('#npwp_opsi_jawaban').removeAttr('readonly', true);
 
             $('#docNPWP').show();
-            $('#docNPWP_id').removeAttr('disabled', true);
-            $('#docNPWPnama_file').removeAttr('disabled', true);
-            $('#docNPWP_upload_file').removeAttr('disabled', true);
+            $('#docNPWP_id').removeAttr('readonly', true);
+            $('#docNPWPnama_file').removeAttr('readonly', true);
+            $('#docNPWP_upload_file').removeAttr('readonly', true);
         } else if (ijinUsaha == 'surat keterangan usaha') {
             $('#nib').hide()
-            $('#nib_id').attr('disabled', true);
-            $('#nib_text').attr('disabled', true);
-            $('#id_nib_text').attr('disabled', true);
-            $('#id_jawaban_nib').attr('disabled', true);
-            $('#nib_opsi_jawaban').attr('disabled', true);
+            $('#nib_id').attr('readonly', true);
+            $('#nib_text').attr('readonly', true);
+            $('#id_nib_text').attr('readonly', true);
+            $('#id_jawaban_nib').attr('readonly', true);
+            $('#nib_opsi_jawaban').attr('readonly', true);
 
             $('#docNIB').hide();
-            $('#docNIB_id').attr('disabled', true);
-            $('#docNIBnama_file').attr('disabled', true);
-            $('#docNIB_upload_file').attr('disabled', true);
+            $('#docNIB_id').attr('readonly', true);
+            $('#docNIBnama_file').attr('readonly', true);
+            $('#docNIB_upload_file').attr('readonly', true);
 
             $('#tlgs').hide();
-            $('#tlgs_id').attr('disabled', true);
-            $('#tlgs_text').attr('disabled', true);
-            $('#id_tlgs_text').attr('disabled', true);
-            $('#id_jawaban_tlgs').attr('disabled', true);
-            $('#tlgs_opsi_jawaban').attr('disabled', true);
+            $('#tlgs_id').attr('readonly', true);
+            $('#tlgs_text').attr('readonly', true);
+            $('#id_tlgs_text').attr('readonly', true);
+            $('#id_jawaban_tlgs').attr('readonly', true);
+            $('#tlgs_opsi_jawaban').attr('readonly', true);
 
             $('#surat_keterangan_usaha').show();
-            $('#surat_keterangan_usaha_id').removeAttr('disabled');
-            $('#surat_keterangan_usaha_text').removeAttr('disabled');
-            $('#surat_keterangan_usaha_opsi_jawaban').removeAttr('disabled');
+            $('#surat_keterangan_usaha_id').removeAttr('readonly');
+            $('#surat_keterangan_usaha_text').removeAttr('readonly');
+            $('#surat_keterangan_usaha_opsi_jawaban').removeAttr('readonly');
 
             $('#docSKU').show();
-            $('#docSKU_id').removeAttr('disabled');
-            $('#docSKU_text').removeAttr('disabled');
-            $('#docSKU_upload_file').removeAttr('disabled');
+            $('#docSKU_id').removeAttr('readonly');
+            $('#docSKU_text').removeAttr('readonly');
+            $('#docSKU_upload_file').removeAttr('readonly');
 
             $('#npwp').show();
-            $('#npwp_id').removeAttr('disabled', true);
-            $('#npwp_text').removeAttr('disabled', true);
-            $('#npwp_opsi_jawaban').removeAttr('disabled', true);
+            $('#npwp_id').removeAttr('readonly', true);
+            $('#npwp_text').removeAttr('readonly', true);
+            $('#npwp_opsi_jawaban').removeAttr('readonly', true);
 
             $('#docNPWP').show();
-            $('#docNPWP_id').removeAttr('disabled', true);
-            $('#docNPWPnama_file').removeAttr('disabled', true);
-            $('#docNPWP_upload_file').removeAttr('disabled', true);
+            $('#docNPWP_id').removeAttr('readonly', true);
+            $('#docNPWPnama_file').removeAttr('readonly', true);
+            $('#docNPWP_upload_file').removeAttr('readonly', true);
         } else if (ijinUsaha == 'tidak ada legalitas usaha') {
             $('#tlgs').show();
-            $('#tlgs_id').removeAttr('disabled', true);
-            $('#tlgs_text').removeAttr('disabled', true);
-            $('#tlgs_opsi_jawaban').removeAttr('disabled', true);
+            $('#tlgs_id').removeAttr('readonly', true);
+            $('#tlgs_text').removeAttr('readonly', true);
+            $('#tlgs_opsi_jawaban').removeAttr('readonly', true);
 
             $('#nib').hide()
-            $('#nib_id').attr('disabled', true);
-            $('#nib_text').attr('disabled', true);
-            $('#id_nib_text').attr('disabled', true);
-            $('#id_jawaban_nib').attr('disabled', true);
-            $('#nib_opsi_jawaban').attr('disabled', true);
+            $('#nib_id').attr('readonly', true);
+            $('#nib_text').attr('readonly', true);
+            $('#id_nib_text').attr('readonly', true);
+            $('#id_jawaban_nib').attr('readonly', true);
+            $('#nib_opsi_jawaban').attr('readonly', true);
 
             $('#docNIB').hide();
-            $('#docNIB_id').attr('disabled', true);
-            $('#docNIBnama_file').attr('disabled', true);
-            $('#docNIB_upload_file').attr('disabled', true);
+            $('#docNIB_id').attr('readonly', true);
+            $('#docNIBnama_file').attr('readonly', true);
+            $('#docNIB_upload_file').attr('readonly', true);
 
             $('#surat_keterangan_usaha').hide();
-            $('#surat_keterangan_usaha_id').attr('disabled', true);
-            $('#surat_keterangan_usaha_text').attr('disabled', true);
-            $('#id_surat_keterangan_usaha_text').attr('disabled', true);
-            $('#id_jawaban_surat_keterangan_usaha').attr('disabled', true);
-            $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
+            $('#surat_keterangan_usaha_id').attr('readonly', true);
+            $('#surat_keterangan_usaha_text').attr('readonly', true);
+            $('#id_surat_keterangan_usaha_text').attr('readonly', true);
+            $('#id_jawaban_surat_keterangan_usaha').attr('readonly', true);
+            $('#surat_keterangan_usaha_opsi_jawaban').attr('readonly', true);
 
             $('#docSKU').hide();
-            $('#docSKU_id').attr('disabled', true);
-            $('#docSKUnama_file').attr('disabled', true);
-            $('#docSKU_upload_file').attr('disabled', true);
+            $('#docSKU_id').attr('readonly', true);
+            $('#docSKUnama_file').attr('readonly', true);
+            $('#docSKU_upload_file').attr('readonly', true);
 
             $('#npwp').hide();
-            $('#npwp_id').attr('disabled', true);
-            $('#npwp_text').attr('disabled', true);
-            $('#npwp_opsi_jawaban').attr('disabled', true);
+            $('#npwp_id').attr('readonly', true);
+            $('#npwp_text').attr('readonly', true);
+            $('#npwp_opsi_jawaban').attr('readonly', true);
 
             $('#docNPWP').hide();
-            $('#docNPWP_id').attr('disabled', true);
-            $('#docNPWPnama_file').attr('disabled', true);
-            $('#docNPWP_upload_file').attr('disabled', true);
+            $('#docNPWP_id').attr('readonly', true);
+            $('#docNPWPnama_file').attr('readonly', true);
+            $('#docNPWP_upload_file').attr('readonly', true);
         } else {
             $('#nib').hide()
-            $('#nib_id').attr('disabled', true);
-            $('#nib_text').attr('disabled', true);
-            $('#id_nib_text').attr('disabled', true);
-            $('#id_jawaban_nib').attr('disabled', true);
-            $('#nib_opsi_jawaban').attr('disabled', true);
+            $('#nib_id').attr('readonly', true);
+            $('#nib_text').attr('readonly', true);
+            $('#id_nib_text').attr('readonly', true);
+            $('#id_jawaban_nib').attr('readonly', true);
+            $('#nib_opsi_jawaban').attr('readonly', true);
 
             $('#docNIB').hide();
-            $('#docNIB_id').attr('disabled', true);
-            $('#docNIBnama_file').attr('disabled', true);
-            $('#docNIB_upload_file').attr('disabled', true);
+            $('#docNIB_id').attr('readonly', true);
+            $('#docNIBnama_file').attr('readonly', true);
+            $('#docNIB_upload_file').attr('readonly', true);
 
             $('#surat_keterangan_usaha').hide();
-            $('#surat_keterangan_usaha_id').attr('disabled', true);
-            $('#surat_keterangan_usaha_text').attr('disabled', true);
-            $('#id_surat_keterangan_usaha_text').attr('disabled', true);
-            $('#id_jawaban_surat_keterangan_usaha').attr('disabled', true);
-            $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
+            $('#surat_keterangan_usaha_id').attr('readonly', true);
+            $('#surat_keterangan_usaha_text').attr('readonly', true);
+            $('#id_surat_keterangan_usaha_text').attr('readonly', true);
+            $('#id_jawaban_surat_keterangan_usaha').attr('readonly', true);
+            $('#surat_keterangan_usaha_opsi_jawaban').attr('readonly', true);
 
             $('#docSKU').hide();
-            $('#docSKU_id').attr('disabled', true);
-            $('#docSKUnama_file').attr('disabled', true);
-            $('#docSKU_upload_file').attr('disabled', true);
+            $('#docSKU_id').attr('readonly', true);
+            $('#docSKUnama_file').attr('readonly', true);
+            $('#docSKU_upload_file').attr('readonly', true);
 
             $('#tlgs').hide();
-            $('#tlgs_id').attr('disabled', true);
-            $('#tlgs_text').attr('disabled', true);
-            $('#id_tlgs_text').attr('disabled', true);
-            $('#id_jawaban_tlgs').attr('disabled', true);
-            $('#tlgs_opsi_jawaban').attr('disabled', true);
+            $('#tlgs_id').attr('readonly', true);
+            $('#tlgs_text').attr('readonly', true);
+            $('#id_tlgs_text').attr('readonly', true);
+            $('#id_jawaban_tlgs').attr('readonly', true);
+            $('#tlgs_opsi_jawaban').attr('readonly', true);
 
             $('#npwp').show();
-            $('#npwp_id').removeAttr('disabled', true);
-            $('#npwp_text').removeAttr('disabled', true);
-            $('#npwp_opsi_jawaban').removeAttr('disabled', true);
+            $('#npwp_id').removeAttr('readonly', true);
+            $('#npwp_text').removeAttr('readonly', true);
+            $('#npwp_opsi_jawaban').removeAttr('readonly', true);
 
             $('#docNPWP').show();
-            $('#docNPWP_id').removeAttr('disabled', true);
-            $('#docNPWPnama_file').removeAttr('disabled', true);
-            $('#docNPWP_upload_file').removeAttr('disabled', true);
+            $('#docNPWP_id').removeAttr('readonly', true);
+            $('#docNPWPnama_file').removeAttr('readonly', true);
+            $('#docNPWP_upload_file').removeAttr('readonly', true);
         }
     }
 
