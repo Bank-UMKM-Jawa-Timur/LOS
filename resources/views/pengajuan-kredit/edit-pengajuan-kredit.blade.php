@@ -435,7 +435,7 @@
                                     <label for="">{{ $item?->nama }}</label>
                                     <select name="ijin_usaha" id="ijin_usaha" class="form-control" required>
                                             <option>-- Pilih Ijin Usaha --</option>
-                                            @php $opsiText = strtolower($dataIjin->opsi_text); @endphp
+                                            @php $opsiText = strtolower($dataIjin?->opsi_text ?? ''); @endphp
                                             <option value="NIB" {{ $opsiText == 'nib' ? 'selected' : '' }}>NIB</option>
                                             <option value="Surat Keterangan Usaha" {{ $opsiText == 'surat keterangan usaha' ? 'selected' : '' }}>Surat Keterangan Usaha</option>
                                             <option value="Tidak ada Legalitas Usaha" {{ $opsiText == 'tidak ada legalitas usaha' ? 'selected' : '' }}>Tidak Ada Legalitas Usaha</option>
@@ -1297,7 +1297,7 @@
     });
 
     function getIjinUsaha(){
-        let ijinUsaha = $('#ijin_usaha').val();
+        let ijinUsaha = $('#ijin_usaha').val().toLowerCase();
         if (ijinUsaha == 'nib') {
             $('#surat_keterangan_usaha').hide();
             $('#surat_keterangan_usaha_id').attr('disabled', true);
@@ -1337,7 +1337,7 @@
             $('#docNPWP_id').removeAttr('disabled', true);
             $('#docNPWPnama_file').removeAttr('disabled', true);
             $('#docNPWP_upload_file').removeAttr('disabled', true);
-        } else if (ijinUsaha == 'surat_keterangan_usaha') {
+        } else if (ijinUsaha == 'surat keterangan usaha') {
             $('#nib').hide()
             $('#nib_id').attr('disabled', true);
             $('#nib_text').attr('disabled', true);
@@ -1376,7 +1376,7 @@
             $('#docNPWP_id').removeAttr('disabled', true);
             $('#docNPWPnama_file').removeAttr('disabled', true);
             $('#docNPWP_upload_file').removeAttr('disabled', true);
-        } else if (ijinUsaha == 'tidak_ada_legalitas_usaha') {
+        } else if (ijinUsaha == 'tidak ada legalitas usaha') {
             $('#tlgs').show();
             $('#tlgs_id').removeAttr('disabled', true);
             $('#tlgs_text').removeAttr('disabled', true);
