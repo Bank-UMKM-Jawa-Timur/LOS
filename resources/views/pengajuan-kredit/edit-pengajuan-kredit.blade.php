@@ -446,15 +446,20 @@
                             </div>
 
                             <div class="row col-md-12">
+                                @php
+                                    $jawabanNIB = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
+                                                    ->where('id_jawaban', 77)
+                                                    ->first();
+                                @endphp
                                 <div class="form-group col-md-6" id="nib">
                                     <label for="">NIB</label>
                                     <input type="hidden" name="id_level[]" value="77" id="nib_id">
                                     <input type="hidden" name="opsi_jawaban[]" value="input text" id="nib_opsi_jawaban">
                                     <input type="text" name="info_text[]" id="nib_text" id="" placeholder="Masukkan informasi"
-                                        class="form-control" value="{{  ($dataIjin?->nama == 'NIB') ? $dataIjin?->opsi_text : '' }}">
-                                    <input type="hidden" name="skor_penyelia_text[]" value="{{  ($dataIjin?->nama == 'NIB') ? $dataIjin?->skor_penyelia : null }}" >
+                                        class="form-control" value="{{ $jawabanNIB?->opsi_text }}">
+                                    <input type="hidden" name="skor_penyelia_text[]" value="{{ $jawabanNIB?->skor_penyelia }}" >
                                     <input type="hidden"name="id_text[]" id="id_nib_text" value="77" >
-                                    <input type="hidden" name="id_jawaban_text[]" id="id_jawaban_nib" value="{{  ($dataIjin?->nama == 'NIB') ? $dataIjin?->id : '' }}" >
+                                    <input type="hidden" name="id_jawaban_text[]" id="id_jawaban_nib" value="{{ $jawabanNIB?->id }}" >
                                 </div>
 
                                 <div class="form-group col-md-6" id="docNIB">
@@ -464,13 +469,15 @@
                                                         ->first();
                                     @endphp
                                     <label for="">Dokumen NIB</label>
-                                    <input type="hidden" name="id_item_file[]" value="153" id="docNIB_id">
+                                    <input type="hidden" name="id_file_text[]" value="153" id="docNIB_id">
                                         @if (isset($jawabanDokNIB->opsi_text) != null)
+                                            <input type="hidden" name="id_update_file[]" value="{{ $jawabanDokNIB?->id }}">
                                             <label for="update_file" style="display: none" id="docNIBnama_file">{{ $jawabanDokNIB->opsi_text }}</label>
-                                            <input type="file" name="upload_file[]" id="docNIB_upload_file" placeholder="Masukkan informasi Dokumen NIB" class="form-control limit-size" value="{{ $jawabanDokNIB->opsi_text }}">
+                                            <input type="file" name="update_file[]" id="docNIB_upload_file" placeholder="Masukkan informasi Dokumen NIB" class="form-control limit-size" value="{{ $jawabanDokNIB->opsi_text }}">
                                         @else
+                                            <input type="hidden" name="id_update_file[]" value="">
                                             <label for="update_file" style="display: none" id="docNIBnama_file">Belum Upload Dokumen NIB</label>
-                                            <input type="file" name="upload_file[]" id="docNIB_upload_file" placeholder="Masukkan informasi Dokumen NIB" class="form-control limit-size" value="Belum Upload Dokumen NIB">
+                                            <input type="file" name="update_file[]" id="docNIB_upload_file" placeholder="Masukkan informasi Dokumen NIB" class="form-control limit-size" value="Belum Upload Dokumen NIB">
                                         @endif
                                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
@@ -482,14 +489,19 @@
                                 </div>
 
                                 <div class="form-group col-md-6" id="surat_keterangan_usaha">
+                                    @php
+                                        $jawabanSKU = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
+                                                        ->where('id_jawaban', 78)
+                                                        ->first();
+                                    @endphp
                                     <label for="">Surat Keterangan Usaha</label>
                                     <input type="hidden" name="id_level[]" value="78" id="surat_keterangan_usaha_id">
                                     <input type="hidden" name="opsi_jawaban[]" value="input text" id="surat_keterangan_usaha_opsi_jawaban">
                                     <input type="text" name="info_text[]" placeholder="Masukkan informasi"
-                                        class="form-control" value="{{  ($dataIjin?->nama == 'Surat Keterangan Usaha') ? $dataIjin?->opsi_text : null }}">
-                                    <input type="hidden" name="skor_penyelia_text[]" id="surat_keterangan_usaha_text" value="{{  ($dataIjin?->nama == 'Surat Keterangan Usaha') ? $dataIjin?->skor_penyelia : null }}" >
+                                        class="form-control" value="{{ $jawabanSKU?->opsi_text }}">
+                                    <input type="hidden" name="skor_penyelia_text[]" id="surat_keterangan_usaha_text" value="{{ $jawabanSKU?->skor_penyelia }}" >
                                     <input type="hidden" name="id_text[]" id="id_surat_keterangan_usaha_text"  value="78">
-                                    <input type="hidden" name="id_jawaban_text[]" id="id_jawaban_surat_keterangan_usaha" value="{{  ($dataIjin?->nama == 'Surat Keterangan Usaha') ? $dataIjin?->id : '' }}" >
+                                    <input type="hidden" name="id_jawaban_text[]" id="id_jawaban_surat_keterangan_usaha" value="{{ $jawabanSKU?->id }}" >
                                 </div>
 
                                 <div class="form-group col-md-6" id="docSKU">
@@ -499,13 +511,15 @@
                                                         ->first();
                                     @endphp
                                     <label for="">Surat Keterangan Usaha</label>
-                                    <input type="hidden" name="id_item_file[]" value="157" id="docSKU_id">
+                                    <input type="hidden" name="id_file_text[]" value="157" id="docSKU_id">
                                         @if (isset($jawabanDokSKU->opsi_text) != null)
+                                            <input type="hidden" name="id_update_file[]" value="{{ $jawabanDokSKU?->id }}">
                                             <label for="update_file" style="display: none" id="docSKUnama_file">{{ $jawabanDokSKU->opsi_text }}</label>
-                                            <input type="file" name="upload_file[]" id="docSKU_upload_file" placeholder="Masukkan informasi Dokumen SKU" class="form-control limit-size" value="{{ $jawabanDokSKU->opsi_text }}">
+                                            <input type="file" name="update_file[]" id="docSKU_upload_file" placeholder="Masukkan informasi Dokumen SKU" class="form-control limit-size" value="{{ $jawabanDokSKU->opsi_text }}">
                                         @else
+                                            <input type="hidden" name="id_update_file[]" value="">
                                             <label for="update_file" style="display: none" id="docSKUnama_file">Belum Upload Dokumen SKU</label>
-                                            <input type="file" name="upload_file[]" id="docSKU_upload_file" placeholder="Masukkan informasi Dokumen SKU" class="form-control limit-size" value="Belum Upload Dokumen SKU">
+                                            <input type="file" name="update_file[]" id="docSKU_upload_file" placeholder="Masukkan informasi Dokumen SKU" class="form-control limit-size" value="Belum Upload Dokumen SKU">
                                         @endif
                                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
