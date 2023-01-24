@@ -540,7 +540,7 @@
                                     <input type="hidden" name="id_level[]" value="158" id="tlgs_id">
                                     <input type="hidden" name="opsi_jawaban[]" value="input text" id="tlgs_opsi_jawaban">
                                     <input type="text" name="info_text[]" id="tlgs_text" id="" placeholder="Masukkan informasi"
-                                        class="form-control" value="{{ $jawabanTlgs?->opsi_text }}">
+                                        class="form-control" value="Tidak Ada Legalitas Usaha">
                                     <input type="hidden" name="skor_penyelia_text[]" value="{{  ($jawabanTlgs?->nama == 'Tidak Ada Legalitas Usaha') ? $jawabanTlgs?->skor_penyelia : null }}" >
                                     <input type="hidden"name="id_text[]" value="158" >
                                     <input type="hidden" name="id_jawaban_text[]" id="id_jawaban_tlgs" value="{{ $jawabanTlgs?->id }}" >
@@ -1398,10 +1398,12 @@
             $('#docNPWPnama_file').removeAttr('readonly', true);
             $('#docNPWP_upload_file').removeAttr('readonly', true);
         } else if (ijinUsaha == 'tidak ada legalitas usaha') {
-            $('#tlgs').show();
-            $('#tlgs_id').removeAttr('readonly', true);
-            $('#tlgs_text').removeAttr('readonly', true);
-            $('#tlgs_opsi_jawaban').removeAttr('readonly', true);
+            $('#tlgs').hide();
+            $('#tlgs_id').attr('readonly', true);
+            $('#tlgs_text').attr('readonly', true);
+            $('#id_tlgs_text').attr('readonly', true);
+            $('#id_jawaban_tlgs').attr('readonly', true);
+            $('#tlgs_opsi_jawaban').attr('readonly', true);
 
             $('#nib').hide()
             $('#nib_id').attr('readonly', true);
