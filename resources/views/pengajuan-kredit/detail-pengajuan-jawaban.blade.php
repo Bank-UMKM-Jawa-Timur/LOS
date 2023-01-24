@@ -654,9 +654,9 @@
                                                             $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text);
                                                         @endphp
                                                         @if ($file_parts['extension'] == 'pdf')
-                                                            <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}" width="100%" height="800px"></iframe>
+                                                            <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}" width="100%" height="600px"></iframe>
                                                         @else
-                                                            <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}" alt="" width="800px">
+                                                            <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}" alt="" width="600px">
                                                         @endif
                                                     @else    
                                                         <p class="badge badge-info text-lg"><b>
@@ -833,24 +833,13 @@
                                                     <b>Jawaban:</b>
                                                     <div class="mt-2 pl-3">
                                                         @if ($itemEmpat->opsi_jawaban == 'file')
-                                                            @if (intval($itemTextEmpat->opsi_text) > 1)
-                                                                @php
-                                                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text);
-                                                                @endphp
-                                                                @if ($file_parts['extension']=='pdf')
-                                                                    <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}" width="100%" height="400"></iframe>
-                                                                @else
-                                                                    <img style="border: 5px solid #c2c7cf" src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}" alt="" width="400">
-                                                                @endif
+                                                            @php
+                                                                $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text);
+                                                            @endphp
+                                                            @if ($file_parts['extension']=='pdf')
+                                                                <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}" width="100%" height="600px"></iframe>
                                                             @else
-                                                                @php
-                                                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text);
-                                                                @endphp
-                                                                @if ($file_parts['extension']=='pdf')
-                                                                    <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}" width="100%" height="500px"></iframe>
-                                                                @else
-                                                                    <img style="border: 5px solid #c2c7cf" src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}" alt="" width="500px">
-                                                                @endif
+                                                                <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}" alt="" width="600px">
                                                             @endif
                                                         @else
                                                             <p class="badge badge-info text-lg"><b>
