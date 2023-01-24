@@ -410,11 +410,16 @@
                         @php
                             $idLevelDua = str_replace(' ', '_', strtolower($item->nama));
 
+                            // $dataIjin = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
+                            //             ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
+                            //             ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                            //             ->orderBy('id', 'DESC')
+                            //             ->whereIn('item.nama', ['nib', 'surat keterangan usaha', 'tidak ada legalitas usaha'])->first();
+
                             $dataIjin = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
-                                        ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
-                                        ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-                                        ->orderBy('id', 'DESC')
-                                        ->whereIn('item.nama', ['nib', 'surat keterangan usaha', 'tidak ada legalitas usaha'])->first();
+                                ->whereIn('opsi_text', ['nib', 'surat keterangan usaha', 'tidak ada legalitas usaha'])
+                                ->latest()
+                                ->first();
 
                             $dataDetailJawabanTextnpwp = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
                                         ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
@@ -429,10 +434,11 @@
                                 <div class="form-group col-md-6">
                                     <label for="">{{ $item?->nama }}</label>
                                     <select name="ijin_usaha" id="ijin_usaha" class="form-control" required>
-                                        <option value="">-- Pilih Ijin Usaha --</option>
-                                            <option value="nib" {{ ($dataIjin?->nama == 'NIB') ? 'selected' : '' }}>NIB</option>
-                                            <option value="surat_keterangan_usaha" {{ ($dataIjin?->nama == 'Surat Keterangan Usaha') ? 'selected' : '' }}>Surat Keterangan Usaha</option>
-                                            <option value="tidak_ada_legalitas_usaha" {{ ($dataIjin?->nama == 'Tidak Ada Legalitas Usaha') ? 'selected' : '' }}>Tidak Ada Legalitas Usaha</option>
+                                            <option>-- Pilih Ijin Usaha --</option>
+                                            @php $opsiText = strtolower($dataIjin->opsi_text); @endphp
+                                            <option value="NIB" {{ $opsiText == 'nib' ? 'selected' : '' }}>NIB</option>
+                                            <option value="Surat Keterangan Usaha" {{ $opsiText == 'surat keterangan usaha' ? 'selected' : '' }}>Surat Keterangan Usaha</option>
+                                            <option value="Tidak ada Legalitas Usaha" {{ $opsiText == 'tidak ada legalitas usaha' ? 'selected' : '' }}>Tidak Ada Legalitas Usaha</option>
                                     </select>
                                 </div>
                             </div>
