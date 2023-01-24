@@ -433,7 +433,9 @@
                             <div class="row col-md-12">
                                 <div class="form-group col-md-6">
                                     <label for="">{{ $item?->nama }}</label>
-                                    <select name="ijin_usaha" id="ijin_usaha" class="form-control" required>
+                                    <input type="hidden" name="id_text[]" value="77">
+                                    <input type="hidden" name="id_jawaban_text[]" value="{{ $dataIjin?->id }}}">
+                                    <select name="info_text[]" id="ijin_usaha" class="form-control" required>
                                             <option>-- Pilih Ijin Usaha --</option>
                                             @php $opsiText = strtolower($dataIjin?->opsi_text ?? ''); @endphp
                                             <option value="NIB" {{ $opsiText == 'nib' ? 'selected' : '' }}>NIB</option>
