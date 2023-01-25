@@ -412,16 +412,11 @@
                         @php
                             $idLevelDua = str_replace(' ', '_', strtolower($item->nama));
 
-                            // $dataIjin = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
-                            //             ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
-                            //             ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-                            //             ->orderBy('id', 'DESC')
-                            //             ->whereIn('item.nama', ['nib', 'surat keterangan usaha', 'tidak ada legalitas usaha'])->first();
-
                             $dataIjin = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
-                                ->whereIn('opsi_text', ['nib', 'surat keterangan usaha', 'tidak ada legalitas usaha'])
-                                ->latest()
-                                ->first();
+                                        ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
+                                        ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                        ->orderBy('id', 'DESC')
+                                        ->whereIn('item.nama', ['nib', 'surat keterangan usaha', 'tidak ada legalitas usaha'])->first();
 
                             $dataDetailJawabanTextnpwp = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
                                         ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
@@ -435,33 +430,25 @@
                             <div class="row col-md-12">
                                 <div class="form-group col-md-6">
                                     <label for="">{{ $item?->nama }}</label>
-                                    <input type="hidden" name="id_text[]" value="76">
-                                    <input type="hidden" name="id_jawaban_text[]" value="{{ $dataIjin?->id }}">
-                                    <select name="info_text[]" id="ijin_usaha" class="form-control" required>
-                                            <option>-- Pilih Ijin Usaha --</option>
-                                            @php $opsiText = strtolower($dataIjin?->opsi_text ?? ''); @endphp
-                                            <option value="NIB" {{ $opsiText == 'nib' ? 'selected' : '' }}>NIB</option>
-                                            <option value="Surat Keterangan Usaha" {{ $opsiText == 'surat keterangan usaha' ? 'selected' : '' }}>Surat Keterangan Usaha</option>
-                                            <option value="Tidak ada Legalitas Usaha" {{ $opsiText == 'tidak ada legalitas usaha' ? 'selected' : '' }}>Tidak Ada Legalitas Usaha</option>
+                                    <select name="ijin_usaha" id="ijin_usaha" class="form-control" required>
+                                        <option value="">-- Pilih Ijin Usaha --</option>
+                                            <option value="nib" {{ ($dataIjin?->nama == 'NIB') ? 'selected' : '' }}>NIB</option>
+                                            <option value="surat_keterangan_usaha" {{ ($dataIjin?->nama == 'Surat Keterangan Usaha') ? 'selected' : '' }}>Surat Keterangan Usaha</option>
+                                            <option value="tidak_ada_legalitas_usaha" {{ ($dataIjin?->nama == 'Tidak Ada Legalitas Usaha') ? 'selected' : '' }}>Tidak Ada Legalitas Usaha</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="row col-md-12">
-                                @php
-                                    $jawabanNIB = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
-                                                    ->where('id_jawaban', 77)
-                                                    ->first();
-                                @endphp
                                 <div class="form-group col-md-6" id="nib">
                                     <label for="">NIB</label>
                                     <input type="hidden" name="id_level[]" value="77" id="nib_id">
                                     <input type="hidden" name="opsi_jawaban[]" value="input text" id="nib_opsi_jawaban">
                                     <input type="text" name="info_text[]" id="nib_text" id="" placeholder="Masukkan informasi"
-                                        class="form-control" value="{{ $jawabanNIB?->opsi_text }}">
-                                    <input type="hidden" name="skor_penyelia_text[]" value="{{ $jawabanNIB?->skor_penyelia }}" >
+                                        class="form-control" value="{{  ($dataIjin?->nama == 'NIB') ? $dataIjin?->opsi_text : '' }}">
+                                    <input type="hidden" name="skor_penyelia_text[]" value="{{  ($dataIjin?->nama == 'NIB') ? $dataIjin?->skor_penyelia : null }}" >
                                     <input type="hidden"name="id_text[]" id="id_nib_text" value="77" >
-                                    <input type="hidden" name="id_jawaban_text[]" id="id_jawaban_nib" value="{{ $jawabanNIB?->id }}" >
+                                    <input type="hidden" name="id_jawaban_text[]" id="id_jawaban_nib" value="{{  ($dataIjin?->nama == 'NIB') ? $dataIjin?->id : '' }}" >
                                 </div>
 
                                 <div class="form-group col-md-6" id="docNIB">
@@ -473,13 +460,11 @@
                                     <label for="">Dokumen NIB</label>
                                     <input type="hidden" name="id_file_text[]" value="153" id="docNIB_id">
                                         @if (isset($jawabanDokNIB->opsi_text) != null)
-                                            <input type="hidden" name="id_update_file[]" value="{{ $jawabanDokNIB?->id }}">
                                             <label for="update_file" style="display: none" id="docNIBnama_file">{{ $jawabanDokNIB->opsi_text }}</label>
-                                            <input type="file" name="upload_file[]" id="docNIB_upload_file" placeholder="Masukkan informasi Dokumen NIB" class="form-control limit-size" value="{{ $jawabanDokNIB->opsi_text }}">
+                                            <input type="file" name="update_file[]" id="docNIB_update_file" placeholder="Masukkan informasi Dokumen NIB" class="form-control limit-size" value="{{ $jawabanDokNIB->opsi_text }}">
                                         @else
-                                            <input type="hidden" name="id_update_file[]" value="">
                                             <label for="update_file" style="display: none" id="docNIBnama_file">Belum Upload Dokumen NIB</label>
-                                            <input type="file" name="upload_file[]" id="docNIB_upload_file" placeholder="Masukkan informasi Dokumen NIB" class="form-control limit-size" value="Belum Upload Dokumen NIB">
+                                            <input type="file" name="update_file[]" id="docNIB_update_file" placeholder="Masukkan informasi Dokumen NIB" class="form-control limit-size" value="Belum Upload Dokumen NIB">
                                         @endif
                                     <input type="hidden" id="id_update_nib" name="id_update_file[]" value="{{ $jawabanDokNIB?->id }}">
                                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
@@ -492,19 +477,13 @@
                                 </div>
 
                                 <div class="form-group col-md-6" id="surat_keterangan_usaha">
-                                    @php
-                                        $jawabanSKU = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
-                                                        ->where('id_jawaban', 78)
-                                                        ->first();
-                                    @endphp
                                     <label for="">Surat Keterangan Usaha</label>
                                     <input type="hidden" name="id_level[]" value="78" id="surat_keterangan_usaha_id">
-                                    <input type="hidden" name="opsi_jawaban[]" value="input text" id="surat_keterangan_usaha_opsi_jawaban">
-                                    <input type="text" name="info_text[]" placeholder="Masukkan informasi"
-                                        class="form-control" value="{{ $jawabanSKU?->opsi_text }}">
-                                    <input type="hidden" name="skor_penyelia_text[]" id="surat_keterangan_usaha_text" value="{{ $jawabanSKU?->skor_penyelia }}" >
+                                    <input type="text" name="info_text[]" placeholder="Masukkan informasi" id="surat_keterangan_usaha_text"
+                                        class="form-control" value="{{  ($dataIjin?->nama == 'Surat Keterangan Usaha') ? $dataIjin?->opsi_text : null }}">
+                                    <input type="hidden" name="skor_penyelia_text[]" id="surat_keterangan_usaha_text" value="{{  ($dataIjin?->nama == 'Surat Keterangan Usaha') ? $dataIjin?->skor_penyelia : null }}" >
                                     <input type="hidden" name="id_text[]" id="id_surat_keterangan_usaha_text"  value="78">
-                                    <input type="hidden" name="id_jawaban_text[]" id="id_jawaban_surat_keterangan_usaha" value="{{ $jawabanSKU?->id }}" >
+                                    <input type="hidden" name="id_jawaban_text[]" id="id_jawaban_surat_keterangan_usaha" value="{{  ($dataIjin?->nama == 'Surat Keterangan Usaha') ? $dataIjin?->id : '' }}" >
                                 </div>
 
                                 <div class="form-group col-md-6" id="docSKU">
@@ -516,13 +495,11 @@
                                     <label for="">Surat Keterangan Usaha</label>
                                     <input type="hidden" name="id_file_text[]" value="157" id="docSKU_id">
                                         @if (isset($jawabanDokSKU->opsi_text) != null)
-                                            <input type="hidden" name="id_update_file[]" value="{{ $jawabanDokSKU?->id }}">
                                             <label for="update_file" style="display: none" id="docSKUnama_file">{{ $jawabanDokSKU->opsi_text }}</label>
-                                            <input type="file" name="upload_file[]" id="docSKU_upload_file" placeholder="Masukkan informasi Dokumen SKU" class="form-control limit-size" value="{{ $jawabanDokSKU->opsi_text }}">
+                                            <input type="file" name="update_file[]" id="docSKU_update_file" placeholder="Masukkan informasi Dokumen SKU" class="form-control limit-size" value="{{ $jawabanDokSKU->opsi_text }}">
                                         @else
-                                            <input type="hidden" name="id_update_file[]" value="">
                                             <label for="update_file" style="display: none" id="docSKUnama_file">Belum Upload Dokumen SKU</label>
-                                            <input type="file" name="upload_file[]" id="docSKU_upload_file" placeholder="Masukkan informasi Dokumen SKU" class="form-control limit-size" value="Belum Upload Dokumen SKU">
+                                            <input type="file" name="update_file[]" id="docSKU_update_file" placeholder="Masukkan informasi Dokumen SKU" class="form-control limit-size" value="Belum Upload Dokumen SKU">
                                         @endif
                                     <input type="hidden" name="id_update_file[]" id="id_update_sku" value="{{ $jawabanDokSKU?->id }}">
                                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
@@ -533,22 +510,6 @@
                                     @endif
                                     {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
                                 </div>
-
-                                @php
-                                     $jawabanTlgs = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
-                                                        ->where('id_jawaban', 158)
-                                                        ->first();
-                                @endphp
-                                <div class="form-group col-md-6" id="tlgs">
-                                    <label for="">Tidak Ada Legalitas Usaha</label>
-                                    <input type="hidden" name="id_level[]" value="158" id="tlgs_id">
-                                    <input type="hidden" name="opsi_jawaban[]" value="input text" id="tlgs_opsi_jawaban">
-                                    <input type="text" name="info_text[]" id="tlgs_text" id="" placeholder="Masukkan informasi"
-                                        class="form-control" value="Tidak Ada Legalitas Usaha">
-                                    <input type="hidden" name="skor_penyelia_text[]" value="{{  ($jawabanTlgs?->nama == 'Tidak Ada Legalitas Usaha') ? $jawabanTlgs?->skor_penyelia : null }}" >
-                                    <input type="hidden"name="id_text[]" value="158" >
-                                    <input type="hidden" name="id_jawaban_text[]" id="id_jawaban_tlgs" value="{{ $jawabanTlgs?->id }}" >
-                                </div>
                             </div>
 
                         @elseif($item->nama == 'NPWP')
@@ -557,11 +518,11 @@
                                     <label for="">NPWP</label>
                                     <input type="hidden" name="id_level[]" value="79" id="npwp_id">
                                     <input type="hidden" name="opsi_jawaban[]" value="input text" id="npwp_opsi_jawaban">
-                                    <input type="hidden" name="id_text[]" value="{{ $dataDetailJawabanTextnpwp?->id_item ?? '79' }}">
+                                    <input type="hidden" name="id_text[]" value="{{ $dataDetailJawabanTextnpwp?->id_item }}">
                                     <input type="text" name="info_text[]" id="npwp_text" placeholder="Masukkan informasi"
                                         class="form-control" value="{{ ($dataDetailJawabanTextnpwp != null) ? $dataDetailJawabanTextnpwp?->opsi_text : "" }}">
                                     <input type="hidden" name="skor_penyelia_text[]" id="npwp_text" value="{{ $dataDetailJawabanTextnpwp?->skor_penyelia }}">
-                                    <input type="hidden" name="id_jawaban_text[]" id="npwp_text" value="{{ ($dataDetailJawabanTextnpwp != null) ? $dataDetailJawabanTextnpwp->id : '' }}">
+                                    <input type="hidden" name="id_jawaban_text[]" id="npwp_text" value="{{ ($dataDetailJawabanTextnpwp != null) ? $dataDetailJawabanTextnpwp->id : null }}">
                                 </div>
 
                                 <div class="form-group col-md-6" id="docNPWP">
@@ -571,15 +532,13 @@
                                                         ->first();
                                     @endphp
                                     <label for="">Dokumen NPWP</label>
-                                    <input type="hidden" name="id_item_file[]" value="154" id="docNPWP_id">
+                                    <input type="hidden" name="id_file_text[]" value="154" id="docNPWP_id">
                                         @if (isset($jawabanDokNPWP->opsi_text) != null)
-                                            <input type="hidden" name="id_update_file[]" value="{{ $jawabanDokNPWP?->id }}" id="docNPWP_id">
                                             <label for="update_file" style="display: none" id="docNPWPnama_file">{{ $jawabanDokNPWP->opsi_text }}</label>
-                                            <input type="file" name="upload_file[]" id="docNPWP_upload_file" placeholder="Masukkan informasi Dokumen NPWP" class="form-control limit-size" value="{{ $jawabanDokNPWP->opsi_text }}">
+                                            <input type="file" name="update_file[]" id="docNPWP_update_file" placeholder="Masukkan informasi Dokumen NPWP" class="form-control limit-size" value="{{ $jawabanDokNPWP->opsi_text }}">
                                         @else
-                                            <input type="hidden" name="id_update_file[]" value="" id="docNPWP_id">
                                             <label for="update_file" style="display: none" id="docNPWPnama_file">Belum Upload Dokumen NPWP</label>
-                                            <input type="file" name="upload_file[]" id="docNPWP_upload_file" placeholder="Masukkan informasi Dokumen NPWP" class="form-control limit-size" value="Belum Upload Dokumen NPWP">
+                                            <input type="file" name="update_file[]" id="docNPWP_update_file" placeholder="Masukkan informasi Dokumen NPWP" class="form-control limit-size" value="Belum Upload Dokumen NPWP">
                                         @endif
                                         <input type="hidden" id="id_update_npwp" name="id_update_file[]" value="{{ $jawabanDokNPWP?->id }}">
                                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
@@ -1198,7 +1157,6 @@
     $('#docNIB').hide();
     $('#docSKU').hide();
     $('#surat_keterangan_usaha').hide();
-    $('#tlgs').hide();
     //make input readonly
     $('#ratio_coverage').attr('readonly', true);
     $('#ratio_tenor_asuransi').attr('readonly', true);
@@ -1323,71 +1281,81 @@
     });
 
     function getIjinUsaha(){
-        let ijinUsaha = $('#ijin_usaha').val().toLowerCase();
+        let ijinUsaha = $('#ijin_usaha').val();
         if (ijinUsaha == 'nib') {
             $('#surat_keterangan_usaha').hide();
-            $('#surat_keterangan_usaha_id').attr('readonly', true);
-            $('#surat_keterangan_usaha_text').attr('readonly', true);
-            $('#id_surat_keterangan_usaha_text').attr('readonly', true);
-            $('#id_jawaban_surat_keterangan_usaha').attr('readonly', true);
-            $('#surat_keterangan_usaha_opsi_jawaban').attr('readonly', true);
+            $('#surat_keterangan_usaha_id').attr('disabled', true);
+            $('#surat_keterangan_usaha_text').attr('disabled', true);
+            $('#surat_keterangan_usaha_text').attr('disabled', true);
+            $('#id_surat_keterangan_usaha_text').attr('disabled', true);
+            $('#id_jawaban_surat_keterangan_usaha').attr('disabled', true);
+            $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
 
             $('#docSKU').hide();
             $('#docSKU_id').attr('disabled', true);
             $('#docSKUnama_file').attr('disabled', true);
-            $('#docSKU_upload_file').attr('disabled', true);
+            $('#docSKU_update_file').attr('disabled', true);
+            $('#id_update_sku').attr('disabled', true);
 
             $('#nib').show();
-            $('#nib_id').removeAttr('readonly');
-            $('#nib_text').removeAttr('readonly');
-            $('#nib_opsi_jawaban').removeAttr('readonly');
+            $('#nib_id').removeAttr('disabled');
+            $('#nib_text').removeAttr('disabled');
+            $('#nib_opsi_jawaban').removeAttr('disabled');
 
             $('#docNIB').show();
             $('#docNIB_id').removeAttr('disabled');
-            $('#docSKUnama_file').removeAttr('disabled');
-            $('#docNIB_upload_file').removeAttr('disabled');
+            $('#id_nib_text').removeAttr('disabled');
+            $('#id_jawaban_nib').removeAttr('disabled');
+            $('#docNIBnama_file').removeAttr('disabled');
+            $('#docNIB_update_file').removeAttr('disabled');
+            $('#id_update_nib').removeAttr('disabled');
 
             $('#npwp').show();
-            $('#npwp_id').removeAttr('readonly', true);
-            $('#npwp_text').removeAttr('readonly', true);
-            $('#npwp_opsi_jawaban').removeAttr('readonly', true);
+            $('#npwp_id').removeAttr('disabled', true);
+            $('#npwp_text').removeAttr('disabled', true);
+            $('#npwp_opsi_jawaban').removeAttr('disabled', true);
 
             $('#docNPWP').show();
             $('#docNPWP_id').removeAttr('disabled', true);
             $('#docNPWPnama_file').removeAttr('disabled', true);
-            $('#docNPWP_upload_file').removeAttr('disabled', true);
+            $('#docNPWP_update_file').removeAttr('disabled', true);
         } else if (ijinUsaha == 'surat_keterangan_usaha') {
             $('#nib').hide()
-            $('#nib_id').attr('readonly', true);
-            $('#nib_text').attr('readonly', true);
-            $('#id_nib_text').attr('readonly', true);
-            $('#id_jawaban_nib').attr('readonly', true);
-            $('#nib_opsi_jawaban').attr('readonly', true);
+            $('#nib_id').attr('disabled', true);
+            $('#nib_text').attr('disabled', true);
+            $('#id_nib_text').attr('disabled', true);
+            $('#id_jawaban_nib').attr('disabled', true);
+            $('#nib_opsi_jawaban').attr('disabled', true);
 
             $('#docNIB').hide();
             $('#docNIB_id').attr('disabled', true);
             $('#docNIBnama_file').attr('disabled', true);
-            $('#docNIB_upload_file').attr('disabled', true);
+            $('#docNIB_update_file').attr('disabled', true);
+            $('#id_update_nib').attr('disabled', true);
 
             $('#surat_keterangan_usaha').show();
             $('#surat_keterangan_usaha_id').removeAttr('disabled');
             $('#surat_keterangan_usaha_text').removeAttr('disabled');
+            $('#id_nib_text').removeAttr('disabled');
+            $('#id_jawaban_nib').removeAttr('disabled');
+            $('#docSKUnama_file').removeAttr('disabled');
             $('#surat_keterangan_usaha_opsi_jawaban').removeAttr('disabled');
+            $('#id_update_nib').removeAttr('disabled');
 
             $('#docSKU').show();
             $('#docSKU_id').removeAttr('disabled');
             $('#docSKU_text').removeAttr('disabled');
-            $('#docSKU_upload_file').removeAttr('disabled');
+            $('#docSKU_update_file').removeAttr('disabled');
 
             $('#npwp').show();
-            $('#npwp_id').removeAttr('readonly', true);
-            $('#npwp_text').removeAttr('readonly', true);
-            $('#npwp_opsi_jawaban').removeAttr('readonly', true);
+            $('#npwp_id').removeAttr('disabled', true);
+            $('#npwp_text').removeAttr('disabled', true);
+            $('#npwp_opsi_jawaban').removeAttr('disabled', true);
 
             $('#docNPWP').show();
             $('#docNPWP_id').removeAttr('disabled', true);
             $('#docNPWPnama_file').removeAttr('disabled', true);
-            $('#docNPWP_upload_file').removeAttr('disabled', true);
+            $('#docNPWP_update_file').removeAttr('disabled', true);
         } else if (ijinUsaha == 'tidak_ada_legalitas_usaha') {
             $('#nib').hide();
             $('#nib_id').attr('disabled', true);
@@ -1397,7 +1365,39 @@
             $('#docNIB').hide();
             $('#docNIB_id').attr('disabled', true);
             $('#docNIBnama_file').attr('disabled', true);
-            $('#docNIB_upload_file').attr('disabled', true);
+            $('#docNIB_update_file').attr('disabled', true);
+            $('#id_update_nib').attr('disabled', true);
+
+            $('#surat_keterangan_usaha').hide();
+            $('#surat_keterangan_usaha_id').attr('disabled', true);
+            $('#surat_keterangan_usaha_text').attr('disabled', true);
+            $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
+            $('#id_update_sku').attr('disabled', true);
+
+            $('#docSKU').hide();
+            $('#docSKU_id').attr('disabled', true);
+            $('#docSKUnama_file').attr('disabled', true);
+            $('#docSKU_update_file').attr('disabled', true);
+
+            $('#npwp').hide();
+            $('#npwp_id').attr('disabled', true);
+            $('#npwp_text').attr('disabled', true);
+            $('#npwp_opsi_jawaban').attr('disabled', true);
+
+            $('#docNPWP').hide();
+            $('#docNPWP_id').attr('disabled', true);
+            $('#docNPWPnama_file').attr('disabled', true);
+            $('#docNPWP_update_file').attr('disabled', true);
+        } else {
+            $('#nib').hide();
+            $('#nib_id').attr('disabled', true);
+            $('#nib_text').attr('disabled', true);
+            $('#nib_opsi_jawaban').attr('disabled', true);
+
+            $('#docNIB').hide();
+            $('#docNIB_id').attr('disabled', true);
+            $('#docNIBnama_file').attr('disabled', true);
+            $('#docNIB_update_file').attr('disabled', true);
 
             $('#surat_keterangan_usaha').hide();
             $('#surat_keterangan_usaha_id').attr('disabled', true);
@@ -1407,51 +1407,17 @@
             $('#docSKU').hide();
             $('#docSKU_id').attr('disabled', true);
             $('#docSKUnama_file').attr('disabled', true);
-            $('#docSKU_upload_file').attr('disabled', true);
-
-            $('#npwp').hide();
-            $('#npwp_id').attr('readonly', true);
-            $('#npwp_text').attr('readonly', true);
-            $('#npwp_opsi_jawaban').attr('readonly', true);
-
-            $('#docNPWP').hide();
-            $('#docNPWP_id').attr('disabled', true);
-            $('#docNPWPnama_file').attr('disabled', true);
-            $('#docNPWP_upload_file').attr('disabled', true);
-        } else {
-            $('#nib').hide()
-            $('#nib_id').attr('readonly', true);
-            $('#nib_text').attr('readonly', true);
-            $('#id_nib_text').attr('readonly', true);
-            $('#id_jawaban_nib').attr('readonly', true);
-            $('#nib_opsi_jawaban').attr('readonly', true);
-
-            $('#docNIB').hide();
-            $('#docNIB_id').attr('disabled', true);
-            $('#docNIBnama_file').attr('disabled', true);
-            $('#docNIB_upload_file').attr('disabled', true);
-
-            $('#surat_keterangan_usaha').hide();
-            $('#surat_keterangan_usaha_id').attr('readonly', true);
-            $('#surat_keterangan_usaha_text').attr('readonly', true);
-            $('#id_surat_keterangan_usaha_text').attr('readonly', true);
-            $('#id_jawaban_surat_keterangan_usaha').attr('readonly', true);
-            $('#surat_keterangan_usaha_opsi_jawaban').attr('readonly', true);
-
-            $('#docSKU').hide();
-            $('#docSKU_id').attr('disabled', true);
-            $('#docSKUnama_file').attr('disabled', true);
-            $('#docSKU_upload_file').attr('disabled', true);
+            $('#docSKU_update_file').attr('disabled', true);
 
             $('#npwp').show();
-            $('#npwp_id').removeAttr('readonly', true);
-            $('#npwp_text').removeAttr('readonly', true);
-            $('#npwp_opsi_jawaban').removeAttr('readonly', true);
+            $('#npwp_id').removeAttr('disabled', true);
+            $('#npwp_text').removeAttr('disabled', true);
+            $('#npwp_opsi_jawaban').removeAttr('disabled', true);
 
             $('#docNPWP').show();
             $('#docNPWP_id').removeAttr('disabled', true);
             $('#docNPWPnama_file').removeAttr('disabled', true);
-            $('#docNPWP_upload_file').removeAttr('disabled', true);
+            $('#docNPWP_update_file').removeAttr('disabled', true);
         }
     }
 
@@ -2195,8 +2161,8 @@
                     var ttlInput = -2
                     var ttlInputFilled = -1
                 } else if(ijin.val() == "tidak_ada_legalitas_usaha"){
-                    var ttlInput = -2
-                    var ttlInputFilled = -1
+                    var ttlInput = -6
+                    var ttlInputFilled = -5
                     console.log(ttlInput);
                 } else if(ijin.val() == "surat_keterangan_usaha"){
                     console.log(2);
