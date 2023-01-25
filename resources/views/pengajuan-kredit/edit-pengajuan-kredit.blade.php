@@ -147,14 +147,15 @@
                                         ->first();
                     @endphp
                     <label for="">Foto KTP Suami</label>
-                    <input type="hidden" name="id_item_file[]" value="151" id="">
+                    <input type="hidden" name="id_file_text[]" value="151" id="">
                         @if (isset($jawabanFotoKTPSu->opsi_text) != null)
                             <label for="update_file" style="display: none" id="nama_file">{{ $jawabanFotoKTPSu->opsi_text }}</label>
-                            <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi Foto KTP Suami" class="form-control limit-size" value="{{ $jawabanFotoKTPSu->opsi_text }}">
+                            <input type="file" name="update_file[]" id="" placeholder="Masukkan informasi Foto KTP Suami" class="form-control limit-size" value="{{ $jawabanFotoKTPSu->opsi_text }}">
                         @else
                             <label for="update_file" style="display: none" id="nama_file">Belum Upload Foto KTP Suami</label>
-                            <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi Foto KTP Suami" class="form-control limit-size" value="Belum Upload Foto KTP Suami">
+                            <input type="file" name="update_file[]" id="" placeholder="Masukkan informasi Foto KTP Suami" class="form-control limit-size" value="Belum Upload Foto KTP Suami">
                         @endif
+                    <input type="hidden" name="id_update_file[]" value="{{ $jawabanFotoKTPSu->id }}">
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
@@ -170,14 +171,15 @@
                                         ->first();
                     @endphp
                     <label for="">Foto KTP Istri</label>
-                    <input type="hidden" name="id_item_file[]" value="152" id="">
-                        @if (isset($jawabanFotoKTPSu->opsi_text) != null)
+                    <input type="hidden" name="id_file_text[]" value="152" id="">
+                        @if (isset($jawabanFotoKTPIs->opsi_text) != null)
                             <label for="update_file" style="display: none" id="nama_file">{{ $jawabanFotoKTPIs->opsi_text }}</label>
-                            <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi Foto KTP Istri" class="form-control limit-size" value="{{ $jawabanFotoKTPIs->opsi_text }}">
+                            <input type="file" name="update_file[]" id="" placeholder="Masukkan informasi Foto KTP Istri" class="form-control limit-size" value="{{ $jawabanFotoKTPIs->opsi_text }}">
                         @else
                             <label for="update_file" style="display: none" id="nama_file">Belum Upload Foto KTP Istri</label>
-                            <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi Foto KTP Istri" class="form-control limit-size" value="Belum Upload Foto KTP Istri">
+                            <input type="file" name="update_file[]" id="" placeholder="Masukkan informasi Foto KTP Istri" class="form-control limit-size" value="Belum Upload Foto KTP Istri">
                         @endif
+                    <input type="hidden" name="id_update_file[]" value="{{ $jawabanFotoKTPIs->id }}">
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
@@ -456,14 +458,15 @@
                                                         ->first();
                                     @endphp
                                     <label for="">Dokumen NIB</label>
-                                    <input type="hidden" name="id_item_file[]" value="153" id="docNIB_id">
+                                    <input type="hidden" name="id_file_text[]" value="153" id="docNIB_id">
                                         @if (isset($jawabanDokNIB->opsi_text) != null)
                                             <label for="update_file" style="display: none" id="docNIBnama_file">{{ $jawabanDokNIB->opsi_text }}</label>
-                                            <input type="file" name="upload_file[]" id="docNIB_upload_file" placeholder="Masukkan informasi Dokumen NIB" class="form-control limit-size" value="{{ $jawabanDokNIB->opsi_text }}">
+                                            <input type="file" name="update_file[]" id="docNIB_update_file" placeholder="Masukkan informasi Dokumen NIB" class="form-control limit-size" value="{{ $jawabanDokNIB->opsi_text }}">
                                         @else
                                             <label for="update_file" style="display: none" id="docNIBnama_file">Belum Upload Dokumen NIB</label>
-                                            <input type="file" name="upload_file[]" id="docNIB_upload_file" placeholder="Masukkan informasi Dokumen NIB" class="form-control limit-size" value="Belum Upload Dokumen NIB">
+                                            <input type="file" name="update_file[]" id="docNIB_update_file" placeholder="Masukkan informasi Dokumen NIB" class="form-control limit-size" value="Belum Upload Dokumen NIB">
                                         @endif
+                                    <input type="hidden" id="id_update_nib" name="id_update_file[]" value="{{ $jawabanDokNIB->id }}">
                                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
@@ -490,14 +493,15 @@
                                                         ->first();
                                     @endphp
                                     <label for="">Surat Keterangan Usaha</label>
-                                    <input type="hidden" name="id_item_file[]" value="157" id="docSKU_id">
+                                    <input type="hidden" name="id_file_text[]" value="157" id="docSKU_id">
                                         @if (isset($jawabanDokSKU->opsi_text) != null)
                                             <label for="update_file" style="display: none" id="docSKUnama_file">{{ $jawabanDokSKU->opsi_text }}</label>
-                                            <input type="file" name="upload_file[]" id="docSKU_upload_file" placeholder="Masukkan informasi Dokumen SKU" class="form-control limit-size" value="{{ $jawabanDokSKU->opsi_text }}">
+                                            <input type="file" name="update_file[]" id="docSKU_update_file" placeholder="Masukkan informasi Dokumen SKU" class="form-control limit-size" value="{{ $jawabanDokSKU->opsi_text }}">
                                         @else
                                             <label for="update_file" style="display: none" id="docSKUnama_file">Belum Upload Dokumen SKU</label>
-                                            <input type="file" name="upload_file[]" id="docSKU_upload_file" placeholder="Masukkan informasi Dokumen SKU" class="form-control limit-size" value="Belum Upload Dokumen SKU">
+                                            <input type="file" name="update_file[]" id="docSKU_update_file" placeholder="Masukkan informasi Dokumen SKU" class="form-control limit-size" value="Belum Upload Dokumen SKU">
                                         @endif
+                                    <input type="hidden" id="id_update_sku" id="id_update_npwp" name="id_update_file[]" value="{{ $jawabanDokSKU->id }}">
                                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
@@ -528,14 +532,15 @@
                                                         ->first();
                                     @endphp
                                     <label for="">Dokumen NPWP</label>
-                                    <input type="hidden" name="id_item_file[]" value="154" id="docNPWP_id">
+                                    <input type="hidden" name="id_file_text[]" value="154" id="docNPWP_id">
                                         @if (isset($jawabanDokNPWP->opsi_text) != null)
                                             <label for="update_file" style="display: none" id="docNPWPnama_file">{{ $jawabanDokNPWP->opsi_text }}</label>
-                                            <input type="file" name="upload_file[]" id="docNPWP_upload_file" placeholder="Masukkan informasi Dokumen NPWP" class="form-control limit-size" value="{{ $jawabanDokNPWP->opsi_text }}">
+                                            <input type="file" name="update_file[]" id="docNPWP_update_file" placeholder="Masukkan informasi Dokumen NPWP" class="form-control limit-size" value="{{ $jawabanDokNPWP->opsi_text }}">
                                         @else
                                             <label for="update_file" style="display: none" id="docNPWPnama_file">Belum Upload Dokumen NPWP</label>
-                                            <input type="file" name="upload_file[]" id="docNPWP_upload_file" placeholder="Masukkan informasi Dokumen NPWP" class="form-control limit-size" value="Belum Upload Dokumen NPWP">
+                                            <input type="file" name="update_file[]" id="docNPWP_update_file" placeholder="Masukkan informasi Dokumen NPWP" class="form-control limit-size" value="Belum Upload Dokumen NPWP">
                                         @endif
+                                    <input type="hidden" name="id_update_file[]" value="{{ $jawabanDokNPWP->id }}">
                                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
@@ -1289,7 +1294,8 @@
             $('#docSKU').hide();
             $('#docSKU_id').attr('disabled', true);
             $('#docSKUnama_file').attr('disabled', true);
-            $('#docSKU_upload_file').attr('disabled', true);
+            $('#docSKU_update_file').attr('disabled', true);
+            $('#id_update_sku').attr('disabled', true);
 
             $('#nib').show();
             $('#nib_id').removeAttr('disabled');
@@ -1298,8 +1304,11 @@
 
             $('#docNIB').show();
             $('#docNIB_id').removeAttr('disabled');
-            $('#docSKUnama_file').removeAttr('disabled');
-            $('#docNIB_upload_file').removeAttr('disabled');
+            $('#id_nib_text').removeAttr('disabled');
+            $('#id_jawaban_nib').removeAttr('disabled');
+            $('#docNIBnama_file').removeAttr('disabled');
+            $('#docNIB_update_file').removeAttr('disabled');
+            $('#id_update_nib').removeAttr('disabled');
 
             $('#npwp').show();
             $('#npwp_id').removeAttr('disabled', true);
@@ -1309,7 +1318,7 @@
             $('#docNPWP').show();
             $('#docNPWP_id').removeAttr('disabled', true);
             $('#docNPWPnama_file').removeAttr('disabled', true);
-            $('#docNPWP_upload_file').removeAttr('disabled', true);
+            $('#docNPWP_update_file').removeAttr('disabled', true);
         } else if (ijinUsaha == 'surat_keterangan_usaha') {
             $('#nib').hide()
             $('#nib_id').attr('disabled', true);
@@ -1321,17 +1330,22 @@
             $('#docNIB').hide();
             $('#docNIB_id').attr('disabled', true);
             $('#docNIBnama_file').attr('disabled', true);
-            $('#docNIB_upload_file').attr('disabled', true);
+            $('#docNIB_update_file').attr('disabled', true);
+            $('#id_update_nib').attr('disabled', true);
 
             $('#surat_keterangan_usaha').show();
             $('#surat_keterangan_usaha_id').removeAttr('disabled');
             $('#surat_keterangan_usaha_text').removeAttr('disabled');
+            $('#id_nib_text').removeAttr('disabled');
+            $('#id_jawaban_nib').removeAttr('disabled');
+            $('#docSKUnama_file').removeAttr('disabled');
             $('#surat_keterangan_usaha_opsi_jawaban').removeAttr('disabled');
+            $('#id_update_nib').removeAttr('disabled');
 
             $('#docSKU').show();
             $('#docSKU_id').removeAttr('disabled');
             $('#docSKU_text').removeAttr('disabled');
-            $('#docSKU_upload_file').removeAttr('disabled');
+            $('#docSKU_update_file').removeAttr('disabled');
 
             $('#npwp').show();
             $('#npwp_id').removeAttr('disabled', true);
@@ -1341,7 +1355,7 @@
             $('#docNPWP').show();
             $('#docNPWP_id').removeAttr('disabled', true);
             $('#docNPWPnama_file').removeAttr('disabled', true);
-            $('#docNPWP_upload_file').removeAttr('disabled', true);
+            $('#docNPWP_update_file').removeAttr('disabled', true);
         } else if (ijinUsaha == 'tidak_ada_legalitas_usaha') {
             $('#nib').hide();
             $('#nib_id').attr('disabled', true);
@@ -1351,17 +1365,19 @@
             $('#docNIB').hide();
             $('#docNIB_id').attr('disabled', true);
             $('#docNIBnama_file').attr('disabled', true);
-            $('#docNIB_upload_file').attr('disabled', true);
+            $('#docNIB_update_file').attr('disabled', true);
+            $('#id_update_nib').attr('disabled', true);
 
             $('#surat_keterangan_usaha').hide();
             $('#surat_keterangan_usaha_id').attr('disabled', true);
             $('#surat_keterangan_usaha_text').attr('disabled', true);
             $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
+            $('#id_update_sku').attr('disabled', true);
 
             $('#docSKU').hide();
             $('#docSKU_id').attr('disabled', true);
             $('#docSKUnama_file').attr('disabled', true);
-            $('#docSKU_upload_file').attr('disabled', true);
+            $('#docSKU_update_file').attr('disabled', true);
 
             $('#npwp').hide();
             $('#npwp_id').attr('disabled', true);
@@ -1371,7 +1387,7 @@
             $('#docNPWP').hide();
             $('#docNPWP_id').attr('disabled', true);
             $('#docNPWPnama_file').attr('disabled', true);
-            $('#docNPWP_upload_file').attr('disabled', true);
+            $('#docNPWP_update_file').attr('disabled', true);
         } else {
             $('#nib').hide();
             $('#nib_id').attr('disabled', true);
@@ -1381,7 +1397,7 @@
             $('#docNIB').hide();
             $('#docNIB_id').attr('disabled', true);
             $('#docNIBnama_file').attr('disabled', true);
-            $('#docNIB_upload_file').attr('disabled', true);
+            $('#docNIB_update_file').attr('disabled', true);
 
             $('#surat_keterangan_usaha').hide();
             $('#surat_keterangan_usaha_id').attr('disabled', true);
@@ -1391,7 +1407,7 @@
             $('#docSKU').hide();
             $('#docSKU_id').attr('disabled', true);
             $('#docSKUnama_file').attr('disabled', true);
-            $('#docSKU_upload_file').attr('disabled', true);
+            $('#docSKU_update_file').attr('disabled', true);
 
             $('#npwp').show();
             $('#npwp_id').removeAttr('disabled', true);
@@ -1401,7 +1417,7 @@
             $('#docNPWP').show();
             $('#docNPWP_id').removeAttr('disabled', true);
             $('#docNPWPnama_file').removeAttr('disabled', true);
-            $('#docNPWP_upload_file').removeAttr('disabled', true);
+            $('#docNPWP_update_file').removeAttr('disabled', true);
         }
     }
 
