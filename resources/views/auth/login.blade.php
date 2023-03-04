@@ -14,7 +14,7 @@
 
     <link rel="stylesheet" href="{{ asset('') }}css/custom.css" />
     <link rel="icon" href="{{ asset('') }}img/favicon.png" type="image/gif" sizes="16x6" />
-    <title>Login</title>
+    <title>Analisa Kredit | BANK UMKM JATIM</title>
     <style>
         body{
             background: var(--colorDarkBlue);
