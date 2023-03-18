@@ -45,8 +45,8 @@
                 </div>
                 <div class="form-group col-md-6">
                     <label for="">{{ $itemSP->nama }}</label>
-                    <input type="hidden" name="id_item_file[]" value="{{ $itemSP->id }}" id="">
-                    <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-control limit-size" required>
+                    <input type="hidden" name="id_item_file[{{ $itemSP->id }}]" value="{{ $itemSP->id }}" id="">
+                    <input type="file" name="upload_file[{{ $itemSP->id }}]" id="" placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-control limit-size" required>
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
@@ -123,8 +123,8 @@
                 </div>
                 <div class="form-group col-md-6">
                     <label for="">{{ $itemKTPSu->nama }}</label>
-                    <input type="hidden" name="id_item_file[]" value="{{ $itemKTPSu->id }}" id="">
-                    <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size">
+                    <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
+                    <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" id="" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
@@ -134,8 +134,8 @@
                 </div>
                 <div class="form-group col-md-6">
                     <label for="">{{ $itemKTPIs->nama }}</label>
-                    <input type="hidden" name="id_item_file[]" value="{{ $itemKTPIs->id }}" id="">
-                    <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size">
+                    <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
+                    <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" id="" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
@@ -214,8 +214,8 @@
                 </div>
                 <div class="form-group col-md-6">
                     <label for="">{{ $itemP->nama }}</label>
-                    <input type="hidden" name="id_item_file[]" value="{{ $itemP->id }}" id="">
-                    <input type="file" name="upload_file[]" id="" placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-control limit-size">
+                    <input type="hidden" name="id_item_file[{{ $itemP->id }}]" value="{{ $itemP->id }}" id="">
+                    <input type="file" name="upload_file[{{ $itemP->id }}]" id="" placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
@@ -352,8 +352,8 @@
 
                                 <div class="form-group col-md-6" id="docNIB">
                                     <label for="">{{ $itemNIB->nama }}</label>
-                                    <input type="hidden" name="id_item_file[]" value="{{ $itemNIB->id }}" id="docNIB_id">
-                                    <input type="file" name="upload_file[]" id="docNIB_upload_file" placeholder="Masukkan informasi {{ $itemNIB->nama }}" class="form-control limit-size">
+                                    <input type="hidden" name="id_item_file[{{ $itemNIB->id }}]" value="{{ $itemNIB->id }}" id="docNIB_id">
+                                    <input type="file" name="upload_file[{{ $itemNIB->id }}]" id="docNIB_upload_file" placeholder="Masukkan informasi {{ $itemNIB->nama }}" class="form-control limit-size">
                                     <span class="invalid-tooltip" style="display: none" id="docNIB_text">Maximum upload file size is 15 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
@@ -373,8 +373,8 @@
 
                                 <div class="form-group col-md-6" id="docSKU">
                                     <label for="">{{ $itemSKU->nama }}</label>
-                                    <input type="hidden" name="id_item_file[]" value="{{ $itemSKU->id }}" id="docSKU_id">
-                                    <input type="file" name="upload_file[]" id="docSKU_upload_file" placeholder="Masukkan informasi {{ $itemSKU->nama }}" class="form-control limit-size">
+                                    <input type="hidden" name="id_item_file[{{ $itemSKU->id }}]" value="{{ $itemSKU->id }}" id="docSKU_id">
+                                    <input type="file" name="upload_file[{{ $itemSKU->id }}]" id="docSKU_upload_file" placeholder="Masukkan informasi {{ $itemSKU->nama }}" class="form-control limit-size">
                                     <span class="invalid-tooltip" style="display: none" id="docSKU_text">Maximum upload file size is 15 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
@@ -396,8 +396,8 @@
 
                                 <div class="form-group col-md-6" id="docNPWP">
                                     <label for="">{{ $itemNPWP->nama }}</label>
-                                    <input type="hidden" name="id_item_file[]" value="{{ $itemNPWP->id }}" id="docNPWP_id">
-                                    <input type="file" name="upload_file[]" id="docNPWP_upload_file" placeholder="Masukkan informasi {{ $itemNPWP->nama }}" class="form-control limit-size">
+                                    <input type="hidden" name="id_item_file[{{ $itemNPWP->id }}]" value="{{ $itemNPWP->id }}" id="docNPWP_id">
+                                    <input type="file" name="upload_file[{{ $itemNPWP->id }}]" id="docNPWP_upload_file" placeholder="Masukkan informasi {{ $itemNPWP->nama }}" class="form-control limit-size">
                                     <span class="invalid-tooltip" style="display: none" id="docNPWP_text">Maximum upload file size is 15 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
@@ -462,8 +462,8 @@
                                     <label for="">{{ $item->nama }}</label>
                                     {{-- <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" --}}
                                         {{-- id="{{ $idLevelDua }}"> --}}
-                                    <input type="hidden" name="id_item_file[]" value="{{ $item->id }}" id="">
-                                    <input type="file" name="upload_file[]" id=""
+                                    <input type="hidden" name="id_item_file[{{ $item->id }}]" value="{{ $item->id }}" id="">
+                                    <input type="file" name="upload_file[{{ $item->id }}]" id=""
                                         placeholder="Masukkan informasi {{ $item->nama }}" class="form-control limit-size">
                                         <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                                 </div>
@@ -646,8 +646,8 @@
                                             <label for="">{{ $itemTiga->nama }}</label>
                                             <div class="row file-input">
                                                 <div class="col-md-9">
-                                                    <input type="hidden" name="id_item_file[]" value="{{ $itemTiga->id }}" id="">
-                                                    <input type="file" name="upload_file[]" id=""
+                                                    <input type="hidden" name="id_item_file[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}" id="">
+                                                    <input type="file" name="upload_file[{{ $itemTiga->id }}]" id=""
                                                         placeholder="Masukkan informasi {{ $itemTiga->nama }}"
                                                         class="form-control limit-size">
                                                         <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
@@ -779,9 +779,9 @@
                                                 <label for="">{{ $itemEmpat->nama }}</label>
                                                 {{-- <input type="hidden" name="opsi_jawaban[]"
                                                     value="{{ $itemEmpat->opsi_jawaban }}" id=""> --}}
-                                                <input type="hidden" name="id_item_file[]" value="{{ $itemEmpat->id }}"
+                                                <input type="hidden" name="id_item_file[{{ $itemEmpat->id }}]" value="{{ $itemEmpat->id }}"
                                                     id="">
-                                                <input type="file" name="upload_file[]" id=""
+                                                <input type="file" name="upload_file[{{ $itemEmpat->id }}]" id=""
                                                     placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
                                                     class="form-control limit-size">
                                                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
@@ -1059,8 +1059,8 @@
                                     $('#bukti_pemilikan_jaminan_utama').append(`
                                     <div class="form-group col-md-6 aspek_jaminan_kategori_jaminan_utama">
                                         <label>${valItem.nama}</label>
-                                        <input type="hidden" name="id_item_file[]" value="${valItem.id}" id="" class="input">
-                                        <input type="file" name="upload_file[]" id="" class="form-control limit-size">
+                                        <input type="hidden" name="id_item_file[${valItem.id}]" value="${valItem.id}" id="" class="input">
+                                        <input type="file" name="upload_file[${valItem.id}]" id="" class="form-control limit-size">
                                         <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                                     </div>`);
                                 }
@@ -1187,8 +1187,8 @@
                                     <label>${valItem.nama}</label>
                                     <div class="row">
                                         <div class="col-md-9">
-                                            <input type="hidden" name="id_item_file[]" value="${valItem.id}" id="" class="input">
-                                            <input type="file" name="upload_file[]" id="" class="form-control limit-size">
+                                            <input type="hidden" name="id_item_file[${valItem.id}]" value="${valItem.id}" id="" class="input">
+                                            <input type="file" name="upload_file[${valItem.id}]" id="" class="form-control limit-size">
                                             <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                                         </div>
                                         <div class="col-md-1">
@@ -1220,8 +1220,8 @@
                             <label>Foto</label>
                             <div class="row">
                                 <div class="col-md-9">
-                                    <input type="hidden" name="id_item_file[]" value="148" id="" class="input">
-                                    <input type="file" name="upload_file[]" id="" class="form-control limit-size">
+                                    <input type="hidden" name="id_item_file[148]" value="148" id="" class="input">
+                                    <input type="file" name="upload_file[148]" id="" class="form-control limit-size">
                                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                                 </div>
                                 <div class="col-md-1">
