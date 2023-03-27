@@ -1025,7 +1025,7 @@
                     <hr>
                     <div class="form-group col-md-12">
                         <label for="">Pendapat dan Usulan Staf Kredit</label>
-                        <p>{{ $pendapatStafPerAspek->pendapat_per_aspek }}</p>
+                        <p>{{ $pendapatStafPerAspek?->pendapat_per_aspek }}</p>
                     </div>
                         
                     @endif

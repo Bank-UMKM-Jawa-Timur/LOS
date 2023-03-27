@@ -466,7 +466,7 @@
                                             <label for="update_file" style="display: none" id="docNIBnama_file">Belum Upload Dokumen NIB</label>
                                             <input type="file" name="update_file[]" id="docNIB_update_file" placeholder="Masukkan informasi Dokumen NIB" class="form-control limit-size" value="Belum Upload Dokumen NIB">
                                         @endif
-                                    <input type="hidden" id="id_update_nib" name="id_update_file[]" value="{{ $jawabanDokNIB->id }}">
+                                    <input type="hidden" id="id_update_nib" name="id_update_file[]" value="{{ $jawabanDokNIB?->id }}">
                                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
@@ -1336,11 +1336,8 @@
             $('#surat_keterangan_usaha').show();
             $('#surat_keterangan_usaha_id').removeAttr('disabled');
             $('#surat_keterangan_usaha_text').removeAttr('disabled');
-            $('#id_nib_text').removeAttr('disabled');
-            $('#id_jawaban_nib').removeAttr('disabled');
             $('#docSKUnama_file').removeAttr('disabled');
             $('#surat_keterangan_usaha_opsi_jawaban').removeAttr('disabled');
-            $('#id_update_nib').removeAttr('disabled');
 
             $('#docSKU').show();
             $('#docSKU_id').removeAttr('disabled');

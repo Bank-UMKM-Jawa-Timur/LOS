@@ -231,7 +231,7 @@
                                     <td>{{ $item->nama }}</td>
                                     <td>{{ $item->sektor_kredit }}</td>
                                     <td>{{ $item->jenis_usaha }}</td>
-                                    <td>Rp.{{ number_format($item->jumlah_kredit, 2, '.', ',') }}</td>
+                                    <td>Rp.{{ (is_numeric($item->jumlah_kredit)) ? number_format($item->jumlah_kredit, 2, '.', ',') : $item->jumlah_kredit }}</td>
                                     <td>{{ date('d-m-Y',strtotime( $item->tanggal ) ) }}</td>
                                 </tr>
                             @empty
