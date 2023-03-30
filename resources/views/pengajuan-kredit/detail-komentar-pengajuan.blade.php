@@ -892,6 +892,8 @@
                                             <div class="col-sm-7">
                                                 @foreach ($dataJawabanLevelTiga as $key => $itemJawabanTiga)
                                                     @php
+                                                        $dataDetailJawabanTiga;
+                                                        $getKomentarPenyelia3;
                                                         $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
                                                             ->where('id_pengajuan', $dataUmum->id)
                                                             ->get();
@@ -938,29 +940,31 @@
                                                 @endforeach
                                             </div>
                                         </div>
-                                        @foreach ($getKomentarPenyelia3 as $itemKomentar3)
-                                            <div class="row form-group sub pl-4">
-                                                <label for="staticEmail" class="col-sm-3 col-form-label"></label>
-                                                <label for="staticEmail" class="col-sm-1 col-form-label px-0">
-                                                    <div class="d-flex justify-content-end">
-                                                        <div style="width: 20px">
+                                        @if (isset($getKomentarPenyelia3))
+                                            @foreach ($getKomentarPenyelia3 as $itemKomentar3)
+                                                <div class="row form-group sub pl-4">
+                                                    <label for="staticEmail" class="col-sm-3 col-form-label"></label>
+                                                    <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                                                        <div class="d-flex justify-content-end">
+                                                            <div style="width: 20px">
+
+                                                            </div>
+                                                        </div>
+                                                    </label>
+                                                    <div class="col-sm-7">
+                                                        <div class="d-flex">
+                                                            <div style="width: 30%">
+                                                                <p class="p-0 m-0"><strong>Komentar Penyelia: </strong></p>
+                                                            </div>
+                                                            <h6 class="font-italic">{{ $itemKomentar3->komentar ?? '' }}</h6>
+                                                            {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
 
                                                         </div>
+                                                        {{-- <input type="text" readonly class="form-control-plaintext" id="komentar" value="{{ $itemKomentar3->komentar }}"> --}}
                                                     </div>
-                                                </label>
-                                                <div class="col-sm-7">
-                                                    <div class="d-flex">
-                                                        <div style="width: 30%">
-                                                            <p class="p-0 m-0"><strong>Komentar Penyelia: </strong></p>
-                                                        </div>
-                                                        <h6 class="font-italic">{{ $itemKomentar3->komentar ?? '' }}</h6>
-                                                        {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
-
-                                                    </div>
-                                                    {{-- <input type="text" readonly class="form-control-plaintext" id="komentar" value="{{ $itemKomentar3->komentar }}"> --}}
                                                 </div>
-                                            </div>
-                                        @endforeach
+                                            @endforeach
+                                        @endif
                                         @if ($dataUmum->id_cabang == 1)    
                                             @foreach ($getKomentarPBP3 as $itemKomentar3)    
                                                 <div class="row form-group sub pl-4">
