@@ -529,7 +529,7 @@
                                                                     <p class="p-0 m-0"><strong>Komentar : </strong>
                                                                     </p>
                                                                 </div>
-                                                                <h6 class="font-italic">{{ $itemKomentar->komentar }}
+                                                                <h6 class="font-italic">{{ $itemKomentar->komentar ?? '' }}
                                                                 </h6>
                                                                 {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
 
@@ -681,7 +681,7 @@
                                                     <div style="width: 30%">
                                                         <p class="p-0 m-0"><strong>Komentar Penyelia : </strong></p>
                                                     </div>
-                                                    <h6 class="font-italic">{{ $itemKomentarPenyelia->komentar}}</h6>
+                                                    <h6 class="font-italic">{{ $itemKomentarPenyelia->komentar ?? ''}}</h6>
                                                 </div>
                                             </div>
                                         </div>
@@ -702,7 +702,7 @@
                                                         <div style="width: 30%">
                                                             <p class="p-0 m-0"><strong>Komentar PBP : </strong></p>
                                                         </div>
-                                                        <h6 class="font-italic">{{ $itemKomentarPBP->komentar}}</h6>
+                                                        <h6 class="font-italic">{{ $itemKomentarPBP->komentar ?? ''}}</h6>
                                                     </div>
                                                 </div>
                                             </div>
@@ -813,7 +813,7 @@
                                                         <div style="width: 15%">
                                                             <p class="p-0 m-0"><strong>Komentar : </strong></p>
                                                         </div>
-                                                        <h6 class="font-italic">{{ $itemKomentar2->komentar }}</h6>
+                                                        <h6 class="font-italic">{{ $itemKomentar2->komentar ?? '' }}</h6>
                                                     </div>
                                                 </div>
                                             </div>
@@ -953,7 +953,7 @@
                                                         <div style="width: 30%">
                                                             <p class="p-0 m-0"><strong>Komentar Penyelia: </strong></p>
                                                         </div>
-                                                        <h6 class="font-italic">{{ $itemKomentar3->komentar }}</h6>
+                                                        <h6 class="font-italic">{{ $itemKomentar3->komentar ?? '' }}</h6>
                                                         {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
 
                                                     </div>
@@ -977,7 +977,7 @@
                                                             <div style="width: 30%">
                                                                 <p class="p-0 m-0"><strong>Komentar PBP: </strong></p>
                                                             </div>
-                                                            <h6 class="font-italic">{{ $itemKomentar3->komentar }}</h6>
+                                                            <h6 class="font-italic">{{ $itemKomentar3->komentar ?? '' }}</h6>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1091,7 +1091,7 @@
                                                             <div style="width: 15%">
                                                                 <p class="p-0 m-0"><strong>Komentar : </strong></p>
                                                             </div>
-                                                            <h6 class="font-italic">{{ $itemKomentar4->komentar }}
+                                                            <h6 class="font-italic">{{ $itemKomentar4->komentar ?? '' }}
                                                             </h6>
                                                             {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
 
@@ -1256,7 +1256,7 @@
                                                                 </p>
                                                             </div>
                                                             <h6 class="font-italic">
-                                                                {{ $getKomentarPenyelia5->komentar }}</h6>
+                                                                {{ $getKomentarPenyelia5->komentar ?? '' }}</h6>
                                                             {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
 
                                                         </div>
@@ -1280,7 +1280,7 @@
                                                                 </p>
                                                             </div>
                                                             <h6 class="font-italic">
-                                                                {{ $getKomentarPBP5->komentar }}</h6>
+                                                                {{ $getKomentarPBP5->komentar ?? '' }}</h6>
                                                             {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
 
                                                         </div>
