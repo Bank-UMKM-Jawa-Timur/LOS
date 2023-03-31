@@ -185,7 +185,7 @@
                                     <tr>
                                         <td style="width: 40%; padding-left: 33px">{{  $item->nama }}</td>
                                         <td>:</td>
-                                        <td>{{ round($itemTextDua->opsi_text,2) }}</td>
+                                        <td>{{ (is_numeric($itemTextDua->opsi_text)) ? round($itemTextDua->opsi_text,2) : $itemTextDua->opsi_text }}</td>
                                     </tr>
                                 @else
                                     @if ($item->nama == 'Omzet Penjualan' || $item->nama == 'Installment')    
