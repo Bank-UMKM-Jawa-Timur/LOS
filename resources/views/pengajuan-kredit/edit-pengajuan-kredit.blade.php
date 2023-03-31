@@ -155,7 +155,7 @@
                             <label for="update_file" style="display: none" id="nama_file">Belum Upload Foto KTP Suami</label>
                             <input type="file" name="update_file[]" id="" placeholder="Masukkan informasi Foto KTP Suami" class="form-control limit-size" value="Belum Upload Foto KTP Suami">
                         @endif
-                    <input type="hidden" name="id_update_file[]" value="{{ $jawabanFotoKTPSu->id }}">
+                    <input type="hidden" name="id_update_file[]" value="{{ $jawabanFotoKTPSu->id ?? '' }}">
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
@@ -179,7 +179,7 @@
                             <label for="update_file" style="display: none" id="nama_file">Belum Upload Foto KTP Istri</label>
                             <input type="file" name="update_file[]" id="" placeholder="Masukkan informasi Foto KTP Istri" class="form-control limit-size" value="Belum Upload Foto KTP Istri">
                         @endif
-                    <input type="hidden" name="id_update_file[]" value="{{ $jawabanFotoKTPIs->id }}">
+                    <input type="hidden" name="id_update_file[]" value="{{ $jawabanFotoKTPIs->id ?? '' }}">
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
@@ -501,7 +501,7 @@
                                             <label for="update_file" style="display: none" id="docSKUnama_file">Belum Upload Dokumen SKU</label>
                                             <input type="file" name="update_file[]" id="docSKU_update_file" placeholder="Masukkan informasi Dokumen SKU" class="form-control limit-size" value="Belum Upload Dokumen SKU">
                                         @endif
-                                    <input type="hidden" id="id_update_sku" id="id_update_npwp" name="id_update_file[]" value="{{ $jawabanDokSKU->id }}">
+                                    <input type="hidden" id="id_update_sku" id="id_update_npwp" name="id_update_file[]" value="{{ $jawabanDokSKU->id ?? '' }}">
                                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
@@ -540,7 +540,7 @@
                                             <label for="update_file" style="display: none" id="docNPWPnama_file">Belum Upload Dokumen NPWP</label>
                                             <input type="file" name="update_file[]" id="docNPWP_update_file" placeholder="Masukkan informasi Dokumen NPWP" class="form-control limit-size" value="Belum Upload Dokumen NPWP">
                                         @endif
-                                    <input type="hidden" name="id_update_file[]" value="{{ $jawabanDokNPWP->id }}">
+                                    <input type="hidden" name="id_update_file[]" value="{{ $jawabanDokNPWP->id ?? '' }}">
                                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
