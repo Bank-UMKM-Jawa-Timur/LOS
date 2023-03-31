@@ -885,6 +885,7 @@
 @endsection
 
 @push('custom-script')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $('#nib').hide();
         $('#docNIB').hide();
@@ -1672,6 +1673,22 @@
             $(this).parent().parent().parent().remove();
         });
         // End Limit Upload
+
+        @if(count($errors->all()))
+        Swal.fire({
+            icon: 'error',
+            title: 'Error Validation',
+            html: `
+            <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                @foreach($errors->all() as $error)
+                <ul>
+                    <li>{{ $error }}</li>
+                </ul>
+                @endforeach
+            </div>
+            `
+        });
+        @endif
     </script>
     <script src="{{ asset('') }}js/custom.js"></script>
 @endpush
