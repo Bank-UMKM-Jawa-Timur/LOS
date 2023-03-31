@@ -498,10 +498,6 @@ class PengajuanKreditController extends Controller
             'jaminan' => 'required',
             'hubungan_bank' => 'required',
             'hasil_verifikasi' => 'required',
-            // 'komentar_staff' => 'required'
-            // 'dataLevelDua.*' => $checkLevelDua,
-            // 'dataLevelTiga.*' => $checkLevelTiga,
-            // 'dataLevelEmpat.*' => $checkLevelEmpat,
         ], [
             'required' => 'data harus terisi.'
         ]);
