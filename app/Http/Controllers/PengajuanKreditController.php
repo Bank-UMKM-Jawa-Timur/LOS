@@ -499,7 +499,7 @@ class PengajuanKreditController extends Controller
             'hubungan_bank' => 'required',
             'hasil_verifikasi' => 'required',
         ], [
-            'required' => 'data harus terisi.'
+            'required' => ':attribute data harus terisi.'
         ]);
 
         DB::beginTransaction();
