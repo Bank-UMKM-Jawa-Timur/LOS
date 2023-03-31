@@ -621,6 +621,8 @@
                                                     $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
                                                         ->where('id_pengajuan', $dataUmum->id)
                                                         ->get();
+                                                    $getKomentarPenyelia = null;
+                                                    $getKomentarPBP = null;
                                                     $count = count($dataDetailJawaban);
                                                     for ($i = 0; $i < $count; $i++) {
                                                         $data[] = $dataDetailJawaban[$i]['id_jawaban'];
@@ -666,26 +668,28 @@
                                             @endforeach
                                         </div>
                                     </div>
-                                    @foreach ($getKomentarPenyelia as $itemKomentarPenyelia)
-                                        <div class="row form-group sub pl-4">
-                                            <label for="staticEmail" class="col-sm-3 col-form-label"></label>
-                                            <label for="staticEmail" class="col-sm-1 col-form-label px-0">
-                                                <div class="d-flex justify-content-end">
-                                                    <div style="width: 20px">
-        
+                                    @if (isset($getKomentarPenyelia))
+                                        @foreach ($getKomentarPenyelia as $itemKomentarPenyelia)
+                                            <div class="row form-group sub pl-4">
+                                                <label for="staticEmail" class="col-sm-3 col-form-label"></label>
+                                                <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                                                    <div class="d-flex justify-content-end">
+                                                        <div style="width: 20px">
+            
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </label>
-                                            <div class="col-sm-7">
-                                                <div class="d-flex">
-                                                    <div style="width: 30%">
-                                                        <p class="p-0 m-0"><strong>Komentar Penyelia : </strong></p>
+                                                </label>
+                                                <div class="col-sm-7">
+                                                    <div class="d-flex">
+                                                        <div style="width: 30%">
+                                                            <p class="p-0 m-0"><strong>Komentar Penyelia : </strong></p>
+                                                        </div>
+                                                        <h6 class="font-italic">{{ $itemKomentarPenyelia->komentar ?? ''}}</h6>
                                                     </div>
-                                                    <h6 class="font-italic">{{ $itemKomentarPenyelia->komentar ?? ''}}</h6>
                                                 </div>
                                             </div>
-                                        </div>
-                                    @endforeach
+                                        @endforeach
+                                    @endif
                                     @if ($dataUmum->id_cabang == 1)    
                                         @foreach ($getKomentarPBP as $itemKomentarPBP)
                                             <div class="row form-group sub pl-4">
