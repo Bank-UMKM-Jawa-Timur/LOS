@@ -31,7 +31,7 @@
     <form id="pengajuan_kredit" action="{{ route('pengajuan-kredit.store') }}" method="post" enctype="multipart/form-data">
         @csrf
         <input type="hidden" name="progress" class="progress">
-        <div class="form-wizard active" data-index='0' data-done='true'>
+        <div class="form-wizard active" data-index='0' data-done='true' id="wizard-data-umum">
             <div class="row">
                 <div class="form-group col-md-6">
                     <label for="">Nama Lengkap</label>
@@ -1690,5 +1690,6 @@
         });
         @endif
     </script>
+    @include('pengajuan-kredit.partials.save-script')
     <script src="{{ asset('') }}js/custom.js"></script>
 @endpush

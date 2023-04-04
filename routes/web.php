@@ -59,6 +59,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('getkecamatan', [PengajuanKreditController::class, "getkecamatan"]);
     Route::get('getdesa', [PengajuanKreditController::class, "getdesa"]);
 
+    Route::post('pengajuan-kredit/temp/nasabah', [PengajuanKreditController::class, 'tempNasabah'])
+        ->name('pengajuan-kredit.temp.nasabah');
+
+    Route::post('pengajuan-kredit/temp/jawaban', [PengajuanKreditController::class, 'tempJawaban'])
+        ->name('pengajuan-kredit.temp.jawaban');
+
     Route::resource('pengajuan-kredit', PengajuanKreditController::class);
     // Route::post('pengajuan-kredit/create', PengajuanKreditController::class);
 

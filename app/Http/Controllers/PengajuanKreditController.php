@@ -16,6 +16,7 @@ use App\Models\PengajuanModel;
 use App\Models\JawabanSubColumnModel;
 use App\Models\PendapatPerAspek;
 use App\Models\DetailPendapatPerAspek;
+use App\Services\TemporaryService;
 use DateTime;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -1774,5 +1775,24 @@ class PengajuanKreditController extends Controller
         } catch (QueryException $e) {
             return redirect()->back()->withError('Terjadi kesalahan');
         }
+    }
+
+    public function tempNasabah(Request $request)
+    {
+        $nasabah = TemporaryService::saveNasabah(
+            TemporaryService::convertNasabahReq($request)
+        );
+
+        dd($nasabah->toArray());
+
+
+        return response()->json([
+            'status' => 'ok',
+            'code' => 200,
+        ]);
+    }
+
+    public function tempJawaban(Request $request)
+    {
     }
 }
