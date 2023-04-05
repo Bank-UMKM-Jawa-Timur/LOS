@@ -172,7 +172,7 @@ class PengajuanKreditController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         $param['pageTitle'] = "Dashboard";
         $param['multipleFiles'] = $this->isMultipleFiles;
@@ -189,6 +189,7 @@ class PengajuanKreditController extends Controller
         $param['itemNIB'] = ItemModel::where('nama', 'Dokumen NIB')->first();
         $param['itemNPWP'] = ItemModel::where('nama', 'Dokumen NPWP')->first();
         $param['itemSKU'] = ItemModel::where('nama', 'Dokumen Surat Keterangan Usaha')->first();
+        $param['duTemp'] = TemporaryService::getNasabahData($request->user());
 
         $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
 

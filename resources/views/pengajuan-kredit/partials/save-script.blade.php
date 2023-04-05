@@ -27,4 +27,10 @@
             }
         });
     }
+
+    $('#kabupaten').trigger('change');
+
+    setTimeout(() => {
+        $('#kecamatan').trigger('change');
+    }, 4000);
 </script>

@@ -18,6 +18,7 @@ class AddAddressFieldToTemporaryCalonNasabahTable extends Migration
             $table->bigInteger('id_kabupaten')->nullable()->after('id_user');
             $table->bigInteger('id_kecamatan')->nullable()->after('id_kabupaten');
             $table->bigInteger('id_desa')->nullable()->after('id_kecamatan');
+            $table->tinyInteger('tenor_yang_diminta')->nullable()->after('id_desa');
         });
     }
 
@@ -34,6 +35,7 @@ class AddAddressFieldToTemporaryCalonNasabahTable extends Migration
                 'id_kabupaten',
                 'id_kecamatan',
                 'id_desa',
+                'tenor_yang_diminta',
             ]);
         });
     }

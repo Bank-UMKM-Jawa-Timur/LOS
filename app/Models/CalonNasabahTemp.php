@@ -19,6 +19,7 @@ class CalonNasabahTemp extends Model
         'tempat_lahir',
         'tanggal_lahir',
         'status',
+        'sektor_kredit',
         'jenis_usaha',
         'jumlah_kredit',
         'tujuan_kredit',
@@ -29,5 +30,6 @@ class CalonNasabahTemp extends Model
         'id_kabupaten',
         'id_kecamatan',
         'id_desa',
+        'tenor_yang_diminta',
     ];
 }
