@@ -1,4 +1,20 @@
 @extends('layouts.template')
+
+@php
+$status = [
+    'belum menikah',
+    'menikah',
+    'duda',
+    'janda',
+];
+
+$sectors = [
+    'perdagangan',
+    'perindustrian',
+    'dll',
+];
+@endphp
+
 @section('content')
     @include('components.notification')
     <style>
@@ -31,12 +47,12 @@
     <form id="pengajuan_kredit" action="{{ route('pengajuan-kredit.store') }}" method="post" enctype="multipart/form-data">
         @csrf
         <input type="hidden" name="progress" class="progress">
-        <div class="form-wizard active" data-index='0' data-done='true'>
+        <div class="form-wizard active" data-index='0' data-done='true' id="wizard-data-umum">
             <div class="row">
                 <div class="form-group col-md-6">
                     <label for="">Nama Lengkap</label>
                     <input type="text" name="name" id="nama" class="form-control @error('name') is-invalid @enderror"
-                        placeholder="Nama sesuai dengan KTP">
+                        placeholder="Nama sesuai dengan KTP" value="{{ $duTemp->nama ?? '' }}">
                     @error('name')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -59,7 +75,10 @@
                     <select name="kabupaten" class="form-control @error('name') is-invalid @enderror select2" id="kabupaten">
                         <option value="">---Pilih Kabupaten----</option>
                         @foreach ($dataKabupaten as $item)
-                            <option value="{{ old('id', $item->id) }}">{{ $item->kabupaten }}</option>
+                            <option
+                                {{ ($item->id == $duTemp->id_kabupaten ?? '') ? 'selected' : '' }}
+                                value="{{ $item->id }}"
+                            >{{ $item->kabupaten }}</option>
                         @endforeach
                     </select>
                     @error('kabupaten')
@@ -93,7 +112,7 @@
                 <div class="form-group col-md-12">
                     <label for="">Alamat Rumah</label>
                     <textarea name="alamat_rumah" class="form-control @error('alamat_rumah') is-invalid @enderror" id="" cols="30" rows="4"
-                        placeholder="Alamat Rumah disesuaikan dengan KTP"></textarea>
+                        placeholder="Alamat Rumah disesuaikan dengan KTP">{{ $duTemp->alamat_rumah ?? '' }}</textarea>
                     @error('alamat_rumah')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -104,7 +123,7 @@
                 <div class="form-group col-md-12">
                     <label for="">Alamat Usaha</label>
                     <textarea name="alamat_usaha" class="form-control @error('alamat_usaha') is-invalid @enderror" id="" cols="30" rows="4"
-                        placeholder="Alamat Usaha"></textarea>
+                        placeholder="Alamat Usaha">{{ $duTemp->alamat_usaha ?? '' }}</textarea>
                     @error('alamat_usaha')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -114,7 +133,7 @@
                 <div class="form-group col-md-12">
                     <label for="">No. KTP</label>
                     <input type="number" maxlength="16" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" name="no_ktp" class="form-control @error('no_ktp') is-invalid @enderror" id=""
-                        placeholder="Masukkan 16 digit No. KTP">
+                        placeholder="Masukkan 16 digit No. KTP" value="{{ $duTemp->no_ktp ?? '' }}">
                     @error('no_ktp')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -146,7 +165,7 @@
                 <div class="form-group col-md-4">
                     <label for="">Tempat Lahir</label>
                     <input type="text" name="tempat_lahir" id=""
-                        class="form-control @error('tempat_lahir') is-invalid @enderror" placeholder="Tempat Lahir">
+                        class="form-control @error('tempat_lahir') is-invalid @enderror" placeholder="Tempat Lahir" value="{{ $duTemp->tempat_lahir ?? '' }}">
                     @error('tempat_lahir')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -156,7 +175,7 @@
                 <div class="form-group col-md-4">
                     <label for="">Tanggal Lahir</label>
                     <input type="date" name="tanggal_lahir" id=""
-                        class="form-control @error('tanggal_lahir') is-invalid @enderror" placeholder="Tempat Lahir">
+                        class="form-control @error('tanggal_lahir') is-invalid @enderror" placeholder="Tempat Lahir" value="{{ $duTemp->tanggal_lahir ?? '' }}">
                     @error('tanggal_lahir')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -167,10 +186,12 @@
                     <label for="">Status</label>
                     <select name="status" id="" class="form-control @error('status') is-invalid @enderror select2">
                         <option value=""> --Pilih Status --</option>
-                        <option value="menikah">Menikah</option>
-                        <option value="belum menikah">Belum Menikah</option>
-                        <option value="duda">Duda</option>
-                        <option value="janda">Janda</option>
+                        @foreach ($status as $sts)
+                            <option
+                                value="{{ $sts }}"
+                                {{ ($sts == $duTemp->status ?? '') ? 'selected' : null }}
+                            >{{ ucfirst($sts) }}</option>
+                        @endforeach
                     </select>
                     @error('alamat_rumah')
                         <div class="invalid-feedback">
@@ -183,9 +204,12 @@
                     <select name="sektor_kredit" id=""
                         class="form-control @error('sektor_kredit') is-invalid @enderror select2">
                         <option value=""> --Pilih Sektor Kredit -- </option>
-                        <option value="perdagangan">Perdagangan</option>
-                        <option value="perindustrian">Perindustrian</option>
-                        <option value="dll">dll</option>
+                        @foreach ($sectors as $sector)
+                        <option
+                            value="{{ $sector }}"
+                            {{ ($sector == $duTemp->sektor_kredit ?? '') ? 'selected' : '' }}
+                        >{{ ucfirst($sector) }}</option>
+                        @endforeach
                     </select>
                     @error('sektor_kredit')
                         <div class="invalid-feedback">
@@ -227,7 +251,7 @@
                 <div class="form-group col-md-12">
                     <label for="">Jenis Usaha</label>
                     <textarea name="jenis_usaha" class="form-control @error('jenis_usaha') is-invalid @enderror" id="" cols="30" rows="4"
-                        placeholder="Jenis Usaha secara spesifik"></textarea>
+                        placeholder="Jenis Usaha secara spesifik">{{ $duTemp->jenis_usaha ?? '' }}</textarea>
                     @error('jenis_usaha')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -237,7 +261,7 @@
                 <div class="form-group col-md-6">
                     <label for="">Jumlah Kredit yang diminta</label>
                     <input type="text" name="jumlah_kredit" id="jumlah_kredit"
-                        class="form-control rupiah">
+                        class="form-control rupiah" value="{{ $duTemp->jumlah_kredit ?? '' }}">
                     {{-- <textarea name="jumlah_kredit" class="form-control @error('jumlah_kredit') is-invalid @enderror" id="" cols="30"
                         rows="4" placeholder="Jumlah Kredit"></textarea> --}}
                     @error('jumlah_kredit')
@@ -252,7 +276,10 @@
                         class="form-control select2 @error('tenor_yang_diminta') is-invalid @enderror" required>
                         <option value="">-- Pilih Tenor --</option>
                         @for ($i = 1; $i <= 10; $i++)
-                            <option value="{{ $i }}"> {{ $i . ' tahun' }} </option>
+                            <option
+                                value="{{ $i }}"
+                                {{ ($i == $duTemp->tenor_yang_diminta ?? '') ? 'selected' : '' }}
+                            > {{ $i . ' tahun' }} </option>
                         @endfor
                     </select>
                     @error('tenor_yang_diminta')
@@ -264,7 +291,7 @@
                 <div class="form-group col-md-12">
                     <label for="">Tujuan Kredit</label>
                     <textarea name="tujuan_kredit" class="form-control @error('tujuan_kredit') is-invalid @enderror" id="" cols="30"
-                        rows="4" placeholder="Tujuan Kredit"></textarea>
+                        rows="4" placeholder="Tujuan Kredit">{{ $duTemp->tujuan_kredit ?? '' }}</textarea>
                     @error('tujuan_kredit')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -274,7 +301,7 @@
                 <div class="form-group col-md-12">
                     <label for="">Jaminan yang disediakan</label>
                     <textarea name="jaminan" class="form-control @error('jaminan') is-invalid @enderror" id="" cols="30" rows="4"
-                        placeholder="Jaminan yang disediakan"></textarea>
+                        placeholder="Jaminan yang disediakan">{{ $duTemp->jaminan_kredit }}</textarea>
                     @error('jaminan')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -284,7 +311,7 @@
                 <div class="form-group col-md-12">
                     <label for="">Hubungan Bank</label>
                     <textarea name="hubungan_bank" class="form-control @error('hubungan_bank') is-invalid @enderror" id="" cols="30"
-                        rows="4" placeholder="Hubungan dengan Bank"></textarea>
+                        rows="4" placeholder="Hubungan dengan Bank">{{ $duTemp->hubungan_bank }}</textarea>
                     @error('hubungan_bank')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -294,7 +321,7 @@
                 <div class="form-group col-md-12">
                     <label for="">Hasil Verifikasi</label>
                     <textarea name="hasil_verifikasi" class="form-control @error('hasil_verifikasi') is-invalid @enderror" id="" cols="30"
-                        rows="4" placeholder="Hasil Verifikasi Karakter Umum"></textarea>
+                        rows="4" placeholder="Hasil Verifikasi Karakter Umum">{{ $duTemp->verifikasi_umum }}</textarea>
                     @error('hasil_verifikasi')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -929,8 +956,9 @@
                             $("#kecamatan").append('<option>---Pilih Kecamatan---</option>');
                             $("#desa").append('<option>---Pilih Desa---</option>');
                             $.each(res, function(nama, kode) {
-                                $("#kecamatan").append('<option value="' + kode + '">' + nama +
-                                    '</option>');
+                                $('#kecamatan').append(`
+                                    <option value="${kode}" ${kode == {{$duTemp->id_kecamatan}} ? 'selected' : '' }>${nama}</option>
+                                `);
                             });
                         } else {
                             $("#kecamatan").empty();
@@ -958,8 +986,9 @@
                             $("#desa").empty();
                             $("#desa").append('<option>---Pilih Desa---</option>');
                             $.each(res, function(nama, kode) {
-                                $("#desa").append('<option value="' + kode + '">' + nama +
-                                    '</option>');
+                                $('#desa').append(`
+                                    <option value="${kode}" ${kode == {{$duTemp->id_desa}} ? 'selected' : '' }>${nama}</option>
+                                `);
                             });
                         } else {
                             $("#desa").empty();
@@ -1690,5 +1719,6 @@
         });
         @endif
     </script>
+    @include('pengajuan-kredit.partials.save-script')
     <script src="{{ asset('') }}js/custom.js"></script>
 @endpush
