@@ -478,6 +478,7 @@ class PengajuanKreditController extends Controller
         // $checkLevelDua = $request->dataLevelDua != null ? 'required' : '';
         // $checkLevelTiga = $request->dataLevelTiga != null ? 'required' : '';
         // $checkLevelEmpat = $request->dataLevelEmpat != null ? 'required' : '';
+        $statusSlik = false;
         $find = array('Rp ', '.');
         $request->validate([
             'name' => 'required',
@@ -582,6 +583,11 @@ class PengajuanKreditController extends Controller
                     $id_jawaban[$key] = $data_level_dua[1];
                     //jika skor nya tidak kosong
                     if ($skor[$key] != 'kosong') {
+                        if($id_jawaban[$key] == 66 || $id_jawaban[$key] == 187){
+                            if($skor[$key] == 1){
+                                $statusSlik = true;
+                            }
+                        }
                         array_push($rata_rata, $skor[$key]);
                     } else {
                         $skor[$key] = NULL;
@@ -670,9 +676,15 @@ class PengajuanKreditController extends Controller
                 JawabanPengajuanModel::insert($finalArray[$i]);
             }
 
-            $updateData->posisi = 'Proses Input Data';
-            $updateData->status_by_sistem = $status;
-            $updateData->average_by_sistem = $result;
+            if(!$statusSlik){
+                $updateData->posisi = 'Proses Input Data';
+                $updateData->status_by_sistem = $status;
+                $updateData->average_by_sistem = $result;
+            } else{
+                $updateData->posisi = 'Ditolak';
+                $updateData->status_by_sistem = "merah";
+                $updateData->average_by_sistem = "1.0";
+            }
             $updateData->update();
 
             //save pendapat per aspek
