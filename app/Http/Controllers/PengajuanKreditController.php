@@ -1805,6 +1805,27 @@ class PengajuanKreditController extends Controller
         ]);
     }
 
+    public function tempFile(Request $request)
+    {
+        $uploadedFile = [];
+        $files = $request->file('upload_file');
+
+        if(!$files) return response()->json([
+            'errorCode' => 422,
+            'message' => 'You must provide file',
+        ], 422);
+
+        foreach($files as $id => $val) {
+            $uploadedFile = TemporaryService::saveFile($id, $val);
+            break;
+        }
+
+        return response()->json([
+            'statusCode' => 200,
+            'filename' => $uploadedFile,
+        ]);
+    }
+
     public function tempJawaban(Request $request)
     {
     }

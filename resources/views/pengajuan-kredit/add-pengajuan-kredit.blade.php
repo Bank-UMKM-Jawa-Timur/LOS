@@ -69,6 +69,7 @@ $sectors = [
                             {{ $errors->first('dataLevelDua.' . $key) }}
                         </div>
                     @endif
+                    <span class="filename" style="display: inline;"></span>
                 </div>
                 <div class="form-group col-md-4">
                     <label for="">Kabupaten</label>
@@ -150,6 +151,7 @@ $sectors = [
                             {{ $errors->first('dataLevelDua.' . $key) }}
                         </div>
                     @endif
+                    <span class="filename" style="display: inline;"></span>
                 </div>
                 <div class="form-group col-md-6">
                     <label for="">{{ $itemKTPIs->nama }}</label>
@@ -161,6 +163,7 @@ $sectors = [
                             {{ $errors->first('dataLevelDua.' . $key) }}
                         </div>
                     @endif
+                    <span class="filename" style="display: inline;"></span>
                 </div>
                 <div class="form-group col-md-4">
                     <label for="">Tempat Lahir</label>
@@ -246,6 +249,7 @@ $sectors = [
                             {{ $errors->first('dataLevelDua.' . $key) }}
                         </div>
                     @endif
+                    <span class="filename" style="display: inline;"></span>
                     {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
                 </div>
                 <div class="form-group col-md-12">
@@ -387,6 +391,7 @@ $sectors = [
                                             {{ $errors->first('dataLevelTiga.' . $key) }}
                                         </div>
                                     @endif
+                                    <span class="filename" style="display: inline;"></span>
                                 </div>
 
                                 <div class="form-group col-md-6" id="surat_keterangan_usaha">
@@ -408,6 +413,7 @@ $sectors = [
                                             {{ $errors->first('dataLevelTiga.' . $key) }}
                                         </div>
                                     @endif
+                                    <span class="filename" style="display: inline;"></span>
                                 </div>
                             </div>
 
@@ -431,6 +437,7 @@ $sectors = [
                                             {{ $errors->first('dataLevelTiga.' . $key) }}
                                         </div>
                                     @endif
+                                    <span class="filename" style="display: inline;"></span>
                                 </div>
                             </div>
                         @else
@@ -493,6 +500,7 @@ $sectors = [
                                     <input type="file" name="upload_file[{{ $item->id }}]" id=""
                                         placeholder="Masukkan informasi {{ $item->nama }}" class="form-control limit-size">
                                         <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                                    <span class="filename" style="display: inline;"></span>
                                 </div>
                             @elseif ($item->opsi_jawaban == 'long text')
                                 <div class="form-group col-md-6">
@@ -678,6 +686,7 @@ $sectors = [
                                                         placeholder="Masukkan informasi {{ $itemTiga->nama }}"
                                                         class="form-control limit-size">
                                                         <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                                                    <span class="filename" style="display: inline;"></span>
                                                 </div>
                                                 @if(in_array(trim($itemTiga->nama), $multipleFiles))
                                                 <div class="col-1">
@@ -812,6 +821,7 @@ $sectors = [
                                                     placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
                                                     class="form-control limit-size">
                                                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                                                <span class="filename" style="display: inline;"></span>
                                             </div>
                                         @elseif ($itemEmpat->opsi_jawaban == 'long text')
                                             <div class="form-group col-md-6">
@@ -1092,6 +1102,7 @@ $sectors = [
                                         <input type="hidden" name="id_item_file[${valItem.id}]" value="${valItem.id}" id="" class="input">
                                         <input type="file" name="upload_file[${valItem.id}]" id="" class="form-control limit-size">
                                         <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                                        <span class="filename" style="display: inline;"></span>
                                     </div>`);
                                 }
                                 else {
@@ -1220,6 +1231,7 @@ $sectors = [
                                             <input type="hidden" name="id_item_file[${valItem.id}]" value="${valItem.id}" id="" class="input">
                                             <input type="file" name="upload_file[${valItem.id}]" id="" class="form-control limit-size">
                                             <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                                            <span class="filename" style="display: inline;"></span>
                                         </div>
                                         <div class="col-md-1">
                                             <button class="btn btn-success plus" id="btnTambahBukti"><i class="fa fa-plus"></i></button>
@@ -1253,6 +1265,7 @@ $sectors = [
                                     <input type="hidden" name="id_item_file[148]" value="148" id="" class="input">
                                     <input type="file" name="upload_file[148]" id="" class="form-control limit-size">
                                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                                    <span class="filename" style="display: inline;"></span>
                                 </div>
                                 <div class="col-md-1">
                                     <button class="btn btn-success plus" id="btnTambahBukti"><i class="fa fa-plus"></i></button>
