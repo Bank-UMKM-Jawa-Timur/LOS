@@ -2,8 +2,10 @@
 namespace App\Services;
 
 use App\Models\CalonNasabahTemp;
+use App\Models\JawabanTemp;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 
 class TemporaryService
 {
@@ -23,6 +25,26 @@ class TemporaryService
         }
 
         return CalonNasabahTemp::insert($data);
+    }
+
+    public static function saveFile(int $id, UploadedFile $file)
+    {
+        $exist = JawabanTemp::where('id_jawaban', $id)->first();
+        $path = public_path("upload/temp/{$id}/");
+        $name = time() . '.' . $file->getClientOriginalExtension();
+
+        if($exist) {
+            @unlink($path . $exist->opsi_text);
+            $exist->update(['opsi_text' => $name]);
+        } else {
+            JawabanTemp::create([
+                'id_jawaban' => $id,
+                'opsi_text' => $name,
+            ]);
+        }
+
+        $file->move($path, $name);
+        return $name;
     }
 
     public static function convertNasabahReq(Request $request): array
