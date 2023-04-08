@@ -62,7 +62,7 @@ $sectors = [
                 <div class="form-group col-md-6">
                     <label for="">{{ $itemSP->nama }}</label>
                     <input type="hidden" name="id_item_file[{{ $itemSP->id }}]" value="{{ $itemSP->id }}" id="">
-                    <input type="file" name="upload_file[{{ $itemSP->id }}]" id="" placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-control limit-size" required>
+                    <input type="file" name="upload_file[{{ $itemSP->id }}]" id="" placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
@@ -583,7 +583,7 @@ $sectors = [
                                     {{-- <div class="form-group col-md-6">
                                         <label for="">{{ $itemTiga->nama }}</label>
                                         <select name="kategori_jaminan_utama" id="kategori_jaminan_utama"
-                                            class="form-control" required>
+                                            class="form-control">
                                             <option value="">-- Pilih Kategori Jaminan Utama --</option>
                                             <option value="Tanah">Tanah</option>
                                             <option value="Kendaraan Bermotor">Kendaraan Bermotor</option>
@@ -898,7 +898,7 @@ $sectors = [
                 <div class="form-group col-md-12">
                     <label for="">Pendapat dan Usulan</label>
                     <textarea name="komentar_staff" class="form-control @error('komentar_staff') is-invalid @enderror" id="" cols="30"
-                        rows="4" placeholder="Pendapat dan Usulan Staf/Analis Kredit" required></textarea>
+                        rows="4" placeholder="Pendapat dan Usulan Staf/Analis Kredit"></textarea>
                     @error('komentar_staff')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -1026,7 +1026,7 @@ $sectors = [
                         <div class="form-group sub mt-2">
                             <label for="">${response.sub_column}</label>
                             <input type="hidden" name="id_option_sub_column[]" value="${idOption}">
-                            <input type="text" name="jawaban_sub_column[]" placeholder="Masukkan informasi tambahan" class="form-control" required>
+                            <input type="text" name="jawaban_sub_column[]" placeholder="Masukkan informasi tambahan" class="form-control">
                         </div>
                         `);
                     } else {

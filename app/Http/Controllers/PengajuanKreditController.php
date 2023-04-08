@@ -514,28 +514,10 @@ class PengajuanKreditController extends Controller
             $addPengajuan->save();
             $id_pengajuan = $addPengajuan->id;
 
-            $addData = new CalonNasabah;
-            $addData->nama = $request->name;
-            $addData->alamat_rumah = $request->alamat_rumah;
-            $addData->alamat_usaha = $request->alamat_usaha;
-            $addData->no_ktp = $request->no_ktp;
-            $addData->tempat_lahir = $request->tempat_lahir;
-            $addData->tanggal_lahir = $request->tanggal_lahir;
-            $addData->status = $request->status;
-            $addData->sektor_kredit = $request->sektor_kredit;
-            $addData->jenis_usaha = $request->jenis_usaha;
-            $addData->jumlah_kredit = str_replace($find, "", $request->jumlah_kredit);
-            $addData->tenor_yang_diminta = $request->tenor_yang_diminta;
-            $addData->tujuan_kredit = $request->tujuan_kredit;
-            $addData->jaminan_kredit = $request->jaminan;
-            $addData->hubungan_bank = $request->hubungan_bank;
-            $addData->verifikasi_umum = $request->hasil_verifikasi;
-            $addData->id_user = auth()->user()->id;
-            $addData->id_pengajuan = $id_pengajuan;
-            $addData->id_desa = $request->desa;
-            $addData->id_kecamatan = $request->kec;
-            $addData->id_kabupaten = $request->kabupaten;
-            $addData->save();
+            $tempNasabah = TemporaryService::getNasabahData($request->user())->toArray();
+            $tempNasabah['id_pengajuan'] = $id_pengajuan;
+
+            $addData = CalonNasabah::create($tempNasabah);
             $id_calon_nasabah = $addData->id;
 
             //untuk jawaban yg teks, number, persen, long text
