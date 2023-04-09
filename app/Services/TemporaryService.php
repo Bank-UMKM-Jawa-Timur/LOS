@@ -41,6 +41,7 @@ class TemporaryService
             $exist = JawabanTemp::create([
                 'id_jawaban' => $aID,
                 'opsi_text' => $name,
+                'type' => 'file',
             ]);
         }
 

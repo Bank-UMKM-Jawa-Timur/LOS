@@ -24,6 +24,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 use Image;
 
@@ -515,11 +516,14 @@ class PengajuanKreditController extends Controller
             $addPengajuan->save();
             $id_pengajuan = $addPengajuan->id;
 
-            $tempNasabah = TemporaryService::getNasabahData($request->user())->toArray();
-            $tempNasabah['id_pengajuan'] = $id_pengajuan;
+            $tempNasabah = TemporaryService::getNasabahData($request->user());
+            $dataNasabah = $tempNasabah->toArray();
+            $dataNasabah['id_pengajuan'] = $id_pengajuan;
 
-            $addData = CalonNasabah::create($tempNasabah);
+            $addData = CalonNasabah::create($dataNasabah);
             $id_calon_nasabah = $addData->id;
+
+            $tempNasabah->delete();
 
             //untuk jawaban yg teks, number, persen, long text
             foreach ($request->id_level as $key => $value) {
@@ -534,26 +538,29 @@ class PengajuanKreditController extends Controller
                 // $dataJawabanText->opsi_text = $request->get('informasi')[$key] == null ? '-' : $request->get('informasi')[$key];
                 $dataJawabanText->save();
             }
+
             //untuk upload file
-            foreach ($request->id_item_file as $key => $value) {
-                if (!isset($request->file('upload_file')[$key])) continue;
+            $tempFiles = JawabanTemp::where('type', 'file')->get();
 
-                $image = $request->file('upload_file')[$key];
-                $imageName = $key . time() . '.' . $image->getClientOriginalExtension();
+            foreach($tempFiles as $tempFile) {
+                $tempPath = public_path("upload/temp/{$tempFile->id_jawaban}/{$tempFile->opsi_text}");
+                $newPath = str_replace('temp/', '', $tempPath);
 
-                $filePath = public_path() . '/upload/' . $id_pengajuan . '/' . $value;
+                File::isDirectory(public_path("upload/{$tempFile->id_jawaban}")) or
+                    File::makeDirectory(public_path("upload/{$tempFile->id_jawaban}"));
 
-                if (!\File::isDirectory($filePath)) {
-                    \File::makeDirectory($filePath, 493, true);
-                }
+                @File::move($tempPath, $newPath);
 
-                $image->move($filePath, $imageName);
+                JawabanTextModel::create([
+                    'id_pengajuan' => $id_pengajuan,
+                    'id_jawaban' => $tempFile->id_jawaban,
+                    'opsi_text' => $tempFile->opsi_text,
+                    'skor_penyelia' => null,
+                    'skor_pbp' => null,
+                    'skor' => null,
+                ]);
 
-                $dataJawabanText = new JawabanTextModel;
-                $dataJawabanText->id_pengajuan = $id_pengajuan;
-                $dataJawabanText->id_jawaban =  $value;
-                $dataJawabanText->opsi_text = $imageName;
-                $dataJawabanText->save();
+                $tempFile->delete();
             }
 
             $finalArray = array();
@@ -905,13 +912,13 @@ class PengajuanKreditController extends Controller
                         // return $imageLama;
                         foreach ($imageLama as $imageKey => $imageValue) {
                             $pathLama = public_path() . '/upload/' . $id_pengajuan . '/' . $imageValue->id_jawaban . '/' . $imageValue->opsi_text;
-                            \File::delete($pathLama);
+                            File::delete($pathLama);
                         }
 
                         $filePath = public_path() . '/upload/' . $id_pengajuan . '/' . $request->id_file_text[$key];
                         // $filePath = public_path() . '/upload';
-                        if (!\File::isDirectory($filePath)) {
-                            \File::makeDirectory($filePath, 493, true);
+                        if (!File::isDirectory($filePath)) {
+                            File::makeDirectory($filePath, 493, true);
                         }
 
                         $image->move($filePath, $imageName);
@@ -924,8 +931,8 @@ class PengajuanKreditController extends Controller
 
                         $filePath = public_path() . '/upload/' . $id_pengajuan . '/' . $request->id_file_text[$key];
 
-                        if (!\File::isDirectory($filePath)) {
-                            \File::makeDirectory($filePath, 493, true);
+                        if (!File::isDirectory($filePath)) {
+                            File::makeDirectory($filePath, 493, true);
                         }
 
                         $image->move($filePath, $imageName);
