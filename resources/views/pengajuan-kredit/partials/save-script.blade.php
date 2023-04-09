@@ -17,11 +17,34 @@
 
             data[input.attr('name')] = input.val();
         });
+        console.log(data);
 
         $.ajax({
             url: '{{ route('pengajuan-kredit.temp.nasabah') }}',
             method: 'POST',
             data,
+            success(res) {
+                console.log(res);
+            }
+        });
+    }
+
+    function saveDataTemporary(i){
+        let data = {};
+        let form = $(".form-wizard[data-index='" + i + "']");
+
+        $(".form-wizard[data-index='" + i + "'] input, .form-wizard[data-index='" + i + "'] select, .form-wizard[data-index='" + i + "'] textarea").each(function(){
+            let input = $(this)
+            // console.log('test');
+
+            data[input.attr('name')] = input.val();
+        });
+        
+        console.log(data);
+        $.ajax({
+            url: '{{ route('pengajuan-kredit.temp.jawaban') }}',
+            method: 'POST',
+            data: data,
             success(res) {
                 console.log(res);
             }
