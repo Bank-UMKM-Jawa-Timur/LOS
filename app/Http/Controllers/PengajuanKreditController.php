@@ -25,6 +25,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 use Image;
 
@@ -516,29 +517,14 @@ class PengajuanKreditController extends Controller
             $addPengajuan->save();
             $id_pengajuan = $addPengajuan->id;
 
-            $addData = new CalonNasabah;
-            $addData->nama = $request->name;
-            $addData->alamat_rumah = $request->alamat_rumah;
-            $addData->alamat_usaha = $request->alamat_usaha;
-            $addData->no_ktp = $request->no_ktp;
-            $addData->tempat_lahir = $request->tempat_lahir;
-            $addData->tanggal_lahir = $request->tanggal_lahir;
-            $addData->status = $request->status;
-            $addData->sektor_kredit = $request->sektor_kredit;
-            $addData->jenis_usaha = $request->jenis_usaha;
-            $addData->jumlah_kredit = str_replace($find, "", $request->jumlah_kredit);
-            $addData->tenor_yang_diminta = $request->tenor_yang_diminta;
-            $addData->tujuan_kredit = $request->tujuan_kredit;
-            $addData->jaminan_kredit = $request->jaminan;
-            $addData->hubungan_bank = $request->hubungan_bank;
-            $addData->verifikasi_umum = $request->hasil_verifikasi;
-            $addData->id_user = auth()->user()->id;
-            $addData->id_pengajuan = $id_pengajuan;
-            $addData->id_desa = $request->desa;
-            $addData->id_kecamatan = $request->kec;
-            $addData->id_kabupaten = $request->kabupaten;
-            $addData->save();
+            $tempNasabah = TemporaryService::getNasabahData($request->user());
+            $dataNasabah = $tempNasabah->toArray();
+            $dataNasabah['id_pengajuan'] = $id_pengajuan;
+
+            $addData = CalonNasabah::create($dataNasabah);
             $id_calon_nasabah = $addData->id;
+
+            $tempNasabah->delete();
 
             //untuk jawaban yg teks, number, persen, long text
             foreach ($request->id_level as $key => $value) {
@@ -553,26 +539,29 @@ class PengajuanKreditController extends Controller
                 // $dataJawabanText->opsi_text = $request->get('informasi')[$key] == null ? '-' : $request->get('informasi')[$key];
                 $dataJawabanText->save();
             }
+
             //untuk upload file
-            foreach ($request->id_item_file as $key => $value) {
-                if (!isset($request->file('upload_file')[$key])) continue;
+            $tempFiles = JawabanTemp::where('type', 'file')->get();
 
-                $image = $request->file('upload_file')[$key];
-                $imageName = $key . time() . '.' . $image->getClientOriginalExtension();
+            foreach($tempFiles as $tempFile) {
+                $tempPath = public_path("upload/temp/{$tempFile->id_jawaban}/{$tempFile->opsi_text}");
+                $newPath = str_replace('temp/', '', $tempPath);
 
-                $filePath = public_path() . '/upload/' . $id_pengajuan . '/' . $value;
+                File::isDirectory(public_path("upload/{$tempFile->id_jawaban}")) or
+                    File::makeDirectory(public_path("upload/{$tempFile->id_jawaban}"));
 
-                if (!\File::isDirectory($filePath)) {
-                    \File::makeDirectory($filePath, 493, true);
-                }
+                @File::move($tempPath, $newPath);
 
-                $image->move($filePath, $imageName);
+                JawabanTextModel::create([
+                    'id_pengajuan' => $id_pengajuan,
+                    'id_jawaban' => $tempFile->id_jawaban,
+                    'opsi_text' => $tempFile->opsi_text,
+                    'skor_penyelia' => null,
+                    'skor_pbp' => null,
+                    'skor' => null,
+                ]);
 
-                $dataJawabanText = new JawabanTextModel;
-                $dataJawabanText->id_pengajuan = $id_pengajuan;
-                $dataJawabanText->id_jawaban =  $value;
-                $dataJawabanText->opsi_text = $imageName;
-                $dataJawabanText->save();
+                $tempFile->delete();
             }
 
             $finalArray = array();
@@ -924,13 +913,13 @@ class PengajuanKreditController extends Controller
                         // return $imageLama;
                         foreach ($imageLama as $imageKey => $imageValue) {
                             $pathLama = public_path() . '/upload/' . $id_pengajuan . '/' . $imageValue->id_jawaban . '/' . $imageValue->opsi_text;
-                            \File::delete($pathLama);
+                            File::delete($pathLama);
                         }
 
                         $filePath = public_path() . '/upload/' . $id_pengajuan . '/' . $request->id_file_text[$key];
                         // $filePath = public_path() . '/upload';
-                        if (!\File::isDirectory($filePath)) {
-                            \File::makeDirectory($filePath, 493, true);
+                        if (!File::isDirectory($filePath)) {
+                            File::makeDirectory($filePath, 493, true);
                         }
 
                         $image->move($filePath, $imageName);
@@ -943,8 +932,8 @@ class PengajuanKreditController extends Controller
 
                         $filePath = public_path() . '/upload/' . $id_pengajuan . '/' . $request->id_file_text[$key];
 
-                        if (!\File::isDirectory($filePath)) {
-                            \File::makeDirectory($filePath, 493, true);
+                        if (!File::isDirectory($filePath)) {
+                            File::makeDirectory($filePath, 493, true);
                         }
 
                         $image->move($filePath, $imageName);
@@ -1794,21 +1783,50 @@ class PengajuanKreditController extends Controller
 
     public function tempNasabah(Request $request)
     {
-        try{
-            $nasabah = TemporaryService::saveNasabah(
-                TemporaryService::convertNasabahReq($request)
-            );
-    
-            dd($nasabah->toArray());
-    
-    
+        $nasabah = TemporaryService::saveNasabah(
+            TemporaryService::convertNasabahReq($request)
+        );
+
+        return response()->json([
+            'status' => 'ok',
+            'code' => 200,
+            'data' => $nasabah,
+        ]);
+    }
+
+    public function tempFile(Request $request)
+    {
+        $data = TemporaryService::saveFile(
+            $request->answer_id,
+            $request->file_id,
+            $request->file('file')
+        );
+
+        return response()->json([
+            'statusCode' => 200,
+            'data' => $data,
+        ]);
+    }
+
+    public function delTempFile(Request $request)
+    {
+        $deleted = TemporaryService::delFile(
+            JawabanTemp::find($request->answer_id)
+        );
+
+        if($deleted) {
             return response()->json([
-                'status' => 'ok',
-                'code' => 200,
+                'statusCode' => 200,
+                'deleted' => true,
+                'message' => 'Success delete the file',
             ]);
-        } catch(Exception $e){
-            dd($e);
         }
+
+        return response()->json([
+            'statusCode' => 200,
+            'deleted' => false,
+            'message' => 'No file deleted',
+        ]);
     }
 
     public function tempJawaban(Request $request)

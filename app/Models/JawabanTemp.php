@@ -17,5 +17,6 @@ class JawabanTemp extends Model
         'opsi_text',
         'skor_penyelia',
         'skor',
+        'type',
     ];
 }
