@@ -65,6 +65,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('pengajuan-kredit/temp/file', [PengajuanKreditController::class, 'tempFile'])
         ->name('pengajuan-kredit.temp.file');
 
+    Route::delete('pengajuan-kredit/temp/file', [PengajuanKreditController::class, 'delTempFile']);
+
     Route::post('pengajuan-kredit/temp/jawaban', [PengajuanKreditController::class, 'tempJawaban'])
         ->name('pengajuan-kredit.temp.jawaban');
 

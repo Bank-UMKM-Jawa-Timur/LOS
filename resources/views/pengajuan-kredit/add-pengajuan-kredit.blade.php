@@ -677,6 +677,33 @@ $sectors = [
                                             @endif
                                         </div>
                                     @elseif ($itemTiga->opsi_jawaban == 'file')
+                                        @forelse (temporary($itemTiga->id, true) as $tempData)
+                                        <div class="form-group col-md-6 file-wrapper item-{{ $itemTiga->id }}">
+                                            <label for="">{{ $itemTiga->nama }}</label>
+                                            <div class="row file-input">
+                                                <div class="col-md-9">
+                                                    <input type="hidden" name="id_item_file[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}" id="">
+                                                    <input type="file" name="upload_file[{{ $itemTiga->id }}]" data-id="{{ $tempData->id }}"
+                                                        placeholder="Masukkan informasi {{ $itemTiga->nama }}"
+                                                        class="form-control limit-size">
+                                                        <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                                                    <span class="filename" style="display: inline;">{{ $tempData->opsi_text }}</span>
+                                                </div>
+                                                @if(in_array(trim($itemTiga->nama), $multipleFiles))
+                                                <div class="col-1">
+                                                    <button class="btn btn-sm btn-success btn-add-file" type="button" data-id="{{ $itemTiga->id }}">
+                                                        <i class="fa fa-plus"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="col-1">
+                                                    <button class="btn btn-sm btn-danger btn-del-file" type="button" data-id="{{ $itemTiga->id }}">
+                                                        <i class="fa fa-minus"></i>
+                                                    </button>
+                                                </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        @empty
                                         <div class="form-group col-md-6 file-wrapper item-{{ $itemTiga->id }}">
                                             <label for="">{{ $itemTiga->nama }}</label>
                                             <div class="row file-input">
@@ -702,6 +729,7 @@ $sectors = [
                                                 @endif
                                             </div>
                                         </div>
+                                        @endforelse
                                     @elseif ($itemTiga->opsi_jawaban == 'long text')
                                         <div class="form-group col-md-6">
                                             <label for="">{{ $itemTiga->nama }}</label>
@@ -1714,7 +1742,19 @@ $sectors = [
 
         $('body').on('click', '.file-wrapper .btn-del-file', function(e) {
             if($('.file-wrapper').get().length < 2) return;
-            $(this).parent().parent().parent().remove();
+
+            const inputData = $(this).parent().parent().find('input[type="file"]');
+
+            $.ajax({
+                url: '{{ route('pengajuan-kredit.temp.file') }}',
+                method: 'DELETE',
+                data: {
+                    answer_id: inputData.data('id'),
+                },
+                success: (res) => {
+                    $(this).parent().parent().parent().remove();
+                }
+            });
         });
         // End Limit Upload
 

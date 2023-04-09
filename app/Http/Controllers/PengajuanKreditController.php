@@ -16,6 +16,7 @@ use App\Models\PengajuanModel;
 use App\Models\JawabanSubColumnModel;
 use App\Models\PendapatPerAspek;
 use App\Models\DetailPendapatPerAspek;
+use App\Models\JawabanTemp;
 use App\Services\TemporaryService;
 use DateTime;
 use Exception;
@@ -1796,6 +1797,27 @@ class PengajuanKreditController extends Controller
         return response()->json([
             'statusCode' => 200,
             'data' => $data,
+        ]);
+    }
+
+    public function delTempFile(Request $request)
+    {
+        $deleted = TemporaryService::delFile(
+            JawabanTemp::find($request->answer_id)
+        );
+
+        if($deleted) {
+            return response()->json([
+                'statusCode' => 200,
+                'deleted' => true,
+                'message' => 'Success delete the file',
+            ]);
+        }
+
+        return response()->json([
+            'statusCode' => 200,
+            'deleted' => false,
+            'message' => 'No file deleted',
         ]);
     }
 

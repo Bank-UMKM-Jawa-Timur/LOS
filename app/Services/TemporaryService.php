@@ -51,6 +51,18 @@ class TemporaryService
         ];
     }
 
+    public static function delFile(JawabanTemp|null $answer)
+    {
+        if(!$answer) return false;
+
+        $path = public_path("upload/temp/{$answer->id_jawaban}/{$answer->opsi_text}");
+
+        @unlink($path);
+        $answer->delete();
+
+        return true;
+    }
+
     public static function convertNasabahReq(Request $request): array
     {
         return [
