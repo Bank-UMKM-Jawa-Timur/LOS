@@ -13,8 +13,11 @@
         const url = `{{ route('pengajuan-kredit.temp.file') }}`;
         const inputData = $(this);
         const formData = new FormData();
+        const answerId = inputData.attr('name').replace(/\D/g, '');
 
-        formData.append(inputData.attr('name'), e.target.files[0]);
+        formData.append('file', e.target.files[0]);
+        formData.append('file_id', inputData.data('id'));
+        formData.append('answer_id', answerId);
 
         $.ajax({
             url,
@@ -25,7 +28,8 @@
             contentType: false,
             success: (res) => {
                 inputData.val('');
-                inputData.siblings('.filename').html(res.filename);
+                inputData.siblings('.filename').html(res.data.filename);
+                inputData.attr('data-id', res.data.file_id);
             }
         });
     });

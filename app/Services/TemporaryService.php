@@ -27,24 +27,28 @@ class TemporaryService
         return CalonNasabahTemp::insert($data);
     }
 
-    public static function saveFile(int $id, UploadedFile $file)
+    public static function saveFile(int $aID, int|null $fID, UploadedFile $file)
     {
-        $exist = JawabanTemp::where('id_jawaban', $id)->first();
-        $path = public_path("upload/temp/{$id}/");
+        $exist = JawabanTemp::find($fID);
+
+        $path = public_path("upload/temp/{$aID}/");
         $name = time() . '.' . $file->getClientOriginalExtension();
 
         if($exist) {
             @unlink($path . $exist->opsi_text);
             $exist->update(['opsi_text' => $name]);
         } else {
-            JawabanTemp::create([
-                'id_jawaban' => $id,
+            $exist = JawabanTemp::create([
+                'id_jawaban' => $aID,
                 'opsi_text' => $name,
             ]);
         }
 
         $file->move($path, $name);
-        return $name;
+        return [
+            'filename' => $name,
+            'file_id' => $exist->id,
+        ];
     }
 
     public static function convertNasabahReq(Request $request): array

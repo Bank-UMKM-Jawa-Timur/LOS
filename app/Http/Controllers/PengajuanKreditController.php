@@ -1778,33 +1778,24 @@ class PengajuanKreditController extends Controller
             TemporaryService::convertNasabahReq($request)
         );
 
-        dd($nasabah->toArray());
-
-
         return response()->json([
             'status' => 'ok',
             'code' => 200,
+            'data' => $nasabah,
         ]);
     }
 
     public function tempFile(Request $request)
     {
-        $uploadedFile = [];
-        $files = $request->file('upload_file');
-
-        if(!$files) return response()->json([
-            'errorCode' => 422,
-            'message' => 'You must provide file',
-        ], 422);
-
-        foreach($files as $id => $val) {
-            $uploadedFile = TemporaryService::saveFile($id, $val);
-            break;
-        }
+        $data = TemporaryService::saveFile(
+            $request->answer_id,
+            $request->file_id,
+            $request->file('file')
+        );
 
         return response()->json([
             'statusCode' => 200,
-            'filename' => $uploadedFile,
+            'data' => $data,
         ]);
     }
 
