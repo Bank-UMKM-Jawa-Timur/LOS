@@ -214,6 +214,10 @@
         $(".btn-next").click(function(e) {
             e.preventDefault();
             var indexNow = $(".form-wizard.active").data('index')
+            
+            if(indexNow != 0){
+                saveDataTemporary(indexNow)
+            }
 
             if(cekNpwp(indexNow)[0]){
                 var next = parseInt(indexNow) + 1
