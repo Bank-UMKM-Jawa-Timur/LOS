@@ -1831,7 +1831,6 @@ class PengajuanKreditController extends Controller
 
     public function tempJawaban(Request $request)
     {
-        dd($request);
         $find = array('Rp ', '.');
 
         try{

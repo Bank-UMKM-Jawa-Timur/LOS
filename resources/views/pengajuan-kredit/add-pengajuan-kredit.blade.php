@@ -378,7 +378,7 @@ $sectors = [
                                     <input type="hidden" name="id_level[77]" value="77" id="nib_id">
                                     <input type="hidden" name="opsi_jawaban[77]" value="input text" id="nib_opsi_jawaban">
                                     <input type="text" name="informasi[77]" id="nib_text" placeholder="Masukkan informasi"
-                                        class="form-control">
+                                        class="form-control" value="{{ temporary(77)?->opsi_text }}">
                                 </div>
 
                                 <div class="form-group col-md-6" id="docNIB">
@@ -424,7 +424,7 @@ $sectors = [
                                     <input type="hidden" name="id_level[79]" value="79" id="npwp_id">
                                     <input type="hidden" name="opsi_jawaban[79]" value="input text" id="npwp_opsi_jawaban">
                                     <input type="text" name="informasi[79]" id="npwp_text" placeholder="Masukkan informasi"
-                                        class="form-control">
+                                        class="form-control" value="{{ temporary(79)?->opsi_text }}">
                                 </div>
 
                                 <div class="form-group col-md-6" id="docNPWP">
@@ -447,7 +447,7 @@ $sectors = [
                                     <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
                                     <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
                                     <input type="text" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
-                                        placeholder="Masukkan informasi {{ $item->nama }}" class="form-control">
+                                        placeholder="Masukkan informasi {{ $item->nama }}" class="form-control" value="{{ temporary($item->id)?->opsi_text }}">
                                 </div>
                             @elseif ($item->opsi_jawaban == 'number')
                                 @if ($item->nama == 'Repayment Capacity')
@@ -456,7 +456,7 @@ $sectors = [
                                         <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
                                         <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
                                         <input type="text" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
-                                            placeholder="Masukkan informasi {{ $item->nama }}" class="form-control">
+                                            placeholder="Masukkan informasi {{ $item->nama }}" class="form-control" value="{{ temporary($item->id)?->opsi_text }}">
                                     </div>
                                 @else
                                     @if ($item->nama == 'Omzet Penjualan' || $item->nama == 'Installment')
@@ -465,7 +465,7 @@ $sectors = [
                                             <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
                                             <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
                                             <input type="text" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
-                                                placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah">
+                                                placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah" value="{{ temporary($item->id)?->opsi_text }}">
                                         </div>
                                     @else
                                         <div class="form-group col-md-6">
@@ -473,7 +473,7 @@ $sectors = [
                                             <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
                                             <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
                                             <input type="text" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
-                                                placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah">
+                                                placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah" value="{{ temporary($item->id)?->opsi_text }}">
                                         </div>
                                     @endif
                                 @endif
@@ -485,7 +485,7 @@ $sectors = [
                                     <div class="input-group mb-3">
                                         <input type="number" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
                                             placeholder="Masukkan informasi {{ $item->nama }}" class="form-control"
-                                            aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                            aria-label="Recipient's username" aria-describedby="basic-addon2" value="{{ temporary($item->id)?->opsi_text }}">
                                         <div class="input-group-append">
                                             <span class="input-group-text" id="basic-addon2">%</span>
                                         </div>
@@ -508,7 +508,7 @@ $sectors = [
                                     <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
                                     <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
                                     <textarea name="informasi[{{ $item->id }}]" rows="4" id="{{ $idLevelDua }}" class="form-control"
-                                        placeholder="Masukkan informasi {{ $item->nama }}"></textarea>
+                                        placeholder="Masukkan informasi {{ $item->nama }}">{{ temporary($item->id)?->opsi_text }}</textarea>
                                 </div>
                             @endif
 
@@ -565,7 +565,7 @@ $sectors = [
                                         <option value=""> --Pilih Opsi-- </option>
                                         @foreach ($dataJawaban as $key => $itemJawaban)
                                             <option id="{{ $idLevelDua . '_' . $key }}"
-                                                value="{{ ($itemJawaban->skor == null ? 'kosong' : $itemJawaban->skor) . '-' . $itemJawaban->id }}">
+                                                value="{{ ($itemJawaban->skor == null ? 'kosong' : $itemJawaban->skor) . '-' . $itemJawaban->id }}" {{ (temporary_select($item->id)?->skor == $itemJawaban->skor) ? 'selected' : '' }}>
                                                 {{ $itemJawaban->option }}</option>
                                         @endforeach
                                     </select>
@@ -643,7 +643,7 @@ $sectors = [
                                             <input type="hidden" name="opsi_jawaban[{{ $itemTiga->id }}]"
                                                 value="{{ $itemTiga->opsi_jawaban }}" id="">
                                             <input type="text" name="informasi[]" placeholder="Masukkan informasi"
-                                                class="form-control" id="{{ $idLevelTiga }}">
+                                                class="form-control" id="{{ $idLevelTiga }}" value="{{ temporary($itemTiga->id)?->opsi_text }}">
                                         </div>
                                     @elseif ($itemTiga->opsi_jawaban == 'number')
                                         <div class="form-group col-md-6">
@@ -653,7 +653,7 @@ $sectors = [
                                             <input type="hidden" name="id_level[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}" id="">
                                             <input type="text" step="any" name="informasi[{{ $itemTiga->id }}]" id="{{ $idLevelTiga }}"
                                                 placeholder="Masukkan informasi {{ $itemTiga->nama }}"
-                                                class="form-control rupiah">
+                                                class="form-control rupiah" value="{{ temporary($itemTiga->id)?->opsi_text }}">
                                         </div>
                                     @elseif ($itemTiga->opsi_jawaban == 'persen')
                                         <div class="form-group col-md-6">
@@ -669,7 +669,7 @@ $sectors = [
                                                     id="{{ $idLevelTiga }}"
                                                     placeholder="Masukkan informasi {{ $itemTiga->nama }}"
                                                     class="form-control" aria-label="Recipient's username"
-                                                    aria-describedby="basic-addon2">
+                                                    aria-describedby="basic-addon2" value="{{ temporary($itemTiga->id)?->opsi_text }}">
                                                 <div class="input-group-append">
                                                     <span class="input-group-text" id="basic-addon2">%</span>
                                                 </div>
@@ -737,7 +737,7 @@ $sectors = [
                                                 value="{{ $itemTiga->opsi_jawaban }}" id="">
                                             <input type="hidden" name="id_level[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}" id="">
                                             <textarea name="informasi[{{ $itemTiga->id }}]" rows="4" id="{{ $idLevelTiga }}" class="form-control"
-                                                placeholder="Masukkan informasi {{ $itemTiga->nama }}"></textarea>
+                                                placeholder="Masukkan informasi {{ $itemTiga->nama }}">{{ temporary($itemTiga->id)?->opsi_text }}</textarea>
                                         </div>
                                     @endif
 
@@ -782,7 +782,7 @@ $sectors = [
                                                     <option value=""> --Pilih Opsi-- </option>
                                                     @foreach ($dataJawabanLevelTiga as $key => $itemJawabanTiga)
                                                         <option id="{{ $idLevelTiga . '_' . $key }}"
-                                                            value="{{ ($itemJawabanTiga->skor == null ? 'kosong' : $itemJawabanTiga->skor) . '-' . $itemJawabanTiga->id }}">
+                                                            value="{{ ($itemJawabanTiga->skor == null ? 'kosong' : $itemJawabanTiga->skor) . '-' . $itemJawabanTiga->id }}" {{ (temporary_select($itemTiga->id)?->skor == $itemJawabanTiga->skor) ? 'selected' : '' }}>
                                                             {{ $itemJawabanTiga->option }}</option>
                                                     @endforeach
                                                 </select>
@@ -806,7 +806,7 @@ $sectors = [
                                                 <input type="hidden" name="opsi_jawaban[{{ $itemEmpat->id }}]"
                                                     value="{{ $itemEmpat->opsi_jawaban }}" id="">
                                                 <input type="text" name="informasi[{{ $itemEmpat->id }}]" id="{{ $idLevelEmpat }}"
-                                                    placeholder="Masukkan informasi" class="form-control">
+                                                    placeholder="Masukkan informasi" class="form-control" value="{{ temporary($itemEmpat->id)?->opsi_text }}">
                                             </div>
                                         @elseif ($itemEmpat->opsi_jawaban == 'number')
                                             <div class="form-group col-md-6">
@@ -818,7 +818,7 @@ $sectors = [
                                                 <input type="text" step="any" name="informasi[{{ $itemEmpat->id }}]"
                                                     id="{{ $idLevelEmpat }}"
                                                     placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
-                                                    class="form-control rupiah">
+                                                    class="form-control rupiah" value="{{ temporary($itemEmpat->id)?->opsi_text }}">
                                             </div>
                                         @elseif ($itemEmpat->opsi_jawaban == 'persen')
                                             <div class="form-group col-md-6">
@@ -832,7 +832,7 @@ $sectors = [
                                                         id="{{ $idLevelEmpat }}"
                                                         placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
                                                         class="form-control" aria-label="Recipient's username"
-                                                        aria-describedby="basic-addon2">
+                                                        aria-describedby="basic-addon2" value="{{ temporary($itemEmpat->id)?->opsi_text }}">
                                                     <div class="input-group-append">
                                                         <span class="input-group-text" id="basic-addon2">%</span>
                                                     </div>
@@ -889,7 +889,7 @@ $sectors = [
                                                     <option value=""> --Pilih Opsi -- </option>
                                                     @foreach ($dataJawabanLevelEmpat as $itemJawabanEmpat)
                                                         <option id="{{ $idLevelEmpat . '_' . $key }}"
-                                                            value="{{ ($itemJawabanEmpat->skor == null ? 'kosong' : $itemJawabanEmpat->skor) . '-' . $itemJawabanEmpat->id }}">
+                                                            value="{{ ($itemJawabanEmpat->skor == null ? 'kosong' : $itemJawabanEmpat->skor) . '-' . $itemJawabanEmpat->id }}" {{ (temporary_select($itemEmpat->id)?->skor == $itemJawabanEmpat->skor) ? 'selected' : '' }}>
                                                             {{ $itemJawabanEmpat->option }}</option>
                                                     @endforeach
                                                 </select>
@@ -1025,7 +1025,7 @@ $sectors = [
                             $("#desa").append('<option>---Pilih Desa---</option>');
                             $.each(res, function(nama, kode) {
                                 $('#desa').append(`
-                                    <option value="${kode}" ${kode == {{$duTemp->id_desa}} ? 'selected' : '' }>${nama}</option>
+                                    <option value="${kode}" ${kode == {{$duTemp?->id_desa}} ? 'selected' : '' }>${nama}</option>
                                 `);
                             });
                         } else {
