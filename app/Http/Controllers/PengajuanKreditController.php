@@ -17,6 +17,7 @@ use App\Models\JawabanSubColumnModel;
 use App\Models\PendapatPerAspek;
 use App\Models\DetailPendapatPerAspek;
 use App\Models\JawabanTemp;
+use App\Models\JawabanTempModel;
 use App\Services\TemporaryService;
 use DateTime;
 use Exception;
@@ -1830,5 +1831,118 @@ class PengajuanKreditController extends Controller
 
     public function tempJawaban(Request $request)
     {
+        $find = array('Rp ', '.');
+
+        try{
+            foreach ($request->id_level as $key => $value) {
+                $dataJawabanText = new JawabanTemp();
+                $dataJawabanText->id_jawaban = $request->get('id_level')[$key];
+                if ($request->get('id_level')[$key] == '143') {
+                    $dataJawabanText->opsi_text = $request->get('informasi')[$key];
+                } else {
+                    $dataJawabanText->opsi_text = str_replace($find, '', $request->get('informasi')[$key]);
+                }
+                
+                $dataJawabanText->save();
+            }
+    
+            $finalArray = array();
+            $rata_rata = array();
+            // data Level dua
+            if ($request->dataLevelDua != null) {
+                $data = $request->dataLevelDua;
+                foreach ($data as $key => $value) {
+                    $data_level_dua = $this->getDataLevel($value);
+                    $skor[$key] = $data_level_dua[0];
+                    $id_jawaban[$key] = $data_level_dua[1];
+                    //jika skor nya tidak kosong
+                    if ($skor[$key] != 'kosong') {
+                        if($id_jawaban[$key] == 66 || $id_jawaban[$key] == 187){
+                            if($skor[$key] == 1){
+                                $statusSlik = true;
+                            }
+                        }
+                        array_push($rata_rata, $skor[$key]);
+                    } else {
+                        $skor[$key] = NULL;
+                    }
+                    array_push(
+                        $finalArray,
+                        array(
+                            'id_jawaban' => $id_jawaban[$key],
+                            'skor' => $skor[$key],
+                            'created_at' => date("Y-m-d H:i:s"),
+                        )
+                    );
+                }
+            } else {
+            }
+
+            // data level tiga
+            if ($request->dataLevelTiga != null) {
+                $dataLevelTiga = $request->dataLevelTiga;
+                foreach ($dataLevelTiga as $key => $value) {
+                    $data_level_tiga = $this->getDataLevel($value);
+                    $skor[$key] = $data_level_tiga[0];
+                    $id_jawaban[$key] = $data_level_tiga[1];
+                    //jika skor nya tidak kosong
+                    if ($skor[$key] != 'kosong') {
+                        array_push($rata_rata, $skor[$key]);
+                    } else {
+                        $skor[$key] = NULL;
+                    }
+                    array_push(
+                        $finalArray,
+                        array(
+                            'id_jawaban' => $id_jawaban[$key],
+                            'skor' => $skor[$key],
+                            'created_at' => date("Y-m-d H:i:s"),
+                        )
+                    );
+                }
+            } else {
+            }
+
+            // data level empat
+            if ($request->dataLevelEmpat != null) {
+                $dataLevelEmpat = $request->dataLevelEmpat;
+                foreach ($dataLevelEmpat as $key => $value) {
+                    $data_level_empat = $this->getDataLevel($value);
+                    $skor[$key] = $data_level_empat[0];
+                    $id_jawaban[$key] = $data_level_empat[1];
+                    //jika skor nya tidak kosong
+                    if ($skor[$key] != 'kosong') {
+                        array_push($rata_rata, $skor[$key]);
+                    } else {
+                        $skor[$key] = NULL;
+                    }
+                    array_push(
+                        $finalArray,
+                        array(
+                            'id_jawaban' => $id_jawaban[$key],
+                            'skor' => $skor[$key],
+                            'created_at' => date("Y-m-d H:i:s"),
+                        )
+                    );
+                }
+            } else {
+            }
+
+            for ($i = 0; $i < count($finalArray); $i++) {
+                JawabanTempModel::insert($finalArray[$i]);
+            }
+        } catch(Exception $e){
+            DB::rollBack();
+            dd($e);
+        } catch(QueryException $e){
+            DB::rollBack();
+            dd($e);
+        }
+
+        dd([$request]);
+
+        return response()->json([
+            'status' => 'ok'
+        ]);
     }
 }
