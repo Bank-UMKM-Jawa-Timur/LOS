@@ -43,6 +43,12 @@ $sectors = [
             /* border-bottom: 1px solid #dc3545; */
         }
 
+        span.filename {
+            position: absolute;
+            top: 40px;
+            left: 139px;
+            background: white;
+        }
     </style>
     <form id="pengajuan_kredit" action="{{ route('pengajuan-kredit.store') }}" method="post" enctype="multipart/form-data">
         @csrf
