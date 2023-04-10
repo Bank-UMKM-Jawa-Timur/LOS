@@ -1,4 +1,22 @@
 <script>
+    function fillTempFile(selector) {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function() {
+            const container = new DataTransfer();
+            const file = new File([xhr.response], 'filled.png', {
+                type: 'image/png',
+                lastModified: (new Date().getTime()),
+            }, 'utf-8');
+
+            container.items.add(file);
+            $(selector).each((i, el) => el.files = container.files);
+        }
+
+        xhr.open('GET', '/assets/img/no-image.png');
+        xhr.responseType = 'blob';
+        xhr.send();
+    }
+
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -18,6 +36,7 @@
         formData.append('file', e.target.files[0]);
         formData.append('file_id', inputData.data('id'));
         formData.append('answer_id', answerId);
+        formData.append('id_calon_nasabah', {{ $duTemp->id }});
 
         $.ajax({
             url,
@@ -30,16 +49,18 @@
                 inputData.val('');
                 inputData.siblings('.filename').html(res.data.filename);
                 inputData.attr('data-id', res.data.file_id);
+                fillTempFile(`input[data-id="${res.data.file_id}"]`);
             }
         });
     });
 
     function saveDataUmum() {
-        const data = {};
+        const data = {
+            id_nasabah: {{ $duTemp->id }},
+        };
 
         $('#wizard-data-umum input, #wizard-data-umum select, #wizard-data-umum textarea').each(function() {
             const input = $(this);
-
             data[input.attr('name')] = input.val();
         });
         console.log(data);
@@ -64,7 +85,7 @@
 
             data[input.attr('name')] = input.val();
         });
-        
+
         console.log(data);
         $.ajax({
             url: '{{ route('pengajuan-kredit.temp.jawaban') }}',
@@ -81,4 +102,18 @@
     setTimeout(() => {
         $('#kecamatan').trigger('change');
     }, 4000);
+
+
+    // Fill temporary file with empty picture
+    const selectors = [];
+
+    $('span.filename').each((i, el) => {
+        const filename = $(el);
+        const input = filename.parent().find('input[type="file"]');
+
+        if(filename.text().trim().length < 1) return;
+        selectors.push(`input[data-id="${input.data('id')}"]`);
+    });
+
+    fillTempFile(selectors.join(','));
 </script>

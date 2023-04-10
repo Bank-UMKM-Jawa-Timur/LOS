@@ -12,7 +12,7 @@ class JawabanTemp extends Model
     protected $table = 'temporary_jawaban_text';
 
     protected $fillable = [
-        'id_calon_nasabah_temporary',
+        'id_temporary_calon_nasabah',
         'id_jawaban',
         'opsi_text',
         'skor_penyelia',
