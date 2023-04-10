@@ -627,10 +627,9 @@ $sectors = [
                                         <input type="text" name="informasi[]" id="" placeholder="Masukkan informasi"
                                             class="form-control"> --}}
                                     </div>
-
-                                    <div class="form-group col-md-6" id="select_kategori_jaminan_tambahan">
-
-                                    </div>
+                                    <span>
+                                        <div class="form-group col-md-6" id="select_kategori_jaminan_tambahan"></div>
+                                    </span>
                                 @elseif ($itemTiga->nama == 'Bukti Pemilikan Jaminan Utama')
                                     {{-- <div class="form-group col-md-12">
                                         <h5>{{ $itemTiga->nama }}</h5>
@@ -1755,9 +1754,8 @@ $sectors = [
         });
 
         $('body').on('click', '.file-wrapper .btn-del-file', function(e) {
-            if($('.file-wrapper').get().length < 2) return;
-
             const inputData = $(this).parent().parent().find('input[type="file"]');
+            const wrapperEl = $(this).parent().parent().parent();
 
             $.ajax({
                 url: '{{ route('pengajuan-kredit.temp.file') }}',
@@ -1766,7 +1764,11 @@ $sectors = [
                     answer_id: inputData.data('id'),
                 },
                 success: (res) => {
-                    $(this).parent().parent().parent().remove();
+                    inputData.parent().find('.filename').text('');
+                    inputData.val('');
+
+                    if(wrapperEl.siblings('.file-wrapper').get().length < 1) return;
+                    wrapperEl.remove();
                 }
             });
         });
