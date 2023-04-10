@@ -1242,11 +1242,11 @@ $sectors = [
                             $('#bukti_pemilikan_jaminan_tambahan').append(`
                                 <div class="form-group col-md-6 aspek_jaminan_kategori">
                                     <label>${valItem.nama}</label>
-                                    <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input">
-                                    <input type="hidden" name="opsi_jawaban[]"
+                                    <input type="hidden" name="id_level[${valItem.id}]" value="${valItem.id}" id="" class="input">
+                                    <input type="hidden" name="opsi_jawaban[${valItem.id}]"
                                         value="${valItem.opsi_jawaban}" id="" class="input">
-                                    <input type="text" name="informasi[]" placeholder="Masukkan informasi"
-                                        class="form-control input">
+                                    <input type="text" name="informasi[${valItem.id}]" placeholder="Masukkan informasi"
+                                        class="form-control input" value="${response.dataJawaban[i]}">
                                 </div>
                             `);
                         } else {
@@ -1270,14 +1270,20 @@ $sectors = [
                                     </div>
                                 </div>`);
                             } else {
+                                if(response.dataJawaban[i] != null && response.dataJawaban[i] != ""){
+                                    if(kategoriJaminan != 'Kendaraan Bermotor'){
+                                        isCheck = "<input type='checkbox' class='checkKategori' checked>"
+                                        isDisabled = ""
+                                    }
+                                }
                                 $('#bukti_pemilikan_jaminan_tambahan').append(`
                                     <div class="form-group col-md-6 aspek_jaminan_kategori">
                                         <label>${isCheck} ${valItem.nama}</label>
-                                        <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input" ${isDisabled}>
-                                        <input type="hidden" name="opsi_jawaban[]"
+                                        <input type="hidden" name="id_level[${valItem.id}]" value="${valItem.id}" id="" class="input" ${isDisabled}>
+                                        <input type="hidden" name="opsi_jawaban[${valItem.id}]"
                                             value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
-                                        <input type="text" name="informasi[]" placeholder="Masukkan informasi"
-                                            class="form-control input" ${isDisabled}>
+                                        <input type="text" name="informasi[${valItem.id}]" placeholder="Masukkan informasi"
+                                            class="form-control input" ${isDisabled} value="${response.dataJawaban[i]}">
                                     </div>
                                 `);
                             }
@@ -1351,7 +1357,7 @@ $sectors = [
                 $('#nib').show();
                 $('#nib_id').removeAttr('disabled');
                 $('#nib_text').removeAttr('disabled');
-                $('#nib_text').val('');
+                $('#nib_text').val('{{ temporary(77)?->opsi_text }}');
                 $('#nib_opsi_jawaban').removeAttr('disabled');
 
                 $('#docNIB').show();
@@ -1362,7 +1368,7 @@ $sectors = [
                 $('#npwp').show();
                 $('#npwp_id').removeAttr('disabled');
                 $('#npwp_text').removeAttr('disabled');
-                $('#npwp_text').val('');
+                $('#npwp_text').val('{{ temporary(79)?->opsi_text }}');
                 $('#npwp_opsi_jawaban').removeAttr('disabled');
 
                 $('#docNPWP').show();
@@ -1380,7 +1386,7 @@ $sectors = [
                 $('#docNIB').hide();
                 $('#docNIB_id').attr('disabled', true);
                 $('#docNIB_text').attr('disabled', true);
-                $('#docNIB_text').val('');
+                $('#docNIB_text').val('{{ temporary(78)?->opsi_text }}');
                 $('#docNIB_upload_file').attr('disabled', true);
 
                 $('#surat_keterangan_usaha').show();
@@ -1397,7 +1403,7 @@ $sectors = [
                 $('#npwp').show();
                 $('#npwp_id').removeAttr('disabled');
                 $('#npwp_text').removeAttr('disabled');
-                $('#npwp_text').val('');
+                $('#npwp_text').val('{{ temporary(79)?->opsi_text }}');
                 $('#npwp_opsi_jawaban').removeAttr('disabled');
 
                 $('#docNPWP').show();
@@ -1463,7 +1469,7 @@ $sectors = [
                 $('#npwp').show();
                 $('#npwp_id').removeAttr('disabled');
                 $('#npwp_text').removeAttr('disabled');
-                $('#npwp_text').val('');
+                $('#npwp_text').val('{{ temporary(79)?->opsi_text }}');
                 $('#npwp_opsi_jawaban').removeAttr('disabled');
 
                 $('#docNPWP').show();

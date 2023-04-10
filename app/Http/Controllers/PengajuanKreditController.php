@@ -363,12 +363,19 @@ class PengajuanKreditController extends Controller
                 ->where('id_parent', 114)
                 ->get();
         }
+
+        $dataJawaban = [];
+        foreach($itemBuktiPemilikan->where('id_parent', 114)->get() as $i){
+            array_push($dataJawaban, temporary($i?->id)?->opsi_text ?? null);
+        }
+
         $data = [
             'detailJawabanOption' => $detailJawabanOption->first(),
             'dataDetailJawabanText' => $dataDetailJawabanText,
             'item' => $item,
             'belum' => $belum,
-            'itemBuktiPemilikan' => $itemBuktiPemilikan->where('id_parent', 114)->get()
+            'itemBuktiPemilikan' => $itemBuktiPemilikan->where('id_parent', 114)->get(),
+            'dataJawaban' => $dataJawaban
         ];
 
         return json_encode($data);
