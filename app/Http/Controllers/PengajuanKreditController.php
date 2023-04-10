@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CalonNasabah;
+use App\Models\CalonNasabahTemp;
 use App\Models\Desa;
 use App\Models\DetailKomentarModel;
 use App\Models\ItemModel;
@@ -1784,6 +1785,7 @@ class PengajuanKreditController extends Controller
     public function tempNasabah(Request $request)
     {
         $nasabah = TemporaryService::saveNasabah(
+            $request->id_nasabah,
             TemporaryService::convertNasabahReq($request)
         );
 
@@ -1796,7 +1798,10 @@ class PengajuanKreditController extends Controller
 
     public function tempFile(Request $request)
     {
+        $nasabah = CalonNasabahTemp::findOrFail($request->id_calon_nasabah);
+
         $data = TemporaryService::saveFile(
+            $nasabah,
             $request->answer_id,
             $request->file_id,
             $request->file('file')
@@ -1842,10 +1847,10 @@ class PengajuanKreditController extends Controller
                 } else {
                     $dataJawabanText->opsi_text = str_replace($find, '', $request->get('informasi')[$key]);
                 }
-                
+
                 $dataJawabanText->save();
             }
-    
+
             $finalArray = array();
             $rata_rata = array();
             // data Level dua

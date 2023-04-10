@@ -6,28 +6,27 @@ use App\Models\JawabanTemp;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Auth;
 
 class TemporaryService
 {
-    public static function getNasabahData(User $user): CalonNasabahTemp|null
+    public static function getNasabahData(User $user): CalonNasabahTemp
     {
-        return CalonNasabahTemp::where('id_user', $user->id)
-            ->first();
+        if($nasData = CalonNasabahTemp::where('id_user', $user->id)->first()) return $nasData;
+        return CalonNasabahTemp::create([
+            'id_user' => Auth::user()->id,
+        ]);
     }
 
-    public static function saveNasabah(array $data): CalonNasabahTemp
+    public static function saveNasabah(int $id, array $data): CalonNasabahTemp
     {
-        $exist = CalonNasabahTemp::first();
+        $nasabah = CalonNasabahTemp::find($id);
+        $nasabah->update($data);
 
-        if($exist) {
-            $exist->update($data);
-            return $exist;
-        }
-
-        return CalonNasabahTemp::insert($data);
+        return $nasabah;
     }
 
-    public static function saveFile(int $aID, int|null $fID, UploadedFile $file)
+    public static function saveFile(CalonNasabahTemp $nasabah, int $aID, int|null $fID, UploadedFile $file)
     {
         $exist = JawabanTemp::find($fID);
 
@@ -39,6 +38,7 @@ class TemporaryService
             $exist->update(['opsi_text' => $name]);
         } else {
             $exist = JawabanTemp::create([
+                'id_temporary_calon_nasabah' => $nasabah->id,
                 'id_jawaban' => $aID,
                 'opsi_text' => $name,
                 'type' => 'file',

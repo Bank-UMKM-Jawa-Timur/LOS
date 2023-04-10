@@ -36,6 +36,7 @@
         formData.append('file', e.target.files[0]);
         formData.append('file_id', inputData.data('id'));
         formData.append('answer_id', answerId);
+        formData.append('id_calon_nasabah', {{ $duTemp->id }});
 
         $.ajax({
             url,
@@ -54,11 +55,12 @@
     });
 
     function saveDataUmum() {
-        const data = {};
+        const data = {
+            id_nasabah: {{ $duTemp->id }},
+        };
 
         $('#wizard-data-umum input, #wizard-data-umum select, #wizard-data-umum textarea').each(function() {
             const input = $(this);
-
             data[input.attr('name')] = input.val();
         });
         console.log(data);
