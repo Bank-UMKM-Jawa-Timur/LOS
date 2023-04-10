@@ -84,6 +84,7 @@
             // console.log('test');
 
             data[input.attr('name')] = input.val();
+            data['id_nasabah'] = {{ $duTemp->id }};
         });
 
         console.log(data);
