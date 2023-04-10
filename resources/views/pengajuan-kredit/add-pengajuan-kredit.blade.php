@@ -995,7 +995,7 @@ $sectors = [
                             $("#desa").append('<option>---Pilih Desa---</option>');
                             $.each(res, function(nama, kode) {
                                 $('#kecamatan').append(`
-                                    <option value="${kode}" ${kode == {{$duTemp?->id_kecamatan}} ? 'selected' : '' }>${nama}</option>
+                                    <option value="${kode}" ${kode == {{$duTemp?->id_kecamatan ?? 'null'}} ? 'selected' : '' }>${nama}</option>
                                 `);
                             });
                         } else {
@@ -1025,7 +1025,7 @@ $sectors = [
                             $("#desa").append('<option>---Pilih Desa---</option>');
                             $.each(res, function(nama, kode) {
                                 $('#desa').append(`
-                                    <option value="${kode}" ${kode == {{$duTemp?->id_desa}} ? 'selected' : '' }>${nama}</option>
+                                    <option value="${kode}" ${kode == {{$duTemp?->id_desa ?? 'null'}} ? 'selected' : '' }>${nama}</option>
                                 `);
                             });
                         } else {
