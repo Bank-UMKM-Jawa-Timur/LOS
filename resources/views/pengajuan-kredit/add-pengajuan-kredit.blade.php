@@ -1257,24 +1257,57 @@ $sectors = [
                             `);
                         } else {
                             if(valItem.nama == 'Foto') {
-                                $('#bukti_pemilikan_jaminan_tambahan').append(`
-                                <div class="form-group col-md-6 aspek_jaminan_kategori">
-                                    <label>${valItem.nama}</label>
-                                    <div class="row">
+                                $('#bukti_pemilikan_jaminan_tambahan').html(`
+                                @forelse (temporary(148, true) as $tempData)
+                                <div class="form-group col-md-6 file-wrapper item-{{ $itemTiga->id }}">
+                                    <label for="">{{ $itemTiga->nama }}</label>
+                                    <div class="row file-input">
                                         <div class="col-md-9">
-                                            <input type="hidden" name="id_item_file[${valItem.id}]" value="${valItem.id}" id="" class="input">
-                                            <input type="file" name="upload_file[${valItem.id}]" data-id="" class="form-control limit-size">
-                                            <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
-                                            <span class="filename" style="display: inline;"></span>
+                                            <input type="hidden" name="id_item_file[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}" id="">
+                                            <input type="file" name="upload_file[{{ $itemTiga->id }}]" data-id="{{ $tempData->id }}"
+                                                placeholder="Masukkan informasi {{ $itemTiga->nama }}"
+                                                class="form-control limit-size">
+                                                <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                                            <span class="filename" style="display: inline;">{{ $tempData->opsi_text }}</span>
                                         </div>
-                                        <div class="col-md-1">
-                                            <button class="btn btn-success plus" id="btnTambahBukti"><i class="fa fa-plus"></i></button>
+                                        <div class="col-1">
+                                            <button class="btn btn-sm btn-success btn-add-file" type="button" data-id="{{ $itemTiga->id }}">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
                                         </div>
-                                        <div class="col-md-1 ml-1">
-                                            <button class="btn btn-danger minus" id="btnHapusBukti"><i class="fa fa-minus"></i></button>
+                                        <div class="col-1">
+                                            <button class="btn btn-sm btn-danger btn-del-file" type="button" data-id="{{ $itemTiga->id }}">
+                                                <i class="fa fa-minus"></i>
+                                            </button>
                                         </div>
                                     </div>
-                                </div>`);
+                                </div>
+                                @empty
+                                <div class="form-group col-md-6 file-wrapper item-${valItem.id}">
+                                    <label for="">${valItem.nama}</label>
+                                    <div class="row file-input">
+                                        <div class="col-md-9">
+                                            <input type="hidden" name="id_item_file[${valItem.id}]" value="${valItem.id}" id="">
+                                            <input type="file" name="upload_file[${valItem.id}]" data-id=""
+                                                placeholder="Masukkan informasi ${valItem.nama}"
+                                                class="form-control limit-size">
+                                                <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                                            <span class="filename" style="display: inline;"></span>
+                                        </div>
+                                        <div class="col-1">
+                                            <button class="btn btn-sm btn-success btn-add-file" type="button" data-id="${valItem.id}">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </div>
+                                        <div class="col-1">
+                                            <button class="btn btn-sm btn-danger btn-del-file" type="button" data-id="${valItem.id}">
+                                                <i class="fa fa-minus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endforelse
+                                `);
                             } else {
                                 $('#bukti_pemilikan_jaminan_tambahan').append(`
                                     <div class="form-group col-md-6 aspek_jaminan_kategori">
