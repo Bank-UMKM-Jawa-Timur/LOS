@@ -1219,9 +1219,10 @@ $sectors = [
 
             $.ajax({
                 type: "get",
-                url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}`,
+                url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}&idCalonNasabah={{ $duTemp?->id }}`,
                 dataType: "json",
                 success: function(response) {
+                    console.log('test');
                     // add item by kategori
                     $('#select_kategori_jaminan_tambahan').append(`
                         <label for="">${response.item.nama}</label>
@@ -1248,6 +1249,7 @@ $sectors = [
                         "<input type='checkbox' class='checkKategori'>" : ""
                     var isDisabled = kategoriJaminan != 'Kendaraan Bermotor' ? 'disabled' : ''
                     $.each(response.itemBuktiPemilikan, function(i, valItem) {
+                        console.log('test');
                         if (valItem.nama == 'Atas Nama') {
                             $('#bukti_pemilikan_jaminan_tambahan').append(`
                                 <div class="form-group col-md-6 aspek_jaminan_kategori">
