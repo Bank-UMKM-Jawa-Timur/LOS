@@ -1802,6 +1802,33 @@ class PengajuanKreditController extends Controller
             TemporaryService::convertNasabahReq($request)
         );
 
+        foreach($request->dataLevelDua as $key => $value){
+            $dataSlik = $this->getDataLevel($value);
+            $cek = DB::table('jawaban_temp')
+                ->where('id_temporary_calon_nasabah', $request->id_nasabah)
+                ->where('id_jawaban', $dataSlik[1])
+                ->count('id');
+            if($cek < 1){
+                DB::table('jawaban_temp')
+                    ->insert([
+                        'id_temporary_calon_nasabah' => $request->id_nasabah,
+                        'id_jawaban' => $dataSlik[1],
+                        'skor' => $dataSlik[0],
+                        'id_option' => $key,
+                        'created_at' => now()
+                    ]);
+            } else{
+                DB::table('jawaban_temp')
+                    ->where('id_temporary_calon_nasabah', $request->id_nasabah)
+                    ->where('id_option', $key)
+                    ->update([
+                        'id_jawaban' => $dataSlik[1],
+                        'skor' => $dataSlik[0],
+                        'updated_at' => now()
+                    ]);
+            }
+        }
+
         return response()->json([
             'status' => 'ok',
             'code' => 200,

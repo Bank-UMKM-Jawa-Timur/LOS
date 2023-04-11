@@ -232,11 +232,11 @@ $sectors = [
                 </div>
                 <div class="form-group col-md-6">
                     <label for="">{{ $itemSlik->nama }}</label>
-                    <select name="dataLevelDua[]" id="dataLevelDua" class="form-control select2"
+                    <select name="dataLevelDua[{{ $itemSlik->id }}]" id="dataLevelDua" class="form-control select2"
                         data-id_item={{ $itemSlik->id }}>
                         <option value=""> --Pilih Data -- </option>
                         @foreach ($itemSlik->option as $itemJawaban)
-                            <option value="{{ $itemJawaban->skor . '-' . $itemJawaban->id }}">
+                            <option value="{{ $itemJawaban->skor . '-' . $itemJawaban->id }}"  {{ (temporary_select($itemSlik->id, $duTemp->id)?->id_jawaban == $itemJawaban->id) ? 'selected' : '' }}>
                                 {{ $itemJawaban->option }}</option>
                         @endforeach
                     </select>
