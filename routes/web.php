@@ -95,6 +95,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/pengajuan-kredit/get-ijin-usaha', [PengajuanKreditController::class, 'getIjinUsaha'])->name('get-ijin-usaha');
 
     Route::get('/draft-pengajuan-kredit', [PengajuanKreditController::class, 'draftPengajuanKredit'])->name('pengajuan-kredit-draft');
+    Route::get('/draft/continue/{id}', [PengajuanKreditController::class, 'continueDraft'])->name('draft.continue');
+    Route::delete('/draft/delete/{id}', [PengajuanKreditController::class, 'deleteDraft'])->name('draft.destroy');
 });
 
 require __DIR__ . '/auth.php';

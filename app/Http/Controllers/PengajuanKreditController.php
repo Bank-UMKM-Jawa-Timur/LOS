@@ -193,7 +193,7 @@ class PengajuanKreditController extends Controller
         $param['itemNIB'] = ItemModel::where('nama', 'Dokumen NIB')->first();
         $param['itemNPWP'] = ItemModel::where('nama', 'Dokumen NPWP')->first();
         $param['itemSKU'] = ItemModel::where('nama', 'Dokumen Surat Keterangan Usaha')->first();
-        $param['duTemp'] = TemporaryService::getNasabahData($request->user());
+        $param['duTemp'] = TemporaryService::getNasabahData($request->tempId);
 
         $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
 
@@ -1868,7 +1868,7 @@ class PengajuanKreditController extends Controller
                     } else {
                         $dataJawabanText->opsi_text = str_replace($find, '', $request->get('informasi')[$key]);
                     }
-    
+
                     $dataJawabanText->save();
                 } else{
                     $data = DB::table('temporary_jawaban_text')
@@ -1988,7 +1988,7 @@ class PengajuanKreditController extends Controller
                             ]);
                     }
                 }
-            } 
+            }
 
         } catch(Exception $e){
             DB::rollBack();
@@ -2029,11 +2029,29 @@ class PengajuanKreditController extends Controller
         //     ->where('pengajuan.id_cabang', auth()->user()->id_cabang)
         //     ->paginate(5);
         $param['data_pengajuan'] = CalonNasabahTemp::select(
+            'id',
             'nama',
             'id_user',
             'created_at'
         )->where('id_user', auth()->user()->id)
         ->paginate(5);
+
         return view('pengajuan-kredit.draft_index', $param);
+    }
+
+    public function continueDraft($id)
+    {
+        $nasabah = CalonNasabahTemp::findOrFail($id);
+        $createRoute = route('pengajuan-kredit.create');
+
+        return redirect()->to($createRoute . "?tempId={$nasabah->id}");
+    }
+
+    public function deleteDraft($id)
+    {
+        $tempNasabah = CalonNasabahTemp::findOrFail($id);
+        $tempNasabah->delete();
+
+        return back()->withStatus('Berhasil menghapus draft');
     }
 }

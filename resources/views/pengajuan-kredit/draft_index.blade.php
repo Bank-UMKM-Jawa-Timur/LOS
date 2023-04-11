@@ -28,7 +28,7 @@
             @forelse ($data_pengajuan as $item)
                 <tr>
                     <td class="text-center">{{ $loop->iteration }}</td>
-                    <td>{{ $item->created_at->format('d-m-Y') }}</td>
+                    <td>{{ $item->created_at->format('d M Y') }}</td>
                     <td>{{ $item->nama }}</td>
                     <td>
                         <div class="d-flex">
@@ -39,15 +39,12 @@
                                     </svg>
                                 </button>
                                 <div class="dropdown-menu">
-                                {{-- @if ($item->posisi == 'Proses Input Data')
-                                    <a href="{{ route('pengajuan-kredit.edit',$item->id_pengajuan) }}" class="dropdown-item">
-                                        Edit data
-                                    </a>
-                                    <a href="{{ route('pengajuan.check.penyeliakredit',$item->id_pengajuan) }}" class="dropdown-item">Tindak lanjut Review Penyelia</a>
-                                    <a target="_blank" href="{{ route('cetak',$item->id_pengajuan) }}" class="dropdown-item">Cetak</a>
-                                @else
-                                    <a target="_blank" href="{{ route('cetak',$item->id_pengajuan) }}" class="dropdown-item">Cetak</a>
-                                @endif --}}
+                                    <a href="{{ route('draft.continue', $item->id) }}" class="dropdown-item">Lanjutkan</a>
+                                    <form action="{{ route('draft.destroy', $item->id) }}" method="post">
+                                        @method('DELETE')
+                                        @csrf
+                                        <button class="dropdown-item" type="submit">Hapus</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -60,11 +57,11 @@
     </table>
     <div>
         {{$data_pengajuan->links()}}
-        Menampilkan 
+        Menampilkan
         {{$data_pengajuan->firstItem()}}
-         - 
+         -
         {{$data_pengajuan->lastItem()}}
-         dari 
+         dari
         {{$data_pengajuan->total()}} Data
     </div>
     <div class="pull-right">

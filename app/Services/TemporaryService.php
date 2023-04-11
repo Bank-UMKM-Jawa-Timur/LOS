@@ -10,9 +10,14 @@ use Illuminate\Support\Facades\Auth;
 
 class TemporaryService
 {
-    public static function getNasabahData(User $user): CalonNasabahTemp
+    public static function getNasabahData($tempId): CalonNasabahTemp
     {
-        if($nasData = CalonNasabahTemp::where('id_user', $user->id)->first()) return $nasData;
+        if(!$tempId) return CalonNasabahTemp::create([
+            'id_user' => Auth::user()->id,
+        ]);
+
+        if($nasData = CalonNasabahTemp::find($tempId)) return $nasData;
+
         return CalonNasabahTemp::create([
             'id_user' => Auth::user()->id,
         ]);
