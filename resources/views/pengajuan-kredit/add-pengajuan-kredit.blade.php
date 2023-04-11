@@ -627,9 +627,7 @@ $sectors = [
                                         <input type="text" name="informasi[]" id="" placeholder="Masukkan informasi"
                                             class="form-control"> --}}
                                     </div>
-                                    <span>
-                                        <div class="form-group col-md-6" id="select_kategori_jaminan_tambahan"></div>
-                                    </span>
+                                    <div class="form-group col-md-6" id="select_kategori_jaminan_tambahan"></div>
                                 @elseif ($itemTiga->nama == 'Bukti Pemilikan Jaminan Utama')
                                     {{-- <div class="form-group col-md-12">
                                         <h5>{{ $itemTiga->nama }}</h5>
@@ -1130,7 +1128,7 @@ $sectors = [
                                     <input type="text" name="informasi[]" placeholder="Masukkan informasi"
                                         class="form-control input">
                                 </div>
-                            `);
+                            `);m
                             } else {
                                 if(valItem.nama == 'Foto') {
                                     $('#bukti_pemilikan_jaminan_utama').append(`
@@ -1260,7 +1258,7 @@ $sectors = [
                             `);
                         } else {
                             if(valItem.nama == 'Foto') {
-                                $('#bukti_pemilikan_jaminan_tambahan').html(`
+                                $('#bukti_pemilikan_jaminan_tambahan').append(`
                                 @forelse (temporary(148, true) as $tempData)
                                 <div class="form-group col-md-6 file-wrapper item-${valItem.id}">
                                     <label for="">${valItem.nama}</label>
