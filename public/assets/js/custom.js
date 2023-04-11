@@ -214,7 +214,8 @@
         $(".btn-next").click(function(e) {
             e.preventDefault();
             var indexNow = $(".form-wizard.active").data('index')
-            
+            setPercentage(indexNow + 1);
+
             if(indexNow != 0){
                 saveDataTemporary(indexNow)
             }
@@ -249,4 +250,6 @@
             cekBtn()
             e.preventDefault();
         })
+
+        setPercentage(0);
     });
