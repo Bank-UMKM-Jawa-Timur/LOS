@@ -2002,4 +2002,32 @@ class PengajuanKreditController extends Controller
             'status' => 'ok'
         ]);
     }
+
+    public function draftPengajuanKredit()
+    {
+        $param['pageTitle'] = 'Tambah Pengajuan Kredit';
+        $param['btnText'] = 'Tambah Pengajuan';
+        $param['btnLink'] = route('pengajuan-kredit.create');
+        $param['data_pengajuan'] = PengajuanModel::select(
+            'pengajuan.id',
+            'pengajuan.tanggal',
+            'pengajuan.posisi',
+            'pengajuan.progress_pengajuan_data',
+            'pengajuan.tanggal_review_penyelia',
+            'pengajuan.tanggal_review_pbp',
+            'pengajuan.tanggal_review_pincab',
+            'pengajuan.status',
+            'pengajuan.status_by_sistem',
+            'pengajuan.id_cabang',
+            'pengajuan.average_by_sistem',
+            'pengajuan.average_by_penyelia',
+            'calon_nasabah.nama',
+            'calon_nasabah.jenis_usaha',
+            'calon_nasabah.id_pengajuan'
+        )
+            ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+            ->where('pengajuan.id_cabang', auth()->user()->id_cabang)
+            ->paginate(5);
+        return view('pengajuan-kredit.draft_index', $param);
+    }
 }
