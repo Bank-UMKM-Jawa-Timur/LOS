@@ -72,14 +72,14 @@ $sectors = [
                 <div class="form-group col-md-6">
                     <label for="">{{ $itemSP->nama }}</label>
                     <input type="hidden" name="id_item_file[{{ $itemSP->id }}]" value="{{ $itemSP->id }}" id="">
-                    <input type="file" name="upload_file[{{ $itemSP->id }}]" data-id="{{ temporary($itemSP->id)?->id }}" placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-control limit-size">
+                    <input type="file" name="upload_file[{{ $itemSP->id }}]" data-id="{{ temporary($duTemp->id, $itemSP->id)?->id }}" placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
                             {{ $errors->first('dataLevelDua.' . $key) }}
                         </div>
                     @endif
-                    <span class="filename" style="display: inline;">{{ temporary($itemSP->id)?->opsi_text }}</span>
+                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemSP->id)?->opsi_text }}</span>
                 </div>
                 <div class="form-group col-md-4">
                     <label for="">Kabupaten</label>
@@ -154,26 +154,26 @@ $sectors = [
                 <div class="form-group col-md-6">
                     <label for="">{{ $itemKTPSu->nama }}</label>
                     <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
-                    <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" data-id="{{ temporary($itemKTPSu->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size">
+                    <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPSu->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
                             {{ $errors->first('dataLevelDua.' . $key) }}
                         </div>
                     @endif
-                    <span class="filename" style="display: inline;">{{ temporary($itemKTPSu->id)?->opsi_text }}</span>
+                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPSu->id)?->opsi_text }}</span>
                 </div>
                 <div class="form-group col-md-6">
                     <label for="">{{ $itemKTPIs->nama }}</label>
                     <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
-                    <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" data-id="{{ temporary($itemKTPIs->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size">
+                    <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPIs->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
                             {{ $errors->first('dataLevelDua.' . $key) }}
                         </div>
                     @endif
-                    <span class="filename" style="display: inline;">{{ temporary($itemKTPIs->id)?->opsi_text }}</span>
+                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPIs->id)?->opsi_text }}</span>
                 </div>
                 <div class="form-group col-md-4">
                     <label for="">Tempat Lahir</label>
@@ -252,14 +252,14 @@ $sectors = [
                 <div class="form-group col-md-6">
                     <label for="">{{ $itemP->nama }}</label>
                     <input type="hidden" name="id_item_file[{{ $itemP->id }}]" value="{{ $itemP->id }}" id="">
-                    <input type="file" name="upload_file[{{ $itemP->id }}]" data-id="{{ temporary($itemP->id)?->id }}" placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-control limit-size">
+                    <input type="file" name="upload_file[{{ $itemP->id }}]" data-id="{{ temporary($duTemp->id, $itemP->id)?->id }}" placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
                             {{ $errors->first('dataLevelDua.' . $key) }}
                         </div>
                     @endif
-                    <span class="filename" style="display: inline;">{{ temporary($itemP->id)?->opsi_text }}</span>
+                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemP->id)?->opsi_text }}</span>
                     {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
                 </div>
                 <div class="form-group col-md-12">
@@ -375,8 +375,8 @@ $sectors = [
                                     <label for="">{{ $item->nama }}</label>
                                     <select name="ijin_usaha" id="ijin_usaha" class="form-control" required>
                                         <option value="">-- Pilih Ijin Usaha --</option>
-                                        <option value="nib"{{ (temporary(77)?->opsi_text != '') ? 'selected' : '' }}>NIB</option>
-                                        <option value="surat_keterangan_usaha"{{ (temporary(79)?->opsi_text != '') ? 'selected' : '' }}>Surat Keterangan Usaha</option>
+                                        <option value="nib"{{ (temporary($duTemp->id, 77)?->opsi_text != '') ? 'selected' : '' }}>NIB</option>
+                                        <option value="surat_keterangan_usaha"{{ (temporary($duTemp->id, 79)?->opsi_text != '') ? 'selected' : '' }}>Surat Keterangan Usaha</option>
                                         <option value="tidak_ada_legalitas_usaha">Tidak Ada Legalitas Usaha</option>
                                     </select>
                                 </div>
@@ -388,20 +388,20 @@ $sectors = [
                                     <input type="hidden" name="id_level[77]" value="77" id="nib_id">
                                     <input type="hidden" name="opsi_jawaban[77]" value="input text" id="nib_opsi_jawaban">
                                     <input type="text" name="informasi[77]" id="nib_text" placeholder="Masukkan informasi"
-                                        class="form-control" value="{{ temporary(77)?->opsi_text }}">
+                                        class="form-control" value="{{ temporary($duTemp->id, 77)?->opsi_text }}">
                                 </div>
 
                                 <div class="form-group col-md-6" id="docNIB">
                                     <label for="">{{ $itemNIB->nama }}</label>
                                     <input type="hidden" name="id_item_file[{{ $itemNIB->id }}]" value="{{ $itemNIB->id }}" id="docNIB_id">
-                                    <input type="file" name="upload_file[{{ $itemNIB->id }}]" data-id="{{ temporary($itemNIB->id)?->id }}" placeholder="Masukkan informasi {{ $itemNIB->nama }}" class="form-control limit-size">
+                                    <input type="file" name="upload_file[{{ $itemNIB->id }}]" data-id="{{ temporary($duTemp->id, $itemNIB->id)?->id }}" placeholder="Masukkan informasi {{ $itemNIB->nama }}" class="form-control limit-size">
                                     <span class="invalid-tooltip" style="display: none" id="docNIB_text">Maximum upload file size is 15 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('dataLevelTiga.' . $key) }}
                                         </div>
                                     @endif
-                                    <span class="filename" style="display: inline;">{{ temporary($itemNIB->id)?->opsi_text }}</span>
+                                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemNIB->id)?->opsi_text }}</span>
                                 </div>
 
                                 <div class="form-group col-md-6" id="surat_keterangan_usaha">
@@ -416,14 +416,14 @@ $sectors = [
                                 <div class="form-group col-md-6" id="docSKU">
                                     <label for="">{{ $itemSKU->nama }}</label>
                                     <input type="hidden" name="id_item_file[{{ $itemSKU->id }}]" value="{{ $itemSKU->id }}" id="docSKU_id">
-                                    <input type="file" name="upload_file[{{ $itemSKU->id }}]" data-id="{{ temporary($itemSKU->id)?->id }}" placeholder="Masukkan informasi {{ $itemSKU->nama }}" class="form-control limit-size">
+                                    <input type="file" name="upload_file[{{ $itemSKU->id }}]" data-id="{{ temporary($duTemp->id, $itemSKU->id)?->id }}" placeholder="Masukkan informasi {{ $itemSKU->nama }}" class="form-control limit-size">
                                     <span class="invalid-tooltip" style="display: none" id="docSKU_text">Maximum upload file size is 15 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('dataLevelTiga.' . $key) }}
                                         </div>
                                     @endif
-                                    <span class="filename" style="display: inline;">{{ temporary($itemSKU->id)?->opsi_text }}</span>
+                                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemSKU->id)?->opsi_text }}</span>
                                 </div>
                             </div>
 
@@ -434,20 +434,20 @@ $sectors = [
                                     <input type="hidden" name="id_level[79]" value="79" id="npwp_id">
                                     <input type="hidden" name="opsi_jawaban[79]" value="input text" id="npwp_opsi_jawaban">
                                     <input type="text" name="informasi[79]" id="npwp_text" placeholder="Masukkan informasi"
-                                        class="form-control" value="{{ temporary(79)?->opsi_text }}">
+                                        class="form-control" value="{{ temporary($duTemp->id, 79)?->opsi_text }}">
                                 </div>
 
                                 <div class="form-group col-md-6" id="docNPWP">
                                     <label for="">{{ $itemNPWP->nama }}</label>
                                     <input type="hidden" name="id_item_file[{{ $itemNPWP->id }}]" value="{{ $itemNPWP->id }}" id="docNPWP_id">
-                                    <input type="file" name="upload_file[{{ $itemNPWP->id }}]" data-id="{{ temporary($itemNPWP->id)?->id }}" placeholder="Masukkan informasi {{ $itemNPWP->nama }}" class="form-control limit-size">
+                                    <input type="file" name="upload_file[{{ $itemNPWP->id }}]" data-id="{{ temporary($duTemp->id, $itemNPWP->id)?->id }}" placeholder="Masukkan informasi {{ $itemNPWP->nama }}" class="form-control limit-size">
                                     <span class="invalid-tooltip" style="display: none" id="docNPWP_text">Maximum upload file size is 15 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('dataLevelTiga.' . $key) }}
                                         </div>
                                     @endif
-                                    <span class="filename" style="display: inline;">{{ temporary($itemNPWP->id)?->opsi_text }}</span>
+                                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemNPWP->id)?->opsi_text }}</span>
                                 </div>
                             </div>
                         @else
@@ -457,7 +457,7 @@ $sectors = [
                                     <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
                                     <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
                                     <input type="text" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
-                                        placeholder="Masukkan informasi {{ $item->nama }}" class="form-control" value="{{ temporary($item->id)?->opsi_text }}">
+                                        placeholder="Masukkan informasi {{ $item->nama }}" class="form-control" value="{{ temporary($duTemp->id, $item->id)?->opsi_text }}">
                                 </div>
                             @elseif ($item->opsi_jawaban == 'number')
                                 @if ($item->nama == 'Repayment Capacity')
@@ -466,7 +466,7 @@ $sectors = [
                                         <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
                                         <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
                                         <input type="text" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
-                                            placeholder="Masukkan informasi {{ $item->nama }}" class="form-control" value="{{ temporary($item->id)?->opsi_text }}">
+                                            placeholder="Masukkan informasi {{ $item->nama }}" class="form-control" value="{{ temporary($duTemp->id, $item->id)?->opsi_text }}">
                                     </div>
                                 @else
                                     @if ($item->nama == 'Omzet Penjualan' || $item->nama == 'Installment')
@@ -475,7 +475,7 @@ $sectors = [
                                             <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
                                             <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
                                             <input type="text" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
-                                                placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah" value="{{ temporary($item->id)?->opsi_text }}">
+                                                placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah" value="{{ temporary($duTemp->id, $item->id)?->opsi_text }}">
                                         </div>
                                     @else
                                         <div class="form-group col-md-6">
@@ -483,7 +483,7 @@ $sectors = [
                                             <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
                                             <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
                                             <input type="text" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
-                                                placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah" value="{{ temporary($item->id)?->opsi_text }}">
+                                                placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah" value="{{ temporary($duTemp->id, $item->id)?->opsi_text }}">
                                         </div>
                                     @endif
                                 @endif
@@ -495,7 +495,7 @@ $sectors = [
                                     <div class="input-group mb-3">
                                         <input type="number" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
                                             placeholder="Masukkan informasi {{ $item->nama }}" class="form-control"
-                                            aria-label="Recipient's username" aria-describedby="basic-addon2" value="{{ temporary($item->id)?->opsi_text }}">
+                                            aria-label="Recipient's username" aria-describedby="basic-addon2" value="{{ temporary($duTemp->id, $item->id)?->opsi_text }}">
                                         <div class="input-group-append">
                                             <span class="input-group-text" id="basic-addon2">%</span>
                                         </div>
@@ -507,10 +507,10 @@ $sectors = [
                                     {{-- <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" --}}
                                         {{-- id="{{ $idLevelDua }}"> --}}
                                     <input type="hidden" name="id_item_file[{{ $item->id }}]" value="{{ $item->id }}" id="">
-                                    <input type="file" name="upload_file[{{ $item->id }}]" data-id="{{ temporary($item->id)?->id }}"
+                                    <input type="file" name="upload_file[{{ $item->id }}]" data-id="{{ temporary($duTemp->id, $item->id)?->id }}"
                                         placeholder="Masukkan informasi {{ $item->nama }}" class="form-control limit-size">
                                         <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
-                                    <span class="filename" style="display: inline;">{{ temporary($item->id)?->opsi_text }}</span>
+                                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $item->id)?->opsi_text }}</span>
                                 </div>
                             @elseif ($item->opsi_jawaban == 'long text')
                                 <div class="form-group col-md-6">
@@ -518,7 +518,7 @@ $sectors = [
                                     <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
                                     <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
                                     <textarea name="informasi[{{ $item->id }}]" rows="4" id="{{ $idLevelDua }}" class="form-control"
-                                        placeholder="Masukkan informasi {{ $item->nama }}">{{ temporary($item->id)?->opsi_text }}</textarea>
+                                        placeholder="Masukkan informasi {{ $item->nama }}">{{ temporary($duTemp->id, $item->id)?->opsi_text }}</textarea>
                                 </div>
                             @endif
 
@@ -650,7 +650,7 @@ $sectors = [
                                             <input type="hidden" name="opsi_jawaban[{{ $itemTiga->id }}]"
                                                 value="{{ $itemTiga->opsi_jawaban }}" id="">
                                             <input type="text" name="informasi[{{ $itemTiga->id }}]" placeholder="Masukkan informasi"
-                                                class="form-control" id="{{ $idLevelTiga }}" value="{{ temporary($itemTiga->id)?->opsi_text }}">
+                                                class="form-control" id="{{ $idLevelTiga }}" value="{{ temporary($duTemp->id, $itemTiga->id)?->opsi_text }}">
                                         </div>
                                     @elseif ($itemTiga->opsi_jawaban == 'number')
                                         <div class="form-group col-md-6">
@@ -660,7 +660,7 @@ $sectors = [
                                             <input type="hidden" name="id_level[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}" id="">
                                             <input type="text" step="any" name="informasi[{{ $itemTiga->id }}]" id="{{ $idLevelTiga }}"
                                                 placeholder="Masukkan informasi {{ $itemTiga->nama }}"
-                                                class="form-control rupiah" value="{{ temporary($itemTiga->id)?->opsi_text }}">
+                                                class="form-control rupiah" value="{{ temporary($duTemp->id, $itemTiga->id)?->opsi_text }}">
                                         </div>
                                     @elseif ($itemTiga->opsi_jawaban == 'persen')
                                         <div class="form-group col-md-6">
@@ -676,7 +676,7 @@ $sectors = [
                                                     id="{{ $idLevelTiga }}"
                                                     placeholder="Masukkan informasi {{ $itemTiga->nama }}"
                                                     class="form-control" aria-label="Recipient's username"
-                                                    aria-describedby="basic-addon2" value="{{ temporary($itemTiga->id)?->opsi_text }}">
+                                                    aria-describedby="basic-addon2" value="{{ temporary($duTemp->id, $itemTiga->id)?->opsi_text }}">
                                                 <div class="input-group-append">
                                                     <span class="input-group-text" id="basic-addon2">%</span>
                                                 </div>
@@ -684,7 +684,7 @@ $sectors = [
                                             @endif
                                         </div>
                                     @elseif ($itemTiga->opsi_jawaban == 'file')
-                                        @forelse (temporary($itemTiga->id, true) as $tempData)
+                                        @forelse (temporary($duTemp->id, $itemTiga->id, true) as $tempData)
                                         <div class="form-group col-md-6 file-wrapper item-{{ $itemTiga->id }}">
                                             <label for="">{{ $itemTiga->nama }}</label>
                                             <div class="row file-input">
@@ -716,11 +716,11 @@ $sectors = [
                                             <div class="row file-input">
                                                 <div class="col-md-9">
                                                     <input type="hidden" name="id_item_file[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}" id="">
-                                                    <input type="file" name="upload_file[{{ $itemTiga->id }}]" data-id="{{ temporary($itemTiga->id)?->id }}"
+                                                    <input type="file" name="upload_file[{{ $itemTiga->id }}]" data-id="{{ temporary($duTemp->id, $itemTiga->id)?->id }}"
                                                         placeholder="Masukkan informasi {{ $itemTiga->nama }}"
                                                         class="form-control limit-size">
                                                         <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
-                                                    <span class="filename" style="display: inline;">{{ temporary($itemTiga->id)?->opsi_text }}</span>
+                                                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemTiga->id)?->opsi_text }}</span>
                                                 </div>
                                                 @if(in_array(trim($itemTiga->nama), $multipleFiles))
                                                 <div class="col-1">
@@ -744,7 +744,7 @@ $sectors = [
                                                 value="{{ $itemTiga->opsi_jawaban }}" id="">
                                             <input type="hidden" name="id_level[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}" id="">
                                             <textarea name="informasi[{{ $itemTiga->id }}]" rows="4" id="{{ $idLevelTiga }}" class="form-control"
-                                                placeholder="Masukkan informasi {{ $itemTiga->nama }}">{{ temporary($itemTiga->id)?->opsi_text }}</textarea>
+                                                placeholder="Masukkan informasi {{ $itemTiga->nama }}">{{ temporary($duTemp->id, $itemTiga->id)?->opsi_text }}</textarea>
                                         </div>
                                     @endif
 
@@ -813,7 +813,7 @@ $sectors = [
                                                 <input type="hidden" name="opsi_jawaban[{{ $itemEmpat->id }}]"
                                                     value="{{ $itemEmpat->opsi_jawaban }}" id="">
                                                 <input type="text" name="informasi[{{ $itemEmpat->id }}]" id="{{ $idLevelEmpat }}"
-                                                    placeholder="Masukkan informasi" class="form-control" value="{{ temporary($itemEmpat->id)?->opsi_text }}">
+                                                    placeholder="Masukkan informasi" class="form-control" value="{{ temporary($duTemp->id, $itemEmpat->id)?->opsi_text }}">
                                             </div>
                                         @elseif ($itemEmpat->opsi_jawaban == 'number')
                                             <div class="form-group col-md-6">
@@ -825,7 +825,7 @@ $sectors = [
                                                 <input type="text" step="any" name="informasi[{{ $itemEmpat->id }}]"
                                                     id="{{ $idLevelEmpat }}"
                                                     placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
-                                                    class="form-control rupiah" value="{{ temporary($itemEmpat->id)?->opsi_text }}">
+                                                    class="form-control rupiah" value="{{ temporary($duTemp->id, $itemEmpat->id)?->opsi_text }}">
                                             </div>
                                         @elseif ($itemEmpat->opsi_jawaban == 'persen')
                                             <div class="form-group col-md-6">
@@ -839,7 +839,7 @@ $sectors = [
                                                         id="{{ $idLevelEmpat }}"
                                                         placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
                                                         class="form-control" aria-label="Recipient's username"
-                                                        aria-describedby="basic-addon2" value="{{ temporary($itemEmpat->id)?->opsi_text }}">
+                                                        aria-describedby="basic-addon2" value="{{ temporary($duTemp->id, $itemEmpat->id)?->opsi_text }}">
                                                     <div class="input-group-append">
                                                         <span class="input-group-text" id="basic-addon2">%</span>
                                                     </div>
@@ -852,11 +852,11 @@ $sectors = [
                                                     value="{{ $itemEmpat->opsi_jawaban }}" id=""> --}}
                                                 <input type="hidden" name="id_item_file[{{ $itemEmpat->id }}]" value="{{ $itemEmpat->id }}"
                                                     id="">
-                                                <input type="file" name="upload_file[{{ $itemEmpat->id }}]" data-id="{{ temporary($itemEmpat->id)?->id }}"
+                                                <input type="file" name="upload_file[{{ $itemEmpat->id }}]" data-id="{{ temporary($duTemp->id, $itemEmpat->id)?->id }}"
                                                     placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
                                                     class="form-control limit-size">
                                                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
-                                                <span class="filename" style="display: inline;">{{ temporary($itemEmpat->id)?->opsi_text }}</span>
+                                                <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemEmpat->id)?->opsi_text }}</span>
                                             </div>
                                         @elseif ($itemEmpat->opsi_jawaban == 'long text')
                                             <div class="form-group col-md-6">
@@ -1259,7 +1259,7 @@ $sectors = [
                         } else {
                             if(valItem.nama == 'Foto') {
                                 $('#bukti_pemilikan_jaminan_tambahan').append(`
-                                @forelse (temporary(148, true) as $tempData)
+                                @forelse (temporary($duTemp->id, 148, true) as $tempData)
                                 <div class="form-group col-md-6 file-wrapper item-${valItem.id}">
                                     <label for="">${valItem.nama}</label>
                                     <div class="row file-input">
@@ -1368,7 +1368,7 @@ $sectors = [
                 $('#nib').show();
                 $('#nib_id').removeAttr('disabled');
                 $('#nib_text').removeAttr('disabled');
-                $('#nib_text').val('{{ temporary(77)?->opsi_text }}');
+                $('#nib_text').val('{{ temporary($duTemp->id, 77)?->opsi_text }}');
                 $('#nib_opsi_jawaban').removeAttr('disabled');
 
                 $('#docNIB').show();
@@ -1379,7 +1379,7 @@ $sectors = [
                 $('#npwp').show();
                 $('#npwp_id').removeAttr('disabled');
                 $('#npwp_text').removeAttr('disabled');
-                $('#npwp_text').val('{{ temporary(79)?->opsi_text }}');
+                $('#npwp_text').val('{{ temporary($duTemp->id, 79)?->opsi_text }}');
                 $('#npwp_opsi_jawaban').removeAttr('disabled');
 
                 $('#docNPWP').show();
@@ -1397,7 +1397,7 @@ $sectors = [
                 $('#docNIB').hide();
                 $('#docNIB_id').attr('disabled', true);
                 $('#docNIB_text').attr('disabled', true);
-                $('#docNIB_text').val('{{ temporary(78)?->opsi_text }}');
+                $('#docNIB_text').val('{{ temporary($duTemp->id, 78)?->opsi_text }}');
                 $('#docNIB_upload_file').attr('disabled', true);
 
                 $('#surat_keterangan_usaha').show();
@@ -1414,7 +1414,7 @@ $sectors = [
                 $('#npwp').show();
                 $('#npwp_id').removeAttr('disabled');
                 $('#npwp_text').removeAttr('disabled');
-                $('#npwp_text').val('{{ temporary(79)?->opsi_text }}');
+                $('#npwp_text').val('{{ temporary($duTemp->id, 79)?->opsi_text }}');
                 $('#npwp_opsi_jawaban').removeAttr('disabled');
 
                 $('#docNPWP').show();
@@ -1480,7 +1480,7 @@ $sectors = [
                 $('#npwp').show();
                 $('#npwp_id').removeAttr('disabled');
                 $('#npwp_text').removeAttr('disabled');
-                $('#npwp_text').val('{{ temporary(79)?->opsi_text }}');
+                $('#npwp_text').val('{{ temporary($duTemp->id, 79)?->opsi_text }}');
                 $('#npwp_opsi_jawaban').removeAttr('disabled');
 
                 $('#docNPWP').show();

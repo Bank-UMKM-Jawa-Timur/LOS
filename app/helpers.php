@@ -4,8 +4,10 @@ use App\Models\JawabanTemp;
 use App\Models\JawabanTempModel;
 
 if(!function_exists('temporary')) {
-    function temporary(int $id, bool $multiple = false) {
-        $temp = JawabanTemp::where('id_jawaban', $id)->orderBy('id', 'desc');
+    function temporary(int $nId, int $id, bool $multiple = false) {
+        $temp = JawabanTemp::where('id_jawaban', $id)
+            ->where('id_temporary_calon_nasabah', $nId)
+            ->orderBy('id', 'desc');
 
         if($multiple) return $temp->get();
         return $temp->first();
