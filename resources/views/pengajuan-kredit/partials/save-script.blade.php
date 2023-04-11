@@ -102,11 +102,6 @@
 
     $('#kabupaten').trigger('change');
 
-    setTimeout(() => {
-        $('#kecamatan').trigger('change');
-    }, 4000);
-
-
     // Fill temporary file with empty picture
     const selectors = [];
 

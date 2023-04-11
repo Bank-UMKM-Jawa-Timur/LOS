@@ -1022,6 +1022,8 @@ $sectors = [
                                     <option value="${kode}" ${kode == {{$duTemp?->id_kecamatan ?? 'null'}} ? 'selected' : '' }>${nama}</option>
                                 `);
                             });
+
+                            $('#kecamatan').trigger('change');
                         } else {
                             $("#kecamatan").empty();
                             $("#desa").empty();
