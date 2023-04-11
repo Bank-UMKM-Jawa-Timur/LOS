@@ -76,7 +76,9 @@
     }
 
     function saveDataTemporary(i){
-        let data = {};
+        let data = {
+            idCalonNasabah: {{ $duTemp?->id ?? null}},
+        };
         let form = $(".form-wizard[data-index='" + i + "']");
 
         $(".form-wizard[data-index='" + i + "'] input, .form-wizard[data-index='" + i + "'] select, .form-wizard[data-index='" + i + "'] textarea").each(function(){

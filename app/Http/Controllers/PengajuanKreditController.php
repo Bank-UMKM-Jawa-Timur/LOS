@@ -1847,15 +1847,25 @@ class PengajuanKreditController extends Controller
 
         try{
             foreach ($request->id_level as $key => $value) {
-                $dataJawabanText = new JawabanTemp();
-                $dataJawabanText->id_jawaban = $request->get('id_level')[$key];
-                if ($request->get('id_level')[$key] == '143') {
-                    $dataJawabanText->opsi_text = $request->get('informasi')[$key];
-                } else {
-                    $dataJawabanText->opsi_text = str_replace($find, '', $request->get('informasi')[$key]);
+                if($request?->idCalonNasabah == null){
+                    $dataJawabanText = new JawabanTemp();
+                    $dataJawabanText->id_temporary_calon_nasabah = $request->get('idCalonNasabah');
+                    $dataJawabanText->id_jawaban = $request->get('id_level')[$key];
+                    if ($request->get('id_level')[$key] == '143') {
+                        $dataJawabanText->opsi_text = $request->get('informasi')[$key];
+                    } else {
+                        $dataJawabanText->opsi_text = str_replace($find, '', $request->get('informasi')[$key]);
+                    }
+    
+                    $dataJawabanText->save();
+                } else{
+                    $data = DB::table('temporary_jawaban_text')
+                        ->where('id_jawaban', $request->get('id_level')[$key])
+                        ->where('id_temporary_calon_nasabah', $request?->idCalonNasabah)
+                        ->update([
+                            'opsi_text' => ($request->get('id_level')[$key] == '143') ? $request->get('informasi')[$key] : str_replace($find, '', $request->get('informasi')[$key]),
+                        ]);
                 }
-
-                $dataJawabanText->save();
             }
 
             $finalArray = array();
@@ -1881,6 +1891,7 @@ class PengajuanKreditController extends Controller
                     array_push(
                         $finalArray,
                         array(
+                            'id_temporary_calon_nasabah' => $request?->idCalonNasabah,
                             'id_jawaban' => $id_jawaban[$key],
                             'skor' => $skor[$key],
                             'created_at' => date("Y-m-d H:i:s"),
@@ -1906,6 +1917,7 @@ class PengajuanKreditController extends Controller
                     array_push(
                         $finalArray,
                         array(
+                            'id_temporary_calon_nasabah' => $request?->idCalonNasabah,
                             'id_jawaban' => $id_jawaban[$key],
                             'skor' => $skor[$key],
                             'created_at' => date("Y-m-d H:i:s"),
@@ -1931,6 +1943,7 @@ class PengajuanKreditController extends Controller
                     array_push(
                         $finalArray,
                         array(
+                            'id_temporary_calon_nasabah' => $request?->idCalonNasabah,
                             'id_jawaban' => $id_jawaban[$key],
                             'skor' => $skor[$key],
                             'created_at' => date("Y-m-d H:i:s"),
@@ -1940,9 +1953,22 @@ class PengajuanKreditController extends Controller
             } else {
             }
 
-            for ($i = 0; $i < count($finalArray); $i++) {
-                JawabanTempModel::insert($finalArray[$i]);
+            if($request?->idCalonNasabah == null){
+                for ($i = 0; $i < count($finalArray); $i++) {
+                    JawabanTempModel::insert($finalArray[$i]);
+                }
+            } else {
+                for ($i = 0; $i < count($finalArray); $i++) {
+                    DB::table('jawaban_temp')
+                        ->where('id_jawaban', $finalArray[$i]['id_jawaban'])
+                        ->where('id_temporary_calon_nasabah', $request?->idCalonNasabah)
+                        ->update([
+                            'skor' => $finalArray[$i]['skor'],
+                            'id_jawaban' => $finalArray[$i]['id_jawaban']
+                        ]);
+                }
             }
+
         } catch(Exception $e){
             DB::rollBack();
             dd($e);
