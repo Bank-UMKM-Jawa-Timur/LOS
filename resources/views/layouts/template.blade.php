@@ -68,7 +68,7 @@
                 @endif
                 @if (auth()->user()->role == 'Staf Analis Kredit')
                 <li class="nav-item">
-                    <a class="nav-link {{ Request::segment(1) == 'draft-pengajuan-kredit' ? 'active' : '' }}" href="{{url('pengajuan-kredit-draft')}}"><span class="fa fa-credit-card mr-1"></span> Draft</a>
+                    <a class="nav-link {{ Request::segment(1) == 'draft-pengajuan-kredit' ? 'active' : '' }}" href="{{route('pengajuan-kredit-draft')}}"><span class="fa fa-credit-card mr-1"></span> Draft</a>
                 </li>
                 @endif
                 @if (auth()->user()->role == 'Administrator')
