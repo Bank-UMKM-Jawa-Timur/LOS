@@ -52,11 +52,11 @@
                                         ->where('id_jawaban', 145)
                                         ->first();
                     @endphp
-                    <input type="hidden" name="id_file_text[]" value="{{ $jawabanFotoSP->id_jawaban }}">
-                    <label for="update_file" style="display: none" id="nama_file">{{ $jawabanFotoSP->opsi_text }}</label>
-                    <input type="file" name="update_file[]" value="{{ $jawabanFotoSP->opsi_text }}" id="sp" placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-control limit-size" >
+                    <input type="hidden" name="id_file_text[]" value="{{ $jawabanFotoSP?->id_jawaban }}">
+                    <label for="update_file" style="display: none" id="nama_file">{{ $jawabanFotoSP?->opsi_text }}</label>
+                    <input type="file" name="update_file[]" value="{{ $jawabanFotoSP?->opsi_text }}" id="sp" placeholder="Masukkan informasi {{ $itemSP?->nama }}" class="form-control limit-size" >
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
-                    <input type="hidden" name="id_update_file[]" value="{{ $jawabanFotoSP->id }}">
+                    <input type="hidden" name="id_update_file[]" value="{{ $jawabanFotoSP?->id }}">
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
                             {{ $errors->first('dataLevelDua.' . $key) }}
@@ -290,9 +290,9 @@
                     @endphp
                     <label for="">Laporan SLIK</label>
                     <input type="hidden" name="id_file_text[]" value="146" id="">
-                    <label for="update_file" style="display: none" id="nama_file">{{ $jawabanLaporanSlik->opsi_text }}</label>
-                    <input type="file" name="update_file[]" id="laporan_slik" placeholder="Masukkan informasi Laporan SLIK" class="form-control limit-size" value="{{ $jawabanLaporanSlik->opsi_text }}">
-                    <input type="hidden" name="id_update_file[]" value="{{ $jawabanLaporanSlik->id }}">
+                    <label for="update_file" style="display: none" id="nama_file">{{ $jawabanLaporanSlik?->opsi_text }}</label>
+                    <input type="file" name="update_file[]" id="laporan_slik" placeholder="Masukkan informasi Laporan SLIK" class="form-control limit-size" value="{{ $jawabanLaporanSlik?->opsi_text }}">
+                    <input type="hidden" name="id_update_file[]" value="{{ $jawabanLaporanSlik?->id }}">
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">

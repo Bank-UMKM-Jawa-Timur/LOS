@@ -526,12 +526,18 @@ class PengajuanKreditController extends Controller
             $id_pengajuan = $addPengajuan->id;
 
             $tempNasabah = TemporaryService::getNasabahData($request->user());
+            $idTempNasabah = DB::table('temporary_calon_nasabah')
+                ->where('id_user', $request->user()->id)
+                ->first('id_user');
+
             $dataNasabah = $tempNasabah->toArray();
             $dataNasabah['id_pengajuan'] = $id_pengajuan;
 
             $addData = CalonNasabah::create($dataNasabah);
             $id_calon_nasabah = $addData->id;
 
+            JawabanTemp::where('id_temporary_calon_nasabah', $idTempNasabah->id_user)->delete();
+            JawabanTempModel::where('id_temporary_calon_nasabah', $idTempNasabah->id_user)->delete();
             $tempNasabah->delete();
 
             //untuk jawaban yg teks, number, persen, long text
