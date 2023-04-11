@@ -946,6 +946,9 @@ $sectors = [
         {{-- end pendapat dan usulan --}}
         <div class="row form-group">
             <div class="col text-right">
+                <a href="{{ route('pengajuan-kredit-draft') }}">
+                    <button class="btn btn-warning" type="button"><span class="fa fa-arrow-left"></span> Kembali</button>
+                </a>
                 <button class="btn btn-default btn-prev"><span class="fa fa-chevron-left"></span> Sebelumnya</button>
                 <button class="btn btn-danger btn-next">Selanjutnya <span class="fa fa-chevron-right"></span></button>
                 <button type="submit" class="btn btn-info btn-simpan" id="submit">Simpan <span

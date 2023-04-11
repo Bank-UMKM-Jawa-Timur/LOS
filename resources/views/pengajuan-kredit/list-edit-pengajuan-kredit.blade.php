@@ -5,9 +5,12 @@
 <div class="row justify-content-between">
     <div class="col-md-6">
         <div class="row">
-            <div class="col-md-2 mb-3">
+            <div class="col-md-12 mb-3">
                 <a href="{{ $btnLink }}" class="btn btn-primary px-3"><i class="fa fa-plus-circle"></i>
                     {{ $btnText }}</a>
+                <a href="{{ route('pengajuan-kredit-draft') }}">
+                    <button type="button" class="btn btn-default"><i class="fa fa-list-alt"></i> Draft</button>
+                </a>
             </div>
         </div>
     </div>
