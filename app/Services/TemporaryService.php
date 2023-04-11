@@ -12,9 +12,14 @@ class TemporaryService
 {
     public static function getNasabahData($tempId): CalonNasabahTemp
     {
-        if(!$tempId) return CalonNasabahTemp::create([
-            'id_user' => Auth::user()->id,
-        ]);
+        if(!$tempId) {
+            if($nasData = CalonNasabahTemp::whereNull('nama')->first())
+                return $nasData;
+
+            return CalonNasabahTemp::create([
+                'id_user' => Auth::user()->id,
+            ]);
+        }
 
         if($nasData = CalonNasabahTemp::find($tempId)) return $nasData;
 

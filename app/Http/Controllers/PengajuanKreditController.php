@@ -2079,13 +2079,9 @@ class PengajuanKreditController extends Controller
         //     ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
         //     ->where('pengajuan.id_cabang', auth()->user()->id_cabang)
         //     ->paginate(5);
-        $param['data_pengajuan'] = CalonNasabahTemp::select(
-            'id',
-            'nama',
-            'id_user',
-            'created_at'
-        )->where('id_user', auth()->user()->id)
-        ->paginate(5);
+        $param['data_pengajuan'] = CalonNasabahTemp::where('id_user', Auth::user()->id)
+            ->whereNotNull('nama')
+            ->paginate(5);
 
         return view('pengajuan-kredit.draft_index', $param);
     }

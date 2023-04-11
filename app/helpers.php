@@ -5,7 +5,7 @@ use App\Models\JawabanTempModel;
 use Illuminate\Support\Facades\DB;
 
 if(!function_exists('temporary')) {
-    function temporary(int $nId, int $id, bool $multiple = false) {
+    function temporary($nId, $id, bool $multiple = false) {
         $temp = JawabanTemp::where('id_jawaban', $id)
             ->where('id_temporary_calon_nasabah', $nId)
             ->orderBy('id', 'desc');
