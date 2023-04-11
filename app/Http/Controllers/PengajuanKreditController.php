@@ -525,7 +525,7 @@ class PengajuanKreditController extends Controller
             $addPengajuan->save();
             $id_pengajuan = $addPengajuan->id;
 
-            $tempNasabah = TemporaryService::getNasabahData($request->user());
+            $tempNasabah = TemporaryService::getNasabahData($request->id_nasabah);
             $idTempNasabah = DB::table('temporary_calon_nasabah')
                 ->where('id_user', $request->user()->id)
                 ->first('id_user');

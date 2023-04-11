@@ -56,6 +56,7 @@ $sectors = [
     </style>
     <form id="pengajuan_kredit" action="{{ route('pengajuan-kredit.store') }}" method="post" enctype="multipart/form-data">
         @csrf
+        <input type="hidden" name="id_nasabah" value="{{ $duTemp?->id }}">
         <input type="hidden" name="progress" class="progress">
         <div class="form-wizard active" data-index='0' data-done='true' id="wizard-data-umum">
             <div class="row">
