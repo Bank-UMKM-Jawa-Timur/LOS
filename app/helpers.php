@@ -14,7 +14,7 @@ if(!function_exists('temporary')) {
 
 if(!function_exists('temporary_select')){
     function temporary_select(int $id){
-        $temp = JawabanTempModel::where('id_jawaban', $id)->orderBy('id', 'desc');
+        $temp = JawabanTempModel::where('id_option', $id)->orderBy('id', 'desc');
 
         return $temp->first();
     }

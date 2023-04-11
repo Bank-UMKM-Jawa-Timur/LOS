@@ -1847,11 +1847,15 @@ class PengajuanKreditController extends Controller
 
         try{
             foreach ($request->id_level as $key => $value) {
-                if($request?->idCalonNasabah == null){
+                $cekData = DB::table('temporary_jawaban_text')
+                    ->where('id_temporary_calon_nasabah', $request->idCalonNasabah)
+                    ->where('id_jawaban', $value)
+                    ->count('id');
+                if($cekData < 1){
                     $dataJawabanText = new JawabanTemp();
                     $dataJawabanText->id_temporary_calon_nasabah = $request->get('idCalonNasabah');
                     $dataJawabanText->id_jawaban = $request->get('id_level')[$key];
-                $dataJawabanText->id_temporary_calon_nasabah = $request->id_nasabah;
+                    $dataJawabanText->id_temporary_calon_nasabah = $request->id_nasabah;
 
                     if ($request->get('id_level')[$key] == '143') {
                         $dataJawabanText->opsi_text = $request->get('informasi')[$key];
@@ -1896,6 +1900,7 @@ class PengajuanKreditController extends Controller
                             'id_temporary_calon_nasabah' => $request?->idCalonNasabah,
                             'id_jawaban' => $id_jawaban[$key],
                             'skor' => $skor[$key],
+                            'id_option' => $key,
                             'created_at' => date("Y-m-d H:i:s"),
                         )
                     );
@@ -1922,6 +1927,7 @@ class PengajuanKreditController extends Controller
                             'id_temporary_calon_nasabah' => $request?->idCalonNasabah,
                             'id_jawaban' => $id_jawaban[$key],
                             'skor' => $skor[$key],
+                            'id_option' => $key,
                             'created_at' => date("Y-m-d H:i:s"),
                         )
                     );
@@ -1948,6 +1954,7 @@ class PengajuanKreditController extends Controller
                             'id_temporary_calon_nasabah' => $request?->idCalonNasabah,
                             'id_jawaban' => $id_jawaban[$key],
                             'skor' => $skor[$key],
+                            'id_option' => $key,
                             'created_at' => date("Y-m-d H:i:s"),
                         )
                     );
@@ -1955,21 +1962,27 @@ class PengajuanKreditController extends Controller
             } else {
             }
 
-            if($request?->idCalonNasabah == null){
-                for ($i = 0; $i < count($finalArray); $i++) {
+            for ($i = 0; $i < count($finalArray); $i++) {
+                $cekDataSelect = DB::table('jawaban_temp')
+                    ->where('id_temporary_calon_nasabah', $request->idCalonNasabah)
+                    ->where('id_jawaban', $finalArray[$i]['id_jawaban'])
+                    ->count('id');
+
+                if($cekDataSelect < 1){
                     JawabanTempModel::insert($finalArray[$i]);
                 }
-            } else {
-                for ($i = 0; $i < count($finalArray); $i++) {
-                    DB::table('jawaban_temp')
-                        ->where('id_jawaban', $finalArray[$i]['id_jawaban'])
-                        ->where('id_temporary_calon_nasabah', $request?->idCalonNasabah)
-                        ->update([
-                            'skor' => $finalArray[$i]['skor'],
-                            'id_jawaban' => $finalArray[$i]['id_jawaban']
-                        ]);
+                else {
+                    for ($i = 0; $i < count($finalArray); $i++) {
+                        DB::table('jawaban_temp')
+                            ->where('id_option', $finalArray[$i]['id_option'])
+                            ->where('id_temporary_calon_nasabah', $request?->idCalonNasabah)
+                            ->update([
+                                'skor' => $finalArray[$i]['skor'],
+                                'id_jawaban' => $finalArray[$i]['id_jawaban']
+                            ]);
+                    }
                 }
-            }
+            } 
 
         } catch(Exception $e){
             DB::rollBack();

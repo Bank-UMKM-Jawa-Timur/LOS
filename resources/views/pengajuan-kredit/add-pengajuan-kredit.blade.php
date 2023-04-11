@@ -375,8 +375,8 @@ $sectors = [
                                     <label for="">{{ $item->nama }}</label>
                                     <select name="ijin_usaha" id="ijin_usaha" class="form-control" required>
                                         <option value="">-- Pilih Ijin Usaha --</option>
-                                        <option value="nib">NIB</option>
-                                        <option value="surat_keterangan_usaha">Surat Keterangan Usaha</option>
+                                        <option value="nib"{{ (temporary(77)?->opsi_text != '') ? 'selected' : '' }}>NIB</option>
+                                        <option value="surat_keterangan_usaha"{{ (temporary(79)?->opsi_text != '') ? 'selected' : '' }}>Surat Keterangan Usaha</option>
                                         <option value="tidak_ada_legalitas_usaha">Tidak Ada Legalitas Usaha</option>
                                     </select>
                                 </div>
@@ -575,7 +575,7 @@ $sectors = [
                                         <option value=""> --Pilih Opsi-- </option>
                                         @foreach ($dataJawaban as $key => $itemJawaban)
                                             <option id="{{ $idLevelDua . '_' . $key }}"
-                                                value="{{ ($itemJawaban->skor == null ? 'kosong' : $itemJawaban->skor) . '-' . $itemJawaban->id }}" {{ (temporary_select($item->id)?->skor == $itemJawaban->skor) ? 'selected' : '' }}>
+                                                value="{{ ($itemJawaban->skor == null ? 'kosong' : $itemJawaban->skor) . '-' . $itemJawaban->id }}" {{ (temporary_select($item->id)?->id_jawaban == $itemJawaban->id) ? 'selected' : '' }}>
                                                 {{ $itemJawaban->option }}</option>
                                         @endforeach
                                     </select>
@@ -649,7 +649,7 @@ $sectors = [
                                             <input type="hidden" name="id_level[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}" id="">
                                             <input type="hidden" name="opsi_jawaban[{{ $itemTiga->id }}]"
                                                 value="{{ $itemTiga->opsi_jawaban }}" id="">
-                                            <input type="text" name="informasi[]" placeholder="Masukkan informasi"
+                                            <input type="text" name="informasi[{{ $itemTiga->id }}]" placeholder="Masukkan informasi"
                                                 class="form-control" id="{{ $idLevelTiga }}" value="{{ temporary($itemTiga->id)?->opsi_text }}">
                                         </div>
                                     @elseif ($itemTiga->opsi_jawaban == 'number')
@@ -789,7 +789,7 @@ $sectors = [
                                                     <option value=""> --Pilih Opsi-- </option>
                                                     @foreach ($dataJawabanLevelTiga as $key => $itemJawabanTiga)
                                                         <option id="{{ $idLevelTiga . '_' . $key }}"
-                                                            value="{{ ($itemJawabanTiga->skor == null ? 'kosong' : $itemJawabanTiga->skor) . '-' . $itemJawabanTiga->id }}" {{ (temporary_select($itemTiga->id)?->skor == $itemJawabanTiga->skor) ? 'selected' : '' }}>
+                                                            value="{{ ($itemJawabanTiga->skor == null ? 'kosong' : $itemJawabanTiga->skor) . '-' . $itemJawabanTiga->id }}" {{ (temporary_select($itemTiga->id)?->id_jawaban == $itemJawabanTiga->id) ? 'selected' : '' }}>
                                                             {{ $itemJawabanTiga->option }}</option>
                                                     @endforeach
                                                 </select>
@@ -896,7 +896,7 @@ $sectors = [
                                                     <option value=""> --Pilih Opsi -- </option>
                                                     @foreach ($dataJawabanLevelEmpat as $itemJawabanEmpat)
                                                         <option id="{{ $idLevelEmpat . '_' . $key }}"
-                                                            value="{{ ($itemJawabanEmpat->skor == null ? 'kosong' : $itemJawabanEmpat->skor) . '-' . $itemJawabanEmpat->id }}" {{ (temporary_select($itemEmpat->id)?->skor == $itemJawabanEmpat->skor) ? 'selected' : '' }}>
+                                                            value="{{ ($itemJawabanEmpat->skor == null ? 'kosong' : $itemJawabanEmpat->skor) . '-' . $itemJawabanEmpat->id }}" {{ (temporary_select($itemEmpat->id)?->id_jawaban == $itemJawabanEmpat->id) ? 'selected' : '' }}>
                                                             {{ $itemJawabanEmpat->option }}</option>
                                                     @endforeach
                                                 </select>
@@ -1222,7 +1222,7 @@ $sectors = [
                     // add item by kategori
                     $('#select_kategori_jaminan_tambahan').append(`
                         <label for="">${response.item.nama}</label>
-                        <select name="dataLevelEmpat[]" id="itemByKategori" class="form-control cek-sub-column"
+                        <select name="dataLevelEmpat[${response.item.id}]" id="itemByKategori" class="form-control cek-sub-column"
                             data-id_item="${response.item.id}">
                             <option value=""> --Pilih Opsi -- </option>
                             </select>
