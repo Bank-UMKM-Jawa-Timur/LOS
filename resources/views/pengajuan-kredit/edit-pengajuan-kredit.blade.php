@@ -1103,8 +1103,8 @@
                         <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
                         <input type="hidden" name="id_aspek[]" value="{{ $value->id }}">
                         <textarea name="pendapat_per_aspek[]" class="form-control @error('pendapat_per_aspek') is-invalid @enderror" id=""
-                            cols="30" rows="4" placeholder="Pendapat Per Aspek">{{ $dataPendapatAspek->pendapat_per_aspek }}</textarea>
-                        <input type="hidden" name="id_jawaban_aspek[]" value="{{ $dataPendapatAspek->id }}">
+                            cols="30" rows="4" placeholder="Pendapat Per Aspek">{{ $dataPendapatAspek?->pendapat_per_aspek }}</textarea>
+                        <input type="hidden" name="id_jawaban_aspek[]" value="{{ $dataPendapatAspek?->id }}">
                         @error('pendapat_per_aspek')
                             <div class="invalid-feedback">
                                 {{ $message }}

@@ -536,10 +536,6 @@ class PengajuanKreditController extends Controller
             $addData = CalonNasabah::create($dataNasabah);
             $id_calon_nasabah = $addData->id;
 
-            JawabanTemp::where('id_temporary_calon_nasabah', $idTempNasabah->id_user)->delete();
-            JawabanTempModel::where('id_temporary_calon_nasabah', $idTempNasabah->id_user)->delete();
-            $tempNasabah->delete();
-
             //untuk jawaban yg teks, number, persen, long text
             foreach ($request->id_level as $key => $value) {
                 $dataJawabanText = new JawabanTextModel;
@@ -718,6 +714,9 @@ class PengajuanKreditController extends Controller
                 $addKomentar->save();
             }
 
+            JawabanTemp::where('id_temporary_calon_nasabah', $tempNasabah->id)->delete();
+            JawabanTempModel::where('id_temporary_calon_nasabah', $tempNasabah->id)->delete();
+            $tempNasabah->delete();
 
             DB::commit();
             return redirect()->route('pengajuan-kredit.index')->withStatus('Data berhasil disimpan.');
