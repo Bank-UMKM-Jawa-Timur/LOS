@@ -367,6 +367,9 @@ $sectors = [
                     @foreach ($dataLevelDua as $item)
                         @php
                             $idLevelDua = str_replace(' ', '_', strtolower($item->nama));
+                            $nib = temporary($duTemp->id, 77)?->opsi_text;
+                            $sku = temporary($duTemp->id, 78)?->opsi_text;
+                            $npwp = temporary($duTemp->id, 79)?->opsi_text;
                         @endphp
                         {{-- item ijin usaha --}}
                         @if ($item->nama == 'Ijin Usaha')
@@ -375,9 +378,9 @@ $sectors = [
                                     <label for="">{{ $item->nama }}</label>
                                     <select name="ijin_usaha" id="ijin_usaha" class="form-control" required>
                                         <option value="">-- Pilih Ijin Usaha --</option>
-                                        <option value="nib"{{ (temporary($duTemp->id, 77)?->opsi_text != '') ? 'selected' : '' }}>NIB</option>
-                                        <option value="surat_keterangan_usaha"{{ (temporary($duTemp->id, 79)?->opsi_text != '') ? 'selected' : '' }}>Surat Keterangan Usaha</option>
-                                        <option value="tidak_ada_legalitas_usaha">Tidak Ada Legalitas Usaha</option>
+                                        <option value="nib"{{ ($nib != '') ? 'selected' : '' }}>NIB</option>
+                                        <option value="surat_keterangan_usaha"{{ ($sku != '') ? 'selected' : '' }}>Surat Keterangan Usaha</option>
+                                        <option value="tidak_ada_legalitas_usaha"{{ ($nib != '' && $sku != '' && $npwp != '') ? 'selected' : '' }}>Tidak Ada Legalitas Usaha</option>
                                     </select>
                                 </div>
                             </div>
@@ -962,10 +965,21 @@ $sectors = [
 @push('custom-script')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        $('#nib').hide();
-        $('#docNIB').hide();
-        $('#docSKU').hide();
-        $('#surat_keterangan_usaha').hide();
+        @if($nib != '')
+            $('#docSKU').hide();
+            $('#surat_keterangan_usaha').hide();
+        @elseif($sku != '')
+            $('#nib').hide();
+            $('#docNIB').hide();
+        @elseif($sku == '' && $npwp == '' && $nib == '')
+            $('#docSKU').hide();
+            $('#surat_keterangan_usaha').hide();
+            $('#nib').hide();
+            $('#docNIB').hide();
+            $('#npwp').hide();
+            $('#docNPWP').hide();
+            $('#ijin_usaha').val('tidak_ada_legalitas_usaha')
+        @endif
         //make input readonly
         $('#ratio_coverage').attr('readonly', true);
         $('#ratio_tenor_asuransi').attr('readonly', true);
