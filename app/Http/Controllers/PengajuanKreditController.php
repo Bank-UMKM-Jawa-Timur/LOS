@@ -1851,6 +1851,8 @@ class PengajuanKreditController extends Controller
                     $dataJawabanText = new JawabanTemp();
                     $dataJawabanText->id_temporary_calon_nasabah = $request->get('idCalonNasabah');
                     $dataJawabanText->id_jawaban = $request->get('id_level')[$key];
+                $dataJawabanText->id_temporary_calon_nasabah = $request->id_nasabah;
+
                     if ($request->get('id_level')[$key] == '143') {
                         $dataJawabanText->opsi_text = $request->get('informasi')[$key];
                     } else {
@@ -1976,8 +1978,6 @@ class PengajuanKreditController extends Controller
             DB::rollBack();
             dd($e);
         }
-
-        dd([$request]);
 
         return response()->json([
             'status' => 'ok'
