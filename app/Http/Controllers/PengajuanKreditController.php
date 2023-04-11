@@ -1968,6 +1968,30 @@ class PengajuanKreditController extends Controller
             } else {
             }
 
+            foreach($request->pendapat_per_aspek as $i => $val){
+                $cekUsulan = DB::table('temporary_usulan_dan_pendapat')
+                    ->where('id_temp', $request->idCalonNasabah)
+                    ->where('id_aspek', $i)
+                    ->count('id');
+                if($cekUsulan < 1){
+                    DB::table('temporary_usulan_dan_pendapat')
+                        ->insert([
+                            'id_temp' => $request->idCalonNasabah,
+                            'id_aspek' => $i,
+                            'usulan' => $val,
+                            'created_at' => now()
+                        ]);
+                } else{
+                    DB::table('temporary_usulan_dan_pendapat')
+                        ->where('id_temp', $request->idCalonNasabah)
+                        ->where('id_aspek', $i)
+                        ->update([
+                            'usulan' => $val,
+                            'updated_at' => now()
+                        ]);
+                }
+            }
+
             for ($i = 0; $i < count($finalArray); $i++) {
                 $cekDataSelect = DB::table('jawaban_temp')
                     ->where('id_temporary_calon_nasabah', $request->idCalonNasabah)

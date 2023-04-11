@@ -575,7 +575,7 @@ $sectors = [
                                         <option value=""> --Pilih Opsi-- </option>
                                         @foreach ($dataJawaban as $key => $itemJawaban)
                                             <option id="{{ $idLevelDua . '_' . $key }}"
-                                                value="{{ ($itemJawaban->skor == null ? 'kosong' : $itemJawaban->skor) . '-' . $itemJawaban->id }}" {{ (temporary_select($item->id)?->id_jawaban == $itemJawaban->id) ? 'selected' : '' }}>
+                                                value="{{ ($itemJawaban->skor == null ? 'kosong' : $itemJawaban->skor) . '-' . $itemJawaban->id }}" {{ (temporary_select($item->id, $duTemp->id)?->id_jawaban == $itemJawaban->id) ? 'selected' : '' }}>
                                                 {{ $itemJawaban->option }}</option>
                                         @endforeach
                                     </select>
@@ -789,7 +789,7 @@ $sectors = [
                                                     <option value=""> --Pilih Opsi-- </option>
                                                     @foreach ($dataJawabanLevelTiga as $key => $itemJawabanTiga)
                                                         <option id="{{ $idLevelTiga . '_' . $key }}"
-                                                            value="{{ ($itemJawabanTiga->skor == null ? 'kosong' : $itemJawabanTiga->skor) . '-' . $itemJawabanTiga->id }}" {{ (temporary_select($itemTiga->id)?->id_jawaban == $itemJawabanTiga->id) ? 'selected' : '' }}>
+                                                            value="{{ ($itemJawabanTiga->skor == null ? 'kosong' : $itemJawabanTiga->skor) . '-' . $itemJawabanTiga->id }}" {{ (temporary_select($itemTiga->id, $duTemp->id)?->id_jawaban == $itemJawabanTiga->id) ? 'selected' : '' }}>
                                                             {{ $itemJawabanTiga->option }}</option>
                                                     @endforeach
                                                 </select>
@@ -896,7 +896,7 @@ $sectors = [
                                                     <option value=""> --Pilih Opsi -- </option>
                                                     @foreach ($dataJawabanLevelEmpat as $itemJawabanEmpat)
                                                         <option id="{{ $idLevelEmpat . '_' . $key }}"
-                                                            value="{{ ($itemJawabanEmpat->skor == null ? 'kosong' : $itemJawabanEmpat->skor) . '-' . $itemJawabanEmpat->id }}" {{ (temporary_select($itemEmpat->id)?->id_jawaban == $itemJawabanEmpat->id) ? 'selected' : '' }}>
+                                                            value="{{ ($itemJawabanEmpat->skor == null ? 'kosong' : $itemJawabanEmpat->skor) . '-' . $itemJawabanEmpat->id }}" {{ (temporary_select($itemEmpat->id, $duTemp->id)?->id_jawaban == $itemJawabanEmpat->id) ? 'selected' : '' }}>
                                                             {{ $itemJawabanEmpat->option }}</option>
                                                     @endforeach
                                                 </select>
@@ -916,7 +916,7 @@ $sectors = [
                         <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
                         <input type="hidden" name="id_aspek[{{ $value->id }}]" value="{{ $value->id }}">
                         <textarea name="pendapat_per_aspek[{{ $value->id }}]" class="form-control @error('pendapat_per_aspek') is-invalid @enderror" id=""
-                            cols="30" rows="4" placeholder="Pendapat Per Aspek"></textarea>
+                            cols="30" rows="4" placeholder="Pendapat Per Aspek">{{ temporary_usulan($value->id, $duTemp->id)?->usulan }}</textarea>
                         @error('pendapat_per_aspek')
                             <div class="invalid-feedback">
                                 {{ $message }}
