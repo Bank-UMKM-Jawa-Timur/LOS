@@ -628,9 +628,9 @@ function rupiah($angka){
                                         <select name="kategori_jaminan_tambahan" id="kategori_jaminan_tambahan"
                                             class="form-control" required>
                                             <option value="">-- Pilih Kategori Jaminan Tambahan --</option>
-                                            <option value="Tanah">Tanah</option>
-                                            <option value="Kendaraan Bermotor">Kendaraan Bermotor</option>
-                                            <option value="Tanah dan Bangunan">Tanah dan Bangunan</option>
+                                            <option value="Tanah" {{ ($duTemp?->jaminan_tambahan == 'Tanah') ? 'selected' : ''  }}>Tanah</option>
+                                            <option value="Kendaraan Bermotor" {{ ($duTemp?->jaminan_tambahan == 'Kendaraan Bermotor') ? 'selected' : ''  }}>Kendaraan Bermotor</option>
+                                            <option value="Tanah dan Bangunan" {{ ($duTemp?->jaminan_tambahan == 'Tanah dan Bangunan') ? 'selected' : ''  }}>Tanah dan Bangunan</option>
                                         </select>
                                         {{-- <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
                                         <input type="hidden" name="opsi_jawaban[]" value="{{ $itemTiga->opsi_jawaban }}"
@@ -1246,7 +1246,6 @@ function rupiah($angka){
                 url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}&idCalonNasabah={{ $duTemp?->id }}`,
                 dataType: "json",
                 success: function(response) {
-                    console.log('test');
                     // add item by kategori
                     $('#select_kategori_jaminan_tambahan').append(`
                         <label for="">${response.item.nama}</label>
@@ -1263,7 +1262,7 @@ function rupiah($angka){
                     $.each(response.item.option, function(i, valOption) {
                         // console.log(valOption.skor);
                         $('#itemByKategori').append(`
-                        <option value="${valOption.skor}-${valOption.id}">
+                        <option value="${valOption.skor}-${valOption.id}" ${(response.dataSelect == valOption.id) ? 'selected' : ''}>
                         ${valOption.option}
                         </option>`);
                     });

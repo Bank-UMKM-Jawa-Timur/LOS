@@ -31,5 +31,6 @@ class CalonNasabahTemp extends Model
         'id_kecamatan',
         'id_desa',
         'tenor_yang_diminta',
+        'jaminan_tambahan'
     ];
 }

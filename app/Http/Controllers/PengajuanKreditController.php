@@ -367,8 +367,9 @@ class PengajuanKreditController extends Controller
 
         $dataJawaban = [];
         foreach($itemBuktiPemilikan->where('id_parent', 114)->get() as $i){
-            array_push($dataJawaban, temporary($i?->id, $request->idCalonNasabah)?->opsi_text ?? '');
+            array_push($dataJawaban, temporary($request->idCalonNasabah, $i->id)?->opsi_text ?? '');
         }
+        $dataSelect = temporary_select($item->id, $request->idCalonNasabah)?->id_jawaban;
 
         $data = [
             'detailJawabanOption' => $detailJawabanOption->first(),
@@ -376,7 +377,8 @@ class PengajuanKreditController extends Controller
             'item' => $item,
             'belum' => $belum,
             'itemBuktiPemilikan' => $itemBuktiPemilikan->where('id_parent', 114)->get(),
-            'dataJawaban' => $dataJawaban
+            'dataJawaban' => $dataJawaban,
+            'dataSelect' => $dataSelect
         ];
 
         return json_encode($data);
@@ -1878,6 +1880,13 @@ class PengajuanKreditController extends Controller
         $find = array('Rp ', '.');
 
         try{
+            if($request->kategori_jaminan_tambahan != null){
+                DB::table('temporary_calon_nasabah')
+                    ->where('id', $request->idCalonNasabah)
+                    ->update([
+                        'jaminan_tambahan' => $request->kategori_jaminan_tambahan
+                    ]);
+            }
             foreach ($request->id_level as $key => $value) {
                 $cekData = DB::table('temporary_jawaban_text')
                     ->where('id_temporary_calon_nasabah', $request->idCalonNasabah)

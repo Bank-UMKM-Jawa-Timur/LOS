@@ -215,6 +215,9 @@
             e.preventDefault();
             var indexNow = $(".form-wizard.active").data('index')
             setPercentage(indexNow + 1);
+            if(indexNow + 1 == 3){
+                $('#kategori_jaminan_tambahan').trigger('change');
+            }
 
             if(indexNow != 0){
                 saveDataTemporary(indexNow)
