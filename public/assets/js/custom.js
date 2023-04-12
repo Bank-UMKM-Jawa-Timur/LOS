@@ -13,6 +13,7 @@
             if ($(".form-wizard[data-index='" + prev + "']").length == 1) {
                 $(".btn-prev").show()
             }
+
             if (parseInt(indexNow) == parseInt(jumlahData)) {
                 // $(".btn-next").click(function(e) {
                 //     if (parseInt(indexNow) != parseInt(jumlahData)) {
@@ -254,5 +255,20 @@
             e.preventDefault();
         })
 
+        function openWizard(index) {
+            $(".side-wizard li[data-index='" + index + "']").addClass('active')
+                $(".side-wizard li[data-index='" + index + "'] a span i").removeClass('fa fa-ban')
+                if ($(".side-wizard li[data-index='" + index + "'] a span i").html() == '' || $(".side-wizard li[data-index='" + index + "'] a span i").html() == '0%') {
+                    $(".side-wizard li[data-index='" + index + "'] a span i").html('0%')
+            }
+        }
+
         setPercentage(0);
+
+        if((new URLSearchParams(window.location.href)).get('continue')) {
+            for(i = 1; i <= 7; i++) {
+                openWizard(i);
+                setPercentage(i);
+            }
+        }
     });

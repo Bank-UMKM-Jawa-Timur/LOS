@@ -2105,7 +2105,7 @@ class PengajuanKreditController extends Controller
         $nasabah = CalonNasabahTemp::findOrFail($id);
         $createRoute = route('pengajuan-kredit.create');
 
-        return redirect()->to($createRoute . "?tempId={$nasabah->id}");
+        return redirect()->to($createRoute . "?tempId={$nasabah->id}&continue=true");
     }
 
     public function deleteDraft($id)
