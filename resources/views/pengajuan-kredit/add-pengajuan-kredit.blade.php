@@ -13,6 +13,13 @@ $sectors = [
     'perindustrian',
     'dll',
 ];
+
+function rupiah($angka){
+	if ($angka != null) {
+        $hasil_rupiah = number_format($angka, 0, ",", ".");
+        return $hasil_rupiah;
+    }
+}
 @endphp
 
 @section('content')
@@ -276,7 +283,7 @@ $sectors = [
                 <div class="form-group col-md-6">
                     <label for="">Jumlah Kredit yang diminta</label>
                     <input type="text" name="jumlah_kredit" id="jumlah_kredit"
-                        class="form-control rupiah" value="{{ $duTemp?->jumlah_kredit ?? '' }}">
+                        class="form-control rupiah" value="{{ rupiah($duTemp?->jumlah_kredit) ?? '' }}">
                     {{-- <textarea name="jumlah_kredit" class="form-control @error('jumlah_kredit') is-invalid @enderror" id="" cols="30"
                         rows="4" placeholder="Jumlah Kredit"></textarea> --}}
                     @error('jumlah_kredit')
@@ -479,7 +486,7 @@ $sectors = [
                                             <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
                                             <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
                                             <input type="text" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
-                                                placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah" value="{{ temporary($duTemp->id, $item->id)?->opsi_text }}">
+                                                placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah" value="{{ rupiah(temporary($duTemp->id, $item->id)?->opsi_text) }}">
                                         </div>
                                     @else
                                         <div class="form-group col-md-6">
@@ -487,7 +494,7 @@ $sectors = [
                                             <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
                                             <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
                                             <input type="text" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
-                                                placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah" value="{{ temporary($duTemp->id, $item->id)?->opsi_text }}">
+                                                placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah" value="{{ rupiah(temporary($duTemp->id, $item->id)?->opsi_text) }}">
                                         </div>
                                     @endif
                                 @endif
@@ -664,7 +671,7 @@ $sectors = [
                                             <input type="hidden" name="id_level[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}" id="">
                                             <input type="text" step="any" name="informasi[{{ $itemTiga->id }}]" id="{{ $idLevelTiga }}"
                                                 placeholder="Masukkan informasi {{ $itemTiga->nama }}"
-                                                class="form-control rupiah" value="{{ temporary($duTemp->id, $itemTiga->id)?->opsi_text }}">
+                                                class="form-control rupiah" value="{{ rupiah(temporary($duTemp->id, $itemTiga->id)?->opsi_text) }}">
                                         </div>
                                     @elseif ($itemTiga->opsi_jawaban == 'persen')
                                         <div class="form-group col-md-6">
@@ -829,7 +836,7 @@ $sectors = [
                                                 <input type="text" step="any" name="informasi[{{ $itemEmpat->id }}]"
                                                     id="{{ $idLevelEmpat }}"
                                                     placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
-                                                    class="form-control rupiah" value="{{ temporary($duTemp->id, $itemEmpat->id)?->opsi_text }}">
+                                                    class="form-control rupiah" value="{{ rupiah(temporary($duTemp->id, $itemEmpat->id)?->opsi_text) }}">
                                             </div>
                                         @elseif ($itemEmpat->opsi_jawaban == 'persen')
                                             <div class="form-group col-md-6">
