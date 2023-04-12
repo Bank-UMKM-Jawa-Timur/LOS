@@ -1912,30 +1912,32 @@ class PengajuanKreditController extends Controller
             if ($request->dataLevelDua != null) {
                 $data = $request->dataLevelDua;
                 foreach ($data as $key => $value) {
-                    $data_level_dua = $this->getDataLevel($value);
-                    $skor[$key] = $data_level_dua[0];
-                    $id_jawaban[$key] = $data_level_dua[1];
-                    //jika skor nya tidak kosong
-                    if ($skor[$key] != 'kosong') {
-                        if($id_jawaban[$key] == 66 || $id_jawaban[$key] == 187){
-                            if($skor[$key] == 1){
-                                $statusSlik = true;
+                    if($value != null){
+                        $data_level_dua = $this->getDataLevel($value);
+                        $skor[$key] = $data_level_dua[0];
+                        $id_jawaban[$key] = $data_level_dua[1];
+                        //jika skor nya tidak kosong
+                        if ($skor[$key] != 'kosong') {
+                            if($id_jawaban[$key] == 66 || $id_jawaban[$key] == 187){
+                                if($skor[$key] == 1){
+                                    $statusSlik = true;
+                                }
                             }
+                            array_push($rata_rata, $skor[$key]);
+                        } else {
+                            $skor[$key] = NULL;
                         }
-                        array_push($rata_rata, $skor[$key]);
-                    } else {
-                        $skor[$key] = NULL;
+                        array_push(
+                            $finalArray,
+                            array(
+                                'id_temporary_calon_nasabah' => $request?->idCalonNasabah,
+                                'id_jawaban' => $id_jawaban[$key],
+                                'skor' => $skor[$key],
+                                'id_option' => $key,
+                                'created_at' => date("Y-m-d H:i:s"),
+                            )
+                        );
                     }
-                    array_push(
-                        $finalArray,
-                        array(
-                            'id_temporary_calon_nasabah' => $request?->idCalonNasabah,
-                            'id_jawaban' => $id_jawaban[$key],
-                            'skor' => $skor[$key],
-                            'id_option' => $key,
-                            'created_at' => date("Y-m-d H:i:s"),
-                        )
-                    );
                 }
             } else {
             }
@@ -1944,25 +1946,27 @@ class PengajuanKreditController extends Controller
             if ($request->dataLevelTiga != null) {
                 $dataLevelTiga = $request->dataLevelTiga;
                 foreach ($dataLevelTiga as $key => $value) {
-                    $data_level_tiga = $this->getDataLevel($value);
-                    $skor[$key] = $data_level_tiga[0];
-                    $id_jawaban[$key] = $data_level_tiga[1];
-                    //jika skor nya tidak kosong
-                    if ($skor[$key] != 'kosong') {
-                        array_push($rata_rata, $skor[$key]);
-                    } else {
-                        $skor[$key] = NULL;
+                    if($value != null){
+                        $data_level_tiga = $this->getDataLevel($value);
+                        $skor[$key] = $data_level_tiga[0];
+                        $id_jawaban[$key] = $data_level_tiga[1];
+                        //jika skor nya tidak kosong
+                        if ($skor[$key] != 'kosong') {
+                            array_push($rata_rata, $skor[$key]);
+                        } else {
+                            $skor[$key] = NULL;
+                        }
+                        array_push(
+                            $finalArray,
+                            array(
+                                'id_temporary_calon_nasabah' => $request?->idCalonNasabah,
+                                'id_jawaban' => $id_jawaban[$key],
+                                'skor' => $skor[$key],
+                                'id_option' => $key,
+                                'created_at' => date("Y-m-d H:i:s"),
+                            )
+                        );
                     }
-                    array_push(
-                        $finalArray,
-                        array(
-                            'id_temporary_calon_nasabah' => $request?->idCalonNasabah,
-                            'id_jawaban' => $id_jawaban[$key],
-                            'skor' => $skor[$key],
-                            'id_option' => $key,
-                            'created_at' => date("Y-m-d H:i:s"),
-                        )
-                    );
                 }
             } else {
             }
@@ -1971,25 +1975,27 @@ class PengajuanKreditController extends Controller
             if ($request->dataLevelEmpat != null) {
                 $dataLevelEmpat = $request->dataLevelEmpat;
                 foreach ($dataLevelEmpat as $key => $value) {
-                    $data_level_empat = $this->getDataLevel($value);
-                    $skor[$key] = $data_level_empat[0];
-                    $id_jawaban[$key] = $data_level_empat[1];
-                    //jika skor nya tidak kosong
-                    if ($skor[$key] != 'kosong') {
-                        array_push($rata_rata, $skor[$key]);
-                    } else {
-                        $skor[$key] = NULL;
+                    if($value != null){
+                        $data_level_empat = $this->getDataLevel($value);
+                        $skor[$key] = $data_level_empat[0];
+                        $id_jawaban[$key] = $data_level_empat[1];
+                        //jika skor nya tidak kosong
+                        if ($skor[$key] != 'kosong') {
+                            array_push($rata_rata, $skor[$key]);
+                        } else {
+                            $skor[$key] = NULL;
+                        }
+                        array_push(
+                            $finalArray,
+                            array(
+                                'id_temporary_calon_nasabah' => $request?->idCalonNasabah,
+                                'id_jawaban' => $id_jawaban[$key],
+                                'skor' => $skor[$key],
+                                'id_option' => $key,
+                                'created_at' => date("Y-m-d H:i:s"),
+                            )
+                        );
                     }
-                    array_push(
-                        $finalArray,
-                        array(
-                            'id_temporary_calon_nasabah' => $request?->idCalonNasabah,
-                            'id_jawaban' => $id_jawaban[$key],
-                            'skor' => $skor[$key],
-                            'id_option' => $key,
-                            'created_at' => date("Y-m-d H:i:s"),
-                        )
-                    );
                 }
             } else {
             }
