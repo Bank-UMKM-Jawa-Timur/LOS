@@ -369,7 +369,11 @@ class PengajuanKreditController extends Controller
         foreach($itemBuktiPemilikan->where('id_parent', 114)->get() as $i){
             array_push($dataJawaban, temporary($request->idCalonNasabah, $i->id)?->opsi_text ?? '');
         }
-        $dataSelect = temporary_select($item->id, $request->idCalonNasabah)?->id_jawaban;
+
+        $dataSelect = [];
+
+        if($request->idCalonNasabah)
+            $dataSelect = temporary_select($item->id, $request->idCalonNasabah)?->id_jawaban;
 
         $data = [
             'detailJawabanOption' => $detailJawabanOption->first(),

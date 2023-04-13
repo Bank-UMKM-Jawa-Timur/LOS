@@ -68,8 +68,8 @@
                     <select name="kabupaten" class="form-control @error('name') is-invalid @enderror select2" id="kabupaten">
                         <option value="">---Pilih Kabupaten----</option>
                         @foreach ($allKab as $item)
-                            <option value="{{ old('id', $item->id) }}"
-                                {{ old('id', $item->id) == $dataUmum->id_kabupaten ? 'selected' : '' }}>
+                            <option value="{{ $item->id }}"
+                                {{ $item->id == $dataUmum->id_kabupaten ? 'selected' : '' }}>
                                 {{ $item->kabupaten }}</option>
                         @endforeach
                     </select>
