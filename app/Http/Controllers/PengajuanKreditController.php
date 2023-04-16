@@ -561,11 +561,10 @@ class PengajuanKreditController extends Controller
 
             foreach($tempFiles as $tempFile) {
                 $tempPath = public_path("upload/temp/{$tempFile->id_jawaban}/{$tempFile->opsi_text}");
-                $newPath = str_replace('temp/', '', $tempPath);
+                $newPath = str_replace('temp/', "{$id_pengajuan}/", $tempPath);
+                $relPath = "upload/{$id_pengajuan}/{$tempFile->id_jawaban}";
 
-                File::isDirectory(public_path("upload/{$tempFile->id_jawaban}")) or
-                    File::makeDirectory(public_path("upload/{$tempFile->id_jawaban}"));
-
+                File::isDirectory(public_path($relPath)) or File::makeDirectory(public_path($relPath), recursive: true);
                 @File::move($tempPath, $newPath);
 
                 JawabanTextModel::create([
