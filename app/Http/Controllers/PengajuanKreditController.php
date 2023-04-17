@@ -722,6 +722,9 @@ class PengajuanKreditController extends Controller
             JawabanTemp::where('id_temporary_calon_nasabah', $tempNasabah->id)->delete();
             JawabanTempModel::where('id_temporary_calon_nasabah', $tempNasabah->id)->delete();
             $tempNasabah->delete();
+            DB::table('temporary_usulan_dan_pendapat')
+                ->where('id_temp', $tempNasabah->id)
+                ->delete();
 
             DB::commit();
             return redirect()->route('pengajuan-kredit.index')->withStatus('Data berhasil disimpan.');
