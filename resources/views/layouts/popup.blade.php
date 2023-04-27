@@ -12,17 +12,17 @@
                 <label for="skema">Pilih Skema Kredit</label>
                 <select class="form-control" id="skema">
                     <option value="">- Pilih Skema Kredit -</option>
-                    <option value="pkjp">PKJP</option>
-                    <option value="kkb">KKB</option>
-                    <option value="talangan umroh">Talangan Umroh</option>
-                    <option value="prokesra">Prokesra</option>
-                    <option value="kusuma">Kusuma</option>
+                    <option value="PKPJ">PKPJ</option>
+                    <option value="KKB">KKB</option>
+                    <option value="Talangan Umroh">Talangan Umroh</option>
+                    <option value="Prokesra">Prokesra</option>
+                    <option value="Kusuma">Kusuma</option>
                 </select>
             </div>
             </form>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-primary" onclick="$('#exampleModal').modal('hide')">Simpan</button>
+            <button type="button" class="btn btn-primary" id="btnSkema" onclick="$('#exampleModal').modal('hide')">Simpan</button>
         </div>
         </div>
     </div>

@@ -70,7 +70,7 @@ function rupiah($angka){
         <div class="form-wizard active" data-index='0' data-done='true' id="wizard-data-umum">
             <div class="row">
                 {{-- Input hidden for Skema Kredit --}}
-                <input type="hidden" name="skema_kredit" id="skema_kredit" value="KKB">
+                <input type="hidden" name="skema_kredit" id="skema_kredit" value="{{ $duTemp?->skema_kredit ?? '' }}">
 
                 <div class="form-group col-md-6">
                     <label for="">Nama Lengkap</label>
@@ -979,8 +979,18 @@ function rupiah($angka){
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(function() {
-            $('#exampleModal').modal('show');
+            let valSkema = $("#skema_kredit").val();
+            if(valSkema == null || valSkema == ''){
+                $('#exampleModal').modal('show');
+            }
         });
+
+        $("#exampleModal").on('click', "#btnSkema", function(){
+            let valSkema = $("#skema").val();
+            console.log(valSkema);
+
+            $("#skema_kredit").val(valSkema);
+        })
 
         @if($nib != '')
             $('#docSKU').hide();
