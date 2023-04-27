@@ -24,6 +24,7 @@ function rupiah($angka){
 
 @section('content')
     @include('components.notification')
+    @include('layouts.popup')
     <style>
         .form-wizard .sub label:not(.info) {
             font-weight: 400;
@@ -61,6 +62,7 @@ function rupiah($angka){
             top: 10px;
         }
     </style>
+
     <form id="pengajuan_kredit" action="{{ route('pengajuan-kredit.store') }}" method="post" enctype="multipart/form-data">
         @csrf
         <input type="hidden" name="id_nasabah" value="{{ $duTemp?->id }}">
@@ -976,6 +978,10 @@ function rupiah($angka){
 @push('custom-script')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        $(document).ready(function() {
+            $('#exampleModal').modal('show');
+        });
+
         @if($nib != '')
             $('#docSKU').hide();
             $('#surat_keterangan_usaha').hide();
