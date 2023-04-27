@@ -67,6 +67,9 @@ function rupiah($angka){
         <input type="hidden" name="progress" class="progress">
         <div class="form-wizard active" data-index='0' data-done='true' id="wizard-data-umum">
             <div class="row">
+                {{-- Input hidden for Skema Kredit --}}
+                <input type="hidden" name="skema_kredit" id="skema_kredit" value="KKB">
+
                 <div class="form-group col-md-6">
                     <label for="">Nama Lengkap</label>
                     <input type="text" name="name" id="nama" class="form-control @error('name') is-invalid @enderror"
