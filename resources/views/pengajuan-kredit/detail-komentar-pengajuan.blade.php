@@ -245,7 +245,7 @@
                                     <div style="width: 30%">
                                         <p class="p-0 m-0"><strong>Komentar Penyelia : </strong></p>
                                     </div>
-                                    <h6 class="font-italic">{{ $komentarSlikPenyelia->komentar }}</h6>
+                                    <h6 class="font-italic">{{ $komentarSlikPenyelia?->komentar }}</h6>
                                     {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
 
                                 </div>
@@ -266,7 +266,7 @@
                                         <div style="width: 30%">
                                             <p class="p-0 m-0"><strong>Komentar PBP : </strong></p>
                                         </div>
-                                        <h6 class="font-italic">{{ $komentarSlikPBP->komentar }}</h6>
+                                        <h6 class="font-italic">{{ $komentarSlikPBP?->komentar }}</h6>
                                         {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
 
                                     </div>
@@ -690,7 +690,7 @@
                                             </div>
                                         @endforeach
                                     @endif
-                                    @if ($dataUmum->id_cabang == 1)    
+                                    @if ($dataUmum->id_cabang == 1 && $getKomentarPBP != null)    
                                         @foreach ($getKomentarPBP as $itemKomentarPBP)
                                             <div class="row form-group sub pl-4">
                                                 <label for="staticEmail" class="col-sm-3 col-form-label"></label>
@@ -969,7 +969,7 @@
                                                 </div>
                                             @endforeach
                                         @endif
-                                        @if ($dataUmum->id_cabang == 1)    
+                                        @if ($dataUmum->id_cabang == 1 && $getKomentarPBP3 != null)    
                                             @foreach ($getKomentarPBP3 as $itemKomentar3)    
                                                 <div class="row form-group sub pl-4">
                                                     <label for="staticEmail" class="col-sm-3 col-form-label"></label>
@@ -1271,7 +1271,7 @@
                                                     </div>
                                                 </div>
                                             @endif
-                                            @if ($dataUmum->id_cabang == 1)    
+                                            @if ($dataUmum->id_cabang == 1 && $getKomentarPBP5 != null)    
                                                 <div class="row form-group sub pl-4">
                                                     <label for="staticEmail" class="col-sm-3 col-form-label"></label>
                                                     <label for="staticEmail" class="col-sm-1 col-form-label px-0">
