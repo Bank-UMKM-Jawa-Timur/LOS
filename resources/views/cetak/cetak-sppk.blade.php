@@ -164,7 +164,7 @@
                     <table>
                         <tr>
                             <td>-</td>
-                            <td style="width: 70%">Provinsi</td>
+                            <td style="width: 70%">Provisi</td>
                             <td>:</td>
                             <td>Rp. ...................</td>
                         </tr>

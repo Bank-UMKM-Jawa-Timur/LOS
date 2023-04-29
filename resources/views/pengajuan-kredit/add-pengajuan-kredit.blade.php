@@ -979,18 +979,18 @@ function rupiah($angka){
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(function() {
-            let valSkema = $("#skema_kredit").val();
+            let valSkema = $("#skema").val();
             if(valSkema == null || valSkema == ''){
                 $('#exampleModal').modal('show');
             }
+
+            $("#exampleModal").on('click', "#btnSkema", function(){
+                let valSkema = $("#skema").val();
+                console.log(valSkema);
+
+                $("#skema_kredit").val(valSkema);
+            })
         });
-
-        $("#exampleModal").on('click', "#btnSkema", function(){
-            let valSkema = $("#skema").val();
-            console.log(valSkema);
-
-            $("#skema_kredit").val(valSkema);
-        })
 
         @if($nib != '')
             $('#docSKU').hide();
