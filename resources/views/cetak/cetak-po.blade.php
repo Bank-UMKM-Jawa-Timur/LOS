@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Pemesanan Kendaraan Bermotor</title>
+    <title>Surat Pemesanan Kendaraan Bermotor</title>
     <style>
         .data-surat {
             width: 100%;
@@ -97,41 +97,45 @@
         </table>
     
         <p>
-            Berdasarkan Surat Pemberitahuan Persetujuan Kredit (SPPK) Nomor : ................................, tanggal .....................,
-            bersama ini saya melalui PT. BPR JATIM Kantor Cabang ................... melakukan pemesanan kendaraan bermotor kepada 
-            PT. BJSC Aquagro Mandiri sebagai berikut :
+            Demikian surat ini kami sampaikan, atas perhatian dan kerjasamanya kami ucapkan terima kasih.
         </p>
     
+        <table>
+            <tr>
+                <td>Jenis Kendaraan roda 2 :</td>
+            </tr>
+        </table>
+
         <table class="table-body">
-            <p>Jenis Kendaraan roda 2 :</p>
             <tr>
-                <td style="width: 25%">Merk/Type</td>
+                <td style="width: 13%">Merk/Type</td>
                 <td style="width: 2%">:</td>
                 <td>.....................................</td>
             </tr>
             <tr>
-                <td style="width: 25%">Tahun</td>
+                <td style="width: 13%">Tahun</td>
                 <td style="width: 2%">:</td>
                 <td>.....................................</td>
             </tr>
             <tr>
-                <td style="width: 25%">Warna</td>
+                <td style="width: 13%">Warna</td>
                 <td style="width: 2%">:</td>
                 <td>.....................................</td>
             </tr>
             <tr>
-                <td style="width: 25%">Keterangan</td>
+                <td style="width: 13%">Keterangan</td>
                 <td style="width: 2%">:</td>
                 <td>Pemesanan .......................... sejumlah ........................</td>
             </tr>
             <tr>
-                <td style="width: 25%">Harga</td>
+                <td style="width: 13%">Harga</td>
                 <td style="width: 2%">:</td>
                 <td>.....................................</td>
             </tr>
         </table>
 
         <p>Demikian surat ini kami sampaikan, atas perhatian dan kerjasamanya kami ucapkan terima kasih.</p>
+        <br>
 
         <table class="table-ttd">
             <tr>
@@ -172,7 +176,7 @@
         const element = document.querySelector('.data-surat');
         doc.html(element, {
             callback: function (doc) {
-                doc.save('Pemesanan Kendaraan Bermotor.pdf');
+                doc.save('Surat Pemberitahuan Persetujuan Kredit.pdf');
             }
         });
     }
