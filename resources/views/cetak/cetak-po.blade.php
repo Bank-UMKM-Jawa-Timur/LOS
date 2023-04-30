@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Surat Pemberitahuan Persetujuan Kredit</title>
+    <title>Pemesanan Kendaraan Bermotor</title>
     <style>
         .data-surat {
             width: 100%;
@@ -97,7 +97,9 @@
         </table>
     
         <p>
-            Demikian surat ini kami sampaikan, atas perhatian dan kerjasamanya kami ucapkan terima kasih.
+            Berdasarkan Surat Pemberitahuan Persetujuan Kredit (SPPK) Nomor : ................................, tanggal .....................,
+            bersama ini saya melalui PT. BPR JATIM Kantor Cabang ................... melakukan pemesanan kendaraan bermotor kepada 
+            PT. BJSC Aquagro Mandiri sebagai berikut :
         </p>
     
         <table class="table-body">
@@ -170,7 +172,7 @@
         const element = document.querySelector('.data-surat');
         doc.html(element, {
             callback: function (doc) {
-                doc.save('Surat Pemberitahuan Persetujuan Kredit.pdf');
+                doc.save('Pemesanan Kendaraan Bermotor.pdf');
             }
         });
     }
