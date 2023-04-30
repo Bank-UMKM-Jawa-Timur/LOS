@@ -213,6 +213,7 @@
                                         <a target="_blank" href="{{ route('cetak',$item->id_pengajuan) }}" class="dropdown-item" >Cetak</a>
                                         <a target="_blank" href="{{ route('cetak-sppk')}}" class="dropdown-item" >Cetak SPPK</a>
                                         <a target="_blank" href="{{ route('cetak-pk')}}" class="dropdown-item" >Cetak PK</a>
+                                        <a target="_blank" href="{{ route('cetak-po')}}" class="dropdown-item" >Cetak PO</a>
                                     </div>
                                 </div>
                             @else

@@ -33,6 +33,10 @@ Route::get('/cetak-pk', function() {
     return view('cetak.cetak-pk');
 })->name('cetak-pk');
 
+Route::get('/cetak-po', function() {
+    return view('cetak.cetak-po');
+})->name('cetak-po');
+
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
 // })->middleware(['auth'])->name('dashboard');
