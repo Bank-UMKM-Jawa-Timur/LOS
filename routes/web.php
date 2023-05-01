@@ -25,6 +25,17 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+Route::get('/cetak-sppk', function() {
+    return view('cetak.cetak-sppk');
+})->name('cetak-sppk');
+
+Route::get('/cetak-pk', function() {
+    return view('cetak.cetak-pk');
+})->name('cetak-pk');
+
+Route::get('/cetak-po', function() {
+    return view('cetak.cetak-po');
+})->name('cetak-po');
 
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
@@ -88,6 +99,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('master-item', MasterItemController::class);
     // Cetak Surat
     Route::get('cetak-surat/{id}', [CetakSuratController::class, 'cetak'])->name('cetak');
+    
     // Route::gety('cetak-surat', CetakSuratController::class);
 
     Route::get('/pengajuan-kredit/get-item-jaminan-by-kategori-jaminan-utama-edit', [PengajuanKreditController::class, 'getEditJaminanKategori'])->name('get-item-jaminan-by-kategori-jaminan-utama-edit');
