@@ -306,30 +306,30 @@
                     @enderror
                 </div>
                 <div class="form-group col-md-12">
-                    <label for="">{{ $itemSlik->nama }}</label>
+                    <label for="">{{ $itemSlik?->nama }}</label>
                     <br>
                     <b>Jawaban : </b>
                     <div class="mt-2 pl-2">
                         <p class="badge badge-info text-lg">
-                            <b>{{ $itemSlik->option }}</b>
+                            <b>{{ $itemSlik?->option }}</b>
                         </p>
                     </div>
                     @php
                         $komentarSlik = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', '=', 'detail_komentar.id_komentar')
                             ->where('id_pengajuan', $dataUmum->id)
-                            ->where('id_item', $itemSlik->id_item)
+                            ->where('id_item', $itemSlik?->id_item)
                             ->first();
                     @endphp
                     <div class="input-group input-b-bottom">
-                        <input type="hidden" name="id_item[]" value="{{ $itemSlik->id_item }}">
-                        <input type="hidden" name="id_option[]" value="{{ $itemSlik->id_jawaban }}">
+                        <input type="hidden" name="id_item[]" value="{{ $itemSlik?->id_item }}">
+                        <input type="hidden" name="id_option[]" value="{{ $itemSlik?->id_jawaban }}">
                         <input type="text" class="form-control komentar" name="komentar_penyelia[]"
                             placeholder="Masukkan Komentar"
                             value="{{ isset($komentarSlik->komentar) ? $komentarSlik->komentar : '' }}">
                         <div class="input-skor">
                             <input type="number" class="form-control" placeholder="" name="skor_penyelia[]" onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
-                                {{ $itemSlik->status_skor == 0 ? 'readonly' : '' }}
-                                value="{{ $itemSlik->skor_penyelia != null ? $itemSlik->skor_penyelia : $itemSlik->skor }}">
+                                {{ $itemSlik?->status_skor == 0 ? 'readonly' : '' }}
+                                value="{{ $itemSlik?->skor_penyelia != null ? $itemSlik?->skor_penyelia : $itemSlik?->skor }}">
                         </div>
                     </div>
                 </div>
