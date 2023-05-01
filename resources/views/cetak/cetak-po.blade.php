@@ -6,6 +6,22 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Surat Pemesanan Kendaraan Bermotor</title>
     <style>
+        body{
+            font-size: 20px;
+            width: 215mm;
+            height: 330mm;
+        }
+        table{
+            border-spacing: 0;
+        }
+        tr{
+            vertical-align: top;
+        }
+        @media print {
+            html, body {
+                height: 99%;    
+            }
+        }
         .data-surat {
             width: 100%;
             margin: 0 auto;
@@ -50,7 +66,7 @@
 </head>
 <body onload="printPage()">
     <div class="data-surat">
-        <table class="table-header-kota">
+        <table class="table-header-kota" style="margin-bottom: 10px;">
             <tr>
                 <td style="width: 0.5%">Kota, </td>
                 <td style="width: 50%">......................................</td>
@@ -65,7 +81,7 @@
                 <td>PT. BJSC Aquagro Mandiri</td>
             </tr>
             <tr>
-                <td>Melalui PT. BPR JATIM Kanto Cabang</td>
+                <td>Melalui PT. BPR JATIM Kantor Cabang</td>
             </tr>
         </table>
     
@@ -88,17 +104,21 @@
     
         <br>
     
-        <table class="table-header-perihal">
+        <table class="table-header-perihal" style="margin-bottom: 10px">
             <tr>
                 <td style="width: 7%">Perihal</td>
                 <td style="width: 1%">:</td>
                 <td><b>Pemesanan Kendaraan Bermotor</b></td>
             </tr>
+            <tr>
+                <td colspan="3">
+                    <br>Berdasarkan Surat Pemberitahuan Persetujuan Kredit (SPPK) Nomor : ..........., tanggal ........., bersama ini saya melalui PT. BPR Jatim Kantor Cabang ........., melakukan pemesanan kendaraan bermotor kepada PT. BJSC Aquagro Mandiri sebagai berikut :
+                </td>
+            </tr>
         </table>
-    
-        <p>
-            Demikian surat ini kami sampaikan, atas perhatian dan kerjasamanya kami ucapkan terima kasih.
-        </p>
+        
+        {{-- <p style="vertical-align: ">
+        </p> --}}
     
         <table>
             <tr>
@@ -143,20 +163,20 @@
                 <th style="font-weight: 500; width: 50%;">Debitur</th>
             </tr>
             <tr>
-                <td style="text-align: center; padding-top: 100px">
+                <td style="text-align: center; padding-top: 70px">
                     <table style="width: 100%; text-align: center;">
                         <tr>
-                            <td>______________________________________</td>
+                            <td>__________________________</td>
                         </tr>
                         <tr>
                             <td></td>
                         </tr>
                     </table>
                 </td>
-                <td style="text-align: center; padding-top: 100px">
+                <td style="text-align: center; padding-top: 70px">
                     <table style="width: 100%; text-align: center;">
                         <tr>
-                            <td>______________________________________</td>
+                            <td>__________________________________</td>
                         </tr>
                     </table>
                 </td>

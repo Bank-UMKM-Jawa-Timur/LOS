@@ -6,6 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Surat Perjanjian Kredit</title>
     <style>
+        body{
+            font-size: 20px;
+            width: 215mm;
+            height: 330mm;
+        }
         .heading {
             text-align: center;
         }
@@ -281,6 +286,7 @@
             </tr>
         </table>
 
+        <br><br>
         <table class="table-pasal-7">
             <p style="text-align: center"><b>Pasal 7</b></p>
             <tr>

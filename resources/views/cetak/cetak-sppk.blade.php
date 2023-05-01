@@ -6,6 +6,21 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Surat Pemberitahuan Persetujuan Kredit</title>
     <style>
+        body{
+            width: 215mm;
+            height: 330mm;
+        }
+        table{
+            border-spacing: 0;
+        }
+        tr{
+            vertical-align: top;
+        }
+        @media print {
+            html, body {
+                height: 99%;    
+            }
+        }
         .data-surat {
             width: 100%;
             margin: 0 auto;
@@ -180,17 +195,17 @@
                             <td>:</td>
                             <td>Rp. ...................</td>
                         </tr>
-                        <tr>
+                        {{-- <tr>
                             <td></td>
                             <td style="width: 70%"></td>
                             <td></td>
                             <td><hr style="margin: 2px 0px -2px 0px"></td>
-                        </tr>
+                        </tr> --}}
                         <tr>
                             <td></td>
                             <td style="width: 70%"></td>
                             <td></td>
-                            <td><u>Rp. ...................</u></td>
+                            <td>Rp. ................... </td>
                         </tr>
                     </table>
                 </td>
@@ -218,16 +233,16 @@
             </tr>
             <tr>
                 <td style="vertical-align: text-top">14.</td>
-                <td>Sesuai dengan ketentuan perkreditan yang berlaku.</td>
+                <td>Sesuai dengan ketentuan perkreditan yang berlaku.<br>
+                    Selanjutnya apabila ketentuan-ketentuan tersebut di atas Suadara setujui, maka lembar kedua dari surat ini, sesudah ditandatangani harap dikirim kepada kami sebagai tanda persetujuan saudara.<br>
+                    <br>Demikian untuk menjadikan saudara maklum
+                </td>
             </tr>
         </table>
 
-        <p>Selanjutnya apabila ketentuan-ketentuan tersebut di atas Suadara setujui, maka lembar kedua dari surat ini, sesudah ditandatangani harap dikirim kepada kami sebagai tanda persetujuan saudara.</p>
-        <p>Demikian untuk menjadikan saudara maklum</p>
-
         <table class="table-ttd">
             <tr>
-                <th style="font-weight: 500; width: 50%;">DEBITUR</th>
+                <th style="font-weight: 500; width: 50%;"><br>DEBITUR</th>
                 <th style="font-weight: 500; width: 50%;">PT. Bank Perkreditan Rakyat Jawa Timur <br>Cabang .....................</th>
             </tr>
             <tr>
