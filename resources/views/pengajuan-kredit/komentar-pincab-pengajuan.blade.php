@@ -216,6 +216,17 @@
                                         <a target="_blank" href="{{ route('cetak-po')}}" class="dropdown-item" >Cetak PO</a>
                                     </div>
                                 </div>
+                            @elseif ($item->posisi == 'Selesai')
+                            <div class="btn-gtoup">
+                                <button type="button" data-toggle="dropdown" class="btn btn-link">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16" style="color: black">
+                                        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                                    </svg>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a href="#" class="dropdown-item" data-toggle="modal" data-id="{{ $item->id_pengajuan }}" data-target="#uploadModal-{{$item->id_pengajuan}}">Upload File</a>
+                                </div>
+                            </div>
                             @else
                                 <div class="btn-group">
                                     <button type="button" data-toggle="dropdown" class="btn btn-link">
@@ -247,4 +258,5 @@
     </div>
 </div>
 @include('layouts.modal')
+@include('layouts.popup-upload')
 @endsection
