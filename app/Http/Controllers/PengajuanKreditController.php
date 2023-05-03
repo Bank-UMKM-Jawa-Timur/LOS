@@ -66,6 +66,7 @@ class PengajuanKreditController extends Controller
                 'pengajuan.id_cabang',
                 'pengajuan.average_by_sistem',
                 'pengajuan.average_by_penyelia',
+                'pengajuan.skema_kredit',
                 'calon_nasabah.nama',
                 'calon_nasabah.jenis_usaha',
                 'calon_nasabah.id_pengajuan'
@@ -92,6 +93,7 @@ class PengajuanKreditController extends Controller
                 'pengajuan.id_cabang',
                 'pengajuan.average_by_sistem',
                 'pengajuan.average_by_penyelia',
+                'pengajuan.skema_kredit',
                 'calon_nasabah.nama',
                 'calon_nasabah.jenis_usaha',
                 'calon_nasabah.id_pengajuan'
@@ -115,6 +117,7 @@ class PengajuanKreditController extends Controller
                 'pengajuan.id_cabang',
                 'pengajuan.average_by_sistem',
                 'pengajuan.average_by_penyelia',
+                'pengajuan.skema_kredit',
                 'calon_nasabah.nama',
                 'calon_nasabah.jenis_usaha',
                 'calon_nasabah.id_pengajuan'
@@ -137,6 +140,7 @@ class PengajuanKreditController extends Controller
                 'pengajuan.id_cabang',
                 'pengajuan.average_by_sistem',
                 'pengajuan.average_by_penyelia',
+                'pengajuan.skema_kredit',
                 'calon_nasabah.nama',
                 'calon_nasabah.jenis_usaha',
                 'calon_nasabah.id_pengajuan'
@@ -161,6 +165,7 @@ class PengajuanKreditController extends Controller
                 'pengajuan.id_cabang',
                 'pengajuan.average_by_sistem',
                 'pengajuan.average_by_penyelia',
+                'pengajuan.skema_kredit',
                 'calon_nasabah.nama',
                 'calon_nasabah.jenis_usaha',
                 'calon_nasabah.id_pengajuan'

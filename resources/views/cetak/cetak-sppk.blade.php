@@ -68,6 +68,13 @@
         }
     </style>
 </head>
+@php
+    function rupiah($angka){
+	
+	$hasil_rupiah = number_format($angka,2,',','.');
+	return $hasil_rupiah;
+}
+@endphp
 <body onload="printPage()">
     <div class="data-surat">
         <table class="table-header-tgl">
@@ -138,13 +145,13 @@
                 <td>4.</td>
                 <td style="width: 25%">Besarnya Pinjaman</td>
                 <td style="width: 2%">:</td>
-                <td>Rp. ........................</td>
+                <td>Rp. {{ rupiah($dataNasabah->jumlah_kredit) }}</td>
             </tr>
             <tr>
                 <td>5.</td>
                 <td style="width: 25%">Jangka Waktu Pinjaman</td>
                 <td style="width: 2%">:</td>
-                <td>...... bulan</td>
+                <td>{{ intval($dataNasabah->tenor_yang_diminta) * 12 }} bulan</td>
             </tr>
             <tr>
                 <td>6.</td>
@@ -243,7 +250,7 @@
         <table class="table-ttd">
             <tr>
                 <th style="font-weight: 500; width: 50%;"><br>DEBITUR</th>
-                <th style="font-weight: 500; width: 50%;">PT. Bank Perkreditan Rakyat Jawa Timur <br>Cabang .....................</th>
+                <th style="font-weight: 500; width: 50%;">PT. Bank Perkreditan Rakyat Jawa Timur <br>Cabang {{ $dataCabang->cabang }}</th>
             </tr>
             <tr>
                 <td style="text-align: center; padding-top: 100px">

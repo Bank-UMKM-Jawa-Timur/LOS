@@ -7,6 +7,7 @@ use App\Models\CalonNasabah;
 use App\Models\ItemModel;
 use App\Models\KomentarModel;
 use App\Models\PengajuanModel;
+use Illuminate\Support\Facades\DB;
 
 class CetakSuratController extends Controller
 {
@@ -106,5 +107,62 @@ class CetakSuratController extends Controller
         $param['komentar'] = KomentarModel::where('id_pengajuan', $id)->first();
 
         return view('cetak.cetak-surat', $param);
+    }
+
+    public function cetakSPPk($id)
+    {
+        $param['dataNasabah'] = CalonNasabah::select('calon_nasabah.*','kabupaten.id as kabupaten_id','kabupaten.kabupaten','kecamatan.id as kecamatan_id','kecamatan.id_kabupaten','kecamatan.kecamatan','desa.id as desa_id','desa.id_kabupaten','desa.id_kecamatan','desa.desa')
+            ->join('kabupaten','kabupaten.id','calon_nasabah.id_kabupaten')
+            ->join('kecamatan','kecamatan.id','calon_nasabah.id_kecamatan')
+            ->join('desa','desa.id','calon_nasabah.id_desa')
+            ->where('calon_nasabah.id_pengajuan',$id)
+            ->first();
+            
+        $param['dataUmum'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang')
+            ->find($id);
+
+        $param['dataCabang'] = DB::table('cabang')
+            ->where('id', $param['dataUmum']->id_cabang)
+            ->first();
+
+        return view('cetak.cetak-sppk', $param);
+    }
+
+    public function cetakPO($id)
+    {
+        $param['dataNasabah'] = CalonNasabah::select('calon_nasabah.*','kabupaten.id as kabupaten_id','kabupaten.kabupaten','kecamatan.id as kecamatan_id','kecamatan.id_kabupaten','kecamatan.kecamatan','desa.id as desa_id','desa.id_kabupaten','desa.id_kecamatan','desa.desa')
+            ->join('kabupaten','kabupaten.id','calon_nasabah.id_kabupaten')
+            ->join('kecamatan','kecamatan.id','calon_nasabah.id_kecamatan')
+            ->join('desa','desa.id','calon_nasabah.id_desa')
+            ->where('calon_nasabah.id_pengajuan',$id)
+            ->first();
+            
+        $param['dataUmum'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang')
+            ->find($id);
+
+        $param['dataCabang'] = DB::table('cabang')
+            ->where('id', $param['dataUmum']->id_cabang)
+            ->first();
+
+        return view('cetak.cetak-po', $param);
+    }
+
+    public function cetakPk($id)
+    {
+        $param['dataNasabah'] = CalonNasabah::select('calon_nasabah.*','kabupaten.id as kabupaten_id','kabupaten.kabupaten','kecamatan.id as kecamatan_id','kecamatan.id_kabupaten','kecamatan.kecamatan','desa.id as desa_id','desa.id_kabupaten','desa.id_kecamatan','desa.desa')
+            ->join('kabupaten','kabupaten.id','calon_nasabah.id_kabupaten')
+            ->join('kecamatan','kecamatan.id','calon_nasabah.id_kecamatan')
+            ->join('desa','desa.id','calon_nasabah.id_desa')
+            ->where('calon_nasabah.id_pengajuan',$id)
+            ->first();
+            
+        $param['dataUmum'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang')
+            ->find($id);
+
+        $param['dataCabang'] = DB::table('cabang')
+            ->where('id', $param['dataUmum']->id_cabang)
+            ->first();
+            
+        return view('cetak.cetak-pk', $param);
     }
 }

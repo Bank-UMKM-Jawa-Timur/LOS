@@ -200,8 +200,18 @@
                                     </a>
                                     <a href="{{ route('pengajuan.check.penyeliakredit',$item->id_pengajuan) }}" class="dropdown-item">Tindak lanjut Review Penyelia</a>
                                     <a target="_blank" href="{{ route('cetak',$item->id_pengajuan) }}" class="dropdown-item">Cetak</a>
+                                    @if ($item->skema_kredit == 'KKB')
+                                        <a target="_blank" href="{{ route('cetak-sppk',$item->id_pengajuan) }}" class="dropdown-item">Cetak SPPK</a>
+                                        <a target="_blank" href="{{ route('cetak-po',$item->id_pengajuan) }}" class="dropdown-item">Cetak PO</a>
+                                        <a target="_blank" href="{{ route('cetak-pk',$item->id_pengajuan) }}" class="dropdown-item">Cetak PK</a>
+                                    @endif
                                 @else
                                     <a target="_blank" href="{{ route('cetak',$item->id_pengajuan) }}" class="dropdown-item">Cetak</a>
+                                    @if ($item->skema_kredit == 'KKB')
+                                        <a target="_blank" href="{{ route('cetak-sppk',$item->id_pengajuan) }}" class="dropdown-item">Cetak SPPK</a>
+                                        <a target="_blank" href="{{ route('cetak-po',$item->id_pengajuan) }}" class="dropdown-item">Cetak PO</a>
+                                        <a target="_blank" href="{{ route('cetak-pk',$item->id_pengajuan) }}" class="dropdown-item">Cetak PK</a>
+                                    @endif
                                 @endif
                                 </div>
                             </div>

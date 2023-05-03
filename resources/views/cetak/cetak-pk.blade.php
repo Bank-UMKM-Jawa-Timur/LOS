@@ -48,6 +48,13 @@
 
     </style>
 </head>
+@php
+    function rupiah($angka){
+	
+	$hasil_rupiah = number_format($angka,2,',','.');
+	return $hasil_rupiah;
+}
+@endphp
 <body onload="printPage()">
     <div class="data-surat">
         <div class="heading">
@@ -79,13 +86,13 @@
                 <td style="width: 3%">II.</td>
                 <td style="width: 20%">Nama</td>
                 <td style="width: 1%">:</td>
-                <td>..................................</td>
+                <td>{{ $dataNasabah->nama }}</td>
             </tr>
             <tr>
                 <td style="width: 3%"></td>
                 <td style="width: 20%">Alamat</td>
                 <td style="width: 1%">:</td>
-                <td>..................................</td>
+                <td>{{ $dataNasabah->alamat_rumah }}</td>
             </tr>
             <tr>
                 <td style="width: 3%"></td>
@@ -97,7 +104,7 @@
                 <td style="width: 3%"></td>
                 <td style="width: 20%">No. KTP/SIM</td>
                 <td style="width: 1%">:</td>
-                <td>..................................</td>
+                <td>{{ $dataNasabah->no_ktp }}</td>
             </tr>
         </table>
 
@@ -123,8 +130,8 @@
             <tr>
                 <td style="vertical-align: top; width: 3%;">1.</td>
                 <td style="text-align: justify">
-                    BANK memberikan kepada DEBITUR fasilitas kredit sampai sejumlah Rp. ..................... (...terbilang...), yang dipergunakan untuk
-                    <b><i>konsumsi (Pembelian Kendaraan Bermotor)</i></b> untuk jangka waktu ............. (.................) bulan terhitung sejak tanggal .................... 
+                    BANK memberikan kepada DEBITUR fasilitas kredit sampai sejumlah Rp. {{ rupiah($dataNasabah->jumlah_kredit) }} (...terbilang...), yang dipergunakan untuk
+                    <b><i>konsumsi (Pembelian Kendaraan Bermotor)</i></b> untuk jangka waktu {{ intval($dataNasabah->tenor_yang_diminta) * 12 }} (.................) bulan terhitung sejak tanggal .................... 
                     sampai dengan tanggal .................
                 </td>
             </tr>
@@ -199,7 +206,7 @@
             <tr>
                 <td style="vertical-align: top; width: 3%;">1.</td>
                 <td style="text-align: justify">
-                    Kredit sebesar yang ditentukan dalam pasal 1 ayat 1 tersebut harus dibayar lunas dalam waktu ................ (................) bulan dan diangsur dalam ................. (.................)
+                    Kredit sebesar yang ditentukan dalam pasal 1 ayat 1 tersebut harus dibayar lunas dalam waktu {{ intval($dataNasabah->tenor_yang_diminta) * 12 }} (................) bulan dan diangsur dalam ................. (.................)
                     kali angsuran, setiap 1 (satu) bulan sekali seperti ditentukan dalam lampiran yang merupakan satu kesatuan dengan perjanjian ini.
                 </td>
             </tr>
@@ -438,7 +445,7 @@
 
         <table class="table-ttd">
             <tr>
-                <th style="font-weight: 500; width: 50%;"><b>PT. Bank Perkreditan Rakyat Jawa Timur <br>Cabang .....................</b></th>
+                <th style="font-weight: 500; width: 50%;"><b>PT. Bank Perkreditan Rakyat Jawa Timur <br>Cabang {{ $dataCabang->cabang }}</b></th>
                 <th style="font-weight: 500; width: 50%;"><b>DEBITUR</b></th>
             </tr>
             <tr>

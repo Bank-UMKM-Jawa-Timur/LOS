@@ -25,18 +25,6 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-Route::get('/cetak-sppk', function() {
-    return view('cetak.cetak-sppk');
-})->name('cetak-sppk');
-
-Route::get('/cetak-pk', function() {
-    return view('cetak.cetak-pk');
-})->name('cetak-pk');
-
-Route::get('/cetak-po', function() {
-    return view('cetak.cetak-po');
-})->name('cetak-po');
-
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
 // })->middleware(['auth'])->name('dashboard');
@@ -109,6 +97,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/draft-pengajuan-kredit', [PengajuanKreditController::class, 'draftPengajuanKredit'])->name('pengajuan-kredit-draft');
     Route::get('/draft/continue/{id}', [PengajuanKreditController::class, 'continueDraft'])->name('draft.continue');
     Route::delete('/draft/delete/{id}', [PengajuanKreditController::class, 'deleteDraft'])->name('draft.destroy');
+
+    // Cetak SPPK, PO, PK
+    Route::get('/cetak-sppk/{id}', [CetakSuratController::class, 'cetakSPPK'])->name('cetak-sppk');
+    Route::get('/cetak-po/{id}', [CetakSuratController::class, 'cetakPO'])->name('cetak-po');
+    Route::get('/cetak-pk/{id}', [CetakSuratController::class, 'cetakPK'])->name('cetak-pk');
 });
 
 require __DIR__ . '/auth.php';

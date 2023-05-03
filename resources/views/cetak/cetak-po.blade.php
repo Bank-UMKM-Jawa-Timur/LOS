@@ -159,7 +159,7 @@
 
         <table class="table-ttd">
             <tr>
-                <th style="font-weight: 500; width: 50%;">PT. BPR JATIM <br>CABANG.....................</th>
+                <th style="font-weight: 500; width: 50%;">PT. BPR JATIM <br>CABANG {{ strtoupper($dataCabang->cabang) }}</th>
                 <th style="font-weight: 500; width: 50%;">Debitur</th>
             </tr>
             <tr>
