@@ -2129,16 +2129,71 @@ class PengajuanKreditController extends Controller
         return back()->withStatus('Berhasil menghapus draft');
     }
 
-    public function postFileKKB(Request $request)
+    public function postFileKKBIndex($id)
+    {
+        $data['id'] = $id;
+        $data['pageTitle'] = 'Upload File KKB';
+
+        return view('pengajuan-kredit.upload-file', $data);
+    }
+
+    public function postFileKKB(Request $request, $id)
     {
         try{
-            $id = $request->id_pengajuan;
+            // File SPPK Handler
+            $folderSPPK = public_path() . '/upload/' . $id . '/sppk/';
+            $fileSPPK = $request->sppk;
+            $filenameSPPK = date('YmdHis').'.'.$fileSPPK->getClientOriginalExtension();
+            $pathSPPK = realpath($folderSPPK);
+             // If it exist, check if it's a directory
+            if(!($pathSPPK !== true AND is_dir($pathSPPK)))
+            {
+                // Path/folder does not exist then create a new folder
+                mkdir($folderSPPK, 0755, true);
+            }
+            $fileSPPK->move($folderSPPK, $filenameSPPK);
 
-            
+            // File PO Handler
+            $folderPO = public_path() . '/upload/' . $id . '/po/';
+            $filePO = $request->po;
+            $filenamePO = date('YmdHis').'.'.$filePO->getClientOriginalExtension();
+            $pathPO = realpath($folderPO);
+             // If it exist, check if it's a directory
+            if(!($pathPO !== true AND is_dir($pathPO)))
+            {
+                // Path/folder does not exist then create a new folder
+                mkdir($folderPO, 0755, true);
+            }
+            $filePO->move($folderPO, $filenamePO);
+
+            // File PK Handler
+            $folderPK = public_path() . '/upload/' . $id . '/pk/';
+            $filePK = $request->pk;
+            $filenamePK = date('YmdHis').'.'.$filePK->getClientOriginalExtension();
+            $pathPK = realpath($folderPK);
+             // If it exist, check if it's a directory
+            if(!($pathPK !== true AND is_dir($pathPK)))
+            {
+                // Path/folder does not exist then create a new folder
+                mkdir($folderPK, 0755, true);
+            }
+            $filePK->move($folderPK, $filenamePK);
+
+            DB::table('pengajuan')
+                ->where('id', $id)
+                ->update([
+                    'sppk' => $filenameSPPK,
+                    'po' => $filenamePO,
+                    'pk' => $filenamePK
+                ]);
+
+            return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil menambahkan file SPPO, PO, dan PK.');
         } catch(Exception $e){
-
+            DB::rollBack();
+            return redirect()->route('pengajuan-kredit.index')->withStatus('Terjadi kesalahan. '.$e->getMessage());
         } catch(QueryException $e){
-
+            DB::rollBack();
+            return redirect()->route('pengajuan-kredit.index')->withStatus('Terjadi kesalahan. '.$e->getMessage());
         }
     }
 }

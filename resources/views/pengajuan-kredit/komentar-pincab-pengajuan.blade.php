@@ -211,10 +211,12 @@
                                         <a href="{{ route('pengajuan.check.pincab.status.detail',$item->id_pengajuan) }}" class="dropdown-item">Review</a>
                                         <a href="#" class="dropdown-item" data-toggle="modal" data-id="{{ $item->id_pengajuan }}" data-target="#exampleModal-{{$item->id_pengajuan}}">Disetujui / Ditolak</a>
                                         <a target="_blank" href="{{ route('cetak',$item->id_pengajuan) }}" class="dropdown-item" >Cetak</a>
-                                        <a target="_blank" href="{{ route('cetak-sppk',$item->id_pengajuan)}}" class="dropdown-item" >Cetak SPPK</a>
-                                        <a target="_blank" href="{{ route('cetak-pk',$item->id_pengajuan)}}" class="dropdown-item" >Cetak PK</a>
-                                        <a target="_blank" href="{{ route('cetak-po',$item->id_pengajuan)}}" class="dropdown-item" >Cetak PO</a>
-                                        <a href="{{ route('upload-file') }}" class="dropdown-item">Upload File</a>
+                                        @if ($item->skema_kredit == 'KKB')
+                                            <a target="_blank" href="{{ route('cetak-sppk',$item->id_pengajuan)}}" class="dropdown-item" >Cetak SPPK</a>
+                                            <a target="_blank" href="{{ route('cetak-pk',$item->id_pengajuan)}}" class="dropdown-item" >Cetak PK</a>
+                                            <a target="_blank" href="{{ route('cetak-po',$item->id_pengajuan)}}" class="dropdown-item" >Cetak PO</a>
+                                            <a href="{{ route('upload-file', $item->id_pengajuan) }}" class="dropdown-item">Upload File</a>
+                                        @endif
                                     </div>
                                 </div>
                             @elseif ($item->posisi == 'Selesai')
@@ -225,7 +227,12 @@
                                     </svg>
                                 </button>
                                 <div class="dropdown-menu">
-                                    <a href="/upload-file" class="dropdown-item">Upload File</a>
+                                    @if ($item->skema_kredit == 'KKB')
+                                        <a target="_blank" href="{{ route('cetak-sppk',$item->id_pengajuan)}}" class="dropdown-item" >Cetak SPPK</a>
+                                        <a target="_blank" href="{{ route('cetak-pk',$item->id_pengajuan)}}" class="dropdown-item" >Cetak PK</a>
+                                        <a target="_blank" href="{{ route('cetak-po',$item->id_pengajuan)}}" class="dropdown-item" >Cetak PO</a>
+                                        <a href="{{ route('upload-file', $item->id_pengajuan) }}" class="dropdown-item">Upload File</a>
+                                    @endif
                                 </div>
                             </div>
                             @else
