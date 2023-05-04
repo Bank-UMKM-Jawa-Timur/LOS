@@ -8,12 +8,12 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="border-bottom-primary">
-                @php
-                    $page = Request::get('page');
-                    $no = !$page || $page == 1 ? 1 : ($page - 1) * 10 + 1;
+            @php
+                $page = Request::get('page');
+                $no = !$page || $page == 1 ? 1 : ($page - 1) * 10 + 1;
                 @endphp
-                @foreach ($dataMerk as $item)
+            @foreach ($dataMerk as $item)
+                <tr class="border-bottom-primary">
                     <td class="text-center text-muted">{{ $no }}</td>
                     <td>
                         {{ $item->merk }}
@@ -37,8 +37,8 @@
                     @php
                         $no++;
                     @endphp
-                @endforeach
-            </tr>
+                </tr>
+            @endforeach
         </tbody>
     </table>
     <div class="pull-right">
