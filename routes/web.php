@@ -9,6 +9,8 @@ use \App\Http\Controllers\DesaController;
 use \App\Http\Controllers\CabangController;
 use App\Http\Controllers\MasterItemController;
 use \App\Http\Controllers\UserController;
+use \App\Http\Controllers\MerkController;
+use \App\Http\Controllers\TipeController;
 use \App\Http\Controllers\CetakSuratController;
 /*
 |--------------------------------------------------------------------------
@@ -79,6 +81,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('desa', DesaController::class);
     Route::resource('cabang', CabangController::class);
     Route::resource('user', UserController::class);
+    Route::resource('merk', MerkController::class);
+    Route::resource('tipe', TipeController::class);
     Route::get('change-password', [UserController::class, 'changePassword'])->name('change_password');
     Route::put('change-password/{id}', [UserController::class, 'updatePassword'])->name('update_password');
     // master item

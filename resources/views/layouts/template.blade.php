@@ -78,6 +78,8 @@
                         <a class="dropdown-item" href="{{ route('desa.index') }}">Master Desa</a>
                         <a class="dropdown-item" href="{{ route('user.index') }}">Master User</a>
                         <a class="dropdown-item" href="{{ route('master-item.index') }}">Master Item</a>
+                        <a class="dropdown-item" href="{{ route('merk.index') }}">Master Merk</a>
+                        <a class="dropdown-item" href="{{ route('tipe.index') }}">Master Tipe</a>
                     </div>
                 </li>
                 @endif
