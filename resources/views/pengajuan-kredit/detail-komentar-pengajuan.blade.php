@@ -918,13 +918,6 @@
                                                                     ->where('komentar.id_pengajuan', $comment->id_pengajuan)
                                                                     ->where('detail_komentar.id_user', $comment->id_penyelia)
                                                                     ->get();
-                                                                if ($dataUmum->id_cabang == 1) {
-                                                                    $getKomentarPBP3 = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', 'detail_komentar.id_komentar')
-                                                                        ->where('detail_komentar.id_item', $itemJawabanTiga->id_item)
-                                                                        ->where('komentar.id_pengajuan', $comment->id_pengajuan)
-                                                                        ->where('detail_komentar.id_user', $comment->id_pbp)
-                                                                        ->get();
-                                                                }
                                                             @endphp
                                                             @foreach ($dataDetailJawabanTiga as $item)
                                                                 @if ($item->skor_penyelia != null && $item->skor_penyelia != '')
@@ -941,6 +934,15 @@
                                                             @endforeach
                                                         @endif
                                                     @endif
+                                                    @php
+                                                        if ($dataUmum->id_cabang == 1) {
+                                                            $getKomentarPBP3 = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', 'detail_komentar.id_komentar')
+                                                                ->where('detail_komentar.id_item', $itemJawabanTiga->id_item)
+                                                                ->where('komentar.id_pengajuan', $comment->id_pengajuan)
+                                                                ->where('detail_komentar.id_user', $comment->id_pbp)
+                                                                ->get();
+                                                        }
+                                                    @endphp
                                                 @endforeach
                                             </div>
                                         </div>
