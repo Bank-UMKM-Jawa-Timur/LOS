@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\MerkModel;
+use App\Models\TipeModel;
 use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -28,6 +30,7 @@ class TipeController extends Controller
         $this->param['pageTitle'] = 'List Tipe';
         $this->param['btnText'] = 'Tambah Tipe';
         $this->param['btnLink'] = route('tipe.create');
+        $this->param['dataTipe'] = TipeModel::paginate(10);
 
         return \view('tipe.index', $this->param);
     }
@@ -42,6 +45,7 @@ class TipeController extends Controller
         $this->param['pageTitle'] = 'Tambah Tipe';
         $this->param['btnText'] = 'List Tipe';
         $this->param['btnLink'] = route('tipe.index');
+        $this->param['dataMerk'] = MerkModel::all();
 
         return \view('tipe.create', $this->param);
     }
@@ -52,7 +56,7 @@ class TipeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(tipeRequest $request)
+    public function store(Request $request)
     {
         /*
         TODO
@@ -60,6 +64,30 @@ class TipeController extends Controller
         2. simpan ke db
         3. redirect ke index
         */
+
+        $request->validate([
+            'id_merk' => 'required',
+            'tipe' => 'required'
+        ], [
+            'id_merk.required' => 'Merk harus diisi.',
+            'tipe.required' => 'Tipe harus diisi.'
+        ]);
+
+        try{
+            TipeModel::insert([
+                'id_merk' => $request->id_merk,
+                'tipe' => $request->tipe,
+                'created_at' => now()
+            ]);
+
+            return redirect()->route('tipe.index')->withStatus('Data berhasil ditambahkan.');
+        } catch(Exception $e){
+            DB::rollBack();
+            return redirect()->route('tipe.index')->withStatus('Terjadi kesalahan. '.$e->getMessage());
+        } catch(QueryException $e){
+            DB::rollBack();
+            return redirect()->route('tipe.index')->withStatus('Terjadi kesalahan. '.$e->getMessage());
+        }
     }
 
     /**
@@ -82,10 +110,11 @@ class TipeController extends Controller
     public function edit($id)
     {
         $this->param['pageTitle'] = 'Edit Tipe';
-        $tipe = tipe::find($id);
+        $tipe = TipeModel::find($id);
         $this->param['tipe'] = $tipe;
         $this->param['btnText'] = 'List Tipe';
         $this->param['btnLink'] = route('tipe.index');
+        $this->param['dataMerk'] = MerkModel::all();
         
         return view('tipe.edit', $this->param);
     }
@@ -99,7 +128,29 @@ class TipeController extends Controller
      */
     public function update(Request $request, $id)
     {
-    
+        $tipe = TipeModel::findOrFail($id);
+
+        $request->validate([
+            'id_merk' => 'required',
+            'tipe' => 'required'
+        ], [
+            'id_merk.required' => 'Merk harus diisi.',
+            'tipe.required' => 'Tipe harus diisi.'
+        ]);
+        try{
+            $tipe->id_merk = $request->id_merk;
+            $tipe->tipe = $request->tipe;
+            $tipe->updated_at = now();
+            $tipe->save();
+
+            return redirect()->route('tipe.index')->withStatus('Data berhasil diubah.');
+        } catch(Exception $e){
+            DB::rollBack();
+            return redirect()->route('tipe.index')->withStatus('Terjadi kesalahan. '.$e->getMessage());
+        } catch(QueryException $e){
+            DB::rollBack();
+            return redirect()->route('tipe.index')->withStatus('Terjadi kesalahan. '.$e->getMessage());
+        }
     }
 
     /**
@@ -110,6 +161,17 @@ class TipeController extends Controller
      */
     public function destroy($id)
     {
+        try{
+            $tipe = TipeModel::findOrFail($id);
+            $tipe->delete();
 
+            return redirect()->route('tipe.index')->withStatus('Data berhasil dihapus.');
+        } catch(Exception $e){
+            DB::rollBack();
+            return redirect()->route('tipe.index')->withStatus('Terjadi kesalahan. '.$e->getMessage());
+        } catch(QueryException $e){
+            DB::rollBack();
+            return redirect()->route('tipe.index')->withStatus('Terjadi kesalahan. '.$e->getMessage());
+        }
     }
 }

@@ -1,4 +1,4 @@
-<form action="" method="POST">
+<form action="{{ route('merk.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
     <div class="form-group row col-md-6">
         <label>Nama Merk Kendaraan</label>
