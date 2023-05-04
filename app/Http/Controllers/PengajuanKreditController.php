@@ -2128,4 +2128,17 @@ class PengajuanKreditController extends Controller
 
         return back()->withStatus('Berhasil menghapus draft');
     }
+
+    public function postFileKKB(Request $request)
+    {
+        try{
+            $id = $request->id_pengajuan;
+
+            
+        } catch(Exception $e){
+
+        } catch(QueryException $e){
+
+        }
+    }
 }
