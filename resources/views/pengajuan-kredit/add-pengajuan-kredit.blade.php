@@ -67,6 +67,7 @@ function rupiah($angka){
         @csrf
         <input type="hidden" name="id_nasabah" value="{{ $duTemp?->id }}">
         <input type="hidden" name="progress" class="progress">
+
         <div class="form-wizard active" data-index='0' data-done='true' id="wizard-data-umum">
             <div class="row">
                 {{-- Input hidden for Skema Kredit --}}
@@ -357,11 +358,83 @@ function rupiah($angka){
                 </div>
             </div>
         </div>
+
+        <div class="form-wizard active" data-index='1' data-done='true' id="wizard-data-umum">
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <span style="color: black; font-weight: bold; font-size: 18px;">Jenis Kendaraan Roda 2 :</span>
+                </div>
+                <div class="form-group col-md-12">
+                    <label for="">Merk/Type</label>
+                    <input type="text" name="merk" id="merk" class="form-control @error('merk') is-invalid @enderror"
+                        placeholder="Merk/Type Kendaraan" value="{{ $duTemp?->merk ?? '' }}">
+                    @error('merk')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="">Tahun</label>
+                    <input type="number" name="tahun" id="tahun" class="form-control @error('tahun') is-invalid @enderror"
+                        placeholder="Tahun Kendaraan" value="{{ $duTemp?->tahun ?? '' }}" min="2000">
+                    @error('tahun')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="">Warna</label>
+                    <input type="text" name="warna" id="warna" class="form-control @error('warna') is-invalid @enderror"
+                        placeholder="Warna Kendaraan" value="{{ $duTemp?->warna ?? '' }}">
+                    @error('warna')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="form-group col-md-12">
+                    <span style="color: black">Keterangan :</span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="">Pemesanan</label>
+                    <input type="text" name="pemesanan" id="pemesanan" class="form-control @error('pemesanan') is-invalid @enderror"
+                        placeholder="Pemesanan Kendaraan" value="{{ $duTemp?->pemesanan ?? '' }}">
+                    @error('pemesanan')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="">Sejumlah</label>
+                    <input type="number" name="sejumlah" id="sejumlah" class="form-control @error('sejumlah') is-invalid @enderror"
+                        placeholder="Jumlah Kendaraan" value="{{ $duTemp?->sejumlah ?? '' }}">
+                    @error('sejumlah')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="">Harga</label>
+                    <input type="number" name="harga" id="harga" class="form-control @error('harga') is-invalid @enderror"
+                        placeholder="Harga Kendaraan" value="{{ $duTemp?->harga ?? '' }}">
+                    @error('harga')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+            </div>
+        </div>
+
         <input type="text" id="jumlahData" name="jumlahData" hidden value="{{ count($dataAspek) + 1 }}">
 
         @foreach ($dataAspek as $key => $value)
             @php
-                $key += 1;
+                $key += 2;
                 // check level 2
                 $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'level', 'opsi_jawaban', 'id_parent')
                     ->where('level', 2)
@@ -980,6 +1053,9 @@ function rupiah($angka){
     <script>
         $(document).ready(function() {
             let valSkema = $("#skema").val();
+            const skemaSelect = $('#skema');
+            const dataPoLink = $('a:contains("Data PO")');
+
             if(valSkema == null || valSkema == ''){
                 $('#exampleModal').modal('show');
             }
@@ -989,7 +1065,15 @@ function rupiah($angka){
                 console.log(valSkema);
 
                 $("#skema_kredit").val(valSkema);
-            })
+            });
+
+            skemaSelect.on('change', function() {
+                if (skemaSelect.val() === 'KKB') {
+                    dataPoLink.show();
+                } else {
+                    dataPoLink.hide();
+                }
+            });
         });
 
         @if($nib != '')

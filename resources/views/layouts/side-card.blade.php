@@ -8,10 +8,15 @@
                     <input type="hidden" name="answerFilled" class="answerFilled">
                     <a href="#"><span><i>0%</i></span> Data Umum</a>
                 </li>
+                <li data-index='1'>
+                    <input type="hidden" name="answer" class="answer">
+                    <input type="hidden" name="answerFilled" class="answerFilled">
+                    <a href="#" class="data-po-link" style="display: none"><span><i>0%</i></span> Data PO</a>
+                </li>
                 <li><label>PEMBAHASAN PER ASPEK</label></li>
                 @foreach ($dataAspek as $key => $value)
                     @php
-                        $key += 1;
+                        $key += 2;
                     @endphp
                     <li data-index='{{ $key }}'
                         class="{{ request()->routeIs('pengajuan-kredit.edit') == 'pengajuan-kredit' ? 'active' : '' }}">

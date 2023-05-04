@@ -176,6 +176,17 @@ a {
 .side-wizard ul li:not(.last) a span::before {
     content: "";
     position: absolute;
+    /* width: 1px; */
+    height: 100%;
+    background: #c2c7cf;
+    bottom: -120%;
+    left: 50%;
+}
+
+/* only for data po */
+.side-wizard ul li:not(.last) a:not(.data-po-link) span::before {
+    content: "";
+    position: absolute;
     width: 1px;
     height: 100%;
     background: #c2c7cf;
