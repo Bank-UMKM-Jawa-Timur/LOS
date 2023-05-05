@@ -34,7 +34,7 @@
             @csrf
 
             {{-- calon nasabah --}}
-            <div class="card">
+            <div class="card mb-3">
                 <div class="card-header bg-info color-white font-weight-bold" data-toggle="collapse" href="#cardDataUmum">
                     Data Umum
                 </div>
@@ -420,7 +420,103 @@
                     </div>
                 </div>
             </div>
-            <br>
+
+            <div class="card mb-3">
+                <div class="card-header bg-info font-weight-bold color-white" data-toggle="collapse" href="#cardDataPO">
+                    Data PO
+                </div>
+                <div class="card-body collapse multi-collapse" id="cardDataPO">
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label">Merk/Type</label>
+                        <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                            <div class="d-flex justify-content-end">
+                                <div style="width: 20px">
+                                    :
+                                </div>
+                            </div>
+                        </label>
+                        <div class="col-sm-7">
+                            <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                                value="">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label">Tahun</label>
+                        <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                            <div class="d-flex justify-content-end">
+                                <div style="width: 20px">
+                                    :
+                                </div>
+                            </div>
+                        </label>
+                        <div class="col-sm-7">
+                            <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                                value="">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label">Warna</label>
+                        <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                            <div class="d-flex justify-content-end">
+                                <div style="width: 20px">
+                                    :
+                                </div>
+                            </div>
+                        </label>
+                        <div class="col-sm-7">
+                            <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                                value="">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label">Pemesan</label>
+                        <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                            <div class="d-flex justify-content-end">
+                                <div style="width: 20px">
+                                    :
+                                </div>
+                            </div>
+                        </label>
+                        <div class="col-sm-7">
+                            <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                                value="">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label">Sejumlah</label>
+                        <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                            <div class="d-flex justify-content-end">
+                                <div style="width: 20px">
+                                    :
+                                </div>
+                            </div>
+                        </label>
+                        <div class="col-sm-7">
+                            <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                                value="">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group row">
+                        <label for="staticEmail" class="col-sm-3 col-form-label">Harga</label>
+                        <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                            <div class="d-flex justify-content-end">
+                                <div style="width: 20px">
+                                    :
+                                </div>
+                            </div>
+                        </label>
+                        <div class="col-sm-7">
+                            <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                                value="">
+                        </div>
+                    </div>
+                </div>
+            </div>
             {{-- aspek management --}}
             @foreach ($dataAspek as $itemAspek)
                 @php

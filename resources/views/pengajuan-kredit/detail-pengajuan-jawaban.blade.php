@@ -451,6 +451,77 @@
             </div>
         </div>
 
+        <div class="form-wizard active" data-index='1' data-done='true'>
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <span style="color: black; font-weight: bold; font-size: 18px;">Jenis Kendaraan Roda 2 :</span>
+                </div>
+                <div class="form-group col-md-12">
+                    <label for="">Merk/Type</label>
+                    <input type="text" name="merk" id="merk" class="form-control @error('merk') is-invalid @enderror"
+                        placeholder="Merk/Type Kendaraan" value="{{ $duTemp?->merk ?? '' }}">
+                    @error('merk')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="">Tahun</label>
+                    <input type="number" name="tahun" id="tahun" class="form-control @error('tahun') is-invalid @enderror"
+                        placeholder="Tahun Kendaraan" value="{{ $duTemp?->tahun ?? '' }}" min="2000">
+                    @error('tahun')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="">Warna</label>
+                    <input type="text" name="warna" id="warna" class="form-control @error('warna') is-invalid @enderror"
+                        placeholder="Warna Kendaraan" value="{{ $duTemp?->warna ?? '' }}">
+                    @error('warna')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="form-group col-md-12">
+                    <span style="color: black">Keterangan :</span>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="">Pemesanan</label>
+                    <input type="text" name="pemesanan" id="pemesanan" class="form-control @error('pemesanan') is-invalid @enderror"
+                        placeholder="Pemesanan Kendaraan" value="{{ $duTemp?->pemesanan ?? '' }}">
+                    @error('pemesanan')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="">Sejumlah</label>
+                    <input type="number" name="sejumlah" id="sejumlah" class="form-control @error('sejumlah') is-invalid @enderror"
+                        placeholder="Jumlah Kendaraan" value="{{ $duTemp?->sejumlah ?? '' }}">
+                    @error('sejumlah')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="">Harga</label>
+                    <input type="number" name="harga" id="harga" class="form-control @error('harga') is-invalid @enderror"
+                        placeholder="Harga Kendaraan" value="{{ $duTemp?->harga ?? '' }}">
+                    @error('harga')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+            </div>
+        </div>
+
         <input type="hidden" id="jumlahData" name="jumlahData" hidden value="{{ count($dataAspek) + 1 }}">
         <input type="hidden" id="id_pengajuan" name="id_pengajuan" value="{{ $dataUmum->id }}">
         @php
@@ -463,7 +534,7 @@
         @endforeach
         @foreach ($dataAspek as $key => $value)
             @php
-                $key += 1;
+                $key += 2;
                 // check level 2
                 $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
                     ->where('level', 2)
