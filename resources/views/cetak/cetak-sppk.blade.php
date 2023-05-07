@@ -71,7 +71,7 @@
 @php
     function rupiah($angka){
 	
-	$hasil_rupiah = number_format($angka,2,',','.');
+	$hasil_rupiah = number_format($angka,0,',','.');
 	return $hasil_rupiah;
 }
 @endphp
@@ -81,10 +81,10 @@
             <tr>
                 <td style="width: 7%">Nomor</td>
                 <td style="width: 1%">:</td>
-                <td style="width: 50%">......................................</td>
-                <td style="width: 18%">Kota .....</td>
+                <td style="width: 50%">............/SPPK/{{ $dataCabang->kode_cabang }}/{{ date('m', strtotime($tglCetak->tgl_cetak_sppk)) }}/{{ date('Y', strtotime($tglCetak->tgl_cetak_sppk)) }}</td>
+                <td style="width: 13%">Kota {{ $dataCabang->cabang }}</td>
                 <td style="width: 1%">,</td>
-                <td>tanggal .....</td>
+                <td>tanggal {{ $tgl }}</td>
             </tr>
             <tr>
                 <td>Kepada</td>
@@ -95,7 +95,7 @@
             <tr>
                 <td style="width: 10px">Yth</td>
                 <td style="padding-left: -100px">.</td>
-                <td>....................................</td>
+                <td>{{ $dataNasabah->nama }}</td>
             </tr>
         </table>
     
@@ -105,7 +105,7 @@
             </tr>
             <tr>
                 <td></td>
-                <td>......................................</td>
+                <td>{{ $dataNasabah->alamat_rumah }}</td>
             </tr>
         </table>
     
@@ -119,7 +119,7 @@
             </tr>
         </table>
     
-        <p>Dengan ini kami beritahukan, bahwa permohonan kredit saudara sesuai buku register nomor ........ tanggal .........., 
+        <p>Dengan ini kami beritahukan, bahwa permohonan kredit saudara sesuai buku register nomor ............/{{ $dataCabang->kode_cabang }}/SPPK/{{ date('m', strtotime($tglCetak->tgl_cetak_sppk)) }}/{{ date('Y', strtotime($tglCetak->tgl_cetak_sppk)) }} tanggal {{ $tgl }}, 
            pada prinsipnya dapat kami setujui dengan ketentuan sebagai berikut:</p>
     
         <table class="table-body">
@@ -163,7 +163,7 @@
                 <td>7.</td>
                 <td style="width: 25%">Angsuran Perbulan</td>
                 <td style="width: 2%">:</td>
-                <td>Rp. ........................</td>
+                <td>Rp. {{ rupiah(intval($installment?->opsi_text) ?? 0) }}</td>
             </tr>
             <tr>
                 <td>8.</td>
@@ -236,7 +236,7 @@
             </tr>
             <tr>
                 <td style="vertical-align: text-top">13.</td>
-                <td>Permohonan kredit Saudara dapat direalisir pada tanggal .................................</td>
+                <td>Permohonan kredit Saudara dapat direalisir paling awal pada 1 hari kerja setelah {{ $tgl }}</td>
             </tr>
             <tr>
                 <td style="vertical-align: text-top">14.</td>
@@ -256,7 +256,7 @@
                 <td style="text-align: center; padding-top: 100px">
                     <table style="width: 100%; text-align: center;">
                         <tr>
-                            <td>(.....................................)</td>
+                            <td>({{ strtoupper($dataNasabah->nama) }})</td>
                         </tr>
                         <tr>
                             <td></td>

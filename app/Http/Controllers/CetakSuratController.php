@@ -17,6 +17,7 @@ class CetakSuratController extends Controller
      * @return \Illuminate\Http\Response
      */
     // protected $param;
+    protected $bulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
     public function index()
     {
         $param['nasabah'] = CalonNasabah::get();
@@ -111,6 +112,18 @@ class CetakSuratController extends Controller
 
     public function cetakSPPk($id)
     {
+        $count = DB::table('log_cetak_kkb')
+            ->where('id_pengajuan', $id)
+            ->count('tgl_cetak_sppk');
+        if($count < 1){
+            DB::table('log_cetak_kkb')
+                ->insert([
+                    'id_pengajuan' => $id,
+                    'tgl_cetak_sppk' => now(),
+                    'tgl_cetak_po' => now()
+                ]);
+        }
+    
         $param['dataNasabah'] = CalonNasabah::select('calon_nasabah.*','kabupaten.id as kabupaten_id','kabupaten.kabupaten','kecamatan.id as kecamatan_id','kecamatan.id_kabupaten','kecamatan.kecamatan','desa.id as desa_id','desa.id_kabupaten','desa.id_kecamatan','desa.desa')
             ->join('kabupaten','kabupaten.id','calon_nasabah.id_kabupaten')
             ->join('kecamatan','kecamatan.id','calon_nasabah.id_kecamatan')
@@ -124,6 +137,18 @@ class CetakSuratController extends Controller
         $param['dataCabang'] = DB::table('cabang')
             ->where('id', $param['dataUmum']->id_cabang)
             ->first();
+
+        $param['tglCetak'] = DB::table('log_cetak_kkb')
+            ->where('id_pengajuan', $id)
+            ->first();
+
+        $indexBulan = intval(date('m', strtotime($param['tglCetak']->tgl_cetak_sppk))) - 1;
+        $param['tgl'] = date('d', strtotime($param['tglCetak']->tgl_cetak_sppk)) . ' ' . $this->bulan[$indexBulan] . ' ' . date('Y', strtotime($param['tglCetak']->tgl_cetak_sppk));
+
+        $param['installment'] = DB::table('jawaban_text')
+            ->where('id_pengajuan', $id)
+            ->where('id_jawaban', 140)
+            ->first() ?? '0';
 
         return view('cetak.cetak-sppk', $param);
     }
@@ -144,11 +169,29 @@ class CetakSuratController extends Controller
             ->where('id', $param['dataUmum']->id_cabang)
             ->first();
 
+        $indexBulan = intval(date('m', strtotime($param['tglCetak']->tgl_cetak_po))) - 1;
+        $param['tgl'] = date('d', strtotime($param['tglCetak']->tgl_cetak_po)) . ' ' . $this->bulan[$indexBulan] . ' ' . date('Y', strtotime($param['tglCetak']->tgl_cetak_po));
+
+        $param['tglCetak'] = DB::table('log_cetak_kkb')
+            ->where('id_pengajuan', $id)
+            ->first();
+
         return view('cetak.cetak-po', $param);
     }
 
     public function cetakPk($id)
     {
+        $count = DB::table('log_cetak_kkb')
+            ->where('id_pengajuan', $id)
+            ->count('tgl_cetak_pk');
+        if($count < 1){
+            DB::table('log_cetak_kkb')
+                ->where('id_pengajuan', $id)
+                ->update([
+                    'tgl_cetak_pk' => now()
+                ]);
+        }
+
         $param['dataNasabah'] = CalonNasabah::select('calon_nasabah.*','kabupaten.id as kabupaten_id','kabupaten.kabupaten','kecamatan.id as kecamatan_id','kecamatan.id_kabupaten','kecamatan.kecamatan','desa.id as desa_id','desa.id_kabupaten','desa.id_kecamatan','desa.desa')
             ->join('kabupaten','kabupaten.id','calon_nasabah.id_kabupaten')
             ->join('kecamatan','kecamatan.id','calon_nasabah.id_kecamatan')
@@ -161,6 +204,13 @@ class CetakSuratController extends Controller
 
         $param['dataCabang'] = DB::table('cabang')
             ->where('id', $param['dataUmum']->id_cabang)
+            ->first();
+
+        $indexBulan = intval(date('m', strtotime($param['tglCetak']->tgl_cetak_pk))) - 1;
+        $param['tgl'] = date('d', strtotime($param['tglCetak']->tgl_cetak_pk)) . ' ' . $this->bulan[$indexBulan] . ' ' . date('Y', strtotime($param['tglCetak']->tgl_cetak_pk));
+
+        $param['tglCetak'] = DB::table('log_cetak_kkb')
+            ->where('id_pengajuan', $id)
             ->first();
             
         return view('cetak.cetak-pk', $param);
