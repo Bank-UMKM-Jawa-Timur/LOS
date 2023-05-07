@@ -19,6 +19,8 @@ use App\Models\PendapatPerAspek;
 use App\Models\DetailPendapatPerAspek;
 use App\Models\JawabanTemp;
 use App\Models\JawabanTempModel;
+use App\Models\MerkModel;
+use App\Models\TipeModel;
 use App\Services\TemporaryService;
 use DateTime;
 use Exception;
@@ -201,6 +203,7 @@ class PengajuanKreditController extends Controller
         $param['duTemp'] = TemporaryService::getNasabahData($request->tempId);
 
         $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
+        $param['dataMerk'] = MerkModel::all();
 
         // dump($param['dataAspek']);
         // dump($param['itemSlik']);
@@ -560,6 +563,20 @@ class PengajuanKreditController extends Controller
                 }
                 // $dataJawabanText->opsi_text = $request->get('informasi')[$key] == null ? '-' : $request->get('informasi')[$key];
                 $dataJawabanText->save();
+            }
+
+            // Data KKB Handler 
+            if($request->skema_kredit == 'KKB'){
+                DB::table('kkb')
+                    ->insert([
+                        'id_pengajuan' => $id_pengajuan,
+                        'tahun_kendaraan' => $request->tahun,
+                        'id_type' => $request->id_tipe,
+                        'warna' => $request->warna_kendaraan,
+                        'keterangan' => 'Pemesanan ' . $request->pemesanan,
+                        'jumlah' => $request->jumlah,
+                        'harga'
+                    ]);
             }
 
             //untuk upload file
@@ -979,6 +996,20 @@ class PengajuanKreditController extends Controller
                 fn ($fileId) => JawabanTextModel::find($fileId)?->delete(),
                 $request->id_delete_file ?? []
             );
+            
+            // Data KKB Handler 
+            if($updatePengajuan->skema_kredit == 'KKB'){
+                DB::table('kkb')
+                    ->where('id_pengajuan', $id)
+                    ->update([
+                        'tahun_kendaraan' => $request->tahun,
+                        'id_type' => $request->id_tipe,
+                        'warna' => $request->warna_kendaraan,
+                        'keterangan' => 'Pemesanan ' . $request->pemesanan,
+                        'jumlah' => $request->jumlah,
+                        'harga'
+                    ]);
+            }
 
             foreach ($request->id_jawaban_text as $key => $value) {
                 if ($request->info_text[$key] == null) continue;
@@ -2195,5 +2226,24 @@ class PengajuanKreditController extends Controller
             DB::rollBack();
             return redirect()->route('pengajuan-kredit.index')->withStatus('Terjadi kesalahan. '.$e->getMessage());
         }
+    }
+
+    public function getMerkKendaraan()
+    {
+        $data = MerkModel::all();
+        
+        return response()->json([
+            'merk' => $data
+        ]);
+    }
+
+    public function getTipeByMerk(Request $request)
+    {
+        $idMerk = $request->get('id_merk');
+        $data = TipeModel::where('id_merk', $idMerk)->get();
+
+        return response()->json([
+            'tipe' => $data
+        ]);
     }
 }

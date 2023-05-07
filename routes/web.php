@@ -108,6 +108,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/cetak-sppk/{id}', [CetakSuratController::class, 'cetakSPPK'])->name('cetak-sppk');
     Route::get('/cetak-po/{id}', [CetakSuratController::class, 'cetakPO'])->name('cetak-po');
     Route::get('/cetak-pk/{id}', [CetakSuratController::class, 'cetakPK'])->name('cetak-pk');
+
+    Route::get('/get-merk-kendaraan', [PengajuanKreditController::class, 'getMerkKendaraan'])->name('get-merk-kendaraan');
+    Route::get('/get-tipe-kendaraan', [PengajuanKreditController::class, 'getTipeByMerk'])->name('get-tipe-kendaraan');
 });
 
 require __DIR__ . '/auth.php';
