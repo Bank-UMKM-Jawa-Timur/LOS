@@ -360,7 +360,7 @@ function rupiah($angka){
             </div>
         </div>
 
-        <div class="form-wizard" data-index='1' data-done='true' id="wizard-data-umum">
+        <div class="form-wizard" data-index='1' data-done='true' id="wizard-data-po">
             <div class="row">
                 <div class="form-group col-md-12">
                     <span style="color: black; font-weight: bold; font-size: 18px;">Jenis Kendaraan Roda 2 :</span>
@@ -435,7 +435,8 @@ function rupiah($angka){
 
         @foreach ($dataAspek as $key => $value)
             @php
-                $key += 2;
+
+                $key += 1;
                 // check level 2
                 $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'level', 'opsi_jawaban', 'id_parent')
                     ->where('level', 2)
@@ -1057,6 +1058,9 @@ function rupiah($angka){
             const skemaSelect = $('#skema');
             const dataPoLink = $('a:contains("Data PO")');
 
+            const formWizardDivPO = $('#wizard-data-po');
+            const liSideBarPO = $('#form-dataPO');
+
             if(valSkema == null || valSkema == ''){
                 $('#exampleModal').modal('show');
             }
@@ -1073,6 +1077,8 @@ function rupiah($angka){
                     dataPoLink.show();
                 } else {
                     dataPoLink.hide();
+                    formWizardDivPO.attr('data-index', 0);
+                    liSideBarPO.attr('data-index', 0);
                 }
             });
         });
