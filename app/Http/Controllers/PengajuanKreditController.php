@@ -575,7 +575,7 @@ class PengajuanKreditController extends Controller
                         'warna' => $request->warna_kendaraan,
                         'keterangan' => 'Pemesanan ' . $request->pemesanan,
                         'jumlah' => $request->jumlah,
-                        'harga'
+                        'harga' => str_replace($find, '', $request->harga)
                     ]);
             }
 
