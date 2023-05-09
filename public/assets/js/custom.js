@@ -214,6 +214,7 @@
 
         $(".btn-next").click(function(e) {
             e.preventDefault();
+            let valSkema = $("#skema").val();
             var indexNow = $(".form-wizard.active").data('index')
             setPercentage(indexNow + 1);
             if(indexNow + 1 == 3){
@@ -221,7 +222,11 @@
             }
 
             if(indexNow != 0){
-                saveDataTemporary(indexNow)
+                if(indexNow == 1){
+                    if(valSkema != 'KKB'){
+                        saveDataTemporary(indexNow)
+                    }
+                }
             }
 
             if(cekNpwp(indexNow)[0]){
@@ -240,6 +245,9 @@
                 setPercentage(indexNow)
             }
             $("#npwp").closest('.form-group').find("label").html(cekNpwp(indexNow)[1])
+            cekWizard()
+            cekBtn(true)
+            setPercentage(indexNow)
         })
 
         $(".btn-prev").click(function(e) {

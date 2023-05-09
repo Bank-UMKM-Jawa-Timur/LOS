@@ -567,14 +567,14 @@ class PengajuanKreditController extends Controller
 
             // Data KKB Handler 
             if($request->skema_kredit == 'KKB'){
-                DB::table('kkb')
+                DB::table('data_po')
                     ->insert([
                         'id_pengajuan' => $id_pengajuan,
                         'tahun_kendaraan' => $request->tahun,
                         'id_type' => $request->id_tipe,
-                        'warna' => $request->warna_kendaraan,
+                        'warna' => $request->warna,
                         'keterangan' => 'Pemesanan ' . $request->pemesanan,
-                        'jumlah' => $request->jumlah,
+                        'jumlah' => $request->sejumlah,
                         'harga' => str_replace($find, '', $request->harga)
                     ]);
             }
@@ -803,6 +803,7 @@ class PengajuanKreditController extends Controller
             'pengajuan.tanggal',
             'pengajuan.posisi',
             'pengajuan.tanggal_review_penyelia',
+            'pengajuan.skema_kredit',
             'calon_nasabah.id as id_calon_nasabah',
             'calon_nasabah.nama',
             'calon_nasabah.alamat_rumah',
@@ -830,6 +831,15 @@ class PengajuanKreditController extends Controller
         $param['allKec'] = Kecamatan::where('id_kabupaten', $param['dataUmum']->id_kabupaten)->get();
         $param['allDesa'] = Desa::where('id_kecamatan', $param['dataUmum']->id_kecamatan)->get();
         $param['pendapatDanUsulanStaf'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff')->first();
+        if($param['dataUmum']->skema_kredit == 'KKB'){
+            $param['dataMerk'] = MerkModel::all();
+            $param['dataPO'] = DB::table('data_po')
+                ->where('id_pengajuan', $id)
+                ->first();
+            $param['dataPOMerk'] = DB::table('mst_tipe')
+                ->where('id', $param['dataPO']->id_type)
+                ->first();
+        }
 
         // return JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama', 'item.opsi_jawaban')
         //                                 ->join('item', 'jawaban_text.id_jawaban', 'item.id')
@@ -999,14 +1009,14 @@ class PengajuanKreditController extends Controller
             
             // Data KKB Handler 
             if($updatePengajuan->skema_kredit == 'KKB'){
-                DB::table('kkb')
+                DB::table('data_po')
                     ->where('id_pengajuan', $id)
                     ->update([
                         'tahun_kendaraan' => $request->tahun,
                         'id_type' => $request->id_tipe,
-                        'warna' => $request->warna_kendaraan,
+                        'warna' => $request->warna,
                         'keterangan' => 'Pemesanan ' . $request->pemesanan,
-                        'jumlah' => $request->jumlah,
+                        'jumlah' => $request->sejumlah,
                         'harga'
                     ]);
             }
