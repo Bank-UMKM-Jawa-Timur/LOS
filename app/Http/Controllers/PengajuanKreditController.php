@@ -1257,6 +1257,7 @@ class PengajuanKreditController extends Controller
                 'pengajuan.tanggal',
                 'pengajuan.posisi',
                 'pengajuan.tanggal_review_penyelia',
+                'pengajuan.skema_kredit',
                 'calon_nasabah.id as id_calon_nasabah',
                 'calon_nasabah.nama',
                 'calon_nasabah.alamat_rumah',
@@ -1287,6 +1288,15 @@ class PengajuanKreditController extends Controller
                 ->find($id);
             $param['pendapatDanUsulanStaf'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff')->first();
             $param['pendapatDanUsulanPenyelia'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_penyelia')->first();
+            if($param['dataUmumNasabah']->skema_kredit == 'KKB'){
+                $param['dataMerk'] = MerkModel::all();
+                $param['dataPO'] = DB::table('data_po')
+                    ->where('id_pengajuan', $id)
+                    ->first();
+                $param['dataPOMerk'] = DB::table('mst_tipe')
+                    ->where('id', $param['dataPO']->id_type)
+                    ->first();
+            }
 
             return view('pengajuan-kredit.detail-pengajuan-jawaban', $param);
         } elseif (auth()->user()->role == 'PBP') {
@@ -1305,6 +1315,7 @@ class PengajuanKreditController extends Controller
                 'pengajuan.tanggal',
                 'pengajuan.posisi',
                 'pengajuan.tanggal_review_pbp',
+                'pengajuan.skema_kredit',
                 'calon_nasabah.id as id_calon_nasabah',
                 'calon_nasabah.nama',
                 'calon_nasabah.alamat_rumah',
@@ -1336,6 +1347,15 @@ class PengajuanKreditController extends Controller
             $param['pendapatDanUsulanStaf'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff')->first();
             $param['pendapatDanUsulanPenyelia'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_penyelia')->first();
             $param['pendapatDanUsulanPBP'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_pbp')->first();
+            if($param['dataUmumNasabah']->skema_kredit == 'KKB'){
+                $param['dataMerk'] = MerkModel::all();
+                $param['dataPO'] = DB::table('data_po')
+                    ->where('id_pengajuan', $id)
+                    ->first();
+                $param['dataPOMerk'] = DB::table('mst_tipe')
+                    ->where('id', $param['dataPO']->id_type)
+                    ->first();
+            }
 
             return view('pengajuan-kredit.detail-pengajuan-jawaban-pbp', $param);
         } else {
@@ -1647,7 +1667,7 @@ class PengajuanKreditController extends Controller
             ->join('desa', 'desa.id', 'calon_nasabah.id_desa')
             ->where('calon_nasabah.id_pengajuan', $id)
             ->first();
-        $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang')
+        $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit')
             ->find($id);
         $param['comment'] = KomentarModel::where('id_pengajuan', $id)->first();
         // $param['jawabanpengajuan'] = JawabanPengajuanModel::select('jawaban.id','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','option.id as id_option','option.option as name_option','option.id_item','item.id as id_item','item.nama','item.level','item.id_parent')
@@ -1656,6 +1676,14 @@ class PengajuanKreditController extends Controller
         //                             ->where('jawaban.id_pengajuan',$id)
         //                             ->get();
         $param['pendapatDanUsulan'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff', 'komentar_penyelia', 'komentar_pincab', 'komentar_pbp')->first();
+        if($param['dataUmum']->skema_kredit == 'KKB'){
+            $param['dataPO'] = DB::table('data_po')
+                ->where('id_pengajuan', $id)
+                ->join('mst_tipe', 'data_po.id_type', 'mst_tipe.id')
+                ->join('mst_merk', 'mst_tipe.id_merk', 'mst_merk.id')
+                ->select('data_po.*', 'mst_tipe.tipe', 'mst_merk.merk')
+                ->first();
+        }
 
         return view('pengajuan-kredit.detail-komentar-pengajuan', $param);
     }
