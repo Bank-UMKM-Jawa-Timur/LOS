@@ -196,6 +196,10 @@
             $('.progress').val(result);
             console.log(allInput);
             console.log(allInputFilled);
+            console.log("Input: "+ttlInput + " index: "+formIndex);
+            console.log("Input Filled: "+ttlInputFilled + " index: "+formIndex);
+            console.log("Select: "+ttlSelect + " index: "+formIndex);
+            console.log("Select Filled: "+ttlSelectFilled + " index: "+formIndex);
         }
 
         function cekNpwp(indexNow) {
@@ -217,9 +221,6 @@
             let valSkema = $("#skema").val();
             var indexNow = $(".form-wizard.active").data('index')
             setPercentage(indexNow + 1);
-            if(indexNow + 1 == 3){
-                $('#kategori_jaminan_tambahan').trigger('change');
-            }
 
             if(indexNow != 0){
                 if(indexNow == 1){
@@ -227,6 +228,7 @@
                         saveDataTemporary(indexNow)
                     }
                 }
+                saveDataTemporary(indexNow)
             }
 
             if(cekNpwp(indexNow)[0]){
@@ -274,9 +276,10 @@
         setPercentage(0);
 
         if((new URLSearchParams(window.location.href)).get('continue')) {
-            for(i = 1; i <= 7; i++) {
+            for(i = 0; i <= 7; i++) {
                 openWizard(i);
                 setPercentage(i);
             }
+            $('#kategori_jaminan_tambahan').trigger('change');
         }
     });
