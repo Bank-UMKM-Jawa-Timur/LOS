@@ -1,4 +1,14 @@
 @extends('layouts.template')
+@php
+$dataIndex = match ($dataUmum->skema_kredit) {
+    'PKPJ' => 1,
+    'KKB' => 2,
+    'Talangan Umroh' => 1,
+    'Prokesra' => 1,
+    'Kusuma' => 1,
+    null => 1
+};
+@endphp
 @section('content')
     @include('components.notification')
 
@@ -542,7 +552,7 @@
             @endif
         </div>
 
-        <input type="hidden" id="jumlahData" name="jumlahData" hidden value="{{ count($dataAspek) + 1 }}">
+        <input type="hidden" id="jumlahData" name="jumlahData" hidden value="{{ count($dataAspek) + $dataIndex }}">
         <input type="hidden" id="id_pengajuan" name="id_pengajuan" value="{{ $dataUmum->id }}">
         @php
             $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor')
@@ -554,7 +564,7 @@
         @endforeach
         @foreach ($dataAspek as $key => $value)
             @php
-                $key += 2;
+                $key += $dataIndex;
                 // check level 2
                 $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
                     ->where('level', 2)
@@ -1124,7 +1134,7 @@
         @endforeach
         {{-- pendapat dan usulan --}}
         @if (Auth::user()->role == 'PBP')    
-            <div class="form-wizard" data-index='{{ count($dataAspek) + 1 }}' data-done='true'>
+            <div class="form-wizard" data-index='{{ count($dataAspek) + $dataIndex }}' data-done='true'>
                 <div class="row">
                     <div class="form-group col-md-12">
                         <label for="">Pendapat dan Usulan Staf Kredit</label>
@@ -1158,7 +1168,7 @@
                 </div>
             </div>
         @else    
-            <div class="form-wizard" data-index='{{ count($dataAspek) + 1 }}' data-done='true'>
+            <div class="form-wizard" data-index='{{ count($dataAspek) + $dataIndex }}' data-done='true'>
                 <div class="row">
                     <div class="form-group col-md-12">
                         <label for="">Pendapat dan Usulan Staf Kredit</label>
@@ -1201,7 +1211,9 @@
     <script>
         $(window).on('load', function(){
             $("#id_merk").trigger("change");
-        })
+        });
+
+        @if ($dataUmum->skema_kredit == 'KKB')
         $("#id_merk").change(function(){
             let val = $(this).val();
             
@@ -1221,8 +1233,10 @@
                         })
                     }
                 }
-            })
-    })
+            });
+        });
+        @endif
+        
         var jumlahData = $('#jumlahData').val();
         for (let index = 0; index <= jumlahData; index++) {
             for (let index = 0; index <= parseInt(jumlahData); index++) {

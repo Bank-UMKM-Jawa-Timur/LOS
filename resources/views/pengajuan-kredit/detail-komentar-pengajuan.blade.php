@@ -1,4 +1,14 @@
 @extends('layouts.template')
+@php
+$dataIndex = match ($dataUmum->skema_kredit) {
+    'PKPJ' => 1,
+    'KKB' => 2,
+    'Talangan Umroh' => 1,
+    'Prokesra' => 1,
+    'Kusuma' => 1,
+    null => 1
+};
+@endphp
 @section('content')
     @include('components.notification')
 

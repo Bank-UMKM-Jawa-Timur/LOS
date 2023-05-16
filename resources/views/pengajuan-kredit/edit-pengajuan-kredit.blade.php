@@ -1,6 +1,16 @@
 @extends('layouts.template')
+@php
+$dataIndex = match ($dataUmum->skema_kredit) {
+    'PKPJ' => 1,
+    'KKB' => 2,
+    'Talangan Umroh' => 1,
+    'Prokesra' => 1,
+    'Kusuma' => 1,
+    null => 1
+};
+@endphp
 @section('content')
-    @include('components.notification')
+@include('components.notification')
     <style>
         .form-wizard .sub label:not(.info) {
             font-weight: 400;
@@ -472,7 +482,7 @@
                 </div>
             </div>
         @endif
-        <input type="text" id="jumlahData" name="jumlahData" hidden value="{{ count($dataAspek) + 1 }}">
+        <input type="text" id="jumlahData" name="jumlahData" hidden value="{{ count($dataAspek) + $dataIndex }}">
         @php
             $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban')
                 ->where('id_pengajuan', $dataUmum->id)
@@ -483,7 +493,7 @@
         @endforeach
         @foreach ($dataAspek as $key => $value)
             @php
-                $key += 1;
+                $key += $dataIndex;
                 // check level 2
                 $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'level', 'opsi_jawaban', 'id_parent')
                     ->where('level', 2)
@@ -1213,7 +1223,7 @@
             $detailKomentar = \App\Models\KomentarModel::where('id_pengajuan', $dataUmum->id)
                             ->first();
         @endphp
-        <div class="form-wizard" data-index='{{ count($dataAspek) + 1 }}' data-done='true'>
+        <div class="form-wizard" data-index='{{ count($dataAspek) + $dataIndex }}' data-done='true'>
             <div class="row">
                 <div class="form-group col-md-12">
                     <label for="">Pendapat dan Usulan</label>
@@ -1288,27 +1298,29 @@
     hitungRatioTenorAsuransi();
     hitungRepaymentCapacity();
 
-    $("#id_merk").change(function(){
-        let val = $(this).val();
-        
-        $.ajax({
-            type: "get",
-            url: "{{ route('get-tipe-kendaraan') }}?id_merk="+val,
-            dataType: "json",
-            success: (res) => {
-                if(res){
-                    $("#id_tipe").empty();
-                    $("#id_tipe").append(`<option>Pilih Tipe</option>`)
+    @if ($dataUmum->skema_kredit == 'KKB')
+        $("#id_merk").change(function(){
+            let val = $(this).val();
+            
+            $.ajax({
+                type: "get",
+                url: "{{ route('get-tipe-kendaraan') }}?id_merk="+val,
+                dataType: "json",
+                success: (res) => {
+                    if(res){
+                        $("#id_tipe").empty();
+                        $("#id_tipe").append(`<option>Pilih Tipe</option>`)
 
-                    $.each(res.tipe, function(i, value){
-                        $("#id_tipe").append(`
-                            <option value="${value.id}" ${(value.id == {{ $dataPO->id_type }}) ? 'selected' : ''}>${value.tipe}</option>
-                        `);
-                    })
+                        $.each(res.tipe, function(i, value){
+                            $("#id_tipe").append(`
+                                <option value="${value.id}" ${(value.id == {{ $dataPO->id_type }}) ? 'selected' : ''}>${value.tipe}</option>
+                            `);
+                        })
+                    }
                 }
-            }
+            })
         })
-    })
+    @endif
 
     $('#kabupaten').change(function() {
         var kabID = $(this).val();
