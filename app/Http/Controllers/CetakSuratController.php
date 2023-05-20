@@ -176,6 +176,16 @@ class CetakSuratController extends Controller
 
         $indexBulan = intval(date('m', strtotime($param['tglCetak']->tgl_cetak_po))) - 1;
         $param['tgl'] = date('d', strtotime($param['tglCetak']->tgl_cetak_po)) . ' ' . $this->bulan[$indexBulan] . ' ' . date('Y', strtotime($param['tglCetak']->tgl_cetak_po));
+
+        $param['dataKendaraan'] = DB::table('data_po')
+            ->where('id_pengajuan', $id)
+            ->join('mst_tipe', 'mst_tipe.id', 'data_po.id_type')
+            ->join('mst_merk', 'mst_tipe.id_merk', 'mst_merk.id')
+            ->select('mst_tipe.tipe', 'mst_merk.merk')
+            ->first();
+        $param['dataPO'] = DB::table('data_po')
+            ->where('id_pengajuan', $id)
+            ->first();
         return view('cetak.cetak-po', $param);
     }
 

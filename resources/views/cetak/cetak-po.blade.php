@@ -69,7 +69,7 @@
         <table class="table-header-kota" style="margin-bottom: 10px;">
             <tr>
                 <td style="width: 0.5%">Kota, </td>
-                <td style="width: 50%">......................................</td>
+                <td style="width: 50%">{{ $dataCabang->cabang }}</td>
             </tr>
         </table>
     
@@ -81,15 +81,13 @@
                 <td>PT. BJSC Aquagro Mandiri</td>
             </tr>
             <tr>
-                <td>Melalui PT. BPR JATIM Kantor Cabang</td>
+                <td>Melalui PT. BPR JATIM Kantor Cabang {{ $dataCabang->cabang }}</td>
             </tr>
         </table>
     
         <table class="table-header-almt">
             <tr>
-                <td>Jl</td>
-                <td>.</td>
-                <td>......................................</td>
+                <td>{{ $dataCabang->alamat }}</td>
             </tr>
         </table>
 
@@ -112,7 +110,7 @@
             </tr>
             <tr>
                 <td colspan="3">
-                    <br>Berdasarkan Surat Pemberitahuan Persetujuan Kredit (SPPK) Nomor : ..........., tanggal ........., bersama ini saya melalui PT. BPR Jatim Kantor Cabang ........., melakukan pemesanan kendaraan bermotor kepada PT. BJSC Aquagro Mandiri sebagai berikut :
+                    <br>Berdasarkan Surat Pemberitahuan Persetujuan Kredit (SPPK) Nomor : ............/{{ $dataCabang->kode_cabang }}/SPPK/{{ date('m', strtotime($tglCetak->tgl_cetak_sppk)) }}/{{ date('Y', strtotime($tglCetak->tgl_cetak_sppk)) }}, tanggal {{ $tgl }}, bersama ini saya melalui PT. BPR Jatim Kantor Cabang {{ $dataCabang->cabang }}, melakukan pemesanan kendaraan bermotor kepada PT. BJSC Aquagro Mandiri sebagai berikut :
                 </td>
             </tr>
         </table>
@@ -130,27 +128,27 @@
             <tr>
                 <td style="width: 13%">Merk/Type</td>
                 <td style="width: 2%">:</td>
-                <td>.....................................</td>
+                <td>{{ $dataKendaraan->merk }}</td>
             </tr>
             <tr>
                 <td style="width: 13%">Tahun</td>
                 <td style="width: 2%">:</td>
-                <td>.....................................</td>
+                <td>{{ $dataPO->tahun_kendaraan }}</td>
             </tr>
             <tr>
                 <td style="width: 13%">Warna</td>
                 <td style="width: 2%">:</td>
-                <td>.....................................</td>
+                <td>{{ $dataPO->warna }}</td>
             </tr>
             <tr>
                 <td style="width: 13%">Keterangan</td>
                 <td style="width: 2%">:</td>
-                <td>Pemesanan .......................... sejumlah ........................</td>
+                <td>{{ $dataPO->keterangan }} sejumlah {{ $dataPO->jumlah }}</td>
             </tr>
             <tr>
                 <td style="width: 13%">Harga</td>
                 <td style="width: 2%">:</td>
-                <td>.....................................</td>
+                <td>Rp. {{ number_format($dataPO->harga,0,',','.') }}</td>
             </tr>
         </table>
 
@@ -176,7 +174,7 @@
                 <td style="text-align: center; padding-top: 70px">
                     <table style="width: 100%; text-align: center;">
                         <tr>
-                            <td>__________________________________</td>
+                            <td>{{ $dataNasabah->nama }}</td>
                         </tr>
                     </table>
                 </td>

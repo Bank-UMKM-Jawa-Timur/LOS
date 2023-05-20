@@ -98,7 +98,7 @@
                 <td style="width: 3%"></td>
                 <td style="width: 20%">Pekerjaan</td>
                 <td style="width: 1%">:</td>
-                <td>..................................</td>
+                <td>{{ $dataNasabah->pekerjaan }}</td>
             </tr>
             <tr>
                 <td style="width: 3%"></td>
