@@ -164,6 +164,11 @@ class CetakSuratController extends Controller
             
         $param['dataUmum'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang')
             ->find($id);
+            
+
+        $param['tglCetak'] = DB::table('log_cetak_kkb')
+            ->where('id_pengajuan', $id)
+            ->first();
 
         $param['dataCabang'] = DB::table('cabang')
             ->where('id', $param['dataUmum']->id_cabang)
@@ -171,11 +176,6 @@ class CetakSuratController extends Controller
 
         $indexBulan = intval(date('m', strtotime($param['tglCetak']->tgl_cetak_po))) - 1;
         $param['tgl'] = date('d', strtotime($param['tglCetak']->tgl_cetak_po)) . ' ' . $this->bulan[$indexBulan] . ' ' . date('Y', strtotime($param['tglCetak']->tgl_cetak_po));
-
-        $param['tglCetak'] = DB::table('log_cetak_kkb')
-            ->where('id_pengajuan', $id)
-            ->first();
-
         return view('cetak.cetak-po', $param);
     }
 
@@ -199,6 +199,11 @@ class CetakSuratController extends Controller
             ->where('calon_nasabah.id_pengajuan',$id)
             ->first();
             
+
+        $param['tglCetak'] = DB::table('log_cetak_kkb')
+            ->where('id_pengajuan', $id)
+            ->first();
+
         $param['dataUmum'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang')
             ->find($id);
 
@@ -208,10 +213,6 @@ class CetakSuratController extends Controller
 
         $indexBulan = intval(date('m', strtotime($param['tglCetak']->tgl_cetak_pk))) - 1;
         $param['tgl'] = date('d', strtotime($param['tglCetak']->tgl_cetak_pk)) . ' ' . $this->bulan[$indexBulan] . ' ' . date('Y', strtotime($param['tglCetak']->tgl_cetak_pk));
-
-        $param['tglCetak'] = DB::table('log_cetak_kkb')
-            ->where('id_pengajuan', $id)
-            ->first();
             
         return view('cetak.cetak-pk', $param);
     }
