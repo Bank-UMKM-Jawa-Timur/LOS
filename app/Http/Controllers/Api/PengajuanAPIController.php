@@ -59,7 +59,7 @@ class PengajuanAPIController extends Controller
             ->first();
         $path = asset('..') . '/upload/' . $id . '/po/' .$data->po;
 
-        return response()->json($path);
+        return response()->json(['path' => $path]);
     }
     public function getFileSPPK($id)
     {
@@ -69,7 +69,7 @@ class PengajuanAPIController extends Controller
             ->first();
         $path = asset('..') . '/upload/' . $id . '/sppk/' .$data->sppk;
 
-        return response()->json($path);
+        return response()->json(['path' => $path]);
     }
 
     public function getFilePK($id)
@@ -80,6 +80,6 @@ class PengajuanAPIController extends Controller
             ->first();
         $path = asset('..') . '/upload/' . $id . '/pk/' .$data->pk;
 
-        return response()->json($path);
+        return response()->json(['path' => $path]);
     }
 }
