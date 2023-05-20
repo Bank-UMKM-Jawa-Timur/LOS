@@ -81,7 +81,7 @@ $dataIndex = match ($skema) {
         <div class="form-wizard active" data-index='0' data-done='true' id="wizard-data-umum">
             <div class="row">
                 {{-- Input hidden for Skema Kredit --}}
-                <input type="hidden" name="skema_kredit" id="skema_kredit" value="{{ $duTemp?->skema_kredit ?? '' }}">
+                <input type="hidden" name="skema_kredit" id="skema_kredit" value="{{ $skema ?? '' }}">
 
                 <div class="form-group col-md-6">
                     <label for="">Nama Lengkap</label>

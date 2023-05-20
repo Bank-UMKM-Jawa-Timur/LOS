@@ -67,78 +67,152 @@
 
         function setPercentage(formIndex) {
             var form = ".form-wizard[data-index='" + formIndex + "']"
+            var skema = $("#skema_kredit").val();
 
             var input = $(form + " input")
             var select = $(form + " select")
             var textarea = $(form + " textarea")
             var hidden = $(form + " input[type=hidden]")
 
-            if (form == ".form-wizard[data-index='2']") {
-                var ijin = $(form + " select[name=ijin_usaha]");
-                if(ijin.val() == "nib"){
-                    var ttlInput = -2
-                } else if(ijin.val() == "tidak_ada_legalitas_usaha"){
-                    var ttlInput = -6
-                    console.log(ttlInput);
-                } else if(ijin.val() == "surat_keterangan_usaha"){
-                    var ttlInput = -2
+            if(skema == "KKB"){
+                if(form == ".form-wizard[data-index='2']"){
+                    var ttlInput = 0;
                 }
-            } else if (form == ".form-wizard[data-index='3']") {
-                var checkbox = $(form + " input[type=checkbox]:checked").length;
-                if ($(form + " select[name=kategori_jaminan_utama]").find(':selected').val() == 'Tanah' || $(form + " select[name=kategori_jaminan_utama]").find(':selected').val() == 'Tanah dan Bangunan') {
-                    if ($(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah' || $(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah dan Bangunan') {
-                        if (checkbox == 2) {
-                            var ttlInput = -5
-                        } else if (checkbox == 3){
-                            var ttlInput = -4
-                        } else if (checkbox == 4){
-                            var ttlInput = -3
-                        } else if (checkbox == 5) {
-                            var ttlInput = -2
-                        } else {
-                            if (checkbox == 6) {
-                                var ttlInput = -1
+                else if (form == ".form-wizard[data-index='3']") {
+                    var ijin = $(form + " select[name=ijin_usaha]");
+                    if(ijin.val() == "nib"){
+                        var ttlInput = -2
+                    } else if(ijin.val() == "tidak_ada_legalitas_usaha"){
+                        var ttlInput = -6
+                        console.log(ttlInput);
+                    } else if(ijin.val() == "surat_keterangan_usaha"){
+                        var ttlInput = -2
+                    }
+                } else if (form == ".form-wizard[data-index='4']") {
+                    var checkbox = $(form + " input[type=checkbox]:checked").length;
+                    if ($(form + " select[name=kategori_jaminan_utama]").find(':selected').val() == 'Tanah' || $(form + " select[name=kategori_jaminan_utama]").find(':selected').val() == 'Tanah dan Bangunan') {
+                        if ($(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah' || $(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah dan Bangunan') {
+                            if (checkbox == 2) {
+                                var ttlInput = -5
+                            } else if (checkbox == 3){
+                                var ttlInput = -4
+                            } else if (checkbox == 4){
+                                var ttlInput = -3
+                            } else if (checkbox == 5) {
+                                var ttlInput = -2
                             } else {
-                                var ttlInput = -7
+                                if (checkbox == 6) {
+                                    var ttlInput = -1
+                                } else {
+                                    var ttlInput = -7
+                                }
+                            }
+                        } else {
+                            if (checkbox == 1) {
+                                var ttlInput = -3;
+                            } else if (checkbox == 2) {
+                                var ttlInput = -2;
+                            } else {
+                                if (checkbox == 3) {
+                                    var ttlInput = -1;
+                                } else {
+                                    var ttlInput = -4;
+                                }
                             }
                         }
-                    } else {
-                        if (checkbox == 1) {
-                            var ttlInput = -3;
-                        } else if (checkbox == 2) {
-                            var ttlInput = -2;
-                        } else {
-                            if (checkbox == 3) {
+                        // var ttlInput = -1;
+                    }
+                    else {
+                        if ($(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah' || $(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah dan Bangunan') {
+                            if (checkbox == 1) {
+                                var ttlInput = -2;
+                            } else if (checkbox == 2) {
                                 var ttlInput = -1;
                             } else {
-                                var ttlInput = -4;
+                                if (checkbox == 3) {
+                                    var ttlInput = 0;
+                                } else {
+                                    var ttlInput = -3;
+                                }
                             }
-                        }
-                    }
-                    // var ttlInput = -1;
-                }
-                else {
-                    if ($(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah' || $(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah dan Bangunan') {
-                        if (checkbox == 1) {
-                            var ttlInput = -2;
-                        } else if (checkbox == 2) {
-                            var ttlInput = -1;
                         } else {
-                            if (checkbox == 3) {
-                                var ttlInput = 0;
-                            } else {
-                                var ttlInput = -3;
-                            }
+                            var ttlInput = 0;
                         }
-                    } else {
-                        var ttlInput = 0;
                     }
                 }
-            }
-            else if (form == ".form-wizard[data-index='6']"){
-                var ttlInput = -1;
+                else if (form == ".form-wizard[data-index='7']"){
+                    var ttlInput = -1;
+                } else {
+                    var ttlInput = 0;
+                }
             } else {
-                var ttlInput = 0;
+                if (form == ".form-wizard[data-index='2']") {
+                    var ijin = $(form + " select[name=ijin_usaha]");
+                    if(ijin.val() == "nib"){
+                        var ttlInput = -2
+                    } else if(ijin.val() == "tidak_ada_legalitas_usaha"){
+                        var ttlInput = -6
+                        console.log(ttlInput);
+                    } else if(ijin.val() == "surat_keterangan_usaha"){
+                        var ttlInput = -2
+                    }
+                } else if (form == ".form-wizard[data-index='3']") {
+                    var checkbox = $(form + " input[type=checkbox]:checked").length;
+                    if ($(form + " select[name=kategori_jaminan_utama]").find(':selected').val() == 'Tanah' || $(form + " select[name=kategori_jaminan_utama]").find(':selected').val() == 'Tanah dan Bangunan') {
+                        if ($(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah' || $(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah dan Bangunan') {
+                            if (checkbox == 2) {
+                                var ttlInput = -5
+                            } else if (checkbox == 3){
+                                var ttlInput = -4
+                            } else if (checkbox == 4){
+                                var ttlInput = -3
+                            } else if (checkbox == 5) {
+                                var ttlInput = -2
+                            } else {
+                                if (checkbox == 6) {
+                                    var ttlInput = -1
+                                } else {
+                                    var ttlInput = -7
+                                }
+                            }
+                        } else {
+                            if (checkbox == 1) {
+                                var ttlInput = -3;
+                            } else if (checkbox == 2) {
+                                var ttlInput = -2;
+                            } else {
+                                if (checkbox == 3) {
+                                    var ttlInput = -1;
+                                } else {
+                                    var ttlInput = -4;
+                                }
+                            }
+                        }
+                        // var ttlInput = -1;
+                    }
+                    else {
+                        if ($(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah' || $(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah dan Bangunan') {
+                            if (checkbox == 1) {
+                                var ttlInput = -2;
+                            } else if (checkbox == 2) {
+                                var ttlInput = -1;
+                            } else {
+                                if (checkbox == 3) {
+                                    var ttlInput = 0;
+                                } else {
+                                    var ttlInput = -3;
+                                }
+                            }
+                        } else {
+                            var ttlInput = 0;
+                        }
+                    }
+                }
+                else if (form == ".form-wizard[data-index='6']"){
+                    var ttlInput = -1;
+                } else {
+                    var ttlInput = 0;
+                }
             }
 
             var ttlInputFilled = 0;
@@ -196,10 +270,6 @@
             $('.progress').val(result);
             console.log(allInput);
             console.log(allInputFilled);
-            console.log("Input: "+ttlInput + " index: "+formIndex);
-            console.log("Input Filled: "+ttlInputFilled + " index: "+formIndex);
-            console.log("Select: "+ttlSelect + " index: "+formIndex);
-            console.log("Select Filled: "+ttlSelectFilled + " index: "+formIndex);
         }
 
         function cekNpwp(indexNow) {

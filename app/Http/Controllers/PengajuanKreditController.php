@@ -2211,6 +2211,9 @@ class PengajuanKreditController extends Controller
     public function postFileKKB(Request $request, $id)
     {
         try{
+            // No PO Handler
+            $po = $request->no_po;
+
             // File SPPK Handler
             $folderSPPK = public_path() . '/upload/' . $id . '/sppk/';
             $fileSPPK = $request->sppk;
@@ -2250,6 +2253,12 @@ class PengajuanKreditController extends Controller
             }
             $filePK->move($folderPK, $filenamePK);
 
+            DB::table('data_po')
+                ->where('id_pengajuan', $id)
+                ->update([
+                    'no_po' => $po
+                ]);
+
             DB::table('pengajuan')
                 ->where('id', $id)
                 ->update([
@@ -2258,12 +2267,14 @@ class PengajuanKreditController extends Controller
                     'pk' => $filenamePK
                 ]);
 
-            return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil menambahkan file SPPO, PO, dan PK.');
+            return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil menambahkan nomor PO, file SPPO, file PO, dan file PK.');
         } catch(Exception $e){
             DB::rollBack();
+            dd($e);
             return redirect()->route('pengajuan-kredit.index')->withStatus('Terjadi kesalahan. '.$e->getMessage());
         } catch(QueryException $e){
             DB::rollBack();
+            dd($e);
             return redirect()->route('pengajuan-kredit.index')->withStatus('Terjadi kesalahan. '.$e->getMessage());
         }
     }
