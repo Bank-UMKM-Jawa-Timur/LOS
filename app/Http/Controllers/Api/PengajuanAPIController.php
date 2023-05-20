@@ -50,4 +50,36 @@ class PengajuanAPIController extends Controller
         
         return response()->json($data);
     }
+
+    public function getFilePO($id)
+    {
+        $data = DB::table('pengajuan')
+            ->where('id', $id)
+            ->select('po')
+            ->first();
+        $path = asset('..') . '/upload/' . $id . '/po/' .$data->po;
+
+        return response()->json($path);
+    }
+    public function getFileSPPK($id)
+    {
+        $data = DB::table('pengajuan')
+            ->where('id', $id)
+            ->select('sppk')
+            ->first();
+        $path = asset('..') . '/upload/' . $id . '/sppk/' .$data->sppk;
+
+        return response()->json($path);
+    }
+
+    public function getFilePK($id)
+    {
+        $data = DB::table('pengajuan')
+            ->where('id', $id)
+            ->select('pk')
+            ->first();
+        $path = asset('..') . '/upload/' . $id . '/pk/' .$data->pk;
+
+        return response()->json($path);
+    }
 }

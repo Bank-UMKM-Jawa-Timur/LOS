@@ -24,4 +24,7 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
 
     Route::post('/logout', [PengajuanAPIController::class, 'logout']);
     Route::get('/get-data-pengajuan', [PengajuanAPIController::class, 'getDataPengajuan']);
+    Route::get('/get-file-po/{id}', [PengajuanAPIController::class, 'getFilePO'])->name('get-file-po');
+    Route::get('/get-file-sppk/{id}', [PengajuanAPIController::class, 'getFileSPPK'])->name('get-file-sppk');
+    Route::get('/get-file-pk/{id}', [PengajuanAPIController::class, 'getFilePK'])->name('get-file-pk');
 });
