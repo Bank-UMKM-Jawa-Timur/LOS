@@ -1,3 +1,15 @@
+@php
+$dataUmum = isset($dataUmum) ? $dataUmum : null;
+
+$dataIndex = match ($skema ?? $dataUmum) {
+    'PKPJ' => 1,
+    'KKB' => 2,
+    'Talangan Umroh' => 1,
+    'Prokesra' => 1,
+    'Kusuma' => 1,
+    null => 1
+};
+@endphp
 <div class="row">
     <div class="col-md-3">
         <div class="box-content side-wizard px-4 py-4 ">
@@ -8,15 +20,18 @@
                     <input type="hidden" name="answerFilled" class="answerFilled">
                     <a href="#"><span><i>0%</i></span> Data Umum</a>
                 </li>
-                {{-- <li data-index='1' id="form-dataPO">
-                    <input type="hidden" name="answer" class="answer">
-                    <input type="hidden" name="answerFilled" class="answerFilled">
-                    <a href="#" class="data-po-link" style="display: none"><span><i>0%</i></span> Data PO</a>
-                </li> --}}
+                @if(($skema ?? $dataUmum?->skema_kredit) == 'KKB')
+                    <li class="data-po-label"><label>DATA PO</label></li>
+                    <li data-index='1'>
+                        <input type="hidden" name="answer" class="answer">
+                        <input type="hidden" name="answerFilled" class="answerFilled">
+                        <a href="#" class="data-po-link"><span><i>0%</i></span> Data PO</a>
+                    </li>
+                @endif
                 <li><label>PEMBAHASAN PER ASPEK</label></li>
                 @foreach ($dataAspek as $key => $value)
                     @php
-                        $key += 1;
+                        $key += $dataIndex;
                     @endphp
                     <li data-index='{{ $key }}'
                         class="{{ request()->routeIs('pengajuan-kredit.edit') == 'pengajuan-kredit' ? 'active' : '' }}">
@@ -26,7 +41,7 @@
                     </li>
                 @endforeach
                 <li><label> PENDAPAT dan USULAN STAF/ANALIS KREDIT</label></li>
-                <li class="last" data-index='{{count($dataAspek) + 1}}'>
+                <li class="last" data-index='{{ count($dataAspek) + $dataIndex }}'>
                     <input type="hidden" name="answer" class="answer">
                     <input type="hidden" name="answerFilled" class="answerFilled">
                     <a href="#"><span><i class="fa fa-ban"></i></span> Pendapat dan Usulan</a>
