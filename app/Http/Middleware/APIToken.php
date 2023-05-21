@@ -16,7 +16,7 @@ class APIToken
      */
     public function handle(Request $request, Closure $next)
     {
-        if($request->api_token != 'gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFVaNj'){
+        if($_SERVER['HTTP_TOKEN'] != 'gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFVaNj'){
             return response()->json('Unauthorized', 401);
         }
         

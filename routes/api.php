@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\PengajuanAPIController;
+use App\Http\Middleware\APIToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,7 +26,11 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
     Route::post('/logout', [PengajuanAPIController::class, 'logout']);
 });
 
-Route::get('/get-data-pengajuan/{api_token}', [PengajuanAPIController::class, 'getDataPengajuan'])->middleware('api_token');
-Route::get('/get-file-po/{id}/{api_token}', [PengajuanAPIController::class, 'getFilePO'])->name('get-file-po')->middleware('api_token');
-Route::get('/get-file-sppk/{id}/{api_token}', [PengajuanAPIController::class, 'getFileSPPK'])->name('get-file-sppk')->middleware('api_token');
-Route::get('/get-file-pk/{id}/{api_token}', [PengajuanAPIController::class, 'getFilePK'])->name('get-file-pk')->middleware('api_token');
+Route::prefix('kkb')->group(function(){
+    Route::middleware([APIToken::class])->group(function(){
+        Route::get('/get-data-pengajuan', [PengajuanAPIController::class, 'getDataPengajuan']);
+        Route::get('/get-file-po/{id}', [PengajuanAPIController::class, 'getFilePO'])->name('get-file-po');
+        Route::get('/get-file-sppk/{id}', [PengajuanAPIController::class, 'getFileSPPK'])->name('get-file-sppk');
+        Route::get('/get-file-pk/{id}', [PengajuanAPIController::class, 'getFilePK'])->name('get-file-pk');
+    });
+});
