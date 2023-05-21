@@ -47,7 +47,9 @@ class PengajuanAPIController extends Controller
             ->whereNotNull('po')
             ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
             ->join('data_po', 'data_po.id_pengajuan', 'pengajuan.id')
-            ->select('pengajuan.id', 'calon_nasabah.nama', 'calon_nasabah.jumlah_kredit', 'data_po.no_po', 'calon_nasabah.tenor_yang_diminta', 'pengajuan.sppk', 'pengajuan.po', 'pengajuan.pk')
+            ->join('mst_tipe', 'mst_tipe.id', 'data_po.id_type')
+            ->join('mst_merk', 'mst_merk.id', 'mst_tipe.id_merk')
+            ->select('pengajuan.id', 'calon_nasabah.nama', 'calon_nasabah.jumlah_kredit', 'data_po.no_po', 'calon_nasabah.tenor_yang_diminta', 'pengajuan.sppk', 'pengajuan.po', 'pengajuan.pk', 'mst_merk.merk', 'mst_tipe.tipe', 'data_po.tahun_kendaraan', 'data_po.harga')
             ->first();
         
         return response()->json([
@@ -58,7 +60,10 @@ class PengajuanAPIController extends Controller
             'tenor' => intval($data->tenor_yang_diminta) * 12,
             'sppk' => $data->sppk ?? null,
             'po' => $data->po ?? null,
-            'pk' => $data->pk ?? null
+            'pk' => $data->pk ?? null,
+            'kendaraan' => $data->merk . ' ' . $data->tipe,
+            'tahun_kendaraan' => $data->tahun_kendaraan,
+            'harga_kendaraan' => $data->harga
         ]);
     }
 }
