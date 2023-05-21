@@ -2210,6 +2210,12 @@ class PengajuanKreditController extends Controller
 
     public function postFileKKB(Request $request, $id)
     {
+        $kode_cabang = DB::table('cabang')
+            ->join('pengajuan', 'pengajuan.id_cabang', 'cabang.id')
+            ->where('pengajuan.id', $id)
+            ->select('kode_cabang')
+            ->first();
+
         try{
             // No PO Handler
             $po = $request->no_po;
@@ -2266,6 +2272,29 @@ class PengajuanKreditController extends Controller
                     'po' => $filenamePO,
                     'pk' => $filenamePK
                 ]);
+
+            try{
+                $curl = curl_init();
+
+                curl_setopt_array($curl, array(
+                    CURLOPT_URL => 'http://127.0.0.1:8001/api/v1/store-kredit',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => array('pengajuan_id' => $id,'kode_cabang' => $kode_cabang->kode_cabang),
+                    CURLOPT_HTTPHEADER => array(
+                      'mid_client_key: $2y$10$uK7wv2xbmgOFAWOA./7nn.RMkuDfg4FKy64ad4h0AVqKxEpt0Co2u'
+                    ),
+                  ));
+                $response = curl_exec($curl);
+                curl_close($curl);
+            } catch(Exception $e){
+                dd($e);
+            }
 
             return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil menambahkan nomor PO, file SPPO, file PO, dan file PK.');
         } catch(Exception $e){

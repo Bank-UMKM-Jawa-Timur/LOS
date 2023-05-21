@@ -38,48 +38,27 @@ class PengajuanAPIController extends Controller
         ]);
     }
 
-    public function getDataPengajuan()
+    public function getDataPengajuan($id)
     {
         $data = DB::table('pengajuan')
             ->where('skema_kredit', 'KKB')
+            ->where('posisi', 'Selesai')
+            ->where('pengajuan.id', $id)
             ->whereNotNull('po')
             ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
             ->join('data_po', 'data_po.id_pengajuan', 'pengajuan.id')
-            ->select('pengajuan.id', 'calon_nasabah.nama', 'calon_nasabah.jumlah_kredit', 'data_po.no_po')
-            ->get();
+            ->select('pengajuan.id', 'calon_nasabah.nama', 'calon_nasabah.jumlah_kredit', 'data_po.no_po', 'calon_nasabah.tenor_yang_diminta', 'pengajuan.sppk', 'pengajuan.po', 'pengajuan.pk')
+            ->first();
         
-        return response()->json($data);
-    }
-
-    public function getFilePO($id)
-    {
-        $data = DB::table('pengajuan')
-            ->where('id', $id)
-            ->select('po')
-            ->first();
-        $path = asset('..') . '/upload/' . $id . '/po/' .$data->po;
-
-        return response()->json(['path' => $path]);
-    }
-    public function getFileSPPK($id)
-    {
-        $data = DB::table('pengajuan')
-            ->where('id', $id)
-            ->select('sppk')
-            ->first();
-        $path = asset('..') . '/upload/' . $id . '/sppk/' .$data->sppk;
-
-        return response()->json(['path' => $path]);
-    }
-
-    public function getFilePK($id)
-    {
-        $data = DB::table('pengajuan')
-            ->where('id', $id)
-            ->select('pk')
-            ->first();
-        $path = asset('..') . '/upload/' . $id . '/pk/' .$data->pk;
-
-        return response()->json(['path' => $path]);
+        return response()->json([
+            'id_pengajuan' => $data->id,
+            'nama' => $data->nama,
+            'jumlah_kredit' => intval($data->jumlah_kredit),
+            'no_po' => $data->no_po,
+            'tenor' => intval($data->tenor_yang_diminta) * 12,
+            'sppk' => $data->sppk ?? null,
+            'po' => $data->po ?? null,
+            'pk' => $data->pk ?? null
+        ]);
     }
 }
