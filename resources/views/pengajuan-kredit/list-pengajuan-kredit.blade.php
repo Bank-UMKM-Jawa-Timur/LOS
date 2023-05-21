@@ -207,6 +207,30 @@
                                 </button>
                                 <div class="dropdown-menu">
                                     <a target="_blank" href="{{ route('cetak',$item->id_pengajuan) }}" class="dropdown-item" >Cetak</a>
+                                    @if ($item->skema_kredit == 'KKB' && $item->posisi == 'Selesai')
+                                        @php
+                                            $tglCetak = DB::table('log_cetak_kkb')
+                                                ->where('id_pengajuan', $item->id_pengajuan)
+                                                ->first();
+                                        @endphp
+                                        @if ($tglCetak?->tgl_cetak_sppk == null || $tglCetak == null)
+                                            <a target="_blank" href="{{ route('cetak-sppk',$item->id_pengajuan)}}" class="dropdown-item" >Cetak SPPK</a>
+                                        @elseif($tglCetak?->tgl_cetak_sppk != null && $item->sppk == null)
+                                            <a href="#" class="dropdown-item" data-toggle="modal" data-id="{{ $item->id_pengajuan }}" data-target="#uploadSPPKModal-{{$item->id_pengajuan}}">Upload File SPPK</a>
+                                        @endif
+
+                                        @if ($item->sppk != null && $tglCetak?->tgl_cetak_sppk != null && $tglCetak?->tgl_cetak_po == null)
+                                            <a target="_blank" href="{{ route('cetak-po',$item->id_pengajuan)}}" class="dropdown-item" >Cetak PO</a>
+                                        @elseif($item->sppk != null && $tglCetak->tgl_cetak_po != null && $item->po == null)
+                                            <a href="#" class="dropdown-item" data-toggle="modal" data-id="{{ $item->id_pengajuan }}" data-target="#uploadPOModal-{{$item->id_pengajuan}}">Upload File PO</a>
+                                        @endif
+
+                                        @if ($item->po != null && $tglCetak?->tgl_cetak_po != null && $tglCetak?->tgl_cetak_pk == null)
+                                            <a target="_blank" href="{{ route('cetak-pk',$item->id_pengajuan)}}" class="dropdown-item" >Cetak PK</a>
+                                        @elseif($item->po != null && $tglCetak?->tgl_cetak_pk != null && $item->pk == null)
+                                            <a href="#" class="dropdown-item" data-toggle="modal" data-id="{{ $item->id_pengajuan }}" data-target="#uploadPKModal-{{$item->id_pengajuan}}">Upload File PK</a>
+                                        @endif
+                                    @endif
                                 </div>
                             </div>
                         @endif
@@ -231,3 +255,6 @@
     </div>
 </div>
 @endsection
+@include('layouts.popup-upload-sppk')
+@include('layouts.popup-upload-po')
+@include('layouts.popup-upload-pk')

@@ -114,13 +114,18 @@ class CetakSuratController extends Controller
     {
         $count = DB::table('log_cetak_kkb')
             ->where('id_pengajuan', $id)
-            ->count('tgl_cetak_sppk');
+            ->count('*');
         if($count < 1){
             DB::table('log_cetak_kkb')
                 ->insert([
                     'id_pengajuan' => $id,
-                    'tgl_cetak_sppk' => now(),
-                    'tgl_cetak_po' => now()
+                    'tgl_cetak_sppk' => now()
+                ]);
+        } else{
+            DB::table('log_cetak_kkb')
+                ->where('id_pengajuan', $id)
+                ->update([
+                    'tgl_cetak_sppk' => now()
                 ]);
         }
     
@@ -155,6 +160,23 @@ class CetakSuratController extends Controller
 
     public function cetakPO($id)
     {
+        $count = DB::table('log_cetak_kkb')
+            ->where('id_pengajuan', $id)
+            ->count('*');
+        if($count < 1){
+            DB::table('log_cetak_kkb')
+                ->insert([
+                    'id_pengajuan' => $id,
+                    'tgl_cetak_po' => now()
+                ]);
+        } else {
+            DB::table('log_cetak_kkb')
+                ->where('id_pengajuan', $id)
+                ->update([
+                    'tgl_cetak_po' => now()
+                ]);
+        }
+
         $param['dataNasabah'] = CalonNasabah::select('calon_nasabah.*','kabupaten.id as kabupaten_id','kabupaten.kabupaten','kecamatan.id as kecamatan_id','kecamatan.id_kabupaten','kecamatan.kecamatan','desa.id as desa_id','desa.id_kabupaten','desa.id_kecamatan','desa.desa')
             ->join('kabupaten','kabupaten.id','calon_nasabah.id_kabupaten')
             ->join('kecamatan','kecamatan.id','calon_nasabah.id_kecamatan')

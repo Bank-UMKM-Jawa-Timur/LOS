@@ -69,6 +69,9 @@ class PengajuanKreditController extends Controller
                 'pengajuan.average_by_sistem',
                 'pengajuan.average_by_penyelia',
                 'pengajuan.skema_kredit',
+                'pengajuan.sppk',
+                'pengajuan.po',
+                'pengajuan.pk',
                 'calon_nasabah.nama',
                 'calon_nasabah.jenis_usaha',
                 'calon_nasabah.id_pengajuan'
@@ -2217,86 +2220,105 @@ class PengajuanKreditController extends Controller
             ->first();
 
         try{
-            // No PO Handler
-            $po = $request->no_po;
+            $message = null;
+            switch($request->tipe_file){
+                // File SPPK Handler
+                case 'SPPK':
+                    $message = 'file SPPK.';
+                    $folderSPPK = public_path() . '/upload/' . $id . '/sppk/';
+                    $fileSPPK = $request->sppk;
+                    $filenameSPPK = date('YmdHis').'.'.$fileSPPK->getClientOriginalExtension();
+                    $pathSPPK = realpath($folderSPPK);
+                     // If it exist, check if it's a directory
+                    if(!($pathSPPK !== true AND is_dir($pathSPPK)))
+                    {
+                        // Path/folder does not exist then create a new folder
+                        mkdir($folderSPPK, 0755, true);
+                    }
+                    $fileSPPK->move($folderSPPK, $filenameSPPK);
+                    DB::table('pengajuan')
+                        ->where('id', $id)
+                        ->update([
+                            'sppk' => $filenameSPPK
+                        ]);
+                    break;
+                
+                // No PO Handler
+                case 'PO':
+                    $message = 'nomor PO dan file PO.';
+                    $po = $request->no_po;
+                    DB::table('data_po')
+                        ->where('id_pengajuan', $id)
+                        ->update([
+                            'no_po' => $po
+                        ]);
 
-            // File SPPK Handler
-            $folderSPPK = public_path() . '/upload/' . $id . '/sppk/';
-            $fileSPPK = $request->sppk;
-            $filenameSPPK = date('YmdHis').'.'.$fileSPPK->getClientOriginalExtension();
-            $pathSPPK = realpath($folderSPPK);
-             // If it exist, check if it's a directory
-            if(!($pathSPPK !== true AND is_dir($pathSPPK)))
-            {
-                // Path/folder does not exist then create a new folder
-                mkdir($folderSPPK, 0755, true);
+                    // File PO Handler
+                    $folderPO = public_path() . '/upload/' . $id . '/po/';
+                    $filePO = $request->po;
+                    $filenamePO = date('YmdHis').'.'.$filePO->getClientOriginalExtension();
+                    $pathPO = realpath($folderPO);
+                     // If it exist, check if it's a directory
+                    if(!($pathPO !== true AND is_dir($pathPO)))
+                    {
+                        // Path/folder does not exist then create a new folder
+                        mkdir($folderPO, 0755, true);
+                    }
+                    $filePO->move($folderPO, $filenamePO);
+                    DB::table('pengajuan')
+                        ->where('id', $id)
+                        ->update([
+                            'po' => $filenamePO
+                        ]);
+                        
+                    // POST data kredit & PO to API Data Warehouse
+                    try{
+                        $curl = curl_init();
+                        curl_setopt_array($curl, array(
+                            CURLOPT_URL => 'http://127.0.0.1:8001/api/v1/store-kredit',
+                            CURLOPT_RETURNTRANSFER => true,
+                            CURLOPT_ENCODING => '',
+                            CURLOPT_MAXREDIRS => 10,
+                            CURLOPT_TIMEOUT => 0,
+                            CURLOPT_FOLLOWLOCATION => true,
+                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                            CURLOPT_CUSTOMREQUEST => 'POST',
+                            CURLOPT_POSTFIELDS => array('pengajuan_id' => $id,'kode_cabang' => $kode_cabang->kode_cabang),
+                            CURLOPT_HTTPHEADER => array(
+                            'mid_client_key: $2y$10$uK7wv2xbmgOFAWOA./7nn.RMkuDfg4FKy64ad4h0AVqKxEpt0Co2u'
+                            ),
+                        ));
+                        $response = curl_exec($curl);
+                        curl_close($curl);
+                    } catch(Exception $e){
+                        return redirect()->route('pengajuan-kredit.index')->withStatus('Terjadi kesalahan pada. '.$e->getMessage());
+                    }
+
+                    break;
+
+                // File PK Handler
+                case 'PK':
+                    $message = 'file PK.';
+                    $folderPK = public_path() . '/upload/' . $id . '/pk/';
+                    $filePK = $request->pk;
+                    $filenamePK = date('YmdHis').'.'.$filePK->getClientOriginalExtension();
+                    $pathPK = realpath($folderPK);
+                     // If it exist, check if it's a directory
+                    if(!($pathPK !== true AND is_dir($pathPK)))
+                    {
+                        // Path/folder does not exist then create a new folder
+                        mkdir($folderPK, 0755, true);
+                    }
+                    $filePK->move($folderPK, $filenamePK);
+                    DB::table('pengajuan')
+                        ->where('id', $id)
+                        ->update([
+                            'pk' => $filenamePK
+                        ]);
+                    break;
             }
-            $fileSPPK->move($folderSPPK, $filenameSPPK);
 
-            // File PO Handler
-            $folderPO = public_path() . '/upload/' . $id . '/po/';
-            $filePO = $request->po;
-            $filenamePO = date('YmdHis').'.'.$filePO->getClientOriginalExtension();
-            $pathPO = realpath($folderPO);
-             // If it exist, check if it's a directory
-            if(!($pathPO !== true AND is_dir($pathPO)))
-            {
-                // Path/folder does not exist then create a new folder
-                mkdir($folderPO, 0755, true);
-            }
-            $filePO->move($folderPO, $filenamePO);
-
-            // File PK Handler
-            $folderPK = public_path() . '/upload/' . $id . '/pk/';
-            $filePK = $request->pk;
-            $filenamePK = date('YmdHis').'.'.$filePK->getClientOriginalExtension();
-            $pathPK = realpath($folderPK);
-             // If it exist, check if it's a directory
-            if(!($pathPK !== true AND is_dir($pathPK)))
-            {
-                // Path/folder does not exist then create a new folder
-                mkdir($folderPK, 0755, true);
-            }
-            $filePK->move($folderPK, $filenamePK);
-
-            DB::table('data_po')
-                ->where('id_pengajuan', $id)
-                ->update([
-                    'no_po' => $po
-                ]);
-
-            DB::table('pengajuan')
-                ->where('id', $id)
-                ->update([
-                    'sppk' => $filenameSPPK,
-                    'po' => $filenamePO,
-                    'pk' => $filenamePK
-                ]);
-
-            try{
-                $curl = curl_init();
-
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => 'http://127.0.0.1:8001/api/v1/store-kredit',
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => '',
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 0,
-                    CURLOPT_FOLLOWLOCATION => true,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => 'POST',
-                    CURLOPT_POSTFIELDS => array('pengajuan_id' => $id,'kode_cabang' => $kode_cabang->kode_cabang),
-                    CURLOPT_HTTPHEADER => array(
-                      'mid_client_key: $2y$10$uK7wv2xbmgOFAWOA./7nn.RMkuDfg4FKy64ad4h0AVqKxEpt0Co2u'
-                    ),
-                  ));
-                $response = curl_exec($curl);
-                curl_close($curl);
-            } catch(Exception $e){
-                dd($e);
-            }
-
-            return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil menambahkan nomor PO, file SPPO, file PO, dan file PK.');
+            return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil menambahkan '.$message);
         } catch(Exception $e){
             DB::rollBack();
             dd($e);
