@@ -29,5 +29,6 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
 Route::prefix('kkb')->group(function(){
     Route::middleware([APIToken::class])->group(function(){
         Route::get('/get-data-pengajuan/{id}', [PengajuanAPIController::class, 'getDataPengajuan']);
+        Route::get('/get-data-users/{nip}', [PengajuanAPIController::class, 'getDataUsers']);
     });
 });

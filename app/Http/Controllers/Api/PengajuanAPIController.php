@@ -66,4 +66,13 @@ class PengajuanAPIController extends Controller
             'harga_kendaraan' => $data->harga
         ]);
     }
+
+    public function getDataUsers($nip)
+    {
+        $data = DB::table('users')
+            ->where('nip', $nip)
+            ->first();
+
+        return response()->json($data);
+    }
 }
