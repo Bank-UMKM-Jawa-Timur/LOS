@@ -2283,7 +2283,7 @@ class PengajuanKreditController extends Controller
                             CURLOPT_FOLLOWLOCATION => true,
                             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                             CURLOPT_CUSTOMREQUEST => 'POST',
-                            CURLOPT_POSTFIELDS => array('pengajuan_id' => $id,'kode_cabang' => $kode_cabang->kode_cabang),
+                            CURLOPT_POSTFIELDS => array('pengajuan_id' => $id,'kode_cabang' => $kode_cabang->kode_cabang, 'no_po' => $po),
                             CURLOPT_HTTPHEADER => array(
                             'mid_client_key: $2y$10$uK7wv2xbmgOFAWOA./7nn.RMkuDfg4FKy64ad4h0AVqKxEpt0Co2u'
                             ),
