@@ -834,7 +834,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                             @foreach ($dataLevelTiga as $keyTiga => $itemTiga)
                                 @if ($itemTiga->opsi_jawaban != 'option')
                                     @php
-                                        $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama', 'item.is_commentable', 'item.status_skor')
+                                        $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama', 'item.is_commentable', 'item.status_skor', 'item.opsi_jawaban')
                                             ->join('item', 'jawaban_text.id_jawaban', 'item.id')
                                             ->where('jawaban_text.id_pengajuan', $dataUmum->id)
                                             ->where('jawaban_text.id_jawaban', $itemTiga->id)
@@ -873,15 +873,15 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                             @else
                                                 <div class="col-sm-7" style="padding: 0px">
                                             @endif
-                                                @if ($item->opsi_jawaban == 'file')
+                                                @if ($itemTextTiga->opsi_jawaban == 'file')
                                                 <br>
                                                     @php
-                                                        $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextTiga->opsi_text);
+                                                        $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTextTiga->id_jawaban . '/' . $itemTextTiga->opsi_text);
                                                     @endphp
                                                     @if ($file_parts['extension'] == 'pdf')
-                                                        <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextTiga->opsi_text }}" width="100%" height="700px"></iframe>
+                                                        <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTextTiga->id_jawaban . '/' . $itemTextTiga->opsi_text }}" width="100%" height="700px"></iframe>
                                                     @else   
-                                                        <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextTiga->opsi_text }}" alt="" width="700px">
+                                                        <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTextTiga->id_jawaban . '/' . $itemTextTiga->opsi_text }}" alt="" width="700px">
                                                     @endif
                                                 @else
                                                     <input type="text" readonly class="form-control-plaintext font-weight-bold"
@@ -1148,7 +1148,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                 @else
                                                     <div class="col-sm-7" style="padding: 0px">
                                                 @endif
-                                                    @if ($itemEmpat->opsi_jawaban == 'file')
+                                                    @if ($itemTextEmpat->opsi_jawaban == 'file')
                                                     <br>
                                                         @php
                                                             $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text);
