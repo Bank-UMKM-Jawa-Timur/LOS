@@ -81,7 +81,7 @@ $dataIndex = match ($skema) {
         <div class="form-wizard active" data-index='0' data-done='true' id="wizard-data-umum">
             <div class="row">
                 {{-- Input hidden for Skema Kredit --}}
-                <input type="hidden" name="skema_kredit" id="skema_kredit" value="{{ $skema ?? '' }}">
+                <input type="hidden" name="skema_kredit" id="skema_kredit" @if($skema != null) value="{{ $skema ?? '' }}" @elseif($duTemp->skema_kredit != null) value="{{ $duTemp->skema_kredit ?? '' }}" @endif>
 
                 <div class="form-group col-md-6">
                     <label for="">Nama Lengkap</label>
@@ -1082,7 +1082,7 @@ $dataIndex = match ($skema) {
         $(document).ready(function() {
             let valSkema = $("#skema").val();
 
-            @if(!$skema) 
+            @if($duTemp->nama == null) 
                 if(valSkema == null || valSkema == ''){
                     $('#exampleModal').modal('show');
                 }
