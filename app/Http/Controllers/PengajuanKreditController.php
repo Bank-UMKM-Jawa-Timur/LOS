@@ -208,7 +208,7 @@ class PengajuanKreditController extends Controller
         $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
         $param['dataMerk'] = MerkModel::all();
 
-        $param['skema'] = $request->skema;
+        $param['skema'] = $request->skema ?? $param['duTemp']?->skema_kredit;
 
         // dump($param['dataAspek']);
         // dump($param['itemSlik']);

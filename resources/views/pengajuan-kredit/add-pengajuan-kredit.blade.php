@@ -369,7 +369,7 @@ $dataIndex = match ($skema) {
             </div>
         </div>
 
-        @if ($skema == 'KKB')     
+        @if ($skema == 'KKB' || $duTemp?->skema_kredit == 'KKB')     
             <div class="form-wizard" data-index='1' data-done='true' id="wizard-data-po">
                 <div class="row">
                     <div class="form-group col-md-12">
