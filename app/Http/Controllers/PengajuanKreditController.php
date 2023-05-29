@@ -2275,7 +2275,7 @@ class PengajuanKreditController extends Controller
                     try{
                         $curl = curl_init();
                         curl_setopt_array($curl, array(
-                            CURLOPT_URL => 'http://127.0.0.1:8001/api/v1/store-kredit',
+                            CURLOPT_URL => 'http://192.168.1.15:8000/api/v1/store-kredit',
                             CURLOPT_RETURNTRANSFER => true,
                             CURLOPT_ENCODING => '',
                             CURLOPT_MAXREDIRS => 10,
@@ -2283,7 +2283,7 @@ class PengajuanKreditController extends Controller
                             CURLOPT_FOLLOWLOCATION => true,
                             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                             CURLOPT_CUSTOMREQUEST => 'POST',
-                            CURLOPT_POSTFIELDS => array('pengajuan_id' => $id,'kode_cabang' => $kode_cabang->kode_cabang, 'no_po' => $po),
+                            CURLOPT_POSTFIELDS => array('pengajuan_id' => $id,'kode_cabang' => $kode_cabang->kode_cabang, 'nomor_pengajuan' => $po),
                             CURLOPT_HTTPHEADER => array(
                             'mid_client_key: $2y$10$uK7wv2xbmgOFAWOA./7nn.RMkuDfg4FKy64ad4h0AVqKxEpt0Co2u'
                             ),
