@@ -379,13 +379,13 @@ class PengajuanKreditController extends Controller
         }
 
         $dataJawaban = [];
-        foreach($itemBuktiPemilikan->where('id_parent', 114)->get() as $i){
+        foreach ($itemBuktiPemilikan->where('id_parent', 114)->get() as $i) {
             array_push($dataJawaban, temporary($request->idCalonNasabah, $i->id)?->opsi_text ?? '');
         }
 
         $dataSelect = [];
 
-        if($request->idCalonNasabah)
+        if ($request->idCalonNasabah)
             $dataSelect = temporary_select($item->id, $request->idCalonNasabah)?->id_jawaban;
 
         $data = [
@@ -570,8 +570,8 @@ class PengajuanKreditController extends Controller
                 $dataJawabanText->save();
             }
 
-            // Data KKB Handler 
-            if($request->skema_kredit == 'KKB'){
+            // Data KKB Handler
+            if ($request->skema_kredit == 'KKB') {
                 DB::table('data_po')
                     ->insert([
                         'id_pengajuan' => $id_pengajuan,
@@ -587,7 +587,7 @@ class PengajuanKreditController extends Controller
             //untuk upload file
             $tempFiles = JawabanTemp::where('type', 'file')->get();
 
-            foreach($tempFiles as $tempFile) {
+            foreach ($tempFiles as $tempFile) {
                 $tempPath = public_path("upload/temp/{$tempFile->id_jawaban}/{$tempFile->opsi_text}");
                 $newPath = str_replace('temp/', "{$id_pengajuan}/", $tempPath);
                 $relPath = "upload/{$id_pengajuan}/{$tempFile->id_jawaban}";
@@ -619,8 +619,8 @@ class PengajuanKreditController extends Controller
                     $id_jawaban[$key] = $data_level_dua[1];
                     //jika skor nya tidak kosong
                     if ($skor[$key] != 'kosong') {
-                        if($id_jawaban[$key] == 66 || $id_jawaban[$key] == 187){
-                            if($skor[$key] == 1){
+                        if ($id_jawaban[$key] == 66 || $id_jawaban[$key] == 187) {
+                            if ($skor[$key] == 1) {
                                 $statusSlik = true;
                             }
                         }
@@ -712,11 +712,11 @@ class PengajuanKreditController extends Controller
                 JawabanPengajuanModel::insert($finalArray[$i]);
             }
 
-            if(!$statusSlik){
+            if (!$statusSlik) {
                 $updateData->posisi = 'Proses Input Data';
                 $updateData->status_by_sistem = $status;
                 $updateData->average_by_sistem = $result;
-            } else{
+            } else {
                 $updateData->posisi = 'Ditolak';
                 $updateData->status_by_sistem = "merah";
                 $updateData->average_by_sistem = "1.0";
@@ -836,7 +836,7 @@ class PengajuanKreditController extends Controller
         $param['allKec'] = Kecamatan::where('id_kabupaten', $param['dataUmum']->id_kabupaten)->get();
         $param['allDesa'] = Desa::where('id_kecamatan', $param['dataUmum']->id_kecamatan)->get();
         $param['pendapatDanUsulanStaf'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff')->first();
-        if($param['dataUmum']->skema_kredit == 'KKB'){
+        if ($param['dataUmum']->skema_kredit == 'KKB') {
             $param['dataMerk'] = MerkModel::all();
             $param['dataPO'] = DB::table('data_po')
                 ->where('id_pengajuan', $id)
@@ -1011,9 +1011,9 @@ class PengajuanKreditController extends Controller
                 fn ($fileId) => JawabanTextModel::find($fileId)?->delete(),
                 $request->id_delete_file ?? []
             );
-            
-            // Data KKB Handler 
-            if($updatePengajuan->skema_kredit == 'KKB'){
+
+            // Data KKB Handler
+            if ($updatePengajuan->skema_kredit == 'KKB') {
                 DB::table('data_po')
                     ->where('id_pengajuan', $id)
                     ->update([
@@ -1293,7 +1293,7 @@ class PengajuanKreditController extends Controller
                 ->find($id);
             $param['pendapatDanUsulanStaf'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff')->first();
             $param['pendapatDanUsulanPenyelia'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_penyelia')->first();
-            if($param['dataUmumNasabah']->skema_kredit == 'KKB'){
+            if ($param['dataUmumNasabah']->skema_kredit == 'KKB') {
                 $param['dataMerk'] = MerkModel::all();
                 $param['dataPO'] = DB::table('data_po')
                     ->where('id_pengajuan', $id)
@@ -1352,7 +1352,7 @@ class PengajuanKreditController extends Controller
             $param['pendapatDanUsulanStaf'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff')->first();
             $param['pendapatDanUsulanPenyelia'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_penyelia')->first();
             $param['pendapatDanUsulanPBP'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_pbp')->first();
-            if($param['dataUmumNasabah']->skema_kredit == 'KKB'){
+            if ($param['dataUmumNasabah']->skema_kredit == 'KKB') {
                 $param['dataMerk'] = MerkModel::all();
                 $param['dataPO'] = DB::table('data_po')
                     ->where('id_pengajuan', $id)
@@ -1681,7 +1681,7 @@ class PengajuanKreditController extends Controller
         //                             ->where('jawaban.id_pengajuan',$id)
         //                             ->get();
         $param['pendapatDanUsulan'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff', 'komentar_penyelia', 'komentar_pincab', 'komentar_pbp')->first();
-        if($param['dataUmum']->skema_kredit == 'KKB'){
+        if ($param['dataUmum']->skema_kredit == 'KKB') {
             $param['dataPO'] = DB::table('data_po')
                 ->where('id_pengajuan', $id)
                 ->join('mst_tipe', 'data_po.id_type', 'mst_tipe.id')
@@ -1890,13 +1890,13 @@ class PengajuanKreditController extends Controller
             TemporaryService::convertNasabahReq($request)
         );
 
-        foreach($request->dataLevelDua as $key => $value){
+        foreach ($request->dataLevelDua as $key => $value) {
             $dataSlik = $this->getDataLevel($value);
             $cek = DB::table('jawaban_temp')
                 ->where('id_temporary_calon_nasabah', $request->id_nasabah)
                 ->where('id_jawaban', $dataSlik[1])
                 ->count('id');
-            if($cek < 1){
+            if ($cek < 1) {
                 DB::table('jawaban_temp')
                     ->insert([
                         'id_temporary_calon_nasabah' => $request->id_nasabah,
@@ -1905,7 +1905,7 @@ class PengajuanKreditController extends Controller
                         'id_option' => $key,
                         'created_at' => now()
                     ]);
-            } else{
+            } else {
                 DB::table('jawaban_temp')
                     ->where('id_temporary_calon_nasabah', $request->id_nasabah)
                     ->where('id_option', $key)
@@ -1947,7 +1947,7 @@ class PengajuanKreditController extends Controller
             JawabanTemp::find($request->answer_id)
         );
 
-        if($deleted) {
+        if ($deleted) {
             return response()->json([
                 'statusCode' => 200,
                 'deleted' => true,
@@ -1966,8 +1966,8 @@ class PengajuanKreditController extends Controller
     {
         $find = array('Rp ', '.');
 
-        try{
-            if($request->kategori_jaminan_tambahan != null){
+        try {
+            if ($request->kategori_jaminan_tambahan != null) {
                 DB::table('temporary_calon_nasabah')
                     ->where('id', $request->idCalonNasabah)
                     ->update([
@@ -1979,7 +1979,7 @@ class PengajuanKreditController extends Controller
                     ->where('id_temporary_calon_nasabah', $request->idCalonNasabah)
                     ->where('id_jawaban', $value)
                     ->count('id');
-                if($cekData < 1){
+                if ($cekData < 1) {
                     $dataJawabanText = new JawabanTemp();
                     $dataJawabanText->id_temporary_calon_nasabah = $request->get('idCalonNasabah');
                     $dataJawabanText->id_jawaban = $request->get('id_level')[$key];
@@ -1992,7 +1992,7 @@ class PengajuanKreditController extends Controller
                     }
 
                     $dataJawabanText->save();
-                } else{
+                } else {
                     $data = DB::table('temporary_jawaban_text')
                         ->where('id_jawaban', $request->get('id_level')[$key])
                         ->where('id_temporary_calon_nasabah', $request?->idCalonNasabah)
@@ -2008,14 +2008,14 @@ class PengajuanKreditController extends Controller
             if ($request->dataLevelDua != null) {
                 $data = $request->dataLevelDua;
                 foreach ($data as $key => $value) {
-                    if($value != null){
+                    if ($value != null) {
                         $data_level_dua = $this->getDataLevel($value);
                         $skor[$key] = $data_level_dua[0];
                         $id_jawaban[$key] = $data_level_dua[1];
                         //jika skor nya tidak kosong
                         if ($skor[$key] != 'kosong') {
-                            if($id_jawaban[$key] == 66 || $id_jawaban[$key] == 187){
-                                if($skor[$key] == 1){
+                            if ($id_jawaban[$key] == 66 || $id_jawaban[$key] == 187) {
+                                if ($skor[$key] == 1) {
                                     $statusSlik = true;
                                 }
                             }
@@ -2042,7 +2042,7 @@ class PengajuanKreditController extends Controller
             if ($request->dataLevelTiga != null) {
                 $dataLevelTiga = $request->dataLevelTiga;
                 foreach ($dataLevelTiga as $key => $value) {
-                    if($value != null){
+                    if ($value != null) {
                         $data_level_tiga = $this->getDataLevel($value);
                         $skor[$key] = $data_level_tiga[0];
                         $id_jawaban[$key] = $data_level_tiga[1];
@@ -2071,7 +2071,7 @@ class PengajuanKreditController extends Controller
             if ($request->dataLevelEmpat != null) {
                 $dataLevelEmpat = $request->dataLevelEmpat;
                 foreach ($dataLevelEmpat as $key => $value) {
-                    if($value != null){
+                    if ($value != null) {
                         $data_level_empat = $this->getDataLevel($value);
                         $skor[$key] = $data_level_empat[0];
                         $id_jawaban[$key] = $data_level_empat[1];
@@ -2096,12 +2096,12 @@ class PengajuanKreditController extends Controller
             } else {
             }
 
-            foreach($request->pendapat_per_aspek as $i => $val){
+            foreach ($request->pendapat_per_aspek as $i => $val) {
                 $cekUsulan = DB::table('temporary_usulan_dan_pendapat')
                     ->where('id_temp', $request->idCalonNasabah)
                     ->where('id_aspek', $i)
                     ->count('id');
-                if($cekUsulan < 1){
+                if ($cekUsulan < 1) {
                     DB::table('temporary_usulan_dan_pendapat')
                         ->insert([
                             'id_temp' => $request->idCalonNasabah,
@@ -2109,7 +2109,7 @@ class PengajuanKreditController extends Controller
                             'usulan' => $val,
                             'created_at' => now()
                         ]);
-                } else{
+                } else {
                     DB::table('temporary_usulan_dan_pendapat')
                         ->where('id_temp', $request->idCalonNasabah)
                         ->where('id_aspek', $i)
@@ -2126,10 +2126,9 @@ class PengajuanKreditController extends Controller
                     ->where('id_jawaban', $finalArray[$i]['id_jawaban'])
                     ->count('id');
 
-                if($cekDataSelect < 1){
+                if ($cekDataSelect < 1) {
                     JawabanTempModel::insert($finalArray[$i]);
-                }
-                else {
+                } else {
                     for ($i = 0; $i < count($finalArray); $i++) {
                         DB::table('jawaban_temp')
                             ->where('id_option', $finalArray[$i]['id_option'])
@@ -2141,11 +2140,10 @@ class PengajuanKreditController extends Controller
                     }
                 }
             }
-
-        } catch(Exception $e){
+        } catch (Exception $e) {
             DB::rollBack();
             dd($e);
-        } catch(QueryException $e){
+        } catch (QueryException $e) {
             DB::rollBack();
             dd($e);
         }
@@ -2219,19 +2217,18 @@ class PengajuanKreditController extends Controller
             ->select('kode_cabang')
             ->first();
 
-        try{
+        try {
             $message = null;
-            switch($request->tipe_file){
-                // File SPPK Handler
+            switch ($request->tipe_file) {
+                    // File SPPK Handler
                 case 'SPPK':
                     $message = 'file SPPK.';
                     $folderSPPK = public_path() . '/upload/' . $id . '/sppk/';
                     $fileSPPK = $request->sppk;
-                    $filenameSPPK = date('YmdHis').'.'.$fileSPPK->getClientOriginalExtension();
+                    $filenameSPPK = date('YmdHis') . '.' . $fileSPPK->getClientOriginalExtension();
                     $pathSPPK = realpath($folderSPPK);
-                     // If it exist, check if it's a directory
-                    if(!($pathSPPK !== true AND is_dir($pathSPPK)))
-                    {
+                    // If it exist, check if it's a directory
+                    if (!($pathSPPK !== true and is_dir($pathSPPK))) {
                         // Path/folder does not exist then create a new folder
                         mkdir($folderSPPK, 0755, true);
                     }
@@ -2242,8 +2239,8 @@ class PengajuanKreditController extends Controller
                             'sppk' => $filenameSPPK
                         ]);
                     break;
-                
-                // No PO Handler
+
+                    // No PO Handler
                 case 'PO':
                     $message = 'nomor PO dan file PO.';
                     $po = $request->no_po;
@@ -2256,11 +2253,10 @@ class PengajuanKreditController extends Controller
                     // File PO Handler
                     $folderPO = public_path() . '/upload/' . $id . '/po/';
                     $filePO = $request->po;
-                    $filenamePO = date('YmdHis').'.'.$filePO->getClientOriginalExtension();
+                    $filenamePO = date('YmdHis') . '.' . $filePO->getClientOriginalExtension();
                     $pathPO = realpath($folderPO);
-                     // If it exist, check if it's a directory
-                    if(!($pathPO !== true AND is_dir($pathPO)))
-                    {
+                    // If it exist, check if it's a directory
+                    if (!($pathPO !== true and is_dir($pathPO))) {
                         // Path/folder does not exist then create a new folder
                         mkdir($folderPO, 0755, true);
                     }
@@ -2270,12 +2266,18 @@ class PengajuanKreditController extends Controller
                         ->update([
                             'po' => $filenamePO
                         ]);
-                        
+
                     // POST data kredit & PO to API Data Warehouse
-                    try{
+                    try {
+                        $getPo =
+                            DB::table('data_po as dp')
+                            ->join('pengajuan as p', 'p.id', 'dp.id_pengajuan')
+                            ->join('calon_nasabah as cn', 'cn.id_pengajuan', 'p.id')
+                            ->select('cn.tenor_yang_diminta as tenor', 'dp.harga')
+                            ->where('dp.id_pengajuan', $id)->first();
                         $curl = curl_init();
                         curl_setopt_array($curl, array(
-                            CURLOPT_URL => 'http://192.168.1.15:8000/api/v1/store-kredit',
+                            CURLOPT_URL => 'http://127.0.0.1:8000/api/v1/store-kredit',
                             CURLOPT_RETURNTRANSFER => true,
                             CURLOPT_ENCODING => '',
                             CURLOPT_MAXREDIRS => 10,
@@ -2283,29 +2285,28 @@ class PengajuanKreditController extends Controller
                             CURLOPT_FOLLOWLOCATION => true,
                             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                             CURLOPT_CUSTOMREQUEST => 'POST',
-                            CURLOPT_POSTFIELDS => array('pengajuan_id' => $id,'kode_cabang' => $kode_cabang->kode_cabang, 'nomor_pengajuan' => $po),
+                            CURLOPT_POSTFIELDS => array('pengajuan_id' => $id, 'kode_cabang' => $kode_cabang->kode_cabang, 'nomor_pengajuan' => $po, 'harga_kendaraan' => $getPo->harga, 'tenor' => intval($getPo->tenor) * 12),
                             CURLOPT_HTTPHEADER => array(
-                            'mid_client_key: $2y$10$uK7wv2xbmgOFAWOA./7nn.RMkuDfg4FKy64ad4h0AVqKxEpt0Co2u'
+                                'mid_client_key: $2y$10$uK7wv2xbmgOFAWOA./7nn.RMkuDfg4FKy64ad4h0AVqKxEpt0Co2u'
                             ),
                         ));
                         $response = curl_exec($curl);
                         curl_close($curl);
-                    } catch(Exception $e){
-                        return redirect()->route('pengajuan-kredit.index')->withStatus('Terjadi kesalahan pada. '.$e->getMessage());
+                    } catch (Exception $e) {
+                        return redirect()->route('pengajuan-kredit.index')->withStatus('Terjadi kesalahan pada. ' . $e->getMessage());
                     }
 
                     break;
 
-                // File PK Handler
+                    // File PK Handler
                 case 'PK':
                     $message = 'file PK.';
                     $folderPK = public_path() . '/upload/' . $id . '/pk/';
                     $filePK = $request->pk;
-                    $filenamePK = date('YmdHis').'.'.$filePK->getClientOriginalExtension();
+                    $filenamePK = date('YmdHis') . '.' . $filePK->getClientOriginalExtension();
                     $pathPK = realpath($folderPK);
-                     // If it exist, check if it's a directory
-                    if(!($pathPK !== true AND is_dir($pathPK)))
-                    {
+                    // If it exist, check if it's a directory
+                    if (!($pathPK !== true and is_dir($pathPK))) {
                         // Path/folder does not exist then create a new folder
                         mkdir($folderPK, 0755, true);
                     }
@@ -2318,22 +2319,22 @@ class PengajuanKreditController extends Controller
                     break;
             }
 
-            return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil menambahkan '.$message);
-        } catch(Exception $e){
+            return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil menambahkan ' . $message);
+        } catch (Exception $e) {
             DB::rollBack();
             dd($e);
-            return redirect()->route('pengajuan-kredit.index')->withStatus('Terjadi kesalahan. '.$e->getMessage());
-        } catch(QueryException $e){
+            return redirect()->route('pengajuan-kredit.index')->withStatus('Terjadi kesalahan. ' . $e->getMessage());
+        } catch (QueryException $e) {
             DB::rollBack();
             dd($e);
-            return redirect()->route('pengajuan-kredit.index')->withStatus('Terjadi kesalahan. '.$e->getMessage());
+            return redirect()->route('pengajuan-kredit.index')->withStatus('Terjadi kesalahan. ' . $e->getMessage());
         }
     }
 
     public function getMerkKendaraan()
     {
         $data = MerkModel::all();
-        
+
         return response()->json([
             'merk' => $data
         ]);
