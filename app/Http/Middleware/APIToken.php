@@ -16,10 +16,11 @@ class APIToken
      */
     public function handle(Request $request, Closure $next)
     {
-        if($_SERVER['HTTP_TOKEN'] != 'gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFVaNj'){
-            return response()->json('Unauthorized', 401);
+        if($_SERVER['HTTP_TOKEN'] == 'gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFVaNj'){
+            return $next($request);
         }
+        // return response()->json('Unauthorized', 401);
+        return response()->json('Your token is invalid');
         
-        return $next($request);
     }
 }
