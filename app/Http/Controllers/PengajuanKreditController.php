@@ -2273,9 +2273,15 @@ class PengajuanKreditController extends Controller
                         
                     // POST data kredit & PO to API Data Warehouse
                     try{
+                        $dataPengajuan = DB::table('pengajuan')
+                            ->join('data_po', 'data_po.id_pengajuan', 'pengajuan.id')
+                            ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                            ->select('data_po.harga', 'calon_nasabah.tenor_yang_diminta')
+                            ->where('pengajuan.id', $id)
+                            ->first();
                         $curl = curl_init();
                         curl_setopt_array($curl, array(
-                            CURLOPT_URL => 'http://192.168.1.15:8000/api/v1/store-kredit',
+                            CURLOPT_URL => 'http://192.168.63.31:8001/api/v1/store-kredit',
                             CURLOPT_RETURNTRANSFER => true,
                             CURLOPT_ENCODING => '',
                             CURLOPT_MAXREDIRS => 10,
@@ -2283,7 +2289,12 @@ class PengajuanKreditController extends Controller
                             CURLOPT_FOLLOWLOCATION => true,
                             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                             CURLOPT_CUSTOMREQUEST => 'POST',
-                            CURLOPT_POSTFIELDS => array('pengajuan_id' => $id,'kode_cabang' => $kode_cabang->kode_cabang, 'nomor_pengajuan' => $po),
+                            CURLOPT_POSTFIELDS => array(
+                                'pengajuan_id' => $id,
+                                'kode_cabang' => $kode_cabang->kode_cabang, 
+                                'nomor_po' => $po,
+                                'tenor' => intval($dataPengajuan->tenor_yang_diminta) * 12,
+                                'harga_kendaraan' => $dataPengajuan->harga),
                             CURLOPT_HTTPHEADER => array(
                             'mid_client_key: $2y$10$uK7wv2xbmgOFAWOA./7nn.RMkuDfg4FKy64ad4h0AVqKxEpt0Co2u'
                             ),

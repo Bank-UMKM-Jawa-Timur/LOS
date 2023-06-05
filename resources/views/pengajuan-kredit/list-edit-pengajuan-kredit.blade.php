@@ -221,7 +221,7 @@
 
                                         @if ($item->sppk != null && $tglCetak?->tgl_cetak_sppk != null && $tglCetak?->tgl_cetak_po == null)
                                             <a target="_blank" href="{{ route('cetak-po',$item->id_pengajuan)}}" class="dropdown-item" >Cetak PO</a>
-                                        @elseif($item->sppk != null && $tglCetak->tgl_cetak_po != null && $item->po == null)
+                                        @elseif($item->sppk != null && $tglCetak?->tgl_cetak_po != null && $item->po == null)
                                             <a href="#" class="dropdown-item" data-toggle="modal" data-id="{{ $item->id_pengajuan }}" data-target="#uploadPOModal-{{$item->id_pengajuan}}">Upload File PO</a>
                                         @endif
 
