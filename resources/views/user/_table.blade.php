@@ -3,6 +3,7 @@
         <thead>
             <tr class="table-primary">
                 <th class="text-center">#</th>
+                <th>NIP</th>
                 <th>Nama</th>
                 <th>Email</th>
                 <th>Role</th>
@@ -18,6 +19,7 @@
             @foreach ($user as $item)
                 <tr class="border-bottom-primary">
                     <td class="text-center text-muted">{{ $no }}</td>
+                    <td>{{ $item->nip ?? '-' }}</td>
                     <td>{{ $item->name }}</td>
                     <td>{{ $item->email }}</td>
                     <td>{{ $item->role }}</td>

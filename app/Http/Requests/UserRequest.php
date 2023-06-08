@@ -24,6 +24,7 @@ class UserRequest extends FormRequest
     public function rules()
     {
         return [
+            'nip' => 'sometimes|nullable|unique:users',
             'name' => 'required',
             'email' => 'required',
             'role' => 'required',
@@ -34,6 +35,7 @@ class UserRequest extends FormRequest
     public function messages()
     {
         return [
+            'nip.unique' => 'NIP telah digunakan.',
             'name.required' => 'Name harus diisi.',
             'email.required' => 'Email harus diisi.',
             'role.required' => 'Role harus diisi.',

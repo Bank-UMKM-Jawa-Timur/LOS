@@ -2,6 +2,15 @@
     @csrf
     <div class="row">
         <div class="form-group col-md-6">
+            <label>NIP User</label>
+            <input type="text" name="nip" class="form-control @error('nip') is-invalid @enderror" placeholder="NIP User" value="{{old('nip')}}">
+            @error('nip')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+            @enderror
+        </div>
+        <div class="form-group col-md-6">
             <label>Nama User</label>
             <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" placeholder="Nama User" value="{{old('name')}}">
             @error('name')

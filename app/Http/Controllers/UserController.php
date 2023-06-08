@@ -83,6 +83,7 @@ class UserController extends Controller
         $validated = $request->validated();
         try {
             $user = new User;
+            $user->nip = ($request->get('nip') == null) ? null : $validated['nip'];
             $user->name = $validated['name'];
             $user->email = $validated['email'];
             $user->role = $validated['role'];
@@ -139,6 +140,7 @@ class UserController extends Controller
 
         $validatedData = $request->validate(
             [
+                'nip' => 'sometimes|nullable|unique:users,nip,'.$user->id,
                 'name' => 'required',
                 'email' => 'required',
                 'role' => 'required',
@@ -147,6 +149,7 @@ class UserController extends Controller
         );
 
         try {
+            $user->nip = $request->get('nip');
             $user->name = $request->get('name');
             $user->email = $request['email'];
             $user->role = $request['role'];
