@@ -845,6 +845,7 @@ class PengajuanKreditController extends Controller
                 ->where('id', $param['dataPO']->id_type)
                 ->first();
         }
+        $param['skema'] = $param['dataUmum']->skema_kredit;
 
         // return JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama', 'item.opsi_jawaban')
         //                                 ->join('item', 'jawaban_text.id_jawaban', 'item.id')
