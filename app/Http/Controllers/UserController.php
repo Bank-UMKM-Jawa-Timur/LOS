@@ -36,7 +36,7 @@ class UserController extends Controller
             $getUser = User::with('cabang')->orderBy('id', 'ASC');
 
             if ($keyword) {
-                $getUser->where('id', 'LIKE', "%{$keyword}%")->orWhere('users', 'LIKE', "%{$keyword}%");
+                $getUser->where('id', 'LIKE', "%{$keyword}%")->orWhere('name', 'LIKE', "%{$keyword}%")->orWhere('nip', 'LIKE', "%{$keyword}%");
             }
 
             $this->param['user'] = $getUser->paginate(10);

@@ -1,7 +1,7 @@
 <form action="{{ route('user.store') }}" method="POST">
     @csrf
     <div class="row">
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-4">
             <label>NIP User</label>
             <input type="text" name="nip" class="form-control @error('nip') is-invalid @enderror" placeholder="NIP User" value="{{old('nip')}}">
             @error('nip')
@@ -10,7 +10,7 @@
                 </div>
             @enderror
         </div>
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-4">
             <label>Nama User</label>
             <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" placeholder="Nama User" value="{{old('name')}}">
             @error('name')
@@ -19,7 +19,7 @@
                 </div>
             @enderror
         </div>
-        <div class="form-group col-md-6">
+        <div class="form-group col-md-4">
             <label>Email User</label>
             <input type="text" name="email" class="form-control @error('email') is-invalid @enderror" placeholder="Email User" value="{{old('email')}}">
             @error('email')
