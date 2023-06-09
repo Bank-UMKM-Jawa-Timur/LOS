@@ -29,6 +29,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 use Image;
 
@@ -2276,23 +2277,45 @@ class PengajuanKreditController extends Controller
                             ->join('calon_nasabah as cn', 'cn.id_pengajuan', 'p.id')
                             ->select('cn.tenor_yang_diminta as tenor', 'dp.harga')
                             ->where('dp.id_pengajuan', $id)->first();
-                        $curl = curl_init();
-                        curl_setopt_array($curl, array(
-                            CURLOPT_URL => 'http://192.168.63.31:8001/api/v1/store-kredit',
-                            CURLOPT_RETURNTRANSFER => true,
-                            CURLOPT_ENCODING => '',
-                            CURLOPT_MAXREDIRS => 10,
-                            CURLOPT_TIMEOUT => 0,
-                            CURLOPT_FOLLOWLOCATION => true,
-                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                            CURLOPT_CUSTOMREQUEST => 'POST',
-                            CURLOPT_POSTFIELDS => array('pengajuan_id' => $id, 'kode_cabang' => $kode_cabang->kode_cabang, 'nomor_po' => $po, 'harga_kendaraan' => $getPo->harga, 'tenor' => intval($getPo->tenor) * 12),
-                            CURLOPT_HTTPHEADER => array(
-                                'mid_client_key: $2y$10$uK7wv2xbmgOFAWOA./7nn.RMkuDfg4FKy64ad4h0AVqKxEpt0Co2u'
-                            ),
-                        ));
-                        $response = curl_exec($curl);
-                        curl_close($curl);
+                        // $curl = curl_init();
+                        // curl_setopt_array($curl, array(
+                        //     CURLOPT_URL => 'http://192.168.63.31:8001/api/v1/store-kredit',
+                        //     CURLOPT_RETURNTRANSFER => true,
+                        //     CURLOPT_ENCODING => '',
+                        //     CURLOPT_MAXREDIRS => 10,
+                        //     CURLOPT_TIMEOUT => 0,
+                        //     CURLOPT_FOLLOWLOCATION => true,
+                        //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        //     CURLOPT_CUSTOMREQUEST => 'POST',
+                        //     CURLOPT_POSTFIELDS => array('pengajuan_id' => $id, 'kode_cabang' => $kode_cabang->kode_cabang, 'nomor_po' => $po, 'harga_kendaraan' => $getPo->harga, 'tenor' => intval($getPo->tenor) * 12),
+                        //     CURLOPT_HTTPHEADER => array(
+                        //         'mid_client_key: $2y$10$uK7wv2xbmgOFAWOA./7nn.RMkuDfg4FKy64ad4h0AVqKxEpt0Co2u'
+                        //     ),
+                        // ));
+                        // $response = curl_exec($curl);
+                        // curl_close($curl);
+
+                        // store api
+                        $host = env('DWH_HOST');
+                        $apiURL = $host . '/api/v1/store-kredit';
+                        $headers = [
+                            'mid-client-key' => env('DWH_TOKEN')
+                        ];
+                        try {
+                            $response = Http::timeout(3)->withHeaders($headers)->withOptions(['verify' => false])->post($apiURL,[
+                                'pengajuan_id' => $id,
+                                'kode_cabang' => $kode_cabang->kode_cabang,
+                                'nomor_po' => $po,
+                                'harga_kendaraan' => $getPo->harga,
+                                'tenor' => intval($getPo->tenor) * 12
+                            ]);
+        
+                            $statusCode = $response->status();
+                            $responseBody = json_decode($response->getBody(), true);
+                        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+                            // return $e->getMessage();
+                        }
+
                     } catch (Exception $e) {
                         return redirect()->route('pengajuan-kredit.index')->withStatus('Terjadi kesalahan pada. ' . $e->getMessage());
                     }
