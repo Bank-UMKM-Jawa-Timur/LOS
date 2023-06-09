@@ -54,20 +54,20 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mx-auto">
-                <li class="nav-item">
+                <li class="nav-item" id="navDashboard">
                     <a class="nav-link {{ Request::segment(1) == 'dashboard' ? 'active' : '' }}" href="{{url('/dashboard')}}"><span class="fa fa-home mr-1"></span> Dashboard <span class="sr-only">(current)</span></a>
                 </li>
                 @if(Request::segment(1) == 'pengajuan-kredit' && (auth()->user()->role == 'Staf Analis Kredit' || auth()->user()->role == 'PBO / PBP'))
-                <li class="nav-item">
+                <li class="nav-item" id="navAnalisa">
                     <a class="nav-link {{ Request::segment(1) == 'pengajuan-kredit' ? 'active' : '' }}" href="{{url('pengajuan-kredit')}}"><span class="fa fa-credit-card mr-1"></span> Analisa Kredit</a>
                 </li>
                 @else
-                <li class="nav-item">
+                <li class="nav-item" id="navAnalisa">
                     <a class="nav-link {{ Request::segment(1) == 'pengajuan-kredit' ? 'active' : '' }}" href="{{url('pengajuan-kredit')}}"><span class="fa fa-credit-card mr-1"></span> Analisa Kredit</a>
                 </li>
                 @endif
                 @if (auth()->user()->role == 'Administrator')
-                <li class="nav-item dropdown">
+                <li class="nav-item dropdown" id="navAdmin">
                     <a class="nav-link dropdown-toggle {{ Request::segment(1) == 'rekap' ? 'active' : '' }}" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       <span class="fa fa-file-alt"></span> Data Master
                     </a>

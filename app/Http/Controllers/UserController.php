@@ -8,6 +8,7 @@ use \App\Models\User;
 use \App\Models\Cabang;
 use Exception;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -190,6 +191,11 @@ class UserController extends Controller
     {
         $this->param['pageTitle'] = 'Edit Password';
         $this->param['user'] = User::find(auth()->user()->id);
+        if(Auth::user()->password_change_at == null){
+            $this->param['force'] = true;
+        } else {
+            $this->param['force'] = false;
+        }
         return view('user.change-password', $this->param);
     }
 
@@ -225,6 +231,7 @@ class UserController extends Controller
 
         try {
             $user->password = \Hash::make($request->get('password'));
+            $user->password_change_at = now();
             $user->save();
 
 
