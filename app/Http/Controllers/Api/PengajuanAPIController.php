@@ -51,23 +51,30 @@ class PengajuanAPIController extends Controller
             ->join('mst_merk', 'mst_merk.id', 'mst_tipe.id_merk')
             ->select('pengajuan.id', 'calon_nasabah.nama', 'calon_nasabah.jumlah_kredit', 'data_po.no_po', 'calon_nasabah.tenor_yang_diminta', 'pengajuan.sppk', 'pengajuan.po', 'pengajuan.tanggal', 'pengajuan.pk', 'mst_merk.merk', 'mst_tipe.tipe', 'data_po.tahun_kendaraan', 'data_po.harga', 'data_po.jumlah AS jumlah_kendaraan')
             ->first();
-        
-        return response()->json([
-            'id_pengajuan' => $data->id,
-            'nama' => $data->nama,
-            'jumlah_kredit' => intval($data->jumlah_kredit),
-            'no_po' => $data->no_po,
-            'tenor' => intval($data->tenor_yang_diminta) * 12,
-            'sppk' => $data->sppk ?? null,
-            'po' => $data->po ?? null,
-            'pk' => $data->pk ?? null,
-            'merk' => $data->merk,
-            'tipe' => $data->tipe,
-            'tahun_kendaraan' => $data->tahun_kendaraan,
-            'harga_kendaraan' => $data->harga,
-            'jumlah_kendaraan' => $data->jumlah_kendaraan,
-            'tanggal' => $data->tanggal
-        ]);
+        if ($data) {
+            return response()->json([
+                'id_pengajuan' => $data->id,
+                'nama' => $data->nama,
+                'jumlah_kredit' => intval($data->jumlah_kredit),
+                'no_po' => $data->no_po,
+                'tenor' => intval($data->tenor_yang_diminta) * 12,
+                'sppk' => $data->sppk ?? null,
+                'po' => $data->po ?? null,
+                'pk' => $data->pk ?? null,
+                'merk' => $data->merk,
+                'tipe' => $data->tipe,
+                'tahun_kendaraan' => $data->tahun_kendaraan,
+                'harga_kendaraan' => $data->harga,
+                'jumlah_kendaraan' => $data->jumlah_kendaraan,
+                'tanggal' => $data->tanggal
+            ]);
+        }
+        else {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data not found'
+            ]);
+        }
     }
 
     public function getDataUsers($nip)
