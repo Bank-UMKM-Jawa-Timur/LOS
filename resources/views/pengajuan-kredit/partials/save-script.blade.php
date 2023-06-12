@@ -34,7 +34,7 @@
         const answerId = inputData.attr('name').replace(/\D/g, '');
 
         formData.append('file', e.target.files[0]);
-        formData.append('file_id', inputData.data('id'));
+        formData.append('file_id', inputData.attr('data-id'));
         formData.append('answer_id', answerId);
         formData.append('id_calon_nasabah', {{ $duTemp->id }});
 
