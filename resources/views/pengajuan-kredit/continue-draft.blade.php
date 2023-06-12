@@ -75,18 +75,18 @@ $dataIndex = match ($skema) {
 
     <form id="pengajuan_kredit" action="{{ route('pengajuan-kredit.store') }}" method="post" enctype="multipart/form-data">
         @csrf
-        <input type="hidden" name="id_nasabah" value="" id="id_nasabah">
+        <input type="hidden" name="id_nasabah" value="{{ $duTemp?->id }}">
         <input type="hidden" name="progress" class="progress">
 
         <div class="form-wizard active" data-index='0' data-done='true' id="wizard-data-umum">
             <div class="row">
                 {{-- Input hidden for Skema Kredit --}}
-                <input type="hidden" name="skema_kredit" id="skema_kredit" @if($skema != null) value="{{ $skema ?? '' }}" @endif>
+                <input type="hidden" name="skema_kredit" id="skema_kredit" @if($skema != null) value="{{ $skema ?? '' }}" @elseif($duTemp->skema_kredit != null) value="{{ $duTemp->skema_kredit ?? '' }}" @endif>
 
                 <div class="form-group col-md-6">
                     <label for="">Nama Lengkap</label>
                     <input type="text" name="name" id="nama" class="form-control @error('name') is-invalid @enderror"
-                        placeholder="Nama sesuai dengan KTP" value="" required maxlength="255">
+                        placeholder="Nama sesuai dengan KTP" value="{{ $duTemp?->nama ?? '' }}" required maxlength="255">
                     @error('name')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -96,14 +96,14 @@ $dataIndex = match ($skema) {
                 <div class="form-group col-md-6">
                     <label for="">{{ $itemSP->nama }}</label>
                     <input type="hidden" name="id_item_file[{{ $itemSP->id }}]" value="{{ $itemSP->id }}" id="">
-                    <input type="file" name="upload_file[{{ $itemSP->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-control limit-size">
+                    <input type="file" name="upload_file[{{ $itemSP->id }}]" data-id="{{ temporary($duTemp->id, $itemSP->id)?->id }}" placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
                             {{ $errors->first('dataLevelDua.' . $key) }}
                         </div>
                     @endif
-                    <span class="filename" style="display: inline;"></span>
+                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemSP->id)?->opsi_text }}</span>
                 </div>
                 <div class="form-group col-md-4">
                     <label for="">Kabupaten</label>
@@ -111,7 +111,7 @@ $dataIndex = match ($skema) {
                         <option value="">---Pilih Kabupaten----</option>
                         @foreach ($dataKabupaten as $item)
                             <option
-                                
+                                {{ ($item->id == $duTemp?->id_kabupaten ?? '') ? 'selected' : '' }}
                                 value="{{ $item->id }}"
                             >{{ $item->kabupaten }}</option>
                         @endforeach
@@ -147,7 +147,7 @@ $dataIndex = match ($skema) {
                 <div class="form-group col-md-12">
                     <label for="">Alamat Rumah</label>
                     <textarea name="alamat_rumah" class="form-control @error('alamat_rumah') is-invalid @enderror" maxlength="255" id="" cols="30" rows="4"
-                        placeholder="Alamat Rumah disesuaikan dengan KTP"></textarea>
+                        placeholder="Alamat Rumah disesuaikan dengan KTP">{{ $duTemp?->alamat_rumah ?? '' }}</textarea>
                     @error('alamat_rumah')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -158,7 +158,7 @@ $dataIndex = match ($skema) {
                 <div class="form-group col-md-12">
                     <label for="">Alamat Usaha</label>
                     <textarea name="alamat_usaha" class="form-control @error('alamat_usaha') is-invalid @enderror" maxlength="255" id="" cols="30" rows="4"
-                        placeholder="Alamat Usaha"></textarea>
+                        placeholder="Alamat Usaha">{{ $duTemp?->alamat_usaha ?? '' }}</textarea>
                     @error('alamat_usaha')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -168,7 +168,7 @@ $dataIndex = match ($skema) {
                 <div class="form-group col-md-12">
                     <label for="">No. KTP</label>
                     <input type="number" maxlength="16" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" name="no_ktp" class="form-control @error('no_ktp') is-invalid @enderror" id=""
-                        placeholder="Masukkan 16 digit No. KTP" value="">
+                        placeholder="Masukkan 16 digit No. KTP" value="{{ $duTemp?->no_ktp ?? '' }}">
                     @error('no_ktp')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -178,31 +178,31 @@ $dataIndex = match ($skema) {
                 <div class="form-group col-md-6">
                     <label for="">{{ $itemKTPSu->nama }}</label>
                     <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
-                    <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size">
+                    <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPSu->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
                             {{ $errors->first('dataLevelDua.' . $key) }}
                         </div>
                     @endif
-                    <span class="filename" style="display: inline;"></span>
+                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPSu->id)?->opsi_text }}</span>
                 </div>
                 <div class="form-group col-md-6">
                     <label for="">{{ $itemKTPIs->nama }}</label>
                     <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
-                    <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size">
+                    <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPIs->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
                             {{ $errors->first('dataLevelDua.' . $key) }}
                         </div>
                     @endif
-                    <span class="filename" style="display: inline;"></span>
+                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPIs->id)?->opsi_text }}</span>
                 </div>
                 <div class="form-group col-md-4">
                     <label for="">Tempat Lahir</label>
                     <input type="text" maxlength="255" name="tempat_lahir" id=""
-                        class="form-control @error('tempat_lahir') is-invalid @enderror" placeholder="Tempat Lahir" value="">
+                        class="form-control @error('tempat_lahir') is-invalid @enderror" placeholder="Tempat Lahir" value="{{ $duTemp?->tempat_lahir ?? '' }}">
                     @error('tempat_lahir')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -212,7 +212,7 @@ $dataIndex = match ($skema) {
                 <div class="form-group col-md-4">
                     <label for="">Tanggal Lahir</label>
                     <input type="date" name="tanggal_lahir" id=""
-                        class="form-control @error('tanggal_lahir') is-invalid @enderror" placeholder="Tempat Lahir" value="">
+                        class="form-control @error('tanggal_lahir') is-invalid @enderror" placeholder="Tempat Lahir" value="{{ $duTemp?->tanggal_lahir ?? '' }}">
                     @error('tanggal_lahir')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -226,7 +226,7 @@ $dataIndex = match ($skema) {
                         @foreach ($status as $sts)
                             <option
                                 value="{{ $sts }}"
-                                
+                                {{ ($sts == $duTemp?->status ?? '') ? 'selected' : null }}
                             >{{ ucfirst($sts) }}</option>
                         @endforeach
                     </select>
@@ -244,7 +244,7 @@ $dataIndex = match ($skema) {
                         @foreach ($sectors as $sector)
                         <option
                             value="{{ $sector }}"
-                            
+                            {{ ($sector == $duTemp?->sektor_kredit ?? '') ? 'selected' : '' }}
                         >{{ ucfirst($sector) }}</option>
                         @endforeach
                     </select>
@@ -260,7 +260,7 @@ $dataIndex = match ($skema) {
                         data-id_item={{ $itemSlik->id }}>
                         <option value=""> --Pilih Data -- </option>
                         @foreach ($itemSlik->option as $itemJawaban)
-                            <option value="{{ $itemJawaban->skor . '-' . $itemJawaban->id }}">
+                            <option value="{{ $itemJawaban->skor . '-' . $itemJawaban->id }}"  {{ (temporary_select($itemSlik->id, $duTemp->id)?->id_jawaban == $itemJawaban->id) ? 'selected' : '' }}>
                                 {{ $itemJawaban->option }}</option>
                         @endforeach
                     </select>
@@ -276,20 +276,20 @@ $dataIndex = match ($skema) {
                 <div class="form-group col-md-6">
                     <label for="">{{ $itemP->nama }}</label>
                     <input type="hidden" name="id_item_file[{{ $itemP->id }}]" value="{{ $itemP->id }}" id="">
-                    <input type="file" name="upload_file[{{ $itemP->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-control limit-size">
+                    <input type="file" name="upload_file[{{ $itemP->id }}]" data-id="{{ temporary($duTemp->id, $itemP->id)?->id }}" placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
                             {{ $errors->first('dataLevelDua.' . $key) }}
                         </div>
                     @endif
-                    <span class="filename" style="display: inline;"></span>
+                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemP->id)?->opsi_text }}</span>
                     {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Jenis Usaha</label>
                     <textarea name="jenis_usaha" class="form-control @error('jenis_usaha') is-invalid @enderror" maxlength="255" id="" cols="30" rows="4"
-                        placeholder="Jenis Usaha secara spesifik"></textarea>
+                        placeholder="Jenis Usaha secara spesifik">{{ $duTemp?->jenis_usaha ?? '' }}</textarea>
                     @error('jenis_usaha')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -299,7 +299,7 @@ $dataIndex = match ($skema) {
                 <div class="form-group col-md-6">
                     <label for="">Jumlah Kredit yang diminta</label>
                     <input type="text" name="jumlah_kredit" id="jumlah_kredit"
-                        class="form-control rupiah" value="">
+                        class="form-control rupiah" value="{{ rupiah($duTemp?->jumlah_kredit) ?? '' }}">
                     {{-- <textarea name="jumlah_kredit" class="form-control @error('jumlah_kredit') is-invalid @enderror" id="" cols="30"
                         rows="4" placeholder="Jumlah Kredit"></textarea> --}}
                     @error('jumlah_kredit')
@@ -316,7 +316,7 @@ $dataIndex = match ($skema) {
                         @for ($i = 1; $i <= 10; $i++)
                             <option
                                 value="{{ $i }}"
-                                
+                                {{ ($i == $duTemp?->tenor_yang_diminta ?? '') ? 'selected' : '' }}
                             > {{ $i . ' tahun' }} </option>
                         @endfor
                     </select>
@@ -329,7 +329,7 @@ $dataIndex = match ($skema) {
                 <div class="form-group col-md-12">
                     <label for="">Tujuan Kredit</label>
                     <textarea name="tujuan_kredit" class="form-control @error('tujuan_kredit') is-invalid @enderror" maxlength="255" id="" cols="30"
-                        rows="4" placeholder="Tujuan Kredit"></textarea>
+                        rows="4" placeholder="Tujuan Kredit">{{ $duTemp?->tujuan_kredit ?? '' }}</textarea>
                     @error('tujuan_kredit')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -339,7 +339,7 @@ $dataIndex = match ($skema) {
                 <div class="form-group col-md-12">
                     <label for="">Jaminan yang disediakan</label>
                     <textarea name="jaminan" class="form-control @error('jaminan') is-invalid @enderror" maxlength="255" id="" cols="30" rows="4"
-                        placeholder="Jaminan yang disediakan"></textarea>
+                        placeholder="Jaminan yang disediakan">{{ $duTemp?->jaminan_kredit }}</textarea>
                     @error('jaminan')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -349,7 +349,7 @@ $dataIndex = match ($skema) {
                 <div class="form-group col-md-12">
                     <label for="">Hubungan Bank</label>
                     <textarea name="hubungan_bank" class="form-control @error('hubungan_bank') is-invalid @enderror" maxlength="255" id="" cols="30"
-                        rows="4" placeholder="Hubungan dengan Bank"></textarea>
+                        rows="4" placeholder="Hubungan dengan Bank">{{ $duTemp?->hubungan_bank }}</textarea>
                     @error('hubungan_bank')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -359,7 +359,7 @@ $dataIndex = match ($skema) {
                 <div class="form-group col-md-12">
                     <label for="">Hasil Verifikasi</label>
                     <textarea name="hasil_verifikasi" class="form-control @error('hasil_verifikasi') is-invalid @enderror" maxlength="255" id="" cols="30"
-                        rows="4" placeholder="Hasil Verifikasi Karakter Umum"></textarea>
+                        rows="4" placeholder="Hasil Verifikasi Karakter Umum">{{ $duTemp?->verifikasi_umum }}</textarea>
                     @error('hasil_verifikasi')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -369,7 +369,7 @@ $dataIndex = match ($skema) {
             </div>
         </div>
 
-        @if ($skema == 'KKB')     
+        @if ($skema == 'KKB' || $duTemp?->skema_kredit == 'KKB')     
             <div class="form-wizard" data-index='1' data-done='true' id="wizard-data-po">
                 <div class="row">
                     <div class="form-group col-md-12">
@@ -403,7 +403,7 @@ $dataIndex = match ($skema) {
                     <div class="form-group col-md-6">
                         <label for="">Tahun</label>
                         <input type="number" name="tahun" id="tahun" class="form-control @error('tahun') is-invalid @enderror"
-                            placeholder="Tahun Kendaraan" value="" min="2000">
+                            placeholder="Tahun Kendaraan" value="{{ $duTemp?->tahun ?? '' }}" min="2000">
                         @error('tahun')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -413,7 +413,7 @@ $dataIndex = match ($skema) {
                     <div class="form-group col-md-6">
                         <label for="">Warna</label>
                         <input type="text" maxlength="255" name="warna" id="warna" class="form-control @error('warna') is-invalid @enderror"
-                            placeholder="Warna Kendaraan" value="">
+                            placeholder="Warna Kendaraan" value="{{ $duTemp?->warna ?? '' }}">
                         @error('warna')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -426,7 +426,7 @@ $dataIndex = match ($skema) {
                     <div class="form-group col-md-6">
                         <label for="">Pemesanan</label>
                         <input type="text" maxlength="255" name="pemesanan" id="pemesanan" class="form-control @error('pemesanan') is-invalid @enderror"
-                            placeholder="Pemesanan Kendaraan" value="">
+                            placeholder="Pemesanan Kendaraan" value="{{ $duTemp?->pemesanan ?? '' }}">
                         @error('pemesanan')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -436,7 +436,7 @@ $dataIndex = match ($skema) {
                     <div class="form-group col-md-6">
                         <label for="">Sejumlah</label>
                         <input type="number" name="sejumlah" id="sejumlah" class="form-control @error('sejumlah') is-invalid @enderror"
-                            placeholder="Jumlah Kendaraan" value="">
+                            placeholder="Jumlah Kendaraan" value="{{ $duTemp?->sejumlah ?? '' }}">
                         @error('sejumlah')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -446,7 +446,7 @@ $dataIndex = match ($skema) {
                     <div class="form-group col-md-6">
                         <label for="">Harga</label>
                         <input type="text" name="harga" id="harga" class="form-control rupiah @error('harga') is-invalid @enderror"
-                            placeholder="Harga Kendaraan" value="">
+                            placeholder="Harga Kendaraan" value="{{ $duTemp?->harga ?? '' }}">
                         @error('harga')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -481,6 +481,9 @@ $dataIndex = match ($skema) {
                     @foreach ($dataLevelDua as $item)
                         @php
                             $idLevelDua = str_replace(' ', '_', strtolower($item->nama));
+                            $nib = temporary($duTemp->id, 77)?->opsi_text;
+                            $sku = temporary($duTemp->id, 78)?->opsi_text;
+                            $npwp = temporary($duTemp->id, 79)?->opsi_text;
                         @endphp
                         {{-- item ijin usaha --}}
                         @if ($item->nama == 'Ijin Usaha')
@@ -489,9 +492,9 @@ $dataIndex = match ($skema) {
                                     <label for="">{{ $item->nama }}</label>
                                     <select name="ijin_usaha" id="ijin_usaha" class="form-control" required>
                                         <option value="">-- Pilih Ijin Usaha --</option>
-                                        <option value="nib">NIB</option>
-                                        <option value="surat_keterangan_usaha">Surat Keterangan Usaha</option>
-                                        <option value="tidak_ada_legalitas_usaha">Tidak Ada Legalitas Usaha</option>
+                                        <option value="nib"{{ ($nib != '') ? 'selected' : '' }}>NIB</option>
+                                        <option value="surat_keterangan_usaha"{{ ($sku != '') ? 'selected' : '' }}>Surat Keterangan Usaha</option>
+                                        <option value="tidak_ada_legalitas_usaha"{{ ($nib != '' && $sku != '' && $npwp != '') ? 'selected' : '' }}>Tidak Ada Legalitas Usaha</option>
                                     </select>
                                 </div>
                             </div>
@@ -502,20 +505,20 @@ $dataIndex = match ($skema) {
                                     <input type="hidden" name="id_level[77]" value="77" id="nib_id">
                                     <input type="hidden" name="opsi_jawaban[77]" value="input text" id="nib_opsi_jawaban">
                                     <input type="text" maxlength="255" name="informasi[77]" id="nib_text" placeholder="Masukkan informasi"
-                                        class="form-control" value="">
+                                        class="form-control" value="{{ temporary($duTemp->id, 77)?->opsi_text }}">
                                 </div>
 
                                 <div class="form-group col-md-6" id="docNIB">
                                     <label for="">{{ $itemNIB->nama }}</label>
                                     <input type="hidden" name="id_item_file[{{ $itemNIB->id }}]" value="{{ $itemNIB->id }}" id="docNIB_id">
-                                    <input type="file" name="upload_file[{{ $itemNIB->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemNIB->nama }}" class="form-control limit-size">
+                                    <input type="file" name="upload_file[{{ $itemNIB->id }}]" data-id="{{ temporary($duTemp->id, $itemNIB->id)?->id }}" placeholder="Masukkan informasi {{ $itemNIB->nama }}" class="form-control limit-size">
                                     <span class="invalid-tooltip" style="display: none" id="docNIB_text">Maximum upload file size is 15 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('dataLevelTiga.' . $key) }}
                                         </div>
                                     @endif
-                                    <span class="filename" style="display: inline;"></span>
+                                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemNIB->id)?->opsi_text }}</span>
                                 </div>
 
                                 <div class="form-group col-md-6" id="surat_keterangan_usaha">
@@ -530,14 +533,14 @@ $dataIndex = match ($skema) {
                                 <div class="form-group col-md-6" id="docSKU">
                                     <label for="">{{ $itemSKU->nama }}</label>
                                     <input type="hidden" name="id_item_file[{{ $itemSKU->id }}]" value="{{ $itemSKU->id }}" id="docSKU_id">
-                                    <input type="file" name="upload_file[{{ $itemSKU->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemSKU->nama }}" class="form-control limit-size">
+                                    <input type="file" name="upload_file[{{ $itemSKU->id }}]" data-id="{{ temporary($duTemp->id, $itemSKU->id)?->id }}" placeholder="Masukkan informasi {{ $itemSKU->nama }}" class="form-control limit-size">
                                     <span class="invalid-tooltip" style="display: none" id="docSKU_text">Maximum upload file size is 15 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('dataLevelTiga.' . $key) }}
                                         </div>
                                     @endif
-                                    <span class="filename" style="display: inline;"></span>
+                                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemSKU->id)?->opsi_text }}</span>
                                 </div>
                             </div>
 
@@ -548,20 +551,20 @@ $dataIndex = match ($skema) {
                                     <input type="hidden" name="id_level[79]" value="79" id="npwp_id">
                                     <input type="hidden" name="opsi_jawaban[79]" value="input text" id="npwp_opsi_jawaban">
                                     <input type="text" maxlength="255" name="informasi[79]" id="npwp_text" placeholder="Masukkan informasi"
-                                        class="form-control" value="">
+                                        class="form-control" value="{{ temporary($duTemp->id, 79)?->opsi_text }}">
                                 </div>
 
                                 <div class="form-group col-md-6" id="docNPWP">
                                     <label for="">{{ $itemNPWP->nama }}</label>
                                     <input type="hidden" name="id_item_file[{{ $itemNPWP->id }}]" value="{{ $itemNPWP->id }}" id="docNPWP_id">
-                                    <input type="file" name="upload_file[{{ $itemNPWP->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemNPWP->nama }}" class="form-control limit-size">
+                                    <input type="file" name="upload_file[{{ $itemNPWP->id }}]" data-id="{{ temporary($duTemp->id, $itemNPWP->id)?->id }}" placeholder="Masukkan informasi {{ $itemNPWP->nama }}" class="form-control limit-size">
                                     <span class="invalid-tooltip" style="display: none" id="docNPWP_text">Maximum upload file size is 15 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('dataLevelTiga.' . $key) }}
                                         </div>
                                     @endif
-                                    <span class="filename" style="display: inline;"></span>
+                                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemNPWP->id)?->opsi_text }}</span>
                                 </div>
                             </div>
                         @else
@@ -571,7 +574,7 @@ $dataIndex = match ($skema) {
                                     <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
                                     <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
                                     <input type="text" maxlength="255" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
-                                        placeholder="Masukkan informasi {{ $item->nama }}" class="form-control" value="">
+                                        placeholder="Masukkan informasi {{ $item->nama }}" class="form-control" value="{{ temporary($duTemp->id, $item->id)?->opsi_text }}">
                                 </div>
                             @elseif ($item->opsi_jawaban == 'number')
                                 @if ($item->nama == 'Repayment Capacity')
@@ -580,7 +583,7 @@ $dataIndex = match ($skema) {
                                         <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
                                         <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
                                         <input type="text" maxlength="255" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
-                                            placeholder="Masukkan informasi {{ $item->nama }}" class="form-control" value="">
+                                            placeholder="Masukkan informasi {{ $item->nama }}" class="form-control" value="{{ temporary($duTemp->id, $item->id)?->opsi_text }}">
                                     </div>
                                 @else
                                     @if ($item->nama == 'Omzet Penjualan' || $item->nama == 'Installment')
@@ -589,7 +592,7 @@ $dataIndex = match ($skema) {
                                             <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
                                             <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
                                             <input type="text" maxlength="255" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
-                                                placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah" value="">
+                                                placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah" value="{{ rupiah(temporary($duTemp->id, $item->id)?->opsi_text) }}">
                                         </div>
                                     @else
                                         <div class="form-group col-md-6">
@@ -597,7 +600,7 @@ $dataIndex = match ($skema) {
                                             <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
                                             <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
                                             <input type="text" maxlength="255" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
-                                                placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah" value="">
+                                                placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah" value="{{ rupiah(temporary($duTemp->id, $item->id)?->opsi_text) }}">
                                         </div>
                                     @endif
                                 @endif
@@ -609,7 +612,7 @@ $dataIndex = match ($skema) {
                                     <div class="input-group mb-3">
                                         <input type="number" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
                                             placeholder="Masukkan informasi {{ $item->nama }}" class="form-control"
-                                            aria-label="Recipient's username" aria-describedby="basic-addon2" value="">
+                                            aria-label="Recipient's username" aria-describedby="basic-addon2" value="{{ temporary($duTemp->id, $item->id)?->opsi_text }}">
                                         <div class="input-group-append">
                                             <span class="input-group-text" id="basic-addon2">%</span>
                                         </div>
@@ -621,10 +624,10 @@ $dataIndex = match ($skema) {
                                     {{-- <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" --}}
                                         {{-- id="{{ $idLevelDua }}"> --}}
                                     <input type="hidden" name="id_item_file[{{ $item->id }}]" value="{{ $item->id }}" id="">
-                                    <input type="file" name="upload_file[{{ $item->id }}]" data-id=""
+                                    <input type="file" name="upload_file[{{ $item->id }}]" data-id="{{ temporary($duTemp->id, $item->id)?->id }}"
                                         placeholder="Masukkan informasi {{ $item->nama }}" class="form-control limit-size">
                                         <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
-                                    <span class="filename" style="display: inline;"></span>
+                                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $item->id)?->opsi_text }}</span>
                                 </div>
                             @elseif ($item->opsi_jawaban == 'long text')
                                 <div class="form-group col-md-6">
@@ -632,7 +635,7 @@ $dataIndex = match ($skema) {
                                     <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
                                     <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
                                     <textarea name="informasi[{{ $item->id }}]" rows="4" id="{{ $idLevelDua }}" maxlength="255" class="form-control"
-                                        placeholder="Masukkan informasi {{ $item->nama }}"></textarea>
+                                        placeholder="Masukkan informasi {{ $item->nama }}">{{ temporary($duTemp->id, $item->id)?->opsi_text }}</textarea>
                                 </div>
                             @endif
 
@@ -689,7 +692,7 @@ $dataIndex = match ($skema) {
                                         <option value=""> --Pilih Opsi-- </option>
                                         @foreach ($dataJawaban as $key => $itemJawaban)
                                             <option id="{{ $idLevelDua . '_' . $key }}"
-                                                value="{{ ($itemJawaban->skor == null ? 'kosong' : $itemJawaban->skor) . '-' . $itemJawaban->id }}">
+                                                value="{{ ($itemJawaban->skor == null ? 'kosong' : $itemJawaban->skor) . '-' . $itemJawaban->id }}" {{ (temporary_select($item->id, $duTemp->id)?->id_jawaban == $itemJawaban->id) ? 'selected' : '' }}>
                                                 {{ $itemJawaban->option }}</option>
                                         @endforeach
                                     </select>
@@ -731,9 +734,9 @@ $dataIndex = match ($skema) {
                                         <select name="kategori_jaminan_tambahan" id="kategori_jaminan_tambahan"
                                             class="form-control" required>
                                             <option value="">-- Pilih Kategori Jaminan Tambahan --</option>
-                                            <option value="Tanah">Tanah</option>
-                                            <option value="Kendaraan Bermotor">Kendaraan Bermotor</option>
-                                            <option value="Tanah dan Bangunan">Tanah dan Bangunan</option>
+                                            <option value="Tanah" {{ ($duTemp?->jaminan_tambahan == 'Tanah') ? 'selected' : ''  }}>Tanah</option>
+                                            <option value="Kendaraan Bermotor" {{ ($duTemp?->jaminan_tambahan == 'Kendaraan Bermotor') ? 'selected' : ''  }}>Kendaraan Bermotor</option>
+                                            <option value="Tanah dan Bangunan" {{ ($duTemp?->jaminan_tambahan == 'Tanah dan Bangunan') ? 'selected' : ''  }}>Tanah dan Bangunan</option>
                                         </select>
                                         {{-- <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
                                         <input type="hidden" name="opsi_jawaban[]" value="{{ $itemTiga->opsi_jawaban }}"
@@ -764,7 +767,7 @@ $dataIndex = match ($skema) {
                                             <input type="hidden" name="opsi_jawaban[{{ $itemTiga->id }}]"
                                                 value="{{ $itemTiga->opsi_jawaban }}" id="">
                                             <input type="text" maxlength="255" name="informasi[{{ $itemTiga->id }}]" placeholder="Masukkan informasi"
-                                                class="form-control" id="{{ $idLevelTiga }}" value="">
+                                                class="form-control" id="{{ $idLevelTiga }}" value="{{ temporary($duTemp->id, $itemTiga->id)?->opsi_text }}">
                                         </div>
                                     @elseif ($itemTiga->opsi_jawaban == 'number')
                                         <div class="form-group col-md-6">
@@ -774,7 +777,7 @@ $dataIndex = match ($skema) {
                                             <input type="hidden" name="id_level[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}" id="">
                                             <input type="text" step="any" name="informasi[{{ $itemTiga->id }}]" id="{{ $idLevelTiga }}"
                                                 placeholder="Masukkan informasi {{ $itemTiga->nama }}"
-                                                class="form-control rupiah" value="">
+                                                class="form-control rupiah" value="{{ rupiah(temporary($duTemp->id, $itemTiga->id)?->opsi_text) }}">
                                         </div>
                                     @elseif ($itemTiga->opsi_jawaban == 'persen')
                                         <div class="form-group col-md-6">
@@ -790,7 +793,7 @@ $dataIndex = match ($skema) {
                                                     id="{{ $idLevelTiga }}"
                                                     placeholder="Masukkan informasi {{ $itemTiga->nama }}"
                                                     class="form-control" aria-label="Recipient's username"
-                                                    aria-describedby="basic-addon2" value="">
+                                                    aria-describedby="basic-addon2" value="{{ temporary($duTemp->id, $itemTiga->id)?->opsi_text }}">
                                                 <div class="input-group-append">
                                                     <span class="input-group-text" id="basic-addon2">%</span>
                                                 </div>
@@ -798,40 +801,17 @@ $dataIndex = match ($skema) {
                                             @endif
                                         </div>
                                     @elseif ($itemTiga->opsi_jawaban == 'file')
+                                        @forelse (temporary($duTemp->id, $itemTiga->id, true) as $tempData)
                                         <div class="form-group col-md-6 file-wrapper item-{{ $itemTiga->id }}">
                                             <label for="">{{ $itemTiga->nama }}</label>
                                             <div class="row file-input">
                                                 <div class="col-md-9">
                                                     <input type="hidden" name="id_item_file[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}" id="">
-                                                    <input type="file" name="upload_file[{{ $itemTiga->id }}]" data-id=""
+                                                    <input type="file" name="upload_file[{{ $itemTiga->id }}]" data-id="{{ $tempData->id }}"
                                                         placeholder="Masukkan informasi {{ $itemTiga->nama }}"
                                                         class="form-control limit-size">
                                                         <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
-                                                    <span class="filename" style="display: inline;"></span>
-                                                </div>
-                                                <div class="col-1">
-                                                    <button class="btn btn-sm btn-success btn-add-file" type="button" data-id="{{ $itemTiga->id }}">
-                                                        <i class="fa fa-plus"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="col-1">
-                                                    <button class="btn btn-sm btn-danger btn-del-file" type="button" data-id="{{ $itemTiga->id }}">
-                                                        <i class="fa fa-minus"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="form-group col-md-6 file-wrapper item-{{ $itemTiga->id }}">
-                                            <label for="">{{ $itemTiga->nama }}</label>
-                                            <div class="row file-input">
-                                                <div class="col-md-9">
-                                                    <input type="hidden" name="id_item_file[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}" id="">
-                                                    <input type="file" name="upload_file[{{ $itemTiga->id }}]" data-id=""
-                                                        placeholder="Masukkan informasi {{ $itemTiga->nama }}"
-                                                        class="form-control limit-size">
-                                                        <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
-                                                    <span class="filename" style="display: inline;"></span>
+                                                    <span class="filename" style="display: inline;">{{ $tempData->opsi_text }}</span>
                                                 </div>
                                                 @if(in_array(trim($itemTiga->nama), $multipleFiles))
                                                 <div class="col-1">
@@ -847,6 +827,33 @@ $dataIndex = match ($skema) {
                                                 @endif
                                             </div>
                                         </div>
+                                        @empty
+                                        <div class="form-group col-md-6 file-wrapper item-{{ $itemTiga->id }}">
+                                            <label for="">{{ $itemTiga->nama }}</label>
+                                            <div class="row file-input">
+                                                <div class="col-md-9">
+                                                    <input type="hidden" name="id_item_file[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}" id="">
+                                                    <input type="file" name="upload_file[{{ $itemTiga->id }}]" data-id="{{ temporary($duTemp->id, $itemTiga->id)?->id }}"
+                                                        placeholder="Masukkan informasi {{ $itemTiga->nama }}"
+                                                        class="form-control limit-size">
+                                                        <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                                                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemTiga->id)?->opsi_text }}</span>
+                                                </div>
+                                                @if(in_array(trim($itemTiga->nama), $multipleFiles))
+                                                <div class="col-1">
+                                                    <button class="btn btn-sm btn-success btn-add-file" type="button" data-id="{{ $itemTiga->id }}">
+                                                        <i class="fa fa-plus"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="col-1">
+                                                    <button class="btn btn-sm btn-danger btn-del-file" type="button" data-id="{{ $itemTiga->id }}">
+                                                        <i class="fa fa-minus"></i>
+                                                    </button>
+                                                </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        @endforelse
                                     @elseif ($itemTiga->opsi_jawaban == 'long text')
                                         <div class="form-group col-md-6">
                                             <label for="">{{ $itemTiga->nama }}</label>
@@ -854,7 +861,7 @@ $dataIndex = match ($skema) {
                                                 value="{{ $itemTiga->opsi_jawaban }}" id="">
                                             <input type="hidden" name="id_level[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}" id="">
                                             <textarea name="informasi[{{ $itemTiga->id }}]" rows="4" id="{{ $idLevelTiga }}" maxlength="255" class="form-control"
-                                                placeholder="Masukkan informasi {{ $itemTiga->nama }}"></textarea>
+                                                placeholder="Masukkan informasi {{ $itemTiga->nama }}">{{ temporary($duTemp->id, $itemTiga->id)?->opsi_text }}</textarea>
                                         </div>
                                     @endif
 
@@ -899,7 +906,7 @@ $dataIndex = match ($skema) {
                                                     <option value=""> --Pilih Opsi-- </option>
                                                     @foreach ($dataJawabanLevelTiga as $key => $itemJawabanTiga)
                                                         <option id="{{ $idLevelTiga . '_' . $key }}"
-                                                            value="{{ ($itemJawabanTiga->skor == null ? 'kosong' : $itemJawabanTiga->skor) . '-' . $itemJawabanTiga->id }}">
+                                                            value="{{ ($itemJawabanTiga->skor == null ? 'kosong' : $itemJawabanTiga->skor) . '-' . $itemJawabanTiga->id }}" {{ (temporary_select($itemTiga->id, $duTemp->id)?->id_jawaban == $itemJawabanTiga->id) ? 'selected' : '' }}>
                                                             {{ $itemJawabanTiga->option }}</option>
                                                     @endforeach
                                                 </select>
@@ -923,7 +930,7 @@ $dataIndex = match ($skema) {
                                                 <input type="hidden" name="opsi_jawaban[{{ $itemEmpat->id }}]"
                                                     value="{{ $itemEmpat->opsi_jawaban }}" id="">
                                                 <input type="text" maxlength="255" name="informasi[{{ $itemEmpat->id }}]" id="{{ $idLevelEmpat }}"
-                                                    placeholder="Masukkan informasi" class="form-control" value="">
+                                                    placeholder="Masukkan informasi" class="form-control" value="{{ temporary($duTemp->id, $itemEmpat->id)?->opsi_text }}">
                                             </div>
                                         @elseif ($itemEmpat->opsi_jawaban == 'number')
                                             <div class="form-group col-md-6">
@@ -935,7 +942,7 @@ $dataIndex = match ($skema) {
                                                 <input type="text" step="any" name="informasi[{{ $itemEmpat->id }}]"
                                                     id="{{ $idLevelEmpat }}"
                                                     placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
-                                                    class="form-control rupiah" value="">
+                                                    class="form-control rupiah" value="{{ rupiah(temporary($duTemp->id, $itemEmpat->id)?->opsi_text) }}">
                                             </div>
                                         @elseif ($itemEmpat->opsi_jawaban == 'persen')
                                             <div class="form-group col-md-6">
@@ -949,7 +956,7 @@ $dataIndex = match ($skema) {
                                                         id="{{ $idLevelEmpat }}"
                                                         placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
                                                         class="form-control" aria-label="Recipient's username"
-                                                        aria-describedby="basic-addon2" value="">
+                                                        aria-describedby="basic-addon2" value="{{ temporary($duTemp->id, $itemEmpat->id)?->opsi_text }}">
                                                     <div class="input-group-append">
                                                         <span class="input-group-text" id="basic-addon2">%</span>
                                                     </div>
@@ -962,11 +969,11 @@ $dataIndex = match ($skema) {
                                                     value="{{ $itemEmpat->opsi_jawaban }}" id=""> --}}
                                                 <input type="hidden" name="id_item_file[{{ $itemEmpat->id }}]" value="{{ $itemEmpat->id }}"
                                                     id="">
-                                                <input type="file" name="upload_file[{{ $itemEmpat->id }}]" data-id=""
+                                                <input type="file" name="upload_file[{{ $itemEmpat->id }}]" data-id="{{ temporary($duTemp->id, $itemEmpat->id)?->id }}"
                                                     placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
                                                     class="form-control limit-size">
                                                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
-                                                <span class="filename" style="display: inline;"></span>
+                                                <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemEmpat->id)?->opsi_text }}</span>
                                             </div>
                                         @elseif ($itemEmpat->opsi_jawaban == 'long text')
                                             <div class="form-group col-md-6">
@@ -1006,7 +1013,7 @@ $dataIndex = match ($skema) {
                                                     <option value=""> --Pilih Opsi -- </option>
                                                     @foreach ($dataJawabanLevelEmpat as $itemJawabanEmpat)
                                                         <option id="{{ $idLevelEmpat . '_' . $key }}"
-                                                            value="{{ ($itemJawabanEmpat->skor == null ? 'kosong' : $itemJawabanEmpat->skor) . '-' . $itemJawabanEmpat->id }}">
+                                                            value="{{ ($itemJawabanEmpat->skor == null ? 'kosong' : $itemJawabanEmpat->skor) . '-' . $itemJawabanEmpat->id }}" {{ (temporary_select($itemEmpat->id, $duTemp->id)?->id_jawaban == $itemJawabanEmpat->id) ? 'selected' : '' }}>
                                                             {{ $itemJawabanEmpat->option }}</option>
                                                     @endforeach
                                                 </select>
@@ -1026,7 +1033,7 @@ $dataIndex = match ($skema) {
                         <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
                         <input type="hidden" name="id_aspek[{{ $value->id }}]" value="{{ $value->id }}">
                         <textarea name="pendapat_per_aspek[{{ $value->id }}]" class="form-control @error('pendapat_per_aspek') is-invalid @enderror" id="" maxlength="255"
-                            cols="30" rows="4" placeholder="Pendapat Per Aspek"></textarea>
+                            cols="30" rows="4" placeholder="Pendapat Per Aspek">{{ temporary_usulan($value->id, $duTemp->id)?->usulan }}</textarea>
                         @error('pendapat_per_aspek')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -1074,9 +1081,12 @@ $dataIndex = match ($skema) {
     <script>
         $(document).ready(function() {
             let valSkema = $("#skema").val();
-            if(valSkema == null || valSkema == ''){
-                $('#exampleModal').modal('show');
-            }
+
+            @if($duTemp->nama == null) 
+                if(valSkema == null || valSkema == ''){
+                    $('#exampleModal').modal('show');
+                }
+            @endif
 
             $("#exampleModal").on('click', "#btnSkema", function(){
                 let valSkema = $("#skema").val();
@@ -1108,10 +1118,21 @@ $dataIndex = match ($skema) {
             })
         })
 
-        $('#docSKU').hide();
-        $('#surat_keterangan_usaha').hide();
-        $('#nib').hide();
-        $('#docNIB').hide();
+        @if($nib != '')
+            $('#docSKU').hide();
+            $('#surat_keterangan_usaha').hide();
+        @elseif($sku != '')
+            $('#nib').hide();
+            $('#docNIB').hide();
+        @elseif($sku == '' && $npwp == '' && $nib == '')
+            $('#docSKU').hide();
+            $('#surat_keterangan_usaha').hide();
+            $('#nib').hide();
+            $('#docNIB').hide();
+            $('#npwp').hide();
+            $('#docNPWP').hide();
+            $('#ijin_usaha').val('tidak_ada_legalitas_usaha')
+        @endif
         //make input readonly
         $('#ratio_coverage').attr('readonly', true);
         $('#ratio_tenor_asuransi').attr('readonly', true);
@@ -1151,7 +1172,7 @@ $dataIndex = match ($skema) {
                             $("#desa").append('<option>---Pilih Desa---</option>');
                             $.each(res, function(nama, kode) {
                                 $('#kecamatan').append(`
-                                    <option value="${kode}">${nama}</option>
+                                    <option value="${kode}" ${kode == {{$duTemp?->id_kecamatan ?? 'null'}} ? 'selected' : '' }>${nama}</option>
                                 `);
                             });
 
@@ -1183,7 +1204,7 @@ $dataIndex = match ($skema) {
                             $("#desa").append('<option>---Pilih Desa---</option>');
                             $.each(res, function(nama, kode) {
                                 $('#desa').append(`
-                                    <option value="${kode}">${nama}</option>
+                                    <option value="${kode}" ${kode == {{$duTemp?->id_desa ?? 'null'}} ? 'selected' : '' }>${nama}</option>
                                 `);
                             });
                         } else {
@@ -1367,7 +1388,7 @@ $dataIndex = match ($skema) {
 
             $.ajax({
                 type: "get",
-                url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}`,
+                url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}&idCalonNasabah={{ $duTemp?->id }}`,
                 dataType: "json",
                 success: function(response) {
                     // add item by kategori
@@ -1411,6 +1432,31 @@ $dataIndex = match ($skema) {
                         } else {
                             if(valItem.nama == 'Foto') {
                                 $('#bukti_pemilikan_jaminan_tambahan').append(`
+                                @forelse (temporary($duTemp->id, 148, true) as $tempData)
+                                <div class="form-group col-md-6 file-wrapper item-${valItem.id}">
+                                    <label for="">${valItem.nama}</label>
+                                    <div class="row file-input">
+                                        <div class="col-md-9">
+                                            <input type="hidden" name="id_item_file[${valItem.id}]" value="${valItem.id}" id="">
+                                            <input type="file" name="upload_file[${valItem.id}]" data-id="{{ $tempData->id }}"
+                                                placeholder="Masukkan informasi ${valItem.nama}"
+                                                class="form-control limit-size">
+                                                <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                                            <span class="filename" style="display: inline;">{{ $tempData->opsi_text }}</span>
+                                        </div>
+                                        <div class="col-1">
+                                            <button class="btn btn-sm btn-success btn-add-file" type="button" data-id="${valItem.id}">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </div>
+                                        <div class="col-1">
+                                            <button class="btn btn-sm btn-danger btn-del-file" type="button" data-id="${valItem.id}">
+                                                <i class="fa fa-minus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                @empty
                                 <div class="form-group col-md-6 file-wrapper item-${valItem.id}">
                                     <label for="">${valItem.nama}</label>
                                     <div class="row file-input">
@@ -1434,30 +1480,7 @@ $dataIndex = match ($skema) {
                                         </div>
                                     </div>
                                 </div>
-                                
-                                <div class="form-group col-md-6 file-wrapper item-${valItem.id}">
-                                    <label for="">${valItem.nama}</label>
-                                    <div class="row file-input">
-                                        <div class="col-md-9">
-                                            <input type="hidden" name="id_item_file[${valItem.id}]" value="${valItem.id}" id="">
-                                            <input type="file" name="upload_file[${valItem.id}]" data-id=""
-                                                placeholder="Masukkan informasi ${valItem.nama}"
-                                                class="form-control limit-size">
-                                                <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
-                                            <span class="filename" style="display: inline;"></span>
-                                        </div>
-                                        <div class="col-1">
-                                            <button class="btn btn-sm btn-success btn-add-file" type="button" data-id="${valItem.id}">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                        </div>
-                                        <div class="col-1">
-                                            <button class="btn btn-sm btn-danger btn-del-file" type="button" data-id="${valItem.id}">
-                                                <i class="fa fa-minus"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
+                                @endforelse
                                 `);
                             } else {
                                 if(response.dataJawaban[i] != null && response.dataJawaban[i] != ""){
@@ -1518,6 +1541,7 @@ $dataIndex = match ($skema) {
                 $('#nib').show();
                 $('#nib_id').removeAttr('disabled');
                 $('#nib_text').removeAttr('disabled');
+                $('#nib_text').val('{{ temporary($duTemp->id, 77)?->opsi_text }}');
                 $('#nib_opsi_jawaban').removeAttr('disabled');
 
                 $('#docNIB').show();
@@ -1528,6 +1552,7 @@ $dataIndex = match ($skema) {
                 $('#npwp').show();
                 $('#npwp_id').removeAttr('disabled');
                 $('#npwp_text').removeAttr('disabled');
+                $('#npwp_text').val('{{ temporary($duTemp->id, 79)?->opsi_text }}');
                 $('#npwp_opsi_jawaban').removeAttr('disabled');
 
                 $('#docNPWP').show();
@@ -1545,6 +1570,7 @@ $dataIndex = match ($skema) {
                 $('#docNIB').hide();
                 $('#docNIB_id').attr('disabled', true);
                 $('#docNIB_text').attr('disabled', true);
+                $('#docNIB_text').val('{{ temporary($duTemp->id, 78)?->opsi_text }}');
                 $('#docNIB_upload_file').attr('disabled', true);
 
                 $('#surat_keterangan_usaha').show();
@@ -1561,6 +1587,7 @@ $dataIndex = match ($skema) {
                 $('#npwp').show();
                 $('#npwp_id').removeAttr('disabled');
                 $('#npwp_text').removeAttr('disabled');
+                $('#npwp_text').val('{{ temporary($duTemp->id, 79)?->opsi_text }}');
                 $('#npwp_opsi_jawaban').removeAttr('disabled');
 
                 $('#docNPWP').show();
@@ -1626,6 +1653,7 @@ $dataIndex = match ($skema) {
                 $('#npwp').show();
                 $('#npwp_id').removeAttr('disabled');
                 $('#npwp_text').removeAttr('disabled');
+                $('#npwp_text').val('{{ temporary($duTemp->id, 79)?->opsi_text }}');
                 $('#npwp_opsi_jawaban').removeAttr('disabled');
 
                 $('#docNPWP').show();
@@ -1939,6 +1967,6 @@ $dataIndex = match ($skema) {
         });
         @endif
     </script>
-    @include('pengajuan-kredit.partials.create-save-script')
+    @include('pengajuan-kredit.partials.save-script')
     <script src="{{ asset('') }}js/custom.js"></script>
 @endpush

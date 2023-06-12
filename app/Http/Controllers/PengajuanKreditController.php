@@ -205,12 +205,11 @@ class PengajuanKreditController extends Controller
         $param['itemNIB'] = ItemModel::where('nama', 'Dokumen NIB')->first();
         $param['itemNPWP'] = ItemModel::where('nama', 'Dokumen NPWP')->first();
         $param['itemSKU'] = ItemModel::where('nama', 'Dokumen Surat Keterangan Usaha')->first();
-        $param['duTemp'] = TemporaryService::getNasabahData($request->tempId);
 
         $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
         $param['dataMerk'] = MerkModel::all();
 
-        $param['skema'] = $request->skema ?? $param['duTemp']?->skema_kredit;
+        $param['skema'] = $request->skema;
 
         // dump($param['dataAspek']);
         // dump($param['itemSlik']);
@@ -1325,6 +1324,7 @@ class PengajuanKreditController extends Controller
                     ->where('id', $param['dataPO']->id_type)
                     ->first();
             }
+            $param['skema'] = $param['dataUmumNasabah']->skema_kredit;
 
             return view('pengajuan-kredit.detail-pengajuan-jawaban', $param);
         } elseif (auth()->user()->role == 'PBO' || auth()->user()->role == 'PBP') {
@@ -1385,6 +1385,7 @@ class PengajuanKreditController extends Controller
                     ->where('id', $param['dataPO']->id_type)
                     ->first();
             }
+            $param['skema'] = $param['dataUmumNasabah']->skema_kredit;
 // return $param;
             return view('pengajuan-kredit.detail-pengajuan-jawaban-pbp', $param);
         } else {
@@ -2012,21 +2013,27 @@ class PengajuanKreditController extends Controller
 
     public function tempNasabah(Request $request)
     {
-        $nasabah = TemporaryService::saveNasabah(
-            $request->id_nasabah,
-            TemporaryService::convertNasabahReq($request)
-        );
-
+        if(isset($request->id_nasabah)){
+            $nasabah = TemporaryService::saveNasabah(
+                $request->id_nasabah,
+                TemporaryService::convertNasabahReq($request)
+            );
+        } else {
+            $nasabah = TemporaryService::saveNasabah(
+                null,
+                TemporaryService::convertNasabahReq($request)
+            );
+        }
         foreach ($request->dataLevelDua as $key => $value) {
             $dataSlik = $this->getDataLevel($value);
             $cek = DB::table('jawaban_temp')
-                ->where('id_temporary_calon_nasabah', $request->id_nasabah)
+                ->where('id_temporary_calon_nasabah', $request->id_nasabah ?? $nasabah->id)
                 ->where('id_jawaban', $dataSlik[1])
                 ->count('id');
             if ($cek < 1) {
                 DB::table('jawaban_temp')
                     ->insert([
-                        'id_temporary_calon_nasabah' => $request->id_nasabah,
+                        'id_temporary_calon_nasabah' => $request->id_nasabah ?? $nasabah->id,
                         'id_jawaban' => $dataSlik[1],
                         'skor' => $dataSlik[0],
                         'id_option' => $key,
@@ -2034,7 +2041,7 @@ class PengajuanKreditController extends Controller
                     ]);
             } else {
                 DB::table('jawaban_temp')
-                    ->where('id_temporary_calon_nasabah', $request->id_nasabah)
+                    ->where('id_temporary_calon_nasabah', $request->id_nasabah ?? $nasabah->id)
                     ->where('id_option', $key)
                     ->update([
                         'id_jawaban' => $dataSlik[1],
@@ -2315,9 +2322,41 @@ class PengajuanKreditController extends Controller
     public function continueDraft($id)
     {
         $nasabah = CalonNasabahTemp::findOrFail($id);
-        $createRoute = route('pengajuan-kredit.create');
+        $createRoute = route('pengajuan-kredit.continue-draft');
+        // dd($createRoute);
 
         return redirect()->to($createRoute . "?tempId={$nasabah->id}&continue=true");
+    }
+    
+    public function showContinueDraft(Request $request){
+        $param['pageTitle'] = "Dashboard";
+        $param['multipleFiles'] = $this->isMultipleFiles;
+
+        $param['dataDesa'] = Desa::all();
+        $param['dataKecamatan'] = Kecamatan::all();
+        $param['dataKabupaten'] = Kabupaten::all();
+        $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->where('nama', '!=', 'Data Umum')->get();
+        $param['itemSlik'] = ItemModel::with('option')->where('nama', 'SLIK')->first();
+        $param['itemSP'] = ItemModel::where('nama', 'Surat Permohonan')->first();
+        $param['itemP'] = ItemModel::where('nama', 'Laporan SLIK')->first();
+        $param['itemKTPSu'] = ItemModel::where('nama', 'Foto KTP Suami')->first();
+        $param['itemKTPIs'] = ItemModel::where('nama', 'Foto KTP Istri')->first();
+        $param['itemNIB'] = ItemModel::where('nama', 'Dokumen NIB')->first();
+        $param['itemNPWP'] = ItemModel::where('nama', 'Dokumen NPWP')->first();
+        $param['itemSKU'] = ItemModel::where('nama', 'Dokumen Surat Keterangan Usaha')->first();
+        $param['duTemp'] = TemporaryService::getNasabahData($request->tempId);
+
+        $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
+        $param['dataMerk'] = MerkModel::all();
+
+        $param['skema'] = $request->skema ?? $param['duTemp']?->skema_kredit;
+
+        // dump($param['dataAspek']);
+        // dump($param['itemSlik']);
+        // dump($param['itemSP']);
+        // dump($param['dataPertanyaanSatu']);
+        // dd($param['itemP']);
+        return view('pengajuan-kredit.continue-draft', $param);
     }
 
     public function deleteDraft($id)

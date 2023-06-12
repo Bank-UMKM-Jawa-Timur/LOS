@@ -108,7 +108,7 @@
     </nav>
     @yield('dashboard')
     <div class="my-4">
-        @if(Request::segment(1) == 'pengajuan-kredit' && (auth()->user()->role == 'Staf Analis Kredit' || auth()->user()->role == 'PBO / PBP'))
+        @if(Request::segment(1) == 'pengajuan-kredit' || Request::segment(1) == 'lanjutkan-draft' && (auth()->user()->role == 'Staf Analis Kredit' || auth()->user()->role == 'PBO / PBP'))
             @if (request()->routeIs('pengajuan-kredit.index') == 'pengajuan-kredit')
                 @include('layouts.full-card')
             @else
