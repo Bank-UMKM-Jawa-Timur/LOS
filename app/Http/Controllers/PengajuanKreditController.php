@@ -1714,13 +1714,25 @@ class PengajuanKreditController extends Controller
         } elseif (auth()->user()->role == 'PBO') {
             $dataPenyelia = PengajuanModel::find($id);
             $status = $dataPenyelia->average_by_pbo;
-            if ($status != null) {
-                $dataPenyelia->tanggal_review_pbp = date(now());
-                $dataPenyelia->posisi = "PBP";
-                $dataPenyelia->update();
-                return redirect()->back()->withStatus('Berhasil mengganti posisi.');
-            } else {
-                return redirect()->back()->withError('Belum di review PBP.');
+            if (auth()->user()->id_cabang == 1) {
+                if ($status != null) {
+                    $dataPenyelia->tanggal_review_pbp = date(now());
+                    $dataPenyelia->posisi = "PBP";
+                    $dataPenyelia->update();
+                    return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+                } else {
+                    return redirect()->back()->withError('Belum di review PBO.');
+                }
+            }
+            else {
+                if ($status != null) {
+                    $dataPenyelia->tanggal_review_pbp = date(now());
+                    $dataPenyelia->posisi = "Pincab";
+                    $dataPenyelia->update();
+                    return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+                } else {
+                    return redirect()->back()->withError('Belum di review PBO.');
+                }
             }
         } elseif (auth()->user()->role == 'PBP') {
             $dataPenyelia = PengajuanModel::find($id);

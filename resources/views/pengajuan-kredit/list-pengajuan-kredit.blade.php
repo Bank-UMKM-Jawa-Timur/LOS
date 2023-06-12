@@ -172,6 +172,12 @@
                     </td>
                     <td>
                         <div class="d-flex">
+                        @php
+                            $pbo = \App\Models\User::select('id')
+                                                    ->where('id_cabang', $item->id_cabang)
+                                                    ->where('role', 'PBO')
+                                                    ->first();
+                        @endphp
                         @if ($item->posisi == 'Review Penyelia')
                                 <div class="btn-group">
                                     @if (auth()->user()->id_cabang == '1')    
@@ -183,12 +189,6 @@
                                         <div class="dropdown-menu">
                                             <a href="{{ route('pengajuan.detailjawaban',$item->id_pengajuan) }}" class="dropdown-item">Review</a>
                                             <a href="{{ route('pengajuan.backToInputProses',$item->id_pengajuan) }}" class="dropdown-item">Kembalikan Ke Staff</a>
-                                            @php
-                                                $pbo = \App\Models\User::select('id')
-                                                                        ->where('id_cabang', $item->id_cabang)
-                                                                        ->where('role', 'PBO')
-                                                                        ->first();
-                                            @endphp
                                             @if ($pbo)
                                                 <a href="{{ route('pengajuan.check.pincab',$item->id_pengajuan) }}" class="dropdown-item">Lanjutkan Ke PBO</a>
                                             @else
@@ -205,7 +205,11 @@
                                         <div class="dropdown-menu">
                                             <a href="{{ route('pengajuan.detailjawaban',$item->id_pengajuan) }}" class="dropdown-item">Review</a>
                                             <a href="{{ route('pengajuan.backToInputProses',$item->id_pengajuan) }}" class="dropdown-item">Kembalikan Ke Staff</a>
-                                            <a href="{{ route('pengajuan.check.pincab',$item->id_pengajuan) }}" class="dropdown-item">Lanjutkan Ke Pincab</a>
+                                            @if ($pbo)
+                                                <a href="{{ route('pengajuan.check.pincab',$item->id_pengajuan) }}" class="dropdown-item">Lanjutkan Ke PBO</a>
+                                            @else
+                                                <a href="{{ route('pengajuan.check.pincab',$item->id_pengajuan) }}" class="dropdown-item">Lanjutkan Ke Pincab</a>
+                                            @endif
                                             <a target="_blank" href="{{ route('cetak',$item->id_pengajuan) }}" class="dropdown-item" >Cetak</a>
                                         </div>
                                     @endif
