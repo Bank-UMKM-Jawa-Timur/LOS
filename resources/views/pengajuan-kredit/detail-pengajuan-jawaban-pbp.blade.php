@@ -318,7 +318,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                         </div>
                     @enderror
                 </div>
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-12">
                     <label for="">Jumlah Kredit yang diminta</label>
                     <input type="number" disabled name="jumlah_kredit"
                         class="form-control @error('jumlah_kredit') is-invalid @enderror" placeholder="Jumlah Kredit"
@@ -329,7 +329,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                         </div>
                     @enderror
                 </div>
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-12">
                     <label for="">Tenor Yang Diminta</label>
                     <input type="text" disabled name="tenor_yang_diminta"
                         class="form-control @error('tenor_yang_diminta') is-invalid @enderror"
@@ -640,7 +640,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                         @if (isset($data))
                                             <div class="col-md-12 form-group">
                                                 <div class="row">
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-12">
                                                         <b>Jawaban : </b>
                                                         <div class="mt-2 pl-2">
                                                             <p class="badge badge-info text-lg">
@@ -690,7 +690,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                 @endphp
                                 @foreach ($dataDetailJawabanText as $itemTextTiga)
                                     @if ($itemTextTiga->nama != 'Ratio Tenor Asuransi')    
-                                        <div class="row col-md-6">
+                                        <div class="row col-md-12">
                                             <div class="form-group col-md-12 mb-0">
                                                 <label for="">{{ $itemTextTiga->nama }}</label>
                                             </div>
@@ -781,7 +781,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                 @if (isset($data))
                                                     <div class="col-md-12 form-group">
                                                         <div class="row">
-                                                            <div class="col-md-6">
+                                                            <div class="col-md-12">
                                                                 <b>Jawaban : </b>
                                                                 <div class="mt-2 pl-2">
                                                                     <p class="badge badge-info text-lg">
@@ -938,7 +938,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                 @if (isset($data))
                                                     <div class="col-md-12 form-group">
                                                         <div class="row">
-                                                            <div class="col-md-6">
+                                                            <div class="col-md-12">
                                                                 <b>Jawaban : </b>
                                                                 <div class="mt-2 pl-2">
                                                                     <p class="badge badge-info text-lg">
