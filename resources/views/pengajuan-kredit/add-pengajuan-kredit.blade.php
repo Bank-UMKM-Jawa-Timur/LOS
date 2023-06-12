@@ -86,7 +86,7 @@ $dataIndex = match ($skema) {
                 <div class="form-group col-md-6">
                     <label for="">Nama Lengkap</label>
                     <input type="text" name="name" id="nama" class="form-control @error('name') is-invalid @enderror"
-                        placeholder="Nama sesuai dengan KTP" value="{{ $duTemp?->nama ?? '' }}" required>
+                        placeholder="Nama sesuai dengan KTP" value="{{ $duTemp?->nama ?? '' }}" required maxlength="255">
                     @error('name')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -146,7 +146,7 @@ $dataIndex = match ($skema) {
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Alamat Rumah</label>
-                    <textarea name="alamat_rumah" class="form-control @error('alamat_rumah') is-invalid @enderror" id="" cols="30" rows="4"
+                    <textarea name="alamat_rumah" class="form-control @error('alamat_rumah') is-invalid @enderror" maxlength="255" id="" cols="30" rows="4"
                         placeholder="Alamat Rumah disesuaikan dengan KTP">{{ $duTemp?->alamat_rumah ?? '' }}</textarea>
                     @error('alamat_rumah')
                         <div class="invalid-feedback">
@@ -157,7 +157,7 @@ $dataIndex = match ($skema) {
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Alamat Usaha</label>
-                    <textarea name="alamat_usaha" class="form-control @error('alamat_usaha') is-invalid @enderror" id="" cols="30" rows="4"
+                    <textarea name="alamat_usaha" class="form-control @error('alamat_usaha') is-invalid @enderror" maxlength="255" id="" cols="30" rows="4"
                         placeholder="Alamat Usaha">{{ $duTemp?->alamat_usaha ?? '' }}</textarea>
                     @error('alamat_usaha')
                         <div class="invalid-feedback">
@@ -201,7 +201,7 @@ $dataIndex = match ($skema) {
                 </div>
                 <div class="form-group col-md-4">
                     <label for="">Tempat Lahir</label>
-                    <input type="text" name="tempat_lahir" id=""
+                    <input type="text" maxlength="255" name="tempat_lahir" id=""
                         class="form-control @error('tempat_lahir') is-invalid @enderror" placeholder="Tempat Lahir" value="{{ $duTemp?->tempat_lahir ?? '' }}">
                     @error('tempat_lahir')
                         <div class="invalid-feedback">
@@ -288,7 +288,7 @@ $dataIndex = match ($skema) {
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Jenis Usaha</label>
-                    <textarea name="jenis_usaha" class="form-control @error('jenis_usaha') is-invalid @enderror" id="" cols="30" rows="4"
+                    <textarea name="jenis_usaha" class="form-control @error('jenis_usaha') is-invalid @enderror" maxlength="255" id="" cols="30" rows="4"
                         placeholder="Jenis Usaha secara spesifik">{{ $duTemp?->jenis_usaha ?? '' }}</textarea>
                     @error('jenis_usaha')
                         <div class="invalid-feedback">
@@ -328,7 +328,7 @@ $dataIndex = match ($skema) {
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Tujuan Kredit</label>
-                    <textarea name="tujuan_kredit" class="form-control @error('tujuan_kredit') is-invalid @enderror" id="" cols="30"
+                    <textarea name="tujuan_kredit" class="form-control @error('tujuan_kredit') is-invalid @enderror" maxlength="255" id="" cols="30"
                         rows="4" placeholder="Tujuan Kredit">{{ $duTemp?->tujuan_kredit ?? '' }}</textarea>
                     @error('tujuan_kredit')
                         <div class="invalid-feedback">
@@ -338,7 +338,7 @@ $dataIndex = match ($skema) {
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Jaminan yang disediakan</label>
-                    <textarea name="jaminan" class="form-control @error('jaminan') is-invalid @enderror" id="" cols="30" rows="4"
+                    <textarea name="jaminan" class="form-control @error('jaminan') is-invalid @enderror" maxlength="255" id="" cols="30" rows="4"
                         placeholder="Jaminan yang disediakan">{{ $duTemp?->jaminan_kredit }}</textarea>
                     @error('jaminan')
                         <div class="invalid-feedback">
@@ -348,7 +348,7 @@ $dataIndex = match ($skema) {
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Hubungan Bank</label>
-                    <textarea name="hubungan_bank" class="form-control @error('hubungan_bank') is-invalid @enderror" id="" cols="30"
+                    <textarea name="hubungan_bank" class="form-control @error('hubungan_bank') is-invalid @enderror" maxlength="255" id="" cols="30"
                         rows="4" placeholder="Hubungan dengan Bank">{{ $duTemp?->hubungan_bank }}</textarea>
                     @error('hubungan_bank')
                         <div class="invalid-feedback">
@@ -358,7 +358,7 @@ $dataIndex = match ($skema) {
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Hasil Verifikasi</label>
-                    <textarea name="hasil_verifikasi" class="form-control @error('hasil_verifikasi') is-invalid @enderror" id="" cols="30"
+                    <textarea name="hasil_verifikasi" class="form-control @error('hasil_verifikasi') is-invalid @enderror" maxlength="255" id="" cols="30"
                         rows="4" placeholder="Hasil Verifikasi Karakter Umum">{{ $duTemp?->verifikasi_umum }}</textarea>
                     @error('hasil_verifikasi')
                         <div class="invalid-feedback">
@@ -412,7 +412,7 @@ $dataIndex = match ($skema) {
                     </div>
                     <div class="form-group col-md-6">
                         <label for="">Warna</label>
-                        <input type="text" name="warna" id="warna" class="form-control @error('warna') is-invalid @enderror"
+                        <input type="text" maxlength="255" name="warna" id="warna" class="form-control @error('warna') is-invalid @enderror"
                             placeholder="Warna Kendaraan" value="{{ $duTemp?->warna ?? '' }}">
                         @error('warna')
                             <div class="invalid-feedback">
@@ -425,7 +425,7 @@ $dataIndex = match ($skema) {
                     </div>
                     <div class="form-group col-md-6">
                         <label for="">Pemesanan</label>
-                        <input type="text" name="pemesanan" id="pemesanan" class="form-control @error('pemesanan') is-invalid @enderror"
+                        <input type="text" maxlength="255" name="pemesanan" id="pemesanan" class="form-control @error('pemesanan') is-invalid @enderror"
                             placeholder="Pemesanan Kendaraan" value="{{ $duTemp?->pemesanan ?? '' }}">
                         @error('pemesanan')
                             <div class="invalid-feedback">
@@ -504,7 +504,7 @@ $dataIndex = match ($skema) {
                                     <label for="">NIB</label>
                                     <input type="hidden" name="id_level[77]" value="77" id="nib_id">
                                     <input type="hidden" name="opsi_jawaban[77]" value="input text" id="nib_opsi_jawaban">
-                                    <input type="text" name="informasi[77]" id="nib_text" placeholder="Masukkan informasi"
+                                    <input type="text" maxlength="255" name="informasi[77]" id="nib_text" placeholder="Masukkan informasi"
                                         class="form-control" value="{{ temporary($duTemp->id, 77)?->opsi_text }}">
                                 </div>
 
@@ -526,7 +526,7 @@ $dataIndex = match ($skema) {
                                     <input type="hidden" name="id_level[78]" value="78" id="surat_keterangan_usaha_id">
                                     <input type="hidden" name="opsi_jawaban[78]" value="input text"
                                         id="surat_keterangan_usaha_opsi_jawaban">
-                                    <input type="text" name="informasi[78]" id="surat_keterangan_usaha_text"
+                                    <input type="text" maxlength="255" name="informasi[78]" id="surat_keterangan_usaha_text"
                                         placeholder="Masukkan informasi" class="form-control">
                                 </div>
 
@@ -550,7 +550,7 @@ $dataIndex = match ($skema) {
                                     <label for="">NPWP</label>
                                     <input type="hidden" name="id_level[79]" value="79" id="npwp_id">
                                     <input type="hidden" name="opsi_jawaban[79]" value="input text" id="npwp_opsi_jawaban">
-                                    <input type="text" name="informasi[79]" id="npwp_text" placeholder="Masukkan informasi"
+                                    <input type="text" maxlength="255" name="informasi[79]" id="npwp_text" placeholder="Masukkan informasi"
                                         class="form-control" value="{{ temporary($duTemp->id, 79)?->opsi_text }}">
                                 </div>
 
@@ -573,7 +573,7 @@ $dataIndex = match ($skema) {
                                     <label for="">{{ $item->nama }}</label>
                                     <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
                                     <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
-                                    <input type="text" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
+                                    <input type="text" maxlength="255" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
                                         placeholder="Masukkan informasi {{ $item->nama }}" class="form-control" value="{{ temporary($duTemp->id, $item->id)?->opsi_text }}">
                                 </div>
                             @elseif ($item->opsi_jawaban == 'number')
@@ -582,7 +582,7 @@ $dataIndex = match ($skema) {
                                         <label for="">{{ $item->nama }}</label>
                                         <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
                                         <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
-                                        <input type="text" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
+                                        <input type="text" maxlength="255" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
                                             placeholder="Masukkan informasi {{ $item->nama }}" class="form-control" value="{{ temporary($duTemp->id, $item->id)?->opsi_text }}">
                                     </div>
                                 @else
@@ -591,7 +591,7 @@ $dataIndex = match ($skema) {
                                             <label for="">{{ $item->nama }}(Perbulan)</label>
                                             <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
                                             <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
-                                            <input type="text" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
+                                            <input type="text" maxlength="255" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
                                                 placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah" value="{{ rupiah(temporary($duTemp->id, $item->id)?->opsi_text) }}">
                                         </div>
                                     @else
@@ -599,7 +599,7 @@ $dataIndex = match ($skema) {
                                             <label for="">{{ $item->nama }}</label>
                                             <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
                                             <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
-                                            <input type="text" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
+                                            <input type="text" maxlength="255" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
                                                 placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah" value="{{ rupiah(temporary($duTemp->id, $item->id)?->opsi_text) }}">
                                         </div>
                                     @endif
@@ -634,7 +634,7 @@ $dataIndex = match ($skema) {
                                     <label for="">{{ $item->nama }}</label>
                                     <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
                                     <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
-                                    <textarea name="informasi[{{ $item->id }}]" rows="4" id="{{ $idLevelDua }}" class="form-control"
+                                    <textarea name="informasi[{{ $item->id }}]" rows="4" id="{{ $idLevelDua }}" maxlength="255" class="form-control"
                                         placeholder="Masukkan informasi {{ $item->nama }}">{{ temporary($duTemp->id, $item->id)?->opsi_text }}</textarea>
                                 </div>
                             @endif
@@ -766,7 +766,7 @@ $dataIndex = match ($skema) {
                                             <input type="hidden" name="id_level[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}" id="">
                                             <input type="hidden" name="opsi_jawaban[{{ $itemTiga->id }}]"
                                                 value="{{ $itemTiga->opsi_jawaban }}" id="">
-                                            <input type="text" name="informasi[{{ $itemTiga->id }}]" placeholder="Masukkan informasi"
+                                            <input type="text" maxlength="255" name="informasi[{{ $itemTiga->id }}]" placeholder="Masukkan informasi"
                                                 class="form-control" id="{{ $idLevelTiga }}" value="{{ temporary($duTemp->id, $itemTiga->id)?->opsi_text }}">
                                         </div>
                                     @elseif ($itemTiga->opsi_jawaban == 'number')
@@ -860,7 +860,7 @@ $dataIndex = match ($skema) {
                                             <input type="hidden" name="opsi_jawaban[{{ $itemTiga->id }}]"
                                                 value="{{ $itemTiga->opsi_jawaban }}" id="">
                                             <input type="hidden" name="id_level[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}" id="">
-                                            <textarea name="informasi[{{ $itemTiga->id }}]" rows="4" id="{{ $idLevelTiga }}" class="form-control"
+                                            <textarea name="informasi[{{ $itemTiga->id }}]" rows="4" id="{{ $idLevelTiga }}" maxlength="255" class="form-control"
                                                 placeholder="Masukkan informasi {{ $itemTiga->nama }}">{{ temporary($duTemp->id, $itemTiga->id)?->opsi_text }}</textarea>
                                         </div>
                                     @endif
@@ -929,7 +929,7 @@ $dataIndex = match ($skema) {
                                                     id="">
                                                 <input type="hidden" name="opsi_jawaban[{{ $itemEmpat->id }}]"
                                                     value="{{ $itemEmpat->opsi_jawaban }}" id="">
-                                                <input type="text" name="informasi[{{ $itemEmpat->id }}]" id="{{ $idLevelEmpat }}"
+                                                <input type="text" maxlength="255" name="informasi[{{ $itemEmpat->id }}]" id="{{ $idLevelEmpat }}"
                                                     placeholder="Masukkan informasi" class="form-control" value="{{ temporary($duTemp->id, $itemEmpat->id)?->opsi_text }}">
                                             </div>
                                         @elseif ($itemEmpat->opsi_jawaban == 'number')
@@ -982,7 +982,7 @@ $dataIndex = match ($skema) {
                                                     value="{{ $itemEmpat->opsi_jawaban }}" id="">
                                                 <input type="hidden" name="id_level[{{ $itemEmpat->id }}]" value="{{ $itemEmpat->id }}"
                                                     id="">
-                                                <textarea name="informasi[{{ $itemEmpat->id }}]" rows="4" id="{{ $idLevelEmpat }}" class="form-control"
+                                                <textarea name="informasi[{{ $itemEmpat->id }}]" rows="4" id="{{ $idLevelEmpat }}" maxlength="255" class="form-control"
                                                     placeholder="Masukkan informasi {{ $itemEmpat->nama }}"></textarea>
                                             </div>
                                         @endif
@@ -1032,7 +1032,7 @@ $dataIndex = match ($skema) {
                         <hr style="border: 0.2px solid #E3E6EA;">
                         <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
                         <input type="hidden" name="id_aspek[{{ $value->id }}]" value="{{ $value->id }}">
-                        <textarea name="pendapat_per_aspek[{{ $value->id }}]" class="form-control @error('pendapat_per_aspek') is-invalid @enderror" id=""
+                        <textarea name="pendapat_per_aspek[{{ $value->id }}]" class="form-control @error('pendapat_per_aspek') is-invalid @enderror" id="" maxlength="255"
                             cols="30" rows="4" placeholder="Pendapat Per Aspek">{{ temporary_usulan($value->id, $duTemp->id)?->usulan }}</textarea>
                         @error('pendapat_per_aspek')
                             <div class="invalid-feedback">
@@ -1049,7 +1049,7 @@ $dataIndex = match ($skema) {
             <div class="row">
                 <div class="form-group col-md-12">
                     <label for="">Pendapat dan Usulan</label>
-                    <textarea name="komentar_staff" class="form-control @error('komentar_staff') is-invalid @enderror" id="" cols="30"
+                    <textarea name="komentar_staff" class="form-control @error('komentar_staff') is-invalid @enderror" maxlength="255" id="" cols="30"
                         rows="4" placeholder="Pendapat dan Usulan Staf/Analis Kredit"></textarea>
                     @error('komentar_staff')
                         <div class="invalid-feedback">
@@ -1425,7 +1425,7 @@ $dataIndex = match ($skema) {
                                     <input type="hidden" name="id_level[${valItem.id}]" value="${valItem.id}" id="" class="input">
                                     <input type="hidden" name="opsi_jawaban[${valItem.id}]"
                                         value="${valItem.opsi_jawaban}" id="" class="input">
-                                    <input type="text" name="informasi[${valItem.id}]" placeholder="Masukkan informasi"
+                                    <input type="text" maxlength="255" name="informasi[${valItem.id}]" placeholder="Masukkan informasi"
                                         class="form-control input" value="${response.dataJawaban[i]}">
                                 </div>
                             `);
@@ -1495,7 +1495,7 @@ $dataIndex = match ($skema) {
                                         <input type="hidden" name="id_level[${valItem.id}]" value="${valItem.id}" id="" class="input" ${isDisabled}>
                                         <input type="hidden" name="opsi_jawaban[${valItem.id}]"
                                             value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
-                                        <input type="text" name="informasi[${valItem.id}]" placeholder="Masukkan informasi"
+                                        <input type="text" maxlength="255" name="informasi[${valItem.id}]" placeholder="Masukkan informasi"
                                             class="form-control input" ${isDisabled} value="${response.dataJawaban[i]}">
                                     </div>
                                 `);
