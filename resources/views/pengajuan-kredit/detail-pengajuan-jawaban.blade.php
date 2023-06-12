@@ -234,7 +234,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                             @endphp
                             <div class="form-group col-md-6">
                                 <label for="">{{ $item->nama }}</label>
-                                <div class="col-md-6 form-group">
+                                <div class="form-group">
                                     <b>Jawaban:</b>
                                     <div class="mt-2">
                                         @if ($file_parts['extension'] == 'pdf')

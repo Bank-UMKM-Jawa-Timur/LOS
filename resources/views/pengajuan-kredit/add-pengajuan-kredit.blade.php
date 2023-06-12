@@ -86,7 +86,7 @@ $dataIndex = match ($skema) {
                 <div class="form-group col-md-6">
                     <label for="">Nama Lengkap</label>
                     <input type="text" name="name" id="nama" class="form-control @error('name') is-invalid @enderror"
-                        placeholder="Nama sesuai dengan KTP" value="{{ $duTemp?->nama ?? '' }}">
+                        placeholder="Nama sesuai dengan KTP" value="{{ $duTemp?->nama ?? '' }}" required>
                     @error('name')
                         <div class="invalid-feedback">
                             {{ $message }}
