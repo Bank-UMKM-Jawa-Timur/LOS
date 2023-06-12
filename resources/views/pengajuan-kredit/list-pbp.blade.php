@@ -185,7 +185,11 @@
                                         <a target="_blank" href="{{ route('cetak',$item->id_pengajuan) }}" class="dropdown-item" >Cetak</a>
                                     @elseif (Auth::user()->role == 'PBO' && $item->posisi == 'PBO')
                                         <a href="{{ route('pengajuan.detailjawaban',$item->id_pengajuan) }}" class="dropdown-item">Review</a>
+                                        @if ($item->id_cabang == 1)
                                         <a href="{{ route('pengajuan.check.pincab',$item->id_pengajuan) }}" class="dropdown-item">Tindak lanjut PBP</a>
+                                        @else
+                                        <a href="{{ route('pengajuan.check.pincab',$item->id_pengajuan) }}" class="dropdown-item">Tindak lanjut Pincab</a>
+                                        @endif
                                         <a target="_blank" href="{{ route('cetak',$item->id_pengajuan) }}" class="dropdown-item" >Cetak</a>
                                     @else
                                         <a target="_blank" href="{{ route('cetak',$item->id_pengajuan) }}" class="dropdown-item" >Cetak</a>
