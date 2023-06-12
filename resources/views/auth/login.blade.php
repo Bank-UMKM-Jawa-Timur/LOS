@@ -37,6 +37,14 @@
                         @csrf
                         <h6 class="text-center">LOGIN SISTEM INFORMASI ANALISA KREDIT</h6>
                         <br>
+                        @if (session('error'))
+                            <div class="alert alert-danger">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <i class="icofont icofont-close-line-circled text-white"></i>
+                                </button>
+                                <strong><span class="fa fa-exclamation-triangle"></span> Gagal login.</strong> {{session('error')}}
+                            </div>
+                        @endif
                         @if ($errors->any())
                         <div class="alert alert-danger">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
