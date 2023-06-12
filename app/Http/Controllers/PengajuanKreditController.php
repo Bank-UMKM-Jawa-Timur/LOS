@@ -21,6 +21,7 @@ use App\Models\JawabanTemp;
 use App\Models\JawabanTempModel;
 use App\Models\MerkModel;
 use App\Models\TipeModel;
+use App\Models\User;
 use App\Services\TemporaryService;
 use DateTime;
 use Exception;
@@ -108,7 +109,7 @@ class PengajuanKreditController extends Controller
                 ->where('pengajuan.id_cabang', $id_cabang)
                 ->paginate(5);
             return view('pengajuan-kredit.list-pengajuan-kredit', $param);
-        } elseif (auth()->user()->role == 'PBP') {
+        } elseif (auth()->user()->role == 'PBO' || auth()->user()->role == 'PBP') {
             $id_cabang = Auth::user()->id_cabang;
             $param['data_pengajuan'] = PengajuanModel::select(
                 'pengajuan.id',
@@ -1306,7 +1307,7 @@ class PengajuanKreditController extends Controller
             }
 
             return view('pengajuan-kredit.detail-pengajuan-jawaban', $param);
-        } elseif (auth()->user()->role == 'PBP') {
+        } elseif (auth()->user()->role == 'PBO' || auth()->user()->role == 'PBP') {
             $param['pageTitle'] = "Dashboard";
             $param['dataAspek'] = ItemModel::where('level', 1)->where('nama', '!=', 'Data Umum')->get();
             $param['itemSlik'] = ItemModel::join('option as o', 'o.id_item', 'item.id')
@@ -1354,6 +1355,7 @@ class PengajuanKreditController extends Controller
             $param['pendapatDanUsulanStaf'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff')->first();
             $param['pendapatDanUsulanPenyelia'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_penyelia')->first();
             $param['pendapatDanUsulanPBP'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_pbp')->first();
+            $param['pendapatDanUsulanPBO'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_pbo')->first();
             if ($param['dataUmumNasabah']->skema_kredit == 'KKB') {
                 $param['dataMerk'] = MerkModel::all();
                 $param['dataPO'] = DB::table('data_po')
@@ -1363,7 +1365,7 @@ class PengajuanKreditController extends Controller
                     ->where('id', $param['dataPO']->id_type)
                     ->first();
             }
-
+// return $param;
             return view('pengajuan-kredit.detail-pengajuan-jawaban-pbp', $param);
         } else {
             return redirect()->back()->withError('Tidak memiliki hak akses.');
@@ -1372,7 +1374,8 @@ class PengajuanKreditController extends Controller
     // insert komentar
     public function getInsertKomentar(Request $request)
     {
-        if (Auth::user()->role == 'PBP') {
+        if (Auth::user()->role == 'PBO' || Auth::user()->role == 'PBP') {
+            $role = Auth::user()->role;
             try {
                 $finalArray = array();
                 $finalArray_text = array();
@@ -1402,24 +1405,51 @@ class PengajuanKreditController extends Controller
                     $status = "merah";
                 }
 
-                foreach ($request->get('id_option') as $key => $value) {
-                    JawabanPengajuanModel::where('id_jawaban', $value)->where('id_pengajuan', $request->get('id_pengajuan'))
-                        ->update([
-                            'skor_pbp' => $request->get('skor_pbp')[$key]
-                        ]);
+                if ($role == 'PBP') {
+                    foreach ($request->get('id_option') as $key => $value) {
+                        JawabanPengajuanModel::where('id_jawaban', $value)->where('id_pengajuan', $request->get('id_pengajuan'))
+                            ->update([
+                                'skor_pbp' => $request->get('skor_pbp')[$key]
+                            ]);
+                    }
                 }
+                else {
+                    foreach ($request->get('id_option') as $key => $value) {
+                        JawabanPengajuanModel::where('id_jawaban', $value)->where('id_pengajuan', $request->get('id_pengajuan'))
+                            ->update([
+                                'skor_pbo' => $request->get('skor_pbp')[$key]
+                            ]);
+                    }
+                }
+
                 $updateData->status = $status;
-                $updateData->average_by_pbp = $result;
+                if ($role == 'PBP') {
+                    $updateData->average_by_pbp = $result;
+                }
+                else {
+                    $updateData->average_by_pbo = $result;
+                }
                 $updateData->update();
 
                 $idKomentar = KomentarModel::where('id_pengajuan', $request->id_pengajuan)->first();
-                KomentarModel::where('id', $idKomentar->id)->update(
-                    [
-                        'komentar_pbp' => $request->komentar_pbp_keseluruhan,
-                        'id_pbp' => Auth::user()->id,
-                        'updated_at' => date('Y-m-d H:i:s')
-                    ]
-                );
+                if ($role == 'PBP') {
+                    KomentarModel::where('id', $idKomentar->id)->update(
+                        [
+                            'komentar_pbp' => $request->komentar_pbp_keseluruhan,
+                            'id_pbp' => Auth::user()->id,
+                            'updated_at' => date('Y-m-d H:i:s')
+                        ]
+                    );
+                }
+                else {
+                    KomentarModel::where('id', $idKomentar->id)->update(
+                        [
+                            'komentar_pbo' => $request->komentar_pbp_keseluruhan,
+                            'id_pbo' => Auth::user()->id,
+                            'updated_at' => date('Y-m-d H:i:s')
+                        ]
+                    );
+                }
 
                 $countDK = DetailKomentarModel::where('id_komentar', $idKomentar->id)->where('id_user', Auth::user()->id)->count();
                 if ($countDK > 0) {
@@ -1440,29 +1470,54 @@ class PengajuanKreditController extends Controller
                 }
 
                 // pendapat penyelia
-                $countpendapat = PendapatPerAspek::where('id_pengajuan', $request->get('id_pengajuan'))->where('id_pbp', Auth::user()->id)->count();
+                if ($role == 'PBP')
+                    $countpendapat = PendapatPerAspek::where('id_pengajuan', $request->get('id_pengajuan'))->where('id_pbp', Auth::user()->id)->count();
+                else
+                    $countpendapat = PendapatPerAspek::where('id_pengajuan', $request->get('id_pengajuan'))->where('id_pbo', Auth::user()->id)->count();
+
                 if ($countpendapat > 0) {
-                    foreach ($request->get('id_aspek') as $key => $value) {
-                        $pendapatperaspekpenyelia = PendapatPerAspek::where('id_pengajuan', $request->get('id_pengajuan'))->where('id_aspek', $value)->where('id_pbp', Auth::user()->id)->first();
-                        $pendapatperaspekpenyelia->pendapat_per_aspek = $_POST['pendapat_per_aspek'][$key];
-                        $pendapatperaspekpenyelia->save();
+                    if ($role == 'PBP') {
+                        foreach ($request->get('id_aspek') as $key => $value) {
+                            $pendapatperaspekpenyelia = PendapatPerAspek::where('id_pengajuan', $request->get('id_pengajuan'))->where('id_aspek', $value)->where('id_pbp', Auth::user()->id)->first();
+                            $pendapatperaspekpenyelia->pendapat_per_aspek = $_POST['pendapat_per_aspek'][$key];
+                            $pendapatperaspekpenyelia->save();
+                        }
+                    }
+                    else {
+                        foreach ($request->get('id_aspek') as $key => $value) {
+                            $pendapatperaspekpenyelia = PendapatPerAspek::where('id_pengajuan', $request->get('id_pengajuan'))->where('id_aspek', $value)->where('id_pbo', Auth::user()->id)->first();
+                            $pendapatperaspekpenyelia->pendapat_per_aspek = $_POST['pendapat_per_aspek'][$key];
+                            $pendapatperaspekpenyelia->save();
+                        }
                     }
                 } else {
-                    foreach ($request->get('id_aspek') as $key => $value) {
-                        $pendapatperaspekpenyelia = new PendapatPerAspek;
-                        $pendapatperaspekpenyelia->id_pengajuan = $request->get('id_pengajuan');
-                        $pendapatperaspekpenyelia->id_pbp = Auth::user()->id;
-                        $pendapatperaspekpenyelia->id_aspek = $value;
-                        $pendapatperaspekpenyelia->pendapat_per_aspek = $request->get('pendapat_per_aspek')[$key];
-                        $pendapatperaspekpenyelia->save();
+                    if ($role == 'PBP') {
+                        foreach ($request->get('id_aspek') as $key => $value) {
+                            $pendapatperaspekpenyelia = new PendapatPerAspek;
+                            $pendapatperaspekpenyelia->id_pengajuan = $request->get('id_pengajuan');
+                            $pendapatperaspekpenyelia->id_pbp = Auth::user()->id;
+                            $pendapatperaspekpenyelia->id_aspek = $value;
+                            $pendapatperaspekpenyelia->pendapat_per_aspek = $request->get('pendapat_per_aspek')[$key];
+                            $pendapatperaspekpenyelia->save();
+                        }
+                    }
+                    else {
+                        foreach ($request->get('id_aspek') as $key => $value) {
+                            $pendapatperaspekpenyelia = new PendapatPerAspek;
+                            $pendapatperaspekpenyelia->id_pengajuan = $request->get('id_pengajuan');
+                            $pendapatperaspekpenyelia->id_pbo = Auth::user()->id;
+                            $pendapatperaspekpenyelia->id_aspek = $value;
+                            $pendapatperaspekpenyelia->pendapat_per_aspek = $request->get('pendapat_per_aspek')[$key];
+                            $pendapatperaspekpenyelia->save();
+                        }
                     }
                 }
                 return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil Mereview');
             } catch (Exception $e) {
-                // return $e;
+                return $e->getMessage();
                 return redirect()->back()->withError('Terjadi kesalahan.' . $e->getMessage());
             } catch (QueryException $e) {
-                // return $e;
+                return $e->getMessage();
                 return redirect()->back()->withError('Terjadi kesalahan.' . $e->getMessage());
             }
         } else {
@@ -1588,25 +1643,64 @@ class PengajuanKreditController extends Controller
             if (auth()->user()->id_cabang == '1') {
                 $dataPenyelia = PengajuanModel::find($id);
                 $status = $dataPenyelia->status;
-                if ($status != null) {
-                    $dataPenyelia->tanggal_review_pbp = date(now());
-                    $dataPenyelia->posisi = "PBP";
-                    $dataPenyelia->update();
-                    return redirect()->back()->withStatus('Berhasil mengganti posisi.');
-                } else {
-                    return redirect()->back()->withError('Belum di review Penyelia.');
+                $userPBO = User::select('id')
+                                ->where('id_cabang', $dataPenyelia->id_cabang)
+                                ->where('role', 'PBO')
+                                ->first();
+                if ($userPBO) {
+                    if ($status != null) {
+                        $dataPenyelia->tanggal_review_pbo = date(now());
+                        $dataPenyelia->posisi = "PBO";
+                    } else {
+                        return redirect()->back()->withError('Belum di review Penyelia.');
+                    }
                 }
+                else {
+                    if ($status != null) {
+                        $dataPenyelia->tanggal_review_pbp = date(now());
+                        $dataPenyelia->posisi = "PBP";
+                    } else {
+                        return redirect()->back()->withError('Belum di review Penyelia.');
+                    }
+                }
+                $dataPenyelia->update();
+                return redirect()->back()->withStatus('Berhasil mengganti posisi.');
             } else {
                 $dataPenyelia = PengajuanModel::find($id);
                 $status = $dataPenyelia->status;
-                if ($status != null) {
-                    $dataPenyelia->tanggal_review_pincab = date(now());
-                    $dataPenyelia->posisi = "Pincab";
-                    $dataPenyelia->update();
-                    return redirect()->back()->withStatus('Berhasil mengganti posisi.');
-                } else {
-                    return redirect()->back()->withError('Belum di review Penyelia.');
+                $userPBO = User::select('id')
+                                ->where('id_cabang', $dataPenyelia->id_cabang)
+                                ->where('role', 'PBO')
+                                ->first();
+                if ($userPBO) {
+                    if ($status != null) {
+                        $dataPenyelia->tanggal_review_pbo = date(now());
+                        $dataPenyelia->posisi = "PBO";
+                    } else {
+                        return redirect()->back()->withError('Belum di review Penyelia.');
+                    }
                 }
+                else {
+                    if ($status != null) {
+                        $dataPenyelia->tanggal_review_pincab = date(now());
+                        $dataPenyelia->posisi = "Pincab";
+                    } else {
+                        return redirect()->back()->withError('Belum di review Penyelia.');
+                    }
+                }
+                $dataPenyelia->update();
+                return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+            }
+        } elseif (auth()->user()->role == 'PBO') {
+            $dataPenyelia = PengajuanModel::find($id);
+            $status = $dataPenyelia->average_by_pbo;
+            if ($status != null) {
+                $dataPenyelia->tanggal_review_pbp = date(now());
+                $dataPenyelia->posisi = "PBP";
+                $dataPenyelia->update();
+                return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+            } else {
+                return redirect()->back()->withError('Belum di review PBP.');
             }
         } elseif (auth()->user()->role == 'PBP') {
             $dataPenyelia = PengajuanModel::find($id);
@@ -1652,7 +1746,6 @@ class PengajuanKreditController extends Controller
     }
     public function checkPincabStatusDetail($id)
     {
-
         $param['pageTitle'] = "Dashboard";
         // $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->get();
         $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->where('nama', '!=', 'Data Umum')->get();
@@ -1682,7 +1775,7 @@ class PengajuanKreditController extends Controller
         //                             ->join('item','item.id','option.id_item')
         //                             ->where('jawaban.id_pengajuan',$id)
         //                             ->get();
-        $param['pendapatDanUsulan'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff', 'komentar_penyelia', 'komentar_pincab', 'komentar_pbp')->first();
+        $param['pendapatDanUsulan'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff', 'komentar_penyelia', 'komentar_pincab', 'komentar_pbo', 'komentar_pbp')->first();
         if ($param['dataUmum']->skema_kredit == 'KKB') {
             $param['dataPO'] = DB::table('data_po')
                 ->where('id_pengajuan', $id)
@@ -2297,7 +2390,7 @@ class PengajuanKreditController extends Controller
 
                         // store api
                         $host = env('DWH_HOST');
-                        $apiURL = $host . '/api/v1/store-kredit';
+                        $apiURL = $host . env('DWH_STORE_KREDIT_API');
                         $headers = [
                             'mid-client-key' => env('DWH_TOKEN')
                         ];

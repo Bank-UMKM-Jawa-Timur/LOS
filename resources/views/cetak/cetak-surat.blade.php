@@ -752,6 +752,12 @@
                             <td style="padding: 0px 0px 10px 0px; vertical-align: top">:</td>
                             <td style="padding: 0px 0px 10px 0px; vertical-align: top">{{$pendapatuser->pendapat_per_aspek}}</td>
                         </tr>
+                    @elseif ($pendapatuser->id_pbo != null)
+                        <tr>
+                            <td style="width: 40%; padding: 0px 0px 10px 33px; vertical-align: top">KESIMPULAN PBO</td>
+                            <td style="padding: 0px 0px 10px 0px; vertical-align: top">:</td>
+                            <td style="padding: 0px 0px 10px 0px; vertical-align: top">{{$pendapatuser->pendapat_per_aspek}}</td>
+                        </tr>
                     @elseif ($pendapatuser->id_pbp != null)
                         <tr>
                             <td style="width: 40%; padding: 0px 0px 10px 33px; vertical-align: top">KESIMPULAN PBP</td>
@@ -792,6 +798,23 @@
             <td>{{$komentar->komentar_penyelia}}</td>
         </tr>
     </table>
+    @php
+        $userPBO = \App\Models\User::select('id')
+                                    ->where('id_cabang', $dataUmum->id_cabang)
+                                    ->where('role', 'PBO')
+                                    ->first();
+    @endphp
+    @if ($userPBO)
+        <table style="border-spacing:10px;">
+            <tr>
+                <td style="width: 100%;" ><b><u><span>PENDAPAT dan USULAN PBO</span></u></b>
+                </td>
+            </tr>
+            <tr>
+                <td>{{$komentar->komentar_pbo}}</td>
+            </tr>
+        </table>
+    @endif
     @if (Auth::user()->id_cabang == '1')
         <br>
         <table style="border-spacing:10px;">

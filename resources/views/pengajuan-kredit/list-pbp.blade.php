@@ -26,6 +26,8 @@
                             Staff
                         @elseif ($item->posisi == 'Review Penyelia')
                             Penyelia
+                        @elseif ($item->posisi == 'PBO')
+                            PBO
                         @elseif ($item->posisi == 'PBP')
                             PBP
                         @else
@@ -177,9 +179,13 @@
                                     </svg>
                                 </button>
                                 <div class="dropdown-menu">
-                                    @if ($item->posisi == 'PBP')
+                                    @if (Auth::user()->role == 'PBP' && $item->posisi == 'PBP')
                                         <a href="{{ route('pengajuan.detailjawaban',$item->id_pengajuan) }}" class="dropdown-item">Review</a>
                                         <a href="{{ route('pengajuan.check.pincab',$item->id_pengajuan) }}" class="dropdown-item">Tindak lanjut Pincab</a>
+                                        <a target="_blank" href="{{ route('cetak',$item->id_pengajuan) }}" class="dropdown-item" >Cetak</a>
+                                    @elseif (Auth::user()->role == 'PBO' && $item->posisi == 'PBO')
+                                        <a href="{{ route('pengajuan.detailjawaban',$item->id_pengajuan) }}" class="dropdown-item">Review</a>
+                                        <a href="{{ route('pengajuan.check.pincab',$item->id_pengajuan) }}" class="dropdown-item">Tindak lanjut PBP</a>
                                         <a target="_blank" href="{{ route('cetak',$item->id_pengajuan) }}" class="dropdown-item" >Cetak</a>
                                     @else
                                         <a target="_blank" href="{{ route('cetak',$item->id_pengajuan) }}" class="dropdown-item" >Cetak</a>

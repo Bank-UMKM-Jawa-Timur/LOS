@@ -42,6 +42,8 @@
                             Staff
                         @elseif ($item->posisi == 'Review Penyelia')
                             Penyelia
+                        @elseif ($item->posisi == 'PBO')
+                            PBO
                         @elseif ($item->posisi == 'PBP')
                             PBP
                         @else

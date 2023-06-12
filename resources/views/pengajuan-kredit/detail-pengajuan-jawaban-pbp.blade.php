@@ -523,6 +523,14 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                     ->whereNotNull('id_penyelia')
                     ->where('id_aspek', $value->id)
                     ->first();
+                $pendapatPBOPerAspek = \App\Models\PendapatPerAspek::where('id_pengajuan', $dataUmum->id)
+                    ->whereNotNull('id_pbo')
+                    ->where('id_aspek', $value->id)
+                    ->first();
+                $pendapatPBPPerAspek = \App\Models\PendapatPerAspek::where('id_pengajuan', $dataUmum->id)
+                    ->whereNotNull('id_pbp')
+                    ->where('id_aspek', $value->id)
+                    ->first();
             @endphp
             {{-- level level 2 --}}
 
@@ -970,12 +978,20 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                             @endforeach
                         @endforeach
                     @endforeach
-                    @if (Auth::user()->role == 'PBP')    
+                    @if (Auth::user()->role == 'PBO' || Auth::user()->role == 'PBP')
                     @php
-                        $getPendapatPerAspek = \App\Models\PendapatPerAspek::where('id_pengajuan', $dataUmum->id)
-                            ->where('id_aspek', $value->id)
-                            ->where('id_pbp', Auth::user()->id)
-                            ->first();
+                        if (Auth::user()->role == 'PBP') {
+                            $getPendapatPerAspek = \App\Models\PendapatPerAspek::where('id_pengajuan', $dataUmum->id)
+                                                                                ->where('id_aspek', $value->id)
+                                                                                ->where('id_pbp', Auth::user()->id)
+                                                                                ->first();
+                        }
+                        else {
+                            $getPendapatPerAspek = \App\Models\PendapatPerAspek::where('id_pengajuan', $dataUmum->id)
+                                                                                ->where('id_aspek', $value->id)
+                                                                                ->where('id_pbo', Auth::user()->id)
+                                                                                ->first();
+                        }
                     @endphp
                         <div class="form-group col-md-12">
                             <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
@@ -992,6 +1008,18 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                     </div>
                     <hr>
                     <hr>
+                    @if (Auth::user()->role != 'PBO' && $pendapatPBOPerAspek)
+                    <div class="form-group col-md-12">
+                        <label for="">Pendapat dan Usulan PBO</label>
+                        <p>{{ $pendapatPBOPerAspek->pendapat_per_aspek }}</p>
+                    </div>
+                    @endif
+                    @if (Auth::user()->role != 'PBP' && $pendapatPBPPerAspek)
+                    <div class="form-group col-md-12">
+                        <label for="">Pendapat dan Usulan PBP</label>
+                        <p>{{ $pendapatPBPPerAspek->pendapat_per_aspek }}</p>
+                    </div>
+                    @endif
                     <div class="form-group col-md-12">
                         <label for="">Pendapat dan Usulan Penyelia Kredit</label>
                         <p>{{ $pendapatPenyeliaPerAspek->pendapat_per_aspek }}</p>
@@ -1030,7 +1058,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
             </div>
         @endforeach
         {{-- pendapat dan usulan --}}
-        @if (Auth::user()->role == 'PBP')    
+        @if (Auth::user()->role == 'PBO' || Auth::user()->role == 'PBP')    
             <div class="form-wizard" data-index='{{ count($dataAspek) + $dataIndex }}' data-done='true'>
                 <div class="row">
                     <div class="form-group col-md-12">
@@ -1049,19 +1077,46 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                         </span>
                         <hr>
                     </div>
+                    @if (Auth::user()->role != 'PBO' && $pendapatDanUsulanPBO->komentar_pbo)
                     <div class="form-group col-md-12">
-                        <label for="">Pendapat dan Usulan PBP</label>
-                        <textarea name="komentar_pbp_keseluruhan"
-                            class="form-control @error('komentar_pbp_keseluruhan') is-invalid @enderror" id=""
-                            cols="30" rows="4" placeholder="Pendapat dan Usulan Pemimpin Bidang Pemasaran"
-                            required>{{ isset($pendapatDanUsulanPBP->komentar_pbp) ? $pendapatDanUsulanPBP->komentar_pbp : '' }}</textarea>
-                        @error('komentar_pbp_keseluruhan')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
+                        <label for="">Pendapat dan Usulan PBO</label>
+                        <br>
+                        <span>
+                            {{ $pendapatDanUsulanPBO->komentar_pbo }}
+                        </span>
                         <hr>
                     </div>
+                    @endif
+                    @if (Auth::user()->role == 'PBP' && $dataUmum->posisi == 'PBP')
+                        <div class="form-group col-md-12">
+                            <label for="">Pendapat dan Usulan PBP</label>
+                            <textarea name="komentar_pbp_keseluruhan"
+                                class="form-control @error('komentar_pbp_keseluruhan') is-invalid @enderror" id=""
+                                cols="30" rows="4" placeholder="Pendapat dan Usulan Pemimpin Bidang Pemasaran"
+                                required>{{ isset($pendapatDanUsulanPBP->komentar_pbp) ? $pendapatDanUsulanPBP->komentar_pbp : '' }}</textarea>
+                            @error('komentar_pbp_keseluruhan')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                            <hr>
+                        </div>
+                    @endif
+                    @if (Auth::user()->role == 'PBO' && $dataUmum->posisi == 'PBO')
+                        <div class="form-group col-md-12">
+                            <label for="">Pendapat dan Usulan PBO</label>
+                            <textarea name="komentar_pbp_keseluruhan"
+                                class="form-control @error('komentar_pbp_keseluruhan') is-invalid @enderror" id=""
+                                cols="30" rows="4" placeholder="Pendapat dan Usulan Pemimpin Bidang Pemasaran"
+                                required>{{ isset($pendapatDanUsulanPBO->komentar_pbo) ? $pendapatDanUsulanPBO->komentar_pbo : '' }}</textarea>
+                            @error('komentar_pbp_keseluruhan')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                            <hr>
+                        </div>
+                    @endif
                 </div>
             </div>
         @else    

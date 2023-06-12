@@ -1543,6 +1543,31 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                             </div>
                         </div>
                     </div>
+                    @php
+                        $userPBO = \App\Models\User::select('id')
+                                                    ->where('id_cabang', $dataUmum->id_cabang)
+                                                    ->where('role', 'PBO')
+                                                    ->first();
+                    @endphp
+                    @if ($userPBO)
+                        <div class="alert alert-success ">
+                            <div class="form-group row sub mb-0" style="">
+                                <label for="staticEmail" class="col-sm-3 col-form-label font-weight-bold">Pendapat
+                                    & Usulan <br> (PBO)</label>
+                                <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                                    <div class="d-flex justify-content-end">
+                                        <div style="width: 20px">
+                                            :
+                                        </div>
+                                    </div>
+                                </label>
+                                <div class="col-sm-7">
+                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                                        value="{{ $pendapatDanUsulan->komentar_pbo }}">
+                                </div>
+                            </div>
+                        </div>
+                    @endif
                     @if ($dataUmum->id_cabang == 1)    
                         <div class="alert alert-success">
                             <div class="form-group row sub mb-0">
