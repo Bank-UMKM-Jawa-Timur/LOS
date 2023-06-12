@@ -29,10 +29,10 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request)
     {
-        $user = User::select('nip', 'name')
+        $user = User::select('nip')
                     ->where('email', $request->email)
                     ->first();
-                    // return $user;
+
         if (isset($user->nip)) {
             $request->authenticate();
     
@@ -41,7 +41,7 @@ class AuthenticatedSessionController extends Controller
             return redirect()->intended(RouteServiceProvider::HOME);
         }
         else {
-            return back()->withError("Belum dilakukan Pengkinian Data User untuk $user->name.\nHarap menghubungi Divisi Pemasaran atau TI & AK.");
+            return back()->withError("Belum dilakukan Pengkinian Data User untuk $request->email.\nHarap menghubungi Divisi Pemasaran atau TI & AK.");
         }
     }
 
