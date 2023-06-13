@@ -44,11 +44,12 @@ $dataIndex = match ($dataUmum->skema_kredit) {
         <div class="form-wizard active" data-index='0' data-done='true'>
             <div class="row">
                     @php
-                        $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+                        $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide')
                             ->where('level', 2)
                             ->where('id_parent', $itemSP->id)
                             ->where('nama', 'Surat Permohonan')
                             ->get();
+                            //dd($dataLevelDua);
                     @endphp
                     @foreach ($dataLevelDua as $item)
                         @if ($item->opsi_jawaban == 'file')
@@ -58,6 +59,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                     ->where('jawaban_text.id_pengajuan', $dataUmum->id)
                                     ->where('jawaban_text.id_jawaban', $item->id)
                                     ->get();
+                                    //dd($dataDetailJawabanText);
                             @endphp
                             @foreach ($dataDetailJawabanText as $itemTextDua)
                                 @php
@@ -658,8 +660,8 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                 <p class="badge badge-info text-lg"><b> {{ $itemTextDua->opsi_text }}
                                                         {{ $item->opsi_jawaban == 'persen' ? '%' : '' }}</b></p>
                                                 @if ($itemTextDua->is_commentable)
+                                                <input type="hidden" name="id_item[]" value="{{ $item->id }}">
                                                     <div class="input-k-bottom">
-                                                        <input type="hidden" name="id_item[]" value="{{ $item->id }}">
                                                         <input type="text" class="form-control komentar"
                                                             name="komentar_penyelia[]" placeholder="Masukkan Komentar">
                                                     </div>
@@ -732,6 +734,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                         @if (in_array($itemJawaban->id, $data))
                                             @if (isset($data))
                                                 <div class="col-md-12 form-group">
+                                                    @if ($item->nama != 'Repayment Capacity Opsi')
                                                     <div class="row">
                                                         <div class="col-md-12">
                                                             <b>Jawaban : </b>
@@ -742,11 +745,12 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    @endif
                                                     <div class="input-group input-b-bottom">
+                                                        <input type="hidden" name="id_item[]" value="{{ $item->id }}">
+                                                        <input type="hidden" name="id_option[]"
+                                                            value="{{ $itemJawaban->id }}">
                                                         @if ($item->is_commentable == 'Ya')
-                                                            <input type="hidden" name="id_item[]" value="{{ $item->id }}">
-                                                            <input type="hidden" name="id_option[]"
-                                                                value="{{ $itemJawaban->id }}">
                                                             <input type="text" class="form-control komentar"
                                                                 name="komentar_penyelia[]" placeholder="Masukkan Komentar"
                                                                 value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
@@ -755,8 +759,10 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                                     name="skor_penyelia[]"  onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
                                                                     {{ $item->status_skor == 0 ? 'readonly' : '' }}
                                                                     value="{{ $getSkorPenyelia->skor_penyelia != null ? $getSkorPenyelia->skor_penyelia : $itemJawaban->skor }}">
-
                                                             </div>
+                                                        @else
+                                                            <input type="hidden" name="komentar_penyelia[]" value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
+                                                            <input type="hidden" name="skor_penyelia[]" value="{{ $getSkorPenyelia->skor_penyelia != null ? $getSkorPenyelia->skor_penyelia : $itemJawaban->skor }}">
                                                         @endif
                                                     </div>
                                                 </div>
@@ -848,15 +854,17 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                             @endphp
 
                             @foreach ($dataOptionTiga as $itemOptionTiga)
-                                @if ($itemOptionTiga->option == '-')
-                                    @if (isset($checkJawabanKelayakan))
-                                        
-                                    @else    
-                                        <div class="row">
-                                            <div class="form-group col-md-12">
-                                                <h5> {{ $itemTiga->nama }}</h5>
+                                @if (!$itemTiga->is_hide)
+                                    @if ($itemOptionTiga->option == '-')
+                                        @if (isset($checkJawabanKelayakan))
+                                            
+                                        @else    
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <h5> {{ $itemTiga->nama }}</h5>
+                                                </div>
                                             </div>
-                                        </div>
+                                        @endif
                                     @endif
                                 @endif
                             @endforeach
@@ -917,11 +925,11 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                                 </div>
                                                             </div>
                                                             <div class="input-group input-b-bottom">
+                                                                <input type="hidden" name="id_item[]"
+                                                                    value="{{ $itemTiga->id }}">
+                                                                <input type="hidden" name="id_option[]"
+                                                                    value="{{ $itemJawabanLevelTiga->id }}">
                                                                 @if ($itemTiga->is_commentable == 'Ya')
-                                                                    <input type="hidden" name="id_item[]"
-                                                                        value="{{ $itemTiga->id }}">
-                                                                    <input type="hidden" name="id_option[]"
-                                                                        value="{{ $itemJawabanLevelTiga->id }}">
                                                                     <input type="text" class="form-control komentar"
                                                                         name="komentar_penyelia[]" placeholder="Masukkan Komentar"
                                                                         value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
@@ -930,8 +938,10 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                                             name="skor_penyelia[]" onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
                                                                             {{ $itemTiga->status_skor == 0 ? 'readonly' : '' }}
                                                                             value="{{ $getSkorPenyelia->skor_penyelia != null ? $getSkorPenyelia->skor_penyelia : $itemJawabanLevelTiga->skor }}">
-
                                                                     </div>
+                                                                @else
+                                                                    <input type="hidden" name="komentar_penyelia[]" value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
+                                                                    <input type="hidden" name="skor_penyelia[]" value="{{ $getSkorPenyelia->skor_penyelia != null ? $getSkorPenyelia->skor_penyelia : $itemJawabanLevelTiga->skor }}">
                                                                 @endif
                                                             </div>
                                                         </div>
@@ -1075,11 +1085,11 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                                 </div>
                                                             </div>
                                                             <div class="input-group input-b-bottom">
+                                                                <input type="hidden" name="id_item[]"
+                                                                    value="{{ $itemEmpat->id }}">
+                                                                <input type="hidden" name="id_option[]"
+                                                                    value="{{ $itemJawabanLevelEmpat->id }}">
                                                                 @if ($itemEmpat->is_commentable == 'Ya')
-                                                                    <input type="hidden" name="id_item[]"
-                                                                        value="{{ $itemEmpat->id }}">
-                                                                    <input type="hidden" name="id_option[]"
-                                                                        value="{{ $itemJawabanLevelEmpat->id }}">
                                                                     <input type="text" class="form-control komentar"
                                                                         name="komentar_penyelia[]"
                                                                         placeholder="Masukkan Komentar"

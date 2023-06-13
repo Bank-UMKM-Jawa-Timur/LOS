@@ -805,7 +805,7 @@ $dataIndex = match ($skema) {
                                             </div>
                                         </div>
                                         
-                                        <div class="form-group col-md-6 file-wrapper item-{{ $itemTiga->id }}">
+                                        {{--  <div class="form-group col-md-6 file-wrapper item-{{ $itemTiga->id }}">
                                             <label for="">{{ $itemTiga->nama }}</label>
                                             <div class="row file-input">
                                                 <div class="col-md-9">
@@ -829,7 +829,7 @@ $dataIndex = match ($skema) {
                                                 </div>
                                                 @endif
                                             </div>
-                                        </div>
+                                        </div>  --}}
                                     @elseif ($itemTiga->opsi_jawaban == 'long text')
                                         <div class="form-group col-md-6">
                                             <label for="">{{ $itemTiga->nama }}</label>
@@ -1157,6 +1157,7 @@ $dataIndex = match ($skema) {
             } else {
                 $("#foto-ktp-nasabah").addClass('form-group col-md-12')
                 $("#foto-ktp-nasabah").append(`
+                    @isset($itemKTPNas)
                     <label for="">{{ $itemKTPNas->nama }}</label>
                     <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
                     <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-control limit-size">
@@ -1167,6 +1168,7 @@ $dataIndex = match ($skema) {
                         </div>
                     @endif
                     <span class="filename" style="display: inline;"></span>
+                    @endisset
                 `)
             }
         });
@@ -1448,30 +1450,6 @@ $dataIndex = match ($skema) {
                             } else {
                                 if(valItem.nama == 'Foto') {
                                     $('#bukti_pemilikan_jaminan_tambahan').append(`
-                                    <div class="form-group col-md-6 file-wrapper item-${valItem.id}">
-                                        <label for="">${valItem.nama}</label>
-                                        <div class="row file-input">
-                                            <div class="col-md-9">
-                                                <input type="hidden" name="id_item_file[${valItem.id}]" value="${valItem.id}" id="">
-                                                <input type="file" name="upload_file[${valItem.id}]" data-id=""
-                                                    placeholder="Masukkan informasi ${valItem.nama}"
-                                                    class="form-control limit-size">
-                                                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
-                                                <span class="filename" style="display: inline;"></span>
-                                            </div>
-                                            <div class="col-1">
-                                                <button class="btn btn-sm btn-success btn-add-file" type="button" data-id="${valItem.id}">
-                                                    <i class="fa fa-plus"></i>
-                                                </button>
-                                            </div>
-                                            <div class="col-1">
-                                                <button class="btn btn-sm btn-danger btn-del-file" type="button" data-id="${valItem.id}">
-                                                    <i class="fa fa-minus"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
                                     <div class="form-group col-md-6 file-wrapper item-${valItem.id}">
                                         <label for="">${valItem.nama}</label>
                                         <div class="row file-input">

@@ -538,8 +538,10 @@ class PengajuanKreditController extends Controller
 
         // item level 3
         $dataLev3 = $request->dataLevelTiga;
-        // remove key 121 & 149 from array
+        // remove key 121, 134 & 149 from array
+        return $request;
         unset($dataLev3[121]);
+        unset($dataLev3[134]);
         unset($dataLev3[149]);
 
         // item level 4
@@ -565,6 +567,7 @@ class PengajuanKreditController extends Controller
         }
 
         // find avg
+        return $mergedDataLevel;
         $avgResult = round($totalScore / (count($mergedDataLevel) - $totalDataNull), 2);
         return $avgResult;
 
@@ -674,6 +677,7 @@ class PengajuanKreditController extends Controller
      */
     public function store(Request $request)
     {
+        // return $request;
         // return $_POST;
         // return 'jumlah id level = ' . count($request->get('id_level')) . '; jumlah input = ' . count($request->get('informasi'));
         // $checkLevelDua = $request->dataLevelDua != null ? 'required' : '';
@@ -806,25 +810,29 @@ class PengajuanKreditController extends Controller
              */
 
             // item level 2
+            $dataLev2 = [];
             if ($request->dataLevelDua != null) {
                 $dataLev2 = $request->dataLevelDua;
                 // remove key 80, 86, 93 & 142 from array
-                unset($dataLev2[80]);
-                unset($dataLev2[86]);
-                unset($dataLev2[93]);
-                unset($dataLev2[142]);
+                // unset($dataLev2[80]);
+                // unset($dataLev2[86]);
+                // unset($dataLev2[93]);
+                // unset($dataLev2[142]);
             }
 
             // item level 3
+            $dataLev3 = [];
             if ($request->dataLevelTiga != null) {
                 // item level 3
                 $dataLev3 = $request->dataLevelTiga;
-                // remove key 121 & 149 from array
-                unset($dataLev3[121]);
-                unset($dataLev3[149]);
+                // remove key 121, 134 & 149 from array
+                // unset($dataLev3[121]);
+                unset($dataLev3[134]);
+                // unset($dataLev3[149]);
             }
 
             // item level 4
+            $dataLev4 = [];
             if ($request->dataLevelEmpat != null) {
                 $dataLev4 = $request->dataLevelEmpat;
             }
@@ -848,7 +856,7 @@ class PengajuanKreditController extends Controller
             }
 
             // find avg
-            $avgResult = round($totalScore / count($mergedDataLevel), 2);
+            $avgResult = round($totalScore / (count($mergedDataLevel) - $totalDataNull), 2);
             $status = "";
             $updateData = PengajuanModel::find($id_pengajuan);
             if ($avgResult > 0 && $avgResult <= 1) {
@@ -863,11 +871,22 @@ class PengajuanKreditController extends Controller
             }
 
             for ($i = 0; $i < count($mergedDataLevel); $i++) {
-                JawabanPengajuanModel::insert([
-                    'id_pengajuan' => $id_pengajuan,
-                    'id_jawaban' => $this->getDataLevel($mergedDataLevel[$i])[1],
-                    'skor' => $this->getDataLevel($mergedDataLevel[$i])[0],
-                ]);
+                if ($mergedDataLevel[$i] != null) {
+                    $data = $this->getDataLevel($mergedDataLevel[$i]);
+                    if (is_numeric($data[0])) {
+                        JawabanPengajuanModel::insert([
+                            'id_pengajuan' => $id_pengajuan,
+                            'id_jawaban' => $this->getDataLevel($mergedDataLevel[$i])[1],
+                            'skor' => $this->getDataLevel($mergedDataLevel[$i])[0],
+                        ]);
+                    }
+                    else {
+                        JawabanPengajuanModel::insert([
+                            'id_pengajuan' => $id_pengajuan,
+                            'id_jawaban' => $this->getDataLevel($mergedDataLevel[$i])[1],
+                        ]);
+                    }
+                }
             }
 
             if (!$statusSlik) {
@@ -1527,7 +1546,7 @@ class PengajuanKreditController extends Controller
                     ->first();
             }
             $param['skema'] = $param['dataUmumNasabah']->skema_kredit;
-// return $param;
+
             return view('pengajuan-kredit.detail-pengajuan-jawaban-pbp', $param);
         } else {
             return redirect()->back()->withError('Tidak memiliki hak akses.');
@@ -1536,66 +1555,24 @@ class PengajuanKreditController extends Controller
     // insert komentar
     public function getInsertKomentar(Request $request)
     {
-        // $finalArray = array();
-        // $finalArray_text = array();
-
-        // foreach ($request->skor_pbp as $key => $value) {
-        //     if ($value != '' || $value != null) {
-        //         array_push($finalArray, [
-        //             'skor_pbp' => $value
-        //         ]);
-        //     }
-        // };
-        // // return $finalArray;
-        // $sum_select = array_sum($request->skor_pbp);
-        // // $sum_text = array_sum($request->skor_pbp_text);
-        // $average = ($sum_select) / count($request->skor_pbp);
-        // // return $average;
-        // $result = round($average, 2);
-        // $status = "";
-        // $updateData = PengajuanModel::find($request->id_pengajuan);
-        // if ($result > 0 && $result <= 1) {
-        //     $status = "merah";
-        // } elseif ($result >= 2 && $result <= 3) {
-        //     $status = "kuning";
-        // } elseif ($result > 3) {
-        //     $status = "hijau";
-        // } else {
-        //     $status = "merah";
-        // }
-
-        // $skors = [];
-        // foreach ($request->get('id_option') as $key => $value) {
-        //     JawabanPengajuanModel::where('id_jawaban', $value)->where('id_pengajuan', $request->get('id_pengajuan'))
-        //         ->update([
-        //             'skor_pbp' => $request->get('skor_pbp')[$key]
-        //         ]);
-        //     array_push($skors, $request->get('skor_pbp')[$key]);
-        // }
-        // return [
-        //     'skor' => $skors,
-        //     'final_array' => $finalArray,
-        //     'avg' => $average,
-        //     'result' => $result,
-        // ];
         if (Auth::user()->role == 'PBO' || Auth::user()->role == 'PBP') {
             $role = Auth::user()->role;
             try {
                 $finalArray = array();
                 $finalArray_text = array();
-
+                $totalDataNull = 0;
                 foreach ($request->skor_pbp as $key => $value) {
                     if ($value != '' || $value != null) {
                         array_push($finalArray, [
                             'skor_pbp' => $value
                         ]);
                     }
+                    else {
+                        $totalDataNull++;
+                    }
                 };
-                // return $finalArray;
                 $sum_select = array_sum($request->skor_pbp);
-                // $sum_text = array_sum($request->skor_penyelia_text);
-                $average = ($sum_select) / count($request->skor_pbp);
-                // return $average;
+                $average = ($sum_select) / (count($request->skor_pbp) - $totalDataNull);
                 $result = round($average, 2);
                 $status = "";
                 $updateData = PengajuanModel::find($request->id_pengajuan);
@@ -1728,19 +1705,19 @@ class PengajuanKreditController extends Controller
             try {
                 $finalArray = array();
                 $finalArray_text = array();
-
+                $totalDataNull = 0;
                 foreach ($request->skor_penyelia as $key => $value) {
                     if ($value != '' || $value != null) {
                         array_push($finalArray, [
                             'skor_penyelia' => $value
                         ]);
                     }
+                    else {
+                        $totalDataNull++;
+                    }
                 };
-                // return $finalArray;
                 $sum_select = array_sum($request->skor_penyelia);
-                // $sum_text = array_sum($request->skor_penyelia_text);
-                $average = ($sum_select) / count($request->skor_penyelia);
-                // return $average;
+                $average = ($sum_select) / (count($request->skor_penyelia) - $totalDataNull);
                 $result = round($average, 2);
                 $status = "";
                 $updateData = PengajuanModel::find($request->id_pengajuan);

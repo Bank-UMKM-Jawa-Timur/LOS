@@ -39,6 +39,9 @@ $dataIndex = match ($dataUmum->skema_kredit) {
         }
 
     </style>
+    @php
+        $userPBO = \App\Models\User::select('id')->where('role', 'PBO')->where('id_cabang', $dataUmum->id_cabang)->first();
+    @endphp
     <div class="">
         <form action="{{ route('pengajuan.check.pincab.status.detail.post') }}" method="POST">
             @csrf
@@ -262,6 +265,11 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                             ->where('id_item', $itemSlik->id_item)
                             ->where('id_user', $comment->id_penyelia)
                             ->first();
+                        $komentarSlikPBO = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', '=', 'detail_komentar.id_komentar')
+                            ->where('id_pengajuan', $dataUmum->id)
+                            ->where('id_item', $itemSlik->id_item)
+                            ->where('id_user', $comment->id_pbo)
+                            ->first();
                         if ($dataUmum->id_cabang == 1) {
                             $komentarSlikPBP = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', '=', 'detail_komentar.id_komentar')
                                 ->where('id_pengajuan', $dataUmum->id)
@@ -295,8 +303,6 @@ $dataIndex = match ($dataUmum->skema_kredit) {
 
                             </div>
                         </div>
-
-
                         <div class="row form-group sub pl-4">
                             <label for="staticEmail" class="col-sm-3 col-form-label"></label>
                             <label for="staticEmail" class="col-sm-1 col-form-label px-0">
@@ -317,6 +323,28 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                 </div>
                             </div>
                         </div>
+                        @if ($userPBO)
+                        <div class="row form-group sub pl-4">
+                            <label for="staticEmail" class="col-sm-3 col-form-label"></label>
+                            <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                                <div class="d-flex justify-content-end">
+                                    <div style="width: 20px">
+
+                                    </div>
+                                </div>
+                            </label>
+                            <div class="col-sm-7">
+                                <div class="d-flex">
+                                    <div style="width: 30%">
+                                        <p class="p-0 m-0"><strong>Komentar PBO : </strong></p>
+                                    </div>
+                                    <h6 class="font-italic">{{ $komentarSlikPBO?->komentar }}</h6>
+                                    {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
+
+                                </div>
+                            </div>
+                        </div>
+                        @endif
                         @if ($dataUmum->id_cabang == 1)
                             <div class="row form-group sub pl-4">
                                 <label for="staticEmail" class="col-sm-3 col-form-label"></label>
@@ -339,7 +367,6 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                 </div>
                             </div>
                         @endif
-                    
                     @php
                         $dataLaporanSLIK = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide')
                         ->where('level', 2)
@@ -649,9 +676,16 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                     <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="700px">
                                                 @endif
                                             @else
-                                                <input type="text" readonly class="form-control-plaintext font-weight-bold"
-                                                    id="staticEmail" value="{{ $itemTextDua->opsi_text }} {{$itemTiga->opsi_jawaban == 'persen' ? '%' : ''}} {{$item->opsi_jawaban == 'persen' ? '%' : ''}}">
-                                                <input type="hidden" name="id[]" value="{{ $itemAspek->id }}">
+                                                @if (is_numeric($itemJawaban->option) && strlen($itemJawaban->option) > 3)
+                                                    <input type="text" readonly
+                                                        class="form-control-plaintext font-weight-bold" id="staticEmail"
+                                                        value="{{ $itemTextDua->opsi_text }}">
+                                                    <input type="hidden" name="id[]" value="{{ $itemAspek->id }} {{$itemTiga->opsi_jawaban == 'persen' ? '%' : ''}} {{$item->opsi_jawaban == 'persen' ? '%' : ''}}">
+                                                @else
+                                                    <input type="text" readonly class="form-control-plaintext font-weight-bold"
+                                                        id="staticEmail" value="{{ $itemTextDua->opsi_text }} {{$itemTiga->opsi_jawaban == 'persen' ? '%' : ''}} {{$item->opsi_jawaban == 'persen' ? '%' : ''}}">
+                                                    <input type="hidden" name="id[]" value="{{ $itemAspek->id }}">
+                                                @endif
                                             @endif
                                         </div>
                                     </div>
@@ -763,10 +797,17 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                 @endphp
                                                 @if (in_array($itemJawaban->id, $data))
                                                     @if (isset($data))
+                                                        @if (is_numeric($itemJawaban->option) && strlen($itemJawaban->option) > 3)
                                                         <input type="text" readonly
                                                             class="form-control-plaintext font-weight-bold" id="staticEmail"
                                                             value="{{ $itemJawaban->option }}">
                                                         <input type="hidden" name="id[]" value="{{ $itemAspek->id }}">
+                                                        @else
+                                                        <input type="text" readonly
+                                                            class="form-control-plaintext font-weight-bold" id="staticEmail"
+                                                            value="{{ $itemJawaban->option }}">
+                                                        <input type="hidden" name="id[]" value="{{ $itemAspek->id }}">
+                                                        @endif
                                                     @endif
                                                 @endif
                                             @endforeach
@@ -1089,6 +1130,11 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                                         ->where('komentar.id_pengajuan', $comment->id_pengajuan)
                                                                         ->where('detail_komentar.id_user', $comment->id_penyelia)
                                                                         ->get();
+                                                                    $getKomentarPBO3 = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', 'detail_komentar.id_komentar')
+                                                                        ->where('id_item', $itemJawabanTiga->id_item)
+                                                                        ->where('komentar.id_pengajuan', $comment->id_pengajuan)
+                                                                        ->where('detail_komentar.id_user', $comment->id_pbo)
+                                                                        ->first();
                                                                 @endphp
                                                                 @foreach ($dataDetailJawabanTiga as $item)
                                                                     @if ($item->skor_penyelia != null && $item->skor_penyelia != '')
@@ -1141,6 +1187,29 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                         </div>
                                                     </div>
                                                 @endforeach
+                                            @endif
+                                            @if ($userPBO)
+                                                <div class="row form-group sub pl-4">
+                                                    <label for="staticEmail" class="col-sm-3 col-form-label"></label>
+                                                    <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                                                        <div class="d-flex justify-content-end">
+                                                            <div style="width: 20px">
+    
+                                                            </div>
+                                                        </div>
+                                                    </label>
+                                                    <div class="col-sm-7">
+                                                        <div class="d-flex">
+                                                            <div style="width: 30%">
+                                                                <p class="p-0 m-0"><strong>Komentar PBO: </strong></p>
+                                                            </div>
+                                                            <h6 class="font-italic">{{ $getKomentarPBO3->komentar ?? '' }}</h6>
+                                                            {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
+    
+                                                        </div>
+                                                        {{-- <input type="text" readonly class="form-control-plaintext" id="komentar" value="{{ $itemKomentar3->komentar }}"> --}}
+                                                    </div>
+                                                </div>
                                             @endif
                                             @if ($dataUmum->id_cabang == 1 && $getKomentarPBP3 != null)    
                                                 @foreach ($getKomentarPBP3 as $itemKomentar3)    
@@ -1396,6 +1465,11 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                                             ->where('komentar.id_pengajuan', $comment->id_pengajuan)
                                                                             ->where('detail_komentar.id_user', $comment->id_penyelia)
                                                                             ->first();
+                                                                        $getKomentarPBO5 = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', 'detail_komentar.id_komentar')
+                                                                            ->where('detail_komentar.id_item', $itemJawabanEmpat->id_item)
+                                                                            ->where('komentar.id_pengajuan', $comment->id_pengajuan)
+                                                                            ->where('detail_komentar.id_user', $comment->id_pbo)
+                                                                            ->first();
                                                                         if ($dataUmum->id_cabang == 1) {
                                                                             $getKomentarPBP5 = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', 'detail_komentar.id_komentar')
                                                                             ->where('detail_komentar.id_item', $itemJawabanEmpat->id_item)
@@ -1446,6 +1520,32 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                             </div>
                                                         </div>
                                                     </div>
+                                                @endif
+                                                @if ($userPBO)
+                                                    @if ($getKomentarPBO5)
+                                                        <div class="row form-group sub pl-4">
+                                                            <label for="staticEmail" class="col-sm-3 col-form-label"></label>
+                                                            <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                                                                <div class="d-flex justify-content-end">
+                                                                    <div style="width: 20px">
+
+                                                                    </div>
+                                                                </div>
+                                                            </label>
+                                                            <div class="col-sm-7">
+                                                                <div class="d-flex">
+                                                                    <div style="width: 30%">
+                                                                        <p class="p-0 m-0"><strong>Komentar PBO : </strong>
+                                                                        </p>
+                                                                    </div>
+                                                                    <h6 class="font-italic">
+                                                                        {{ $getKomentarPBO5->komentar ?? '' }}</h6>
+                                                                    {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endif
                                                 @endif
                                                 @if ($dataUmum->id_cabang == 1 && $getKomentarPBP5 != null)    
                                                     <div class="row form-group sub pl-4">
