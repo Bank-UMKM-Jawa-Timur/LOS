@@ -163,17 +163,6 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                         </div>
                     @enderror
                 </div>
-                <div class="form-group col-md-12">
-                    <label for="">No. KTP</label>
-                    <input disabled type="text" name="no_ktp" class="form-control @error('no_ktp') is-invalid @enderror"
-                        id="" value="{{ old('no_ktp', $dataUmumNasabah->no_ktp) }}"
-                        placeholder="Masukkan 16 digit No. KTP">
-                    @error('no_ktp')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
                 <div class="form-group col-md-4">
                     <label for="">Tempat</label>
                     <input disabled type="text" name="tempat_lahir" id=""
@@ -220,6 +209,128 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                         </div>
                     @enderror
                 </div>
+                <div class="form-group col-md-12">
+                    <label for="">No. KTP</label>
+                    <input disabled type="text" name="no_ktp" class="form-control @error('no_ktp') is-invalid @enderror"
+                        id="" value="{{ old('no_ktp', $dataUmumNasabah->no_ktp) }}"
+                        placeholder="Masukkan 16 digit No. KTP">
+                    @error('no_ktp')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                @if ($dataUmumNasabah->status == 'menikah')
+                    @php
+                        $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+                            ->where('level', 2)
+                            ->where('id_parent', $itemKTPSu->id)
+                            ->where('nama', 'Foto KTP Suami')
+                            ->get();
+                    @endphp
+                    @foreach ($dataLevelDua as $item)
+                        @if ($item->opsi_jawaban == 'file')
+                            @php
+                                $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
+                                    ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                    ->where('jawaban_text.id_pengajuan', $dataUmum->id)
+                                    ->where('jawaban_text.id_jawaban', $item->id)
+                                    ->get();
+                            @endphp
+                            @foreach ($dataDetailJawabanText as $itemTextDua)
+                                @php
+                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                                @endphp
+                                <div class="form-group col-md-12">
+                                    <label for="">{{ $item->nama }}</label>
+                                    <div class="col-md-12 form-group">
+                                        <b>Jawaban:</b>
+                                        <div class="mt-2">
+                                            @if ($file_parts['extension'] == 'pdf')
+                                                <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" width="100%" height="400px"></iframe>
+                                            @else
+                                                <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="400px">
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @endif
+                    @endforeach
+                    @php
+                        $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+                            ->where('level', 2)
+                            ->where('id_parent', $itemKTPSu->id)
+                            ->where('nama', 'Foto KTP Istri')
+                            ->get();
+                    @endphp
+                    @foreach ($dataLevelDua as $item)
+                        @if ($item->opsi_jawaban == 'file')
+                            @php
+                                $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
+                                    ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                    ->where('jawaban_text.id_pengajuan', $dataUmum->id)
+                                    ->where('jawaban_text.id_jawaban', $item->id)
+                                    ->get();
+                            @endphp
+                            @foreach ($dataDetailJawabanText as $itemTextDua)
+                                @php
+                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                                @endphp
+                                <div class="form-group col-md-12">
+                                    <label for="">{{ $item->nama }}</label>
+                                    <div class="form-group">
+                                        <b>Jawaban:</b>
+                                        <div class="mt-2">
+                                            @if ($file_parts['extension'] == 'pdf')
+                                                <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" width="100%" height="400px"></iframe>
+                                            @else
+                                                <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="400px">
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @endif
+                    @endforeach
+                @else
+                    @php
+                        $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+                            ->where('level', 2)
+                            ->where('id_parent', $itemKTPSu->id)
+                            ->where('nama', 'Foto KTP Nasabah')
+                            ->get();
+                    @endphp
+                    @foreach ($dataLevelDua as $item)
+                        @if ($item->opsi_jawaban == 'file')
+                            @php
+                                $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
+                                    ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                    ->where('jawaban_text.id_pengajuan', $dataUmum->id)
+                                    ->where('jawaban_text.id_jawaban', $item->id)
+                                    ->get();
+                            @endphp
+                            @foreach ($dataDetailJawabanText as $itemTextDua)
+                                @php
+                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                                @endphp
+                                <div class="form-group col-md-12">
+                                    <label for="">{{ $item->nama }}</label>
+                                    <div class="form-group col-md-12">
+                                        <b>Jawaban:</b>
+                                        <div class="mt-2">
+                                            @if ($file_parts['extension'] == 'pdf')
+                                                <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" width="100%" height="400px"></iframe>
+                                            @else
+                                                <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="400px">
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @endif
+                    @endforeach
+                @endif
                 <div class="form-group col-md-12">
                     <label for="">Sektor Kredit</label>
                     <select disabled name="sektor_kredit" id=""

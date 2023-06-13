@@ -202,6 +202,7 @@ class PengajuanKreditController extends Controller
         $param['itemP'] = ItemModel::where('nama', 'Laporan SLIK')->first();
         $param['itemKTPSu'] = ItemModel::where('nama', 'Foto KTP Suami')->first();
         $param['itemKTPIs'] = ItemModel::where('nama', 'Foto KTP Istri')->first();
+        $param['itemKTPNas'] = ItemModel::where('nama', 'Foto KTP Nasabah')->first();
         $param['itemNIB'] = ItemModel::where('nama', 'Dokumen NIB')->first();
         $param['itemNPWP'] = ItemModel::where('nama', 'Dokumen NPWP')->first();
         $param['itemSKU'] = ItemModel::where('nama', 'Dokumen Surat Keterangan Usaha')->first();
@@ -956,6 +957,7 @@ class PengajuanKreditController extends Controller
         $param['itemP'] = ItemModel::where('nama', 'Laporan SLIK')->first();
         $param['itemKTPSu'] = ItemModel::where('nama', 'Foto KTP Suami')->first();
         $param['itemKTPIs'] = ItemModel::where('nama', 'Foto KTP Istri')->first();
+        $param['itemKTPNas'] = ItemModel::where('nama', 'Foto KTP Nasabah')->first();
         $param['itemNIB'] = ItemModel::where('nama', 'Dokumen NIB')->first();
         $param['itemNPWP'] = ItemModel::where('nama', 'Dokumen NPWP')->first();
         $param['itemSKU'] = ItemModel::where('nama', 'Dokumen Surat Keterangan Usaha')->first();
@@ -1188,6 +1190,7 @@ class PengajuanKreditController extends Controller
                 if ($request->info_text[$key] == null) continue;
 
                 if ($request->id_jawaban_text[$key] == null && $request->info_text[$key] != null) {
+                    // dd($request->id_jawaban_text)
                     $data_baru = new JawabanTextModel();
                     $data_baru->id_pengajuan = $id_pengajuan;
                     $data_baru->id_jawaban = $request->id_text[$key];
@@ -1473,6 +1476,8 @@ class PengajuanKreditController extends Controller
                 ->where('nama', 'SLIK')
                 ->first();
             $param['itemSP'] = ItemModel::where('level', 1)->where('nama', '=', 'Data Umum')->first();
+            $param['itemKTPSu'] = ItemModel::where('level', 1)->where('nama', '=', 'Data Umum')->first();
+            $param['itemKTPIs'] = ItemModel::where('level', 1)->where('nama', '=', 'Data Umum')->first();
 
             $param['dataUmumNasabah'] = PengajuanModel::select(
                 'pengajuan.id',
@@ -2519,6 +2524,7 @@ class PengajuanKreditController extends Controller
         $param['itemP'] = ItemModel::where('nama', 'Laporan SLIK')->first();
         $param['itemKTPSu'] = ItemModel::where('nama', 'Foto KTP Suami')->first();
         $param['itemKTPIs'] = ItemModel::where('nama', 'Foto KTP Istri')->first();
+        $param['itemKTPNas'] = ItemModel::where('nama', 'Foto KTP Nasabah')->first();
         $param['itemNIB'] = ItemModel::where('nama', 'Dokumen NIB')->first();
         $param['itemNPWP'] = ItemModel::where('nama', 'Dokumen NPWP')->first();
         $param['itemSKU'] = ItemModel::where('nama', 'Dokumen Surat Keterangan Usaha')->first();
