@@ -47,7 +47,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
             <div class="row">
                 <div class="form-group col-md-6">
                     <label for="">Nama Lengkap</label>
-                    <input type="text" name="name" id="nama" class="form-control @error('name') is-invalid @enderror"
+                    <input type="text" name="name" id="nama" maxlength="255" class="form-control @error('name') is-invalid @enderror"
                         value="{{ old('name', $dataUmum->nama) }}" placeholder="Nama sesuai dengan KTP">
                     @error('name')
                         <div class="invalid-feedback">
@@ -121,7 +121,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Alamat Rumah</label>
-                    <textarea name="alamat_rumah" class="form-control @error('alamat_rumah') is-invalid @enderror" id="" cols="30" rows="4"
+                    <textarea name="alamat_rumah" class="form-control @error('alamat_rumah') is-invalid @enderror" maxlength="255" id="" cols="30" rows="4"
                         placeholder="Alamat Rumah disesuaikan dengan KTP">{{ old('alamat_rumah', $dataUmum->alamat_rumah) }}</textarea>
                     @error('alamat_rumah')
                         <div class="invalid-feedback">
@@ -132,7 +132,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Alamat Usaha</label>
-                    <textarea name="alamat_usaha" class="form-control @error('alamat_usaha') is-invalid @enderror" id="" cols="30" rows="4"
+                    <textarea name="alamat_usaha" class="form-control @error('alamat_usaha') is-invalid @enderror" maxlength="255" id="" cols="30" rows="4"
                         placeholder="Alamat Usaha disesuaikan dengan KTP">{{ old('alamat_usaha', $dataUmum->alamat_usaha) }}</textarea>
                     @error('alamat_usaha')
                         <div class="invalid-feedback">
@@ -142,7 +142,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">No. KTP</label>
-                    <input type="text" name="no_ktp" class="form-control @error('no_ktp') is-invalid @enderror" id=""
+                    <input type="text" name="no_ktp" maxlength="255" class="form-control @error('no_ktp') is-invalid @enderror" id=""
                         value="{{ old('no_ktp', $dataUmum->no_ktp) }}" placeholder="Masukkan 16 digit No. KTP">
                     @error('no_ktp')
                         <div class="invalid-feedback">
@@ -200,7 +200,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 </div>
                 <div class="form-group col-md-4">
                     <label for="">Tempat</label>
-                    <input type="text" name="tempat_lahir" id=""
+                    <input type="text" name="tempat_lahir" maxlength="255" id=""
                         class="form-control @error('tempat_lahir') is-invalid @enderror"
                         value="{{ old('tempat_lahir', $dataUmum->tempat_lahir) }}" placeholder="Tempat Lahir">
                     @error('tempat_lahir')
@@ -313,7 +313,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Jenis Usaha</label>
-                    <textarea name="jenis_usaha" class="form-control @error('jenis_usaha') is-invalid @enderror" id="" cols="30" rows="4"
+                    <textarea name="jenis_usaha" class="form-control @error('jenis_usaha') is-invalid @enderror" maxlength="255" id="" cols="30" rows="4"
                         placeholder="Jenis Usaha secara spesifik">{{ old('jenis_usaha', $dataUmum->jenis_usaha) }}</textarea>
                     @error('jenis_usaha')
                         <div class="invalid-feedback">
@@ -348,7 +348,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Tujuan Kredit</label>
-                    <textarea name="tujuan_kredit" class="form-control @error('tujuan_kredit') is-invalid @enderror" id="" cols="30"
+                    <textarea name="tujuan_kredit" class="form-control @error('tujuan_kredit') is-invalid @enderror" maxlength="255" id="" cols="30"
                         rows="4"
                         placeholder="Tujuan Kredit">{{ old('tujuan_kredit', $dataUmum->tujuan_kredit) }}</textarea>
                     @error('tujuan_kredit')
@@ -359,7 +359,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Jaminan yang disediakan</label>
-                    <textarea name="jaminan" class="form-control @error('jaminan') is-invalid @enderror" id="" cols="30" rows="4"
+                    <textarea name="jaminan" class="form-control @error('jaminan') is-invalid @enderror" maxlength="255" id="" cols="30" rows="4"
                         placeholder="Jaminan yang disediakan">{{ old('jaminan', $dataUmum->jaminan_kredit) }}</textarea>
                     @error('jaminan')
                         <div class="invalid-feedback">
@@ -369,7 +369,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Hubungan Bank</label>
-                    <textarea name="hubungan_bank" class="form-control @error('hubungan_bank') is-invalid @enderror" id="" cols="30"
+                    <textarea name="hubungan_bank" class="form-control @error('hubungan_bank') is-invalid @enderror" maxlength="255" id="" cols="30"
                         rows="4"
                         placeholder="Hubungan dengan Bank">{{ old('hubungan_bank', $dataUmum->hubungan_bank) }}</textarea>
                     @error('hubungan_bank')
@@ -380,7 +380,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Hasil Verifikasi</label>
-                    <textarea name="hasil_verifikasi" class="form-control @error('hasil_verifikasi') is-invalid @enderror" id="" cols="30"
+                    <textarea name="hasil_verifikasi" class="form-control @error('hasil_verifikasi') is-invalid @enderror" maxlength="255" id="" cols="30"
                         rows="4"
                         placeholder="Hasil Verifikasi Karakter Umum">{{ old('hasil_verifikasi', $dataUmum->verifikasi_umum) }}</textarea>
                     @error('hasil_verifikasi')
@@ -439,7 +439,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 </div>
                 <div class="form-group col-md-6">
                     <label for="">Warna</label>
-                    <input type="text" name="warna" id="warna" class="form-control @error('warna') is-invalid @enderror"
+                    <input type="text" name="warna" id="warna" maxlength="255" class="form-control @error('warna') is-invalid @enderror"
                         placeholder="Warna Kendaraan" value="{{ $dataPO?->warna ?? '' }}">
                     @error('warna')
                         <div class="invalid-feedback">
@@ -452,7 +452,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 </div>
                 <div class="form-group col-md-6">
                     <label for="">Pemesanan</label>
-                    <input type="text" name="pemesanan" id="pemesanan" class="form-control @error('pemesanan') is-invalid @enderror"
+                    <input type="text" maxlength="255" name="pemesanan" id="pemesanan" class="form-control @error('pemesanan') is-invalid @enderror"
                         placeholder="Pemesanan Kendaraan" value="{{ $pemesanan ?? '' }}">
                     @error('pemesanan')
                         <div class="invalid-feedback">
@@ -545,7 +545,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                     <label for="">NIB</label>
                                     <input type="hidden" name="id_level[]" value="77" id="nib_id">
                                     <input type="hidden" name="opsi_jawaban[]" value="input text" id="nib_opsi_jawaban">
-                                    <input type="text" name="info_text[]" id="nib_text" id="" placeholder="Masukkan informasi"
+                                    <input type="text" maxlength="255" name="info_text[]" id="nib_text" id="" placeholder="Masukkan informasi"
                                         class="form-control" value="{{  ($dataIjin?->nama == 'NIB') ? $dataIjin?->opsi_text : '' }}">
                                     <input type="hidden" name="skor_penyelia_text[]" value="{{  ($dataIjin?->nama == 'NIB') ? $dataIjin?->skor_penyelia : null }}" >
                                     <input type="hidden"name="id_text[]" id="id_nib_text" value="77" >
@@ -580,7 +580,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                 <div class="form-group col-md-6" id="surat_keterangan_usaha">
                                     <label for="">Surat Keterangan Usaha</label>
                                     <input type="hidden" name="id_level[]" value="78" id="surat_keterangan_usaha_id">
-                                    <input type="text" name="info_text[]" placeholder="Masukkan informasi" id="surat_keterangan_usaha_text"
+                                    <input type="text" maxlength="255" name="info_text[]" placeholder="Masukkan informasi" id="surat_keterangan_usaha_text"
                                         class="form-control" value="{{  ($dataIjin?->nama == 'Surat Keterangan Usaha') ? $dataIjin?->opsi_text : null }}">
                                     <input type="hidden" name="skor_penyelia_text[]" id="surat_keterangan_usaha_text" value="{{  ($dataIjin?->nama == 'Surat Keterangan Usaha') ? $dataIjin?->skor_penyelia : null }}" >
                                     <input type="hidden" name="id_text[]" id="id_surat_keterangan_usaha_text"  value="78">
@@ -620,7 +620,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                     <input type="hidden" name="id_level[]" value="79" id="npwp_id">
                                     <input type="hidden" name="opsi_jawaban[]" value="input text" id="npwp_opsi_jawaban">
                                     <input type="hidden" name="id_text[]" value="{{ $dataDetailJawabanTextnpwp?->id_item }}">
-                                    <input type="text" name="info_text[]" id="npwp_text" placeholder="Masukkan informasi"
+                                    <input type="text" maxlength="255" name="info_text[]" id="npwp_text" placeholder="Masukkan informasi"
                                         class="form-control" value="{{ ($dataDetailJawabanTextnpwp != null) ? $dataDetailJawabanTextnpwp?->opsi_text : "" }}">
                                     <input type="hidden" name="skor_penyelia_text[]" id="npwp_text" value="{{ $dataDetailJawabanTextnpwp?->skor_penyelia }}">
                                     <input type="hidden" name="id_jawaban_text[]" id="npwp_text" value="{{ ($dataDetailJawabanTextnpwp != null) ? $dataDetailJawabanTextnpwp->id : null }}">
@@ -664,7 +664,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                     <div class="form-group col-md-6">
                                         <label for="">{{ $item->nama }}</label>
                                         <input type="hidden" name="id_text[]" value="{{ $itemTextDua->id_item }}">
-                                        <input type="text" name="info_text[]" id="{{ $idLevelDua }}"
+                                        <input type="text" maxlength="255" name="info_text[]" id="{{ $idLevelDua }}"
                                             placeholder="Masukkan informasi {{ $item->nama }}" value="{{ ($itemTextDua != null) ? $itemTextDua->opsi_text : null }}" class="form-control {{ ($item->nama == 'Modal Awal Sendiri' || $item->nama == 'Modal Pinjaman') ? 'rupiah' : '' }}">
                                         <input type="hidden" name="skor_penyelia_text[]"
                                             value="{{ $itemTextDua->skor_penyelia }}">
@@ -688,7 +688,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                         @else
                                             <div class="form-group col-md-6">
                                                 <label for="">{{ $item->nama }}</label>
-                                                <input type="text" name="info_text[]" id="{{ $idLevelDua }}"
+                                                <input type="text" maxlength="255" name="info_text[]" id="{{ $idLevelDua }}"
                                                     placeholder="Masukkan informasi {{ $item->nama }}" value="{{ ($itemTextDua != null) ? $itemTextDua->opsi_text : null }}" class="form-control">
                                                 <input type="hidden" name="skor_penyelia_text[]"
                                                     value="{{ $itemTextDua->skor_penyelia }}">
@@ -735,7 +735,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                     <div class="form-group col-md-6">
                                         <label for="">{{ $item->nama }}</label>
                                         <input type="hidden" name="id_text[]" value="{{ $itemTextDua->id_item }}">
-                                        <textarea name="info_text[]" rows="4" id="{{ $idLevelDua }}" class="form-control"
+                                        <textarea name="info_text[]" rows="4" id="{{ $idLevelDua }}" maxlength="255" class="form-control"
                                             placeholder="Masukkan informasi {{ $item->nama }}">{{ ($itemTextDua != null) ? $itemTextDua->opsi_text : null }}</textarea>
                                             <input type="hidden" name="skor_penyelia_text[]"
                                                 value="{{ $itemTextDua->skor_penyelia }}">
@@ -919,7 +919,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                             @foreach ($dataDetailJawabanText as $itemTextTiga)
                                                 <label for="">{{ $itemTiga->nama }}</label>
                                                 <input type="hidden" name="id_text[]" value="{{ $itemTextTiga->id_item }}">
-                                                <input type="text" name="info_text[]" placeholder="Masukkan informasi"
+                                                <input type="text" maxlength="255" name="info_text[]" placeholder="Masukkan informasi"
                                                     class="form-control" id="{{ $idLevelTiga }}" value="{{ ($itemTextTiga->opsi_text != null) ? $itemTextTiga->opsi_text : null }}">
                                                 <input type="hidden" name="skor_penyelia_text[]"
                                                     value="{{ $itemTextTiga->skor_penyelia }}">
@@ -996,7 +996,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                     @foreach ($dataDetailJawabanText as $itemTextTiga)
                                             <div class="form-group col-md-6">
                                                 <label for="">{{ $itemTiga->nama }}</label>
-                                                <textarea name="info_text[]" rows="4" id="{{ $idLevelTiga }}" class="form-control"
+                                                <textarea name="info_text[]" rows="4" id="{{ $idLevelTiga }}" maxlength="255" class="form-control"
                                                     placeholder="Masukkan informasi {{ $itemTiga->nama }}">{{ ($itemTextTiga->opsi_text != null) ? $itemTextTiga->opsi_text : null }}</textarea>
                                                     <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextTiga->id }}">
                                                     <input type="hidden" name="skor_penyelia_text[]"
@@ -1076,7 +1076,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                             @foreach ($dataDetailJawabanTextEmpat as $itemTextEmpat)
                                                 <div class="form-group col-md-6">
                                                     <label for="">{{ $itemEmpat->nama }}</label>
-                                                    <input type="text" name="info_text[]" id="{{ $idLevelEmpat }}"
+                                                    <input type="text" maxlength="255" name="info_text[]" id="{{ $idLevelEmpat }}"
                                                         placeholder="Masukkan informasi" class="form-control" value="{{ ($itemTextEmpat->opsi_text != null) ? $itemTextEmpat->opsi_text : null }}">
                                                     <input type="hidden" name="skor_penyelia_text[]"
                                                         value="{{ $itemTextEmpat->skor_penyelia }}">
@@ -1136,7 +1136,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                             @foreach ($dataDetailJawabanTextEmpat as $itemTextEmpat)
                                                 <div class="form-group col-md-6">
                                                     <label for="">{{ $itemEmpat->nama }}</label>
-                                                    <textarea name="info_text[]" rows="4" id="{{ $idLevelEmpat }}" class="form-control"
+                                                    <textarea name="info_text[]" rows="4" id="{{ $idLevelEmpat }}" maxlength="255" class="form-control"
                                                         placeholder="Masukkan informasi {{ $itemEmpat->nama }}">{{ ($itemTextEmpat->opsi_text != null) ? $itemTextEmpat->opsi_text : null }}</textarea>
                                                     <input type="hidden" name="skor_penyelia_text[]"
                                                         value="{{ $itemTextEmpat->skor_penyelia }}">
@@ -1203,7 +1203,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                         <hr style="border: 0.2px solid #E3E6EA;">
                         <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
                         <input type="hidden" name="id_aspek[]" value="{{ $value->id }}">
-                        <textarea name="pendapat_per_aspek[]" class="form-control @error('pendapat_per_aspek') is-invalid @enderror" id=""
+                        <textarea name="pendapat_per_aspek[]" maxlength="255" class="form-control @error('pendapat_per_aspek') is-invalid @enderror" id=""
                             cols="30" rows="4" placeholder="Pendapat Per Aspek">{{ $dataPendapatAspek?->pendapat_per_aspek }}</textarea>
                         <input type="hidden" name="id_jawaban_aspek[]" value="{{ $dataPendapatAspek?->id }}">
                         @error('pendapat_per_aspek')
@@ -1227,7 +1227,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
             <div class="row">
                 <div class="form-group col-md-12">
                     <label for="">Pendapat dan Usulan</label>
-                    <textarea name="komentar_staff" class="form-control @error('komentar_staff') is-invalid @enderror" id="" cols="30"
+                    <textarea name="komentar_staff" class="form-control @error('komentar_staff') is-invalid @enderror" maxlength="255" id="" cols="30"
                         rows="4" placeholder="Pendapat dan Usulan Staf/Analis Kredit" required>{{ $detailKomentar->komentar_staff }}</textarea>
                         <input type="hidden" name="id_komentar_staff_text" value="{{ $detailKomentar->id }}">
                     @error('komentar_staff')
@@ -1648,7 +1648,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                         <input type="hidden" name="id_text[]" value="${valItem.id}" id="" class="input" ${isDisabled}>
                                         <input type="hidden" name="opsi_jawaban[]"
                                             value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
-                                        <input type="text" name="info_text[]" placeholder="Masukkan informasi ${valItem.nama}"
+                                        <input type="text" maxlength="255" name="info_text[]" placeholder="Masukkan informasi ${valItem.nama}"
                                             class="form-control input" ${isDisabled}>
                                         <input type="hidden" name="id_jawaban_text[]" class="input" value="" ${isDisabled}>
                                     </div>`);
@@ -1691,7 +1691,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                         <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input">
                                         <input type="hidden" name="opsi_jawaban[]"
                                             value="${valItem.opsi_jawaban}" id="" class="input">
-                                        <input type="text" name="info_text[]"
+                                        <input type="text" maxlength="255" name="info_text[]"
                                             class="form-control input" value="${valItem.opsi_text}">
                                         <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
                                         <input type="hidden" name="id_jawaban_text[]" value="${valItem.id}">
@@ -1729,7 +1729,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                             <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input" ${isDisabled}>
                                             <input type="hidden" name="opsi_jawaban[]"
                                                 value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
-                                            <input type="text" name="info_text[]"
+                                            <input type="text" maxlength="255" name="info_text[]"
                                                 class="form-control input" value="${valItem.opsi_text}">
                                             <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
                                             <input type="hidden" name="id_jawaban_text[]" value="${valItem.id}">
@@ -1776,7 +1776,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                         <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input">
                                         <input type="hidden" name="opsi_jawaban[]"
                                             value="${valItem.opsi_jawaban}" id="" class="input">
-                                            <input type="text" name="info_text[]" placeholder="Masukkan informasi"
+                                            <input type="text" maxlength="255" name="info_text[]" placeholder="Masukkan informasi"
                                             class="form-control input" value="${valItem.opsi_text}">
                                         <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
                                         <input type="hidden" name="id_jawaban_text[]" value="${valItem.id}">
@@ -1814,7 +1814,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                         <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input">
                                         <input type="hidden" name="opsi_jawaban[]"
                                             value="${valItem.opsi_jawaban}" id="" class="input">
-                                            <input type="text" name="info_text[]" placeholder="Masukkan informasi"
+                                            <input type="text" maxlength="255" name="info_text[]" placeholder="Masukkan informasi"
                                             class="form-control input" value="${valItem.opsi_text}">
                                         <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
                                         <input type="hidden" name="id_jawaban_text[]" value="">

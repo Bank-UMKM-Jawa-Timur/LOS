@@ -63,7 +63,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                 @php
                                     $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
                                 @endphp
-                                <div class="row col-md-6">
+                                <div class="row col-md-12">
                                     <div class="form-group col-md-12 mb-0">
                                         <label for="">{{ $item->nama }}</label>
                                     </div>
@@ -196,9 +196,9 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                             @php
                                 $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
                             @endphp
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-12">
                                 <label for="">{{ $item->nama }}</label>
-                                <div class="col-md-6 form-group">
+                                <div class="col-md-12 form-group">
                                     <b>Jawaban:</b>
                                     <div class="mt-2">
                                         @if ($file_parts['extension'] == 'pdf')
@@ -232,7 +232,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                             @php
                                 $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
                             @endphp
-                            <div class="form-group col-md-6">
+                            <div class="form-group col-md-12">
                                 <label for="">{{ $item->nama }}</label>
                                 <div class="form-group">
                                     <b>Jawaban:</b>
@@ -392,7 +392,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                         </div>
                     @enderror
                 </div>
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-12">
                     <label for="">Jumlah Kredit yang diminta</label>
                     <input type="number" disabled name="jumlah_kredit"
                         class="form-control @error('jumlah_kredit') is-invalid @enderror" placeholder="Jumlah Kredit"
@@ -403,7 +403,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                         </div>
                     @enderror
                 </div>
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-12">
                     <label for="">Tenor Yang Diminta</label>
                     <input type="text" disabled name="tenor_yang_diminta"
                         class="form-control @error('tenor_yang_diminta') is-invalid @enderror"
@@ -470,7 +470,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                     <div class="form-group col-md-12">
                         <span style="color: black; font-weight: bold; font-size: 18px;">Jenis Kendaraan Roda 2 :</span>
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-12">
                         <label>Merk Kendaraan</label>
                         <select name="id_merk" id="id_merk" class="select2 form-control" style="width: 100%;" disabled>
                             <option value="">Pilih Merk Kendaraan</option>
@@ -484,7 +484,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                             </div>
                         @enderror
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-12">
                         <label>Tipe Kendaraan</label>
                         <select name="id_tipe" id="id_tipe" class="select2 form-control" style="width: 100%;" disabled>
                             <option value="">Pilih Tipe</option>
@@ -495,7 +495,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                             </div>
                         @enderror
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-12">
                         <label for="">Tahun</label>
                         <input type="number" name="tahun" id="tahun" class="form-control @error('tahun') is-invalid @enderror"
                             placeholder="Tahun Kendaraan" value="{{ $dataPO?->tahun_kendaraan ?? '' }}" min="2000" disabled>
@@ -505,7 +505,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                             </div>
                         @enderror
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-12">
                         <label for="">Warna</label>
                         <input type="text" name="warna" id="warna" class="form-control @error('warna') is-invalid @enderror"
                             placeholder="Warna Kendaraan" value="{{ $dataPO?->warna ?? '' }}" disabled>
@@ -518,7 +518,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                     <div class="form-group col-md-12">
                         <span style="color: black">Keterangan :</span>
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-12">
                         <label for="">Pemesanan</label>
                         <input type="text" name="pemesanan" id="pemesanan" class="form-control @error('pemesanan') is-invalid @enderror"
                             placeholder="Pemesanan Kendaraan" value="{{ $pemesanan ?? '' }}" disabled>
@@ -528,7 +528,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                             </div>
                         @enderror
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-12">
                         <label for="">Sejumlah</label>
                         <input type="number" name="sejumlah" id="sejumlah" class="form-control @error('sejumlah') is-invalid @enderror"
                             placeholder="Jumlah Kendaraan" value="{{ $dataPO?->jumlah ?? '' }}" disabled>
@@ -538,7 +538,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                             </div>
                         @enderror
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-12">
                         <label for="">Harga</label>
                         <input type="text" name="harga" id="harga" class="form-control rupiah @error('harga') is-invalid @enderror"
                             placeholder="Harga Kendaraan" value="{{ $dataPO?->harga ?? '' }}" disabled>
@@ -693,7 +693,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                         @if (isset($data))
                                             <div class="col-md-12 form-group">
                                                 <div class="row">
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-12">
                                                         <b>Jawaban : </b>
                                                         <div class="mt-2 pl-2">
                                                             <p class="badge badge-info text-lg">
@@ -743,7 +743,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                 @endphp
                                 @foreach ($dataDetailJawabanText as $itemTextTiga)
                                     @if ($itemTextTiga->nama != 'Ratio Tenor Asuransi')    
-                                        <div class="row col-md-6">
+                                        <div class="row col-md-12">
                                             <div class="form-group col-md-12 mb-0">
                                                 <label for="">{{ $itemTextTiga->nama }}</label>
                                             </div>
@@ -865,7 +865,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                 @if (isset($data))
                                                     <div class="col-md-12 form-group">
                                                         <div class="row">
-                                                            <div class="col-md-6">
+                                                            <div class="col-md-12">
                                                                 <b>Jawaban : </b>
                                                                 <div class="mt-2 pl-2">
                                                                     <p class="badge badge-info text-lg">
@@ -928,9 +928,9 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                 @endphp --}}
                                     @foreach ($dataDetailJawabanTextEmpat as $itemTextEmpat)
                                         <div class="row">
-                                            <div class="form-group col-md-6 mb-0">
+                                            <div class="form-group col-md-12 mb-0">
                                                 <label for="">{{ $itemTextEmpat->nama }}</label>
-                                                <div class="col-md-6 form-group">
+                                                <div class="col-md-12 form-group">
                                                     <b>Jawaban:</b>
                                                     <div class="mt-2 pl-3">
                                                         @if ($itemEmpat->opsi_jawaban == 'file')
@@ -1033,7 +1033,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                 @if (isset($data))
                                                     <div class="col-md-12 form-group">
                                                         <div class="row">
-                                                            <div class="col-md-6">
+                                                            <div class="col-md-12">
                                                                 <b>Jawaban : </b>
                                                                 <div class="mt-2 pl-2">
                                                                     <p class="badge badge-info text-lg">

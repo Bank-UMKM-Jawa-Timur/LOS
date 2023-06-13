@@ -34,10 +34,16 @@ class TemporaryService
         ]);
     }
 
-    public static function saveNasabah(int $id, array $data): CalonNasabahTemp
+    public static function saveNasabah(int|null $id, array $data): CalonNasabahTemp
     {
-        $nasabah = CalonNasabahTemp::find($id);
-        $nasabah->update($data);
+        if($id != null){
+            $nasabah = CalonNasabahTemp::find($id);
+            $nasabah->update($data);
+        } else{
+            $nasabah = CalonNasabahTemp::create(
+                $data
+            );
+        }
 
         return $nasabah;
     }
