@@ -650,7 +650,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                         <b>Jawaban : </b>
                                                         <div class="mt-2 pl-2">
                                                             <p class="badge badge-info text-lg">
-                                                                <b>asd{{ $itemJawaban->option }}</b>
+                                                                <b>{{ $itemJawaban->option }}</b>
                                                             </p>
                                                         </div>
                                                     </div>
