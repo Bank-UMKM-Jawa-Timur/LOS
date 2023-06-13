@@ -27,6 +27,9 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+Route::get('tes-skor', [PengajuanKreditController::class, 'tesskor'])->name('tesskor');
+Route::post('tes-skor', [PengajuanKreditController::class, 'countScore'])->name('tesskor.store');
+
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
 // })->middleware(['auth'])->name('dashboard');
