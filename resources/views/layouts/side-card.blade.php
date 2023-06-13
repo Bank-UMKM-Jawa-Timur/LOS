@@ -12,7 +12,7 @@ $dataIndex = match ($skema ?? $dataUmum) {
 };
 @endphp
 <div class="row">
-    @if (Auth::user()->role != 'Pincab' && $dataUmum->posisi != 'Pincab')
+    @if (Auth::user()->role != 'Pincab')
         <div class="col-md-3">
             <div class="box-content side-wizard px-4 py-4 ">
                 <ul>
@@ -52,7 +52,7 @@ $dataIndex = match ($skema ?? $dataUmum) {
             </div>
         </div>
     @endif
-    <div class="@if (Auth::user()->role != 'Pincab' && $dataUmum->posisi != 'Pincab') col-md-9 @else col-md-12 @endif">
+    <div class="@if (Auth::user()->role != 'Pincab') col-md-9 @else col-md-12 @endif">
         <div class="box-content px-3 py-4 ">
             <div class="container cusutom">
                 <div class="row row-breadcrumbs align-items-center">
