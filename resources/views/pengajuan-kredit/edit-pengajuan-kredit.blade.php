@@ -150,53 +150,85 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                         </div>
                     @enderror
                 </div>
-                <div class="form-group col-md-6">
-                    @php
-                        $jawabanFotoKTPSu = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
-                                        ->where('id_jawaban', 151)
-                                        ->first();
-                    @endphp
-                    <label for="">Foto KTP Suami</label>
-                    <input type="hidden" name="id_file_text[]" value="151" id="">
-                        @if (isset($jawabanFotoKTPSu->opsi_text) != null)
-                            <label for="update_file" style="display: none" id="nama_file">{{ $jawabanFotoKTPSu->opsi_text }}</label>
-                            <input type="file" name="update_file[]" id="" placeholder="Masukkan informasi Foto KTP Suami" class="form-control limit-size" value="{{ $jawabanFotoKTPSu->opsi_text }}">
-                        @else
-                            <label for="update_file" style="display: none" id="nama_file">Belum Upload Foto KTP Suami</label>
-                            <input type="file" name="update_file[]" id="" placeholder="Masukkan informasi Foto KTP Suami" class="form-control limit-size" value="Belum Upload Foto KTP Suami">
+                @if ($dataUmum->status == 'menikah')
+                    <div class="form-group col-md-6" id="foto-ktp-suami">
+                        @php
+                            $jawabanFotoKTPSu = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
+                                            ->where('id_jawaban', 151)
+                                            ->first();
+                        @endphp
+                        <label for="">Foto KTP Suami</label>
+                        <input type="hidden" name="id_file_text[]" value="151" id="">
+                            @if (isset($jawabanFotoKTPSu->opsi_text) != null)
+                                <label for="update_file" style="display: none" id="nama_file">{{ $jawabanFotoKTPSu->opsi_text }}</label>
+                                <input type="file" name="update_file[]" id="" placeholder="Masukkan informasi Foto KTP Suami" class="form-control limit-size" value="{{ $jawabanFotoKTPSu->opsi_text }}">
+                            @else
+                                <label for="update_file" style="display: none" id="nama_file">Belum Upload Foto KTP Suami</label>
+                                <input type="file" name="update_file[]" id="" placeholder="Masukkan informasi Foto KTP Suami" class="form-control limit-size" value="Belum Upload Foto KTP Suami">
+                            @endif
+                        <input type="hidden" name="id_update_file[]" value="{{ $jawabanFotoKTPSu->id ?? '' }}">
+                        <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                        @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                            <div class="invalid-feedback">
+                                {{ $errors->first('dataLevelDua.' . $key) }}
+                            </div>
                         @endif
-                    <input type="hidden" name="id_update_file[]" value="{{ $jawabanFotoKTPSu->id ?? '' }}">
-                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
-                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
-                        <div class="invalid-feedback">
-                            {{ $errors->first('dataLevelDua.' . $key) }}
-                        </div>
-                    @endif
-                    {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
+                        {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
+                    </div>
+                    <div class="form-group col-md-6" id="foto-ktp-istri">
+                        @php
+                            $jawabanFotoKTPIs = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
+                                            ->where('id_jawaban', 152)
+                                            ->first();
+                        @endphp
+                        <label for="">Foto KTP Istri</label>
+                        <input type="hidden" name="id_file_text[]" value="152" id="">
+                            @if (isset($jawabanFotoKTPIs->opsi_text) != null)
+                                <label for="update_file" style="display: none" id="nama_file">{{ $jawabanFotoKTPIs->opsi_text }}</label>
+                                <input type="file" name="update_file[]" id="" placeholder="Masukkan informasi Foto KTP Istri" class="form-control limit-size" value="{{ $jawabanFotoKTPIs->opsi_text }}">
+                            @else
+                                <label for="update_file" style="display: none" id="nama_file">Belum Upload Foto KTP Istri</label>
+                                <input type="file" name="update_file[]" id="" placeholder="Masukkan informasi Foto KTP Istri" class="form-control limit-size" value="Belum Upload Foto KTP Istri">
+                            @endif
+                        <input type="hidden" name="id_update_file[]" value="{{ $jawabanFotoKTPIs->id ?? '' }}">
+                        <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                        @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                            <div class="invalid-feedback">
+                                {{ $errors->first('dataLevelDua.' . $key) }}
+                            </div>
+                        @endif
+                        {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
+                    </div>
+                @else
+                    <div class="form-group col-md-12" id="foto-ktp-nasabah">
+                        @php
+                            $jawabanFotoKTPNas = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
+                                            ->where('id_jawaban', $itemKTPNas->id)
+                                            ->first(); 
+                        @endphp
+                        <label for="">Foto KTP Nasabah</label>
+                        <input type="hidden" name="id_file_text[]" value="{{$itemKTPNas->id}}" id="">
+                            @if (isset($jawabanFotoKTPNas->opsi_text) != null)
+                                <label for="update_file" style="display: none" id="nama_file">{{ $jawabanFotoKTPNas->opsi_text }}</label>
+                                <input type="file" name="update_file[]" id="" placeholder="Masukkan informasi Foto KTP Nasabah" class="form-control limit-size" value="{{ $jawabanFotoKTPNas->opsi_text }}">
+                            @else
+                                <label for="update_file" style="display: none" id="nama_file">Belum Upload Foto KTP Nasabah</label>
+                                <input type="file" name="update_file[]" id="" placeholder="Masukkan informasi Foto KTP Nasabah" class="form-control limit-size" value="Belum Upload Foto KTP Suami">
+                            @endif
+                        <input type="hidden" name="id_update_file[]" value="{{ $jawabanFotoKTPNas->id ?? '' }}">
+                        <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                        @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                            <div class="invalid-feedback">
+                                {{ $errors->first('dataLevelDua.' . $key) }}
+                            </div>
+                        @endif
+                    </div>
+                @endif
+                <div class="" id="foto-ktp-suami">
                 </div>
-                <div class="form-group col-md-6">
-                    @php
-                        $jawabanFotoKTPIs = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
-                                        ->where('id_jawaban', 152)
-                                        ->first();
-                    @endphp
-                    <label for="">Foto KTP Istri</label>
-                    <input type="hidden" name="id_file_text[]" value="152" id="">
-                        @if (isset($jawabanFotoKTPIs->opsi_text) != null)
-                            <label for="update_file" style="display: none" id="nama_file">{{ $jawabanFotoKTPIs->opsi_text }}</label>
-                            <input type="file" name="update_file[]" id="" placeholder="Masukkan informasi Foto KTP Istri" class="form-control limit-size" value="{{ $jawabanFotoKTPIs->opsi_text }}">
-                        @else
-                            <label for="update_file" style="display: none" id="nama_file">Belum Upload Foto KTP Istri</label>
-                            <input type="file" name="update_file[]" id="" placeholder="Masukkan informasi Foto KTP Istri" class="form-control limit-size" value="Belum Upload Foto KTP Istri">
-                        @endif
-                    <input type="hidden" name="id_update_file[]" value="{{ $jawabanFotoKTPIs->id ?? '' }}">
-                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
-                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
-                        <div class="invalid-feedback">
-                            {{ $errors->first('dataLevelDua.' . $key) }}
-                        </div>
-                    @endif
-                    {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
+                <div class="" id="foto-ktp-istri">
+                </div>
+                <div class="" id="foto-ktp-nasabah">
                 </div>
                 <div class="form-group col-md-4">
                     <label for="">Tempat</label>
@@ -885,14 +917,17 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                         <select name="kategori_jaminan_tambahan" id="kategori_jaminan_tambahan"
                                             class="form-control" required>
                                             <option value="">-- Pilih Kategori Jaminan Tambahan --</option>
+                                            <option value="Tidak Memiliki Jaminan Tambahan" {{ (count($detailJawabanOptionTambahan) == 0 || count($jaminanTambahan) || 0) ? 'selected' : null }}>Tidak Memiliki Jaminan Tambahan</option>
                                             @if (count($detailJawabanOptionTambahan) > 0)
                                                 <option value="Tanah" {{ ($detailJawabanOptionTambahan[0]->id_jawaban == 145 || $detailJawabanOptionTambahan[0]->id_jawaban == 146) ? 'selected' : '' }}>Tanah</option>
                                                 <option value="Tanah dan Bangunan" {{ ($detailJawabanOptionTambahan[0]->id_jawaban == 150 || $detailJawabanOptionTambahan[0]->id_jawaban == 151) ? 'selected' : '' }}>Tanah dan Bangunan</option>
+                                            @elseif(count($jaminanTambahan) > 0)
+                                                <option value="Kendaraan Bermotor" {{ ($jaminanTambahan[0]->id_item == 118 ) ? 'selected' : '' }}>Kendaraan Bermotor</option>
                                             @else
                                                 <option value="Tanah" >Tanah</option>
                                                 <option value="Tanah dan Bangunan">Tanah dan Bangunan</option>
+                                                <option value="Kendaraan Bermotor">Kendaraan Bermotor</option>
                                             @endif
-                                            <option value="Kendaraan Bermotor" {{ ($jaminanTambahan[0]->id_item == 118 ) ? 'selected' : '' }}>Kendaraan Bermotor</option>
                                         </select>
                                         {{-- <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
                                         <input type="hidden" name="opsi_jawaban[]" value="{{ $itemTiga->opsi_jawaban }}"
@@ -1341,6 +1376,91 @@ $dataIndex = match ($dataUmum->skema_kredit) {
     let urlGetItemByKategori = "{{ route('get-item-jaminan-by-kategori') }}";
     let urlGetIjin = "{{ route('get-ijin-usaha') }}";
     let id = parseInt("{{ $dataUmum->id }}");
+    $("#status").change(function(){
+            let value = $(this).val();
+            $("#foto-ktp-istri").empty();
+            $("#foto-ktp-suami").empty();
+            $("#foto-ktp-nasabah").empty();
+            $("#foto-ktp-istri").removeClass('form-group col-md-6');
+            $("#foto-ktp-suami").removeClass('form-group col-md-6');
+            $("#foto-ktp-nasabah").removeClass('form-group col-md-6');
+
+            if(value == "menikah"){
+                $("#foto-ktp-istri").addClass('form-group col-md-6')
+                $("#foto-ktp-suami").addClass('form-group col-md-6')
+                $("#foto-ktp-istri").append(`
+                @php
+                        $jawabanFotoKTPIs = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
+                                        ->where('id_jawaban', 152)
+                                        ->first();
+                    @endphp
+                    <label for="">Foto KTP Istri</label>
+                    <input type="hidden" name="id_file_text[]" value="152" id="">
+                        @if (isset($jawabanFotoKTPIs?->opsi_text) != null)
+                            <label for="update_file" style="display: none" id="nama_file">{{ $jawabanFotoKTPIs?->opsi_text }}</label>
+                            <input type="file" name="update_file[]" id="" placeholder="Masukkan informasi Foto KTP Istri" class="form-control limit-size" value="{{ $jawabanFotoKTPIs?->opsi_text }}">
+                        @else
+                            <label for="update_file" style="display: none" id="nama_file">Belum Upload Foto KTP Istri</label>
+                            <input type="file" name="update_file[]" id="" placeholder="Masukkan informasi Foto KTP Istri" class="form-control limit-size" value="Belum Upload Foto KTP Istri">
+                        @endif
+                    <input type="hidden" name="id_update_file[]" value="{{ $jawabanFotoKTPIs?->id ?? '' }}">
+                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('dataLevelDua.' . $key) }}
+                        </div>
+                    @endif
+                `)
+                $("#foto-ktp-suami").append(`
+                @php
+                        $jawabanFotoKTPSu = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
+                                        ->where('id_jawaban', 151)
+                                        ->first();
+                    @endphp
+                    <label for="">Foto KTP Suami</label>
+                    <input type="hidden" name="id_file_text[]" value="151" id="">
+                        @if (isset($jawabanFotoKTPSu?->opsi_text) != null)
+                            <label for="update_file" style="display: none" id="nama_file">{{ $jawabanFotoKTPSu?->opsi_text }}</label>
+                            <input type="file" name="update_file[]" id="" placeholder="Masukkan informasi Foto KTP Suami" class="form-control limit-size" value="{{ $jawabanFotoKTPSu?->opsi_text }}">
+                        @else
+                            <label for="update_file" style="display: none" id="nama_file">Belum Upload Foto KTP Suami</label>
+                            <input type="file" name="update_file[]" id="" placeholder="Masukkan informasi Foto KTP Suami" class="form-control limit-size" value="Belum Upload Foto KTP Suami">
+                        @endif
+                    <input type="hidden" name="id_update_file[]" value="{{ $jawabanFotoKTPSu?->id ?? '' }}">
+                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('dataLevelDua.' . $key) }}
+                        </div>
+                    @endif
+                `);
+            } else {
+                $("#foto-ktp-nasabah").addClass('form-group col-md-12')
+                $("#foto-ktp-nasabah").append(`
+                    @php
+                        $jawabanFotoKTPNas = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
+                                        ->where('id_jawaban', $itemKTPNas->id)
+                                        ->first(); 
+                    @endphp
+                    <label for="">Foto KTP Nasabah</label>
+                    <input type="hidden" name="id_file_text[]" value="151" id="">
+                        @if (isset($jawabanFotoKTPNas?->opsi_text) != null)
+                            <label for="update_file" style="display: none" id="nama_file">{{ $jawabanFotoKTPNas?->opsi_text }}</label>
+                            <input type="file" name="update_file[]" id="" placeholder="Masukkan informasi Foto KTP Suami" class="form-control limit-size" value="{{ $jawabanFotoKTPNas?->opsi_text }}">
+                        @else
+                            <label for="update_file" style="display: none" id="nama_file">Belum Upload Foto KTP Suami</label>
+                            <input type="file" name="update_file[]" id="" placeholder="Masukkan informasi Foto KTP Suami" class="form-control limit-size" value="Belum Upload Foto KTP Suami">
+                        @endif
+                    <input type="hidden" name="id_update_file[]" value="{{ $jawabanFotoKTPNas?->id ?? '' }}">
+                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('dataLevelDua.' . $key) }}
+                        </div>
+                    @endif
+                `)
+            }
+        });
 
     let x = 1;
      // jaminan tambahan

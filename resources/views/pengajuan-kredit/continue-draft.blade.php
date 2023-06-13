@@ -175,40 +175,6 @@ $dataIndex = match ($skema) {
                         </div>
                     @enderror
                 </div>
-                <div class="form-group col-md-12">
-                    <label for="">No. KTP</label>
-                    <input type="number" maxlength="16" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" name="no_ktp" class="form-control @error('no_ktp') is-invalid @enderror" id=""
-                        placeholder="Masukkan 16 digit No. KTP" value="{{ $duTemp?->no_ktp ?? '' }}">
-                    @error('no_ktp')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="">{{ $itemKTPSu->nama }}</label>
-                    <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
-                    <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPSu->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size">
-                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
-                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
-                        <div class="invalid-feedback">
-                            {{ $errors->first('dataLevelDua.' . $key) }}
-                        </div>
-                    @endif
-                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPSu->id)?->opsi_text }}</span>
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="">{{ $itemKTPIs->nama }}</label>
-                    <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
-                    <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPIs->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size">
-                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
-                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
-                        <div class="invalid-feedback">
-                            {{ $errors->first('dataLevelDua.' . $key) }}
-                        </div>
-                    @endif
-                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPIs->id)?->opsi_text }}</span>
-                </div>
                 <div class="form-group col-md-4">
                     <label for="">Tempat Lahir</label>
                     <input type="text" maxlength="255" name="tempat_lahir" id=""
@@ -231,7 +197,7 @@ $dataIndex = match ($skema) {
                 </div>
                 <div class="form-group col-md-4">
                     <label for="">Status</label>
-                    <select name="status" id="" class="form-control @error('status') is-invalid @enderror select2">
+                    <select name="status" id="status" class="form-control @error('status') is-invalid @enderror select2">
                         <option value=""> --Pilih Status --</option>
                         @foreach ($status as $sts)
                             <option
@@ -245,6 +211,22 @@ $dataIndex = match ($skema) {
                             {{ $message }}
                         </div>
                     @enderror
+                </div>
+                <div class="form-group col-md-12">
+                    <label for="">No. KTP</label>
+                    <input type="number" maxlength="16" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" name="no_ktp" class="form-control @error('no_ktp') is-invalid @enderror" id=""
+                        placeholder="Masukkan 16 digit No. KTP" value="{{ $duTemp?->no_ktp ?? '' }}">
+                    @error('no_ktp')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="" id="foto-ktp-suami">
+                </div>
+                <div class="" id="foto-ktp-istri">
+                </div>
+                <div class="" id="foto-ktp-nasabah">
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Sektor Kredit</label>
@@ -744,6 +726,7 @@ $dataIndex = match ($skema) {
                                         <select name="kategori_jaminan_tambahan" id="kategori_jaminan_tambahan"
                                             class="form-control" required>
                                             <option value="">-- Pilih Kategori Jaminan Tambahan --</option>
+                                            <option value="Tidak Memiliki Jaminan Tambahan" {{ ($duTemp?->jaminan_tambahan == 'Tidak Memiliki Jaminan Tambahan') ? 'selected' : ''  }}>Tidak Memiliki Jaminan Tambahan</option>
                                             <option value="Tanah" {{ ($duTemp?->jaminan_tambahan == 'Tanah') ? 'selected' : ''  }}>Tanah</option>
                                             <option value="Kendaraan Bermotor" {{ ($duTemp?->jaminan_tambahan == 'Kendaraan Bermotor') ? 'selected' : ''  }}>Kendaraan Bermotor</option>
                                             <option value="Tanah dan Bangunan" {{ ($duTemp?->jaminan_tambahan == 'Tanah dan Bangunan') ? 'selected' : ''  }}>Tanah dan Bangunan</option>
@@ -1091,6 +1074,7 @@ $dataIndex = match ($skema) {
     <script>
         $(document).ready(function() {
             let valSkema = $("#skema").val();
+            cekStatusNikah()
 
             @if($duTemp->nama == null) 
                 if(valSkema == null || valSkema == ''){
@@ -1104,6 +1088,111 @@ $dataIndex = match ($skema) {
 
                 $("#skema_kredit").val(valSkema);
             });
+        });
+        function cekStatusNikah(){
+            
+            let value = $("#status").val();
+            $("#foto-ktp-istri").empty();
+            $("#foto-ktp-suami").empty();
+            $("#foto-ktp-nasabah").empty();
+            $("#foto-ktp-istri").removeClass('form-group col-md-6');
+            $("#foto-ktp-suami").removeClass('form-group col-md-6');
+            $("#foto-ktp-nasabah").removeClass('form-group col-md-6');
+
+            if(value == "menikah"){
+                $("#foto-ktp-istri").addClass('form-group col-md-6')
+                $("#foto-ktp-suami").addClass('form-group col-md-6')
+                $("#foto-ktp-istri").append(`
+                <label for="">{{ $itemKTPIs->nama }}</label>
+                    <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
+                    <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPIs->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size">
+                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('dataLevelDua.' . $key) }}
+                        </div>
+                    @endif
+                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPIs->id)?->opsi_text }}</span>
+                `)
+                $("#foto-ktp-suami").append(`
+                <label for="">{{ $itemKTPSu->nama }}</label>
+                    <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
+                    <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPSu->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size">
+                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('dataLevelDua.' . $key) }}
+                        </div>
+                    @endif
+                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPSu->id)?->opsi_text }}</span>
+                `);
+            } else {
+                $("#foto-ktp-nasabah").addClass('form-group col-md-12')
+                $("#foto-ktp-nasabah").append(`
+                    <label for="">{{ $itemKTPNas->nama }}</label>
+                    <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
+                    <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPNas->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-control limit-size">
+                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('dataLevelDua.' . $key) }}
+                        </div>
+                    @endif
+                    <span class="filename" style="display: inline;"></span>
+                `)
+            }
+        }
+        $("#status").change(function(){
+            let value = $(this).val();
+            $("#foto-ktp-istri").empty();
+            $("#foto-ktp-suami").empty();
+            $("#foto-ktp-nasabah").empty();
+            $("#foto-ktp-istri").removeClass('form-group col-md-6');
+            $("#foto-ktp-suami").removeClass('form-group col-md-6');
+            $("#foto-ktp-nasabah").removeClass('form-group col-md-6');
+
+            if(value == "menikah"){
+                $("#foto-ktp-istri").addClass('form-group col-md-6')
+                $("#foto-ktp-suami").addClass('form-group col-md-6')
+                $("#foto-ktp-istri").append(`
+                <label for="">{{ $itemKTPIs->nama }}</label>
+                    <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
+                    <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPIs->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size">
+                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('dataLevelDua.' . $key) }}
+                        </div>
+                    @endif
+                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPIs->id)?->opsi_text }}</span>
+                `)
+                $("#foto-ktp-suami").append(`
+                <label for="">{{ $itemKTPSu->nama }}</label>
+                    <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
+                    <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPSu->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size">
+                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('dataLevelDua.' . $key) }}
+                        </div>
+                    @endif
+                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPSu->id)?->opsi_text }}</span>
+                `);
+            } else {
+                $("#foto-ktp-nasabah").addClass('form-group col-md-12')
+                $("#foto-ktp-nasabah").append(`
+                    <label for="">{{ $itemKTPNas->nama }}</label>
+                    <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
+                    <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-control limit-size">
+                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                        <div class="invalid-feedback">
+                            {{ $errors->first('dataLevelDua.' . $key) }}
+                        </div>
+                    @endif
+                    <span class="filename" style="display: inline;"></span>
+                `)
+            }
         });
 
         $("#id_merk").change(function(){
