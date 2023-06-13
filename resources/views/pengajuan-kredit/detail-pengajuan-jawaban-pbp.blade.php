@@ -650,7 +650,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                         <b>Jawaban : </b>
                                                         <div class="mt-2 pl-2">
                                                             <p class="badge badge-info text-lg">
-                                                                <b>{{ $itemJawaban->option }}</b>
+                                                                <b>asd{{ $itemJawaban->option }}</b>
                                                             </p>
                                                         </div>
                                                     </div>
@@ -803,7 +803,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                             @if (in_array($itemJawabanLevelTiga->id, $data))
                                                 @if (isset($data))
                                                     <div class="col-md-12 form-group">
-                                                        @if (!$itemJawabanLevelTiga->is_hide)
+                                                        @if (!$itemTiga->is_hide)
                                                         <div class="row">
                                                             <div class="col-md-12">
                                                                 <b>Jawaban : </b>
