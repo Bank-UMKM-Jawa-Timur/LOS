@@ -15,9 +15,19 @@ $sectors = [
 ];
 
 function rupiah($angka){
-	if ($angka != null || $angka != '') {
-        $hasil_rupiah = number_format($angka, 0, ",", ".");
-        return $hasil_rupiah;
+    if ($angka != null || $angka != '') {
+        if (gettype($angka) == 'string') {
+            return number_format(0, 0, ",", ".");
+        }
+        else {
+            if (is_nan($angka)) {
+                $hasil_rupiah = number_format(0, 0, ",", ".");
+            }
+            else {
+                $hasil_rupiah = number_format($angka, 0, ",", ".");
+            }
+            return $hasil_rupiah;
+        }
     }
 }
 
