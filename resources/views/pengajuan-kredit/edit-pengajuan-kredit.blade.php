@@ -1228,8 +1228,8 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 <div class="form-group col-md-12">
                     <label for="">Pendapat dan Usulan</label>
                     <textarea name="komentar_staff" class="form-control @error('komentar_staff') is-invalid @enderror" maxlength="255" id="" cols="30"
-                        rows="4" placeholder="Pendapat dan Usulan Staf/Analis Kredit" required>{{ $detailKomentar->komentar_staff }}</textarea>
-                        <input type="hidden" name="id_komentar_staff_text" value="{{ $detailKomentar->id }}">
+                        rows="4" placeholder="Pendapat dan Usulan Staf/Analis Kredit" required>{{ $detailKomentar?->komentar_staff }}</textarea>
+                        <input type="hidden" name="id_komentar_staff_text" value="{{ $detailKomentar?->id }}">
                     @error('komentar_staff')
                         <div class="invalid-feedback">
                             {{ $message }}
