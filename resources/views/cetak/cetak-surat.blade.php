@@ -30,7 +30,7 @@
     </table> --}}
     <h4 style="text-align:center">ANALISA KREDIT MODAL KERJA
         <br>
-        Sektor . . . . . . . .
+        Sektor {{$dataUmum->skema_kredit}}
     </h4>
     <br>
     <table>
@@ -192,13 +192,21 @@
                                         <tr>
                                             <td style="width: 40%; padding-left: 33px">{{  $item->nama }}(Perbulan)</td>
                                             <td>:</td>
-                                            <td>{{ "Rp " . number_format($itemTextDua->opsi_text,2,',','.') }}</td>
+                                            @if (gettype($itemModal->opsi_text) == 'string')
+                                                Rp 0
+                                            @else
+                                                {{ "Rp " . number_format($itemModal->opsi_text,2,',','.') }}
+                                            @endif
                                         </tr>
                                     @else
                                         <tr>
                                             <td style="width: 40%; padding-left: 33px">{{  $item->nama }}</td>
                                             <td>:</td>
-                                            <td>{{ "Rp " . number_format($itemTextDua->opsi_text,2,',','.') }}</td>
+                                            @if (gettype($itemModal->opsi_text) == 'string')
+                                                Rp 0
+                                            @else
+                                                {{ "Rp " . number_format($itemModal->opsi_text,2,',','.') }}
+                                            @endif
                                         </tr>
                                     @endif    
                                 @endif
@@ -266,7 +274,13 @@
                                             <tr>
                                                 <td style="width: 40%; vertical-align: top">{{$itemModal->nama}}</td>
                                                 <td>:</td>
-                                                <td>{{ "Rp " . number_format($itemModal->opsi_text,2,',','.') }}</td>
+                                                <td>
+                                                    @if (gettype($itemModal->opsi_text) == 'string')
+                                                        Rp 0
+                                                    @else
+                                                        {{ "Rp " . number_format($itemModal->opsi_text,2,',','.') }}
+                                                    @endif
+                                                </td>
                                             </tr>
                                         @endforeach
                                     </table>
@@ -527,7 +541,11 @@
                                                         <tr>
                                                             <td style="width: 40%; padding-top: 1px">{{ $itemEmpat->nama }}</td>
                                                             <td style="width: 3%; padding-top: 1px">:</td>
-                                                            <td style="padding-top: 1px">{{ "Rp " . number_format($itemTextEmpat->opsi_text,2,',','.') }}</td>
+                                                            @if (gettype($itemModal->opsi_text) == 'string')
+                                                                Rp 0
+                                                            @else
+                                                                {{ "Rp " . number_format($itemModal->opsi_text,2,',','.') }}
+                                                            @endif
                                                         </tr>
                                                     @endforeach
                                                 @endif
