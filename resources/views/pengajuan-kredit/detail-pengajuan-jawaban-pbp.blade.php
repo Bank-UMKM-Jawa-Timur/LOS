@@ -505,13 +505,13 @@ $dataIndex = match ($dataUmum->skema_kredit) {
             @php
                 $key += $dataIndex;
                 // check level 2
-                $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+                $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide')
                     ->where('level', 2)
                     ->where('id_parent', $value->id)
                     ->get();
 
                 // check level 4
-                $dataLevelEmpat = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+                $dataLevelEmpat = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide')
                     ->where('level', 4)
                     ->where('id_parent', $value->id)
                     ->get();
@@ -539,13 +539,14 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                     @foreach ($dataLevelDua as $item)
                         @if ($item->opsi_jawaban != 'option')
                             @php
-                                $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
+                                $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama', 'item.is_hide')
                                     ->join('item', 'jawaban_text.id_jawaban', 'item.id')
                                     ->where('jawaban_text.id_pengajuan', $dataUmum->id)
                                     ->where('jawaban_text.id_jawaban', $item->id)
                                     ->get();
                             @endphp
                             @foreach ($dataDetailJawabanText as $itemTextDua)
+                                @if (!$item->is_hide)
                                 <div class="row">
                                     <div class="form-group col-md-12 mb-0">
                                         <label for="">{{ $item->nama }}</label>
@@ -556,11 +557,12 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                             @if ($item->opsi_jawaban == 'file')
                                                 @php
                                                     $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                                                    $filepath = "../upload/$dataUmum->id/$item->id_jawaban/$item->opsi_text";
                                                 @endphp
                                                 @if ($file_parts['extension'] == 'pdf')
-                                                    <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" width="100%" height="800px"></iframe>
+                                                    <iframe src="{{ asset($filepath) }}" width="100%" height="800px"></iframe>
                                                 @else
-                                                    <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="800px">
+                                                    <img src="{{ asset($filepath) }}" alt="" width="800px">
                                                 @endif
                                             @else
                                                 <p class="badge badge-info text-lg"><b> {{ $itemTextDua->opsi_text }}
@@ -583,6 +585,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                     name="komentar_pbp" value="{{ $itemTextDua->opsi_text }}" disabled>
                                 <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextDua->id }}">
                                 <input type="hidden" name="id[]" value="{{ $itemTextDua->id_item }}">
+                                @endif
                             @endforeach
                         @endif
                         @php
@@ -600,18 +603,20 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                 ->first();
 
                             // check level 3
-                            $dataLevelTiga = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+                            $dataLevelTiga = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide')
                                 ->where('level', 3)
                                 ->where('id_parent', $item->id)
                                 ->get();
                         @endphp
                         @foreach ($dataOption as $itemOption)
-                            @if ($itemOption->option == '-')
-                                <div class="row">
-                                    <div class="form-group col-md-12">
-                                        <h4>{{ $item->nama }}</h4>
+                            @if (!$item->is_hide)
+                                @if ($itemOption->option == '-')
+                                    <div class="row">
+                                        <div class="form-group col-md-12">
+                                            <h4>{{ $item->nama }}</h4>
+                                        </div>
                                     </div>
-                                </div>
+                                @endif
                             @endif
                         @endforeach
 
@@ -639,6 +644,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                     @if (in_array($itemJawaban->id, $data))
                                         @if (isset($data))
                                             <div class="col-md-12 form-group">
+                                                @if (!$itemJawaban->is_hide)
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <b>Jawaban : </b>
@@ -649,6 +655,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                         </div>
                                                     </div>
                                                 </div>
+                                                @endif
                                                 <div class="input-group input-b-bottom">
                                                     @if ($item->is_commentable == 'Ya')
                                                         <input type="hidden" name="id_item[]" value="{{ $item->id }}">
@@ -682,7 +689,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                         @foreach ($dataLevelTiga as $keyTiga => $itemTiga)
                             @if ($itemTiga->opsi_jawaban != 'option')
                                 @php
-                                    $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
+                                    $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.opsi_jawaban', 'item.id as id_item', 'item.nama')
                                         ->join('item', 'jawaban_text.id_jawaban', 'item.id')
                                         ->where('jawaban_text.id_pengajuan', $dataUmum->id)
                                         ->where('jawaban_text.id_jawaban', $itemTiga->id)
@@ -690,6 +697,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                 @endphp
                                 @foreach ($dataDetailJawabanText as $itemTextTiga)
                                     @if ($itemTextTiga->nama != 'Ratio Tenor Asuransi')    
+                                        @if (!$itemTextTiga->is_hide)
                                         <div class="row col-md-12">
                                             <div class="form-group col-md-12 mb-0">
                                                 <label for="">{{ $itemTextTiga->nama }}</label>
@@ -697,19 +705,31 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                             <div class="col-md-12 form-group">
                                                 <b>Jawaban:</b>
                                                 <div class="mt-2 pl-3">
-                                                    <p class="badge badge-info text-lg"><b>
-                                                            {{ $itemTextTiga->opsi_text }}
-                                                            {{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</b></p>
-                                                    @if ($item->is_commentable == 'Ya')
-                                                        <div class="input-k-bottom">
-                                                            <input type="hidden" name="id_item[]" value="{{ $item->id }}">
-                                                            <input type="text" class="form-control komentar"
-                                                                name="komentar_pbp[]" placeholder="Masukkan Komentar">
-                                                        </div>
+                                                    @if ($itemTextTiga->opsi_jawaban == 'file')
+                                                        @php
+                                                            $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTextTiga->id . '/' . $itemTextTiga->opsi_text);
+                                                            $filepath = "../upload/$dataUmum->id/$itemTextTiga->id_jawaban/$itemTextTiga->opsi_text";
+                                                        @endphp
+                                                        @if ($file_parts['extension'] == 'pdf')
+                                                            <iframe src="{{ asset($filepath) }}" width="100%" height="800px"></iframe>
+                                                        @else
+                                                            <img src="{{ asset($filepath) }}" alt="" width="800px">
+                                                        @endif
+                                                    @else
+                                                        <p class="badge badge-info text-lg"><b> {{ $itemTextTiga->opsi_text }}
+                                                                {{ $itemTextTiga->opsi_jawaban == 'persen' ? '%' : '' }}</b></p>
+                                                        @if ($itemTextTiga->is_commentable)
+                                                            <div class="input-k-bottom">
+                                                                <input type="hidden" name="id_item[]" value="{{ $itemTextTiga->id }}">
+                                                                <input type="text" class="form-control komentar"
+                                                                    name="komentar_pbp[]" placeholder="Masukkan Komentar">
+                                                            </div>
+                                                        @endif
                                                     @endif
                                                 </div>
                                             </div>
                                         </div>
+                                        @endif
 
                                         <input type="hidden" class="form-control mb-3" placeholder="Masukkan komentar"
                                             name="komentar_pbp" value="{{ $itemTextTiga->nama }}" disabled>
@@ -743,12 +763,14 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                             @endphp
 
                             @foreach ($dataOptionTiga as $itemOptionTiga)
-                                @if ($itemOptionTiga->option == '-')
-                                    <div class="row">
-                                        <div class="form-group col-md-12">
-                                            <h5> {{ $itemTiga->nama }}</h5>
+                                @if (!$itemTiga->is_hide)
+                                    @if ($itemOptionTiga->option == '-')
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <h5> {{ $itemTiga->nama }}</h5>
+                                            </div>
                                         </div>
-                                    </div>
+                                    @endif
                                 @endif
                             @endforeach
 
@@ -756,6 +778,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                 @if ($itemTiga->nama == 'Ratio Tenor Asuransi Opsi')
                                     
                                 @else
+                                    @if (!$itemTiga->is_hide)
                                     <div class="row">
                                         <div class="form-group col-md-12">
                                             <label for="">{{ $itemTiga->nama }}</label>
@@ -780,6 +803,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                             @if (in_array($itemJawabanLevelTiga->id, $data))
                                                 @if (isset($data))
                                                     <div class="col-md-12 form-group">
+                                                        @if (!$itemTiga->is_hide)
                                                         <div class="row">
                                                             <div class="col-md-12">
                                                                 <b>Jawaban : </b>
@@ -790,6 +814,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        @endif
                                                         <div class="input-group input-b-bottom">
                                                             @if ($itemTiga->is_commentable == 'Ya')
                                                                 <input type="hidden" name="id_item[]"
@@ -820,6 +845,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                             @endif
                                         @endforeach
                                     </div>
+                                    @endif
                                 @endif
                             @endif
                             @foreach ($dataLevelEmpat as $keyEmpat => $itemEmpat)
@@ -937,6 +963,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                             @if (in_array($itemJawabanLevelEmpat->id, $data))
                                                 @if (isset($data))
                                                     <div class="col-md-12 form-group">
+                                                        @if (!$itemJawabanLevelEmpat->is_hide)
                                                         <div class="row">
                                                             <div class="col-md-12">
                                                                 <b>Jawaban : </b>
@@ -947,6 +974,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        @endif
                                                         <div class="input-group input-b-bottom">
                                                             @if ($itemEmpat->is_commentable == 'Ya')
                                                                 <input type="hidden" name="id_item[]"

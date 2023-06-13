@@ -101,7 +101,7 @@ class CetakSuratController extends Controller
                                         ->join('desa','desa.id','calon_nasabah.id_desa')
                                         ->where('calon_nasabah.id_pengajuan',$id)
                                         ->first();
-        $param['dataUmum'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang')
+        $param['dataUmum'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit')
                                         ->find($id);
         $param['komentar'] = KomentarModel::where('id_pengajuan', $id)->first();
 

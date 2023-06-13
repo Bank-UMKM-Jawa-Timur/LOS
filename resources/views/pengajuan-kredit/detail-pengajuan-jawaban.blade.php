@@ -566,13 +566,13 @@ $dataIndex = match ($dataUmum->skema_kredit) {
             @php
                 $key += $dataIndex;
                 // check level 2
-                $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+                $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide')
                     ->where('level', 2)
                     ->where('id_parent', $value->id)
                     ->get();
 
                 // check level 4
-                $dataLevelEmpat = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+                $dataLevelEmpat = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide')
                     ->where('level', 4)
                     ->where('id_parent', $value->id)
                     ->get();
@@ -653,7 +653,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                 ->first();
 
                             // check level 3
-                            $dataLevelTiga = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+                            $dataLevelTiga = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide')
                                 ->where('level', 3)
                                 ->where('id_parent', $item->id)
                                 ->get();
@@ -676,57 +676,59 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                             </div>
                             <div class="row">
                                 @foreach ($dataJawaban as $key => $itemJawaban)
-                                    @php
-                                        $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
-                                            ->where('id_pengajuan', $dataUmum->id)
-                                            ->get();
-                                        $count = count($dataDetailJawaban);
-                                        for ($i = 0; $i < $count; $i++) {
-                                            $data[] = $dataDetailJawaban[$i]['id_jawaban'];
-                                        }
-                                        $getSkorPenyelia = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
-                                            ->where('id_pengajuan', $dataUmum->id)
-                                            ->where('id_jawaban', $itemJawaban->id)
-                                            ->first();
-                                    @endphp
-                                    @if (in_array($itemJawaban->id, $data))
-                                        @if (isset($data))
-                                            <div class="col-md-12 form-group">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <b>Jawaban : </b>
-                                                        <div class="mt-2 pl-2">
-                                                            <p class="badge badge-info text-lg">
-                                                                <b>{{ $itemJawaban->option }}</b>
-                                                            </p>
+                                    @if (!$item->is_hide)
+                                        @php
+                                            $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
+                                                ->where('id_pengajuan', $dataUmum->id)
+                                                ->get();
+                                            $count = count($dataDetailJawaban);
+                                            for ($i = 0; $i < $count; $i++) {
+                                                $data[] = $dataDetailJawaban[$i]['id_jawaban'];
+                                            }
+                                            $getSkorPenyelia = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
+                                                ->where('id_pengajuan', $dataUmum->id)
+                                                ->where('id_jawaban', $itemJawaban->id)
+                                                ->first();
+                                        @endphp
+                                        @if (in_array($itemJawaban->id, $data))
+                                            @if (isset($data))
+                                                <div class="col-md-12 form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <b>Jawaban : </b>
+                                                            <div class="mt-2 pl-2">
+                                                                <p class="badge badge-info text-lg">
+                                                                    <b>{{ $itemJawaban->option }}</b>
+                                                                </p>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="input-group input-b-bottom">
-                                                    @if ($item->is_commentable == 'Ya')
-                                                        <input type="hidden" name="id_item[]" value="{{ $item->id }}">
-                                                        <input type="hidden" name="id_option[]"
-                                                            value="{{ $itemJawaban->id }}">
-                                                        <input type="text" class="form-control komentar"
-                                                            name="komentar_penyelia[]" placeholder="Masukkan Komentar"
-                                                            value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
-                                                        <div class="input-skor">
-                                                            <input type="number" class="form-control" placeholder=""
-                                                                name="skor_penyelia[]"  onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
-                                                                {{ $item->status_skor == 0 ? 'readonly' : '' }}
-                                                                value="{{ $getSkorPenyelia->skor_penyelia != null ? $getSkorPenyelia->skor_penyelia : $itemJawaban->skor }}">
+                                                    <div class="input-group input-b-bottom">
+                                                        @if ($item->is_commentable == 'Ya')
+                                                            <input type="hidden" name="id_item[]" value="{{ $item->id }}">
+                                                            <input type="hidden" name="id_option[]"
+                                                                value="{{ $itemJawaban->id }}">
+                                                            <input type="text" class="form-control komentar"
+                                                                name="komentar_penyelia[]" placeholder="Masukkan Komentar"
+                                                                value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
+                                                            <div class="input-skor">
+                                                                <input type="number" class="form-control" placeholder=""
+                                                                    name="skor_penyelia[]"  onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
+                                                                    {{ $item->status_skor == 0 ? 'readonly' : '' }}
+                                                                    value="{{ $getSkorPenyelia->skor_penyelia != null ? $getSkorPenyelia->skor_penyelia : $itemJawaban->skor }}">
 
-                                                        </div>
-                                                    @endif
+                                                            </div>
+                                                        @endif
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <input type="text" hidden class="form-control mb-3"
-                                                placeholder="Masukkan komentar" name="komentar_penyelia"
-                                                value="{{ $itemJawaban->option }}" disabled>
-                                            <input type="text" hidden class="form-control mb-3"
-                                                placeholder="Masukkan komentar" name="komentar_penyelia"
-                                                value="{{ $itemJawaban->skor }}" disabled>
-                                            <input type="hidden" name="id[]" value="{{ $item->id }}">
+                                                <input type="text" hidden class="form-control mb-3"
+                                                    placeholder="Masukkan komentar" name="komentar_penyelia"
+                                                    value="{{ $itemJawaban->option }}" disabled>
+                                                <input type="text" hidden class="form-control mb-3"
+                                                    placeholder="Masukkan komentar" name="komentar_penyelia"
+                                                    value="{{ $itemJawaban->skor }}" disabled>
+                                                <input type="hidden" name="id[]" value="{{ $item->id }}">
+                                            @endif
                                         @endif
                                     @endif
                                 @endforeach
@@ -798,7 +800,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                     ->where('id_item', $itemTiga->id)
                                     ->first();
                                 // check level empat
-                                $dataLevelEmpat = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+                                $dataLevelEmpat = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide')
                                     ->where('level', 4)
                                     ->where('id_parent', $itemTiga->id)
                                     ->get();
@@ -847,59 +849,61 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                     @endif
                                     <div class="row">
                                         @foreach ($dataJawabanLevelTiga as $key => $itemJawabanLevelTiga)
-                                            @php
-                                                $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
-                                                    ->where('id_pengajuan', $dataUmum->id)
-                                                    ->get();
+                                            @if (!$itemTiga->is_hide)
+                                                @php
+                                                    $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
+                                                        ->where('id_pengajuan', $dataUmum->id)
+                                                        ->get();
 
-                                                $getSkorPenyelia = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
-                                                    ->where('id_pengajuan', $dataUmum->id)
-                                                    ->where('id_jawaban', $itemJawabanLevelTiga->id)
-                                                    ->first();
-                                                $count = count($dataDetailJawaban);
-                                                for ($i = 0; $i < $count; $i++) {
-                                                    $data[] = $dataDetailJawaban[$i]['id_jawaban'];
-                                                }
-                                            @endphp
-                                            @if (in_array($itemJawabanLevelTiga->id, $data))
-                                                @if (isset($data))
-                                                    <div class="col-md-12 form-group">
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <b>Jawaban : </b>
-                                                                <div class="mt-2 pl-2">
-                                                                    <p class="badge badge-info text-lg">
-                                                                        <b>{{ $itemJawabanLevelTiga->option }}</b>
-                                                                    </p>
+                                                    $getSkorPenyelia = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
+                                                        ->where('id_pengajuan', $dataUmum->id)
+                                                        ->where('id_jawaban', $itemJawabanLevelTiga->id)
+                                                        ->first();
+                                                    $count = count($dataDetailJawaban);
+                                                    for ($i = 0; $i < $count; $i++) {
+                                                        $data[] = $dataDetailJawaban[$i]['id_jawaban'];
+                                                    }
+                                                @endphp
+                                                @if (in_array($itemJawabanLevelTiga->id, $data))
+                                                    @if (isset($data))
+                                                        <div class="col-md-12 form-group">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <b>Jawaban : </b>
+                                                                    <div class="mt-2 pl-2">
+                                                                        <p class="badge badge-info text-lg">
+                                                                            <b>{{ $itemJawabanLevelTiga->option }}</b>
+                                                                        </p>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="input-group input-b-bottom">
-                                                            @if ($itemTiga->is_commentable == 'Ya')
-                                                                <input type="hidden" name="id_item[]"
-                                                                    value="{{ $itemTiga->id }}">
-                                                                <input type="hidden" name="id_option[]"
-                                                                    value="{{ $itemJawabanLevelTiga->id }}">
-                                                                <input type="text" class="form-control komentar"
-                                                                    name="komentar_penyelia[]" placeholder="Masukkan Komentar"
-                                                                    value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
-                                                                <div class="input-skor">
-                                                                    <input type="number" class="form-control" placeholder=""
-                                                                        name="skor_penyelia[]" onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
-                                                                        {{ $itemTiga->status_skor == 0 ? 'readonly' : '' }}
-                                                                        value="{{ $getSkorPenyelia->skor_penyelia != null ? $getSkorPenyelia->skor_penyelia : $itemJawabanLevelTiga->skor }}">
+                                                            <div class="input-group input-b-bottom">
+                                                                @if ($itemTiga->is_commentable == 'Ya')
+                                                                    <input type="hidden" name="id_item[]"
+                                                                        value="{{ $itemTiga->id }}">
+                                                                    <input type="hidden" name="id_option[]"
+                                                                        value="{{ $itemJawabanLevelTiga->id }}">
+                                                                    <input type="text" class="form-control komentar"
+                                                                        name="komentar_penyelia[]" placeholder="Masukkan Komentar"
+                                                                        value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
+                                                                    <div class="input-skor">
+                                                                        <input type="number" class="form-control" placeholder=""
+                                                                            name="skor_penyelia[]" onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
+                                                                            {{ $itemTiga->status_skor == 0 ? 'readonly' : '' }}
+                                                                            value="{{ $getSkorPenyelia->skor_penyelia != null ? $getSkorPenyelia->skor_penyelia : $itemJawabanLevelTiga->skor }}">
 
-                                                                </div>
-                                                            @endif
+                                                                    </div>
+                                                                @endif
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <input type="text" hidden class="form-control mb-3"
-                                                        placeholder="Masukkan komentar" name="komentar_penyelia"
-                                                        value="{{ $itemJawabanLevelTiga->option }}" disabled>
-                                                    <input type="text" hidden class="form-control mb-3"
-                                                        placeholder="Masukkan komentar" name="skor_penyelia"
-                                                        value="{{ $itemJawabanLevelTiga->skor }}" disabled>
-                                                    <input type="hidden" name="id[]" value="{{ $itemTiga->id }}">
+                                                        <input type="text" hidden class="form-control mb-3"
+                                                            placeholder="Masukkan komentar" name="komentar_penyelia"
+                                                            value="{{ $itemJawabanLevelTiga->option }}" disabled>
+                                                        <input type="text" hidden class="form-control mb-3"
+                                                            placeholder="Masukkan komentar" name="skor_penyelia"
+                                                            value="{{ $itemJawabanLevelTiga->skor }}" disabled>
+                                                        <input type="hidden" name="id[]" value="{{ $itemTiga->id }}">
+                                                    @endif
                                                 @endif
                                             @endif
                                         @endforeach
@@ -907,13 +911,8 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                 @endif
                             @endif
                             @foreach ($dataLevelEmpat as $keyEmpat => $itemEmpat)
-                                {{-- @php
-                                echo "<pre>";
-                                    print($itemEmpat);
-                                echo "</pre>";
-                            @endphp --}}
-
-                                @if ($itemEmpat->opsi_jawaban != 'option')
+                                @if (!$itemEmpat->is_hide)
+                                    @if ($itemEmpat->opsi_jawaban != 'option')
                                     @php
                                         $dataDetailJawabanTextEmpat = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
                                             ->join('item', 'jawaban_text.id_jawaban', 'item.id')
@@ -921,11 +920,6 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                             ->where('jawaban_text.id_jawaban', $itemEmpat->id)
                                             ->get();
                                     @endphp
-                                    {{-- @php
-                                    echo "<pre>";
-                                        print($dataDetailJawabanTextEmpat);
-                                    echo "</pre>";
-                                @endphp --}}
                                     @foreach ($dataDetailJawabanTextEmpat as $itemTextEmpat)
                                         <div class="row">
                                             <div class="form-group col-md-12 mb-0">
@@ -980,95 +974,95 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                         <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextEmpat->id }}">
                                         <input type="hidden" name="id[]" value="{{ $itemTextEmpat->id_item }}">
                                     @endforeach
+                                    @endif
+                                    @php
+                                        // check level empat
+                                        $dataJawabanLevelEmpat = \App\Models\OptionModel::where('option', '!=', '-')
+                                            ->where('id_item', $itemEmpat->id)
+                                            ->get();
+                                        $dataOptionEmpat = \App\Models\OptionModel::where('option', '=', '-')
+                                            ->where('id_item', $itemEmpat->id)
+                                            ->get();
+                                        $isJawabanExist = \App\Models\OptionModel::join('jawaban', 'jawaban.id_jawaban', 'option.id')
+                                            ->where('jawaban.id_pengajuan', $dataUmum->id)
+                                            ->where('id_item', $itemEmpat->id)
+                                            ->count();
 
-                                @endif
-                                @php
-                                    // check level empat
-                                    $dataJawabanLevelEmpat = \App\Models\OptionModel::where('option', '!=', '-')
-                                        ->where('id_item', $itemEmpat->id)
-                                        ->get();
-                                    $dataOptionEmpat = \App\Models\OptionModel::where('option', '=', '-')
-                                        ->where('id_item', $itemEmpat->id)
-                                        ->get();
-                                    $isJawabanExist = \App\Models\OptionModel::join('jawaban', 'jawaban.id_jawaban', 'option.id')
-                                        ->where('jawaban.id_pengajuan', $dataUmum->id)
-                                        ->where('id_item', $itemEmpat->id)
-                                        ->count();
-
-                                    $getKomentar = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', '=', 'detail_komentar.id_komentar')
-                                        ->where('id_pengajuan', $dataUmum->id)
-                                        ->where('id_item', $itemEmpat->id)
-                                        ->first();
-                                    // echo "<pre>";
-                                    // print_r ($dataOptionEmpat);
-                                    // echo "</pre>";
-                                    // ;
-                                @endphp
-                                @if ($itemEmpat->opsi_jawaban == 'option' && $isJawabanExist > 0)
-                                    <div class="row">
-                                        <div class="form-group col-md-12 mb-0">
-                                            <label for="">{{ $itemEmpat->nama }}</label>
+                                        $getKomentar = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', '=', 'detail_komentar.id_komentar')
+                                            ->where('id_pengajuan', $dataUmum->id)
+                                            ->where('id_item', $itemEmpat->id)
+                                            ->first();
+                                        // echo "<pre>";
+                                        // print_r ($dataOptionEmpat);
+                                        // echo "</pre>";
+                                        // ;
+                                    @endphp
+                                    @if ($itemEmpat->opsi_jawaban == 'option' && $isJawabanExist > 0)
+                                        <div class="row">
+                                            <div class="form-group col-md-12 mb-0">
+                                                <label for="">{{ $itemEmpat->nama }}</label>
+                                            </div>
                                         </div>
-                                    </div>
-                                @endif
+                                    @endif
 
-                                {{-- Data jawaban Level Empat --}}
-                                @if (count($dataJawabanLevelEmpat) != 0)
-                                    <div class="row">
-                                        @foreach ($dataJawabanLevelEmpat as $key => $itemJawabanLevelEmpat)
-                                            @php
-                                                $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
-                                                    ->where('id_pengajuan', $dataUmum->id)
-                                                    ->get();
-                                                $count = count($dataDetailJawaban);
-                                                for ($i = 0; $i < $count; $i++) {
-                                                    $data[] = $dataDetailJawaban[$i]['id_jawaban'];
-                                                }
-                                                $getSkorPenyelia = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
-                                                    ->where('id_pengajuan', $dataUmum->id)
-                                                    ->where('id_jawaban', $itemJawabanLevelEmpat->id)
-                                                    ->first();
-                                            @endphp
-                                            @if (in_array($itemJawabanLevelEmpat->id, $data))
-                                                @if (isset($data))
-                                                    <div class="col-md-12 form-group">
-                                                        <div class="row">
-                                                            <div class="col-md-12">
-                                                                <b>Jawaban : </b>
-                                                                <div class="mt-2 pl-2">
-                                                                    <p class="badge badge-info text-lg">
-                                                                        <b>{{ $itemJawabanLevelEmpat->option }}</b>
-                                                                    </p>
+                                    {{-- Data jawaban Level Empat --}}
+                                    @if (count($dataJawabanLevelEmpat) != 0)
+                                        <div class="row">
+                                            @foreach ($dataJawabanLevelEmpat as $key => $itemJawabanLevelEmpat)
+                                                @php
+                                                    $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
+                                                        ->where('id_pengajuan', $dataUmum->id)
+                                                        ->get();
+                                                    $count = count($dataDetailJawaban);
+                                                    for ($i = 0; $i < $count; $i++) {
+                                                        $data[] = $dataDetailJawaban[$i]['id_jawaban'];
+                                                    }
+                                                    $getSkorPenyelia = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
+                                                        ->where('id_pengajuan', $dataUmum->id)
+                                                        ->where('id_jawaban', $itemJawabanLevelEmpat->id)
+                                                        ->first();
+                                                @endphp
+                                                @if (in_array($itemJawabanLevelEmpat->id, $data))
+                                                    @if (isset($data))
+                                                        <div class="col-md-12 form-group">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <b>Jawaban : </b>
+                                                                    <div class="mt-2 pl-2">
+                                                                        <p class="badge badge-info text-lg">
+                                                                            <b>{{ $itemJawabanLevelEmpat->option }}</b>
+                                                                        </p>
+                                                                    </div>
                                                                 </div>
                                                             </div>
+                                                            <div class="input-group input-b-bottom">
+                                                                @if ($itemEmpat->is_commentable == 'Ya')
+                                                                    <input type="hidden" name="id_item[]"
+                                                                        value="{{ $itemEmpat->id }}">
+                                                                    <input type="hidden" name="id_option[]"
+                                                                        value="{{ $itemJawabanLevelEmpat->id }}">
+                                                                    <input type="text" class="form-control komentar"
+                                                                        name="komentar_penyelia[]"
+                                                                        placeholder="Masukkan Komentar"
+                                                                        value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
+                                                                    <div class="input-skor">
+                                                                        <input type="number" class="form-control"
+                                                                            placeholder="" name="skor_penyelia[]" onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
+                                                                            {{ $itemEmpat->status_skor == 0 ? 'readonly' : '' }}
+                                                                            value="{{ $getSkorPenyelia->skor_penyelia != null ? $getSkorPenyelia->skor_penyelia : $itemJawabanLevelEmpat->skor }}">
+                                                                    </div>
+                                                                @endif
+                                                            </div>
                                                         </div>
-                                                        <div class="input-group input-b-bottom">
-                                                            @if ($itemEmpat->is_commentable == 'Ya')
-                                                                <input type="hidden" name="id_item[]"
-                                                                    value="{{ $itemEmpat->id }}">
-                                                                <input type="hidden" name="id_option[]"
-                                                                    value="{{ $itemJawabanLevelEmpat->id }}">
-                                                                <input type="text" class="form-control komentar"
-                                                                    name="komentar_penyelia[]"
-                                                                    placeholder="Masukkan Komentar"
-                                                                    value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
-                                                                <div class="input-skor">
-                                                                    <input type="number" class="form-control"
-                                                                        placeholder="" name="skor_penyelia[]" onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
-                                                                        {{ $itemEmpat->status_skor == 0 ? 'readonly' : '' }}
-                                                                        value="{{ $getSkorPenyelia->skor_penyelia != null ? $getSkorPenyelia->skor_penyelia : $itemJawabanLevelEmpat->skor }}">
-                                                                </div>
-                                                            @endif
-                                                        </div>
-                                                    </div>
-                                                    <input type="hidden" class="form-control mb-3"
-                                                        placeholder="Masukkan komentar" name="komentar_penyelia"
-                                                        value="{{ $itemJawabanLevelEmpat->option }}" disabled>
-                                                    <input type="hidden" name="id[]" value="{{ $itemEmpat->id }}">
+                                                        <input type="hidden" class="form-control mb-3"
+                                                            placeholder="Masukkan komentar" name="komentar_penyelia"
+                                                            value="{{ $itemJawabanLevelEmpat->option }}" disabled>
+                                                        <input type="hidden" name="id[]" value="{{ $itemEmpat->id }}">
+                                                    @endif
                                                 @endif
-                                            @endif
-                                        @endforeach
-                                    </div>
+                                            @endforeach
+                                        </div>
+                                    @endif
                                 @endif
                             @endforeach
                         @endforeach
