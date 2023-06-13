@@ -33,15 +33,20 @@ class AuthenticatedSessionController extends Controller
                     ->where('email', $request->email)
                     ->first();
 
-        if (isset($user->nip)) {
-            $request->authenticate();
-    
-            $request->session()->regenerate();
-    
-            return redirect()->intended(RouteServiceProvider::HOME);
+        if ($user) {
+            if (isset($user->nip)) {
+                $request->authenticate();
+        
+                $request->session()->regenerate();
+        
+                return redirect()->intended(RouteServiceProvider::HOME);
+            }
+            else {
+                return back()->withError("Belum dilakukan Pengkinian Data User untuk $request->email.\nHarap menghubungi Divisi Pemasaran atau TI & AK.");
+            }
         }
         else {
-            return back()->withError("Belum dilakukan Pengkinian Data User untuk $request->email.\nHarap menghubungi Divisi Pemasaran atau TI & AK.");
+            return back()->withError("Akun tidak ditemukan");
         }
     }
 
