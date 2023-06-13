@@ -7,7 +7,8 @@ $dataIndex = match ($skema ?? $dataUmum) {
     'Talangan Umroh' => 1,
     'Prokesra' => 1,
     'Kusuma' => 1,
-    null => 1
+    null => 1,
+    default => 1
 };
 @endphp
 <div class="row">
