@@ -1052,6 +1052,7 @@ class PengajuanKreditController extends Controller
                 if ($request->info_text[$key] == null) continue;
 
                 if ($request->id_jawaban_text[$key] == null && $request->info_text[$key] != null) {
+                    // dd($request->id_jawaban_text)
                     $data_baru = new JawabanTextModel();
                     $data_baru->id_pengajuan = $id_pengajuan;
                     $data_baru->id_jawaban = $request->id_text[$key];

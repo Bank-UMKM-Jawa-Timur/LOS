@@ -62,7 +62,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                         ->where('id_jawaban', 145)
                                         ->first();
                     @endphp
-                    <input type="hidden" name="id_file_text[]" value="{{ $jawabanFotoSP?->id_jawaban }}">
+                    <input type="hidden" name="id_file_text[]" value="{{ $itemSP->id }}">
                     <label for="update_file" style="display: none" id="nama_file">{{ $jawabanFotoSP?->opsi_text }}</label>
                     <input type="file" name="update_file[]" value="{{ $jawabanFotoSP?->opsi_text }}" id="sp" placeholder="Masukkan informasi {{ $itemSP?->nama }}" class="form-control limit-size" >
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
@@ -617,9 +617,8 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                             <div class="row col-md-12" id="npwp">
                                 <div class="form-group col-md-6">
                                     <label for="">NPWP</label>
-                                    <input type="hidden" name="id_level[]" value="79" id="npwp_id">
+                                    <input type="hidden" name="id_text[]" value="79" id="npwp_id">
                                     <input type="hidden" name="opsi_jawaban[]" value="input text" id="npwp_opsi_jawaban">
-                                    <input type="hidden" name="id_text[]" value="{{ $dataDetailJawabanTextnpwp?->id_item }}">
                                     <input type="text" maxlength="255" name="info_text[]" id="npwp_text" placeholder="Masukkan informasi"
                                         class="form-control" value="{{ ($dataDetailJawabanTextnpwp != null) ? $dataDetailJawabanTextnpwp?->opsi_text : "" }}">
                                     <input type="hidden" name="skor_penyelia_text[]" id="npwp_text" value="{{ $dataDetailJawabanTextnpwp?->skor_penyelia }}">
@@ -716,7 +715,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                     </div>
                                 @endforeach
                             @elseif ($item->opsi_jawaban == 'file')
-                                @foreach ($dataDetailJawabanText as $itemTextDua)
+                                @forelse ($dataDetailJawabanText as $itemTextDua)
                                     <div class="form-group col-md-6">
                                         <label for="">{{ $item->nama }}</label>
                                         {{-- <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" --}}
@@ -729,7 +728,20 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                             value="{{ $itemTextDua->skor_penyelia }}">
                                         <input type="hidden" name="id_update_file[]" value="{{ $itemTextDua->id }}">
                                     </div>
-                                @endforeach
+                                @empty
+                                    <div class="form-group col-md-6">
+                                        <label for="">{{ $item->nama }}</label>
+                                        {{-- <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" --}}
+                                            {{-- id="{{ $idLevelDua }}"> --}}
+                                        <input type="hidden" name="id_file_text[]" value="{{ $item->id }}">
+                                        <label for="update_file" style="display: none" id="nama_file"></label>
+                                        <input type="file" name="update_file[]" id="{{ $idLevelDua . 'file' }}"
+                                            placeholder=""  value="" class="form-control" title="{{ $item->opsi_text }}">
+                                        <input type="hidden" name="skor_penyelia_text[]"
+                                            value="{{ $itemTextDua->skor_penyelia }}">
+                                        <input type="hidden" name="id_update_file[]" value="">
+                                    </div>
+                                @endforelse
                             @elseif ($item->opsi_jawaban == 'long text')
                                 @foreach ($dataDetailJawabanText as $itemTextDua)
                                     <div class="form-group col-md-6">
@@ -825,8 +837,8 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                         ->get();
                                 @endphp
 
-                                @if ($itemTiga->nama == 'Kategori Jaminan Utama')
-                                    <div class="form-group col-md-6">
+                                @if ($itemTiga->nama == 'Kategori Jaminan Utama' || $itemTiga->nama == 'Pengikatan Jaminan Utama')
+                                    {{-- <div class="form-group col-md-6">
                                         @php
                                             $checkKelayakan = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor')
                                                 ->where('id_pengajuan', $dataUmum->id)
@@ -857,16 +869,16 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                             </select>
 
                                         @endif
-                                        {{-- <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
+                                        <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
                                         <input type="hidden" name="opsi_jawaban[]" value="{{ $itemTiga->opsi_jawaban }}"
                                             id="">
                                         <input type="text" name="info_text[]" id="" placeholder="Masukkan informasi"
-                                            class="form-control"> --}}
+                                            class="form-control">
                                     </div>
 
                                     <div class="form-group col-md-6" id="select_kategori_jaminan_utama">
 
-                                    </div>
+                                    </div> --}}
                                 @elseif ($itemTiga->nama == 'Kategori Jaminan Tambahan')
                                     <div class="form-group col-md-6">
                                         <label for="">{{ $itemTiga->nama }}</label>
@@ -880,7 +892,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                 <option value="Tanah" >Tanah</option>
                                                 <option value="Tanah dan Bangunan">Tanah dan Bangunan</option>
                                             @endif
-                                            <option value="Kendaraan Bermotor" {{ ($jaminanTambahan[0]->id_item == 118 ) ? 'selected' : '' }}>Kendaraan Bermotor</option>
+                                            {{-- <option value="Kendaraan Bermotor" {{ ($jaminanTambahan[0]->id_item == 118 ) ? 'selected' : '' }}>Kendaraan Bermotor</option> --}}
                                         </select>
                                         {{-- <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
                                         <input type="hidden" name="opsi_jawaban[]" value="{{ $itemTiga->opsi_jawaban }}"
@@ -893,12 +905,12 @@ $dataIndex = match ($dataUmum->skema_kredit) {
 
                                     </div>
                                 @elseif ($itemTiga->nama == 'Bukti Pemilikan Jaminan Utama')
-                                    <div class="form-group col-md-12">
+                                    {{-- <div class="form-group col-md-12">
                                         <h5>{{ $itemTiga->nama }}</h5>
                                     </div>
                                     <div id="bukti_pemilikan_jaminan_utama" class="form-group col-md-12 row">
 
-                                    </div>
+                                    </div> --}}
                                 @elseif ($itemTiga->nama == 'Bukti Pemilikan Jaminan Tambahan')
                                     <div class="form-group col-md-12">
                                         <h5>{{ $itemTiga->nama }}</h5>
@@ -963,7 +975,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                             </div>
                                             @endforeach
                                     @elseif ($itemTiga->opsi_jawaban == 'file')
-                                        @foreach ($dataDetailJawabanText as $itemTextTiga)
+                                        @forelse ($dataDetailJawabanText as $itemTextTiga)
                                             <div class="form-group col-md-6 file-wrapper">
                                                 <label for="">{{ $itemTiga->nama }}</label>
 
@@ -972,7 +984,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                         <label for="update_file" style="display: none" id="nama_file">{{ $itemTextTiga->opsi_text }}</label>
                                                         <input type="file" name="update_file[]" placeholder="Masukkan informasi"
                                                         class="form-control" id="{{ $idLevelTiga . 'file' }}"  value="{{ ($itemTextTiga->opsi_text != null) ? $itemTextTiga->opsi_text : null }}" title="{{ $itemTextTiga->opsi_text }}" >
-                                                        <input type="hidden" name="id_file_text[]" value="{{ $itemTextTiga->id_item }}">
+                                                        <input type="hidden" name="id_file_text[]" value="{{ $itemTextTiga->id }}">
                                                         <input type="hidden" name="skor_penyelia_text[]"
                                                             value="{{ $itemTextTiga->skor_penyelia }}">
                                                         <input type="hidden" name="id_update_file[]" value="{{ $itemTextTiga->id }}">
@@ -991,7 +1003,35 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                     @endif
                                                 </div>
                                             </div>
-                                        @endforeach
+                                        @empty
+                                            <div class="form-group col-md-6 file-wrapper">
+                                                <label for="">{{ $itemTiga->nama }}</label>
+
+                                                <div class="row file-input">
+                                                    <div class="col-md-9">
+                                                        <label for="update_file" style="display: none" id="nama_file"></label>
+                                                        <input type="file" name="update_file[]" placeholder="Masukkan informasi"
+                                                        class="form-control" id="{{ $idLevelTiga . 'file' }}"  value="" title="" >
+                                                        <input type="hidden" name="id_file_text[]" value="{{ $itemTiga->id }}">
+                                                        <input type="hidden" name="skor_penyelia_text[]"
+                                                            value="">
+                                                        <input type="hidden" name="id_update_file[]" value="">
+                                                    </div>
+                                                    @if(in_array(trim($itemTiga->nama), $multipleFiles))
+                                                    <div class="col-1">
+                                                        <button class="btn btn-sm btn-success btn-add-file" type="button" data-id="{{ $itemTiga->id }}">
+                                                            <i class="fa fa-plus"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="col-1">
+                                                        <button class="btn btn-sm btn-danger btn-del-file" type="button" data-id="{{ $itemTiga->id }}">
+                                                            <i class="fa fa-minus"></i>
+                                                        </button>
+                                                    </div>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        @endforelse
                                     @elseif ($itemTiga->opsi_jawaban == 'long text')
                                     @foreach ($dataDetailJawabanText as $itemTextTiga)
                                             <div class="form-group col-md-6">
@@ -1118,7 +1158,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                 </div>
                                             @endforeach
                                         @elseif ($itemEmpat->opsi_jawaban == 'file')
-                                            @foreach ($dataDetailJawabanTextEmpat as $itemTextEmpat)
+                                            @forelse ($dataDetailJawabanTextEmpat as $itemTextEmpat)
                                                 <div class="form-group col-md-6">
                                                     <label for="">{{ $itemEmpat->nama }}</label>
                                                     {{-- <input type="hidden" name="opsi_jawaban[]"
@@ -1131,7 +1171,20 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                             value="{{ $itemTextEmpat->skor_penyelia }}">
                                                         <input type="hidden" name="id_update_file[]" value="{{ $itemTextEmpat->id }}">
                                                 </div>
-                                            @endforeach
+                                            @empty
+                                                <div class="form-group col-md-6">
+                                                    <label for="">{{ $itemEmpat->nama }}</label>
+                                                    {{-- <input type="hidden" name="opsi_jawaban[]"
+                                                        value="{{ $itemEmpat->opsi_jawaban }}" id=""> --}}
+                                                        <input type="hidden" name="id_file_text[]" value="{{ $itemEmpat->id }}">
+                                                        <label for="update_file" style="display: none" id="nama_file"></label>
+                                                        <input type="file" name="update_file[]" id="{{ $idLevelEmpat . 'file' }}"
+                                                            placeholder="Masukkan informasi" class="form-control hidden" value="">
+                                                        <input type="hidden" name="skor_penyelia_text[]"
+                                                            value="">
+                                                        <input type="hidden" name="id_update_file[]" value="">
+                                                </div>
+                                            @endforelse
                                         @elseif ($itemEmpat->opsi_jawaban == 'long text')
                                             @foreach ($dataDetailJawabanTextEmpat as $itemTextEmpat)
                                                 <div class="form-group col-md-6">
@@ -1462,6 +1515,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
 
             $('#surat_keterangan_usaha').show();
             $('#surat_keterangan_usaha_id').removeAttr('disabled');
+            $('#id_surat_keterangan_usaha_text').removeAttr('disabled');
             $('#surat_keterangan_usaha_text').removeAttr('disabled');
             $('#docSKUnama_file').removeAttr('disabled');
             $('#surat_keterangan_usaha_opsi_jawaban').removeAttr('disabled');
@@ -1494,6 +1548,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
 
             $('#surat_keterangan_usaha').hide();
             $('#surat_keterangan_usaha_id').attr('disabled', true);
+            $('#id_surat_keterangan_usaha_text').attr('disabled', true);
             $('#surat_keterangan_usaha_text').attr('disabled', true);
             $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
             $('#id_update_sku').attr('disabled', true);
@@ -1526,6 +1581,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
             $('#surat_keterangan_usaha').hide();
             $('#surat_keterangan_usaha_id').attr('disabled', true);
             $('#surat_keterangan_usaha_text').attr('disabled', true);
+            $('#id_surat_keterangan_usaha_text').attr('disabled', true);
             $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
 
             $('#docSKU').hide();
