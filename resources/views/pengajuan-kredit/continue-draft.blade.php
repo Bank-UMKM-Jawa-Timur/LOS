@@ -298,8 +298,18 @@ $dataIndex = match ($skema) {
                 </div>
                 <div class="form-group col-md-6">
                     <label for="">Jumlah Kredit yang diminta</label>
+                    @if (gettype($duTemp->jumlah_kredit) == 'string')
+                        @if (is_nan($duTemp->jumlah_kredit))
+                        <input type="text" name="jumlah_kredit" id="jumlah_kredit"
+                            class="form-control rupiah" value="0">
+                        @else
+                        <input type="text" name="jumlah_kredit" id="jumlah_kredit"
+                            class="form-control rupiah" value="{{ rupiah($duTemp?->jumlah_kredit) ?? '' }}">
+                        @endif
+                    @else
                     <input type="text" name="jumlah_kredit" id="jumlah_kredit"
                         class="form-control rupiah" value="{{ rupiah($duTemp?->jumlah_kredit) ?? '' }}">
+                    @endif
                     {{-- <textarea name="jumlah_kredit" class="form-control @error('jumlah_kredit') is-invalid @enderror" id="" cols="30"
                         rows="4" placeholder="Jumlah Kredit"></textarea> --}}
                     @error('jumlah_kredit')
