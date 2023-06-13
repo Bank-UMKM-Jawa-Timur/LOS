@@ -892,7 +892,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                 <option value="Tanah" >Tanah</option>
                                                 <option value="Tanah dan Bangunan">Tanah dan Bangunan</option>
                                             @endif
-                                            {{-- <option value="Kendaraan Bermotor" {{ ($jaminanTambahan[0]->id_item == 118 ) ? 'selected' : '' }}>Kendaraan Bermotor</option> --}}
+                                            <option value="Kendaraan Bermotor" {{ ($jaminanTambahan[0]->id_item == 118 ) ? 'selected' : '' }}>Kendaraan Bermotor</option>
                                         </select>
                                         {{-- <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
                                         <input type="hidden" name="opsi_jawaban[]" value="{{ $itemTiga->opsi_jawaban }}"
