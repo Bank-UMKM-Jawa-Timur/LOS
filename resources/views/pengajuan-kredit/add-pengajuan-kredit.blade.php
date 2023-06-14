@@ -394,7 +394,7 @@ $dataIndex = match ($skema) {
                     </div>
                     <div class="form-group col-md-6">
                         <label for="">Warna</label>
-                        <input type="text" maxlength="255" name="warna" id="warna" class="form-control @error('warna') is-invalid @enderror"
+                        <input type="text" maxlength="25" name="warna" id="warna" class="form-control @error('warna') is-invalid @enderror"
                             placeholder="Warna Kendaraan" value="">
                         @error('warna')
                             <div class="invalid-feedback">
@@ -1378,12 +1378,13 @@ $dataIndex = match ($skema) {
             //get item by kategori
             let kategoriJaminan = $(this).val();
 
-            if(kategoriJaminan != "Tidak Memiliki Jaminan Tambahan"){
-                $.ajax({
-                    type: "get",
-                    url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}`,
-                    dataType: "json",
-                    success: function(response) {
+            $.ajax({
+                type: "get",
+                url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}`,
+                dataType: "json",
+                success: function(response) {
+                    if(kategoriJaminan != "Tidak Memiliki Jaminan Tambahan"){
+                        $("#select_kategori_jaminan_tambahan").show()
                         // add item by kategori
                         $('#select_kategori_jaminan_tambahan').append(`
                             <label for="">${response.item.nama}</label>
@@ -1483,9 +1484,31 @@ $dataIndex = match ($skema) {
                                 // input_opsi_jawaban.prop('disabled',true)
                             }
                         })
+                    } else {
+                        $('#select_kategori_jaminan_tambahan').append(`
+                            <label for="">${response.item.nama}</label>
+                            <select name="dataLevelEmpat[${response.item.id}]" id="itemByKategori" class="form-control cek-sub-column"
+                                data-id_item="${response.item.id}">
+                                <option value=""> --Pilih Opsi -- </option>
+                                </select>
+    
+                            <div id="item${response.item.id}">
+    
+                            </div>
+                        `);
+                        // add opsi dari item
+                        $.each(response.item.option, function(i, valOption) {
+                            // console.log(valOption.skor);
+                            $('#itemByKategori').append(`
+                            <option value="${valOption.skor}-${valOption.id}" ${(response.dataSelect == valOption.id) ? 'selected' : ''}>
+                            ${valOption.option}
+                            </option>`);
+                        });
+                        $("#itemByKategori").val('0-188')
+                        $("#select_kategori_jaminan_tambahan").hide()
                     }
-                });
-            }
+                }
+            })
         });
         // end item kategori jaminan tambahan cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
 
