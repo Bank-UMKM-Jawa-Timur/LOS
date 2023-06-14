@@ -1161,7 +1161,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                             @foreach ($dataDetailJawabanTextEmpat as $itemTextEmpat)
                                                 <div class="form-group col-md-6">
                                                     <label for="">{{ $itemEmpat->nama }}</label>
-                                                        <input type="text" name="info_text[]" id="{{ $idLevelEmpat }}"
+                                                        <input type="text" name="info_text[]" id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan_/_ht' ? 'nilai_asuransi_penjaminan' : $idLevelEmpat }}"
                                                             placeholder="Masukkan informasi" class="form-control rupiah" value="{{ ($itemTextEmpat->opsi_text != null) ? $itemTextEmpat->opsi_text : null }}">
                                                         <input type="hidden" name="skor_penyelia_text[]"
                                                             value="{{ $itemTextEmpat->skor_penyelia }}">

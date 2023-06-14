@@ -361,7 +361,7 @@ $dataIndex = match ($skema) {
             </div>
         </div>
 
-        @if ($skema == 'KKB' || $duTemp?->skema_kredit == 'KKB')     
+        @if ($skema == 'KKB' || $duTemp?->skema_kredit == 'KKB')
             <div class="form-wizard" data-index='1' data-done='true' id="wizard-data-po">
                 <div class="row">
                     <div class="form-group col-md-12">
@@ -922,7 +922,7 @@ $dataIndex = match ($skema) {
                                                     id="">
                                                 <input type="hidden" name="opsi_jawaban[{{ $itemEmpat->id }}]"
                                                     value="{{ $itemEmpat->opsi_jawaban }}" id="">
-                                                <input type="text" maxlength="255" name="informasi[{{ $itemEmpat->id }}]" id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan' ? '':$idLevelEmpat }}"
+                                                <input type="text" maxlength="255" name="informasi[{{ $itemEmpat->id }}]" id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan_/_ht' ? 'nilai_asuransi_penjaminan' : $idLevelEmpat }}"
                                                     placeholder="Masukkan informasi" class="form-control" value="{{ temporary($duTemp->id, $itemEmpat->id)?->opsi_text }}">
                                             </div>
                                         @elseif ($itemEmpat->opsi_jawaban == 'number')
@@ -933,7 +933,7 @@ $dataIndex = match ($skema) {
                                                 <input type="hidden" name="id_level[{{ $itemEmpat->id }}]" value="{{ $itemEmpat->id }}"
                                                     id="">
                                                 <input type="text" step="any" name="informasi[{{ $itemEmpat->id }}]"
-                                                    id="{{ $idLevelEmpat }}"
+                                                    id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan_/_ht' ? 'nilai_asuransi_penjaminan' : $idLevelEmpat }}"
                                                     placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
                                                     class="form-control rupiah" value="{{ rupiah(temporary($duTemp->id, $itemEmpat->id)?->opsi_text) }}">
                                             </div>
@@ -1076,7 +1076,7 @@ $dataIndex = match ($skema) {
             let valSkema = $("#skema").val();
             cekStatusNikah()
 
-            @if($duTemp->nama == null) 
+            @if($duTemp->nama == null)
                 if(valSkema == null || valSkema == ''){
                     $('#exampleModal').modal('show');
                 }
@@ -1090,7 +1090,7 @@ $dataIndex = match ($skema) {
             });
         });
         function cekStatusNikah(){
-            
+
             let value = $("#status").val();
             $("#foto-ktp-istri").empty();
             $("#foto-ktp-suami").empty();
@@ -1197,7 +1197,7 @@ $dataIndex = match ($skema) {
 
         $("#id_merk").change(function(){
             let val = $(this).val();
-            
+
             $.ajax({
                 type: "get",
                 url: "{{ route('get-tipe-kendaraan') }}?id_merk="+val,
@@ -1502,9 +1502,9 @@ $dataIndex = match ($skema) {
                                 data-id_item="${response.item.id}">
                                 <option value=""> --Pilih Opsi -- </option>
                                 </select>
-    
+
                             <div id="item${response.item.id}">
-    
+
                             </div>
                         `);
                         // add opsi dari item
@@ -1515,7 +1515,7 @@ $dataIndex = match ($skema) {
                             ${valOption.option}
                             </option>`);
                         });
-    
+
                         // add item bukti pemilikan
                         var isCheck = kategoriJaminan != 'Kendaraan Bermotor' ?
                             "<input type='checkbox' class='checkKategori'>" : ""
@@ -1606,7 +1606,7 @@ $dataIndex = match ($skema) {
                                 }
                             }
                         });
-    
+
                         $(".checkKategori").click(function() {
                             var input = $(this).closest('.form-group').find(".input")
                             // var input_id = $(this).closest('.form-group').find("input_id").last()
@@ -1629,9 +1629,9 @@ $dataIndex = match ($skema) {
                                 data-id_item="${response.item.id}">
                                 <option value=""> --Pilih Opsi -- </option>
                                 </select>
-    
+
                             <div id="item${response.item.id}">
-    
+
                             </div>
                         `);
                         // add opsi dari item

@@ -879,7 +879,7 @@ $dataIndex = match ($skema) {
                                                     id="">
                                                 <input type="hidden" name="opsi_jawaban[{{ $itemEmpat->id }}]"
                                                     value="{{ $itemEmpat->opsi_jawaban }}" id="">
-                                                <input type="text" maxlength="255" name="informasi[{{ $itemEmpat->id }}]" id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan' ? '':$idLevelEmpat }}"
+                                                <input type="text" maxlength="255" name="informasi[{{ $itemEmpat->id }}]" id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan_/_ht' ? '':$idLevelEmpat }}"
                                                     placeholder="Masukkan informasi" class="form-control" value="">
                                             </div>
                                         @elseif ($itemEmpat->opsi_jawaban == 'number')
