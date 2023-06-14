@@ -204,7 +204,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                         @php
                             $jawabanFotoKTPNas = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
                                             ->where('id_jawaban', $itemKTPNas->id)
-                                            ->first(); 
+                                            ->first();
                         @endphp
                         <label for="">Foto KTP Nasabah</label>
                         <input type="hidden" name="id_file_text[]" value="{{$itemKTPNas->id}}" id="">
@@ -1148,7 +1148,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                             @foreach ($dataDetailJawabanTextEmpat as $itemTextEmpat)
                                                 <div class="form-group col-md-6">
                                                     <label for="">{{ $itemEmpat->nama }}</label>
-                                                    <input type="text" maxlength="255" name="info_text[]" id="{{ $idLevelEmpat }}"
+                                                    <input type="text" maxlength="255" name="info_text[]" id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan' ? '':$idLevelEmpat }}"
                                                         placeholder="Masukkan informasi" class="form-control" value="{{ ($itemTextEmpat->opsi_text != null) ? $itemTextEmpat->opsi_text : null }}">
                                                     <input type="hidden" name="skor_penyelia_text[]"
                                                         value="{{ $itemTextEmpat->skor_penyelia }}">
@@ -1437,7 +1437,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                     @php
                         $jawabanFotoKTPNas = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
                                         ->where('id_jawaban', $itemKTPNas->id)
-                                        ->first(); 
+                                        ->first();
                     @endphp
                     <label for="">Foto KTP Nasabah</label>
                     <input type="hidden" name="id_file_text[]" value="151" id="">
@@ -1471,7 +1471,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
     @if ($dataUmum->skema_kredit == 'KKB')
         $("#id_merk").change(function(){
             let val = $(this).val();
-            
+
             $.ajax({
                 type: "get",
                 url: "{{ route('get-tipe-kendaraan') }}?id_merk="+val,
@@ -1792,9 +1792,9 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                             data-id_item="${response.item.id}">
                             <option value=""> --Pilih Opsi -- </option>
                             </select>
-    
+
                         <div id="item${response.item.id}">
-    
+
                         </div>
                     `);
                     // add opsi dari item
@@ -1805,14 +1805,14 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                             ${valOption.option}
                             </option>`);
                         });
-    
+
                         // add item bukti pemilikan
                         var isCheck = kategoriJaminan != 'Kendaraan Bermotor' ?
                             "<input type='checkbox' class='checkKategori'>" : ""
                         var isChecked = kategoriJaminan != 'Kendaraan Bermotor' ?
                             "<input type='checkbox' checked class='checkKategoriJaminanUtama'>" : ""
                         var isDisabled = kategoriJaminan != 'Kendaraan Bermotor' ? 'disabled' : ''
-    
+
                         if(response.belum.length > 0){
                             $.each(response.belum, function(i, valItem){
                                 if(valItem.nama != 'Foto'){
@@ -1850,14 +1850,14 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                 }
                             })
                         }
-    
+
                         if(response.dataDetailJawabanText.length > 0){
-    
+
                             $.each(response.dataDetailJawabanText, function(i, valItem) {
                                 if($('#kategori_jaminan_tambahan').val() == 'Kendaraan Bermotor') {
                                     if(![118,120,148].includes(valItem.id_jawaban)) return;
                                 }
-    
+
                                 if (valItem.nama == 'Atas Nama') {
                                     $('#bukti_pemilikan_jaminan_tambahan').append(`
                                         <div class="form-group col-md-6 aspek_jaminan_kategori">
@@ -1870,7 +1870,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                             <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
                                             <input type="hidden" name="id_jawaban_text[]" value="${valItem.id}">
                                         <input type="hidden" name="id_text[]" value="${valItem.id_item}">
-    
+
                                         </div>
                                     `);
                                 } else {
@@ -1913,7 +1913,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                     }
                                 }
                             });
-    
+
                             $(".checkKategori").click(function() {
                                 var input = $(this).closest('.form-group').find(".input")
                                 // var input_id = $(this).closest('.form-group').find("input_id").last()
@@ -1937,7 +1937,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                             ${valOption.option}
                             </option>`);
                         });
-    
+
                         // add item bukti pemilikan
                         var isCheck = kategoriJaminan != 'Kendaraan Bermotor' ?
                             "<input type='checkbox' class='checkKategori'>" : ""
@@ -1998,7 +1998,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                 }
                             }
                         });
-    
+
                         $(".checkKategori").click(function() {
                             var input = $(this).closest('.form-group').find(".input")
                             // var input_id = $(this).closest('.form-group').find("input_id").last()
@@ -2015,7 +2015,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                             }
                         })
                         }
-    
+
                     if(kategoriJaminan == "Tidak Memiliki Jaminan Tambahan"){
                         $("#select_kategori_jaminan_tambahan").hide()
                         $("#itemByKategori").val('0-188')
