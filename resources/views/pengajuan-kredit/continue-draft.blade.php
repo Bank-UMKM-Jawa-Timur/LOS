@@ -1071,7 +1071,8 @@ $dataIndex = match ($skema) {
 
 @push('custom-script')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
+<script src="{{ asset('') }}js/custom.js"></script>
+    <script>        
         $(document).ready(function() {
             let valSkema = $("#skema").val();
             cekStatusNikah()
@@ -2241,7 +2242,7 @@ $dataIndex = match ($skema) {
         for(let i = 0; i <= parseInt(jumlahData); i++){
             cekValueKosong(i);
         }
+        
     </script>
     @include('pengajuan-kredit.partials.save-script')
-    <script src="{{ asset('') }}js/custom.js"></script>
 @endpush
