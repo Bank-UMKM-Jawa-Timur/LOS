@@ -86,7 +86,7 @@ $dataIndex = match ($skema) {
                 <div class="form-group col-md-6">
                     <label for="">Nama Lengkap</label>
                     <input type="text" name="name" id="nama" class="form-control @error('name') is-invalid @enderror"
-                        placeholder="Nama sesuai dengan KTP" value=""  maxlength="255">
+                        placeholder="Nama sesuai dengan KTP" value="" required maxlength="255">
                     @error('name')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -311,7 +311,7 @@ $dataIndex = match ($skema) {
                 <div class="form-group col-md-6">
                     <label for="">Tenor Yang Diminta</label>
                     <select name="tenor_yang_diminta" id="tenor_yang_diminta"
-                        class="form-control select2 @error('tenor_yang_diminta') is-invalid @enderror" >
+                        class="form-control select2 @error('tenor_yang_diminta') is-invalid @enderror" required>
                         <option value="">-- Pilih Tenor --</option>
                         @for ($i = 1; $i <= 10; $i++)
                             <option
@@ -377,7 +377,7 @@ $dataIndex = match ($skema) {
                     </div>
                     <div class="form-group col-md-6">
                         <label>Merk Kendaraan</label>
-                        <select name="id_merk" id="id_merk" class="select2 form-control" style="width: 100%;" >
+                        <select name="id_merk" id="id_merk" class="select2 form-control" style="width: 100%;" required>
                             <option value="">Pilih Merk Kendaraan</option>
                             @foreach ($dataMerk as $item)
                                 <option value="{{ $item->id }}">{{ $item->merk }}</option>
@@ -391,7 +391,7 @@ $dataIndex = match ($skema) {
                     </div>
                     <div class="form-group col-md-6">
                         <label>Tipe Kendaraan</label>
-                        <select name="id_tipe" id="id_tipe" class="select2 form-control" style="width: 100%;" >
+                        <select name="id_tipe" id="id_tipe" class="select2 form-control" style="width: 100%;" required>
                             <option value="">Pilih Tipe</option>
                         </select>
                         @error('id_tipe')
@@ -487,7 +487,7 @@ $dataIndex = match ($skema) {
                             <div class="row col-md-12">
                                 <div class="form-group col-md-6">
                                     <label for="">{{ $item->nama }}</label>
-                                    <select name="ijin_usaha" id="ijin_usaha" class="form-control" >
+                                    <select name="ijin_usaha" id="ijin_usaha" class="form-control" required>
                                         <option value="">-- Pilih Ijin Usaha --</option>
                                         <option value="nib">NIB</option>
                                         <option value="surat_keterangan_usaha">Surat Keterangan Usaha</option>
@@ -729,7 +729,7 @@ $dataIndex = match ($skema) {
                                     <div class="form-group col-md-6">
                                         <label for="">{{ $itemTiga->nama }}</label>
                                         <select name="kategori_jaminan_tambahan" id="kategori_jaminan_tambahan"
-                                            class="form-control" >
+                                            class="form-control" required>
                                             <option value="">-- Pilih Kategori Jaminan Tambahan --</option>
                                             <option value="Tanah">Tanah</option>
                                             <option value="Kendaraan Bermotor">Kendaraan Bermotor</option>

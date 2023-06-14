@@ -21,6 +21,7 @@ $dataIndex = match ($skema ?? $dataUmum) {
                         <input type="hidden" name="answer" class="answer">
                         <input type="hidden" name="answerFilled" class="answerFilled">
                         <a href="#"><span><i>0%</i></span> Data Umum</a>
+                        {{--  <a href="#"><span><i>{{ array_key_exists(0, $dataAnswer) ? $dataAnswer[0]['percentage'] : 0 }}%</i></span> Data Umum</a>  --}}
                     </li>
                     @if(($skema ?? $dataUmum?->skema_kredit) == 'KKB')
                         <li class="data-po-label"><label>DATA PO</label></li>
@@ -40,6 +41,7 @@ $dataIndex = match ($skema ?? $dataUmum) {
                             <input type="hidden" name="answer" class="answer">
                             <input type="hidden" name="answerFilled" class="answerFilled">
                             <a href="#"><span><i class="fa fa-ban"></i></span>{{ $value->nama }}</a>
+                            {{--  <a href="#"><span><i>{{ array_key_exists($key, $dataAnswer) ? $dataAnswer[$key]['percentage'] : 0 }}%</i></span>{{$value->nama}}</a>  --}}
                         </li>
                     @endforeach
                     <li><label> PENDAPAT dan USULAN STAF/ANALIS KREDIT</label></li>
