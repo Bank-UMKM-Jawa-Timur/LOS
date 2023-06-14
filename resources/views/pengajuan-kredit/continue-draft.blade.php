@@ -1105,7 +1105,7 @@ $dataIndex = match ($skema) {
                 $("#foto-ktp-istri").append(`
                 <label for="">{{ $itemKTPIs->nama }}</label>
                     <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
-                    <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPIs->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size" id="foto_ktp_istri">
+                    <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" id="Foto_KTP_Istri" data-id="{{ temporary($duTemp->id, $itemKTPIs->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
@@ -1117,7 +1117,7 @@ $dataIndex = match ($skema) {
                 $("#foto-ktp-suami").append(`
                 <label for="">{{ $itemKTPSu->nama }}</label>
                     <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
-                    <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPSu->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size" id="foto_ktp_suami">
+                    <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" id="Foto_KTP_Suami" data-id="{{ temporary($duTemp->id, $itemKTPSu->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
@@ -1131,14 +1131,14 @@ $dataIndex = match ($skema) {
                 $("#foto-ktp-nasabah").append(`
                     <label for="">{{ $itemKTPNas->nama }}</label>
                     <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
-                    <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPNas->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-control limit-size" id="foto_ktp_suami">
+                    <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPNas->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
                             {{ $errors->first('dataLevelDua.' . $key) }}
                         </div>
                     @endif
-                    <span class="filename" style="display: inline;"></span>
+                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPNas->id)?->opsi_text }}</span>
                 `)
             }
         }
@@ -1157,7 +1157,7 @@ $dataIndex = match ($skema) {
                 $("#foto-ktp-istri").append(`
                 <label for="">{{ $itemKTPIs->nama }}</label>
                     <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
-                    <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPIs->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size">
+                    <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" id="Foto_KTP_Istri" data-id="{{ temporary($duTemp->id, $itemKTPIs->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
@@ -1169,7 +1169,7 @@ $dataIndex = match ($skema) {
                 $("#foto-ktp-suami").append(`
                 <label for="">{{ $itemKTPSu->nama }}</label>
                     <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
-                    <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPSu->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size">
+                    <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" id="Foto_KTP_Suami" data-id="{{ temporary($duTemp->id, $itemKTPSu->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
@@ -1183,14 +1183,14 @@ $dataIndex = match ($skema) {
                 $("#foto-ktp-nasabah").append(`
                     <label for="">{{ $itemKTPNas->nama }}</label>
                     <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
-                    <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-control limit-size">
+                    <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPNas->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
                             {{ $errors->first('dataLevelDua.' . $key) }}
                         </div>
                     @endif
-                    <span class="filename" style="display: inline;"></span>
+                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPNas->id)?->opsi_text }}</span>
                 `)
             }
         });
@@ -1494,7 +1494,8 @@ $dataIndex = match ($skema) {
                 url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}&idCalonNasabah={{ $duTemp?->id }}`,
                 dataType: "json",
                 success: function(response) {
-                    if(val != "Tidak Memiliki Jaminan Tambahan"){
+                    if(kategoriJaminan != "Tidak Memiliki Jaminan Tambahan"){
+                        $("#select_kategori_jaminan_tambahan").show()
                         // add item by kategori
                         $('#select_kategori_jaminan_tambahan').append(`
                             <label for="">${response.item.nama}</label>
@@ -1599,7 +1600,7 @@ $dataIndex = match ($skema) {
                                             <input type="hidden" name="id_level[${valItem.id}]" value="${valItem.id}" id="" class="input" ${isDisabled}>
                                             <input type="hidden" name="opsi_jawaban[${valItem.id}]"
                                                 value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
-                                            <input type="text" maxlength="255" name="informasi[${valItem.id}]" placeholder="Masukkan informasi"
+                                            <input type="text" maxlength="255" id="${valItem.nama.toString().replaceAll(" ", "_")}" name="informasi[${valItem.id}]" placeholder="Masukkan informasi"
                                                 class="form-control input" ${isDisabled} value="${response.dataJawaban[i]}">
                                         </div>
                                     `);
