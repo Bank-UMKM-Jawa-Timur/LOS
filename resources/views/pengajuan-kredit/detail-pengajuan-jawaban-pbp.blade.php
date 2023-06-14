@@ -688,7 +688,7 @@
                                                         <img src="{{ asset($filepath) }}" alt="" width="800px">
                                                     @endif
                                                     {{-- Rupiah data 2 --}}
-                                                @elseif ($item->opsi_jawaban == 'number')
+                                                @elseif ($item->opsi_jawaban == 'number' && $item->id != 143)
                                                     <p class="badge badge-info text-lg"><b>
                                                             Rp.
                                                             {{ number_format((int) $itemTextDua->opsi_text, 2, ',', '.') }}

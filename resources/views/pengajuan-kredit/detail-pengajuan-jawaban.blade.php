@@ -632,7 +632,7 @@
                     ->where('level', 2)
                     ->where('id_parent', $value->id)
                     ->get();
-                
+
                 // check level 4
                 $dataLevelEmpat = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide')
                     ->where('level', 4)
@@ -681,7 +681,7 @@
                                                         alt="" width="800px">
                                                 @endif
                                                 {{-- Rupiah data dua --}}
-                                            @elseif ($item->opsi_jawaban == 'number')
+                                            @elseif ($item->opsi_jawaban == 'number' && $item->id != 143)
                                                 <p class="badge badge-info text-lg"><b>
                                                         Rp. {{ number_format((int) $itemTextDua->opsi_text, 2, ',', '.') }}
                                                     </b></p>
@@ -722,13 +722,13 @@
                             $dataOption = \App\Models\OptionModel::where('option', '=', '-')
                                 ->where('id_item', $item->id)
                                 ->get();
-                            
+
                             $getKomentar = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', '=', 'detail_komentar.id_komentar')
                                 ->where('id_pengajuan', $dataUmum->id)
                                 ->where('id_item', $item->id)
                                 ->where('id_user', Auth::user()->id)
                                 ->first();
-                            
+
                             // check level 3
                             $dataLevelTiga = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide')
                                 ->where('level', 3)
@@ -961,7 +961,7 @@
                                                     $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
                                                         ->where('id_pengajuan', $dataUmum->id)
                                                         ->get();
-                                                    
+
                                                     $getSkorPenyelia = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
                                                         ->where('id_pengajuan', $dataUmum->id)
                                                         ->where('id_jawaban', $itemJawabanLevelTiga->id)
@@ -1129,7 +1129,7 @@
                                             ->where('jawaban.id_pengajuan', $dataUmum->id)
                                             ->where('id_item', $itemEmpat->id)
                                             ->count();
-                                        
+
                                         $getKomentar = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', '=', 'detail_komentar.id_komentar')
                                             ->where('id_pengajuan', $dataUmum->id)
                                             ->where('id_item', $itemEmpat->id)
@@ -1457,7 +1457,7 @@
             var percentage = parseInt(allInputFilled / allInput * 100);
             percentage = percentage.isNan ? 0 : percentage;
             percentage = percentage > 100 ? 100 : percentage;
-            
+
             if (index == 7) {
                 if ($("textarea[name=komentar_penyelia_keseluruhan]").val() == '') {
                     $(".side-wizard li[data-index='" + index + "'] a span i").html("0%")
