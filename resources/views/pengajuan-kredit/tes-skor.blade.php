@@ -111,7 +111,7 @@ $dataIndex = match ($skema) {
                         <option value="">---Pilih Kabupaten----</option>
                         @foreach ($dataKabupaten as $item)
                             <option
-                                
+
                                 value="{{ $item->id }}"
                             >{{ $item->kabupaten }}</option>
                         @endforeach
@@ -226,7 +226,7 @@ $dataIndex = match ($skema) {
                         @foreach ($status as $sts)
                             <option
                                 value="{{ $sts }}"
-                                
+
                             >{{ ucfirst($sts) }}</option>
                         @endforeach
                     </select>
@@ -244,7 +244,7 @@ $dataIndex = match ($skema) {
                         @foreach ($sectors as $sector)
                         <option
                             value="{{ $sector }}"
-                            
+
                         >{{ ucfirst($sector) }}</option>
                         @endforeach
                     </select>
@@ -316,7 +316,7 @@ $dataIndex = match ($skema) {
                         @for ($i = 1; $i <= 10; $i++)
                             <option
                                 value="{{ $i }}"
-                                
+
                             > {{ $i . ' tahun' }} </option>
                         @endfor
                     </select>
@@ -369,7 +369,7 @@ $dataIndex = match ($skema) {
             </div>
         </div>
 
-        @if ($skema == 'KKB')     
+        @if ($skema == 'KKB')
             <div class="form-wizard" data-index='1' data-done='true' id="wizard-data-po">
                 <div class="row">
                     <div class="form-group col-md-12">
@@ -821,7 +821,7 @@ $dataIndex = match ($skema) {
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <div class="form-group col-md-6 file-wrapper item-{{ $itemTiga->id }}">
                                             <label for="">{{ $itemTiga->nama }}</label>
                                             <div class="row file-input">
@@ -933,7 +933,7 @@ $dataIndex = match ($skema) {
                                                 <input type="hidden" name="id_level[{{ $itemEmpat->id }}]" value="{{ $itemEmpat->id }}"
                                                     id="">
                                                 <input type="text" step="any" name="informasi[{{ $itemEmpat->id }}]"
-                                                    id="{{ $idLevelEmpat }}"
+                                                    id=""{{ $idLevelEmpat == 'nilai_asuransi_penjaminan_/_ht' ? 'nilai_asuransi_penjaminan' : $idLevelEmpat }}"
                                                     placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
                                                     class="form-control rupiah" value="">
                                             </div>
@@ -1088,7 +1088,7 @@ $dataIndex = match ($skema) {
 
         $("#id_merk").change(function(){
             let val = $(this).val();
-            
+
             $.ajax({
                 type: "get",
                 url: "{{ route('get-tipe-kendaraan') }}?id_merk="+val,
@@ -1434,7 +1434,7 @@ $dataIndex = match ($skema) {
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="form-group col-md-6 file-wrapper item-${valItem.id}">
                                     <label for="">${valItem.nama}</label>
                                     <div class="row file-input">
