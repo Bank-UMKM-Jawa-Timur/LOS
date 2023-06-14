@@ -1442,35 +1442,6 @@ class PengajuanKreditController extends Controller
     // get detail jawaban dan skor pengajuan
     public function getDetailJawaban($id)
     {
-        // $utilityController = new UtilityController;
-        // $mainItem = ItemModel::select('id', 'nama', 'level')->where('level', 1)->get();
-        // foreach ($mainItem as $main) {
-        //     if ($main->nama == 'Data Umum') {
-        //         $columns = $utilityController->getColumnNameOfTable("calon_nasabah", ['id','created_at', 'updated_at', 'pengajuan_id']);
-        //         $totalColumn = $utilityController->getTotalColumnsOfTable("calon_nasabah", ['id','created_at', 'updated_at', 'pengajuan_id']);
-        //         $main->total_item = (int) $totalColumn;
-        //         $main->item = $columns;
-        //     }
-        //     else {
-        //         $item = [];
-        //         $itemLev2 = ItemModel::select('id', 'nama')->where('level', '2')->where('id_parent', $main->id)->get();
-        //         foreach ($itemLev2 as $value) {
-        //             array_push($item, $value->id.";".$value->nama);
-        //             $itemLev3 = ItemModel::select('id', 'nama')->where('level', '3')->where('id_parent', $value->id)->get();
-        //             foreach ($itemLev3 as $value3) {
-        //                 array_push($item, $value3->id.";".$value3->nama);
-        //                 $itemLev4 = ItemModel::select('id', 'nama')->where('level', '4')->where('id_parent', $value3->id)->get();
-        //                 foreach ($itemLev4 as $value4) {
-        //                     array_push($item, $value4->id.";".$value4->nama);
-        //                 }
-        //             }
-        //         }
-        //         $main->total_item = $item ? count($item) : 0;
-        //         $main->item = $item;
-        //     }
-        // }
-        // return $mainItem;
-
         if (auth()->user()->role == 'Penyelia Kredit') {
             $param['pageTitle'] = "Dashboard";
             $param['dataAspek'] = ItemModel::where('level', 1)->where('nama', '!=', 'Data Umum')->get();
