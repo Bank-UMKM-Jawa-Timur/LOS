@@ -543,7 +543,16 @@
                                                     @endphp
                                                     @foreach ($dataDetailJawabanText as $itemTextEmpat)
                                                         <tr>
-                                                            <td style="width: 30%; padding-top: 1px">{{ $itemTextEmpat->nama }}</td>
+                                                            <td style="width: 40%; padding-top: 1px">{{ $itemTextEmpat->nama }}</td>
+                                                            <td style="width: 5%; padding-top: 1px;">:</td>
+                                                            <td style="padding-top: 1px;">
+                                                                @if (is_numeric($itemTextEmpat->opsi_text))
+                                                                    {{ "Rp " . number_format($itemTextEmpat->opsi_text,2,',','.') }}
+                                                                @else
+                                                                    Rp 0 
+                                                                @endif
+                                                            </td>
+                                                            {{-- <td style="width: 5%; padding-top: 1px">{{ $itemTextEmpat->nama }}</td>
                                                             <td style="width: 3%; padding-top: 1px">:</td>
                                                             <td style="width: 3%; padding-top: 1px">
                                                                 @if (is_numeric($itemTextEmpat->opsi_text))
@@ -551,7 +560,7 @@
                                                                 @else
                                                                     Rp 0 
                                                                 @endif
-                                                            </td>
+                                                            </td> --}}
                                                         </tr>
                                                     @endforeach
                                                 @endif
