@@ -628,7 +628,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
             @endphp
             {{-- level level 2 --}}
 
-            <div class="form-wizard $key" data-index='{{ $key }}' data-done='true'>
+            <div class="form-wizard {{$key}}" data-index='{{ $key }}' data-done='true'>
                 <div class="">
                     @foreach ($dataLevelDua as $item)
                         @if ($item->opsi_jawaban != 'option')
@@ -1281,8 +1281,9 @@ $dataIndex = match ($dataUmum->skema_kredit) {
         @endif
         
         var jumlahData = $('#jumlahData').val();
-        for (let index = 0; index <= jumlahData; index++) {
-            for (let index = 0; index <= parseInt(jumlahData); index++) {
+        console.log('Jumlah data : '+jumlahData);
+        for (let index = 0; index <= parseInt(jumlahData); index++) {
+            // for (let index = 0; index <= parseInt(jumlahData); index++) {
                 var selected = index == parseInt(jumlahData) ? ' selected' : ''
                 $(".side-wizard li[data-index='" + index + "']").addClass('active' + selected)
                 $(".side-wizard li[data-index='" + index + "'] a span i").removeClass('fa fa-ban')
@@ -1290,7 +1291,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                         ".side-wizard li[data-index='" + index + "'] a span i").html() == '0%') {
                     $(".side-wizard li[data-index='" + index + "'] a span i").html('0%')
                 }
-            }
+            // }
 
             var form = ".form-wizard[data-index='" + index + "']"
 
@@ -1324,30 +1325,45 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 }
             })
 
-            var ttlInput = 0;
-            var ttlInputFilled = 0;
-            $.each(input, function(i, v) {
-                ttlInput++
-                if (v.value != '') {
-                    ttlInputFilled++
-                }
-            })
             if (index == 1) {
                 var allInput = ttlInput - 1
                 var allInputFilled = ttlInputFilled
             }
-            else if (index == 3 || index == 5) {
+            else if (index == 2) {
+                if (ttlInput == 6 && ttlInputFilled == 3) {
+                    var allInput = 6;
+                    var allInputFilled = 6;
+                }
+                else {
+                    var allInput = ttlInput;
+                    var allInputFilled = ttlInputFilled;
+                }
+            }
+            else if (index == 3) {
+                var allInput = ttlInput - 3
+                var allInputFilled = ttlInputFilled
+            }
+            else if (index == 4) {
+                var allInput = ttlInput
+                var allInputFilled = ttlInputFilled
+            }
+            else if (index == 5) {
                 var allInput = ttlInput - 2
+                var allInputFilled = ttlInputFilled
+            }
+            else if (index == 6) {
+                var allInput = ttlInput - 1
                 var allInputFilled = ttlInputFilled
             }
             else{
                 var allInput = ttlInput
                 var allInputFilled = ttlInputFilled
             }
-            console.log(ttlInput);
-            console.log(ttlInputFilled);
 
             var percentage = parseInt(allInputFilled / allInput * 100);
+            percentage = percentage.isNan ? 0 : percentage;
+            percentage = percentage > 100 ? 100 : percentage;
+            
             if (index == 7) {
                 if ($("textarea[name=komentar_penyelia_keseluruhan]").val() == '') {
                     $(".side-wizard li[data-index='" + index + "'] a span i").html("0%")
@@ -1361,6 +1377,14 @@ $dataIndex = match ($dataUmum->skema_kredit) {
             // $(".side-wizard li[data-index='"+index+"'] input.answer").val(allInput);
             // $(".side-wizard li[data-index='"+index+"'] input.answerFilled").val(allInputFilled);
         }
+
+        $('textarea[name=komentar_penyelia_keseluruhan]').on('change', function() {
+            if ($("textarea[name=komentar_penyelia_keseluruhan]").val() == '') {
+                $(".side-wizard li[data-index=7] a span i").html("0%")
+            } else {
+                $(".side-wizard li[data-index=7] a span i").html("100%")
+            }
+        })
 
         function cekBtn() {
             var indexNow = $(".form-wizard.active").data('index')
