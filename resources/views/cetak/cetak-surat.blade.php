@@ -192,21 +192,25 @@
                                         <tr>
                                             <td style="width: 40%; padding-left: 33px">{{  $item->nama }}(Perbulan)</td>
                                             <td>:</td>
-                                            @if (gettype($itemModal->opsi_text) == 'string')
-                                                Rp 0
-                                            @else
-                                                {{ "Rp " . number_format($itemModal->opsi_text,2,',','.') }}
-                                            @endif
+                                            <td>
+                                                @if (is_numeric($itemTextDua->opsi_text))
+                                                    {{ "Rp " . number_format($itemTextDua->opsi_text,2,',','.') }}
+                                                @else
+                                                    Rp 0 
+                                                @endif
+                                            </td>
                                         </tr>
                                     @else
                                         <tr>
                                             <td style="width: 40%; padding-left: 33px">{{  $item->nama }}</td>
                                             <td>:</td>
-                                            @if (gettype($itemModal->opsi_text) == 'string')
-                                                Rp 0
-                                            @else
-                                                {{ "Rp " . number_format($itemModal->opsi_text,2,',','.') }}
-                                            @endif
+                                           <td>
+                                                @if (is_numeric($itemTextDua->opsi_text))
+                                                    {{ "Rp " . number_format($itemTextDua->opsi_text,2,',','.') }}
+                                                @else
+                                                    Rp 0 
+                                                @endif
+                                            </td>
                                         </tr>
                                     @endif    
                                 @endif
@@ -275,10 +279,10 @@
                                                 <td style="width: 40%; vertical-align: top">{{$itemModal->nama}}</td>
                                                 <td>:</td>
                                                 <td>
-                                                    @if (gettype($itemModal->opsi_text) == 'string')
-                                                        Rp 0
-                                                    @else
+                                                    @if (is_numeric($itemModal->opsi_text))
                                                         {{ "Rp " . number_format($itemModal->opsi_text,2,',','.') }}
+                                                    @else
+                                                        Rp 0
                                                     @endif
                                                 </td>
                                             </tr>
@@ -539,13 +543,15 @@
                                                     @endphp
                                                     @foreach ($dataDetailJawabanText as $itemTextEmpat)
                                                         <tr>
-                                                            <td style="width: 40%; padding-top: 1px">{{ $itemEmpat->nama }}</td>
+                                                            <td style="width: 30%; padding-top: 1px">{{ $itemTextEmpat->nama }}</td>
                                                             <td style="width: 3%; padding-top: 1px">:</td>
-                                                            @if (gettype($itemModal->opsi_text) == 'string')
-                                                                Rp 0
-                                                            @else
-                                                                {{ "Rp " . number_format($itemModal->opsi_text,2,',','.') }}
-                                                            @endif
+                                                            <td style="width: 3%; padding-top: 1px">
+                                                                @if (is_numeric($itemTextEmpat->opsi_text))
+                                                                    {{ "Rp " . number_format($itemTextEmpat->opsi_text,2,',','.') }}
+                                                                @else
+                                                                    Rp 0 
+                                                                @endif
+                                                            </td>
                                                         </tr>
                                                     @endforeach
                                                 @endif
@@ -659,6 +665,9 @@
                         @endforeach
                     
                     @else
+                    @php
+                        $noTiga = 0;
+                    @endphp
                         @foreach ($dataLevelTiga as $keyTiga => $itemTiga)
                             @if ($itemTiga->opsi_jawaban == 'input text')
                                 @php
@@ -666,21 +675,29 @@
                                                                                             ->join('item','jawaban_text.id_jawaban','item.id')
                                                                                             ->where('jawaban_text.id_pengajuan',$dataUmum->id)->where('jawaban_text.id_jawaban',$itemTiga->id)->get();
                                 @endphp
-                                @foreach ($dataDetailJawabanText as $itemTextTiga)
-                                    @if ($itemTiga->nama == 'NIB' || $itemTiga->nama == 'Surat Keterangan Usaha')
+                                @if(count($dataDetailJawabanText) != 0)
+                                    @foreach ($dataDetailJawabanText as $itemTextTiga)
+                                        @if ($itemTiga->nama == 'NIB' || $itemTiga->nama == 'Surat Keterangan Usaha')
+                                            <tr>
+                                                <td style="width: 40%; padding-left: 33px">Ijin Usaha</td>
+                                                <td>: </td>
+                                                <td>{{ $itemTiga->nama }} No. {{ $itemTextTiga->opsi_text }}</td>
+                                            </tr>
+                                        @else    
+                                            <tr>
+                                                <td style="width: 40%; padding-left: 33px">asd</td>
+                                                <td>: </td>
+                                                <td>{{ $itemTextTiga->opsi_text }}</td>
+                                            </tr>
+                                        @endif
+                                    @endforeach
+                                @else
+                                    @if ($noTiga++ == 0)
                                         <tr>
-                                            <td style="width: 40%; padding-left: 33px">Ijin Usaha</td>
-                                            <td>: </td>
-                                            <td>{{ $itemTiga->nama }} No. {{ $itemTextTiga->opsi_text }}</td>
-                                        </tr>
-                                    @else    
-                                        <tr>
-                                            <td style="width: 40%; padding-left: 33px">{{  $itemTiga->nama }}</td>
-                                            <td>: </td>
-                                            <td>{{ $itemTextTiga->opsi_text }}</td>
+                                            <td style="width: 40%; padding-left: 33px">Tidak ada legalitas usaha</td>
                                         </tr>
                                     @endif
-                                @endforeach
+                                @endif
                             @endif
                             @php
                                 // check  jawaban level tiga
@@ -758,37 +775,40 @@
                     $pendapatperaspek = \App\Models\PendapatPerAspek::select('*')->where('id_pengajuan', $dataUmum->id)->where('id_aspek', $itemAspek->id)->get();
                 @endphp
                 @foreach ($pendapatperaspek as $pendapatuser)
-                    @if ($pendapatuser->id_staf != null)
-                        <tr>
-                            <td style="width: 40%; padding: 20px 0px 10px 33px; vertical-align: top">KESIMPULAN STAFF</td>
-                            <td style="padding: 20px 0px 10px 0px; vertical-align: top">:</td>
-                            <td style="padding: 20px 0px 10px 0px; vertical-align: top">{{$pendapatuser->pendapat_per_aspek}}</td>
-                        </tr>
-                    @elseif ($pendapatuser->id_penyelia != null)
-                        <tr>
-                            <td style="width: 40%; padding: 0px 0px 10px 33px; vertical-align: top">KESIMPULAN PENYELIA</td>
-                            <td style="padding: 0px 0px 10px 0px; vertical-align: top">:</td>
-                            <td style="padding: 0px 0px 10px 0px; vertical-align: top">{{$pendapatuser->pendapat_per_aspek}}</td>
-                        </tr>
-                    @elseif ($pendapatuser->id_pbo != null)
-                        <tr>
-                            <td style="width: 40%; padding: 0px 0px 10px 33px; vertical-align: top">KESIMPULAN PBO</td>
-                            <td style="padding: 0px 0px 10px 0px; vertical-align: top">:</td>
-                            <td style="padding: 0px 0px 10px 0px; vertical-align: top">{{$pendapatuser->pendapat_per_aspek}}</td>
-                        </tr>
-                    @elseif ($pendapatuser->id_pbp != null)
-                        <tr>
-                            <td style="width: 40%; padding: 0px 0px 10px 33px; vertical-align: top">KESIMPULAN PBP</td>
-                            <td style="padding: 0px 0px 10px 0px; vertical-align: top">:</td>
-                            <td style="padding: 0px 0px 10px 0px; vertical-align: top">{{$pendapatuser->pendapat_per_aspek}}</td>
-                        </tr>
-                    @elseif ($pendapatuser->id_pincab != null)
-                        <tr>
-                            <td style="width: 40%; padding: 20px 0px 20px 33px; vertical-align: top">KESIMPULAN PINCAB</td>
-                            <td style="padding: 20px 0px 20px 0px; vertical-align: top">:</td>
-                            <td style="padding: 20px 0px 20px 0px; vertical-align: top">{{$pendapatuser->pendapat_per_aspek}}</td>
-                        </tr>
+                    {{-- @if()
+                    @else --}}
+                        @if ($pendapatuser->id_staf != null)
+                            <tr>
+                                <td style="width: 40%; padding: 20px 0px 10px 33px; vertical-align: top">KESIMPULAN STAFF</td>
+                                <td style="padding: 20px 0px 10px 0px; vertical-align: top">:</td>
+                                <td style="padding: 20px 0px 10px 0px; vertical-align: top">{{$pendapatuser->pendapat_per_aspek}}</td>
+                            </tr>
+                        @elseif ($pendapatuser->id_penyelia != null)
+                            <tr>
+                                <td style="width: 40%; padding: 0px 0px 10px 33px; vertical-align: top">KESIMPULAN PENYELIA</td>
+                                <td style="padding: 0px 0px 10px 0px; vertical-align: top">:</td>
+                                <td style="padding: 0px 0px 10px 0px; vertical-align: top">{{$pendapatuser->pendapat_per_aspek}}</td>
+                            </tr>
+                        @elseif ($pendapatuser->id_pbo != null)
+                            <tr>
+                                <td style="width: 40%; padding: 0px 0px 10px 33px; vertical-align: top">KESIMPULAN PBO</td>
+                                <td style="padding: 0px 0px 10px 0px; vertical-align: top">:</td>
+                                <td style="padding: 0px 0px 10px 0px; vertical-align: top">{{$pendapatuser->pendapat_per_aspek}}</td>
+                            </tr>
+                        @elseif ($pendapatuser->id_pbp != null)
+                            <tr>
+                                <td style="width: 40%; padding: 0px 0px 10px 33px; vertical-align: top">KESIMPULAN PBP</td>
+                                <td style="padding: 0px 0px 10px 0px; vertical-align: top">:</td>
+                                <td style="padding: 0px 0px 10px 0px; vertical-align: top">{{$pendapatuser->pendapat_per_aspek}}</td>
+                            </tr>
+                        @elseif ($pendapatuser->id_pincab != null)
+                            <tr>
+                                <td style="width: 40%; padding: 20px 0px 20px 33px; vertical-align: top">KESIMPULAN PINCAB</td>
+                                <td style="padding: 20px 0px 20px 0px; vertical-align: top">:</td>
+                                <td style="padding: 20px 0px 20px 0px; vertical-align: top">{{$pendapatuser->pendapat_per_aspek}}</td>
+                            </tr>
 
+                        {{-- @endif --}}
                     @endif
                 @endforeach
             @else
@@ -864,7 +884,7 @@
         header("Content-Disposition: attachment; filename=$name");
     @endphp
 @else
-    <script>
+    {{-- <script>
         window.print()
-    </script>
+    </script> --}}
 @endif
