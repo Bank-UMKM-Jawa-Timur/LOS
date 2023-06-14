@@ -567,7 +567,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                         <option value="">-- Pilih Ijin Usaha --</option>
                                             <option value="nib" {{ ($dataIjin?->nama == 'NIB') ? 'selected' : '' }}>NIB</option>
                                             <option value="surat_keterangan_usaha" {{ ($dataIjin?->nama == 'Surat Keterangan Usaha') ? 'selected' : '' }}>Surat Keterangan Usaha</option>
-                                            <option value="tidak_ada_legalitas_usaha" {{ ($dataIjin?->nama == 'Tidak Ada Legalitas Usaha') ? 'selected' : '' }}>Tidak Ada Legalitas Usaha</option>
+                                            <option value="tidak_ada_legalitas_usaha" {{ (!$dataIjin) ? 'selected' : '' }}>Tidak Ada Legalitas Usaha</option>
                                     </select>
                                 </div>
                             </div>
@@ -587,7 +587,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                 <div class="form-group col-md-6" id="docNIB">
                                     @php
                                         $jawabanDokNIB = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
-                                                        ->where('id_jawaban', 153)
+                                                        ->where('id_jawaban', $itemNIB->id)
                                                         ->first();
                                     @endphp
                                     <label for="">Dokumen NIB</label>
@@ -622,7 +622,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                 <div class="form-group col-md-6" id="docSKU">
                                     @php
                                         $jawabanDokSKU = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
-                                                        ->where('id_jawaban', 157)
+                                                        ->where('id_jawaban', $itemSKU->id)
                                                         ->first();
                                     @endphp
                                     <label for="">Surat Keterangan Usaha</label>
@@ -660,7 +660,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                 <div class="form-group col-md-6" id="docNPWP">
                                     @php
                                         $jawabanDokNPWP = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
-                                                        ->where('id_jawaban', 154)
+                                                        ->where('id_jawaban', $itemNPWP->id)
                                                         ->first();
                                     @endphp
                                     <label for="">Dokumen NPWP</label>
