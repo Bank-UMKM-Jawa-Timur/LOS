@@ -884,7 +884,7 @@
         header("Content-Disposition: attachment; filename=$name");
     @endphp
 @else
-    {{-- <script>
+    <script>
         window.print()
-    </script> --}}
+    </script>
 @endif
