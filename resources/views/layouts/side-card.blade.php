@@ -1,15 +1,15 @@
 @php
-$dataUmum = isset($dataUmum) ? $dataUmum : null;
-
-$dataIndex = match ($skema ?? $dataUmum) {
-    'PKPJ' => 1,
-    'KKB' => 2,
-    'Talangan Umroh' => 1,
-    'Prokesra' => 1,
-    'Kusuma' => 1,
-    null => 1,
-    default => 1
-};
+    $dataUmum = isset($dataUmum) ? $dataUmum : null;
+    
+    $dataIndex = match ($skema ?? $dataUmum) {
+        'PKPJ' => 1,
+        'KKB' => 2,
+        'Talangan Umroh' => 1,
+        'Prokesra' => 1,
+        'Kusuma' => 1,
+        null => 1,
+        default => 1,
+    };
 @endphp
 <div class="row">
     @if (Auth::user()->role != 'Pincab')
@@ -23,7 +23,7 @@ $dataIndex = match ($skema ?? $dataUmum) {
                         <a href="#"><span><i>0%</i></span> Data Umum</a>
                         {{--  <a href="#"><span><i>{{ array_key_exists(0, $dataAnswer) ? $dataAnswer[0]['percentage'] : 0 }}%</i></span> Data Umum</a>  --}}
                     </li>
-                    @if(($skema ?? $dataUmum?->skema_kredit) == 'KKB')
+                    @if (($skema ?? $dataUmum?->skema_kredit) == 'KKB')
                         <li class="data-po-label"><label>DATA PO</label></li>
                         <li data-index='1'>
                             <input type="hidden" name="answer" class="answer">
@@ -44,7 +44,8 @@ $dataIndex = match ($skema ?? $dataUmum) {
                             {{--  <a href="#"><span><i>{{ array_key_exists($key, $dataAnswer) ? $dataAnswer[$key]['percentage'] : 0 }}%</i></span>{{$value->nama}}</a>  --}}
                         </li>
                     @endforeach
-                    <li><label> PENDAPAT dan USULAN STAF/ANALIS KREDIT</label></li>
+                    <br>
+                    <li><label> PENDAPAT dan USULAN</label></li>
                     <li class="last" data-index='{{ count($dataAspek) + $dataIndex }}'>
                         <input type="hidden" name="answer" class="answer">
                         <input type="hidden" name="answerFilled" class="answerFilled">
