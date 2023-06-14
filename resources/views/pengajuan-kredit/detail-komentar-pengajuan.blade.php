@@ -166,7 +166,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                         $ktpNasabah = \DB::table('jawaban_text')
                                         ->select('id', 'id_jawaban', 'opsi_text')
                                         ->where('id_pengajuan', $dataUmum->id)
-                                        ->where('id_jawaban', 158)
+                                        ->where('id_jawaban', 156)
                                         ->first();
                     @endphp
                     @if ($ktpSuami && $ktpIstri)
@@ -1335,7 +1335,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                                     alt="" width="700px">
                                                             @endif
                                                             {{-- Rupiah data empat --}}
-                                                            @elseif ($itemEmpat->opsi_jawaban == 'number')
+                                                            @elseif ($itemEmpat->opsi_jawaban == 'number' && $itemEmpat->id != 130)
                                                                 <p class="badge badge-info text-lg"><b>
                                                                         Rp.
                                                                         {{ number_format((int) $itemTextEmpat->opsi_text, 2, ',', '.') }}
@@ -1345,6 +1345,11 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                                 <input type="text" readonly
                                                                     class="form-control-plaintext font-weight-bold" id="staticEmail"
                                                                     value="{{ $itemEmpat->nama . '       : ' . $itemTextEmpat->opsi_text }} {{$itemEmpat->opsi_jawaban == 'persen' ? '%' : ''}}">
+                                                                <input type="hidden" name="id[]" value="{{ $itemAspek->id }}">
+                                                            @elseif ($itemEmpat->id == 130)
+                                                                <input type="text" readonly
+                                                                    class="form-control-plaintext font-weight-bold" id="staticEmail"
+                                                                    value="{{$itemEmpat->opsi_jawaban.' Tahun'}}">
                                                                 <input type="hidden" name="id[]" value="{{ $itemAspek->id }}">
                                                             @else
                                                                 <input type="text" readonly
