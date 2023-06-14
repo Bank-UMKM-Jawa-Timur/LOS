@@ -1264,7 +1264,7 @@ $dataIndex = match ($skema) {
             if (kabID) {
                 $.ajax({
                     type: "GET",
-                    url: "{{ getKecamatan }}?kabID=" + kabID,
+                    url: "{{ route('getKecamatan') }}?kabID=" + kabID,
                     dataType: 'JSON',
                     success: function(res) {
                         //    console.log(res);
