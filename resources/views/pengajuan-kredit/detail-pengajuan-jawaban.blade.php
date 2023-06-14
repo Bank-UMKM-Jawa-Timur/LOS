@@ -1465,7 +1465,7 @@
                     $(".side-wizard li[data-index='" + index + "'] a span i").html("100%")
                 }
             } else {
-                $(".side-wizard li[data-index='" + index + "'] a span i").html(isNaN(percentage) ? 0 + "%" : percentage +
+                $(".side-wizard li[data-index='" + index + "'] a span i").html(Number.isNan(percentage) ? 0 + "%" : percentage +
                     "%")
             }
             // $(".side-wizard li[data-index='"+index+"'] input.answer").val(allInput);
