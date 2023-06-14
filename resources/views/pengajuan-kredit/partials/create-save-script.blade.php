@@ -34,6 +34,8 @@
                 }
             })
         }
+
+        cekValueKosong(dataIndex);
     });
 
     function sendFile(dataIndex){

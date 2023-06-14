@@ -25,6 +25,9 @@
 
     $('.btn-next').click(function(e) {
         if($('#wizard-data-umum').hasClass('active')) saveDataUmum();
+        let dataIndex = $(".form-wizard.active").attr("data-index");
+
+        cekValueKosong(dataIndex);
     });
 
     $('body').on('change', 'input[type=file]', function(e) {

@@ -593,6 +593,12 @@ class PengajuanKreditController extends Controller
                 $dataJawabanText->save();
             }
 
+            $dataJawabanText = new JawabanTextModel;
+            $dataJawabanText->id_pengajuan = $id_pengajuan;
+            $dataJawabanText->id_jawaban = 110;
+            $dataJawabanText->opsi_text = $request->kategori_jaminan_tambahan;
+            $dataJawabanText->save();
+
             // Data KKB Handler
             if ($request->skema_kredit == 'KKB') {
                 DB::table('data_po')
@@ -967,6 +973,7 @@ class PengajuanKreditController extends Controller
             $updateData->id_desa = $request->desa;
             $updateData->id_kecamatan = $request->kec;
             $updateData->id_kabupaten = $request->kabupaten;
+            $updateData->tenor_yang_diminta = $request->tenor_yang_diminta;
             $updateData->save();
             $id_calon_nasabah = $updateData->id;
 
@@ -976,6 +983,17 @@ class PengajuanKreditController extends Controller
             $finalArray = array();
             $finalArray_text = array();
             $rata_rata = array();
+            if(!isset($request->id_kategori_jaminan_tambahan)){
+                $dataJawabanText = new JawabanTextModel;
+                $dataJawabanText->id_jawaban = 110;
+                $dataJawabanText->id_pengajuan = $id_pengajuan;
+                $dataJawabanText->opsi_text = $request->kategori_jaminan_tambahan;
+                $dataJawabanText->save();
+            } else{
+                $dataJawabanText = JawabanTextModel::find($request->id_kategori_jaminan_tambahan);
+                $dataJawabanText->opsi_text = $request->kategori_jaminan_tambahan;
+                $dataJawabanText->save();
+            }
 
             if (count($request->file()) > 0) {
                 foreach ($request->file('update_file') as $key => $value) {

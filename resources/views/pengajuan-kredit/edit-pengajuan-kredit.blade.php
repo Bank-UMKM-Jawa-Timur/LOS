@@ -369,7 +369,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                         class="form-control select2 @error('tenor_yang_diminta') is-invalid @enderror" required>
                         <option value="">-- Pilih Tenor --</option>
                         @for ($i = 1; $i <= 10; $i++)
-                            <option value="{{ $i }}" {{ ($dataUmum->tenor_yang_diminta) ? 'selected' : '' }}> {{ $i . ' tahun' }} </option>
+                            <option value="{{ $i }}" {{ ($i == $dataUmum->tenor_yang_diminta) ? 'selected' : '' }}> {{ $i . ' tahun' }} </option>
                         @endfor
                     </select>
                     @error('tenor_yang_diminta')
@@ -912,22 +912,19 @@ $dataIndex = match ($dataUmum->skema_kredit) {
 
                                     </div> --}}
                                 @elseif ($itemTiga->nama == 'Kategori Jaminan Tambahan')
+                                    @php
+                                        $getJaminanTambahan = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)->where('id_jawaban', 110)->first();
+                                    @endphp
                                     <div class="form-group col-md-6">
+                                        <input type="hidden" name="id_kategori_jaminan_tambahan" value="{{ $getJaminanTambahan?->id ?? null }}">
                                         <label for="">{{ $itemTiga->nama }}</label>
                                         <select name="kategori_jaminan_tambahan" id="kategori_jaminan_tambahan"
                                             class="form-control" required>
-                                            <option value="">-- Pilih Kategori Jaminan Tambahan --</option>
-                                            <option value="Tidak Memiliki Jaminan Tambahan" {{ (count($detailJawabanOptionTambahan) == 0 || count($jaminanTambahan) || 0) ? 'selected' : null }}>Tidak Memiliki Jaminan Tambahan</option>
-                                            @if (count($detailJawabanOptionTambahan) > 0)
-                                                <option value="Tanah" {{ ($detailJawabanOptionTambahan[0]->id_jawaban == 145 || $detailJawabanOptionTambahan[0]->id_jawaban == 146) ? 'selected' : '' }}>Tanah</option>
-                                                <option value="Tanah dan Bangunan" {{ ($detailJawabanOptionTambahan[0]->id_jawaban == 150 || $detailJawabanOptionTambahan[0]->id_jawaban == 151) ? 'selected' : '' }}>Tanah dan Bangunan</option>
-                                            @elseif(count($jaminanTambahan) > 0)
-                                                <option value="Kendaraan Bermotor" {{ ($jaminanTambahan[0]->id_item == 118 ) ? 'selected' : '' }}>Kendaraan Bermotor</option>
-                                            @else
-                                                <option value="Tanah" >Tanah</option>
-                                                <option value="Tanah dan Bangunan">Tanah dan Bangunan</option>
-                                                <option value="Kendaraan Bermotor">Kendaraan Bermotor</option>
-                                            @endif
+                                            <option value="" {{ (!$getJaminanTambahan) ? 'selected' : '' }}>-- Pilih Kategori Jaminan Tambahan --</option>
+                                            <option value="Tidak Memiliki Jaminan Tambahan" {{ ($getJaminanTambahan?->opsi_text == 'Tidak Memiliki Jaminan Tambahan') ? 'selected' : '' }}>Tidak Memiliki Jaminan Tambahan</option>
+                                            <option value="Tanah" {{ ($getJaminanTambahan?->opsi_text == 'Tanah') ? 'selected' : '' }}>Tanah</option>
+                                            <option value="Kendaraan Bermotor" {{ ($getJaminanTambahan?->opsi_text == 'Kendaraan Bermotor') ? 'selected' : '' }}>Kendaraan Bermotor</option>
+                                            <option value="Tanah dan Bangunan" {{ ($getJaminanTambahan?->opsi_text == 'Tanah dan Bangunan') ? 'selected' : '' }}>Tanah dan Bangunan</option>
                                         </select>
                                         {{-- <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
                                         <input type="hidden" name="opsi_jawaban[]" value="{{ $itemTiga->opsi_jawaban }}"
@@ -2017,6 +2014,14 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                         }
                     })
                     }
+
+                if(kategoriJaminan == "Tidak Memiliki Jaminan Tambahan"){
+                    $("#select_kategori_jaminan_tambahan").hide()
+                    $("#itemByKategori").val('0-188')
+                    $("#bukti_pemilikan_jaminan_tambahan").empty()
+                } else{
+                    $("#select_kategori_jaminan_tambahan").show()
+                }
             }
         });
     }
