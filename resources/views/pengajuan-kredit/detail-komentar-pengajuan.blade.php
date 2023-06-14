@@ -152,6 +152,24 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                 value="{{ $dataNasabah->no_ktp }}">
                         </div>
                     </div>
+                    @php
+                        $ktpSuami = \DB::table('jawaban_text')
+                                        ->select('id', 'id_jawaban', 'opsi_text')
+                                        ->where('id_pengajuan', $dataUmum->id)
+                                        ->where('id_jawaban', 151)
+                                        ->first();
+                        $ktpIstri = \DB::table('jawaban_text')
+                                        ->select('id', 'id_jawaban', 'opsi_text')
+                                        ->where('id_pengajuan', $dataUmum->id)
+                                        ->where('id_jawaban', 152)
+                                        ->first();
+                        $ktpNasabah = \DB::table('jawaban_text')
+                                        ->select('id', 'id_jawaban', 'opsi_text')
+                                        ->where('id_pengajuan', $dataUmum->id)
+                                        ->where('id_jawaban', 158)
+                                        ->first();
+                    @endphp
+                    @if ($ktpSuami && $ktpIstri)
                     <div class="form-group row">
                         {{-- KTP Suami --}}
                         <label for="staticEmail" class="col-sm-3 col-form-label">KTP Suami</label>
@@ -164,11 +182,6 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                         </label>
                         <div class="col-sm-7">
                             @php
-                                $ktpSuami = \DB::table('jawaban_text')
-                                        ->select('id', 'id_jawaban', 'opsi_text')
-                                        ->where('id_pengajuan', $dataUmum->id)
-                                        ->where('id_jawaban', 151)
-                                        ->first();
                                 if ($ktpSuami) {
                                     $path = "../upload/$dataUmum->id/$ktpSuami->id_jawaban/$ktpSuami->opsi_text";
                                 }
@@ -192,11 +205,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                         </label>
                         <div class="col-sm-7">
                             @php
-                                $ktpIstri = \DB::table('jawaban_text')
-                                        ->select('id', 'id_jawaban', 'opsi_text')
-                                        ->where('id_pengajuan', $dataUmum->id)
-                                        ->where('id_jawaban', 152)
-                                        ->first();
+
                                 if ($ktpIstri) {
                                     $path = "../upload/$dataUmum->id/$ktpIstri->id_jawaban/$ktpIstri->opsi_text";
                                 }
@@ -208,6 +217,31 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                             @endif
                         </div>
                     </div>
+                    @elseif ($ktpNasabah)
+                    <div class="form-group row">
+                        {{-- KTP Nasabah --}}
+                        <label for="staticEmail" class="col-sm-3 col-form-label">KTP Nasabah</label>
+                        <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                            <div class="d-flex justify-content-end">
+                                <div style="width: 20px">
+                                    :
+                                </div>
+                            </div>
+                        </label>
+                        <div class="col-sm-7">
+                            @php
+                                if ($ktpNasabah) {
+                                    $path = "../upload/$dataUmum->id/$ktpNasabah->id_jawaban/$ktpNasabah->opsi_text";
+                                }
+                            @endphp
+                            @if ($ktpNasabah)
+                                <img src="{{ asset($path) }}" width="100%">
+                            @else
+                                Tidak ada foto ktp.
+                            @endif
+                        </div>
+                    </div>
+                    @endif
                     <hr>
                     <div class="form-group row">
                         {{-- Tempat tanggal lahir --}}
@@ -542,7 +576,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                             <label for="staticEmail" class="col-sm-1 col-form-label px-0">
                                 <div class="d-flex justify-content-end">
                                     <div style="width: 20px">
-                                        : 
+                                        :
                                     </div>
                                 </div>
                             </label>
@@ -672,7 +706,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                 @endphp
                                                 @if ($file_parts['extension'] == 'pdf')
                                                     <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" width="100%" height="700px"></iframe>
-                                                @else    
+                                                @else
                                                     <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="700px">
                                                 @endif
                                             @else
@@ -815,7 +849,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                     </div>
                                 @endif
                                 @if ($item->nama == 'Persentase Kebutuhan Kredit Opsi')
-                                
+
                                 @else
                                     <div class="row form-group sub pl-4">
                                         <label for="staticEmail" class="col-sm-3 col-form-label"></label>
@@ -858,7 +892,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                                     ->where('detail_komentar.id_komentar', $comment->id)
                                                                     ->where('detail_komentar.id_item', $item->id)
                                                                     ->where('detail_komentar.id_user', $comment->id_pbp)
-                                                                    ->get();    
+                                                                    ->get();
                                                             }
                                                         @endphp
                                                         @foreach ($dataDetailJawabanskor as $item)
@@ -886,7 +920,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                 <label for="staticEmail" class="col-sm-1 col-form-label px-0">
                                                     <div class="d-flex justify-content-end">
                                                         <div style="width: 20px">
-            
+
                                                         </div>
                                                     </div>
                                                 </label>
@@ -901,14 +935,14 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                             </div>
                                         @endforeach
                                     @endif
-                                    @if ($dataUmum->id_cabang == 1 && $getKomentarPBP != null)    
+                                    @if ($dataUmum->id_cabang == 1 && $getKomentarPBP != null)
                                         @foreach ($getKomentarPBP as $itemKomentarPBP)
                                             <div class="row form-group sub pl-4">
                                                 <label for="staticEmail" class="col-sm-3 col-form-label"></label>
                                                 <label for="staticEmail" class="col-sm-1 col-form-label px-0">
                                                     <div class="d-flex justify-content-end">
                                                         <div style="width: 20px">
-            
+
                                                         </div>
                                                     </div>
                                                 </label>
@@ -924,7 +958,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                         @endforeach
                                     @endif
                                     @if ($item->nama == 'Persentase Kebutuhan Kredit Opsi')
-                                        
+
                                     @else
                                         <hr>
                                     @endif
@@ -979,7 +1013,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                     @endphp
                                                     @if ($file_parts['extension'] == 'pdf')
                                                         <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTextTiga->id_jawaban . '/' . $itemTextTiga->opsi_text }}" width="100%" height="700px"></iframe>
-                                                    @else   
+                                                    @else
                                                         <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTextTiga->id_jawaban . '/' . $itemTextTiga->opsi_text }}" alt="" width="700px">
                                                     @endif
                                                 @else
@@ -1034,7 +1068,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                             </div>
                                         @endforeach
                                         @if ($itemTiga->nama == 'Ratio Coverage')
-                                            
+
                                         @else
                                             <hr>
                                         @endif
@@ -1058,10 +1092,10 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                 @if (count($dataJawabanLevelTiga) != 0)
                                     @if (!$itemTiga->is_hide)
                                         @if ($itemTiga->nama == 'Ratio Tenor Asuransi Opsi')
-                                            
+
                                         @else
                                             @if ( $itemTiga->nama == 'Ratio Coverage Opsi')
-                                                
+
                                             @else
                                                 <div class="row form-group sub pl-5">
                                                     <label for="staticEmail"
@@ -1194,7 +1228,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                     <label for="staticEmail" class="col-sm-1 col-form-label px-0">
                                                         <div class="d-flex justify-content-end">
                                                             <div style="width: 20px">
-    
+
                                                             </div>
                                                         </div>
                                                     </label>
@@ -1205,14 +1239,14 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                             </div>
                                                             <h6 class="font-italic">{{ $getKomentarPBO3->komentar ?? '' }}</h6>
                                                             {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
-    
+
                                                         </div>
                                                         {{-- <input type="text" readonly class="form-control-plaintext" id="komentar" value="{{ $itemKomentar3->komentar }}"> --}}
                                                     </div>
                                                 </div>
                                             @endif
-                                            @if ($dataUmum->id_cabang == 1 && $getKomentarPBP3 != null)    
-                                                @foreach ($getKomentarPBP3 as $itemKomentar3)    
+                                            @if ($dataUmum->id_cabang == 1 && $getKomentarPBP3 != null)
+                                                @foreach ($getKomentarPBP3 as $itemKomentar3)
                                                     <div class="row form-group sub pl-4">
                                                         <label for="staticEmail" class="col-sm-3 col-form-label"></label>
                                                         <label for="staticEmail" class="col-sm-1 col-form-label px-0">
@@ -1256,7 +1290,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                         ->where('komentar.id_pengajuan', $comment->id_pengajuan)
                                                         ->get();
                                                 @endphp
-                                                @if ($itemEmpat->id_parent == '95')    
+                                                @if ($itemEmpat->id_parent == '95')
                                                     <div class="row form-group sub pl-4">
                                                         <label for="staticEmail" class="col-sm-3 col-form-label font-weight-bold">Jaminan Utama</label>
                                                         {{-- @elseif ($itemEmpat->id_paret == '110')
@@ -1285,13 +1319,13 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                                 $filepath = "../upload/$dataUmum->id/$itemTextEmpat->id_jawaban/$itemTextEmpat->opsi_text";
                                                                 @endphp
                                                             @if ($file_parts['extension'] == 'pdf')
-                                                                <iframe src="{{ asset($filepath) }}" width="100%" height="700px"></iframe>    
-                                                            @else    
+                                                                <iframe src="{{ asset($filepath) }}" width="100%" height="700px"></iframe>
+                                                            @else
                                                                 <img src="{{ asset($filepath) }}"
                                                                     alt="" width="700px">
                                                             @endif
                                                         @else
-                                                            @if ($itemEmpat->id == 101)    
+                                                            @if ($itemEmpat->id == 101)
                                                                 <input type="text" readonly
                                                                     class="form-control-plaintext font-weight-bold" id="staticEmail"
                                                                     value="{{ $itemEmpat->nama . '       : ' . $itemTextEmpat->opsi_text }} {{$itemEmpat->opsi_jawaban == 'persen' ? '%' : ''}}">
@@ -1547,7 +1581,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                         </div>
                                                     @endif
                                                 @endif
-                                                @if ($dataUmum->id_cabang == 1 && $getKomentarPBP5 != null)    
+                                                @if ($dataUmum->id_cabang == 1 && $getKomentarPBP5 != null)
                                                     <div class="row form-group sub pl-4">
                                                         <label for="staticEmail" class="col-sm-3 col-form-label"></label>
                                                         <label for="staticEmail" class="col-sm-1 col-form-label px-0">
@@ -1675,7 +1709,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                 @endif
                             @endforeach
                         @endif
-                        @if ($dataUmum->id_cabang == 1)    
+                        @if ($dataUmum->id_cabang == 1)
                             @foreach ($pendapatUsulanPBP as $item)
                                 @if ($item->id_aspek == $itemAspek->id)
                                     <div class="alert alert-success ">
@@ -1765,7 +1799,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                             </div>
                         </div>
                     @endif
-                    @if ($dataUmum->id_cabang == 1)    
+                    @if ($dataUmum->id_cabang == 1)
                         <div class="alert alert-success">
                             <div class="form-group row sub mb-0">
                                 <label for="staticEmail" class="col-sm-3 col-form-label font-weight-bold">Pendapat
