@@ -525,7 +525,8 @@ class PengajuanKreditController extends Controller
         return view('pengajuan-kredit.tes-skor', $param);
     }
 
-    function countScore(Request $request) {
+    function countScore(Request $request)
+    {
         $mergedDataLevel = [];
         // item level 2
         $dataLev2 = $request->dataLevelDua;
@@ -547,12 +548,12 @@ class PengajuanKreditController extends Controller
         // item level 4
         $dataLev4 = $request->dataLevelEmpat;
         $mergedDataLevel = array_merge($dataLev2, $dataLev3, $dataLev4);
-        
+
         // sum score
         // return $mergedDataLevel;
         $totalScore = 0;
         $totalDataNull = 0;
-        for ($i=0; $i < count($mergedDataLevel); $i++) { 
+        for ($i = 0; $i < count($mergedDataLevel); $i++) {
             if ($mergedDataLevel[$i]) {
                 // jika data tersedia
                 $data = $this->getDataLevel($mergedDataLevel[$i]);
@@ -560,8 +561,7 @@ class PengajuanKreditController extends Controller
                     $totalScore += $data[0];
                 else
                     $totalDataNull++;
-            }
-            else {
+            } else {
                 $totalDataNull++;
             }
         }
@@ -604,8 +604,8 @@ class PengajuanKreditController extends Controller
             }
         } else {
         }
-    // return array_values($request->dataLevelTiga)[0];
-    //     return $this->getDataLevel(array_values($request->dataLevelTiga)[0]);
+        // return array_values($request->dataLevelTiga)[0];
+        //     return $this->getDataLevel(array_values($request->dataLevelTiga)[0]);
         // data level tiga
         if ($request->dataLevelTiga != null) {
             $data = $request->dataLevelTiga;
@@ -736,7 +736,7 @@ class PengajuanKreditController extends Controller
             $addData->status = $request->status;
             $addData->sektor_kredit = $request->sektor_kredit;
             $addData->jenis_usaha = $request->jenis_usaha;
-            $addData->jumlah_kredit = str_replace($find,"",$request->jumlah_kredit);
+            $addData->jumlah_kredit = str_replace($find, "", $request->jumlah_kredit);
             $addData->tenor_yang_diminta = $request->tenor_yang_diminta;
             $addData->tujuan_kredit = $request->tujuan_kredit;
             $addData->jaminan_kredit = $request->jaminan;
@@ -847,7 +847,7 @@ class PengajuanKreditController extends Controller
             // sum score
             $totalScore = 0;
             $totalDataNull = 0;
-            for ($i=0; $i < count($mergedDataLevel); $i++) { 
+            for ($i = 0; $i < count($mergedDataLevel); $i++) {
                 if ($mergedDataLevel[$i]) {
                     // jika data tersedia
                     $data = $this->getDataLevel($mergedDataLevel[$i]);
@@ -855,8 +855,7 @@ class PengajuanKreditController extends Controller
                         $totalScore += $data[0];
                     else
                         $totalDataNull++;
-                }
-                else {
+                } else {
                     $totalDataNull++;
                 }
             }
@@ -885,8 +884,7 @@ class PengajuanKreditController extends Controller
                             'id_jawaban' => $this->getDataLevel($mergedDataLevel[$i])[1],
                             'skor' => $this->getDataLevel($mergedDataLevel[$i])[0],
                         ]);
-                    }
-                    else {
+                    } else {
                         JawabanPengajuanModel::insert([
                             'id_pengajuan' => $id_pengajuan,
                             'id_jawaban' => $this->getDataLevel($mergedDataLevel[$i])[1],
@@ -1138,13 +1136,13 @@ class PengajuanKreditController extends Controller
             $finalArray = array();
             $finalArray_text = array();
             $rata_rata = array();
-            if(!isset($request->id_kategori_jaminan_tambahan)){
+            if (!isset($request->id_kategori_jaminan_tambahan)) {
                 $dataJawabanText = new JawabanTextModel;
                 $dataJawabanText->id_jawaban = 110;
                 $dataJawabanText->id_pengajuan = $id_pengajuan;
                 $dataJawabanText->opsi_text = $request->kategori_jaminan_tambahan;
                 $dataJawabanText->save();
-            } else{
+            } else {
                 $dataJawabanText = JawabanTextModel::find($request->id_kategori_jaminan_tambahan);
                 $dataJawabanText->opsi_text = $request->kategori_jaminan_tambahan;
                 $dataJawabanText->save();
@@ -1584,8 +1582,7 @@ class PengajuanKreditController extends Controller
                         array_push($finalArray, [
                             'skor_pbp' => $value
                         ]);
-                    }
-                    else {
+                    } else {
                         $totalDataNull++;
                     }
                 };
@@ -1611,8 +1608,7 @@ class PengajuanKreditController extends Controller
                                 'skor_pbp' => $request->get('skor_pbp')[$key]
                             ]);
                     }
-                }
-                else {
+                } else {
                     foreach ($request->get('id_option') as $key => $value) {
                         JawabanPengajuanModel::where('id_jawaban', $value)->where('id_pengajuan', $request->get('id_pengajuan'))
                             ->update([
@@ -1624,8 +1620,7 @@ class PengajuanKreditController extends Controller
                 $updateData->status = $status;
                 if ($role == 'PBP') {
                     $updateData->average_by_pbp = $result;
-                }
-                else {
+                } else {
                     $updateData->average_by_pbo = $result;
                 }
                 $updateData->update();
@@ -1639,8 +1634,7 @@ class PengajuanKreditController extends Controller
                             'updated_at' => date('Y-m-d H:i:s')
                         ]
                     );
-                }
-                else {
+                } else {
                     KomentarModel::where('id', $idKomentar->id)->update(
                         [
                             'komentar_pbo' => $request->komentar_pbp_keseluruhan,
@@ -1681,8 +1675,7 @@ class PengajuanKreditController extends Controller
                             $pendapatperaspekpenyelia->pendapat_per_aspek = $_POST['pendapat_per_aspek'][$key];
                             $pendapatperaspekpenyelia->save();
                         }
-                    }
-                    else {
+                    } else {
                         foreach ($request->get('id_aspek') as $key => $value) {
                             $pendapatperaspekpenyelia = PendapatPerAspek::where('id_pengajuan', $request->get('id_pengajuan'))->where('id_aspek', $value)->where('id_pbo', Auth::user()->id)->first();
                             $pendapatperaspekpenyelia->pendapat_per_aspek = $_POST['pendapat_per_aspek'][$key];
@@ -1699,8 +1692,7 @@ class PengajuanKreditController extends Controller
                             $pendapatperaspekpenyelia->pendapat_per_aspek = $request->get('pendapat_per_aspek')[$key];
                             $pendapatperaspekpenyelia->save();
                         }
-                    }
-                    else {
+                    } else {
                         foreach ($request->get('id_aspek') as $key => $value) {
                             $pendapatperaspekpenyelia = new PendapatPerAspek;
                             $pendapatperaspekpenyelia->id_pengajuan = $request->get('id_pengajuan');
@@ -1729,8 +1721,7 @@ class PengajuanKreditController extends Controller
                         array_push($finalArray, [
                             'skor_penyelia' => $value
                         ]);
-                    }
-                    else {
+                    } else {
                         $totalDataNull++;
                     }
                 };
@@ -1843,9 +1834,9 @@ class PengajuanKreditController extends Controller
                 $dataPenyelia = PengajuanModel::find($id);
                 $status = $dataPenyelia->status;
                 $userPBO = User::select('id')
-                                ->where('id_cabang', $dataPenyelia->id_cabang)
-                                ->where('role', 'PBO')
-                                ->first();
+                    ->where('id_cabang', $dataPenyelia->id_cabang)
+                    ->where('role', 'PBO')
+                    ->first();
                 if ($userPBO) {
                     if ($status != null) {
                         $dataPenyelia->tanggal_review_pbo = date(now());
@@ -1853,8 +1844,7 @@ class PengajuanKreditController extends Controller
                     } else {
                         return redirect()->back()->withError('Belum di review Penyelia.');
                     }
-                }
-                else {
+                } else {
                     if ($status != null) {
                         $dataPenyelia->tanggal_review_pbp = date(now());
                         $dataPenyelia->posisi = "PBP";
@@ -1868,9 +1858,9 @@ class PengajuanKreditController extends Controller
                 $dataPenyelia = PengajuanModel::find($id);
                 $status = $dataPenyelia->status;
                 $userPBO = User::select('id')
-                                ->where('id_cabang', $dataPenyelia->id_cabang)
-                                ->where('role', 'PBO')
-                                ->first();
+                    ->where('id_cabang', $dataPenyelia->id_cabang)
+                    ->where('role', 'PBO')
+                    ->first();
                 if ($userPBO) {
                     if ($status != null) {
                         $dataPenyelia->tanggal_review_pbo = date(now());
@@ -1878,8 +1868,7 @@ class PengajuanKreditController extends Controller
                     } else {
                         return redirect()->back()->withError('Belum di review Penyelia.');
                     }
-                }
-                else {
+                } else {
                     if ($status != null) {
                         $dataPenyelia->tanggal_review_pincab = date(now());
                         $dataPenyelia->posisi = "Pincab";
@@ -1902,8 +1891,7 @@ class PengajuanKreditController extends Controller
                 } else {
                     return redirect()->back()->withError('Belum di review PBO.');
                 }
-            }
-            else {
+            } else {
                 if ($status != null) {
                     $dataPenyelia->tanggal_review_pbp = date(now());
                     $dataPenyelia->posisi = "Pincab";
@@ -2191,7 +2179,7 @@ class PengajuanKreditController extends Controller
 
     public function tempNasabah(Request $request)
     {
-        if(isset($request->id_nasabah)){
+        if (isset($request->id_nasabah)) {
             $nasabah = TemporaryService::saveNasabah(
                 $request->id_nasabah,
                 TemporaryService::convertNasabahReq($request)
@@ -2505,8 +2493,9 @@ class PengajuanKreditController extends Controller
 
         return redirect()->to($createRoute . "?tempId={$nasabah->id}&continue=true");
     }
-    
-    public function showContinueDraft(Request $request){
+
+    public function showContinueDraft(Request $request)
+    {
         $param['pageTitle'] = "Dashboard";
         $param['multipleFiles'] = $this->isMultipleFiles;
 
@@ -2645,20 +2634,19 @@ class PengajuanKreditController extends Controller
                             'mid-client-key' => env('DWH_TOKEN')
                         ];
                         try {
-                            $response = Http::timeout(3)->withHeaders($headers)->withOptions(['verify' => false])->post($apiURL,[
+                            $response = Http::timeout(3)->withHeaders($headers)->withOptions(['verify' => false])->post($apiURL, [
                                 'pengajuan_id' => $id,
                                 'kode_cabang' => $kode_cabang->kode_cabang,
                                 'nomor_po' => $po,
                                 'harga_kendaraan' => $getPo->harga,
                                 'tenor' => intval($getPo->tenor) * 12
                             ]);
-        
+
                             $statusCode = $response->status();
                             $responseBody = json_decode($response->getBody(), true);
                         } catch (\Illuminate\Http\Client\ConnectionException $e) {
                             // return $e->getMessage();
                         }
-
                     } catch (Exception $e) {
                         return redirect()->route('pengajuan-kredit.index')->withStatus('Terjadi kesalahan pada. ' . $e->getMessage());
                     }
