@@ -499,6 +499,176 @@ class PengajuanKreditController extends Controller
         return response()->json($dataDetailJawabanText);
     }
 
+    public function tesskor(Request $request)
+    {
+        $param['pageTitle'] = "Dashboard";
+        $param['multipleFiles'] = $this->isMultipleFiles;
+
+        $param['dataDesa'] = Desa::all();
+        $param['dataKecamatan'] = Kecamatan::all();
+        $param['dataKabupaten'] = Kabupaten::all();
+        $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->where('nama', '!=', 'Data Umum')->get();
+        $param['itemSlik'] = ItemModel::with('option')->where('nama', 'SLIK')->first();
+        $param['itemSP'] = ItemModel::where('nama', 'Surat Permohonan')->first();
+        $param['itemP'] = ItemModel::where('nama', 'Laporan SLIK')->first();
+        $param['itemKTPSu'] = ItemModel::where('nama', 'Foto KTP Suami')->first();
+        $param['itemKTPIs'] = ItemModel::where('nama', 'Foto KTP Istri')->first();
+        $param['itemNIB'] = ItemModel::where('nama', 'Dokumen NIB')->first();
+        $param['itemNPWP'] = ItemModel::where('nama', 'Dokumen NPWP')->first();
+        $param['itemSKU'] = ItemModel::where('nama', 'Dokumen Surat Keterangan Usaha')->first();
+
+        $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
+        $param['dataMerk'] = MerkModel::all();
+
+        $param['skema'] = $request->skema;
+
+        return view('pengajuan-kredit.tes-skor', $param);
+    }
+
+    function countScore(Request $request) {
+        $mergedDataLevel = [];
+        // item level 2
+        $dataLev2 = $request->dataLevelDua;
+        // remove key 80, 86, 93 & 142 from array
+        unset($dataLev2[80]);
+        unset($dataLev2[86]);
+        // unset($dataLev2[93]);
+        // unset($dataLev2[142]);
+        // return $dataLev2;
+
+        // item level 3
+        $dataLev3 = $request->dataLevelTiga;
+        // remove key 121, 134 & 149 from array
+        return $request;
+        unset($dataLev3[121]);
+        unset($dataLev3[134]);
+        unset($dataLev3[149]);
+
+        // item level 4
+        $dataLev4 = $request->dataLevelEmpat;
+        $mergedDataLevel = array_merge($dataLev2, $dataLev3, $dataLev4);
+        
+        // sum score
+        // return $mergedDataLevel;
+        $totalScore = 0;
+        $totalDataNull = 0;
+        for ($i=0; $i < count($mergedDataLevel); $i++) { 
+            if ($mergedDataLevel[$i]) {
+                // jika data tersedia
+                $data = $this->getDataLevel($mergedDataLevel[$i]);
+                if (is_numeric($data[0]))
+                    $totalScore += $data[0];
+                else
+                    $totalDataNull++;
+            }
+            else {
+                $totalDataNull++;
+            }
+        }
+
+        // find avg
+        return $mergedDataLevel;
+        $avgResult = round($totalScore / (count($mergedDataLevel) - $totalDataNull), 2);
+        return $avgResult;
+
+        $finalArray = array();
+        $rata_rata = array();
+        // data Level dua
+        if ($request->dataLevelDua != null) {
+            $data = $request->dataLevelDua;
+            $result_dua = array_values(array_filter($data));
+            foreach ($result_dua as $key => $value) {
+                $data_level_dua = $this->getDataLevel($value);
+                $skor[$key] = $data_level_dua[0];
+                $id_jawaban[$key] = $data_level_dua[1];
+                //jika skor nya tidak kosong
+                if ($skor[$key] != 'kosong') {
+                    if ($id_jawaban[$key] == 66 || $id_jawaban[$key] == 187) {
+                        if ($skor[$key] == 1) {
+                            $statusSlik = true;
+                        }
+                    }
+                    array_push($rata_rata, $skor[$key]);
+                } else {
+                    $skor[$key] = NULL;
+                }
+                array_push(
+                    $finalArray,
+                    array(
+                        'id_pengajuan' => 67,
+                        'id_jawaban' => $id_jawaban[$key],
+                        'skor' => $skor[$key],
+                        'created_at' => date("Y-m-d H:i:s"),
+                    )
+                );
+            }
+        } else {
+        }
+    // return array_values($request->dataLevelTiga)[0];
+    //     return $this->getDataLevel(array_values($request->dataLevelTiga)[0]);
+        // data level tiga
+        if ($request->dataLevelTiga != null) {
+            $data = $request->dataLevelTiga;
+            $result_tiga = array_values(array_filter($data));
+            foreach ($result_tiga as $key => $value) {
+                $data_level_tiga = $this->getDataLevel($value);
+                $skor[$key] = $data_level_tiga[0];
+                $id_jawaban[$key] = $data_level_tiga[1];
+                //jika skor nya tidak kosong
+                if ($skor[$key] != 'kosong') {
+                    array_push($rata_rata, $skor[$key]);
+                } else {
+                    $skor[$key] = NULL;
+                }
+                array_push(
+                    $finalArray,
+                    array(
+                        'id_pengajuan' => 67,
+                        'id_jawaban' => $id_jawaban[$key],
+                        'skor' => $skor[$key],
+                        'created_at' => date("Y-m-d H:i:s"),
+                    )
+                );
+            }
+        } else {
+        }
+
+        // data level empat
+        if ($request->dataLevelEmpat != null) {
+            $data = $request->dataLevelEmpat;
+            $result_empat = array_values(array_filter($data));
+            foreach ($result_empat as $key => $value) {
+                $data_level_empat = $this->getDataLevel($value);
+                $skor[$key] = $data_level_empat[0];
+                $id_jawaban[$key] = $data_level_empat[1];
+                //jika skor nya tidak kosong
+                if ($skor[$key] != 'kosong') {
+                    array_push($rata_rata, $skor[$key]);
+                } else {
+                    $skor[$key] = NULL;
+                }
+                array_push(
+                    $finalArray,
+                    array(
+                        'id_pengajuan' => 67,
+                        'id_jawaban' => $id_jawaban[$key],
+                        'skor' => $skor[$key],
+                        'created_at' => date("Y-m-d H:i:s"),
+                    )
+                );
+            }
+        } else {
+        }
+        $average = array_sum($rata_rata) / count($rata_rata);
+        $result = round($average, 2);
+        return [
+            'skor' => $rata_rata,
+            'final_array' => $finalArray,
+            'avg' => $average,
+            'result' => $result,
+        ];
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -507,6 +677,7 @@ class PengajuanKreditController extends Controller
      */
     public function store(Request $request)
     {
+        // return $request;
         // return $_POST;
         // return 'jumlah id level = ' . count($request->get('id_level')) . '; jumlah input = ' . count($request->get('informasi'));
         // $checkLevelDua = $request->dataLevelDua != null ? 'required' : '';
@@ -635,115 +806,99 @@ class PengajuanKreditController extends Controller
                 $tempFile->delete();
             }
 
-            $finalArray = array();
-            $rata_rata = array();
-            // data Level dua
+            /**
+             * Find score average
+             * 1. declare array variable needs
+             * 2. remove empty data from array
+             * 3. merge array variables to one array
+             * 4. sum score
+             * 5. find average score
+             */
+
+            // item level 2
+            $dataLev2 = [];
             if ($request->dataLevelDua != null) {
-                $data = $request->dataLevelDua;
-                $result_dua = array_values(array_filter($data));
-                foreach ($result_dua as $key => $value) {
-                    $data_level_dua = $this->getDataLevel($value);
-                    $skor[$key] = $data_level_dua[0];
-                    $id_jawaban[$key] = $data_level_dua[1];
-                    //jika skor nya tidak kosong
-                    if ($skor[$key] != 'kosong') {
-                        if ($id_jawaban[$key] == 66 || $id_jawaban[$key] == 187) {
-                            if ($skor[$key] == 1) {
-                                $statusSlik = true;
-                            }
-                        }
-                        array_push($rata_rata, $skor[$key]);
-                    } else {
-                        $skor[$key] = NULL;
-                    }
-                    array_push(
-                        $finalArray,
-                        array(
-                            'id_pengajuan' => $id_pengajuan,
-                            'id_jawaban' => $id_jawaban[$key],
-                            'skor' => $skor[$key],
-                            'created_at' => date("Y-m-d H:i:s"),
-                        )
-                    );
-                }
-            } else {
+                $dataLev2 = $request->dataLevelDua;
+                // remove key 80, 86, 93 & 142 from array
+                // unset($dataLev2[80]);
+                // unset($dataLev2[86]);
+                // unset($dataLev2[93]);
+                // unset($dataLev2[142]);
             }
 
-            // data level tiga
+            // item level 3
+            $dataLev3 = [];
             if ($request->dataLevelTiga != null) {
-                $data = $request->dataLevelTiga;
-                $result_tiga = array_values(array_filter($data));
-                foreach ($result_tiga as $key => $value) {
-                    $data_level_tiga = $this->getDataLevel($value);
-                    $skor[$key] = $data_level_tiga[0];
-                    $id_jawaban[$key] = $data_level_tiga[1];
-                    //jika skor nya tidak kosong
-                    if ($skor[$key] != 'kosong') {
-                        array_push($rata_rata, $skor[$key]);
-                    } else {
-                        $skor[$key] = NULL;
-                    }
-                    array_push(
-                        $finalArray,
-                        array(
-                            'id_pengajuan' => $id_pengajuan,
-                            'id_jawaban' => $id_jawaban[$key],
-                            'skor' => $skor[$key],
-                            'created_at' => date("Y-m-d H:i:s"),
-                        )
-                    );
-                }
-            } else {
+                // item level 3
+                $dataLev3 = $request->dataLevelTiga;
+                // remove key 121, 134 & 149 from array
+                // unset($dataLev3[121]);
+                unset($dataLev3[134]);
+                // unset($dataLev3[149]);
             }
 
-            // data level empat
+            // item level 4
+            $dataLev4 = [];
             if ($request->dataLevelEmpat != null) {
-                $data = $request->dataLevelEmpat;
-                $result_empat = array_values(array_filter($data));
-                foreach ($result_empat as $key => $value) {
-                    $data_level_empat = $this->getDataLevel($value);
-                    $skor[$key] = $data_level_empat[0];
-                    $id_jawaban[$key] = $data_level_empat[1];
-                    //jika skor nya tidak kosong
-                    if ($skor[$key] != 'kosong') {
-                        array_push($rata_rata, $skor[$key]);
-                    } else {
-                        $skor[$key] = NULL;
-                    }
-                    array_push(
-                        $finalArray,
-                        array(
-                            'id_pengajuan' => $id_pengajuan,
-                            'id_jawaban' => $id_jawaban[$key],
-                            'skor' => $skor[$key],
-                            'created_at' => date("Y-m-d H:i:s"),
-                        )
-                    );
-                }
-            } else {
+                $dataLev4 = $request->dataLevelEmpat;
             }
-            $average = array_sum($rata_rata) / count($rata_rata);
-            $result = round($average, 2);
+
+            $mergedDataLevel = array_merge($dataLev2, $dataLev3, $dataLev4);
+            // sum score
+            $totalScore = 0;
+            $totalDataNull = 0;
+            for ($i=0; $i < count($mergedDataLevel); $i++) { 
+                if ($mergedDataLevel[$i]) {
+                    // jika data tersedia
+                    $data = $this->getDataLevel($mergedDataLevel[$i]);
+                    if (is_numeric($data[0]))
+                        $totalScore += $data[0];
+                    else
+                        $totalDataNull++;
+                }
+                else {
+                    $totalDataNull++;
+                }
+            }
+
+            // find avg
+            $avgResult = round($totalScore / (count($mergedDataLevel) - $totalDataNull), 2);
             $status = "";
             $updateData = PengajuanModel::find($id_pengajuan);
-            if ($result > 0 && $result <= 1) {
+            if ($avgResult > 0 && $avgResult <= 1) {
                 $status = "merah";
-            } elseif ($result >= 2 && $result <= 3) {
+            } elseif ($avgResult >= 2 && $avgResult <= 3) {
                 // $updateData->status = "kuning";
                 $status = "kuning";
-            } elseif ($result > 3) {
+            } elseif ($avgResult > 3) {
                 $status = "hijau";
             } else {
                 $status = "merah";
             }
-            for ($i = 0; $i < count($finalArray); $i++) {
-                JawabanPengajuanModel::insert($finalArray[$i]);
+
+            for ($i = 0; $i < count($mergedDataLevel); $i++) {
+                if ($mergedDataLevel[$i] != null) {
+                    $data = $this->getDataLevel($mergedDataLevel[$i]);
+                    if (is_numeric($data[0])) {
+                        JawabanPengajuanModel::insert([
+                            'id_pengajuan' => $id_pengajuan,
+                            'id_jawaban' => $this->getDataLevel($mergedDataLevel[$i])[1],
+                            'skor' => $this->getDataLevel($mergedDataLevel[$i])[0],
+                        ]);
+                    }
+                    else {
+                        JawabanPengajuanModel::insert([
+                            'id_pengajuan' => $id_pengajuan,
+                            'id_jawaban' => $this->getDataLevel($mergedDataLevel[$i])[1],
+                        ]);
+                    }
+                }
             }
 
             if (!$statusSlik) {
                 $updateData->posisi = 'Proses Input Data';
                 $updateData->status_by_sistem = $status;
-                $updateData->average_by_sistem = $result;
+                $updateData->average_by_sistem = $avgResult;
             } else {
                 $updateData->posisi = 'Ditolak';
                 $updateData->status_by_sistem = "merah";
@@ -1409,7 +1564,7 @@ class PengajuanKreditController extends Controller
                     ->first();
             }
             $param['skema'] = $param['dataUmumNasabah']->skema_kredit;
-// return $param;
+
             return view('pengajuan-kredit.detail-pengajuan-jawaban-pbp', $param);
         } else {
             return redirect()->back()->withError('Tidak memiliki hak akses.');
@@ -1423,19 +1578,19 @@ class PengajuanKreditController extends Controller
             try {
                 $finalArray = array();
                 $finalArray_text = array();
-
+                $totalDataNull = 0;
                 foreach ($request->skor_pbp as $key => $value) {
                     if ($value != '' || $value != null) {
                         array_push($finalArray, [
                             'skor_pbp' => $value
                         ]);
                     }
+                    else {
+                        $totalDataNull++;
+                    }
                 };
-                // return $finalArray;
                 $sum_select = array_sum($request->skor_pbp);
-                // $sum_text = array_sum($request->skor_penyelia_text);
-                $average = ($sum_select) / count($request->skor_pbp);
-                // return $average;
+                $average = ($sum_select) / (count($request->skor_pbp) - $totalDataNull);
                 $result = round($average, 2);
                 $status = "";
                 $updateData = PengajuanModel::find($request->id_pengajuan);
@@ -1568,19 +1723,19 @@ class PengajuanKreditController extends Controller
             try {
                 $finalArray = array();
                 $finalArray_text = array();
-
+                $totalDataNull = 0;
                 foreach ($request->skor_penyelia as $key => $value) {
                     if ($value != '' || $value != null) {
                         array_push($finalArray, [
                             'skor_penyelia' => $value
                         ]);
                     }
+                    else {
+                        $totalDataNull++;
+                    }
                 };
-                // return $finalArray;
                 $sum_select = array_sum($request->skor_penyelia);
-                // $sum_text = array_sum($request->skor_penyelia_text);
-                $average = ($sum_select) / count($request->skor_penyelia);
-                // return $average;
+                $average = ($sum_select) / (count($request->skor_penyelia) - $totalDataNull);
                 $result = round($average, 2);
                 $status = "";
                 $updateData = PengajuanModel::find($request->id_pengajuan);

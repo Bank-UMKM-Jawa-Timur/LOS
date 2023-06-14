@@ -668,7 +668,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                             @if ($item->opsi_jawaban == 'file')
                                                 @php
                                                     $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
-                                                    $filepath = "../upload/$dataUmum->id/$item->id_jawaban/$item->opsi_text";
+                                                    $filepath = "../upload/$dataUmum->id/$itemTextDua->id_jawaban/$itemTextDua->opsi_text";
                                                 @endphp
                                                 @if ($file_parts['extension'] == 'pdf')
                                                     <iframe src="{{ asset($filepath) }}" width="100%" height="800px"></iframe>
