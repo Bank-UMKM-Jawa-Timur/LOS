@@ -1,12 +1,13 @@
 
 $(document).ready(function() {
+    var firstLoad = true;
     console.log("tes : "+$(".form-wizard[data-index=0] .filename").length)
+    
     $('.side-wizard').on('click', function () {
-        var link = $('.side-wizard').find("data-index");
-        var a =link;
-        // $.each(this, function(i, link) {
-        //     console.log(link)
-        // })
+        firstLoad = false
+        for (let index = 0; index < 7; index++) {
+            setPercentage(index);
+        }
     })
     var jumlahData = $('#jumlahData').val();
     // setPercentage(0);
@@ -47,7 +48,7 @@ $(document).ready(function() {
         }
 
         if (formIndex == 3) {
-            subtotalInput -= 2;
+            subtotalInput -= firstLoad ? 2 : 8;
         }
 
         if (formIndex == 6) {
@@ -190,6 +191,8 @@ $(document).ready(function() {
 
     $(".btn-next").click(function(e) {
         e.preventDefault();
+        firstLoad = false
+
         let valSkema = $("#skema").val();
         var indexNow = $(".form-wizard.active").data('index')
         setPercentage(indexNow + 1);
@@ -226,6 +229,8 @@ $(document).ready(function() {
 
     $(".btn-prev").click(function(e) {
         e.preventDefault(e);
+        firstLoad = false
+
         var indexNow = $(".form-wizard.active").data('index')
         var prev = parseInt(indexNow) - 1
         if ($(".form-wizard[data-index='" + prev + "']").length == 1) {
