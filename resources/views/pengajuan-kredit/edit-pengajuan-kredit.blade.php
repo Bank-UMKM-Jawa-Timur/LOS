@@ -642,7 +642,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                         class="form-control" value="{{  ($dataIjin?->nama == 'Surat Keterangan Usaha') ? $dataIjin?->opsi_text : null }}">
                                     <input type="hidden" name="skor_penyelia_text[]" id="surat_keterangan_usaha_text" value="{{  ($dataIjin?->nama == 'Surat Keterangan Usaha') ? $dataIjin?->skor_penyelia : null }}" >
                                     <input type="hidden" name="id_text[]" id="id_surat_keterangan_usaha_text"  value="78">
-                                    <input type="hidden" name="id_jawaban_text[]" id="id_jawaban_surat_keterangan_usaha" value="{{  ($dataIjin?->nama == 'Surat Keterangan Usaha') ? $dataIjin?->id : '' }}" >
+                                    <input type="hidden" name="id_jawaban_text[]" id="id_jawaban_sku" value="{{  ($dataIjin?->nama == 'Surat Keterangan Usaha') ? $dataIjin?->id : '' }}" >
                                 </div>
 
                                 <div class="form-group col-md-6" id="docSKU">
@@ -681,7 +681,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                     <input type="text" maxlength="255" name="info_text[]" id="npwp_text" placeholder="Masukkan informasi"
                                         class="form-control" value="{{ ($dataDetailJawabanTextnpwp != null) ? $dataDetailJawabanTextnpwp?->opsi_text : "" }}">
                                     <input type="hidden" name="skor_penyelia_text[]" id="npwp_text" value="{{ $dataDetailJawabanTextnpwp?->skor_penyelia }}">
-                                    <input type="hidden" name="id_jawaban_text[]" id="npwp_text" value="{{ ($dataDetailJawabanTextnpwp != null) ? $dataDetailJawabanTextnpwp->id : null }}">
+                                    <input type="hidden" name="id_jawaban_text[]" id="id_jawaban_npwp" value="{{ ($dataDetailJawabanTextnpwp != null) ? $dataDetailJawabanTextnpwp->id : null }}">
                                 </div>
 
                                 <div class="form-group col-md-6" id="docNPWP">
@@ -1629,6 +1629,8 @@ $dataIndex = match ($dataUmum->skema_kredit) {
             $('#nib_id').removeAttr('disabled');
             $('#nib_text').removeAttr('disabled');
             $('#nib_opsi_jawaban').removeAttr('disabled');
+            $('#id_jawaban_nib').removeAttr('disabled');
+            $('#id_nib_text').removeAttr('disabled');
 
             $('#docNIB').show();
             $('#docNIB_id').removeAttr('disabled');
@@ -1641,6 +1643,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
             $('#npwp').show();
             $('#npwp_id').removeAttr('disabled', true);
             $('#npwp_text').removeAttr('disabled', true);
+            $('#id_jawaban_npwp').removeAttr('disabled', true);
             $('#npwp_opsi_jawaban').removeAttr('disabled', true);
 
             $('#docNPWP').show();
@@ -1654,6 +1657,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
             $('#id_nib_text').attr('disabled', true);
             $('#id_jawaban_nib').attr('disabled', true);
             $('#nib_opsi_jawaban').attr('disabled', true);
+            $('#id_jawaban_nib').attr('disabled', true);
 
             $('#docNIB').hide();
             $('#docNIB_id').attr('disabled', true);
@@ -1667,6 +1671,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
             $('#surat_keterangan_usaha_text').removeAttr('disabled');
             $('#docSKUnama_file').removeAttr('disabled');
             $('#surat_keterangan_usaha_opsi_jawaban').removeAttr('disabled');
+            $('#id_jawaban_sku').removeAttr('disabled');
 
             $('#docSKU').show();
             $('#docSKU_id').removeAttr('disabled');
@@ -1682,6 +1687,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
             $('#docNPWP_id').removeAttr('disabled', true);
             $('#docNPWPnama_file').removeAttr('disabled', true);
             $('#docNPWP_update_file').removeAttr('disabled', true);
+            $('#id_jawaban_npwp').removeAttr('disabled', true);
         } else if (ijinUsaha == 'tidak_ada_legalitas_usaha') {
             $('#nib').hide();
             $('#nib_id').attr('disabled', true);
@@ -1693,6 +1699,8 @@ $dataIndex = match ($dataUmum->skema_kredit) {
             $('#docNIBnama_file').attr('disabled', true);
             $('#docNIB_update_file').attr('disabled', true);
             $('#id_update_nib').attr('disabled', true);
+            $('#id_jawaban_nib').attr('disabled', true);
+            $('#id_nib_text').attr('disabled', true);
 
             $('#surat_keterangan_usaha').hide();
             $('#surat_keterangan_usaha_id').attr('disabled', true);
@@ -1700,6 +1708,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
             $('#surat_keterangan_usaha_text').attr('disabled', true);
             $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
             $('#id_update_sku').attr('disabled', true);
+            $('#id_jawaban_sku').attr('disabled', true);
 
             $('#docSKU').hide();
             $('#docSKU_id').attr('disabled', true);
@@ -1715,11 +1724,15 @@ $dataIndex = match ($dataUmum->skema_kredit) {
             $('#docNPWP_id').attr('disabled', true);
             $('#docNPWPnama_file').attr('disabled', true);
             $('#docNPWP_update_file').attr('disabled', true);
+            $('#id_jawaban_npwp').attr('disabled', true);
         } else {
             $('#nib').hide();
             $('#nib_id').attr('disabled', true);
             $('#nib_text').attr('disabled', true);
             $('#nib_opsi_jawaban').attr('disabled', true);
+            $('#id_jawaban_sku').attr('disabled', true);
+            $('#id_jawaban_nib').attr('disabled', true);
+            $('#id_jawaban_npwp').attr('disabled', true);
 
             $('#docNIB').hide();
             $('#docNIB_id').attr('disabled', true);
