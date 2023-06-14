@@ -786,6 +786,7 @@
                                         @if (isset($data))
                                             <div class="col-md-12 form-group">
                                                 @if (!$itemJawaban->is_hide)
+                                                    @if ($item->nama != 'Repayment Capacity Opsi')
                                                     <div class="row">
                                                         <div class="col-md-12">
                                                             <b>Jawaban : </b>
@@ -796,6 +797,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    @endif
                                                 @endif
                                                 <div class="input-group input-b-bottom">
                                                     @if ($item->is_commentable == 'Ya')
