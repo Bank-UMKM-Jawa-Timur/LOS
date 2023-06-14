@@ -2031,7 +2031,7 @@ $dataIndex = match ($skema) {
         });
 
         function formatrupiah(angka, prefix) {
-            var number_string = angka.replace(/[^,\d]/g, '').toString(),
+            var number_string = angka ? angka.replace(/[^,\d]/g, '').toString() : angka,
 			split   		= number_string.split(','),
 			sisa     		= split[0].length % 3,
 			rupiah     		= split[0].substr(0, sisa),
@@ -2120,15 +2120,21 @@ $dataIndex = match ($skema) {
                     if(form == ".form-wizard[data-index='2']"){
                         var ijin = $(form + " select[name=ijin_usaha]")
                         if(ijin != "tidak_ada_legalitas_usaha"){
-                            let val = $(this).attr("id").toString();
+                            let val = $(this).attr("id");
+                            if (val)
+                                val = $(this).attr("id").toString()
                             nullValue.push(val.replaceAll("_", " "))
                         }
                     } else{
-                        let val = $(this).attr("id").toString();
+                        let val = $(this).attr("id");
+                        if (val)
+                            val = $(this).attr("id").toString();
                         nullValue.push(val.replaceAll("_", " "))
                     }
                 } else if(v.value != ''){
-                    let val = $(this).attr("id").toString().replaceAll("_", " ");
+                    let val = $(this).attr("id");
+                    if (val)
+                        val = $(this).attr("id").toString().replaceAll("_", " ");
                     for(var i = 0; i < nullValue.length; i++){
                         if(nullValue[i] == val){
                             nullValue.splice(i, 1)
@@ -2140,11 +2146,15 @@ $dataIndex = match ($skema) {
 
             $.each(inputText, function(i, v){
                 if(v.value == '' && !$(this).prop('disabled')){
-                    let val = $(this).attr("id").toString();
+                    let val = $(this).attr("id");
+                    if (val)
+                        val = $(this).attr("id").toString();
                     console.log(val)
                     nullValue.push(val.replaceAll("_", " "))
                 }else if(v.value != ''){
-                    let val = $(this).attr("id").toString().replaceAll("_", " ");
+                    let val = $(this).attr("id");
+                    if (val)
+                        val = $(this).attr("id").toString().replaceAll("_", " ");
                     for(var i = 0; i < nullValue.length; i++){
                         if(nullValue[i] == val){
                             nullValue.splice(i, 1)
@@ -2156,7 +2166,9 @@ $dataIndex = match ($skema) {
 
             $.each(inputNumber, function(i, v){
                 if(v.value == '' && !$(this).prop('disabled')){
-                    let val = $(this).attr("id").toString();
+                    let val = $(this).attr("id");
+                    if (val)
+                        val = $(this).attr("id").toString();
                     console.log(val)
                     nullValue.push(val.replaceAll("_", " "))
                 }else if(v.value != ''){
@@ -2172,13 +2184,17 @@ $dataIndex = match ($skema) {
 
             $.each(select, function(i, v){
                 if(v.value == '' && !$(this).prop('disabled')){
-                    let val = $(this).attr("id").toString();
+                    let val = $(this).attr("id");
+                    if (val)
+                        val = $(this).attr("id").toString();
                     if(val != "persentase_kebutuhan_kredit_opsi" && val != "ratio_tenor_asuransi_opsi" && val != "ratio_coverage_opsi"){
                         console.log(val)
                         nullValue.push(val.replaceAll("_", " "))
                     }
                 }else if(v.value != ''){
-                    let val = $(this).attr("id").toString().replaceAll("_", " ");
+                    let val = $(this).attr("id");
+                    if (val)
+                        val = $(this).attr("id").toString().replaceAll("_", " ");
                     for(var i = 0; i < nullValue.length; i++){
                         if(nullValue[i] == val){
                             nullValue.splice(i, 1)
@@ -2190,11 +2206,15 @@ $dataIndex = match ($skema) {
 
             $.each(textarea, function(i, v){
                 if(v.value == '' && !$(this).prop('disabled')){
-                    let val = $(this).attr("id").toString();
+                    let val = $(this).attr("id");
+                    if (val)
+                        val = $(this).attr("id").toString();
                     console.log(val)
                     nullValue.push(val.replaceAll("_", " "))
                 }else if(v.value != ''){
-                    let val = $(this).attr("id").toString().replaceAll("_", " ");
+                    let val = $(this).attr("id");
+                    if (val)
+                        val = $(this).attr("id").toString().replaceAll("_", " ");
                     for(var i = 0; i < nullValue.length; i++){
                         if(nullValue[i] == val){
                             nullValue.splice(i, 1)
