@@ -1455,7 +1455,7 @@
             }
 
             var percentage = parseInt(allInputFilled / allInput * 100);
-            percentage = percentage.isNan ? 0 : percentage;
+            percentage = Number.isNaN(percentage) ? 0 : percentage;
             percentage = percentage > 100 ? 100 : percentage;
 
             if (index == 7) {

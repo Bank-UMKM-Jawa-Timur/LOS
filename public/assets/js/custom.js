@@ -253,7 +253,7 @@
             var allInputFilled = ttlInputFilled + ttlSelectFilled + ttlTextareaFilled - ttlHiddenFilled
 
             var percentage = parseInt(allInputFilled / allInput * 100);
-            percentage = percentage.isNan ? 0 : percentage;
+            percentage = Number.isNaN(percentage) ? 0 : percentage;
             $(".side-wizard li[data-index='" + formIndex + "'] a span i").html(percentage + "%")
             $(".side-wizard li[data-index='" + formIndex + "'] input.answer").val(allInput);
             $(".side-wizard li[data-index='" + formIndex + "'] input.answerFilled").val(allInputFilled);
@@ -265,7 +265,9 @@
             $(".side-wizard li input.answerFilled").each(function() {
                 allInputFilledTotal += Number($(this).val());
             });
-
+            
+            allInputTotal = Number.isNaN(allInputTotal) ? 0 : allInputTotal
+            allInputFilledTotal = Number.isNaN(allInputFilledTotal) ? 0 : allInputFilledTotal
             var result = parseInt(allInputFilledTotal / allInputTotal * 100);
             $('.progress').val(result);
             console.log(allInput);
