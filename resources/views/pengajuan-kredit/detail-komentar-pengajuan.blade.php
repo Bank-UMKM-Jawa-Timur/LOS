@@ -709,6 +709,10 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                 @else
                                                     <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="700px">
                                                 @endif
+                                                @elseif ($item->opsi_jawaban == 'number')
+                                                <p class="badge badge-info text-lg"><b>
+                                                        Rp. {{ number_format((int) $itemTextDua->opsi_text, 2, ',', '.') }}
+                                                    </b></p>
                                             @else
                                                 @if (is_numeric($itemJawaban->option) && strlen($itemJawaban->option) > 3)
                                                     <input type="text" readonly
@@ -1016,7 +1020,13 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                     @else
                                                         <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTextTiga->id_jawaban . '/' . $itemTextTiga->opsi_text }}" alt="" width="700px">
                                                     @endif
-                                                @else
+                                                {{-- Rupiah data tiga --}}
+                                                    @elseif ($itemTiga->opsi_jawaban == 'number')
+                                                        <p class="badge badge-info text-lg"><b>
+                                                                Rp.
+                                                                {{ number_format((int) $itemTextTiga->opsi_text, 2, ',', '.') }}
+                                                            </b></p>
+                                                    @else
                                                     <input type="text" readonly class="form-control-plaintext font-weight-bold"
                                                         id="staticEmail" value="{{ $itemTextTiga->opsi_text }} {{$itemTiga->opsi_jawaban == 'persen' ? '%' : ''}}">
                                                     <input type="hidden" name="id[]" value="{{ $itemAspek->id }}">
@@ -1323,8 +1333,14 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                             @else
                                                                 <img src="{{ asset($filepath) }}"
                                                                     alt="" width="700px">
-                                                            @endif
-                                                        @else
+                                                            @endif 
+                                                            {{-- Rupiah data empat --}}
+                                                            @elseif ($itemEmpat->opsi_jawaban == 'number')
+                                                                <p class="badge badge-info text-lg"><b>
+                                                                        Rp.
+                                                                        {{ number_format((int) $itemTextEmpat->opsi_text, 2, ',', '.') }}
+                                                                    </b></p>
+                                                            @else
                                                             @if ($itemEmpat->id == 101)
                                                                 <input type="text" readonly
                                                                     class="form-control-plaintext font-weight-bold" id="staticEmail"
