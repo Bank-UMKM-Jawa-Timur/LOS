@@ -1,7 +1,16 @@
 
 $(document).ready(function() {
+    console.log("tes : "+$(".form-wizard[data-index=0] .filename").length)
+    $('.side-wizard').on('click', function () {
+        var link = $('.side-wizard').find("data-index");
+        var a =link;
+        // $.each(this, function(i, link) {
+        //     console.log(link)
+        // })
+    })
     var jumlahData = $('#jumlahData').val();
-    setPercentage(0);
+    // setPercentage(0);
+
     function setPercentage(formIndex) {
         var form = ".form-wizard[data-index='" + formIndex + "']"
         var inputText = $(form + " .row input[type=text]")
@@ -24,6 +33,7 @@ $(document).ready(function() {
         var totalTextArea = textarea ? textarea.length : 0
 
         var subtotalInput = (totalText + totalNumber + totalFile + totalDate + totalSelect + totalTextArea)
+
         if (formIndex == 2) {
             var ijinUsahaSelect = $(form).find("#ijin_usaha");
             if (ijinUsahaSelect.length > 0) {
@@ -41,7 +51,7 @@ $(document).ready(function() {
         }
 
         if (formIndex == 6) {
-            subtotalInput -= 2;
+            subtotalInput -= 1;
         }
 
         var ttlInputTextFilled = 0;
@@ -83,6 +93,18 @@ $(document).ready(function() {
         })
 
         var subtotalFilled = ttlInputTextFilled + ttlInputNumberFilled + ttlInputFileFilled + ttlInputDateFilled + ttlSelectFilled + ttlTextAreaFilled;
+        if (formIndex == 0) {
+            let value = $("#status").val();
+            console.log('status : '+value)
+            if (value == "menikah") {
+                // subtotalInput += 2;
+                subtotalFilled += 2;
+            }
+            else {
+                // subtotalInput += 1;
+                subtotalFilled += 2;
+            }
+        }
         console.log("=============index : "+formIndex+"=============")
         console.log('total input : ' + subtotalInput)
         console.log('total input filled : ' + subtotalFilled)

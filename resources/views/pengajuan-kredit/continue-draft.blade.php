@@ -1071,1179 +1071,1182 @@ $dataIndex = match ($skema) {
 
 @push('custom-script')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="{{ asset('') }}js/custom.js"></script>
-    <script>        
-        $(document).ready(function() {
-            let valSkema = $("#skema").val();
-            cekStatusNikah()
+<script>
 
-            @if($duTemp->nama == null)
-                if(valSkema == null || valSkema == ''){
-                    $('#exampleModal').modal('show');
-                }
-            @endif
+    $(document).ready(function() {
+        let valSkema = $("#skema").val();
+        cekStatusNikah()
+        setPercentage(0);
 
-            $("#exampleModal").on('click', "#btnSkema", function(){
-                let valSkema = $("#skema").val();
-                console.log(valSkema);
-
-                $("#skema_kredit").val(valSkema);
-            });
-        });
-        function cekStatusNikah(){
-
-            let value = $("#status").val();
-            $("#foto-ktp-istri").empty();
-            $("#foto-ktp-suami").empty();
-            $("#foto-ktp-nasabah").empty();
-            $("#foto-ktp-istri").removeClass('form-group col-md-6');
-            $("#foto-ktp-suami").removeClass('form-group col-md-6');
-            $("#foto-ktp-nasabah").removeClass('form-group col-md-6');
-
-            if(value == "menikah"){
-                $("#foto-ktp-istri").addClass('form-group col-md-6')
-                $("#foto-ktp-suami").addClass('form-group col-md-6')
-                $("#foto-ktp-istri").append(`
-                <label for="">{{ $itemKTPIs->nama }}</label>
-                    <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
-                    <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" id="Foto_KTP_Istri" data-id="{{ temporary($duTemp->id, $itemKTPIs->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size">
-                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
-                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
-                        <div class="invalid-feedback">
-                            {{ $errors->first('dataLevelDua.' . $key) }}
-                        </div>
-                    @endif
-                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPIs->id)?->opsi_text }}</span>
-                `)
-                $("#foto-ktp-suami").append(`
-                <label for="">{{ $itemKTPSu->nama }}</label>
-                    <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
-                    <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" id="Foto_KTP_Suami" data-id="{{ temporary($duTemp->id, $itemKTPSu->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size">
-                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
-                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
-                        <div class="invalid-feedback">
-                            {{ $errors->first('dataLevelDua.' . $key) }}
-                        </div>
-                    @endif
-                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPSu->id)?->opsi_text }}</span>
-                `);
-            } else {
-                $("#foto-ktp-nasabah").addClass('form-group col-md-12')
-                $("#foto-ktp-nasabah").append(`
-                    <label for="">{{ $itemKTPNas->nama }}</label>
-                    <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
-                    <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPNas->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-control limit-size">
-                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
-                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
-                        <div class="invalid-feedback">
-                            {{ $errors->first('dataLevelDua.' . $key) }}
-                        </div>
-                    @endif
-                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPNas->id)?->opsi_text }}</span>
-                `)
+        @if($duTemp->nama == null)
+            if(valSkema == null || valSkema == ''){
+                $('#exampleModal').modal('show');
             }
-        }
-        $("#status").change(function(){
-            let value = $(this).val();
-            $("#foto-ktp-istri").empty();
-            $("#foto-ktp-suami").empty();
-            $("#foto-ktp-nasabah").empty();
-            $("#foto-ktp-istri").removeClass('form-group col-md-6');
-            $("#foto-ktp-suami").removeClass('form-group col-md-6');
-            $("#foto-ktp-nasabah").removeClass('form-group col-md-6');
-
-            if(value == "menikah"){
-                $("#foto-ktp-istri").addClass('form-group col-md-6')
-                $("#foto-ktp-suami").addClass('form-group col-md-6')
-                $("#foto-ktp-istri").append(`
-                <label for="">{{ $itemKTPIs->nama }}</label>
-                    <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
-                    <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" id="Foto_KTP_Istri" data-id="{{ temporary($duTemp->id, $itemKTPIs->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size">
-                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
-                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
-                        <div class="invalid-feedback">
-                            {{ $errors->first('dataLevelDua.' . $key) }}
-                        </div>
-                    @endif
-                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPIs->id)?->opsi_text }}</span>
-                `)
-                $("#foto-ktp-suami").append(`
-                <label for="">{{ $itemKTPSu->nama }}</label>
-                    <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
-                    <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" id="Foto_KTP_Suami" data-id="{{ temporary($duTemp->id, $itemKTPSu->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size">
-                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
-                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
-                        <div class="invalid-feedback">
-                            {{ $errors->first('dataLevelDua.' . $key) }}
-                        </div>
-                    @endif
-                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPSu->id)?->opsi_text }}</span>
-                `);
-            } else {
-                $("#foto-ktp-nasabah").addClass('form-group col-md-12')
-                $("#foto-ktp-nasabah").append(`
-                    <label for="">{{ $itemKTPNas->nama }}</label>
-                    <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
-                    <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPNas->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-control limit-size">
-                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
-                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
-                        <div class="invalid-feedback">
-                            {{ $errors->first('dataLevelDua.' . $key) }}
-                        </div>
-                    @endif
-                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPNas->id)?->opsi_text }}</span>
-                `)
-            }
-        });
-
-        $("#id_merk").change(function(){
-            let val = $(this).val();
-
-            $.ajax({
-                type: "get",
-                url: "{{ route('get-tipe-kendaraan') }}?id_merk="+val,
-                dataType: "json",
-                success: (res) => {
-                    if(res){
-                        $("#id_tipe").empty();
-                        $("#id_tipe").append(`<option>Pilih Tipe</option>`)
-
-                        $.each(res.tipe, function(i, value){
-                            $("#id_tipe").append(`
-                                <option value="${value.id}">${value.tipe}</option>
-                            `);
-                        })
-                    }
-                }
-            })
-        })
-
-        @if($nib != '')
-            $('#docSKU').hide();
-            $('#surat_keterangan_usaha').hide();
-        @elseif($sku != '')
-            $('#nib').hide();
-            $('#docNIB').hide();
-        @elseif($sku == '' && $npwp == '' && $nib == '')
-            $('#docSKU').hide();
-            $('#surat_keterangan_usaha').hide();
-            $('#nib').hide();
-            $('#docNIB').hide();
-            $('#npwp').hide();
-            $('#docNPWP').hide();
-            $('#ijin_usaha').val('tidak_ada_legalitas_usaha')
         @endif
-        $(window).on('load', () => {
-            $("#ijin_usaha").trigger("change")
-        })
-        //make input readonly
-        $('#ratio_coverage').attr('readonly', true);
-        $('#ratio_tenor_asuransi').attr('readonly', true);
-        $('#persentase_kebutuhan_kredit').attr('readonly', true);
-        $('#repayment_capacity').attr('readonly', true);
 
-        // make select option hidden
-        $('#ratio_coverage_opsi_label').hide();
-        $('#ratio_tenor_asuransi_opsi_label').hide();
-        $('#ratio_coverage_opsi').hide();
-        $('#ratio_tenor_asuransi_opsi').hide();
-        $('#persentase_kebutuhan_kredit_opsi_label').hide();
-        $('#persentase_kebutuhan_kredit_opsi').hide();
-        $('#repayment_capacity_opsi_label').hide();
-        $('#repayment_capacity_opsi').hide();
-        const nullValue = []
+        $("#exampleModal").on('click', "#btnSkema", function(){
+            let valSkema = $("#skema").val();
+            console.log(valSkema);
 
-        let urlCekSubColumn = "{{ route('cek-sub-column') }}";
-        let urlGetItemByKategoriJaminanUtama =
-            "{{ route('get-item-jaminan-by-kategori-jaminan-utama') }}"; // jaminan tambahan
-        let urlGetItemByKategori = "{{ route('get-item-jaminan-by-kategori') }}"; // jaminan tambahan
-
-        var x = 1;
-
-        $('#kabupaten').change(function() {
-            var kabID = $(this).val();
-            if (kabID) {
-                $.ajax({
-                    type: "GET",
-                    url: "{{ route('getKecamatan') }}?kabID=" + kabID,
-                    dataType: 'JSON',
-                    success: function(res) {
-                        //    console.log(res);
-                        if (res) {
-                            $("#kecamatan").empty();
-                            $("#desa").empty();
-                            $("#kecamatan").append('<option>---Pilih Kecamatan---</option>');
-                            $("#desa").append('<option>---Pilih Desa---</option>');
-                            $.each(res, function(nama, kode) {
-                                $('#kecamatan').append(`
-                                    <option value="${kode}" ${kode == {{$duTemp?->id_kecamatan ?? 'null'}} ? 'selected' : '' }>${nama}</option>
-                                `);
-                            });
-
-                            $('#kecamatan').trigger('change');
-                        } else {
-                            $("#kecamatan").empty();
-                            $("#desa").empty();
-                        }
-                    }
-                });
-            } else {
-                $("#kecamatan").empty();
-                $("#desa").empty();
-            }
+            $("#skema_kredit").val(valSkema);
         });
+    });
+    function cekStatusNikah(){
 
-        $('#kecamatan').change(function() {
-            var kecID = $(this).val();
-            // console.log(kecID);
-            if (kecID) {
-                $.ajax({
-                    type: "GET",
-                    url: "{{ route('getDesa') }}?kecID=" + kecID,
-                    dataType: 'JSON',
-                    success: function(res) {
-                        //    console.log(res);
-                        if (res) {
-                            $("#desa").empty();
-                            $("#desa").append('<option>---Pilih Desa---</option>');
-                            $.each(res, function(nama, kode) {
-                                $('#desa').append(`
-                                    <option value="${kode}" ${kode == {{$duTemp?->id_desa ?? 'null'}} ? 'selected' : '' }>${nama}</option>
-                                `);
-                            });
-                        } else {
-                            $("#desa").empty();
-                        }
-                    }
-                });
-            } else {
-                $("#desa").empty();
-            }
-        });
+        let value = $("#status").val();
+        $("#foto-ktp-istri").empty();
+        $("#foto-ktp-suami").empty();
+        $("#foto-ktp-nasabah").empty();
+        $("#foto-ktp-istri").removeClass('form-group col-md-6');
+        $("#foto-ktp-suami").removeClass('form-group col-md-6');
+        $("#foto-ktp-nasabah").removeClass('form-group col-md-6');
 
-        //cek apakah opsi yg dipilih memiliki sub column
-        $('.cek-sub-column').change(function(e) {
-            let idOption = $(this).val();
-            let idItem = $(this).data('id_item');
-            // cek option apakah ada turunan
-            $(`#item${idItem}`).empty();
-            $.ajax({
-                type: "get",
-                url: `${urlCekSubColumn}?idOption=${idOption}`,
-                dataType: "json",
-                success: function(response) {
-                    if (response.sub_column != null) {
-                        $(`#item${idItem}`).append(`
-                        <div class="form-group sub mt-2">
-                            <label for="">${response.sub_column}</label>
-                            <input type="hidden" name="id_option_sub_column[]" value="${idOption}">
-                            <input type="text" name="jawaban_sub_column[]" placeholder="Masukkan informasi tambahan" class="form-control">
-                        </div>
+        if(value == "menikah"){
+            $("#foto-ktp-istri").addClass('form-group col-md-6')
+            $("#foto-ktp-suami").addClass('form-group col-md-6')
+            $("#foto-ktp-istri").append(`
+            <label for="">{{ $itemKTPIs->nama }}</label>
+                <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
+                <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" id="Foto_KTP_Istri" data-id="{{ temporary($duTemp->id, $itemKTPIs->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size">
+                <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('dataLevelDua.' . $key) }}
+                    </div>
+                @endif
+                <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPIs->id)?->opsi_text }}</span>
+            `)
+            $("#foto-ktp-suami").append(`
+            <label for="">{{ $itemKTPSu->nama }}</label>
+                <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
+                <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" id="Foto_KTP_Suami" data-id="{{ temporary($duTemp->id, $itemKTPSu->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size">
+                <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('dataLevelDua.' . $key) }}
+                    </div>
+                @endif
+                <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPSu->id)?->opsi_text }}</span>
+            `);
+        } else {
+            $("#foto-ktp-nasabah").addClass('form-group col-md-12')
+            $("#foto-ktp-nasabah").append(`
+                <label for="">{{ $itemKTPNas->nama }}</label>
+                <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
+                <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPNas->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-control limit-size">
+                <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('dataLevelDua.' . $key) }}
+                    </div>
+                @endif
+                <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPNas->id)?->opsi_text }}</span>
+            `)
+        }
+    }
+    $("#status").change(function(){
+        let value = $(this).val();
+        $("#foto-ktp-istri").empty();
+        $("#foto-ktp-suami").empty();
+        $("#foto-ktp-nasabah").empty();
+        $("#foto-ktp-istri").removeClass('form-group col-md-6');
+        $("#foto-ktp-suami").removeClass('form-group col-md-6');
+        $("#foto-ktp-nasabah").removeClass('form-group col-md-6');
+
+        if(value == "menikah"){
+            $("#foto-ktp-istri").addClass('form-group col-md-6')
+            $("#foto-ktp-suami").addClass('form-group col-md-6')
+            $("#foto-ktp-istri").append(`
+            <label for="">{{ $itemKTPIs->nama }}</label>
+                <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
+                <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" id="Foto_KTP_Istri" data-id="{{ temporary($duTemp->id, $itemKTPIs->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size">
+                <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('dataLevelDua.' . $key) }}
+                    </div>
+                @endif
+                <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPIs->id)?->opsi_text }}</span>
+            `)
+            $("#foto-ktp-suami").append(`
+            <label for="">{{ $itemKTPSu->nama }}</label>
+                <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
+                <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" id="Foto_KTP_Suami" data-id="{{ temporary($duTemp->id, $itemKTPSu->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size">
+                <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('dataLevelDua.' . $key) }}
+                    </div>
+                @endif
+                <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPSu->id)?->opsi_text }}</span>
+            `);
+        } else {
+            $("#foto-ktp-nasabah").addClass('form-group col-md-12')
+            $("#foto-ktp-nasabah").append(`
+                <label for="">{{ $itemKTPNas->nama }}</label>
+                <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
+                <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPNas->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-control limit-size">
+                <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('dataLevelDua.' . $key) }}
+                    </div>
+                @endif
+                <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPNas->id)?->opsi_text }}</span>
+            `)
+        }
+    });
+
+    $("#id_merk").change(function(){
+        let val = $(this).val();
+
+        $.ajax({
+            type: "get",
+            url: "{{ route('get-tipe-kendaraan') }}?id_merk="+val,
+            dataType: "json",
+            success: (res) => {
+                if(res){
+                    $("#id_tipe").empty();
+                    $("#id_tipe").append(`<option>Pilih Tipe</option>`)
+
+                    $.each(res.tipe, function(i, value){
+                        $("#id_tipe").append(`
+                            <option value="${value.id}">${value.tipe}</option>
                         `);
-                    } else {
-                        $(`#item${idItem}`).empty();
-                    }
+                    })
                 }
-            });
-        });
+            }
+        })
+    })
 
-        //item kategori jaminan utama cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
-        $('#kategori_jaminan_utama').change(function(e) {
-            //clear item
-            $('#select_kategori_jaminan_utama').empty();
+    @if($nib != '')
+        $('#docSKU').hide();
+        $('#surat_keterangan_usaha').hide();
+    @elseif($sku != '')
+        $('#nib').hide();
+        $('#docNIB').hide();
+    @elseif($sku == '' && $npwp == '' && $nib == '')
+        $('#docSKU').hide();
+        $('#surat_keterangan_usaha').hide();
+        $('#nib').hide();
+        $('#docNIB').hide();
+        $('#npwp').hide();
+        $('#docNPWP').hide();
+        $('#ijin_usaha').val('tidak_ada_legalitas_usaha')
+    @endif
+    $(window).on('load', () => {
+        $("#ijin_usaha").trigger("change")
+    })
+    //make input readonly
+    $('#ratio_coverage').attr('readonly', true);
+    $('#ratio_tenor_asuransi').attr('readonly', true);
+    $('#persentase_kebutuhan_kredit').attr('readonly', true);
+    $('#repayment_capacity').attr('readonly', true);
 
-            // clear bukti pemilikan
-            $('#bukti_pemilikan_jaminan_utama').empty();
+    // make select option hidden
+    $('#ratio_coverage_opsi_label').hide();
+    $('#ratio_tenor_asuransi_opsi_label').hide();
+    $('#ratio_coverage_opsi').hide();
+    $('#ratio_tenor_asuransi_opsi').hide();
+    $('#persentase_kebutuhan_kredit_opsi_label').hide();
+    $('#persentase_kebutuhan_kredit_opsi').hide();
+    $('#repayment_capacity_opsi_label').hide();
+    $('#repayment_capacity_opsi').hide();
+    const nullValue = []
 
-            //get item by kategori
-            let kategoriJaminanUtama = $(this).val();
+    let urlCekSubColumn = "{{ route('cek-sub-column') }}";
+    let urlGetItemByKategoriJaminanUtama =
+        "{{ route('get-item-jaminan-by-kategori-jaminan-utama') }}"; // jaminan tambahan
+    let urlGetItemByKategori = "{{ route('get-item-jaminan-by-kategori') }}"; // jaminan tambahan
 
+    var x = 1;
+
+    $('#kabupaten').change(function() {
+        var kabID = $(this).val();
+        if (kabID) {
             $.ajax({
-                type: "get",
-                url: `${urlGetItemByKategoriJaminanUtama}?kategori=${kategoriJaminanUtama}`,
-                dataType: "json",
-                success: function(response) {
-                    // jika kategori bukan stock dan piutang
-                    if (kategoriJaminanUtama != 'Stock' && kategoriJaminanUtama != 'Piutang') {
-                        // add item by kategori
-                        $('#select_kategori_jaminan_utama').append(`
-                            <label for="">${response.item.nama}</label>
-                            <select name="dataLevelEmpat[]" id="itemByKategoriJaminanUtama" class="form-control cek-sub-column"
-                                data-id_item="${response.item.id}">
-                                <option value=""> --Pilih Opsi -- </option>
-                                </select>
-
-                            <div id="item${response.item.id}">
-
-                            </div>
-                        `);
-                        // add opsi dari item
-                        $.each(response.item.option, function(i, valOption) {
-                            // console.log(valOption.skor);
-                            $('#itemByKategoriJaminanUtama').append(`
-                            <option value="${valOption.skor}-${valOption.id}">
-                            ${valOption.option}
-                            </option>`);
+                type: "GET",
+                url: "{{ route('getKecamatan') }}?kabID=" + kabID,
+                dataType: 'JSON',
+                success: function(res) {
+                    //    console.log(res);
+                    if (res) {
+                        $("#kecamatan").empty();
+                        $("#desa").empty();
+                        $("#kecamatan").append('<option>---Pilih Kecamatan---</option>');
+                        $("#desa").append('<option>---Pilih Desa---</option>');
+                        $.each(res, function(nama, kode) {
+                            $('#kecamatan').append(`
+                                <option value="${kode}" ${kode == {{$duTemp?->id_kecamatan ?? 'null'}} ? 'selected' : '' }>${nama}</option>
+                            `);
                         });
 
-                        // add item bukti pemilikan
-                        var isCheck = kategoriJaminanUtama != 'Kendaraan Bermotor' &&
-                            kategoriJaminanUtama != 'Stock' && kategoriJaminanUtama != 'Piutang' ?
-                            "<input type='checkbox' class='checkKategoriJaminanUtama'>" : ""
-                        var isDisabled = kategoriJaminanUtama != 'Kendaraan Bermotor' &&
-                            kategoriJaminanUtama != 'Stock' && kategoriJaminanUtama != 'Piutang' ?
-                            'disabled' : ''
-                        $.each(response.itemBuktiPemilikan, function(i, valItem) {
-                            if (valItem.nama == 'Atas Nama') {
+                        $('#kecamatan').trigger('change');
+                    } else {
+                        $("#kecamatan").empty();
+                        $("#desa").empty();
+                    }
+                }
+            });
+        } else {
+            $("#kecamatan").empty();
+            $("#desa").empty();
+        }
+    });
+
+    $('#kecamatan').change(function() {
+        var kecID = $(this).val();
+        // console.log(kecID);
+        if (kecID) {
+            $.ajax({
+                type: "GET",
+                url: "{{ route('getDesa') }}?kecID=" + kecID,
+                dataType: 'JSON',
+                success: function(res) {
+                    //    console.log(res);
+                    if (res) {
+                        $("#desa").empty();
+                        $("#desa").append('<option>---Pilih Desa---</option>');
+                        $.each(res, function(nama, kode) {
+                            $('#desa').append(`
+                                <option value="${kode}" ${kode == {{$duTemp?->id_desa ?? 'null'}} ? 'selected' : '' }>${nama}</option>
+                            `);
+                        });
+                    } else {
+                        $("#desa").empty();
+                    }
+                }
+            });
+        } else {
+            $("#desa").empty();
+        }
+    });
+
+    //cek apakah opsi yg dipilih memiliki sub column
+    $('.cek-sub-column').change(function(e) {
+        let idOption = $(this).val();
+        let idItem = $(this).data('id_item');
+        // cek option apakah ada turunan
+        $(`#item${idItem}`).empty();
+        $.ajax({
+            type: "get",
+            url: `${urlCekSubColumn}?idOption=${idOption}`,
+            dataType: "json",
+            success: function(response) {
+                if (response.sub_column != null) {
+                    $(`#item${idItem}`).append(`
+                    <div class="form-group sub mt-2">
+                        <label for="">${response.sub_column}</label>
+                        <input type="hidden" name="id_option_sub_column[]" value="${idOption}">
+                        <input type="text" name="jawaban_sub_column[]" placeholder="Masukkan informasi tambahan" class="form-control">
+                    </div>
+                    `);
+                } else {
+                    $(`#item${idItem}`).empty();
+                }
+            }
+        });
+    });
+
+    //item kategori jaminan utama cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
+    $('#kategori_jaminan_utama').change(function(e) {
+        //clear item
+        $('#select_kategori_jaminan_utama').empty();
+
+        // clear bukti pemilikan
+        $('#bukti_pemilikan_jaminan_utama').empty();
+
+        //get item by kategori
+        let kategoriJaminanUtama = $(this).val();
+
+        $.ajax({
+            type: "get",
+            url: `${urlGetItemByKategoriJaminanUtama}?kategori=${kategoriJaminanUtama}`,
+            dataType: "json",
+            success: function(response) {
+                // jika kategori bukan stock dan piutang
+                if (kategoriJaminanUtama != 'Stock' && kategoriJaminanUtama != 'Piutang') {
+                    // add item by kategori
+                    $('#select_kategori_jaminan_utama').append(`
+                        <label for="">${response.item.nama}</label>
+                        <select name="dataLevelEmpat[]" id="itemByKategoriJaminanUtama" class="form-control cek-sub-column"
+                            data-id_item="${response.item.id}">
+                            <option value=""> --Pilih Opsi -- </option>
+                            </select>
+
+                        <div id="item${response.item.id}">
+
+                        </div>
+                    `);
+                    // add opsi dari item
+                    $.each(response.item.option, function(i, valOption) {
+                        // console.log(valOption.skor);
+                        $('#itemByKategoriJaminanUtama').append(`
+                        <option value="${valOption.skor}-${valOption.id}">
+                        ${valOption.option}
+                        </option>`);
+                    });
+
+                    // add item bukti pemilikan
+                    var isCheck = kategoriJaminanUtama != 'Kendaraan Bermotor' &&
+                        kategoriJaminanUtama != 'Stock' && kategoriJaminanUtama != 'Piutang' ?
+                        "<input type='checkbox' class='checkKategoriJaminanUtama'>" : ""
+                    var isDisabled = kategoriJaminanUtama != 'Kendaraan Bermotor' &&
+                        kategoriJaminanUtama != 'Stock' && kategoriJaminanUtama != 'Piutang' ?
+                        'disabled' : ''
+                    $.each(response.itemBuktiPemilikan, function(i, valItem) {
+                        if (valItem.nama == 'Atas Nama') {
+                            $('#bukti_pemilikan_jaminan_utama').append(`
+                            <div class="form-group col-md-6 aspek_jaminan_kategori_jaminan_utama">
+                                <label>${valItem.nama}</label>
+                                <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input">
+                                <input type="hidden" name="opsi_jawaban[]"
+                                    value="${valItem.opsi_jawaban}" id="" class="input">
+                                <input type="text" name="informasi[]" placeholder="Masukkan informasi"
+                                    class="form-control input">
+                            </div>
+                        `);m
+                        } else {
+                            if(valItem.nama == 'Foto') {
                                 $('#bukti_pemilikan_jaminan_utama').append(`
                                 <div class="form-group col-md-6 aspek_jaminan_kategori_jaminan_utama">
                                     <label>${valItem.nama}</label>
-                                    <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input">
-                                    <input type="hidden" name="opsi_jawaban[]"
-                                        value="${valItem.opsi_jawaban}" id="" class="input">
-                                    <input type="text" name="informasi[]" placeholder="Masukkan informasi"
-                                        class="form-control input">
-                                </div>
-                            `);m
-                            } else {
-                                if(valItem.nama == 'Foto') {
-                                    $('#bukti_pemilikan_jaminan_utama').append(`
-                                    <div class="form-group col-md-6 aspek_jaminan_kategori_jaminan_utama">
-                                        <label>${valItem.nama}</label>
-                                        <input type="hidden" name="id_item_file[${valItem.id}]" value="${valItem.id}" id="" class="input">
-                                        <input type="file" name="upload_file[${valItem.id}]" data-id="" class="form-control limit-size">
-                                        <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
-                                        <span class="filename" style="display: inline;"></span>
-                                    </div>`);
-                                }
-                                else {
-                                    $('#bukti_pemilikan_jaminan_utama').append(`
-                                    <div class="form-group col-md-6 aspek_jaminan_kategori_jaminan_utama">
-                                        <label>${isCheck} ${valItem.nama}</label>
-                                        <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input" ${isDisabled}>
-                                        <input type="hidden" name="opsi_jawaban[]"
-                                            value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
-                                        <input type="text" name="informasi[]" placeholder="Masukkan informasi ${valItem.nama}"
-                                            class="form-control input" ${isDisabled}>
-                                    </div>`);
-                                }
+                                    <input type="hidden" name="id_item_file[${valItem.id}]" value="${valItem.id}" id="" class="input">
+                                    <input type="file" name="upload_file[${valItem.id}]" data-id="" class="form-control limit-size">
+                                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                                    <span class="filename" style="display: inline;"></span>
+                                </div>`);
                             }
-                        });
-
-                        $(".checkKategoriJaminanUtama").click(function() {
-                            var input = $(this).closest('.form-group').find(".input")
-                            // var input_id = $(this).closest('.form-group').find("input_id").last()
-                            // var input_opsi_jawaban = $(this).closest('.form-group').find("input_opsi_jawaban").last()
-                            if ($(this).is(':checked')) {
-                                input.prop('disabled', false)
-                                // input_id.prop('disabled',false)
-                                // input_opsi_jawaban.prop('disabled',false)
-                            } else {
-                                input.val('')
-                                input.prop('disabled', true)
-                                // input_id.prop('disabled',true)
-                                // input_opsi_jawaban.prop('disabled',true)
-                            }
-                        })
-                    }
-                    // jika kategori = stock dan piutang
-                    else {
-                        $.each(response.itemBuktiPemilikan, function(i, valItem) {
-                            if (valItem.nama == 'Atas Nama') {
-                                $('#select_kategori_jaminan_utama').append(`
-                                <div class="aspek_jaminan_kategori_jaminan_utama">
-                                    <label>${valItem.nama}</label>
-                                    <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input">
+                            else {
+                                $('#bukti_pemilikan_jaminan_utama').append(`
+                                <div class="form-group col-md-6 aspek_jaminan_kategori_jaminan_utama">
+                                    <label>${isCheck} ${valItem.nama}</label>
+                                    <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input" ${isDisabled}>
                                     <input type="hidden" name="opsi_jawaban[]"
-                                        value="${valItem.opsi_jawaban}" id="" class="input">
-                                    <input type="text" name="informasi[]" placeholder="Masukkan informasi"
-                                        class="form-control input">
-                                </div>
-                            `);
-                            } else {
-                                $('#select_kategori_jaminan_utama').append(`
-                                <div class="aspek_jaminan_kategori_jaminan_utama">
-                                    <label>${valItem.nama}</label>
-                                    <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input" >
-                                    <input type="hidden" name="opsi_jawaban[]"
-                                        value="${valItem.opsi_jawaban}" id="" class="input">
+                                        value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
                                     <input type="text" name="informasi[]" placeholder="Masukkan informasi ${valItem.nama}"
-                                        class="form-control input">
-                                </div>
-                            `);
+                                        class="form-control input" ${isDisabled}>
+                                </div>`);
                             }
-                        });
-                    }
+                        }
+                    });
+
+                    $(".checkKategoriJaminanUtama").click(function() {
+                        var input = $(this).closest('.form-group').find(".input")
+                        // var input_id = $(this).closest('.form-group').find("input_id").last()
+                        // var input_opsi_jawaban = $(this).closest('.form-group').find("input_opsi_jawaban").last()
+                        if ($(this).is(':checked')) {
+                            input.prop('disabled', false)
+                            // input_id.prop('disabled',false)
+                            // input_opsi_jawaban.prop('disabled',false)
+                        } else {
+                            input.val('')
+                            input.prop('disabled', true)
+                            // input_id.prop('disabled',true)
+                            // input_opsi_jawaban.prop('disabled',true)
+                        }
+                    })
                 }
-            });
-        });
-        // end item kategori jaminan utama cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
-
-        //item kategori jaminan tambahan cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
-        $('#kategori_jaminan_tambahan').change(function(e) {
-            //clear item
-            $('#select_kategori_jaminan_tambahan').empty();
-
-            // clear bukti pemilikan
-            $('#bukti_pemilikan_jaminan_tambahan').empty();
-
-            //get item by kategori
-            let kategoriJaminan = $(this).val();
-
-            $.ajax({
-                type: "get",
-                url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}&idCalonNasabah={{ $duTemp?->id }}`,
-                dataType: "json",
-                success: function(response) {
-                    if(kategoriJaminan != "Tidak Memiliki Jaminan Tambahan"){
-                        $("#select_kategori_jaminan_tambahan").show()
-                        // add item by kategori
-                        $('#select_kategori_jaminan_tambahan').append(`
-                            <label for="">${response.item.nama}</label>
-                            <select name="dataLevelEmpat[${response.item.id}]" id="itemByKategori" class="form-control cek-sub-column"
-                                data-id_item="${response.item.id}">
-                                <option value=""> --Pilih Opsi -- </option>
-                                </select>
-
-                            <div id="item${response.item.id}">
-
+                // jika kategori = stock dan piutang
+                else {
+                    $.each(response.itemBuktiPemilikan, function(i, valItem) {
+                        if (valItem.nama == 'Atas Nama') {
+                            $('#select_kategori_jaminan_utama').append(`
+                            <div class="aspek_jaminan_kategori_jaminan_utama">
+                                <label>${valItem.nama}</label>
+                                <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input">
+                                <input type="hidden" name="opsi_jawaban[]"
+                                    value="${valItem.opsi_jawaban}" id="" class="input">
+                                <input type="text" name="informasi[]" placeholder="Masukkan informasi"
+                                    class="form-control input">
                             </div>
                         `);
-                        // add opsi dari item
-                        $.each(response.item.option, function(i, valOption) {
-                            // console.log(valOption.skor);
-                            $('#itemByKategori').append(`
-                            <option value="${valOption.skor}-${valOption.id}" ${(response.dataSelect == valOption.id) ? 'selected' : ''}>
-                            ${valOption.option}
-                            </option>`);
-                        });
+                        } else {
+                            $('#select_kategori_jaminan_utama').append(`
+                            <div class="aspek_jaminan_kategori_jaminan_utama">
+                                <label>${valItem.nama}</label>
+                                <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input" >
+                                <input type="hidden" name="opsi_jawaban[]"
+                                    value="${valItem.opsi_jawaban}" id="" class="input">
+                                <input type="text" name="informasi[]" placeholder="Masukkan informasi ${valItem.nama}"
+                                    class="form-control input">
+                            </div>
+                        `);
+                        }
+                    });
+                }
+            }
+        });
+    });
+    // end item kategori jaminan utama cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
 
-                        // add item bukti pemilikan
-                        var isCheck = kategoriJaminan != 'Kendaraan Bermotor' ?
-                            "<input type='checkbox' class='checkKategori'>" : ""
-                        var isDisabled = kategoriJaminan != 'Kendaraan Bermotor' ? 'disabled' : ''
-                        $.each(response.itemBuktiPemilikan, function(i, valItem) {
-                            console.log('test');
-                            if (valItem.nama == 'Atas Nama') {
+    //item kategori jaminan tambahan cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
+    $('#kategori_jaminan_tambahan').change(function(e) {
+        //clear item
+        $('#select_kategori_jaminan_tambahan').empty();
+
+        // clear bukti pemilikan
+        $('#bukti_pemilikan_jaminan_tambahan').empty();
+
+        //get item by kategori
+        let kategoriJaminan = $(this).val();
+
+        $.ajax({
+            type: "get",
+            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}&idCalonNasabah={{ $duTemp?->id }}`,
+            dataType: "json",
+            success: function(response) {
+                if(kategoriJaminan != "Tidak Memiliki Jaminan Tambahan"){
+                    $("#select_kategori_jaminan_tambahan").show()
+                    // add item by kategori
+                    $('#select_kategori_jaminan_tambahan').append(`
+                        <label for="">${response.item.nama}</label>
+                        <select name="dataLevelEmpat[${response.item.id}]" id="itemByKategori" class="form-control cek-sub-column"
+                            data-id_item="${response.item.id}">
+                            <option value=""> --Pilih Opsi -- </option>
+                            </select>
+
+                        <div id="item${response.item.id}">
+
+                        </div>
+                    `);
+                    // add opsi dari item
+                    $.each(response.item.option, function(i, valOption) {
+                        // console.log(valOption.skor);
+                        $('#itemByKategori').append(`
+                        <option value="${valOption.skor}-${valOption.id}" ${(response.dataSelect == valOption.id) ? 'selected' : ''}>
+                        ${valOption.option}
+                        </option>`);
+                    });
+
+                    // add item bukti pemilikan
+                    var isCheck = kategoriJaminan != 'Kendaraan Bermotor' ?
+                        "<input type='checkbox' class='checkKategori'>" : ""
+                    var isDisabled = kategoriJaminan != 'Kendaraan Bermotor' ? 'disabled' : ''
+                    $.each(response.itemBuktiPemilikan, function(i, valItem) {
+                        console.log('test');
+                        if (valItem.nama == 'Atas Nama') {
+                            $('#bukti_pemilikan_jaminan_tambahan').append(`
+                                <div class="form-group col-md-6 aspek_jaminan_kategori">
+                                    <label>${valItem.nama}</label>
+                                    <input type="hidden" name="id_level[${valItem.id}]" value="${valItem.id}" id="" class="input">
+                                    <input type="hidden" name="opsi_jawaban[${valItem.id}]"
+                                        value="${valItem.opsi_jawaban}" id="" class="input">
+                                    <input type="text" maxlength="255" id="${valItem.nama.toString().replaceAll(" ", "_")}" name="informasi[${valItem.id}]" placeholder="Masukkan informasi"
+                                        class="form-control input" value="${response.dataJawaban[i]}">
+                                </div>
+                            `);
+                        } else {
+                            if(valItem.nama == 'Foto') {
                                 $('#bukti_pemilikan_jaminan_tambahan').append(`
-                                    <div class="form-group col-md-6 aspek_jaminan_kategori">
-                                        <label>${valItem.nama}</label>
-                                        <input type="hidden" name="id_level[${valItem.id}]" value="${valItem.id}" id="" class="input">
-                                        <input type="hidden" name="opsi_jawaban[${valItem.id}]"
-                                            value="${valItem.opsi_jawaban}" id="" class="input">
-                                        <input type="text" maxlength="255" id="${valItem.nama.toString().replaceAll(" ", "_")}" name="informasi[${valItem.id}]" placeholder="Masukkan informasi"
-                                            class="form-control input" value="${response.dataJawaban[i]}">
+                                @forelse (temporary($duTemp->id, 148, true) as $tempData)
+                                <div class="form-group col-md-6 file-wrapper item-${valItem.id}">
+                                    <label for="">${valItem.nama}</label>
+                                    <div class="row file-input">
+                                        <div class="col-md-9">
+                                            <input type="hidden" name="id_item_file[${valItem.id}]" value="${valItem.id}" id="">
+                                            <input type="file" name="upload_file[${valItem.id}]" data-id="{{ $tempData->id }}"
+                                                placeholder="Masukkan informasi ${valItem.nama}"
+                                                class="form-control limit-size" id="${valItem.nama.toString().replaceAll(" ", "_")}">
+                                                <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                                            <span class="filename" style="display: inline;">{{ $tempData->opsi_text }}</span>
+                                        </div>
+                                        <div class="col-1">
+                                            <button class="btn btn-sm btn-success btn-add-file" type="button" data-id="${valItem.id}">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </div>
+                                        <div class="col-1">
+                                            <button class="btn btn-sm btn-danger btn-del-file" type="button" data-id="${valItem.id}">
+                                                <i class="fa fa-minus"></i>
+                                            </button>
+                                        </div>
                                     </div>
+                                </div>
+                                @empty
+                                <div class="form-group col-md-6 file-wrapper item-${valItem.id}">
+                                    <label for="">${valItem.nama}</label>
+                                    <div class="row file-input">
+                                        <div class="col-md-9">
+                                            <input type="hidden" name="id_item_file[${valItem.id}]" value="${valItem.id}" id="">
+                                            <input type="file" name="upload_file[${valItem.id}]" data-id=""
+                                                placeholder="Masukkan informasi ${valItem.nama}"
+                                                class="form-control limit-size" id="${valItem.nama.toString().replaceAll(" ", "_")}">
+                                                <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                                            <span class="filename" style="display: inline;"></span>
+                                        </div>
+                                        <div class="col-1">
+                                            <button class="btn btn-sm btn-success btn-add-file" type="button" data-id="${valItem.id}">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </div>
+                                        <div class="col-1">
+                                            <button class="btn btn-sm btn-danger btn-del-file" type="button" data-id="${valItem.id}">
+                                                <i class="fa fa-minus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endforelse
                                 `);
                             } else {
-                                if(valItem.nama == 'Foto') {
-                                    $('#bukti_pemilikan_jaminan_tambahan').append(`
-                                    @forelse (temporary($duTemp->id, 148, true) as $tempData)
-                                    <div class="form-group col-md-6 file-wrapper item-${valItem.id}">
-                                        <label for="">${valItem.nama}</label>
-                                        <div class="row file-input">
-                                            <div class="col-md-9">
-                                                <input type="hidden" name="id_item_file[${valItem.id}]" value="${valItem.id}" id="">
-                                                <input type="file" name="upload_file[${valItem.id}]" data-id="{{ $tempData->id }}"
-                                                    placeholder="Masukkan informasi ${valItem.nama}"
-                                                    class="form-control limit-size" id="${valItem.nama.toString().replaceAll(" ", "_")}">
-                                                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
-                                                <span class="filename" style="display: inline;">{{ $tempData->opsi_text }}</span>
-                                            </div>
-                                            <div class="col-1">
-                                                <button class="btn btn-sm btn-success btn-add-file" type="button" data-id="${valItem.id}">
-                                                    <i class="fa fa-plus"></i>
-                                                </button>
-                                            </div>
-                                            <div class="col-1">
-                                                <button class="btn btn-sm btn-danger btn-del-file" type="button" data-id="${valItem.id}">
-                                                    <i class="fa fa-minus"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @empty
-                                    <div class="form-group col-md-6 file-wrapper item-${valItem.id}">
-                                        <label for="">${valItem.nama}</label>
-                                        <div class="row file-input">
-                                            <div class="col-md-9">
-                                                <input type="hidden" name="id_item_file[${valItem.id}]" value="${valItem.id}" id="">
-                                                <input type="file" name="upload_file[${valItem.id}]" data-id=""
-                                                    placeholder="Masukkan informasi ${valItem.nama}"
-                                                    class="form-control limit-size" id="${valItem.nama.toString().replaceAll(" ", "_")}">
-                                                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
-                                                <span class="filename" style="display: inline;"></span>
-                                            </div>
-                                            <div class="col-1">
-                                                <button class="btn btn-sm btn-success btn-add-file" type="button" data-id="${valItem.id}">
-                                                    <i class="fa fa-plus"></i>
-                                                </button>
-                                            </div>
-                                            <div class="col-1">
-                                                <button class="btn btn-sm btn-danger btn-del-file" type="button" data-id="${valItem.id}">
-                                                    <i class="fa fa-minus"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @endforelse
-                                    `);
-                                } else {
-                                    if(response.dataJawaban[i] != null && response.dataJawaban[i] != ""){
-                                        if(kategoriJaminan != 'Kendaraan Bermotor'){
-                                            isCheck = "<input type='checkbox' class='checkKategori' checked>"
-                                            isDisabled = ""
-                                        }
+                                if(response.dataJawaban[i] != null && response.dataJawaban[i] != ""){
+                                    if(kategoriJaminan != 'Kendaraan Bermotor'){
+                                        isCheck = "<input type='checkbox' class='checkKategori' checked>"
+                                        isDisabled = ""
                                     }
-                                    $('#bukti_pemilikan_jaminan_tambahan').append(`
-                                        <div class="form-group col-md-6 aspek_jaminan_kategori">
-                                            <label>${isCheck} ${valItem.nama}</label>
-                                            <input type="hidden" name="id_level[${valItem.id}]" value="${valItem.id}" id="" class="input" ${isDisabled}>
-                                            <input type="hidden" name="opsi_jawaban[${valItem.id}]"
-                                                value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
-                                            <input type="text" maxlength="255" id="${valItem.nama.toString().replaceAll(" ", "_")}" name="informasi[${valItem.id}]" placeholder="Masukkan informasi"
-                                                class="form-control input" ${isDisabled} value="${response.dataJawaban[i]}">
-                                        </div>
-                                    `);
                                 }
+                                $('#bukti_pemilikan_jaminan_tambahan').append(`
+                                    <div class="form-group col-md-6 aspek_jaminan_kategori">
+                                        <label>${isCheck} ${valItem.nama}</label>
+                                        <input type="hidden" name="id_level[${valItem.id}]" value="${valItem.id}" id="" class="input" ${isDisabled}>
+                                        <input type="hidden" name="opsi_jawaban[${valItem.id}]"
+                                            value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
+                                        <input type="text" maxlength="255" id="${valItem.nama.toString().replaceAll(" ", "_")}" name="informasi[${valItem.id}]" placeholder="Masukkan informasi"
+                                            class="form-control input" ${isDisabled} value="${response.dataJawaban[i]}">
+                                    </div>
+                                `);
                             }
-                        });
-
-                        $(".checkKategori").click(function() {
-                            var input = $(this).closest('.form-group').find(".input")
-                            // var input_id = $(this).closest('.form-group').find("input_id").last()
-                            // var input_opsi_jawaban = $(this).closest('.form-group').find("input_opsi_jawaban").last()
-                            if ($(this).is(':checked')) {
-                                input.prop('disabled', false)
-                                // input_id.prop('disabled',false)
-                                // input_opsi_jawaban.prop('disabled',false)
-                            } else {
-                                input.val('')
-                                input.prop('disabled', true)
-                                // input_id.prop('disabled',true)
-                                // input_opsi_jawaban.prop('disabled',true)
-                            }
-                        })
-                    } else {
-                        $('#select_kategori_jaminan_tambahan').append(`
-                            <label for="">${response.item.nama}</label>
-                            <select name="dataLevelEmpat[${response.item.id}]" id="itemByKategori" class="form-control cek-sub-column"
-                                data-id_item="${response.item.id}">
-                                <option value=""> --Pilih Opsi -- </option>
-                                </select>
-
-                            <div id="item${response.item.id}">
-
-                            </div>
-                        `);
-                        // add opsi dari item
-                        $.each(response.item.option, function(i, valOption) {
-                            // console.log(valOption.skor);
-                            $('#itemByKategori').append(`
-                            <option value="${valOption.skor}-${valOption.id}" ${(response.dataSelect == valOption.id) ? 'selected' : ''}>
-                            ${valOption.option}
-                            </option>`);
-                        });
-                        $("#itemByKategori").val('0-188')
-                        $("#select_kategori_jaminan_tambahan").hide()
-                    }
-                }
-            });
-        });
-        // end item kategori jaminan tambahan cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
-
-        // milih ijin usaha
-        $('#ijin_usaha').change(function(e) {
-            let ijinUsaha = $(this).val();
-            if (ijinUsaha == 'nib') {
-                $('#surat_keterangan_usaha').hide();
-                $('#surat_keterangan_usaha_id').attr('disabled', true);
-                $('#surat_keterangan_usaha_text').attr('disabled', true);
-                $('#surat_keterangan_usaha_file').attr('disabled', true);
-                $('#surat_keterangan_usaha_text').val("");
-                $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
-
-                $('#docSKU').hide();
-                $('#docSKU_id').attr('disabled', true);
-                $('#docSKU_text').attr('disabled', true);
-                $('#docSKU_upload_file').attr('disabled', true);
-
-                $('#nib').show();
-                $('#nib_id').removeAttr('disabled');
-                $('#nib_text').removeAttr('disabled');
-                $('#nib_text').val('{{ temporary($duTemp->id, 77)?->opsi_text }}');
-                $('#nib_opsi_jawaban').removeAttr('disabled');
-
-                $('#docNIB').show();
-                $('#docNIB_id').removeAttr('disabled');
-                $('#docNIB_text').removeAttr('disabled');
-                $('#docNIB_upload_file').removeAttr('disabled');
-                $('#file_nib').removeAttr('disabled');
-
-                $('#npwp').show();
-                $('#npwp_id').removeAttr('disabled');
-                $('#npwp_text').removeAttr('disabled');
-                $('#npwp_text').val('{{ temporary($duTemp->id, 79)?->opsi_text }}');
-                $('#npwp_opsi_jawaban').removeAttr('disabled');
-                $('#npwp_file').removeAttr('disabled');
-
-                $('#docNPWP').show();
-                $('#docNPWP_id').removeAttr('disabled');
-                $('#docNPWP_text').removeAttr('disabled');
-                $('#docNPWP_text').val('');
-                $('#docNPWP_upload_file').removeAttr('disabled');
-            } else if (ijinUsaha == 'surat_keterangan_usaha') {
-                $('#nib').hide();
-                $('#nib_id').attr('disabled', true);
-                $('#nib_text').attr('disabled', true);
-                $('#nib_text').val('');
-                $('#nib_opsi_jawaban').attr('disabled', true);
-
-                $('#docNIB').hide();
-                $('#docNIB_id').attr('disabled', true);
-                $('#docNIB_text').attr('disabled', true);
-                $('#docNIB_text').val('{{ temporary($duTemp->id, 78)?->opsi_text }}');
-                $('#docNIB_upload_file').attr('disabled', true);
-                $('#nib_file').attr('disabled', true);
-                $('#file_nib').attr('disabled', true);
-                $('#docNIB_file').attr('disabled', true);
-
-                $('#surat_keterangan_usaha').show();
-                $('#surat_keterangan_usaha_id').removeAttr('disabled');
-                $('#surat_keterangan_usaha_text').removeAttr('disabled');
-                $('#surat_keterangan_usaha_text').val('');
-                $('#surat_keterangan_usaha_opsi_jawaban').removeAttr('disabled');
-                $('#surat_keterangan_usaha_file').removeAttr('disabled');
-
-                $('#docSKU').show();
-                $('#docSKU_id').removeAttr('disabled');
-                $('#docSKU_text').removeAttr('disabled');
-                $('#docSKU_upload_file').removeAttr('disabled');
-
-                $('#npwp').show();
-                $('#npwp_id').removeAttr('disabled');
-                $('#npwp_text').removeAttr('disabled');
-                $('#npwp_text').val('{{ temporary($duTemp->id, 79)?->opsi_text }}');
-                $('#npwp_opsi_jawaban').removeAttr('disabled');
-                $('#npwp_file').removeAttr('disabled');
-
-                $('#docNPWP').show();
-                $('#docNPWP_id').removeAttr('disabled');
-                $('#docNPWP_text').removeAttr('disabled');
-                $('#docNPWP_text').val('');
-                $('#docNPWP_upload_file').removeAttr('disabled');
-            } else if (ijinUsaha == 'tidak_ada_legalitas_usaha') {
-                $('#nib').hide();
-                $('#nib_id').attr('disabled', true);
-                $('#nib_text').attr('disabled', true);
-                $('#nib_text').val('');
-                $('#nib_opsi_jawaban').attr('disabled', true);
-                $('#file_nib').attr('disabled', true);
-
-                $('#docNIB').hide();
-                $('#docNIB_id').attr('disabled', true);
-                $('#docNIB_text').attr('disabled', true);
-                $('#docNIB_text').val('');
-                $('#docNIB_file').attr('disabled', true);
-                $('#docNIB_upload_file').attr('disabled', true);
-
-                $('#surat_keterangan_usaha').hide();
-                $('#surat_keterangan_usaha_id').attr('disabled', true);
-                $('#surat_keterangan_usaha_text').attr('disabled', true);
-                $('#surat_keterangan_usaha_text').val('');
-                $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
-                $('#surat_keterangan_usaha_file').attr('disabled', true);
-
-                $('#docSKU').hide();
-                $('#docSKU_id').attr('disabled', true);
-                $('#docSKU_text').attr('disabled', true);
-                $('#docSKU_text').val('');
-                $('#docSKU_upload_file').attr('disabled', true);
-
-                $('#npwp').hide();
-                $('#npwp_id').attr('disabled', true);
-                $('#npwp_text').attr('disabled', true);
-                $('#npwp_file').attr('disabled', true);
-                $('#npwp_text').val('');
-                $('#npwp_opsi_jawaban').attr('disabled', true);
-
-                $('#docNPWP').hide();
-                $('#docNPWP_id').attr('disabled', true);
-                $('#docNPWP_text').attr('disabled', true);
-                $('#docNPWP_text').val('');
-                $('#docNPWP_upload_file').attr('disabled', true);
-            } else {
-                $('#nib').hide();
-                $('#nib_id').attr('disabled', true);
-                $('#nib_text').attr('disabled', true);
-                $('#nib_text').val('');
-                $('#nib_opsi_jawaban').attr('disabled', true);
-
-                $('#docNIB').hide();
-                $('#docNIB_id').attr('disabled', true);
-                $('#docNIB_text').attr('disabled', true);
-                $('#docNIB_text').val('');
-                $('#docNIB_upload_file').attr('disabled', true);
-
-                $('#surat_keterangan_usaha').hide();
-                $('#surat_keterangan_usaha_id').attr('disabled', true);
-                $('#surat_keterangan_usaha_text').attr('disabled', true);
-                $('#surat_keterangan_usaha_text').val('');
-                $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
-
-                $('#npwp').show();
-                $('#npwp_id').removeAttr('disabled');
-                $('#npwp_text').removeAttr('disabled');
-                $('#npwp_text').val('{{ temporary($duTemp->id, 79)?->opsi_text }}');
-                $('#npwp_opsi_jawaban').removeAttr('disabled');
-
-                $('#docNPWP').show();
-                $('#docNPWP_id').removeAttr('disabled');
-                $('#docNPWP_text').removeAttr('disabled');
-                $('#docNPWP_text').val('');
-                $('#docNPWP_upload_file').removeAttr('disabled');
-            }
-        });
-        // end milih ijin usaha
-
-        //triger hitung ratio coverage
-        $('#thls').change(function(e) {
-            hitungRatioCoverage();
-        });
-        //end triger hitung ratio covarege
-
-        //triger hitung ratio coverage
-        $('#nilai_asuransi_penjaminan').change(function(e) {
-            hitungRatioCoverage();
-        });
-        //end triger hitung ratio covarege
-
-        //triger hitung ratio coverage
-        $('#jumlah_kredit').change(function(e) {
-            hitungRatioCoverage();
-        });
-        //end triger hitung ratio covarege
-
-        // hitung ratio covarege
-        function hitungRatioCoverage() {
-            let thls = parseInt($('#thls').val().split('.').join(''));
-            let nilaiAsuransi = parseInt($('#nilai_asuransi_penjaminan').val().split('.').join(''));
-            let kreditYangDiminta = parseInt($('#jumlah_kredit').val().split('.').join(''));
-
-            let ratioCoverage = (thls + nilaiAsuransi) / kreditYangDiminta * 100; //cek rumus nya lagi
-            $('#ratio_coverage').val(ratioCoverage);
-
-            if (ratioCoverage >= 150) {
-                $('#ratio_coverage_opsi_0').attr('selected', true);
-                $('#ratio_coverage_opsi_1').removeAttr('selected');
-                $('#ratio_coverage_opsi_2').removeAttr('selected');
-                $('#ratio_coverage_opsi_3').removeAttr('selected');
-            } else if (ratioCoverage >= 131 && ratioCoverage < 150) {
-                $('#ratio_coverage_opsi_0').removeAttr('selected');
-                $('#ratio_coverage_opsi_1').attr('selected', true);
-                $('#ratio_coverage_opsi_2').removeAttr('selected');
-                $('#ratio_coverage_opsi_3').removeAttr('selected');
-            } else if (ratioCoverage >= 110 && ratioCoverage <= 130) {
-                $('#ratio_coverage_opsi_0').removeAttr('selected');
-                $('#ratio_coverage_opsi_1').removeAttr('selected');
-                $('#ratio_coverage_opsi_2').attr('selected', true);
-                $('#ratio_coverage_opsi_3').removeAttr('selected');
-            } else if (ratioCoverage < 110 && !isNaN(ratioCoverage)) {
-                $('#ratio_coverage_opsi_0').removeAttr('selected');
-                $('#ratio_coverage_opsi_1').removeAttr('selected');
-                $('#ratio_coverage_opsi_2').removeAttr('selected');
-                $('#ratio_coverage_opsi_3').attr('selected', true);
-            } else {
-                $('#ratio_coverage_opsi_0').removeAttr('selected');
-                $('#ratio_coverage_opsi_1').removeAttr('selected');
-                $('#ratio_coverage_opsi_2').removeAttr('selected');
-                $('#ratio_coverage_opsi_3').removeAttr('selected');
-            }
-        }
-        //end hitung ratio covarege
-
-        //triger hitung ratio Tenor Asuransi
-        $('#masa_berlaku_asuransi_penjaminan').change(function(e) {
-            hitungRatioTenorAsuransi();
-        });
-        //end triger hitung ratio Tenor Asuransi
-
-        //triger hitung ratio Tenor Asuransi
-        $('#tenor_yang_diminta').change(function(e) {
-            hitungRatioTenorAsuransi();
-        });
-        //end triger hitung ratio Tenor Asuransi
-
-        // hitung ratio Tenor Asuransi
-        function hitungRatioTenorAsuransi() {
-            let masaBerlakuAsuransi = parseInt($('#masa_berlaku_asuransi_penjaminan').val());
-            let tenorYangDiminta = parseInt($('#tenor_yang_diminta').val());
-
-            let ratioTenorAsuransi = parseInt(masaBerlakuAsuransi / tenorYangDiminta * 100); //cek rumusnya lagi
-
-            $('#ratio_tenor_asuransi').val(ratioTenorAsuransi);
-
-            if (ratioTenorAsuransi >= 200) {
-                $('#ratio_tenor_asuransi_opsi_0').attr('selected', true);
-                $('#ratio_tenor_asuransi_opsi_1').removeAttr('selected');
-                $('#ratio_tenor_asuransi_opsi_2').removeAttr('selected');
-                $('#ratio_tenor_asuransi_opsi_3').removeAttr('selected');
-            } else if (ratioTenorAsuransi >= 150 && ratioTenorAsuransi < 200) {
-                $('#ratio_tenor_asuransi_opsi_0').removeAttr('selected');
-                $('#ratio_tenor_asuransi_opsi_1').attr('selected', true);
-                $('#ratio_tenor_asuransi_opsi_2').removeAttr('selected');
-                $('#ratio_tenor_asuransi_opsi_3').removeAttr('selected');
-            } else if (ratioTenorAsuransi >= 100 && ratioTenorAsuransi < 150) {
-                $('#ratio_tenor_asuransi_opsi_0').removeAttr('selected');
-                $('#ratio_tenor_asuransi_opsi_1').removeAttr('selected');
-                $('#ratio_tenor_asuransi_opsi_2').attr('selected', true);
-                $('#ratio_tenor_asuransi_opsi_3').removeAttr('selected');
-            } else if (ratioTenorAsuransi < 100 && !isNaN(ratioTenorAsuransi)) {
-                $('#ratio_tenor_asuransi_opsi_0').removeAttr('selected');
-                $('#ratio_tenor_asuransi_opsi_1').removeAttr('selected');
-                $('#ratio_tenor_asuransi_opsi_2').removeAttr('selected');
-                $('#ratio_tenor_asuransi_opsi_3').attr('selected', true);
-            } else {
-                $('#ratio_tenor_asuransi_opsi_0').removeAttr('selected');
-                $('#ratio_tenor_asuransi_opsi_1').removeAttr('selected');
-                $('#ratio_tenor_asuransi_opsi_2').removeAttr('selected');
-                $('#ratio_tenor_asuransi_opsi_3').removeAttr('selected');
-            }
-        }
-        //end hitung ratio covarege
-
-        // //triger hitung Persentase Kebutuhan Kredit
-        // $('#kebutuhan_kredit').change(function(e) {
-        //     hitungPersentaseKebutuhanKredit();
-        // });
-        // //end triger hitung Persentase Kebutuhan Kredit
-
-        // //triger hitung Persentase Kebutuhan Kredit
-        // $('#jumlah_kredit').change(function(e) {
-        //     hitungPersentaseKebutuhanKredit();
-        // });
-        //end triger hitung Persentase Kebutuhan Kredit
-
-        // hitung Persentase Kebutuhan Kredit
-        // function hitungPersentaseKebutuhanKredit() {
-        //     let kebutuhanKredit = parseInt($('#kebutuhan_kredit').val());
-        //     let jumlahKredit = parseInt($('#jumlah_kredit').val());
-
-        //     let persentaseKebutuhanKredit = parseInt(jumlahKredit / kebutuhanKredit * 100); //cek rumusnya lagi
-
-        //     $('#persentase_kebutuhan_kredit').val(persentaseKebutuhanKredit);
-
-        //     if (persentaseKebutuhanKredit <= 80 && !isNaN(persentaseKebutuhanKredit)) {
-        //         $('#persentase_kebutuhan_kredit_opsi_0').attr('selected', true);
-        //         $('#persentase_kebutuhan_kredit_opsi_1').removeAttr('selected');
-        //         $('#persentase_kebutuhan_kredit_opsi_2').removeAttr('selected');
-        //         $('#persentase_kebutuhan_kredit_opsi_3').removeAttr('selected');
-        //     } else if (persentaseKebutuhanKredit >= 81 && persentaseKebutuhanKredit <= 89) {
-        //         $('#persentase_kebutuhan_kredit_opsi_0').removeAttr('selected');
-        //         $('#persentase_kebutuhan_kredit_opsi_1').attr('selected', true);
-        //         $('#persentase_kebutuhan_kredit_opsi_2').removeAttr('selected');
-        //         $('#persentase_kebutuhan_kredit_opsi_3').removeAttr('selected');
-        //     } else if (persentaseKebutuhanKredit >= 90 && persentaseKebutuhanKredit <= 100) {
-        //         $('#persentase_kebutuhan_kredit_opsi_0').removeAttr('selected');
-        //         $('#persentase_kebutuhan_kredit_opsi_1').removeAttr('selected');
-        //         $('#persentase_kebutuhan_kredit_opsi_2').attr('selected', true);
-        //         $('#persentase_kebutuhan_kredit_opsi_3').removeAttr('selected');
-        //     } else if (persentaseKebutuhanKredit > 100 && !isNaN(persentaseKebutuhanKredit)) {
-        //         $('#persentase_kebutuhan_kredit_opsi_0').removeAttr('selected');
-        //         $('#persentase_kebutuhan_kredit_opsi_1').removeAttr('selected');
-        //         $('#persentase_kebutuhan_kredit_opsi_2').removeAttr('selected');
-        //         $('#persentase_kebutuhan_kredit_opsi_3').attr('selected', true);
-        //     } else {
-        //         $('#persentase_kebutuhan_kredit_opsi_0').removeAttr('selected');
-        //         $('#persentase_kebutuhan_kredit_opsi_1').removeAttr('selected');
-        //         $('#persentase_kebutuhan_kredit_opsi_2').removeAttr('selected');
-        //         $('#persentase_kebutuhan_kredit_opsi_3').removeAttr('selected');
-        //     }
-        // }
-        //end Persentase Kebutuhan Kredit
-
-        //triger hitung Repayment Capacity
-        $('#persentase_net_income').change(function(e) {
-            hitungRepaymentCapacity();
-        });
-        //end triger hitung Repayment Capacity
-
-        //triger hitung Repayment Capacity
-        $('#omzet_penjualan').change(function(e) {
-            hitungRepaymentCapacity();
-        });
-        //end triger hitung Repayment Capacity
-
-        //triger hitung Repayment Capacity
-        $('#rencana_peningkatan').change(function(e) {
-            hitungRepaymentCapacity();
-        });
-        //end triger hitung Repayment Capacity
-
-        //triger hitung Repayment Capacity
-        $('#installment').change(function(e) {
-            hitungRepaymentCapacity();
-        });
-        //end triger hitung Repayment Capacity
-
-        // hitung Repayment Capacity
-        function hitungRepaymentCapacity() {
-            let omzetPenjualan = parseInt($('#omzet_penjualan').val().split('.').join(''));
-            let persentaseNetIncome = parseInt($('#persentase_net_income').val()) / 100;
-            let rencanaPeningkatan = parseInt($('#rencana_peningkatan').val()) / 100;
-            let installment = parseInt($('#installment').val().split('.').join(''));
-
-            let repaymentCapacity = parseFloat(persentaseNetIncome * omzetPenjualan * (1 + rencanaPeningkatan) /
-                installment); //cek rumusnya lagi
-
-            $('#repayment_capacity').val(repaymentCapacity.toFixed(2));
-
-            if (repaymentCapacity > 2) {
-                $('#repayment_capacity_opsi_0').attr('selected', true);
-                $('#repayment_capacity_opsi_1').removeAttr('selected');
-                $('#repayment_capacity_opsi_2').removeAttr('selected');
-                $('#repayment_capacity_opsi_3').removeAttr('selected');
-            } else if (repaymentCapacity >= 1.5 && repaymentCapacity < 2) {
-                $('#repayment_capacity_opsi_0').removeAttr('selected');
-                $('#repayment_capacity_opsi_1').attr('selected', true);
-                $('#repayment_capacity_opsi_2').removeAttr('selected');
-                $('#repayment_capacity_opsi_3').removeAttr('selected');
-            } else if (repaymentCapacity >= 1.25 && repaymentCapacity < 1.5) {
-                $('#repayment_capacity_opsi_0').removeAttr('selected');
-                $('#repayment_capacity_opsi_1').removeAttr('selected');
-                $('#repayment_capacity_opsi_2').attr('selected', true);
-                $('#repayment_capacity_opsi_3').removeAttr('selected');
-            } else if (repaymentCapacity < 1.25 && !isNaN(repaymentCapacity)) {
-                $('#repayment_capacity_opsi_0').removeAttr('selected');
-                $('#repayment_capacity_opsi_1').removeAttr('selected');
-                $('#repayment_capacity_opsi_2').removeAttr('selected');
-                $('#repayment_capacity_opsi_3').attr('selected', true);
-            } else {
-                $('#repayment_capacity_opsi_0').removeAttr('selected');
-                $('#repayment_capacity_opsi_1').removeAttr('selected');
-                $('#repayment_capacity_opsi_2').removeAttr('selected');
-                $('#repayment_capacity_opsi_3').removeAttr('selected');
-            }
-        }
-        //end Repayment Capacity
-
-        $('.rupiah').keyup(function(e){
-            var input = $(this).val()
-            $(this).val(formatrupiah(input))
-        });
-
-        function formatrupiah(angka, prefix) {
-            var number_string = angka ? angka.replace(/[^,\d]/g, '').toString() : angka,
-			split   		= number_string.split(','),
-			sisa     		= split[0].length % 3,
-			rupiah     		= split[0].substr(0, sisa),
-			ribuan     		= split[0].substr(sisa).match(/\d{3}/gi);
-
-			// tambahkan titik jika yang di input sudah menjadi angka ribuan
-			if(ribuan){
-				separator = sisa ? '.' : '';
-				rupiah += separator + ribuan.join('.');
-			}
-
-			rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-			return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
-        }
-        // End Format Rupiah
-
-        // Limit Upload
-        $('.limit-size').on('change', function() {
-            var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-            if (size > 15) {
-                $(this).next().css({"display": "block"});
-                this.value = ''
-            } else {
-                $(this).next().css({"display": "none"});
-            }
-        })
-
-        $('body').on('click', '.file-wrapper .btn-add-file', function(e) {
-            const wrapper = $(this).parent().parent().parent();
-            const $clone = wrapper.clone();
-
-            $clone.find('[type="file"]').attr('data-id', '');
-            $clone.find('[type="file"]').val('');
-            $clone.find('.filename').html('');
-            $clone.insertAfter(wrapper);
-        });
-
-        $('body').on('click', '.file-wrapper .btn-del-file', function(e) {
-            const inputData = $(this).parent().parent().find('input[type="file"]');
-            const wrapperEl = $(this).parent().parent().parent();
-
-            $.ajax({
-                url: '{{ route('pengajuan-kredit.temp.file') }}',
-                method: 'DELETE',
-                data: {
-                    answer_id: inputData.data('id'),
-                },
-                success: (res) => {
-                    inputData.parent().find('.filename').text('');
-                    inputData.val('');
-
-                    if(wrapperEl.siblings('.file-wrapper').get().length < 1) return;
-                    wrapperEl.remove();
-                }
-            });
-        });
-        // End Limit Upload
-
-        @if(count($errors->all()))
-        Swal.fire({
-            icon: 'error',
-            title: 'Error Validation',
-            html: `
-            <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
-                @foreach($errors->all() as $error)
-                <ul>
-                    <li>{{ $error }}</li>
-                </ul>
-                @endforeach
-            </div>
-            `
-        });
-        @endif
-
-        function cekValueKosong(formIndex){
-            var skema = $("#skema_kredit").val()
-            var form = ".form-wizard[data-index="+ formIndex +"]";
-            var inputFile = $(form + " input[type=file]")
-            var inputText = $(form + " input[type=text]")
-            var inputNumber = $(form + " input[type=number]")
-            var select = $(form + " select")
-            var textarea = $(form + " textarea")
-
-            $.each(inputFile, function(i, v){
-                if(v.value == '' && !$(this).prop('disabled') && $(this).closest('.filename') == ''){
-                    if(form == ".form-wizard[data-index='2']"){
-                        var ijin = $(form + " select[name=ijin_usaha]")
-                        if(ijin != "tidak_ada_legalitas_usaha"){
-                            let val = $(this).attr("id");
-                            if (val)
-                                val = $(this).attr("id").toString()
-                            nullValue.push(val.replaceAll("_", " "))
                         }
-                    } else{
+                    });
+
+                    $(".checkKategori").click(function() {
+                        var input = $(this).closest('.form-group').find(".input")
+                        // var input_id = $(this).closest('.form-group').find("input_id").last()
+                        // var input_opsi_jawaban = $(this).closest('.form-group').find("input_opsi_jawaban").last()
+                        if ($(this).is(':checked')) {
+                            input.prop('disabled', false)
+                            // input_id.prop('disabled',false)
+                            // input_opsi_jawaban.prop('disabled',false)
+                        } else {
+                            input.val('')
+                            input.prop('disabled', true)
+                            // input_id.prop('disabled',true)
+                            // input_opsi_jawaban.prop('disabled',true)
+                        }
+                    })
+                } else {
+                    $('#select_kategori_jaminan_tambahan').append(`
+                        <label for="">${response.item.nama}</label>
+                        <select name="dataLevelEmpat[${response.item.id}]" id="itemByKategori" class="form-control cek-sub-column"
+                            data-id_item="${response.item.id}">
+                            <option value=""> --Pilih Opsi -- </option>
+                            </select>
+
+                        <div id="item${response.item.id}">
+
+                        </div>
+                    `);
+                    // add opsi dari item
+                    $.each(response.item.option, function(i, valOption) {
+                        // console.log(valOption.skor);
+                        $('#itemByKategori').append(`
+                        <option value="${valOption.skor}-${valOption.id}" ${(response.dataSelect == valOption.id) ? 'selected' : ''}>
+                        ${valOption.option}
+                        </option>`);
+                    });
+                    $("#itemByKategori").val('0-188')
+                    $("#select_kategori_jaminan_tambahan").hide()
+                }
+            }
+        });
+    });
+    // end item kategori jaminan tambahan cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
+
+    // milih ijin usaha
+    $('#ijin_usaha').change(function(e) {
+        let ijinUsaha = $(this).val();
+        if (ijinUsaha == 'nib') {
+            $('#surat_keterangan_usaha').hide();
+            $('#surat_keterangan_usaha_id').attr('disabled', true);
+            $('#surat_keterangan_usaha_text').attr('disabled', true);
+            $('#surat_keterangan_usaha_file').attr('disabled', true);
+            $('#surat_keterangan_usaha_text').val("");
+            $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
+
+            $('#docSKU').hide();
+            $('#docSKU_id').attr('disabled', true);
+            $('#docSKU_text').attr('disabled', true);
+            $('#docSKU_upload_file').attr('disabled', true);
+
+            $('#nib').show();
+            $('#nib_id').removeAttr('disabled');
+            $('#nib_text').removeAttr('disabled');
+            $('#nib_text').val('{{ temporary($duTemp->id, 77)?->opsi_text }}');
+            $('#nib_opsi_jawaban').removeAttr('disabled');
+
+            $('#docNIB').show();
+            $('#docNIB_id').removeAttr('disabled');
+            $('#docNIB_text').removeAttr('disabled');
+            $('#docNIB_upload_file').removeAttr('disabled');
+            $('#file_nib').removeAttr('disabled');
+
+            $('#npwp').show();
+            $('#npwp_id').removeAttr('disabled');
+            $('#npwp_text').removeAttr('disabled');
+            $('#npwp_text').val('{{ temporary($duTemp->id, 79)?->opsi_text }}');
+            $('#npwp_opsi_jawaban').removeAttr('disabled');
+            $('#npwp_file').removeAttr('disabled');
+
+            $('#docNPWP').show();
+            $('#docNPWP_id').removeAttr('disabled');
+            $('#docNPWP_text').removeAttr('disabled');
+            $('#docNPWP_text').val('');
+            $('#docNPWP_upload_file').removeAttr('disabled');
+        } else if (ijinUsaha == 'surat_keterangan_usaha') {
+            $('#nib').hide();
+            $('#nib_id').attr('disabled', true);
+            $('#nib_text').attr('disabled', true);
+            $('#nib_text').val('');
+            $('#nib_opsi_jawaban').attr('disabled', true);
+
+            $('#docNIB').hide();
+            $('#docNIB_id').attr('disabled', true);
+            $('#docNIB_text').attr('disabled', true);
+            $('#docNIB_text').val('{{ temporary($duTemp->id, 78)?->opsi_text }}');
+            $('#docNIB_upload_file').attr('disabled', true);
+            $('#nib_file').attr('disabled', true);
+            $('#file_nib').attr('disabled', true);
+            $('#docNIB_file').attr('disabled', true);
+
+            $('#surat_keterangan_usaha').show();
+            $('#surat_keterangan_usaha_id').removeAttr('disabled');
+            $('#surat_keterangan_usaha_text').removeAttr('disabled');
+            $('#surat_keterangan_usaha_text').val('');
+            $('#surat_keterangan_usaha_opsi_jawaban').removeAttr('disabled');
+            $('#surat_keterangan_usaha_file').removeAttr('disabled');
+
+            $('#docSKU').show();
+            $('#docSKU_id').removeAttr('disabled');
+            $('#docSKU_text').removeAttr('disabled');
+            $('#docSKU_upload_file').removeAttr('disabled');
+
+            $('#npwp').show();
+            $('#npwp_id').removeAttr('disabled');
+            $('#npwp_text').removeAttr('disabled');
+            $('#npwp_text').val('{{ temporary($duTemp->id, 79)?->opsi_text }}');
+            $('#npwp_opsi_jawaban').removeAttr('disabled');
+            $('#npwp_file').removeAttr('disabled');
+
+            $('#docNPWP').show();
+            $('#docNPWP_id').removeAttr('disabled');
+            $('#docNPWP_text').removeAttr('disabled');
+            $('#docNPWP_text').val('');
+            $('#docNPWP_upload_file').removeAttr('disabled');
+        } else if (ijinUsaha == 'tidak_ada_legalitas_usaha') {
+            $('#nib').hide();
+            $('#nib_id').attr('disabled', true);
+            $('#nib_text').attr('disabled', true);
+            $('#nib_text').val('');
+            $('#nib_opsi_jawaban').attr('disabled', true);
+            $('#file_nib').attr('disabled', true);
+
+            $('#docNIB').hide();
+            $('#docNIB_id').attr('disabled', true);
+            $('#docNIB_text').attr('disabled', true);
+            $('#docNIB_text').val('');
+            $('#docNIB_file').attr('disabled', true);
+            $('#docNIB_upload_file').attr('disabled', true);
+
+            $('#surat_keterangan_usaha').hide();
+            $('#surat_keterangan_usaha_id').attr('disabled', true);
+            $('#surat_keterangan_usaha_text').attr('disabled', true);
+            $('#surat_keterangan_usaha_text').val('');
+            $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
+            $('#surat_keterangan_usaha_file').attr('disabled', true);
+
+            $('#docSKU').hide();
+            $('#docSKU_id').attr('disabled', true);
+            $('#docSKU_text').attr('disabled', true);
+            $('#docSKU_text').val('');
+            $('#docSKU_upload_file').attr('disabled', true);
+
+            $('#npwp').hide();
+            $('#npwp_id').attr('disabled', true);
+            $('#npwp_text').attr('disabled', true);
+            $('#npwp_file').attr('disabled', true);
+            $('#npwp_text').val('');
+            $('#npwp_opsi_jawaban').attr('disabled', true);
+
+            $('#docNPWP').hide();
+            $('#docNPWP_id').attr('disabled', true);
+            $('#docNPWP_text').attr('disabled', true);
+            $('#docNPWP_text').val('');
+            $('#docNPWP_upload_file').attr('disabled', true);
+        } else {
+            $('#nib').hide();
+            $('#nib_id').attr('disabled', true);
+            $('#nib_text').attr('disabled', true);
+            $('#nib_text').val('');
+            $('#nib_opsi_jawaban').attr('disabled', true);
+
+            $('#docNIB').hide();
+            $('#docNIB_id').attr('disabled', true);
+            $('#docNIB_text').attr('disabled', true);
+            $('#docNIB_text').val('');
+            $('#docNIB_upload_file').attr('disabled', true);
+
+            $('#surat_keterangan_usaha').hide();
+            $('#surat_keterangan_usaha_id').attr('disabled', true);
+            $('#surat_keterangan_usaha_text').attr('disabled', true);
+            $('#surat_keterangan_usaha_text').val('');
+            $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
+
+            $('#npwp').show();
+            $('#npwp_id').removeAttr('disabled');
+            $('#npwp_text').removeAttr('disabled');
+            $('#npwp_text').val('{{ temporary($duTemp->id, 79)?->opsi_text }}');
+            $('#npwp_opsi_jawaban').removeAttr('disabled');
+
+            $('#docNPWP').show();
+            $('#docNPWP_id').removeAttr('disabled');
+            $('#docNPWP_text').removeAttr('disabled');
+            $('#docNPWP_text').val('');
+            $('#docNPWP_upload_file').removeAttr('disabled');
+        }
+    });
+    // end milih ijin usaha
+
+    //triger hitung ratio coverage
+    $('#thls').change(function(e) {
+        hitungRatioCoverage();
+    });
+    //end triger hitung ratio covarege
+
+    //triger hitung ratio coverage
+    $('#nilai_asuransi_penjaminan').change(function(e) {
+        hitungRatioCoverage();
+    });
+    //end triger hitung ratio covarege
+
+    //triger hitung ratio coverage
+    $('#jumlah_kredit').change(function(e) {
+        hitungRatioCoverage();
+    });
+    //end triger hitung ratio covarege
+
+    // hitung ratio covarege
+    function hitungRatioCoverage() {
+        let thls = parseInt($('#thls').val().split('.').join(''));
+        let nilaiAsuransi = parseInt($('#nilai_asuransi_penjaminan').val().split('.').join(''));
+        let kreditYangDiminta = parseInt($('#jumlah_kredit').val().split('.').join(''));
+
+        let ratioCoverage = (thls + nilaiAsuransi) / kreditYangDiminta * 100; //cek rumus nya lagi
+        $('#ratio_coverage').val(ratioCoverage);
+
+        if (ratioCoverage >= 150) {
+            $('#ratio_coverage_opsi_0').attr('selected', true);
+            $('#ratio_coverage_opsi_1').removeAttr('selected');
+            $('#ratio_coverage_opsi_2').removeAttr('selected');
+            $('#ratio_coverage_opsi_3').removeAttr('selected');
+        } else if (ratioCoverage >= 131 && ratioCoverage < 150) {
+            $('#ratio_coverage_opsi_0').removeAttr('selected');
+            $('#ratio_coverage_opsi_1').attr('selected', true);
+            $('#ratio_coverage_opsi_2').removeAttr('selected');
+            $('#ratio_coverage_opsi_3').removeAttr('selected');
+        } else if (ratioCoverage >= 110 && ratioCoverage <= 130) {
+            $('#ratio_coverage_opsi_0').removeAttr('selected');
+            $('#ratio_coverage_opsi_1').removeAttr('selected');
+            $('#ratio_coverage_opsi_2').attr('selected', true);
+            $('#ratio_coverage_opsi_3').removeAttr('selected');
+        } else if (ratioCoverage < 110 && !isNaN(ratioCoverage)) {
+            $('#ratio_coverage_opsi_0').removeAttr('selected');
+            $('#ratio_coverage_opsi_1').removeAttr('selected');
+            $('#ratio_coverage_opsi_2').removeAttr('selected');
+            $('#ratio_coverage_opsi_3').attr('selected', true);
+        } else {
+            $('#ratio_coverage_opsi_0').removeAttr('selected');
+            $('#ratio_coverage_opsi_1').removeAttr('selected');
+            $('#ratio_coverage_opsi_2').removeAttr('selected');
+            $('#ratio_coverage_opsi_3').removeAttr('selected');
+        }
+    }
+    //end hitung ratio covarege
+
+    //triger hitung ratio Tenor Asuransi
+    $('#masa_berlaku_asuransi_penjaminan').change(function(e) {
+        hitungRatioTenorAsuransi();
+    });
+    //end triger hitung ratio Tenor Asuransi
+
+    //triger hitung ratio Tenor Asuransi
+    $('#tenor_yang_diminta').change(function(e) {
+        hitungRatioTenorAsuransi();
+    });
+    //end triger hitung ratio Tenor Asuransi
+
+    // hitung ratio Tenor Asuransi
+    function hitungRatioTenorAsuransi() {
+        let masaBerlakuAsuransi = parseInt($('#masa_berlaku_asuransi_penjaminan').val());
+        let tenorYangDiminta = parseInt($('#tenor_yang_diminta').val());
+
+        let ratioTenorAsuransi = parseInt(masaBerlakuAsuransi / tenorYangDiminta * 100); //cek rumusnya lagi
+
+        $('#ratio_tenor_asuransi').val(ratioTenorAsuransi);
+
+        if (ratioTenorAsuransi >= 200) {
+            $('#ratio_tenor_asuransi_opsi_0').attr('selected', true);
+            $('#ratio_tenor_asuransi_opsi_1').removeAttr('selected');
+            $('#ratio_tenor_asuransi_opsi_2').removeAttr('selected');
+            $('#ratio_tenor_asuransi_opsi_3').removeAttr('selected');
+        } else if (ratioTenorAsuransi >= 150 && ratioTenorAsuransi < 200) {
+            $('#ratio_tenor_asuransi_opsi_0').removeAttr('selected');
+            $('#ratio_tenor_asuransi_opsi_1').attr('selected', true);
+            $('#ratio_tenor_asuransi_opsi_2').removeAttr('selected');
+            $('#ratio_tenor_asuransi_opsi_3').removeAttr('selected');
+        } else if (ratioTenorAsuransi >= 100 && ratioTenorAsuransi < 150) {
+            $('#ratio_tenor_asuransi_opsi_0').removeAttr('selected');
+            $('#ratio_tenor_asuransi_opsi_1').removeAttr('selected');
+            $('#ratio_tenor_asuransi_opsi_2').attr('selected', true);
+            $('#ratio_tenor_asuransi_opsi_3').removeAttr('selected');
+        } else if (ratioTenorAsuransi < 100 && !isNaN(ratioTenorAsuransi)) {
+            $('#ratio_tenor_asuransi_opsi_0').removeAttr('selected');
+            $('#ratio_tenor_asuransi_opsi_1').removeAttr('selected');
+            $('#ratio_tenor_asuransi_opsi_2').removeAttr('selected');
+            $('#ratio_tenor_asuransi_opsi_3').attr('selected', true);
+        } else {
+            $('#ratio_tenor_asuransi_opsi_0').removeAttr('selected');
+            $('#ratio_tenor_asuransi_opsi_1').removeAttr('selected');
+            $('#ratio_tenor_asuransi_opsi_2').removeAttr('selected');
+            $('#ratio_tenor_asuransi_opsi_3').removeAttr('selected');
+        }
+    }
+    //end hitung ratio covarege
+
+    // //triger hitung Persentase Kebutuhan Kredit
+    // $('#kebutuhan_kredit').change(function(e) {
+    //     hitungPersentaseKebutuhanKredit();
+    // });
+    // //end triger hitung Persentase Kebutuhan Kredit
+
+    // //triger hitung Persentase Kebutuhan Kredit
+    // $('#jumlah_kredit').change(function(e) {
+    //     hitungPersentaseKebutuhanKredit();
+    // });
+    //end triger hitung Persentase Kebutuhan Kredit
+
+    // hitung Persentase Kebutuhan Kredit
+    // function hitungPersentaseKebutuhanKredit() {
+    //     let kebutuhanKredit = parseInt($('#kebutuhan_kredit').val());
+    //     let jumlahKredit = parseInt($('#jumlah_kredit').val());
+
+    //     let persentaseKebutuhanKredit = parseInt(jumlahKredit / kebutuhanKredit * 100); //cek rumusnya lagi
+
+    //     $('#persentase_kebutuhan_kredit').val(persentaseKebutuhanKredit);
+
+    //     if (persentaseKebutuhanKredit <= 80 && !isNaN(persentaseKebutuhanKredit)) {
+    //         $('#persentase_kebutuhan_kredit_opsi_0').attr('selected', true);
+    //         $('#persentase_kebutuhan_kredit_opsi_1').removeAttr('selected');
+    //         $('#persentase_kebutuhan_kredit_opsi_2').removeAttr('selected');
+    //         $('#persentase_kebutuhan_kredit_opsi_3').removeAttr('selected');
+    //     } else if (persentaseKebutuhanKredit >= 81 && persentaseKebutuhanKredit <= 89) {
+    //         $('#persentase_kebutuhan_kredit_opsi_0').removeAttr('selected');
+    //         $('#persentase_kebutuhan_kredit_opsi_1').attr('selected', true);
+    //         $('#persentase_kebutuhan_kredit_opsi_2').removeAttr('selected');
+    //         $('#persentase_kebutuhan_kredit_opsi_3').removeAttr('selected');
+    //     } else if (persentaseKebutuhanKredit >= 90 && persentaseKebutuhanKredit <= 100) {
+    //         $('#persentase_kebutuhan_kredit_opsi_0').removeAttr('selected');
+    //         $('#persentase_kebutuhan_kredit_opsi_1').removeAttr('selected');
+    //         $('#persentase_kebutuhan_kredit_opsi_2').attr('selected', true);
+    //         $('#persentase_kebutuhan_kredit_opsi_3').removeAttr('selected');
+    //     } else if (persentaseKebutuhanKredit > 100 && !isNaN(persentaseKebutuhanKredit)) {
+    //         $('#persentase_kebutuhan_kredit_opsi_0').removeAttr('selected');
+    //         $('#persentase_kebutuhan_kredit_opsi_1').removeAttr('selected');
+    //         $('#persentase_kebutuhan_kredit_opsi_2').removeAttr('selected');
+    //         $('#persentase_kebutuhan_kredit_opsi_3').attr('selected', true);
+    //     } else {
+    //         $('#persentase_kebutuhan_kredit_opsi_0').removeAttr('selected');
+    //         $('#persentase_kebutuhan_kredit_opsi_1').removeAttr('selected');
+    //         $('#persentase_kebutuhan_kredit_opsi_2').removeAttr('selected');
+    //         $('#persentase_kebutuhan_kredit_opsi_3').removeAttr('selected');
+    //     }
+    // }
+    //end Persentase Kebutuhan Kredit
+
+    //triger hitung Repayment Capacity
+    $('#persentase_net_income').change(function(e) {
+        hitungRepaymentCapacity();
+    });
+    //end triger hitung Repayment Capacity
+
+    //triger hitung Repayment Capacity
+    $('#omzet_penjualan').change(function(e) {
+        hitungRepaymentCapacity();
+    });
+    //end triger hitung Repayment Capacity
+
+    //triger hitung Repayment Capacity
+    $('#rencana_peningkatan').change(function(e) {
+        hitungRepaymentCapacity();
+    });
+    //end triger hitung Repayment Capacity
+
+    //triger hitung Repayment Capacity
+    $('#installment').change(function(e) {
+        hitungRepaymentCapacity();
+    });
+    //end triger hitung Repayment Capacity
+
+    // hitung Repayment Capacity
+    function hitungRepaymentCapacity() {
+        let omzetPenjualan = parseInt($('#omzet_penjualan').val().split('.').join(''));
+        let persentaseNetIncome = parseInt($('#persentase_net_income').val()) / 100;
+        let rencanaPeningkatan = parseInt($('#rencana_peningkatan').val()) / 100;
+        let installment = parseInt($('#installment').val().split('.').join(''));
+
+        let repaymentCapacity = parseFloat(persentaseNetIncome * omzetPenjualan * (1 + rencanaPeningkatan) /
+            installment); //cek rumusnya lagi
+
+        $('#repayment_capacity').val(repaymentCapacity.toFixed(2));
+
+        if (repaymentCapacity > 2) {
+            $('#repayment_capacity_opsi_0').attr('selected', true);
+            $('#repayment_capacity_opsi_1').removeAttr('selected');
+            $('#repayment_capacity_opsi_2').removeAttr('selected');
+            $('#repayment_capacity_opsi_3').removeAttr('selected');
+        } else if (repaymentCapacity >= 1.5 && repaymentCapacity < 2) {
+            $('#repayment_capacity_opsi_0').removeAttr('selected');
+            $('#repayment_capacity_opsi_1').attr('selected', true);
+            $('#repayment_capacity_opsi_2').removeAttr('selected');
+            $('#repayment_capacity_opsi_3').removeAttr('selected');
+        } else if (repaymentCapacity >= 1.25 && repaymentCapacity < 1.5) {
+            $('#repayment_capacity_opsi_0').removeAttr('selected');
+            $('#repayment_capacity_opsi_1').removeAttr('selected');
+            $('#repayment_capacity_opsi_2').attr('selected', true);
+            $('#repayment_capacity_opsi_3').removeAttr('selected');
+        } else if (repaymentCapacity < 1.25 && !isNaN(repaymentCapacity)) {
+            $('#repayment_capacity_opsi_0').removeAttr('selected');
+            $('#repayment_capacity_opsi_1').removeAttr('selected');
+            $('#repayment_capacity_opsi_2').removeAttr('selected');
+            $('#repayment_capacity_opsi_3').attr('selected', true);
+        } else {
+            $('#repayment_capacity_opsi_0').removeAttr('selected');
+            $('#repayment_capacity_opsi_1').removeAttr('selected');
+            $('#repayment_capacity_opsi_2').removeAttr('selected');
+            $('#repayment_capacity_opsi_3').removeAttr('selected');
+        }
+    }
+    //end Repayment Capacity
+
+    $('.rupiah').keyup(function(e){
+        var input = $(this).val()
+        $(this).val(formatrupiah(input))
+    });
+
+    function formatrupiah(angka, prefix) {
+        var number_string = angka ? angka.replace(/[^,\d]/g, '').toString() : angka,
+        split   		= number_string.split(','),
+        sisa     		= split[0].length % 3,
+        rupiah     		= split[0].substr(0, sisa),
+        ribuan     		= split[0].substr(sisa).match(/\d{3}/gi);
+
+        // tambahkan titik jika yang di input sudah menjadi angka ribuan
+        if(ribuan){
+            separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
+        }
+
+        rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+        return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
+    }
+    // End Format Rupiah
+
+    // Limit Upload
+    $('.limit-size').on('change', function() {
+        var size = (this.files[0].size / 1024 / 1024).toFixed(2)
+        if (size > 15) {
+            $(this).next().css({"display": "block"});
+            this.value = ''
+        } else {
+            $(this).next().css({"display": "none"});
+        }
+    })
+
+    $('body').on('click', '.file-wrapper .btn-add-file', function(e) {
+        const wrapper = $(this).parent().parent().parent();
+        const $clone = wrapper.clone();
+
+        $clone.find('[type="file"]').attr('data-id', '');
+        $clone.find('[type="file"]').val('');
+        $clone.find('.filename').html('');
+        $clone.insertAfter(wrapper);
+    });
+
+    $('body').on('click', '.file-wrapper .btn-del-file', function(e) {
+        const inputData = $(this).parent().parent().find('input[type="file"]');
+        const wrapperEl = $(this).parent().parent().parent();
+
+        $.ajax({
+            url: '{{ route('pengajuan-kredit.temp.file') }}',
+            method: 'DELETE',
+            data: {
+                answer_id: inputData.data('id'),
+            },
+            success: (res) => {
+                inputData.parent().find('.filename').text('');
+                inputData.val('');
+
+                if(wrapperEl.siblings('.file-wrapper').get().length < 1) return;
+                wrapperEl.remove();
+            }
+        });
+    });
+    // End Limit Upload
+
+    @if(count($errors->all()))
+    Swal.fire({
+        icon: 'error',
+        title: 'Error Validation',
+        html: `
+        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+            @foreach($errors->all() as $error)
+            <ul>
+                <li>{{ $error }}</li>
+            </ul>
+            @endforeach
+        </div>
+        `
+    });
+    @endif
+
+    function cekValueKosong(formIndex){
+        var skema = $("#skema_kredit").val()
+        var form = ".form-wizard[data-index="+ formIndex +"]";
+        var inputFile = $(form + " input[type=file]")
+        var inputText = $(form + " input[type=text]")
+        var inputNumber = $(form + " input[type=number]")
+        var select = $(form + " select")
+        var textarea = $(form + " textarea")
+
+        $.each(inputFile, function(i, v){
+            if(v.value == '' && !$(this).prop('disabled') && $(this).closest('.filename') == ''){
+                if(form == ".form-wizard[data-index='2']"){
+                    var ijin = $(form + " select[name=ijin_usaha]")
+                    if(ijin != "tidak_ada_legalitas_usaha"){
                         let val = $(this).attr("id");
                         if (val)
-                            val = $(this).attr("id").toString();
+                            val = $(this).attr("id").toString()
                         nullValue.push(val.replaceAll("_", " "))
                     }
-                } else if(v.value != ''){
-                    let val = $(this).attr("id");
-                    if (val)
-                        val = $(this).attr("id").toString().replaceAll("_", " ");
-                    for(var i = 0; i < nullValue.length; i++){
-                        if(nullValue[i] == val){
-                            nullValue.splice(i, 1)
-                            break;
-                        }
-                    }
-                }
-            })
-
-            $.each(inputText, function(i, v){
-                if(v.value == '' && !$(this).prop('disabled')){
+                } else{
                     let val = $(this).attr("id");
                     if (val)
                         val = $(this).attr("id").toString();
-                    console.log(val)
                     nullValue.push(val.replaceAll("_", " "))
-                }else if(v.value != ''){
-                    let val = $(this).attr("id");
-                    if (val)
-                        val = $(this).attr("id").toString().replaceAll("_", " ");
-                    for(var i = 0; i < nullValue.length; i++){
-                        if(nullValue[i] == val){
-                            nullValue.splice(i, 1)
-                            break;
-                        }
+                }
+            } else if(v.value != ''){
+                let val = $(this).attr("id");
+                if (val)
+                    val = $(this).attr("id").toString().replaceAll("_", " ");
+                for(var i = 0; i < nullValue.length; i++){
+                    if(nullValue[i] == val){
+                        nullValue.splice(i, 1)
+                        break;
                     }
                 }
-            })
-
-            $.each(inputNumber, function(i, v){
-                if(v.value == '' && !$(this).prop('disabled')){
-                    let val = $(this).attr("id");
-                    if (val)
-                        val = $(this).attr("id").toString();
-                    console.log(val)
-                    nullValue.push(val.replaceAll("_", " "))
-                }else if(v.value != ''){
-                    let val = $(this).attr("id").toString().replaceAll("_", " ");
-                    for(var i = 0; i < nullValue.length; i++){
-                        if(nullValue[i] == val){
-                            nullValue.splice(i, 1)
-                            break;
-                        }
-                    }
-                }
-            })
-
-            $.each(select, function(i, v){
-                if(v.value == '' && !$(this).prop('disabled')){
-                    let val = $(this).attr("id");
-                    if (val)
-                        val = $(this).attr("id").toString();
-                    if(val != "persentase_kebutuhan_kredit_opsi" && val != "ratio_tenor_asuransi_opsi" && val != "ratio_coverage_opsi"){
-                        console.log(val)
-                        nullValue.push(val.replaceAll("_", " "))
-                    }
-                }else if(v.value != ''){
-                    let val = $(this).attr("id");
-                    if (val)
-                        val = $(this).attr("id").toString().replaceAll("_", " ");
-                    for(var i = 0; i < nullValue.length; i++){
-                        if(nullValue[i] == val){
-                            nullValue.splice(i, 1)
-                            break;
-                        }
-                    }
-                }
-            })
-
-            $.each(textarea, function(i, v){
-                if(v.value == '' && !$(this).prop('disabled')){
-                    let val = $(this).attr("id");
-                    if (val)
-                        val = $(this).attr("id").toString();
-                    console.log(val)
-                    nullValue.push(val.replaceAll("_", " "))
-                }else if(v.value != ''){
-                    let val = $(this).attr("id");
-                    if (val)
-                        val = $(this).attr("id").toString().replaceAll("_", " ");
-                    for(var i = 0; i < nullValue.length; i++){
-                        if(nullValue[i] == val){
-                            nullValue.splice(i, 1)
-                            break;
-                        }
-                    }
-                }
-            })
-
-            console.log(nullValue);
-        }
-
-        $(".btn-simpan").on('click', function(e){
-            if(nullValue.length > 0){
-                let message = "";
-                $.each(nullValue, (i, v) => {
-                    message += v + ", "
-                })
-                alert("Field " + message + " harus diisi terlebih dahulu")
-                e.preventDefault()
             }
         })
 
-        for(let i = 0; i <= parseInt(jumlahData); i++){
-            cekValueKosong(i);
+        $.each(inputText, function(i, v){
+            if(v.value == '' && !$(this).prop('disabled')){
+                let val = $(this).attr("id");
+                if (val)
+                    val = $(this).attr("id").toString();
+                console.log(val)
+                nullValue.push(val.replaceAll("_", " "))
+            }else if(v.value != ''){
+                let val = $(this).attr("id");
+                if (val)
+                    val = $(this).attr("id").toString().replaceAll("_", " ");
+                for(var i = 0; i < nullValue.length; i++){
+                    if(nullValue[i] == val){
+                        nullValue.splice(i, 1)
+                        break;
+                    }
+                }
+            }
+        })
+
+        $.each(inputNumber, function(i, v){
+            if(v.value == '' && !$(this).prop('disabled')){
+                let val = $(this).attr("id");
+                if (val)
+                    val = $(this).attr("id").toString();
+                console.log(val)
+                nullValue.push(val.replaceAll("_", " "))
+            }else if(v.value != ''){
+                let val = $(this).attr("id").toString().replaceAll("_", " ");
+                for(var i = 0; i < nullValue.length; i++){
+                    if(nullValue[i] == val){
+                        nullValue.splice(i, 1)
+                        break;
+                    }
+                }
+            }
+        })
+
+        $.each(select, function(i, v){
+            if(v.value == '' && !$(this).prop('disabled')){
+                let val = $(this).attr("id");
+                if (val)
+                    val = $(this).attr("id").toString();
+                if(val != "persentase_kebutuhan_kredit_opsi" && val != "ratio_tenor_asuransi_opsi" && val != "ratio_coverage_opsi"){
+                    console.log(val)
+                    nullValue.push(val.replaceAll("_", " "))
+                }
+            }else if(v.value != ''){
+                let val = $(this).attr("id");
+                if (val)
+                    val = $(this).attr("id").toString().replaceAll("_", " ");
+                for(var i = 0; i < nullValue.length; i++){
+                    if(nullValue[i] == val){
+                        nullValue.splice(i, 1)
+                        break;
+                    }
+                }
+            }
+        })
+
+        $.each(textarea, function(i, v){
+            if(v.value == '' && !$(this).prop('disabled')){
+                let val = $(this).attr("id");
+                if (val)
+                    val = $(this).attr("id").toString();
+                console.log(val)
+                nullValue.push(val.replaceAll("_", " "))
+            }else if(v.value != ''){
+                let val = $(this).attr("id");
+                if (val)
+                    val = $(this).attr("id").toString().replaceAll("_", " ");
+                for(var i = 0; i < nullValue.length; i++){
+                    if(nullValue[i] == val){
+                        nullValue.splice(i, 1)
+                        break;
+                    }
+                }
+            }
+        })
+
+        console.log(nullValue);
+    }
+
+    $(".btn-simpan").on('click', function(e){
+        if(nullValue.length > 0){
+            let message = "";
+            $.each(nullValue, (i, v) => {
+                message += v + ", "
+            })
+            alert("Field " + message + " harus diisi terlebih dahulu")
+            e.preventDefault()
         }
-        
-    </script>
-    @include('pengajuan-kredit.partials.save-script')
+    })
+
+    for(let i = 0; i <= parseInt(jumlahData); i++){
+        cekValueKosong(i);
+    }
+    
+</script>
+@include('pengajuan-kredit.partials.save-script')
+
+<script src="{{ asset('') }}js/custom.js"></script>
 @endpush
