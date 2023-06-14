@@ -1,13 +1,13 @@
 @extends('layouts.template')
 @php
-$dataIndex = match ($dataUmum->skema_kredit) {
-    'PKPJ' => 1,
-    'KKB' => 2,
-    'Talangan Umroh' => 1,
-    'Prokesra' => 1,
-    'Kusuma' => 1,
-    null => 1
-};
+    $dataIndex = match ($dataUmum->skema_kredit) {
+        'PKPJ' => 1,
+        'KKB' => 2,
+        'Talangan Umroh' => 1,
+        'Prokesra' => 1,
+        'Kusuma' => 1,
+        null => 1,
+    };
 @endphp
 @section('content')
     @include('components.notification')
@@ -38,51 +38,54 @@ $dataIndex = match ($dataUmum->skema_kredit) {
             /* border-bottom: 1px solid #dc3545; */
         }
     </style>
-    
+
     <form id="pengajuan_kredit" action="{{ route('pengajuan.insertkomentar') }}" method="post">
         @csrf
         <div class="form-wizard active" data-index='0' data-done='true'>
             <div class="row">
-                    @php
-                        $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide')
-                            ->where('level', 2)
-                            ->where('id_parent', $itemSP->id)
-                            ->where('nama', 'Surat Permohonan')
-                            ->get();
-                            //dd($dataLevelDua);
-                    @endphp
-                    @foreach ($dataLevelDua as $item)
-                        @if ($item->opsi_jawaban == 'file')
+                @php
+                    $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide')
+                        ->where('level', 2)
+                        ->where('id_parent', $itemSP->id)
+                        ->where('nama', 'Surat Permohonan')
+                        ->get();
+                    //dd($dataLevelDua);
+                @endphp
+                @foreach ($dataLevelDua as $item)
+                    @if ($item->opsi_jawaban == 'file')
+                        @php
+                            $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
+                                ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                ->where('jawaban_text.id_pengajuan', $dataUmum->id)
+                                ->where('jawaban_text.id_jawaban', $item->id)
+                                ->get();
+                            //dd($dataDetailJawabanText);
+                        @endphp
+                        @foreach ($dataDetailJawabanText as $itemTextDua)
                             @php
-                                $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
-                                    ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-                                    ->where('jawaban_text.id_pengajuan', $dataUmum->id)
-                                    ->where('jawaban_text.id_jawaban', $item->id)
-                                    ->get();
-                                    //dd($dataDetailJawabanText);
+                                $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
                             @endphp
-                            @foreach ($dataDetailJawabanText as $itemTextDua)
-                                @php
-                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
-                                @endphp
-                                <div class="row col-md-12">
-                                    <div class="form-group col-md-12 mb-0">
-                                        <label for="">{{ $item->nama }}</label>
-                                    </div>
-                                    <div class="col-md-12 form-group">
-                                        <b>Jawaban:</b>
-                                        <div class="mt-2">
-                                            @if ($file_parts['extension'] == 'pdf')
-                                                <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" width="100%" height="800px"></iframe>
-                                            @else
-                                                <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="800px">
-                                            @endif
-                                        </div>
+                            <div class="row col-md-12">
+                                <div class="form-group col-md-12 mb-0">
+                                    <label for="">{{ $item->nama }}</label>
+                                </div>
+                                <div class="col-md-12 form-group">
+                                    <b>Jawaban:</b>
+                                    <div class="mt-2">
+                                        @if ($file_parts['extension'] == 'pdf')
+                                            <iframe
+                                                src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                width="100%" height="800px"></iframe>
+                                        @else
+                                            <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                alt="" width="800px">
+                                        @endif
                                     </div>
                                 </div>
-                            @endforeach
-                        @endif
-                    @endforeach
+                            </div>
+                        @endforeach
+                    @endif
+                @endforeach
                 <div class="form-group col-md-12">
                     <label for="">Nama Lengkap</label>
                     <input type="text" disabled name="name" id="nama"
@@ -130,7 +133,8 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 </div>
                 <div class="form-group col-md-4">
                     <label for="">Desa</label>
-                    <select disabled name="desa" id="desa" class="form-control @error('desa') is-invalid @enderror select2">
+                    <select disabled name="desa" id="desa"
+                        class="form-control @error('desa') is-invalid @enderror select2">
                         <option value="">---Pilih Desa----</option>
                         @foreach ($allDesa as $desa)
                             <option value="{{ $desa->id }}"
@@ -146,9 +150,8 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Alamat Rumah</label>
-                    <textarea disabled name="alamat_rumah" class="form-control @error('alamat_rumah') is-invalid @enderror" id="" cols="30"
-                        rows="4"
-                        placeholder="Alamat Rumah disesuaikan dengan KTP">{{ old('alamat_rumah', $dataUmumNasabah->alamat_rumah) }}</textarea>
+                    <textarea disabled name="alamat_rumah" class="form-control @error('alamat_rumah') is-invalid @enderror" id=""
+                        cols="30" rows="4" placeholder="Alamat Rumah disesuaikan dengan KTP">{{ old('alamat_rumah', $dataUmumNasabah->alamat_rumah) }}</textarea>
                     @error('alamat_rumah')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -158,9 +161,8 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Alamat Usaha</label>
-                    <textarea disabled name="alamat_usaha" class="form-control @error('alamat_usaha') is-invalid @enderror" id="" cols="30"
-                        rows="4"
-                        placeholder="Alamat Usaha disesuaikan dengan KTP">{{ old('alamat_usaha', $dataUmumNasabah->alamat_usaha) }}</textarea>
+                    <textarea disabled name="alamat_usaha" class="form-control @error('alamat_usaha') is-invalid @enderror" id=""
+                        cols="30" rows="4" placeholder="Alamat Usaha disesuaikan dengan KTP">{{ old('alamat_usaha', $dataUmumNasabah->alamat_usaha) }}</textarea>
                     @error('alamat_usaha')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -191,7 +193,8 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 </div>
                 <div class="form-group col-md-4">
                     <label for="">Status</label>
-                    <select disabled name="status" id="" class="form-control @error('status') is-invalid @enderror select2">
+                    <select disabled name="status" id=""
+                        class="form-control @error('status') is-invalid @enderror select2">
                         <option value=""> --Pilih Status --</option>
                         <option value="menikah"
                             {{ old('status', $dataUmumNasabah->status) == 'menikah' ? 'selected' : '' }}>
@@ -215,9 +218,9 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">No. KTP</label>
-                    <input disabled type="text" name="no_ktp" class="form-control @error('no_ktp') is-invalid @enderror"
-                        id="" value="{{ old('no_ktp', $dataUmumNasabah->no_ktp) }}"
-                        placeholder="Masukkan 16 digit No. KTP">
+                    <input disabled type="text" name="no_ktp"
+                        class="form-control @error('no_ktp') is-invalid @enderror" id=""
+                        value="{{ old('no_ktp', $dataUmumNasabah->no_ktp) }}" placeholder="Masukkan 16 digit No. KTP">
                     @error('no_ktp')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -251,9 +254,12 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                         <b>Jawaban:</b>
                                         <div class="mt-2">
                                             @if ($file_parts['extension'] == 'pdf')
-                                                <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" width="100%" height="400px"></iframe>
+                                                <iframe
+                                                    src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                    width="100%" height="400px"></iframe>
                                             @else
-                                                <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="400px">
+                                                <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                    alt="" width="400px">
                                             @endif
                                         </div>
                                     </div>
@@ -287,9 +293,12 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                         <b>Jawaban:</b>
                                         <div class="mt-2">
                                             @if ($file_parts['extension'] == 'pdf')
-                                                <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" width="100%" height="400px"></iframe>
+                                                <iframe
+                                                    src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                    width="100%" height="400px"></iframe>
                                             @else
-                                                <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="400px">
+                                                <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                    alt="" width="400px">
                                             @endif
                                         </div>
                                     </div>
@@ -324,9 +333,12 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                         <b>Jawaban:</b>
                                         <div class="mt-2">
                                             @if ($file_parts['extension'] == 'pdf')
-                                                <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" width="100%" height="400px"></iframe>
+                                                <iframe
+                                                    src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                    width="100%" height="400px"></iframe>
                                             @else
-                                                <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="400px">
+                                                <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                    alt="" width="400px">
                                             @endif
                                         </div>
                                     </div>
@@ -378,7 +390,8 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                             placeholder="Masukkan Komentar"
                             value="{{ isset($komentarSlik->komentar) ? $komentarSlik->komentar : '' }}">
                         <div class="input-skor">
-                            <input type="number" class="form-control" placeholder="" name="skor_penyelia[]" onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
+                            <input type="number" class="form-control" placeholder="" name="skor_penyelia[]"
+                                onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
                                 {{ $itemSlik?->status_skor == 0 ? 'readonly' : '' }}
                                 value="{{ $itemSlik?->skor_penyelia != null ? $itemSlik?->skor_penyelia : $itemSlik?->skor }}">
                         </div>
@@ -407,15 +420,18 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                 $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
                             @endphp
                             <div class="form-group col-md-12">
-                            <label for="">{{ $item->nama }}</label>
+                                <label for="">{{ $item->nama }}</label>
                             </div>
                             <div class="col-md-12 form-group">
                                 <b>Jawaban:</b>
                                 <div class="mt-2 pl-3">
                                     @if ($file_parts['extension'] == 'pdf')
-                                        <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" width="100%" height="800px"></iframe>
+                                        <iframe
+                                            src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                            width="100%" height="800px"></iframe>
                                     @else
-                                        <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="800px">
+                                        <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                            alt="" width="800px">
                                     @endif
                                 </div>
                             </div>
@@ -424,9 +440,8 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 @endforeach
                 <div class="form-group col-md-12">
                     <label for="">Jenis Usaha</label>
-                    <textarea disabled name="jenis_usaha" class="form-control @error('jenis_usaha') is-invalid @enderror" id="" cols="30"
-                        rows="4"
-                        placeholder="Jenis Usaha secara spesifik">{{ old('jenis_usaha', $dataUmumNasabah->jenis_usaha) }}</textarea>
+                    <textarea disabled name="jenis_usaha" class="form-control @error('jenis_usaha') is-invalid @enderror" id=""
+                        cols="30" rows="4" placeholder="Jenis Usaha secara spesifik">{{ old('jenis_usaha', $dataUmumNasabah->jenis_usaha) }}</textarea>
                     @error('jenis_usaha')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -458,9 +473,8 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Tujuan Kredit</label>
-                    <textarea disabled name="tujuan_kredit" class="form-control @error('tujuan_kredit') is-invalid @enderror" id=""
-                        cols="30" rows="4"
-                        placeholder="Tujuan Kredit">{{ old('tujuan_kredit', $dataUmumNasabah->tujuan_kredit) }}</textarea>
+                    <textarea disabled name="tujuan_kredit" class="form-control @error('tujuan_kredit') is-invalid @enderror"
+                        id="" cols="30" rows="4" placeholder="Tujuan Kredit">{{ old('tujuan_kredit', $dataUmumNasabah->tujuan_kredit) }}</textarea>
                     @error('tujuan_kredit')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -469,8 +483,8 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Jaminan yang disediakan</label>
-                    <textarea disabled name="jaminan" class="form-control @error('jaminan') is-invalid @enderror" id="" cols="30" rows="4"
-                        placeholder="Jaminan yang disediakan">{{ old('jaminan', $dataUmumNasabah->jaminan_kredit) }}</textarea>
+                    <textarea disabled name="jaminan" class="form-control @error('jaminan') is-invalid @enderror" id=""
+                        cols="30" rows="4" placeholder="Jaminan yang disediakan">{{ old('jaminan', $dataUmumNasabah->jaminan_kredit) }}</textarea>
                     @error('jaminan')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -479,9 +493,8 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Hubungan Bank</label>
-                    <textarea disabled name="hubungan_bank" class="form-control @error('hubungan_bank') is-invalid @enderror" id=""
-                        cols="30" rows="4"
-                        placeholder="Hubungan dengan Bank">{{ old('hubungan_bank', $dataUmumNasabah->hubungan_bank) }}</textarea>
+                    <textarea disabled name="hubungan_bank" class="form-control @error('hubungan_bank') is-invalid @enderror"
+                        id="" cols="30" rows="4" placeholder="Hubungan dengan Bank">{{ old('hubungan_bank', $dataUmumNasabah->hubungan_bank) }}</textarea>
                     @error('hubungan_bank')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -490,9 +503,8 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Hasil Verifikasi</label>
-                    <textarea disabled name="hasil_verifikasi" class="form-control @error('hasil_verifikasi') is-invalid @enderror" id=""
-                        cols="30" rows="4"
-                        placeholder="Hasil Verifikasi Karakter Umum">{{ old('hasil_verifikasi', $dataUmumNasabah->verifikasi_umum) }}</textarea>
+                    <textarea disabled name="hasil_verifikasi" class="form-control @error('hasil_verifikasi') is-invalid @enderror"
+                        id="" cols="30" rows="4" placeholder="Hasil Verifikasi Karakter Umum">{{ old('hasil_verifikasi', $dataUmumNasabah->verifikasi_umum) }}</textarea>
                     @error('hasil_verifikasi')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -505,7 +517,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
             @if ($dataUmumNasabah->skema_kredit == 'KKB')
                 @php
                     $keterangan = $dataPO->keterangan;
-                    $pemesanan = str_replace("Pemesanan ", "", $keterangan);
+                    $pemesanan = str_replace('Pemesanan ', '', $keterangan);
                 @endphp
                 <div class="row" id="data-po">
                     <div class="form-group col-md-12">
@@ -513,10 +525,13 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                     </div>
                     <div class="form-group col-md-12">
                         <label>Merk Kendaraan</label>
-                        <select name="id_merk" id="id_merk" class="select2 form-control" style="width: 100%;" disabled>
+                        <select name="id_merk" id="id_merk" class="select2 form-control" style="width: 100%;"
+                            disabled>
                             <option value="">Pilih Merk Kendaraan</option>
                             @foreach ($dataMerk as $item)
-                                <option value="{{ $item->id }}"  {{ ($dataPOMerk->id_merk == $item->id) ? 'selected' : '' }} >{{ $item->merk }}</option>
+                                <option value="{{ $item->id }}"
+                                    {{ $dataPOMerk->id_merk == $item->id ? 'selected' : '' }}>{{ $item->merk }}
+                                </option>
                             @endforeach
                         </select>
                         @error('id_merk')
@@ -527,7 +542,8 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                     </div>
                     <div class="form-group col-md-12">
                         <label>Tipe Kendaraan</label>
-                        <select name="id_tipe" id="id_tipe" class="select2 form-control" style="width: 100%;" disabled>
+                        <select name="id_tipe" id="id_tipe" class="select2 form-control" style="width: 100%;"
+                            disabled>
                             <option value="">Pilih Tipe</option>
                         </select>
                         @error('id_tipe')
@@ -538,8 +554,9 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                     </div>
                     <div class="form-group col-md-12">
                         <label for="">Tahun</label>
-                        <input type="number" name="tahun" id="tahun" class="form-control @error('tahun') is-invalid @enderror"
-                            placeholder="Tahun Kendaraan" value="{{ $dataPO?->tahun_kendaraan ?? '' }}" min="2000" disabled>
+                        <input type="number" name="tahun" id="tahun"
+                            class="form-control @error('tahun') is-invalid @enderror" placeholder="Tahun Kendaraan"
+                            value="{{ $dataPO?->tahun_kendaraan ?? '' }}" min="2000" disabled>
                         @error('tahun')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -548,8 +565,9 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                     </div>
                     <div class="form-group col-md-12">
                         <label for="">Warna</label>
-                        <input type="text" name="warna" id="warna" class="form-control @error('warna') is-invalid @enderror"
-                            placeholder="Warna Kendaraan" value="{{ $dataPO?->warna ?? '' }}" disabled>
+                        <input type="text" name="warna" id="warna"
+                            class="form-control @error('warna') is-invalid @enderror" placeholder="Warna Kendaraan"
+                            value="{{ $dataPO?->warna ?? '' }}" disabled>
                         @error('warna')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -561,7 +579,8 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                     </div>
                     <div class="form-group col-md-12">
                         <label for="">Pemesanan</label>
-                        <input type="text" name="pemesanan" id="pemesanan" class="form-control @error('pemesanan') is-invalid @enderror"
+                        <input type="text" name="pemesanan" id="pemesanan"
+                            class="form-control @error('pemesanan') is-invalid @enderror"
                             placeholder="Pemesanan Kendaraan" value="{{ $pemesanan ?? '' }}" disabled>
                         @error('pemesanan')
                             <div class="invalid-feedback">
@@ -571,8 +590,9 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                     </div>
                     <div class="form-group col-md-12">
                         <label for="">Sejumlah</label>
-                        <input type="number" name="sejumlah" id="sejumlah" class="form-control @error('sejumlah') is-invalid @enderror"
-                            placeholder="Jumlah Kendaraan" value="{{ $dataPO?->jumlah ?? '' }}" disabled>
+                        <input type="number" name="sejumlah" id="sejumlah"
+                            class="form-control @error('sejumlah') is-invalid @enderror" placeholder="Jumlah Kendaraan"
+                            value="{{ $dataPO?->jumlah ?? '' }}" disabled>
                         @error('sejumlah')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -581,7 +601,8 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                     </div>
                     <div class="form-group col-md-12">
                         <label for="">Harga</label>
-                        <input type="text" name="harga" id="harga" class="form-control rupiah @error('harga') is-invalid @enderror"
+                        <input type="text" name="harga" id="harga"
+                            class="form-control rupiah @error('harga') is-invalid @enderror"
                             placeholder="Harga Kendaraan" value="{{ $dataPO?->harga ?? '' }}" disabled>
                         @error('harga')
                             <div class="invalid-feedback">
@@ -611,7 +632,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                     ->where('level', 2)
                     ->where('id_parent', $value->id)
                     ->get();
-
+                
                 // check level 4
                 $dataLevelEmpat = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide')
                     ->where('level', 4)
@@ -652,15 +673,30 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                     $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
                                                 @endphp
                                                 @if ($file_parts['extension'] == 'pdf')
-                                                    <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" width="100%" height="800px"></iframe>
+                                                    <iframe
+                                                        src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                        width="100%" height="800px"></iframe>
                                                 @else
-                                                    <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="800px">
+                                                    <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                        alt="" width="800px">
+                                                @endif
+                                                {{-- Rupiah data dua --}}
+                                            @elseif ($item->opsi_jawaban == 'number')
+                                                <p class="badge badge-info text-lg"><b>
+                                                        Rp. {{ number_format((int) $itemTextDua->opsi_text, 2, ',', '.') }}
+                                                    </b></p>
+                                                @if ($itemTextDua->is_commentable)
+                                                    <input type="hidden" name="id_item[]" value="{{ $item->id }}">
+                                                    <div class="input-k-bottom">
+                                                        <input type="text" class="form-control komentar"
+                                                            name="komentar_penyelia[]" placeholder="Masukkan Komentar">
+                                                    </div>
                                                 @endif
                                             @else
                                                 <p class="badge badge-info text-lg"><b> {{ $itemTextDua->opsi_text }}
                                                         {{ $item->opsi_jawaban == 'persen' ? '%' : '' }}</b></p>
                                                 @if ($itemTextDua->is_commentable)
-                                                <input type="hidden" name="id_item[]" value="{{ $item->id }}">
+                                                    <input type="hidden" name="id_item[]" value="{{ $item->id }}">
                                                     <div class="input-k-bottom">
                                                         <input type="text" class="form-control komentar"
                                                             name="komentar_penyelia[]" placeholder="Masukkan Komentar">
@@ -686,13 +722,13 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                             $dataOption = \App\Models\OptionModel::where('option', '=', '-')
                                 ->where('id_item', $item->id)
                                 ->get();
-
+                            
                             $getKomentar = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', '=', 'detail_komentar.id_komentar')
                                 ->where('id_pengajuan', $dataUmum->id)
                                 ->where('id_item', $item->id)
                                 ->where('id_user', Auth::user()->id)
                                 ->first();
-
+                            
                             // check level 3
                             $dataLevelTiga = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide')
                                 ->where('level', 3)
@@ -735,19 +771,20 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                             @if (isset($data))
                                                 <div class="col-md-12 form-group">
                                                     @if ($item->nama != 'Repayment Capacity Opsi')
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            <b>Jawaban : </b>
-                                                            <div class="mt-2 pl-2">
-                                                                <p class="badge badge-info text-lg">
-                                                                    <b>{{ $itemJawaban->option }}</b>
-                                                                </p>
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <b>Jawaban : </b>
+                                                                <div class="mt-2 pl-2">
+                                                                    <p class="badge badge-info text-lg">
+                                                                        <b>{{ $itemJawaban->option }}</b>
+                                                                    </p>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
                                                     @endif
                                                     <div class="input-group input-b-bottom">
-                                                        <input type="hidden" name="id_item[]" value="{{ $item->id }}">
+                                                        <input type="hidden" name="id_item[]"
+                                                            value="{{ $item->id }}">
                                                         <input type="hidden" name="id_option[]"
                                                             value="{{ $itemJawaban->id }}">
                                                         @if ($item->is_commentable == 'Ya')
@@ -756,13 +793,16 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                                 value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                             <div class="input-skor">
                                                                 <input type="number" class="form-control" placeholder=""
-                                                                    name="skor_penyelia[]"  onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
+                                                                    name="skor_penyelia[]"
+                                                                    onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
                                                                     {{ $item->status_skor == 0 ? 'readonly' : '' }}
                                                                     value="{{ $getSkorPenyelia->skor_penyelia != null ? $getSkorPenyelia->skor_penyelia : $itemJawaban->skor }}">
                                                             </div>
                                                         @else
-                                                            <input type="hidden" name="komentar_penyelia[]" value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
-                                                            <input type="hidden" name="skor_penyelia[]" value="{{ $getSkorPenyelia->skor_penyelia != null ? $getSkorPenyelia->skor_penyelia : $itemJawaban->skor }}">
+                                                            <input type="hidden" name="komentar_penyelia[]"
+                                                                value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
+                                                            <input type="hidden" name="skor_penyelia[]"
+                                                                value="{{ $getSkorPenyelia->skor_penyelia != null ? $getSkorPenyelia->skor_penyelia : $itemJawaban->skor }}">
                                                         @endif
                                                     </div>
                                                 </div>
@@ -789,7 +829,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                         ->get();
                                 @endphp
                                 @foreach ($dataDetailJawabanText as $itemTextTiga)
-                                    @if ($itemTextTiga->nama != 'Ratio Tenor Asuransi')    
+                                    @if ($itemTextTiga->nama != 'Ratio Tenor Asuransi')
                                         <div class="row col-md-12">
                                             <div class="form-group col-md-12 mb-0">
                                                 <label for="">{{ $itemTextTiga->nama }}</label>
@@ -802,19 +842,40 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                             $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text);
                                                         @endphp
                                                         @if ($file_parts['extension'] == 'pdf')
-                                                            <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}" width="100%" height="800px"></iframe>
+                                                            <iframe
+                                                                src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}"
+                                                                width="100%" height="800px"></iframe>
                                                         @else
-                                                            <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}" alt="" width="800px">
+                                                            <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}"
+                                                                alt="" width="800px">
                                                         @endif
-                                                    @else    
+                                                        {{-- Rupiah data tiga --}}
+                                                    @elseif ($itemTiga->opsi_jawaban == 'number')
                                                         <p class="badge badge-info text-lg"><b>
-                                                            {{ $itemTextTiga->opsi_text }}
-                                                            {{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</b></p>
+                                                                Rp.
+                                                                {{ number_format((int) $itemTextTiga->opsi_text, 2, ',', '.') }}
+                                                            </b></p>
                                                         @if ($item->is_commentable == 'Ya')
                                                             <div class="input-k-bottom">
-                                                                <input type="hidden" name="id_item[]" value="{{ $item->id }}">
+                                                                <input type="hidden" name="id_item[]"
+                                                                    value="{{ $item->id }}">
                                                                 <input type="text" class="form-control komentar"
-                                                                    name="komentar_penyelia[]" placeholder="Masukkan Komentar">
+                                                                    name="komentar_penyelia[]"
+                                                                    placeholder="Masukkan Komentar">
+                                                            </div>
+                                                        @endif
+                                                    @else
+                                                        <p class="badge badge-info text-lg"><b>
+                                                                {{ $itemTextTiga->opsi_text }}
+                                                                {{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</b>
+                                                        </p>
+                                                        @if ($item->is_commentable == 'Ya')
+                                                            <div class="input-k-bottom">
+                                                                <input type="hidden" name="id_item[]"
+                                                                    value="{{ $item->id }}">
+                                                                <input type="text" class="form-control komentar"
+                                                                    name="komentar_penyelia[]"
+                                                                    placeholder="Masukkan Komentar">
                                                             </div>
                                                         @endif
                                                     @endif
@@ -850,15 +911,17 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                     ->where('id_parent', $itemTiga->id)
                                     ->get();
                                 // check jawaban kelayakan
-                                $checkJawabanKelayakan = \App\Models\JawabanPengajuanModel::select('id','id_jawaban','skor')->where('id_pengajuan', $dataUmum->id)->whereIn('id_jawaban', ['183','184'])->first();
+                                $checkJawabanKelayakan = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor')
+                                    ->where('id_pengajuan', $dataUmum->id)
+                                    ->whereIn('id_jawaban', ['183', '184'])
+                                    ->first();
                             @endphp
 
                             @foreach ($dataOptionTiga as $itemOptionTiga)
                                 @if (!$itemTiga->is_hide)
                                     @if ($itemOptionTiga->option == '-')
                                         @if (isset($checkJawabanKelayakan))
-                                            
-                                        @else    
+                                        @else
                                             <div class="row">
                                                 <div class="form-group col-md-12">
                                                     <h5> {{ $itemTiga->nama }}</h5>
@@ -871,12 +934,10 @@ $dataIndex = match ($dataUmum->skema_kredit) {
 
                             @if (count($dataJawabanLevelTiga) != 0)
                                 @if ($itemTiga->nama == 'Ratio Tenor Asuransi Opsi')
-                                    
                                 @else
                                     @if (isset($checkJawabanKelayakan))
                                         @if ($itemTiga->nama != 'Kelayakan Usaha')
-                                            
-                                        @else    
+                                        @else
                                             <div class="row">
                                                 <div class="form-group col-md-12">
                                                     <label for="">{{ $itemTiga->nama }}</label>
@@ -884,14 +945,13 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                             </div>
                                         @endif
                                     @else
-                                        @if ($itemTiga->nama != 'Kelayakan Usaha')    
+                                        @if ($itemTiga->nama != 'Kelayakan Usaha')
                                             <div class="row">
                                                 <div class="form-group col-md-12">
                                                     <label for="">{{ $itemTiga->nama }}</label>
                                                 </div>
                                             </div>
                                         @else
-                                            
                                         @endif
                                     @endif
                                     <div class="row">
@@ -901,7 +961,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                     $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
                                                         ->where('id_pengajuan', $dataUmum->id)
                                                         ->get();
-
+                                                    
                                                     $getSkorPenyelia = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
                                                         ->where('id_pengajuan', $dataUmum->id)
                                                         ->where('id_jawaban', $itemJawabanLevelTiga->id)
@@ -931,17 +991,21 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                                     value="{{ $itemJawabanLevelTiga->id }}">
                                                                 @if ($itemTiga->is_commentable == 'Ya')
                                                                     <input type="text" class="form-control komentar"
-                                                                        name="komentar_penyelia[]" placeholder="Masukkan Komentar"
+                                                                        name="komentar_penyelia[]"
+                                                                        placeholder="Masukkan Komentar"
                                                                         value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                     <div class="input-skor">
-                                                                        <input type="number" class="form-control" placeholder=""
-                                                                            name="skor_penyelia[]" onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
+                                                                        <input type="number" class="form-control"
+                                                                            placeholder="" name="skor_penyelia[]"
+                                                                            onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
                                                                             {{ $itemTiga->status_skor == 0 ? 'readonly' : '' }}
                                                                             value="{{ $getSkorPenyelia->skor_penyelia != null ? $getSkorPenyelia->skor_penyelia : $itemJawabanLevelTiga->skor }}">
                                                                     </div>
                                                                 @else
-                                                                    <input type="hidden" name="komentar_penyelia[]" value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
-                                                                    <input type="hidden" name="skor_penyelia[]" value="{{ $getSkorPenyelia->skor_penyelia != null ? $getSkorPenyelia->skor_penyelia : $itemJawabanLevelTiga->skor }}">
+                                                                    <input type="hidden" name="komentar_penyelia[]"
+                                                                        value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
+                                                                    <input type="hidden" name="skor_penyelia[]"
+                                                                        value="{{ $getSkorPenyelia->skor_penyelia != null ? $getSkorPenyelia->skor_penyelia : $itemJawabanLevelTiga->skor }}">
                                                                 @endif
                                                             </div>
                                                         </div>
@@ -951,7 +1015,8 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                         <input type="text" hidden class="form-control mb-3"
                                                             placeholder="Masukkan komentar" name="skor_penyelia"
                                                             value="{{ $itemJawabanLevelTiga->skor }}" disabled>
-                                                        <input type="hidden" name="id[]" value="{{ $itemTiga->id }}">
+                                                        <input type="hidden" name="id[]"
+                                                            value="{{ $itemTiga->id }}">
                                                     @endif
                                                 @endif
                                             @endif
@@ -962,67 +1027,95 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                             @foreach ($dataLevelEmpat as $keyEmpat => $itemEmpat)
                                 @if (!$itemEmpat->is_hide)
                                     @if ($itemEmpat->opsi_jawaban != 'option')
-                                    @php
-                                        $dataDetailJawabanTextEmpat = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
-                                            ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-                                            ->where('jawaban_text.id_pengajuan', $dataUmum->id)
-                                            ->where('jawaban_text.id_jawaban', $itemEmpat->id)
-                                            ->get();
-                                    @endphp
-                                    @foreach ($dataDetailJawabanTextEmpat as $itemTextEmpat)
-                                        <div class="row">
-                                            <div class="form-group col-md-12 mb-0">
-                                                <label for="">{{ $itemTextEmpat->nama }}</label>
-                                                <div class="col-md-12 form-group">
-                                                    <b>Jawaban:</b>
-                                                    <div class="mt-2 pl-3">
-                                                        @if ($itemEmpat->opsi_jawaban == 'file')
-                                                            @if (intval($itemTextEmpat->opsi_text) > 1)
-                                                                @php
-                                                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text);
-                                                                @endphp
-                                                                @if ($file_parts['extension']=='pdf')
-                                                                    <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}" width="100%" height="400"></iframe>
+                                        @php
+                                            $dataDetailJawabanTextEmpat = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
+                                                ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                                ->where('jawaban_text.id_pengajuan', $dataUmum->id)
+                                                ->where('jawaban_text.id_jawaban', $itemEmpat->id)
+                                                ->get();
+                                        @endphp
+                                        @foreach ($dataDetailJawabanTextEmpat as $itemTextEmpat)
+                                            <div class="row">
+                                                <div class="form-group col-md-12 mb-0">
+                                                    <label for="">{{ $itemTextEmpat->nama }}</label>
+                                                    <div class="col-md-12 form-group">
+                                                        <b>Jawaban:</b>
+                                                        <div class="mt-2 pl-3">
+                                                            @if ($itemEmpat->opsi_jawaban == 'file')
+                                                                @if (intval($itemTextEmpat->opsi_text) > 1)
+                                                                    @php
+                                                                        $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text);
+                                                                    @endphp
+                                                                    @if ($file_parts['extension'] == 'pdf')
+                                                                        <iframe
+                                                                            src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
+                                                                            width="100%" height="400"></iframe>
+                                                                    @else
+                                                                        <img style="border: 5px solid #c2c7cf"
+                                                                            src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
+                                                                            alt="" width="400">
+                                                                    @endif
                                                                 @else
-                                                                    <img style="border: 5px solid #c2c7cf" src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}" alt="" width="400">
+                                                                    @php
+                                                                        $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text);
+                                                                    @endphp
+                                                                    @if ($file_parts['extension'] == 'pdf')
+                                                                        <iframe
+                                                                            src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
+                                                                            width="100%" height="500px"></iframe>
+                                                                    @else
+                                                                        <img style="border: 5px solid #c2c7cf"
+                                                                            src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
+                                                                            alt="" width="500px">
+                                                                    @endif
+                                                                @endif
+                                                                {{-- Rupiah data empat --}}
+                                                            @elseif ($itemEmpat->opsi_jawaban == 'number')
+                                                                <p class="badge badge-info text-lg"><b>
+                                                                        Rp.
+                                                                        {{ number_format((int) $itemTextEmpat->opsi_text, 2, ',', '.') }}
+                                                                    </b></p>
+                                                                @if ($itemTextEmpat->is_commentable == 'Ya')
+                                                                    <div class="input-k-bottom">
+                                                                        <input type="hidden" name="id_item[]"
+                                                                            value="{{ $item->id }}">
+                                                                        <input type="text"
+                                                                            class="form-control komentar"
+                                                                            name="komentar_penyelia[]"
+                                                                            placeholder="Masukkan Komentar">
+                                                                    </div>
                                                                 @endif
                                                             @else
-                                                                @php
-                                                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text);
-                                                                @endphp
-                                                                @if ($file_parts['extension']=='pdf')
-                                                                    <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}" width="100%" height="500px"></iframe>
-                                                                @else
-                                                                    <img style="border: 5px solid #c2c7cf" src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}" alt="" width="500px">
+                                                                <p class="badge badge-info text-lg"><b>
+                                                                        {{ $itemTextEmpat->opsi_text }}
+                                                                        {{ $itemEmpat->opsi_jawaban == 'persen' ? '%' : '' }}</b>
+                                                                </p>
+                                                                @if ($itemTextEmpat->is_commentable == 'Ya')
+                                                                    <div class="input-k-bottom">
+                                                                        <input type="hidden" name="id_item[]"
+                                                                            value="{{ $item->id }}">
+                                                                        <input type="text"
+                                                                            class="form-control komentar"
+                                                                            name="komentar_penyelia[]"
+                                                                            placeholder="Masukkan Komentar">
+                                                                    </div>
                                                                 @endif
                                                             @endif
-                                                        @else
-                                                            <p class="badge badge-info text-lg"><b>
-                                                                {{ $itemTextEmpat->opsi_text }}
-                                                                {{ $itemEmpat->opsi_jawaban == 'persen' ? '%' : '' }}</b>
-                                                            </p>
-                                                            @if ($itemTextEmpat->is_commentable == 'Ya')
-                                                                <div class="input-k-bottom">
-                                                                    <input type="hidden" name="id_item[]"
-                                                                        value="{{ $item->id }}">
-                                                                    <input type="text" class="form-control komentar"
-                                                                        name="komentar_penyelia[]"
-                                                                        placeholder="Masukkan Komentar">
-                                                                </div>
-                                                            @endif
-                                                        @endif
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
 
-                                        <input type="hidden" class="form-control mb-3" placeholder="Masukkan komentar"
-                                            name="komentar_penyelia" value="{{ $itemTextEmpat->nama }}" disabled>
-                                        <input type="hidden" class="form-control mb-3" placeholder="Masukkan komentar"
-                                            name="komentar_penyelia" value="{{ $itemTextEmpat->opsi_text }}" disabled>
-                                        <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextEmpat->id }}">
-                                        <input type="hidden" name="id[]" value="{{ $itemTextEmpat->id_item }}">
-                                    @endforeach
+                                            <input type="hidden" class="form-control mb-3"
+                                                placeholder="Masukkan komentar" name="komentar_penyelia"
+                                                value="{{ $itemTextEmpat->nama }}" disabled>
+                                            <input type="hidden" class="form-control mb-3"
+                                                placeholder="Masukkan komentar" name="komentar_penyelia"
+                                                value="{{ $itemTextEmpat->opsi_text }}" disabled>
+                                            <input type="hidden" name="id_jawaban_text[]"
+                                                value="{{ $itemTextEmpat->id }}">
+                                            <input type="hidden" name="id[]" value="{{ $itemTextEmpat->id_item }}">
+                                        @endforeach
                                     @endif
                                     @php
                                         // check level empat
@@ -1036,7 +1129,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                             ->where('jawaban.id_pengajuan', $dataUmum->id)
                                             ->where('id_item', $itemEmpat->id)
                                             ->count();
-
+                                        
                                         $getKomentar = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', '=', 'detail_komentar.id_komentar')
                                             ->where('id_pengajuan', $dataUmum->id)
                                             ->where('id_item', $itemEmpat->id)
@@ -1096,7 +1189,8 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                                         value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                     <div class="input-skor">
                                                                         <input type="number" class="form-control"
-                                                                            placeholder="" name="skor_penyelia[]" onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
+                                                                            placeholder="" name="skor_penyelia[]"
+                                                                            onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
                                                                             {{ $itemEmpat->status_skor == 0 ? 'readonly' : '' }}
                                                                             value="{{ $getSkorPenyelia->skor_penyelia != null ? $getSkorPenyelia->skor_penyelia : $itemJawabanLevelEmpat->skor }}">
                                                                     </div>
@@ -1106,7 +1200,8 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                         <input type="hidden" class="form-control mb-3"
                                                             placeholder="Masukkan komentar" name="komentar_penyelia"
                                                             value="{{ $itemJawabanLevelEmpat->option }}" disabled>
-                                                        <input type="hidden" name="id[]" value="{{ $itemEmpat->id }}">
+                                                        <input type="hidden" name="id[]"
+                                                            value="{{ $itemEmpat->id }}">
                                                     @endif
                                                 @endif
                                             @endforeach
@@ -1116,67 +1211,64 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                             @endforeach
                         @endforeach
                     @endforeach
-                    @if (Auth::user()->role == 'PBP')    
-                    @php
-                        $getPendapatPerAspek = \App\Models\PendapatPerAspek::where('id_pengajuan', $dataUmum->id)
-                            ->where('id_aspek', $value->id)
-                            ->where('id_pbp', Auth::user()->id)
-                            ->first();
-                    @endphp
+                    @if (Auth::user()->role == 'PBP')
+                        @php
+                            $getPendapatPerAspek = \App\Models\PendapatPerAspek::where('id_pengajuan', $dataUmum->id)
+                                ->where('id_aspek', $value->id)
+                                ->where('id_pbp', Auth::user()->id)
+                                ->first();
+                        @endphp
                         <div class="form-group col-md-12">
                             <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
                             <input type="hidden" name="id_aspek[]" value="{{ $value->id }}">
-                            <textarea name="pendapat_per_aspek[]" class="form-control @error('pendapat_per_aspek') is-invalid @enderror" id=""
-                                cols="30" rows="4"
-                                placeholder="Pendapat Per Aspek">{{ isset($getPendapatPerAspek->pendapat_per_aspek) ? $getPendapatPerAspek->pendapat_per_aspek : '' }}</textarea>
+                            <textarea name="pendapat_per_aspek[]" class="form-control @error('pendapat_per_aspek') is-invalid @enderror"
+                                id="" cols="30" rows="4" placeholder="Pendapat Per Aspek">{{ isset($getPendapatPerAspek->pendapat_per_aspek) ? $getPendapatPerAspek->pendapat_per_aspek : '' }}</textarea>
                             @error('pendapat_per_aspek')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
                             @enderror
                         </div>
-                    </div>
-                    <hr>
-                    <hr>
-                    <div class="form-group col-md-12">
-                        <label for="">Pendapat dan Usulan Penyelia Kredit</label>
-                        <p>{{ $pendapatPenyeliaPerAspek->pendapat_per_aspek }}</p>
-                    </div>
-                    <div class="form-group col-md-12">
-                        <label for="">Pendapat dan Usulan Staf Kredit</label>
-                        <p>{{ $pendapatStafPerAspek->pendapat_per_aspek }}</p>
-                    </div>
-                    @else
-                    @php
-                        $getPendapatPerAspek = \App\Models\PendapatPerAspek::where('id_pengajuan', $dataUmum->id)
-                            ->where('id_aspek', $value->id)
-                            ->where('id_penyelia', Auth::user()->id)
-                            ->first();
-                    @endphp
-                        <div class="form-group col-md-12">
-                            <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
-                            <input type="hidden" name="id_aspek[]" value="{{ $value->id }}">
-                            <textarea name="pendapat_per_aspek[]" class="form-control @error('pendapat_per_aspek') is-invalid @enderror" id=""
-                                cols="30" rows="4"
-                                placeholder="Pendapat Per Aspek">{{ isset($getPendapatPerAspek->pendapat_per_aspek) ? $getPendapatPerAspek->pendapat_per_aspek : '' }}</textarea>
-                            @error('pendapat_per_aspek')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
+                </div>
+                <hr>
+                <hr>
+                <div class="form-group col-md-12">
+                    <label for="">Pendapat dan Usulan Penyelia Kredit</label>
+                    <p>{{ $pendapatPenyeliaPerAspek->pendapat_per_aspek }}</p>
+                </div>
+                <div class="form-group col-md-12">
+                    <label for="">Pendapat dan Usulan Staf Kredit</label>
+                    <p>{{ $pendapatStafPerAspek->pendapat_per_aspek }}</p>
+                </div>
+            @else
+                @php
+                    $getPendapatPerAspek = \App\Models\PendapatPerAspek::where('id_pengajuan', $dataUmum->id)
+                        ->where('id_aspek', $value->id)
+                        ->where('id_penyelia', Auth::user()->id)
+                        ->first();
+                @endphp
+                <div class="form-group col-md-12">
+                    <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
+                    <input type="hidden" name="id_aspek[]" value="{{ $value->id }}">
+                    <textarea name="pendapat_per_aspek[]" class="form-control @error('pendapat_per_aspek') is-invalid @enderror"
+                        id="" cols="30" rows="4" placeholder="Pendapat Per Aspek">{{ isset($getPendapatPerAspek->pendapat_per_aspek) ? $getPendapatPerAspek->pendapat_per_aspek : '' }}</textarea>
+                    @error('pendapat_per_aspek')
+                        <div class="invalid-feedback">
+                            {{ $message }}
                         </div>
-                    </div>
-                    <hr>
-                    <div class="form-group col-md-12">
-                        <label for="">Pendapat dan Usulan Staf Kredit</label>
-                        <p>{{ $pendapatStafPerAspek?->pendapat_per_aspek }}</p>
-                    </div>
-                        
-                    @endif
+                    @enderror
+                </div>
             </div>
+            <hr>
+            <div class="form-group col-md-12">
+                <label for="">Pendapat dan Usulan Staf Kredit</label>
+                <p>{{ $pendapatStafPerAspek?->pendapat_per_aspek }}</p>
+            </div>
+        @endif
+        </div>
         @endforeach
         {{-- pendapat dan usulan --}}
-        @if (Auth::user()->role == 'PBP')    
+        @if (Auth::user()->role == 'PBP')
             <div class="form-wizard" data-index='{{ count($dataAspek) + $dataIndex }}' data-done='true'>
                 <div class="row">
                     <div class="form-group col-md-12">
@@ -1198,9 +1290,8 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                     <div class="form-group col-md-12">
                         <label for="">Pendapat dan Usulan PBP</label>
                         <textarea name="komentar_pbp_keseluruhan"
-                            class="form-control @error('komentar_pbp_keseluruhan') is-invalid @enderror" id=""
-                            cols="30" rows="4" placeholder="Pendapat dan Usulan Penyelia Kredit"
-                            required>{{ isset($pendapatDanUsulanPBP->komentar_pbp) ? $pendapatDanUsulanPBP->komentar_pbp : '' }}</textarea>
+                            class="form-control @error('komentar_pbp_keseluruhan') is-invalid @enderror" id="" cols="30"
+                            rows="4" placeholder="Pendapat dan Usulan Penyelia Kredit" required>{{ isset($pendapatDanUsulanPBP->komentar_pbp) ? $pendapatDanUsulanPBP->komentar_pbp : '' }}</textarea>
                         @error('komentar_pbp_keseluruhan')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -1210,7 +1301,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                     </div>
                 </div>
             </div>
-        @else    
+        @else
             <div class="form-wizard" data-index='{{ count($dataAspek) + $dataIndex }}' data-done='true'>
                 <div class="row">
                     <div class="form-group col-md-12">
@@ -1224,9 +1315,8 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                     <div class="form-group col-md-12">
                         <label for="">Pendapat dan Usulan Penyelia</label>
                         <textarea name="komentar_penyelia_keseluruhan"
-                            class="form-control @error('komentar_penyelia_keseluruhan') is-invalid @enderror" id=""
-                            cols="30" rows="4" placeholder="Pendapat dan Usulan Penyelia"
-                            required>{{ isset($pendapatDanUsulanPenyelia->komentar_penyelia) ? $pendapatDanUsulanPenyelia->komentar_penyelia : '' }}</textarea>
+                            class="form-control @error('komentar_penyelia_keseluruhan') is-invalid @enderror" id="" cols="30"
+                            rows="4" placeholder="Pendapat dan Usulan Penyelia" required>{{ isset($pendapatDanUsulanPenyelia->komentar_penyelia) ? $pendapatDanUsulanPenyelia->komentar_penyelia : '' }}</textarea>
                         @error('komentar_penyelia_keseluruhan')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -1252,34 +1342,34 @@ $dataIndex = match ($dataUmum->skema_kredit) {
 
 @push('custom-script')
     <script>
-        $(window).on('load', function(){
+        $(window).on('load', function() {
             $("#id_merk").trigger("change");
         });
 
         @if ($dataUmum->skema_kredit == 'KKB')
-        $("#id_merk").change(function(){
-            let val = $(this).val();
-            
-            $.ajax({
-                type: "get",
-                url: "{{ route('get-tipe-kendaraan') }}?id_merk="+val,
-                dataType: "json",
-                success: (res) => {
-                    if(res){
-                        $("#id_tipe").empty();
-                        $("#id_tipe").append(`<option>Pilih Tipe</option>`)
+            $("#id_merk").change(function() {
+                let val = $(this).val();
 
-                        $.each(res.tipe, function(i, value){
-                            $("#id_tipe").append(`
+                $.ajax({
+                    type: "get",
+                    url: "{{ route('get-tipe-kendaraan') }}?id_merk=" + val,
+                    dataType: "json",
+                    success: (res) => {
+                        if (res) {
+                            $("#id_tipe").empty();
+                            $("#id_tipe").append(`<option>Pilih Tipe</option>`)
+
+                            $.each(res.tipe, function(i, value) {
+                                $("#id_tipe").append(`
                                 <option value="${value.id}" ${(value.id == {{ $dataPO->id_type }}) ? 'selected' : ''}>${value.tipe}</option>
                             `);
-                        })
+                            })
+                        }
                     }
-                }
+                });
             });
-        });
         @endif
-        
+
         var jumlahData = $('#jumlahData').val();
         for (let index = 0; index <= jumlahData; index++) {
             for (let index = 0; index <= parseInt(jumlahData); index++) {
@@ -1335,12 +1425,10 @@ $dataIndex = match ($dataUmum->skema_kredit) {
             if (index == 1) {
                 var allInput = ttlInput - 1
                 var allInputFilled = ttlInputFilled
-            }
-            else if (index == 3 || index == 5) {
+            } else if (index == 3 || index == 5) {
                 var allInput = ttlInput - 2
                 var allInputFilled = ttlInputFilled
-            }
-            else{
+            } else {
                 var allInput = ttlInput
                 var allInputFilled = ttlInputFilled
             }
@@ -1354,9 +1442,9 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 } else {
                     $(".side-wizard li[data-index='" + index + "'] a span i").html("100%")
                 }
-            }
-            else{
-                $(".side-wizard li[data-index='" + index + "'] a span i").html(isNaN(percentage) ? 0 + "%" : percentage + "%")
+            } else {
+                $(".side-wizard li[data-index='" + index + "'] a span i").html(isNaN(percentage) ? 0 + "%" : percentage +
+                    "%")
             }
             // $(".side-wizard li[data-index='"+index+"'] input.answer").val(allInput);
             // $(".side-wizard li[data-index='"+index+"'] input.answerFilled").val(allInputFilled);
@@ -1384,8 +1472,8 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 $(".btn-simpan").show()
                 $(".progress").prop('disabled', false);
                 $(".btn-next").hide()
-                    // });
-                    // $(".btn-next").show()
+                // });
+                // $(".btn-next").show()
 
             } else {
                 $(".btn-next").show()
@@ -1396,7 +1484,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
 
         function cekWizard(isNext = false) {
             var indexNow = $(".form-wizard.active").data('index')
-                // console.log(indexNow);
+            // console.log(indexNow);
             if (isNext) {
                 $(".side-wizard li").removeClass('active')
             }
@@ -1407,7 +1495,8 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 var selected = index == parseInt(indexNow) ? ' selected' : ''
                 $(".side-wizard li[data-index='" + index + "']").addClass('active' + selected)
                 $(".side-wizard li[data-index='" + index + "'] a span i").removeClass('fa fa-ban')
-                if ($(".side-wizard li[data-index='" + index + "'] a span i").html() == '' || $(".side-wizard li[data-index='" + index + "'] a span i").html() == '0%') {
+                if ($(".side-wizard li[data-index='" + index + "'] a span i").html() == '' || $(
+                        ".side-wizard li[data-index='" + index + "'] a span i").html() == '0%') {
                     $(".side-wizard li[data-index='" + index + "'] a span i").html('0%')
                 }
             }
