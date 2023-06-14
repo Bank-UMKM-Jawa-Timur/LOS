@@ -956,7 +956,7 @@
                                     @endif
                                     <div class="row">
                                         @foreach ($dataJawabanLevelTiga as $key => $itemJawabanLevelTiga)
-                                            @if (!$itemTiga->is_hide)
+                                            {{--  @if (!$itemTiga->is_hide)  --}}
                                                 @php
                                                     $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
                                                         ->where('id_pengajuan', $dataUmum->id)
@@ -974,16 +974,18 @@
                                                 @if (in_array($itemJawabanLevelTiga->id, $data))
                                                     @if (isset($data))
                                                         <div class="col-md-12 form-group">
-                                                            <div class="row">
-                                                                <div class="col-md-12">
-                                                                    <b>Jawaban : </b>
-                                                                    <div class="mt-2 pl-2">
-                                                                        <p class="badge badge-info text-lg">
-                                                                            <b>{{ $itemJawabanLevelTiga->option }}</b>
-                                                                        </p>
+                                                            @if ($itemTiga->nama != 'Ratio Coverage Opsi')
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <b>Jawaban : </b>
+                                                                        <div class="mt-2 pl-2">
+                                                                            <p class="badge badge-info text-lg">
+                                                                                <b>{{ $itemJawabanLevelTiga->option }}</b>
+                                                                            </p>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
+                                                            @endif
                                                             <div class="input-group input-b-bottom">
                                                                 <input type="hidden" name="id_item[]"
                                                                     value="{{ $itemTiga->id }}">
@@ -1019,7 +1021,7 @@
                                                             value="{{ $itemTiga->id }}">
                                                     @endif
                                                 @endif
-                                            @endif
+                                            {{--  @endif  --}}
                                         @endforeach
                                     </div>
                                 @endif
@@ -1457,6 +1459,7 @@
             var percentage = parseInt(allInputFilled / allInput * 100);
             percentage = Number.isNaN(percentage) ? 0 : percentage;
             percentage = percentage > 100 ? 100 : percentage;
+            percentage = percentage < 0 ? 0 : percentage;
 
             if (index == 7) {
                 if ($("textarea[name=komentar_penyelia_keseluruhan]").val() == '') {

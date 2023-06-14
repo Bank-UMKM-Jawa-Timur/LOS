@@ -2061,20 +2061,24 @@ class PengajuanKreditController extends Controller
                 } else {
                     $status = "merah";
                 }
-
+                
                 if ($role == 'PBP') {
                     foreach ($request->get('id_option') as $key => $value) {
-                        JawabanPengajuanModel::where('id_jawaban', $value)->where('id_pengajuan', $request->get('id_pengajuan'))
-                            ->update([
-                                'skor_pbp' => $request->get('skor_pbp')[$key]
-                            ]);
+                        if (array_key_exists($key, $request->skor_pbp)) {
+                            JawabanPengajuanModel::where('id_jawaban', $value)->where('id_pengajuan', $request->get('id_pengajuan'))
+                                ->update([
+                                    'skor_pbp' => $request->get('skor_pbp')[$key]
+                                ]);
+                        }
                     }
                 } else {
                     foreach ($request->get('id_option') as $key => $value) {
-                        JawabanPengajuanModel::where('id_jawaban', $value)->where('id_pengajuan', $request->get('id_pengajuan'))
-                            ->update([
-                                'skor_pbo' => $request->get('skor_pbp')[$key]
-                            ]);
+                        if (array_key_exists($key, $request->skor_pbp)) {
+                            JawabanPengajuanModel::where('id_jawaban', $value)->where('id_pengajuan', $request->get('id_pengajuan'))
+                                ->update([
+                                    'skor_pbo' => $request->get('skor_pbp')[$key]
+                                ]);
+                        }
                     }
                 }
 
@@ -2108,18 +2112,22 @@ class PengajuanKreditController extends Controller
                 $countDK = DetailKomentarModel::where('id_komentar', $idKomentar->id)->where('id_user', Auth::user()->id)->count();
                 if ($countDK > 0) {
                     foreach ($request->id_item as $key => $value) {
-                        $dk = DetailKomentarModel::where('id_komentar', $idKomentar->id)->where('id_user', Auth::user()->id)->where('id_item', $value)->first();
-                        $dk->komentar = $_POST['komentar_pbp'][$key];
-                        $dk->save();
+                        if (array_key_exists($key, $request->komentar_pbp)) {
+                            $dk = DetailKomentarModel::where('id_komentar', $idKomentar->id)->where('id_user', Auth::user()->id)->where('id_item', $value)->first();
+                            $dk->komentar = $_POST['komentar_pbp'][$key];
+                            $dk->save();
+                        }
                     }
                 } else {
                     foreach ($request->id_item as $key => $value) {
-                        $dk = new DetailKomentarModel;
-                        $dk->id_komentar = $idKomentar->id;
-                        $dk->id_user = Auth::user()->id;
-                        $dk->id_item = $value;
-                        $dk->komentar = $_POST['komentar_pbp'][$key];
-                        $dk->save();
+                        if (array_key_exists($key, $request->komentar_pbp)) {
+                            $dk = new DetailKomentarModel;
+                            $dk->id_komentar = $idKomentar->id;
+                            $dk->id_user = Auth::user()->id;
+                            $dk->id_item = $value;
+                            $dk->komentar = $_POST['komentar_pbp'][$key];
+                            $dk->save();
+                        }
                     }
                 }
 

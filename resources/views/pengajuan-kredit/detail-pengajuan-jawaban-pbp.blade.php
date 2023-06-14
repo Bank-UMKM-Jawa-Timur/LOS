@@ -698,7 +698,7 @@
                                                             value="{{ $item->id }}">
                                                         <div class="input-k-bottom">
                                                             <input type="text" class="form-control komentar"
-                                                                name="komentar_penyelia[]"
+                                                                name="komentar_pbp[]"
                                                                 placeholder="Masukkan Komentar">
                                                         </div>
                                                     @endif
@@ -800,11 +800,11 @@
                                                     @endif
                                                 @endif
                                                 <div class="input-group input-b-bottom">
+                                                    <input type="hidden" name="id_item[]"
+                                                        value="{{ $item->id }}">
+                                                    <input type="hidden" name="id_option[]"
+                                                        value="{{ $itemJawaban->id }}">
                                                     @if ($item->is_commentable == 'Ya')
-                                                        <input type="hidden" name="id_item[]"
-                                                            value="{{ $item->id }}">
-                                                        <input type="hidden" name="id_option[]"
-                                                            value="{{ $itemJawaban->id }}">
                                                         <input type="text" class="form-control komentar"
                                                             name="komentar_pbp[]" placeholder="Masukkan Komentar"
                                                             value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
@@ -873,7 +873,7 @@
                                                                     <input type="hidden" name="id_item[]"
                                                                         value="{{ $item->id }}">
                                                                     <input type="text" class="form-control komentar"
-                                                                        name="komentar_penyelia[]"
+                                                                        name="komentar_pbp[]"
                                                                         placeholder="Masukkan Komentar">
                                                                 </div>
                                                             @endif
@@ -980,11 +980,11 @@
                                                                 </div>
                                                             @endif
                                                             <div class="input-group input-b-bottom">
+                                                                <input type="hidden" name="id_item[]"
+                                                                    value="{{ $itemTiga->id }}">
+                                                                <input type="hidden" name="id_option[]"
+                                                                    value="{{ $itemJawabanLevelTiga->id }}">
                                                                 @if ($itemTiga->is_commentable == 'Ya')
-                                                                    <input type="hidden" name="id_item[]"
-                                                                        value="{{ $itemTiga->id }}">
-                                                                    <input type="hidden" name="id_option[]"
-                                                                        value="{{ $itemJawabanLevelTiga->id }}">
                                                                     <input type="text" class="form-control komentar"
                                                                         name="komentar_pbp[]"
                                                                         placeholder="Masukkan Komentar"
@@ -995,7 +995,6 @@
                                                                             onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
                                                                             {{ $itemTiga->status_skor == 0 ? 'readonly' : '' }}
                                                                             value="{{ $getSkorPBP->skor_pbp != null ? $getSkorPBP->skor_pbp : $getSkorPBP->skor_penyelia }}">
-
                                                                     </div>
                                                                 @endif
                                                             </div>
@@ -1004,8 +1003,8 @@
                                                             placeholder="Masukkan komentar" name="komentar_pbp"
                                                             value="{{ $itemJawabanLevelTiga->option }}" disabled>
                                                         <input type="text" hidden class="form-control mb-3"
-                                                            placeholder="Masukkan komentar" name="skor_penyelia"
-                                                            value="{{ $getSkorPBP->skor_penyelia }}" disabled>
+                                                            placeholder="Masukkan komentar" name="skor_pbp"
+                                                            value="{{ $getSkorPBP->skor_pbp }}" disabled>
                                                         <input type="hidden" name="id[]"
                                                             value="{{ $itemTiga->id }}">
                                                     @endif
@@ -1066,7 +1065,7 @@
                                                                     <input type="hidden" name="id_item[]"
                                                                         value="{{ $item->id }}">
                                                                     <input type="text" class="form-control komentar"
-                                                                        name="komentar_penyelia[]"
+                                                                        name="komentar_pbp[]"
                                                                         placeholder="Masukkan Komentar">
                                                                 </div>
                                                             @endif
@@ -1161,11 +1160,11 @@
                                                             </div>
                                                         @endif
                                                         <div class="input-group input-b-bottom">
+                                                            <input type="hidden" name="id_item[]"
+                                                                value="{{ $itemEmpat->id }}">
+                                                            <input type="hidden" name="id_option[]"
+                                                                value="{{ $itemJawabanLevelEmpat->id }}">
                                                             @if ($itemEmpat->is_commentable == 'Ya')
-                                                                <input type="hidden" name="id_item[]"
-                                                                    value="{{ $itemEmpat->id }}">
-                                                                <input type="hidden" name="id_option[]"
-                                                                    value="{{ $itemJawabanLevelEmpat->id }}">
                                                                 <input type="text" class="form-control komentar"
                                                                     name="komentar_pbp[]" placeholder="Masukkan Komentar"
                                                                     value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
@@ -1289,7 +1288,7 @@
                         <br>
                         <span>
                             @if ($pendapatDanUsulanPenyelia)
-                            {{ $pendapatDanUsulanPenyelia->komentar_penyelia }}
+                            {{ $pendapatDanUsulanPenyelia->komentar_pbp }}
                             @endif
                         </span>
                         <hr>
@@ -1349,10 +1348,10 @@
                     </div>
                     <div class="form-group col-md-12">
                         <label for="">Pendapat dan Usulan Penyelia</label>
-                        <textarea name="komentar_penyelia_keseluruhan"
-                            class="form-control @error('komentar_penyelia_keseluruhan') is-invalid @enderror" id="" cols="30"
-                            rows="4" placeholder="Pendapat dan Usulan Penyelia" required>{{ isset($pendapatDanUsulanPenyelia->komentar_penyelia) ? $pendapatDanUsulanPenyelia->komentar_penyelia : '' }}</textarea>
-                        @error('komentar_penyelia_keseluruhan')
+                        <textarea name="komentar_pbp_keseluruhan"
+                            class="form-control @error('komentar_pbp_keseluruhan') is-invalid @enderror" id="" cols="30"
+                            rows="4" placeholder="Pendapat dan Usulan Penyelia" required>{{ isset($pendapatDanUsulanPenyelia->komentar_pbp) ? $pendapatDanUsulanPenyelia->komentar_pbp : '' }}</textarea>
+                        @error('komentar_pbp_keseluruhan')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
@@ -1463,7 +1462,8 @@
             var percentage = parseInt(allInputFilled / allInput * 100);
             percentage = Number.isNaN(percentage) ? 0 : percentage;
             percentage = percentage > 100 ? 100 : percentage;
-            
+            percentage = percentage < 0 ? 0 : percentage;
+
             if (index == 7) {
                 if ($("textarea[name=komentar_pbp_keseluruhan]").val() == '') {
                     $(".side-wizard li[data-index='" + index + "'] a span i").html("0%")
