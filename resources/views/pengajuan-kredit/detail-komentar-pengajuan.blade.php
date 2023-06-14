@@ -156,12 +156,12 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                         $ktpSuami = \DB::table('jawaban_text')
                                         ->select('id', 'id_jawaban', 'opsi_text')
                                         ->where('id_pengajuan', $dataUmum->id)
-                                        ->where('id_jawaban', 151)
+                                        ->where('id_jawaban', 150)
                                         ->first();
                         $ktpIstri = \DB::table('jawaban_text')
                                         ->select('id', 'id_jawaban', 'opsi_text')
                                         ->where('id_pengajuan', $dataUmum->id)
-                                        ->where('id_jawaban', 152)
+                                        ->where('id_jawaban', 151)
                                         ->first();
                         $ktpNasabah = \DB::table('jawaban_text')
                                         ->select('id', 'id_jawaban', 'opsi_text')
