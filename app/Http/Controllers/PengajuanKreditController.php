@@ -755,10 +755,10 @@ class PengajuanKreditController extends Controller
                 $dataJawabanText = new JawabanTextModel;
                 $dataJawabanText->id_pengajuan = $id_pengajuan;
                 $dataJawabanText->id_jawaban = $request->get('id_level')[$key];
-                if ($request->get('id_level')[$key] == '143') {
-                    $dataJawabanText->opsi_text = $request->get('informasi')[$key];
-                } else {
+                if ($request->get('id_level')[$key] != '131' && $request->get('id_level')[$key] != '143' && $request->get('id_level')[$key] != '90' && $request->get('id_level')[$key] != '138') {
                     $dataJawabanText->opsi_text = str_replace($find, '', $request->get('informasi')[$key]);
+                } else {
+                    $dataJawabanText->opsi_text = $request->get('informasi')[$key];
                 }
                 // $dataJawabanText->opsi_text = $request->get('informasi')[$key] == null ? '-' : $request->get('informasi')[$key];
                 $dataJawabanText->save();
@@ -1229,7 +1229,11 @@ class PengajuanKreditController extends Controller
                     $data_baru = new JawabanTextModel();
                     $data_baru->id_pengajuan = $id_pengajuan;
                     $data_baru->id_jawaban = $request->id_text[$key];
-                    $data_baru->opsi_text = str_replace($find, "", $request->info_text[$key]);
+                    if($request->id_text[$key] == '131' || $request->id_text[$key] == '143' || $request->id_text[$key] == '90' || $request->id_text[$key] == '138'){
+                        $data_baru->opsi_text = $request->info_text[$key];
+                    } else{
+                        $data_baru->opsi_text = str_replace($find, "", $request->info_text[$key]);
+                    }
                     $data_baru->skor_penyelia = null;
                     $data_baru->skor = null;
                     $data_baru->save();
@@ -1243,12 +1247,14 @@ class PengajuanKreditController extends Controller
                     array_push($finalArray_text, array(
                         'id_pengajuan' => $id_pengajuan,
                         'id_jawaban' => $request->id_text[$key],
-                        'opsi_text' => str_replace($find, "", $request->info_text[$key]),
+                        'opsi_text' => ($request->id_text[$key] != '131' && $request->id_text[$key] != '143' && $request->id_text[$key] != '90' && $request->id_text[$key] != '138') ? str_replace($find, "", $request->info_text[$key]) : $request->info_text[$key],
                         'skor_penyelia' => $skor[$key],
                         'updated_at' => date("Y-m-d H:i:s"),
                     ));
                 }
             };
+
+            // dd($finalArray_text);
 
             // data Level dua
             if ($request->dataLevelDua != null) {
@@ -1364,7 +1370,7 @@ class PengajuanKreditController extends Controller
                 */
                 $data = DB::table('jawaban_text');
                 if ($request->id_jawaban_text[$i] != null) {
-                    $data->where('id', $request->get('id_jawaban_text')[$i])->update(['opsi_text' => str_replace($find, "", $request->info_text[$i])]);
+                    $data->where('id', $request->get('id_jawaban_text')[$i])->update(['opsi_text' => ($request->id_text[$i] != '131' && $request->id_text[$i] != '143' && $request->id_text[$i] != '90' && $request->id_text[$i] != '138') ? str_replace($find, "", $request->info_text[$i]) : $request->info_text[$i]]);
                 }
                 // if (!empty($request->id_jawaban_text[$i])) {
                 // } else {
@@ -2285,10 +2291,10 @@ class PengajuanKreditController extends Controller
                     $dataJawabanText->id_jawaban = $request->get('id_level')[$key];
                     $dataJawabanText->id_temporary_calon_nasabah = $request->id_nasabah;
 
-                    if ($request->get('id_level')[$key] == '143') {
-                        $dataJawabanText->opsi_text = $request->get('informasi')[$key];
-                    } else {
+                    if ($request->get('id_level')[$key] != '131' && $request->get('id_level')[$key] != '143' && $request->get('id_level')[$key] != '90' && $request->get('id_level')[$key] != '138') {
                         $dataJawabanText->opsi_text = str_replace($find, '', $request->get('informasi')[$key]);
+                    } else {
+                        $dataJawabanText->opsi_text = $request->get('informasi')[$key];
                     }
 
                     $dataJawabanText->save();
@@ -2297,7 +2303,7 @@ class PengajuanKreditController extends Controller
                         ->where('id_jawaban', $request->get('id_level')[$key])
                         ->where('id_temporary_calon_nasabah', $request?->idCalonNasabah)
                         ->update([
-                            'opsi_text' => ($request->get('id_level')[$key] == '143') ? $request->get('informasi')[$key] : str_replace($find, '', $request->get('informasi')[$key]),
+                            'opsi_text' => ($request->get('id_level')[$key] != '131' && $request->get('id_level')[$key] != '143' && $request->get('id_level')[$key] != '90' && $request->get('id_level')[$key] != '138') ?str_replace($find, '', $request->get('informasi')[$key]) : $request->get('informasi')[$key],
                         ]);
                 }
             }
