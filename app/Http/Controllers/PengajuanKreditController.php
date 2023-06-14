@@ -1437,9 +1437,159 @@ class PengajuanKreditController extends Controller
         return $data_level;
     }
 
+    function getAnswer($id) {
+        $answerData = \DB::select("SELECT jt.id, jt.id_pengajuan, option.id AS id_option, item.id AS id_item, item.level, item.id_parent, (SELECT i.nama FROM item AS i WHERE i.id = item.id_parent) AS parent, item.nama, jt.opsi_text FROM `jawaban_text` AS jt JOIN option ON option.id = jt.id_jawaban JOIN item ON item.id = option.id_item where jt.id_pengajuan = $id;");
+        foreach ($answerData as $item) {
+            // find parent
+            if ($item->level == 2) {
+                $parent = \DB::select("SELECT id, nama, id_parent FROM item WHERE id = $item->id_parent");
+                if ($parent) {
+                    if (count($parent) > 0) {
+                        $item->parent = $parent[0]->nama;
+                    }
+                }
+            }
+            else if ($item->level == 3) {
+                $parent2 = \DB::select("SELECT id, nama, id_parent FROM item WHERE id = $item->id_parent");
+                if ($parent2) {
+                    if (count($parent2) > 0) {
+                        $id_parent = $parent2[0]->id_parent;
+                        $parent = \DB::select("SELECT id, nama, id_parent FROM item WHERE id = $id_parent");
+                        if ($parent) {
+                            if (count($parent) > 0) {
+                                $item->parent = $parent[0]->nama;
+                            }
+                        }
+                    }
+                }
+            }
+            else if ($item->level == 4) {
+                $parent3 = \DB::select("SELECT id, nama, id_parent FROM item WHERE id = $item->id_parent");
+                if ($parent3) {
+                    if (count($parent3) > 0) {
+                        $id_parent = $parent3[0]->id_parent;
+                        $parent2 = \DB::select("SELECT id, nama, id_parent FROM item WHERE id = $id_parent");
+                        if ($parent2) {
+                            if (count($parent2) > 0) {
+                                $id_parent = $parent2[0]->id_parent;
+                                $parent = \DB::select("SELECT id, nama, id_parent FROM item WHERE id = $id_parent");
+                                if ($parent) {
+                                    if (count($parent) > 0) {
+                                        $item->parent = $parent[0]->nama;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        $utilityController = new UtilityController;
+        
+        $totalDataUmum = $utilityController->getTotalColumnsOfTable('calon_nasabah', ['id', 'created_at', 'updated_at']);
+        $totalJawabDataUmum = $utilityController->getTotalColumnsOfTable('calon_nasabah', ['id', 'created_at', 'updated_at']);
+        $totalAManagement = 0;
+        $totalJawabAManagement = 0;
+        $totalAHukum = 0;
+        $totalJawabAHukum = 0;
+        $totalAJaminan = 0;
+        $totalJawabAJaminan = 0;
+        $totalATeknis = 0;
+        $totalJawabATeknis = 0;
+        $totalAPemasaran = 0;
+        $totalJawabAPemasaran = 0;
+        $totalAKeuangan = 0;
+        $totalJawabAKeuangan = 0;
+        foreach ($answerData as $item) {
+            if ($item->parent == 'Data Umum') {
+                $totalDataUmum++;
+                if ($item->opsi_text != null || $item->opsi_text != '') {
+                    $totalJawabDataUmum++;
+                }
+            }
+            if ($item->parent == 'Aspek Management') {
+                $totalAManagement++;
+                if ($item->opsi_text != null || $item->opsi_text != '') {
+                    $totalJawabAManagement++;
+                }
+            }
+            if ($item->parent == 'Aspek Hukum') {
+                $totalAHukum++;
+                if ($item->opsi_text != null || $item->opsi_text != '') {
+                    $totalJawabAHukum++;
+                }
+            }
+            if ($item->parent == 'Aspek Jaminan') {
+                $totalAJaminan++;
+                if ($item->opsi_text != null || $item->opsi_text != '') {
+                    $totalJawabAJaminan++;
+                }
+            }
+            if ($item->parent == 'Aspek Teknis & Produksi') {
+                $totalATeknis++;
+                if ($item->opsi_text != null || $item->opsi_text != '') {
+                    $totalJawabATeknis++;
+                }
+            }
+            if ($item->parent == 'Aspek Pemasaran') {
+                $totalAPemasaran++;
+                if ($item->opsi_text != null || $item->opsi_text != '') {
+                    $totalJawabAPemasaran++;
+                }
+            }
+            if ($item->parent == 'Aspek Keuangan') {
+                $totalAKeuangan++;
+                if ($item->opsi_text != null || $item->opsi_text != '') {
+                    $totalJawabAKeuangan++;
+                }
+            }
+        }
+        // return $answerData;
+        return [
+            [
+                'total_data' => $totalDataUmum,
+                'total_answer' => $totalJawabDataUmum,
+                'percentage' => $totalDataUmum > 0 && $totalJawabDataUmum > 0 ? intval(($totalJawabDataUmum / $totalDataUmum) * 100) : 0,
+            ],
+            [
+                'total_data' => $totalAManagement,
+                'total_answer' => $totalJawabAManagement,
+                'percentage' => $totalAManagement > 0 && $totalJawabAManagement > 0 ? intval(($totalJawabAManagement / $totalAManagement) * 100) : 0,
+            ],
+            [
+                'total_data' => $totalAHukum,
+                'total_answer' => $totalJawabAHukum,
+                'percentage' => $totalAHukum > 0 && $totalJawabAHukum > 0 ? intval(($totalJawabAHukum / $totalAHukum) * 100) : 0,
+            ],
+            [
+                'total_data' => $totalAJaminan,
+                'total_answer' => $totalJawabAJaminan,
+                'percentage' => $totalAJaminan > 0 && $totalJawabAJaminan > 0 ? intval(($totalJawabAJaminan / $totalAJaminan) * 100) : 0,
+            ],
+            [
+                'total_data' => $totalATeknis,
+                'total_answer' => $totalJawabATeknis,
+                'percentage' => $totalATeknis > 0 && $totalJawabATeknis > 0 ? intval(($totalJawabATeknis / $totalATeknis) * 100) : 0,
+            ],
+            [
+                'total_data' => $totalAPemasaran,
+                'total_answer' => $totalJawabAPemasaran,
+                'percentage' => $totalAPemasaran > 0 && $totalJawabAPemasaran > 0 ? intval(($totalJawabAPemasaran / $totalAPemasaran) * 100) : 0,
+            ],
+            [
+                'total_data' => $totalAKeuangan,
+                'total_answer' => $totalJawabAKeuangan,
+                'percentage' => $totalAKeuangan > 0 && $totalJawabAKeuangan > 0 ? intval(($totalJawabAKeuangan / $totalAKeuangan) * 100) : 0,
+            ],
+        ];
+    }
+
     // get detail jawaban dan skor pengajuan
     public function getDetailJawaban($id)
     {
+// return $this->getAnswer($id);
+
         if (auth()->user()->role == 'Penyelia Kredit') {
             $param['pageTitle'] = "Dashboard";
             $param['dataAspek'] = ItemModel::where('level', 1)->where('nama', '!=', 'Data Umum')->get();
@@ -1499,6 +1649,7 @@ class PengajuanKreditController extends Controller
                     ->first();
             }
             $param['skema'] = $param['dataUmumNasabah']->skema_kredit;
+            // $param['dataAnswer'] = $this->getAnswer($id);
 
             return view('pengajuan-kredit.detail-pengajuan-jawaban', $param);
         } elseif (auth()->user()->role == 'PBO' || auth()->user()->role == 'PBP') {
@@ -1562,6 +1713,7 @@ class PengajuanKreditController extends Controller
                     ->first();
             }
             $param['skema'] = $param['dataUmumNasabah']->skema_kredit;
+            // $param['dataAnswer'] = $this->getAnswer($id);
 
             return view('pengajuan-kredit.detail-pengajuan-jawaban-pbp', $param);
         } else {
