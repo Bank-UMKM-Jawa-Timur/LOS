@@ -709,7 +709,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                 @else
                                                     <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="700px">
                                                 @endif
-                                                @elseif ($item->opsi_jawaban == 'number')
+                                                @elseif ($item->opsi_jawaban == 'number' && $item->id != 143)
                                                 <p class="badge badge-info text-lg"><b>
                                                         Rp. {{ number_format((int) $itemTextDua->opsi_text, 2, ',', '.') }}
                                                     </b></p>
@@ -1333,7 +1333,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                             @else
                                                                 <img src="{{ asset($filepath) }}"
                                                                     alt="" width="700px">
-                                                            @endif 
+                                                            @endif
                                                             {{-- Rupiah data empat --}}
                                                             @elseif ($itemEmpat->opsi_jawaban == 'number')
                                                                 <p class="badge badge-info text-lg"><b>
