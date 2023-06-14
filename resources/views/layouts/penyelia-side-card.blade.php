@@ -1,12 +1,12 @@
 @php
-$dataIndex = match ($skema ?? $dataUmum->skema_kredit) {
-    'PKPJ' => 1,
-    'KKB' => 2,
-    'Talangan Umroh' => 1,
-    'Prokesra' => 1,
-    'Kusuma' => 1,
-    null => 1
-};
+    $dataIndex = match ($skema ?? $dataUmum->skema_kredit) {
+        'PKPJ' => 1,
+        'KKB' => 2,
+        'Talangan Umroh' => 1,
+        'Prokesra' => 1,
+        'Kusuma' => 1,
+        null => 1,
+    };
 @endphp
 <div class="row">
     <div class="col-md-3">
@@ -18,7 +18,7 @@ $dataIndex = match ($skema ?? $dataUmum->skema_kredit) {
                     <input type="hidden" name="answerFilled" class="answerFilled">
                     <a href="#"><span><i>0%</i></span> Data Umum</a>
                 </li>
-                @if($skema ?? $dataUmum->skema_kredit == 'KKB')
+                @if ($skema ?? $dataUmum->skema_kredit == 'KKB')
                     <li class="data-po-label"><label>DATA PO</label></li>
                     <li data-index='1'>
                         <input type="hidden" name="answer" class="answer">
@@ -31,15 +31,16 @@ $dataIndex = match ($skema ?? $dataUmum->skema_kredit) {
                     @php
                         $key += $dataIndex;
                     @endphp
-                <li data-index='{{ $key }}' class="{{ request()->routeIs('pengajuan-kredit.edit') == 'pengajuan-kredit' ? 'active' : '' }}">
-                    <input type="hidden" name="answer" class="answer">
-                    <input type="hidden" name="answerFilled" class="answerFilled">
-                    <a href="#"><span><i class="fa fa-ban"></i></span>{{ $value->nama }}</a>
-                </li>
+                    <li data-index='{{ $key }}'
+                        class="{{ request()->routeIs('pengajuan-kredit.edit') == 'pengajuan-kredit' ? 'active' : '' }}">
+                        <input type="hidden" name="answer" class="answer">
+                        <input type="hidden" name="answerFilled" class="answerFilled">
+                        <a href="#"><span><i class="fa fa-ban"></i></span>{{ $value->nama }}</a>
+                    </li>
                 @endforeach
 
-                <li><label> PENDAPAT dan USULAN PENYELIA KREDIT</label></li>
-                <li class="last" data-index='{{count($dataAspek) + $dataIndex}}'>
+                <li><label> PENDAPAT dan USULAN</label></li>
+                <li class="last" data-index='{{ count($dataAspek) + $dataIndex }}'>
                     <input type="hidden" name="answer" class="answer">
                     <input type="hidden" name="answerFilled" class="answerFilled">
                     <a href="#"><span><i class="fa fa-ban"></i></span> Pendapat dan Usulan</a>
@@ -54,10 +55,10 @@ $dataIndex = match ($skema ?? $dataUmum->skema_kredit) {
                 <div class="row row-breadcrumbs align-items-center">
                     <div class="col-md-6">
                         <h5>
-                        {{ ucwords(str_replace('-',' ',Request::segment(1))) }}</h5>
+                            {{ ucwords(str_replace('-', ' ', Request::segment(1))) }}</h5>
                     </div>
                     <div class="col-md-6 text-right">
-                        <h6>{{ ucwords(str_replace('-',' ',Request::segment(1))) }} / {{$pageTitle}}</h6>
+                        <h6>{{ ucwords(str_replace('-', ' ', Request::segment(1))) }} / {{ $pageTitle }}</h6>
                     </div>
                 </div>
                 <hr class="mt-4">

@@ -36,6 +36,26 @@ $dataIndex = match ($dataUmum->skema_kredit) {
             font-size: 16px;
             /* border-bottom: 1px solid #dc3545; */
         }
+        span.filename {
+            position: absolute;
+            top: 40px;
+            left: 139px;
+            background: white;
+        }
+
+        .file-wrapper span.filename {
+            top: 10px;
+        }
+        span.filenameBukti {
+            position: absolute;
+            top: 10px;
+            left: 139px;
+            background: white;
+        }
+
+        .file-wrapper span.filenameBukti {
+            top: 10px;
+        }
 
     </style>
     <form id="pengajuan_kredit" action="{{ route('pengajuan-kredit.update', $dataUmum->id) }}" enctype="multipart/form-data" method="post">
@@ -64,7 +84,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                     @endphp
                     <input type="hidden" name="id_file_text[]" value="{{ $itemSP->id }}">
                     <label for="update_file" style="display: none" id="nama_file">{{ $jawabanFotoSP?->opsi_text }}</label>
-                    <input type="file" name="update_file[]" value="{{ $jawabanFotoSP?->opsi_text }}" id="sp" placeholder="Masukkan informasi {{ $itemSP?->nama }}" class="form-control limit-size" >
+                    <input type="file" name="update_file[]" value="{{ $jawabanFotoSP?->opsi_text }}" id="surat_permohonan" placeholder="Masukkan informasi {{ $itemSP?->nama }}" class="form-control limit-size" >
                     <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
                     <input type="hidden" name="id_update_file[]" value="{{ $jawabanFotoSP?->id }}">
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
@@ -72,6 +92,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                             {{ $errors->first('dataLevelDua.' . $key) }}
                         </div>
                     @endif
+                    <span class="filename" style="display: inline;">{{ $jawabanFotoSP?->opsi_text }}</span>
                 </div>
                 <div class="form-group col-md-4">
                     <label for="">Kabupaten</label>
@@ -173,6 +194,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                 {{ $errors->first('dataLevelDua.' . $key) }}
                             </div>
                         @endif
+                        <span class="filename" style="display: inline;">{{ $jawabanFotoSP?->opsi_text }}</span>
                         {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
                     </div>
                     <div class="form-group col-md-6" id="foto-ktp-istri">
@@ -197,6 +219,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                 {{ $errors->first('dataLevelDua.' . $key) }}
                             </div>
                         @endif
+                        <span class="filename" style="display: inline;">{{ $jawabanFotoSP?->opsi_text }}</span>
                         {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
                     </div>
                 @else
@@ -222,6 +245,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                 {{ $errors->first('dataLevelDua.' . $key) }}
                             </div>
                         @endif
+                        <span class="filename" style="display: inline;">{{ $jawabanFotoSP?->opsi_text }}</span>
                     </div>
                 @endif
                 <div class="" id="foto-ktp-suami">
@@ -341,6 +365,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                             {{ $errors->first('dataLevelDua.' . $key) }}
                         </div>
                     @endif
+                    <span class="filename" style="display: inline;">{{ $jawabanLaporanSlik?->opsi_text }}</span>
                     {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
                 </div>
                 <div class="form-group col-md-12">
@@ -567,7 +592,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                         <option value="">-- Pilih Ijin Usaha --</option>
                                             <option value="nib" {{ ($dataIjin?->nama == 'NIB') ? 'selected' : '' }}>NIB</option>
                                             <option value="surat_keterangan_usaha" {{ ($dataIjin?->nama == 'Surat Keterangan Usaha') ? 'selected' : '' }}>Surat Keterangan Usaha</option>
-                                            <option value="tidak_ada_legalitas_usaha" {{ ($dataIjin?->nama == 'Tidak Ada Legalitas Usaha') ? 'selected' : '' }}>Tidak Ada Legalitas Usaha</option>
+                                            <option value="tidak_ada_legalitas_usaha" {{ (!$dataIjin) ? 'selected' : '' }}>Tidak Ada Legalitas Usaha</option>
                                     </select>
                                 </div>
                             </div>
@@ -587,7 +612,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                 <div class="form-group col-md-6" id="docNIB">
                                     @php
                                         $jawabanDokNIB = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
-                                                        ->where('id_jawaban', 153)
+                                                        ->where('id_jawaban', $itemNIB->id)
                                                         ->first();
                                     @endphp
                                     <label for="">Dokumen NIB</label>
@@ -607,6 +632,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                         </div>
                                     @endif
                                     {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
+                                    <span class="filename" style="display: inline;">{{ $jawabanDokNIB?->opsi_text }}</span>
                                 </div>
 
                                 <div class="form-group col-md-6" id="surat_keterangan_usaha">
@@ -622,7 +648,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                 <div class="form-group col-md-6" id="docSKU">
                                     @php
                                         $jawabanDokSKU = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
-                                                        ->where('id_jawaban', 157)
+                                                        ->where('id_jawaban', $itemSKU->id)
                                                         ->first();
                                     @endphp
                                     <label for="">Surat Keterangan Usaha</label>
@@ -641,6 +667,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                             {{ $errors->first('dataLevelTiga.' . $key) }}
                                         </div>
                                     @endif
+                                    <span class="filename" style="display: inline;">{{ $jawabanDokSKU?->opsi_text }}</span>
                                     {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
                                 </div>
                             </div>
@@ -660,7 +687,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                 <div class="form-group col-md-6" id="docNPWP">
                                     @php
                                         $jawabanDokNPWP = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
-                                                        ->where('id_jawaban', 154)
+                                                        ->where('id_jawaban', $itemNPWP->id)
                                                         ->first();
                                     @endphp
                                     <label for="">Dokumen NPWP</label>
@@ -679,6 +706,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                             {{ $errors->first('dataLevelTiga.' . $key) }}
                                         </div>
                                     @endif
+                                    <span class="filename" style="display: inline;">{{ $jawabanDokNPWP?->opsi_text }}</span>
                                     {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
                                 </div>
                             </div>
@@ -759,6 +787,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                         <input type="hidden" name="skor_penyelia_text[]"
                                             value="{{ $itemTextDua->skor_penyelia }}">
                                         <input type="hidden" name="id_update_file[]" value="{{ $itemTextDua->id }}">
+                                        <span class="filename" style="display: inline;">{{ $itemTextDua?->opsi_text }}</span>
                                     </div>
                                 @empty
                                     <div class="form-group col-md-6">
@@ -1020,6 +1049,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                         <input type="hidden" name="skor_penyelia_text[]"
                                                             value="{{ $itemTextTiga->skor_penyelia }}">
                                                         <input type="hidden" name="id_update_file[]" value="{{ $itemTextTiga->id }}">
+                                                        <span class="filename" style="display: inline;">{{ $itemTextTiga?->opsi_text }}</span>
                                                     </div>
                                                     @if(in_array(trim($itemTiga->nama), $multipleFiles))
                                                     <div class="col-1">
@@ -1161,7 +1191,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                             @foreach ($dataDetailJawabanTextEmpat as $itemTextEmpat)
                                                 <div class="form-group col-md-6">
                                                     <label for="">{{ $itemEmpat->nama }}</label>
-                                                        <input type="text" name="info_text[]" id="{{ $idLevelEmpat }}"
+                                                        <input type="text" name="info_text[]" id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan_/_ht' ? 'nilai_asuransi_penjaminan' : $idLevelEmpat }}"
                                                             placeholder="Masukkan informasi" class="form-control rupiah" value="{{ ($itemTextEmpat->opsi_text != null) ? $itemTextEmpat->opsi_text : null }}">
                                                         <input type="hidden" name="skor_penyelia_text[]"
                                                             value="{{ $itemTextEmpat->skor_penyelia }}">
@@ -1192,7 +1222,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                         @elseif ($itemEmpat->opsi_jawaban == 'file')
                                             @forelse ($dataDetailJawabanTextEmpat as $itemTextEmpat)
                                                 <div class="form-group col-md-6">
-                                                    <label for="">{{ $itemEmpat->nama }}</label>
+                                                    <label for="">{{ $itemEmpat->nama }}ccd</label>
                                                     {{-- <input type="hidden" name="opsi_jawaban[]"
                                                         value="{{ $itemEmpat->opsi_jawaban }}" id=""> --}}
                                                         <input type="hidden" name="id_file_text[]" value="{{ $itemTextEmpat->id_item }}">
@@ -1202,6 +1232,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                         <input type="hidden" name="skor_penyelia_text[]"
                                                             value="{{ $itemTextEmpat->skor_penyelia }}">
                                                         <input type="hidden" name="id_update_file[]" value="{{ $itemTextEmpat->id }}">
+                                                        <span class="filename" style="display: inline;">{{ $itemTextEmpat?->opsi_text }}</span>
                                                 </div>
                                             @empty
                                                 <div class="form-group col-md-6">
@@ -1885,6 +1916,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                     <input type="hidden" name="id_file_text[]" value="${valItem.id_item}" id="" class="input">
                                                     <input type="file" name="update_file[]" value="${valItem.opsi_text}" id="${valItem.nama}file" class="form-control">
                                                     <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
+                                                    <span class="filenameBukti" style="display: inline;">${valItem.opsi_text}</span>
                                                 </div>
                                                 <div class="col-md-1">
                                                     <button type="button" class="btn btn-success plus" id="btnTambahBukti"><i class="fa fa-plus"></i></button>
