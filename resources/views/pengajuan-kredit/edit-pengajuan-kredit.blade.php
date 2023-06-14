@@ -2325,6 +2325,8 @@ $dataIndex = match ($dataUmum->skema_kredit) {
     //end Repayment Capacity
 </script>
     <script>
+        var firstLoad = true;
+
         $('.rupiah').each(function(){
             var inp = $(this).val()
             $(this).val(formatrupiah(inp))
@@ -2379,70 +2381,6 @@ $dataIndex = match ($dataUmum->skema_kredit) {
 
             }
         }
-
-        for (let index = 0; index < jumlahData + 1; index++) {
-            for (let index = 0; index <= parseInt(jumlahData); index++) {
-                var selected = index == parseInt(jumlahData) ? ' selected' : ''
-                $(".side-wizard li[data-index='" + index + "']").addClass('active' + selected)
-                $(".side-wizard li[data-index='" + index + "'] a span i").removeClass('fa fa-ban')
-                if ($(".side-wizard li[data-index='" + index + "'] a span i").html() == '' || $(
-                        ".side-wizard li[data-index='" + index + "'] a span i").html() == '0%') {
-                    $(".side-wizard li[data-index='" + index + "'] a span i").html('0%')
-                }
-            }
-
-            var form = ".form-wizard[data-index='" + index + "']"
-
-            var input = $(form + " input")
-            var select = $(form + " select")
-            var textarea = $(form + " textarea")
-
-            var ttlInput = 0;
-            var ttlInputFilled = 0;
-            $.each(input, function(i, v) {
-                ttlInput++
-                if (v.value != '') {
-                    ttlInputFilled++
-                }
-            })
-            var ttlSelect = 0;
-            var ttlSelectFilled = 0;
-            $.each(select, function(i, v) {
-                ttlSelect++
-                if (v.value != '') {
-                    ttlSelectFilled++
-                }
-            })
-
-            var ttlTextarea = 0;
-            var ttlTextareaFilled = 0;
-            $.each(textarea, function(i, v) {
-                ttlTextarea++
-                if (v.value != '') {
-                    ttlTextareaFilled++
-                }
-            })
-
-            var allInput = ttlInput + ttlSelect + ttlTextarea
-            var allInputFilled = ttlInputFilled + ttlSelectFilled + ttlTextareaFilled
-
-            var percentage = parseInt(allInputFilled / allInput * 100);
-            percentage = isNaN(percentage) ? 0 : percentage;
-            $(".side-wizard li[data-index='" + index + "'] a span i").html(percentage + "%")
-            $(".side-wizard li[data-index='" + index + "'] input.answer").val(allInput);
-            $(".side-wizard li[data-index='" + index + "'] input.answerFilled").val(allInputFilled);
-            var allInputTotal = 0;
-            var allInputFilledTotal = 0;
-        }
-        $(".side-wizard li input.answer").each(function() {
-            allInputTotal += Number($(this).val());
-        });
-        $(".side-wizard li input.answerFilled").each(function() {
-            allInputFilledTotal += Number($(this).val());
-        });
-        console.log(allInputTotal);
-        var result = parseInt(allInputFilledTotal / allInputTotal * 100);
-        $('.progress').val(result);
 
         function cekBtn() {
             var indexNow = $(".form-wizard.active").data('index')
@@ -2508,161 +2446,126 @@ $dataIndex = match ($dataUmum->skema_kredit) {
         })
 
         for(let i = 0; i <= parseInt(jumlahData); i++){
+            var selected = i == parseInt(jumlahData) ? ' selected' : ''
+                $(".side-wizard li[data-index='" + i + "']").addClass('active' + selected)
+                $(".side-wizard li[data-index='" + i + "'] a span i").removeClass('fa fa-ban')
+                if ($(".side-wizard li[data-index='" + i + "'] a span i").html() == '' || $(
+                        ".side-wizard li[data-index='" + i + "'] a span i").html() == '0%') {
+                    $(".side-wizard li[data-index='" + i + "'] a span i").html('0%')
+                }
             setPercent(i);
         }
 
         function setPercent(formIndex) {
             var form = ".form-wizard[data-index='" + formIndex + "']"
-
-            var input = $(form + " input")
+            var inputText = $(form + " .row input[type=text]")
+            var inputNumber = $(form + " input[type=number]")
+            var inputDisabled = $(form + " input:disabled")
+            var inputReadonly = $(form + " input").find("readonly")
+            var inputHidden = $(form + " input[type=hidden]")
+            var inputFile = $(form + " .filename")
+            var inputDate = $(form + " input[type=date]")
             var select = $(form + " select")
             var textarea = $(form + " textarea")
-            var hidden = $(form + " input[type=hidden]")
-            var file = $(form + " input[type=file]")
+            var totalText = inputText ? inputText.length : 0
+            var totalNumber = inputNumber ? inputNumber.length : 0
+            var totalDisabled = inputDisabled ? inputDisabled.length : 0
+            var totalReadonly = inputReadonly ? inputReadonly.length : 0
+            var totalHidden = inputHidden ? inputHidden.length : 0
+            var totalFile = inputFile ? inputFile.length : 0
+            var totalDate = inputDate ? inputDate.length : 0
+            var totalSelect = select ? select.length : 0
+            var totalTextArea = textarea ? textarea.length : 0
 
-            if (form == ".form-wizard[data-index='2']") {
-                var ijin = $(form + " select[name=ijin_usaha]");
-                if(ijin.val() == "nib"){
-                    var ttlInput = -2
-                    var ttlInputFilled = -1
-                } else if(ijin.val() == "tidak_ada_legalitas_usaha"){
-                    var ttlInput = -6
-                    var ttlInputFilled = -5
-                    console.log(ttlInput);
-                } else if(ijin.val() == "surat_keterangan_usaha"){
-                    console.log(2);
-                    var ttlInput = -2
-                    var ttlInputFilled = -1
-                }
-            } else if (form == ".form-wizard[data-index='3']") {
-                var checkbox = $(form + " input[type=checkbox]:checked").length;
-                if ($(form + " select[name=kategori_jaminan_utama]").find(':selected').val() == 'Tanah' || $(form + " select[name=kategori_jaminan_utama]").find(':selected').val() == 'Tanah dan Bangunan') {
-                    if ($(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah' || $(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah dan Bangunan') {
-                        if (checkbox == 2) {
-                            var ttlInput = -5
-                            var ttlInputFilled = -5
-                        } else if (checkbox == 3){
-                            var ttlInput = -4
-                            var ttlInputFilled = -4
-                        } else if (checkbox == 4){
-                            var ttlInput = -3
-                            var ttlInputFilled = -3
-                        } else if (checkbox == 5) {
-                            var ttlInput = -2
-                            var ttlInputFilled = -2
-                        } else {
-                            if (checkbox == 6) {
-                                var ttlInput = -1
-                                var ttlInputFilled = -1
-                            } else {
-                                var ttlInput = -7
-                                var ttlInputFilled = -7
-                            }
-                        }
-                    } else {
-                        if (checkbox == 1) {
-                            var ttlInput = -3;
-                            var ttlInputFilled = -3;
-                        } else if (checkbox == 2) {
-                            var ttlInput = -2;
-                            var ttlInputFilled = -2;
-                        } else {
-                            if (checkbox == 3) {
-                                var ttlInput = -1;
-                                var ttlInputFilled = -1;
-                            } else {
-                                var ttlInput = -4;
-                                var ttlInputFilled = -4;
-                            }
-                        }
+            var subtotalInput = (totalText + totalNumber + totalFile + totalDate + totalSelect + totalTextArea)
+
+            if (formIndex == 2) {
+                var ijinUsahaSelect = $(form).find("#ijin_usaha");
+                if (ijinUsahaSelect.length > 0) {
+                    if (ijinUsahaSelect[0].value == 'nib' || ijinUsahaSelect[0].value == 'surat_keterangan_usaha') {
+                        subtotalInput -= 2;
                     }
-                    // var ttlInput = -1;
-                }
-                else {
-                    if ($(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah' || $(form + " select[name=kategori_jaminan_tambahan]").find(':selected').val() == 'Tanah dan Bangunan') {
-                        if (checkbox == 1) {
-                            var ttlInput = -3;
-                            var ttlInputFilled = -3;
-                        } else if (checkbox == 2) {
-                            var ttlInput = -2;
-                            var ttlInputFilled = -2;
-                        } else {
-                            if (checkbox == 3) {
-                                var ttlInput = -1;
-                                var ttlInputFilled = -1;
-                            } else {
-                                var ttlInput = -4;
-                                var ttlInputFilled = -4;
-                            }
-                        }
-                    } else {
-                        var ttlInput = 0;
-                        var ttlInputFilled = 0;
+                    if (ijinUsahaSelect[0].value == 'tidak_ada_legalitas_usaha') {
+                        subtotalInput -= 6;
                     }
                 }
             }
-            else if (form == ".form-wizard[data-index='6']"){
-                var ttlInput = -1;
-                var ttlInputFilled = 0;
-            } else {
-                var ttlInput = 0;
-                var ttlInputFilled = 0;
+
+            if (formIndex == 3) {
+                subtotalInput -= firstLoad ? 4 : 8;
             }
 
-            $.each(input, function(i, v) {
-                ttlInput++
+            if (formIndex == 6) {
+                subtotalInput -= 1;
+            }
+
+            var ttlInputTextFilled = 0;
+            $.each(inputText, function(i, v) {
                 if (v.value != '') {
-                    ttlInputFilled++
+                    ttlInputTextFilled++
                 }
             })
-            var ttlSelect = 0;
+            var ttlInputNumberFilled = 0;
+            $.each(inputNumber, function(i, v) {
+                if (v.value != '') {
+                    ttlInputNumberFilled++
+                }
+            })
+            var ttlInputFileFilled = 0;
+            $.each(inputFile, function(i, v) {
+                if (v.innerHTML != '') {
+                    ttlInputFileFilled++
+                }
+            })
+            var ttlInputDateFilled = 0;
+            $.each(inputDate, function(i, v) {
+                if (v.value != '') {
+                    ttlInputDateFilled++
+                }
+            })
             var ttlSelectFilled = 0;
             $.each(select, function(i, v) {
-                ttlSelect++
-                if (v.value != '') {
+                var data = v.value;
+                if (data != "" && data != '' && data != null && data != ' --Pilih Opsi-- ' && data != '--Pilih Opsi--') {
                     ttlSelectFilled++
                 }
             })
-
-            var ttlTextarea = 0;
-            var ttlTextareaFilled = 0;
+            var ttlTextAreaFilled = 0;
             $.each(textarea, function(i, v) {
-                ttlTextarea++
                 if (v.value != '') {
-                    ttlTextareaFilled++
+                    ttlTextAreaFilled++
                 }
             })
 
-            var ttlHidden = 0;
-            var ttlHiddenFilled = 0;
-            $.each(hidden, function(i, v) {
-                ttlHidden++
-                if (v.value != '') {
-                    ttlHiddenFilled++
+            var subtotalFilled = ttlInputTextFilled + ttlInputNumberFilled + ttlInputFileFilled + ttlInputDateFilled + ttlSelectFilled + ttlTextAreaFilled;
+            if (formIndex == 0) {
+                let value = $("#status").val();
+                console.log('status : '+value)
+                if (value == "menikah") {
+                    // subtotalInput += 2;
+                    subtotalFilled += 2;
                 }
-            })
-
-            var ttlFile = 0;
-            var ttlFileFilled = 0;
-            $.each(file, function(i, v) {
-                ttlFile++
-                if (v.value != '') {
-                    ttlFileFilled++
+                else {
+                    // subtotalInput += 1;
+                    subtotalFilled += 2;
                 }
-            })
+            }
+            console.log("=============index : "+formIndex+"=============")
+            console.log('total input : ' + subtotalInput)
+            console.log('total input filled : ' + subtotalFilled)
+            console.log("===============================================")
 
-            var allInput = ttlInput + ttlSelect + ttlTextarea - ttlHidden - ttlFile
-            var allInputFilled = ttlInputFilled + ttlSelectFilled + ttlTextareaFilled - ttlHiddenFilled - ttlFileFilled
-            console.log("AllInput : " + allInput);
-            console.log("AllInputFilled : " + allInputFilled);
+            var percentage = parseInt(subtotalFilled / subtotalInput * 100);
+            percentage = Number.isNaN(percentage) ? 0 : percentage;
+            percentage = percentage > 100 ? 100 : percentage;
+            percentage = percentage < 0 ? 0 : percentage;
 
-            var result = parseInt((allInputFilled / allInput) * 100);
-            console.log("result : "+ result)
-            $(".side-wizard li[data-index='" + formIndex + "'] a span i").html(result + "%")
-            $(".side-wizard li[data-index='" + formIndex + "'] input.answer").val(allInput);
-            $(".side-wizard li[data-index='" + formIndex + "'] input.answerFilled").val(allInputFilled);
+            $(".side-wizard li[data-index='" + formIndex + "'] a span i").html(percentage + "%")
 
-            $('.progress').val(result);
+            $(".side-wizard li[data-index='" + formIndex + "'] input.answer").val(subtotalInput);
+            $(".side-wizard li[data-index='" + formIndex + "'] input.answerFilled").val(subtotalFilled);
+
+            $('.progress').val(percentage);
         }
 
         $(".btn-next").click(function(e) {
