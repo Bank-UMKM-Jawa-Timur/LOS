@@ -61,8 +61,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('pengajuan-kredit/jawaban-pengajuan-penyelia', [PengajuanKreditController::class, "storeAspekPenyelia"])->name('pengajuan.insertkomentarPenyelia');
     Route::get('pengajuan-kredit/update-posisi/{id}', [PengajuanKreditController::class, "backToInputProses"])->name('pengajuan.backToInputProses');
 
-    Route::get('getkecamatan', [PengajuanKreditController::class, "getkecamatan"]);
-    Route::get('getdesa', [PengajuanKreditController::class, "getdesa"]);
+    Route::get('getkecamatan', [PengajuanKreditController::class, "getkecamatan"])->name('getKecamatan');
+    Route::get('getdesa', [PengajuanKreditController::class, "getdesa"])->name('getDesa');
 
     Route::post('pengajuan-kredit/temp/nasabah', [PengajuanKreditController::class, 'tempNasabah'])
         ->name('pengajuan-kredit.temp.nasabah');
@@ -91,9 +91,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('change-password/{id}', [UserController::class, 'updatePassword'])->name('update_password');
     // master item
     Route::get('/master-item/addEditItem', [MasterItemController::class, 'addEditItem']);
-    Route::get('data-item-satu', [MasterItemController::class, 'dataItemSatu']);
-    Route::get('data-item-tiga', [MasterItemController::class, 'dataItemtiga']);
-    Route::get('data-item-empat', [MasterItemController::class, 'dataItemEmpat']);
+    Route::get('data-item-satu', [MasterItemController::class, 'dataItemSatu'])->name('getItemSatu');
+    Route::get('data-item-tiga', [MasterItemController::class, 'dataItemtiga'])->name('getItemTiga');
+    Route::get('data-item-empat', [MasterItemController::class, 'dataItemEmpat'])->name('getItemEmpat');
     Route::resource('master-item', MasterItemController::class);
     // Cetak Surat
     Route::get('cetak-surat/{id}', [CetakSuratController::class, 'cetak'])->name('cetak');

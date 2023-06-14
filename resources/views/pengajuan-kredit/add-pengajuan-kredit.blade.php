@@ -1153,7 +1153,7 @@ $dataIndex = match ($skema) {
             if (kabID) {
                 $.ajax({
                     type: "GET",
-                    url: "/getkecamatan?kabID=" + kabID,
+                    url: "{{ route('getKecamatan') }}?kabID=" + kabID,
                     dataType: 'JSON',
                     success: function(res) {
                         //    console.log(res);
@@ -1187,7 +1187,7 @@ $dataIndex = match ($skema) {
             if (kecID) {
                 $.ajax({
                     type: "GET",
-                    url: "/getdesa?kecID=" + kecID,
+                    url: "{{ route('getDesa') }}?kecID=" + kecID,
                     dataType: 'JSON',
                     success: function(res) {
                         //    console.log(res);
