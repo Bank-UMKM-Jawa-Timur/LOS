@@ -787,6 +787,24 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                         <hr>
                                     @endif
                                 @endforeach
+                                @if ($item->nama == 'Ijin Usaha' && $countIjin == 0)
+                                        <div class="row form-group sub pl-4">
+                                            <label for="staticEmail"
+                                                class="col-sm-3 col-form-label font-weight-bold">Ijin Usaha</label>
+                                            <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                                                <div class="d-flex justify-content-end">
+                                                    <div style="width: 20px">
+                                                        :
+                                                    </div>
+                                                </div>
+                                            </label>
+                                            <div class="col-sm-7">
+                                                <input type="text" readonly
+                                                    class="form-control-plaintext font-weight-bold" id="staticEmail"
+                                                    value="Tidak ada legalitas usaha">
+                                            </div>
+                                        </div>
+                                    @endif
                             @endif
                             @php
                                 $dataJawaban = \App\Models\OptionModel::where('option', '!=', '-')

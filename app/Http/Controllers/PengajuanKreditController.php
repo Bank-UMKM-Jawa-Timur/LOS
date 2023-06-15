@@ -1972,6 +1972,20 @@ class PengajuanKreditController extends Controller
                     ->first();
             }
             $param['skema'] = $param['dataUmumNasabah']->skema_kredit;
+            $dokumenUsaha = DB::table('item')
+                    ->where('nama', 'LIKE', '%NIB%')
+                    ->orWhere('nama', 'LIKE', '%Surat Keterangan Usaha%')
+                    ->orWhere('nama', 'LIKE', '%NPWP%')
+                    ->get('id');
+            $countDoc = 0;
+            foreach($dokumenUsaha as $idDoc){
+                $count = DB::table('jawaban_text')
+                    ->where('id_pengajuan', $id)
+                    ->where('id_jawaban', $idDoc->id)
+                    ->count();
+                $countDoc += $count;
+            }
+            $param['countIjin'] = $countDoc;
             // $param['dataAnswer'] = $this->getAnswer($id);
 
             return view('pengajuan-kredit.detail-pengajuan-jawaban', $param);
@@ -2036,6 +2050,20 @@ class PengajuanKreditController extends Controller
                     ->first();
             }
             $param['skema'] = $param['dataUmumNasabah']->skema_kredit;
+            $dokumenUsaha = DB::table('item')
+                    ->where('nama', 'LIKE', '%NIB%')
+                    ->orWhere('nama', 'LIKE', '%Surat Keterangan Usaha%')
+                    ->orWhere('nama', 'LIKE', '%NPWP%')
+                    ->get('id');
+            $countDoc = 0;
+            foreach($dokumenUsaha as $idDoc){
+                $count = DB::table('jawaban_text')
+                    ->where('id_pengajuan', $id)
+                    ->where('id_jawaban', $idDoc->id)
+                    ->count();
+                $countDoc += $count;
+            }
+            $param['countIjin'] = $countDoc;
             // $param['dataAnswer'] = $this->getAnswer($id);
 
             return view('pengajuan-kredit.detail-pengajuan-jawaban-pbp', $param);
@@ -2466,6 +2494,20 @@ class PengajuanKreditController extends Controller
                 ->select('data_po.*', 'mst_tipe.tipe', 'mst_merk.merk')
                 ->first();
         }
+        $dokumenUsaha = DB::table('item')
+                ->where('nama', 'LIKE', '%NIB%')
+                ->orWhere('nama', 'LIKE', '%Surat Keterangan Usaha%')
+                ->orWhere('nama', 'LIKE', '%NPWP%')
+                ->get('id');
+        $countDoc = 0;
+        foreach($dokumenUsaha as $idDoc){
+            $count = DB::table('jawaban_text')
+                ->where('id_pengajuan', $id)
+                ->where('id_jawaban', $idDoc->id)
+                ->count();
+            $countDoc += $count;
+        }
+        $param['countIjin'] = $countDoc;
 
         return view('pengajuan-kredit.detail-komentar-pengajuan', $param);
     }

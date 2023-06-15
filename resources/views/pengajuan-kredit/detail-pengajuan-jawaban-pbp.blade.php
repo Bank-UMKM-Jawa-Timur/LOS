@@ -757,6 +757,16 @@
                                             <h4>{{ $item->nama }}</h4>
                                         </div>
                                     </div>
+                                    @if ($item->nama == 'Ijin Usaha' && $countIjin == 0)
+                                        <div class="row col-md-12 mb-0 pl-3">
+                                            <div class="col-md-12 form-group">
+                                                <b>Jawaban: </b>
+                                                <div class="mt-2 pl-3">
+                                                    <p class="badge badge-info text-lg">Tidak Ada Legalitas Usaha</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
                                 @endif
                             @endif
                         @endforeach
