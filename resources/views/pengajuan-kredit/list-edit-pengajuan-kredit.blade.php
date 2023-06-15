@@ -243,8 +243,10 @@
                                                 class="dropdown-item">
                                                 Edit data
                                             </a>
-                                            <a href="{{ route('pengajuan.check.penyeliakredit', $item->id_pengajuan) }}"
-                                                class="dropdown-item">Tindak lanjut Review Penyelia</a>
+                                            {{--  <a id="tindak-lanjut-penyelia-link" href="#" data-toggle="modal" data-target="#pilihPenyeliaModal"
+                                                class="dropdown-item">Tindak lanjut Review Penyelia</a>  --}}
+                                            <a href="#" data-id="{{$item->id_pengajuan}}"
+                                                class="dropdown-item tindak-lanjut-penyelia-link">Tindak lanjut Review Penyelia</a>
                                             <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
                                                 class="dropdown-item">Cetak</a>
                                             @if ($item->skema_kredit == 'KKB')
@@ -320,6 +322,7 @@
         <div class="pull-right">
         </div>
     </div>
+    @include('pengajuan-kredit.modal.pilih-penyelia')
 @endsection
 @include('pengajuan-kredit.modal-filter')
 @include('layouts.popup-upload-sppk')
