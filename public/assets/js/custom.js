@@ -1,7 +1,6 @@
 
 $(document).ready(function() {
     var firstLoad = true;
-    console.log("tes : "+$(".form-wizard[data-index=0] .filename").length)
     
     $('.side-wizard').on('click', function () {
         firstLoad = false

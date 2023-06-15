@@ -1071,9 +1071,19 @@ $dataIndex = match ($skema) {
 
 @push('custom-script')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{{ asset('') }}js/custom.js"></script>
 <script>
-
     $(document).ready(function() {
+        var firstLoad = true;
+        
+        $('.side-wizard').on('click', function () {
+            firstLoad = false
+            for (let index = 0; index < 7; index++) {
+                setPercentage(index);
+            }
+        })
+        var jumlahData = $('#jumlahData').val();
+
         let valSkema = $("#skema").val();
         cekStatusNikah()
         setPercentage(0);
@@ -1091,6 +1101,112 @@ $dataIndex = match ($skema) {
             $("#skema_kredit").val(valSkema);
         });
     });
+    function setPercentage(formIndex) {
+        var form = ".form-wizard[data-index='" + formIndex + "']"
+        var inputText = $(form + " .row input[type=text]")
+        var inputNumber = $(form + " input[type=number]")
+        var inputDisabled = $(form + " input:disabled")
+        var inputReadonly = $(form + " input").find("readonly")
+        var inputHidden = $(form + " input[type=hidden]")
+        var inputFile = $(form + " .filename")
+        var inputDate = $(form + " input[type=date]")
+        var select = $(form + " select")
+        var textarea = $(form + " textarea")
+        var totalText = inputText ? inputText.length : 0
+        var totalNumber = inputNumber ? inputNumber.length : 0
+        var totalDisabled = inputDisabled ? inputDisabled.length : 0
+        var totalReadonly = inputReadonly ? inputReadonly.length : 0
+        var totalHidden = inputHidden ? inputHidden.length : 0
+        var totalFile = inputFile ? inputFile.length : 0
+        var totalDate = inputDate ? inputDate.length : 0
+        var totalSelect = select ? select.length : 0
+        var totalTextArea = textarea ? textarea.length : 0
+
+        var subtotalInput = (totalText + totalNumber + totalFile + totalDate + totalSelect + totalTextArea)
+
+        if (formIndex == 2) {
+            var ijinUsahaSelect = $(form).find("#ijin_usaha");
+            if (ijinUsahaSelect.length > 0) {
+                if (ijinUsahaSelect[0].value == 'nib' || ijinUsahaSelect[0].value == 'surat_keterangan_usaha') {
+                    subtotalInput -= 2;
+                }
+                if (ijinUsahaSelect[0].value == 'tidak_ada_legalitas_usaha') {
+                    subtotalInput -= 6;
+                }
+            }
+        }
+
+        if (formIndex == 3) {
+            subtotalInput -= firstLoad ? 2 : 8;
+        }
+
+        if (formIndex == 6) {
+            subtotalInput -= 1;
+        }
+
+        var ttlInputTextFilled = 0;
+        $.each(inputText, function(i, v) {
+            if (v.value != '') {
+                ttlInputTextFilled++
+            }
+        })
+        var ttlInputNumberFilled = 0;
+        $.each(inputNumber, function(i, v) {
+            if (v.value != '') {
+                ttlInputNumberFilled++
+            }
+        })
+        var ttlInputFileFilled = 0;
+        $.each(inputFile, function(i, v) {
+            if (v.innerHTML != '') {
+                ttlInputFileFilled++
+            }
+        })
+        var ttlInputDateFilled = 0;
+        $.each(inputDate, function(i, v) {
+            if (v.value != '') {
+                ttlInputDateFilled++
+            }
+        })
+        var ttlSelectFilled = 0;
+        $.each(select, function(i, v) {
+            var data = v.value;
+            if (data != "" && data != '' && data != null && data != ' --Pilih Opsi-- ' && data != '--Pilih Opsi--') {
+                ttlSelectFilled++
+            }
+        })
+        var ttlTextAreaFilled = 0;
+        $.each(textarea, function(i, v) {
+            if (v.value != '') {
+                ttlTextAreaFilled++
+            }
+        })
+
+        var subtotalFilled = ttlInputTextFilled + ttlInputNumberFilled + ttlInputFileFilled + ttlInputDateFilled + ttlSelectFilled + ttlTextAreaFilled;
+        if (formIndex == 0) {
+            let value = $("#status").val();
+            console.log('status : '+value)
+            if (value == "menikah") {
+                // subtotalInput += 2;
+                subtotalFilled += 2;
+            }
+            else {
+                // subtotalInput += 1;
+                subtotalFilled += 2;
+            }
+        }
+        console.log("=============index : "+formIndex+"=============")
+        console.log('total input : ' + subtotalInput)
+        console.log('total input filled : ' + subtotalFilled)
+        console.log("===============================================")
+
+        var percentage = parseInt(subtotalFilled / subtotalInput * 100);
+        percentage = Number.isNaN(percentage) ? 0 : percentage;
+        percentage = percentage > 100 ? 100 : percentage;
+        percentage = percentage < 0 ? 0 : percentage;
+
+        $(".side-wizard li[data-index='" + formIndex + "'] a span i").html(percentage + "%")
+    }
     function cekStatusNikah(){
 
         let value = $("#status").val();
@@ -1833,9 +1949,9 @@ $dataIndex = match ($skema) {
 
     // hitung ratio covarege
     function hitungRatioCoverage() {
-        let thls = parseInt($('#thls').val().split('.').join(''));
-        let nilaiAsuransi = parseInt($('#nilai_pertanggungan_asuransi').val().split('.').join(''));
-        let kreditYangDiminta = parseInt($('#jumlah_kredit').val().split('.').join(''));
+        let thls = $('#thls').val() ? parseInt($('#thls').val().split('.').join('')) : '';
+        let nilaiAsuransi = $('#nilai_pertanggungan_asuransi').val() ? parseInt($('#nilai_pertanggungan_asuransi').val().split('.').join('')) : '';
+        let kreditYangDiminta = $('#jumlah_kredit').val() ? parseInt($('#jumlah_kredit').val().split('.').join('')) : '';
 
         let ratioCoverage = (thls + nilaiAsuransi) / kreditYangDiminta * 100; //cek rumus nya lagi
         $('#ratio_coverage').val(ratioCoverage);
@@ -2249,5 +2365,4 @@ $dataIndex = match ($skema) {
 </script>
 @include('pengajuan-kredit.partials.save-script')
 
-<script src="{{ asset('') }}js/custom.js"></script>
 @endpush

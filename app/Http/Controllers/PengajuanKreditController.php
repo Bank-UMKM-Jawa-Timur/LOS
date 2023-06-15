@@ -47,7 +47,7 @@ class PengajuanKreditController extends Controller
         ];
     }
 
-    public function getPenyeliaJson()
+    public function getUserJson($role)
     {
         $status = '';
         $req_status = 0;
@@ -55,7 +55,8 @@ class PengajuanKreditController extends Controller
         $data = null;
         try {
             $data = User::select('id', 'nip', 'email', 'name')
-                        ->where('role', 'Penyelia Kredit')
+                        ->where('role', $role)
+                        ->whereNotNull('nip')
                         ->where('id_cabang', Auth::user()->id_cabang)
                         ->get();
 
@@ -1079,6 +1080,7 @@ class PengajuanKreditController extends Controller
         DB::beginTransaction();
         try {
             $addPengajuan = new PengajuanModel;
+            $addPengajuan->id_staf = auth()->user()->id;
             $addPengajuan->tanggal = date(now());
             $addPengajuan->id_cabang = auth()->user()->id_cabang;
             $addPengajuan->progress_pengajuan_data = $request->progress;
@@ -2421,7 +2423,7 @@ class PengajuanKreditController extends Controller
     }
 
     // check status pincab
-    public function checkPincab($id)
+    public function checkPincab($id, Request $request)
     {
         if (auth()->user()->role == 'Penyelia Kredit') {
             if (auth()->user()->id_cabang == '1') {
@@ -2429,10 +2431,12 @@ class PengajuanKreditController extends Controller
                 $status = $dataPenyelia->status;
                 $userPBO = User::select('id')
                     ->where('id_cabang', $dataPenyelia->id_cabang)
+                    ->whereNotNull('nip')
                     ->where('role', 'PBO')
                     ->first();
                 if ($userPBO) {
                     if ($status != null) {
+                        $dataPenyelia->id_pbo = $userPBO->id;
                         $dataPenyelia->tanggal_review_pbo = date(now());
                         $dataPenyelia->posisi = "PBO";
                     } else {
@@ -2440,8 +2444,19 @@ class PengajuanKreditController extends Controller
                     }
                 } else {
                     if ($status != null) {
-                        $dataPenyelia->tanggal_review_pbp = date(now());
-                        $dataPenyelia->posisi = "PBP";
+                        $userPBP = User::select('id')
+                                        ->where('id_cabang', $dataPenyelia->id_cabang)
+                                        ->whereNotNull('nip')
+                                        ->where('role', 'PBP')
+                                        ->first();
+                        if ($userPBP) {
+                            $dataPenyelia->id_pbp = $userPBP->id;
+                            $dataPenyelia->tanggal_review_pbp = date(now());
+                            $dataPenyelia->posisi = "PBP";
+                        }
+                        else {
+                            return back()->withError('User pbp tidak ditemukan pada cabang ini.');
+                        }
                     } else {
                         return redirect()->back()->withError('Belum di review Penyelia.');
                     }
@@ -2453,10 +2468,12 @@ class PengajuanKreditController extends Controller
                 $status = $dataPenyelia->status;
                 $userPBO = User::select('id')
                     ->where('id_cabang', $dataPenyelia->id_cabang)
+                    ->whereNotNull('nip')
                     ->where('role', 'PBO')
                     ->first();
                 if ($userPBO) {
                     if ($status != null) {
+                        $dataPenyelia->id_pbo = $userPBO->id;
                         $dataPenyelia->tanggal_review_pbo = date(now());
                         $dataPenyelia->posisi = "PBO";
                     } else {
@@ -2464,8 +2481,19 @@ class PengajuanKreditController extends Controller
                     }
                 } else {
                     if ($status != null) {
-                        $dataPenyelia->tanggal_review_pincab = date(now());
-                        $dataPenyelia->posisi = "Pincab";
+                        $userPincab = User::select('id')
+                                ->where('id_cabang', $dataPenyelia->id_cabang)
+                                ->whereNotNull('nip')
+                                ->where('role', 'Pincab')
+                                ->first();
+                        if ($userPincab) {
+                            $dataPenyelia->id_pincab = $userPincab->id;
+                            $dataPenyelia->tanggal_review_pincab = date(now());
+                            $dataPenyelia->posisi = "Pincab";
+                        }
+                        else {
+                            return back()->withError('User pincab tidak ditemukan di cabang ini.');
+                        }
                     } else {
                         return redirect()->back()->withError('Belum di review Penyelia.');
                     }
@@ -2476,21 +2504,44 @@ class PengajuanKreditController extends Controller
         } elseif (auth()->user()->role == 'PBO') {
             $dataPenyelia = PengajuanModel::find($id);
             $status = $dataPenyelia->average_by_pbo;
+            
             if (auth()->user()->id_cabang == 1) {
                 if ($status != null) {
-                    $dataPenyelia->tanggal_review_pbp = date(now());
-                    $dataPenyelia->posisi = "PBP";
-                    $dataPenyelia->update();
-                    return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+                    $userPBP = User::select('id')
+                                    ->where('id_cabang', $dataPenyelia->id_cabang)
+                                    ->whereNotNull('nip')
+                                    ->where('role', 'PBP')
+                                    ->first();
+                    if ($userPBP) {
+                        $dataPenyelia->id_pbp = $userPBP->id;
+                        $dataPenyelia->tanggal_review_pbp = date(now());
+                        $dataPenyelia->posisi = "PBP";
+                        $dataPenyelia->update();
+                        return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+                    }
+                    else {
+                        return back()->withError('User pbp tidak ditemukan pada cabang ini.');
+                    }
                 } else {
                     return redirect()->back()->withError('Belum di review PBO.');
                 }
             } else {
                 if ($status != null) {
-                    $dataPenyelia->tanggal_review_pbp = date(now());
-                    $dataPenyelia->posisi = "Pincab";
-                    $dataPenyelia->update();
-                    return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+                    $userPincab = User::select('id')
+                                ->where('id_cabang', $dataPenyelia->id_cabang)
+                                ->whereNotNull('nip')
+                                ->where('role', 'Pincab')
+                                ->first();
+                    if ($userPincab) {
+                        $dataPenyelia->id_pincab = $userPincab->id;
+                        $dataPenyelia->tanggal_review_pincab = date(now());
+                        $dataPenyelia->posisi = "Pincab";
+                        $dataPenyelia->update();
+                        return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+                    }
+                    else {
+                        return back()->withError('User pincab tidak ditemukan pada cabang ini.');
+                    }
                 } else {
                     return redirect()->back()->withError('Belum di review PBO.');
                 }
@@ -2499,10 +2550,21 @@ class PengajuanKreditController extends Controller
             $dataPenyelia = PengajuanModel::find($id);
             $status = $dataPenyelia->average_by_pbp;
             if ($status != null) {
-                $dataPenyelia->tanggal_review_pincab = date(now());
-                $dataPenyelia->posisi = "Pincab";
-                $dataPenyelia->update();
-                return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+                $userPincab = User::select('id')
+                                ->where('id_cabang', $dataPenyelia->id_cabang)
+                                ->whereNotNull('nip')
+                                ->where('role', 'Pincab')
+                                ->first();
+                if ($userPincab) {
+                    $dataPenyelia->id_pincab = $userPincab->id;
+                    $dataPenyelia->tanggal_review_pincab = date(now());
+                    $dataPenyelia->posisi = "Pincab";
+                    $dataPenyelia->update();
+                    return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+                }
+                else {
+                    return back()->withError('User pincab tidak ditemukan pada cabang ini.');
+                }
             } else {
                 return redirect()->back()->withError('Belum di review PBP.');
             }
