@@ -1253,6 +1253,7 @@ $dataIndex = match ($skema) {
     $('#repayment_capacity_opsi_label').hide();
     $('#repayment_capacity_opsi').hide();
     const nullValue = []
+    hitungRatioCoverage()
 
     let urlCekSubColumn = "{{ route('cek-sub-column') }}";
     let urlGetItemByKategoriJaminanUtama =

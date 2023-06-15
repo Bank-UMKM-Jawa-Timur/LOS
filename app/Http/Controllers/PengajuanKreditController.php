@@ -1222,7 +1222,11 @@ class PengajuanKreditController extends Controller
             }
 
             if ($request->get('komentar_staff') == '') {
-                # code...
+                $addKomentar = new KomentarModel;
+                $addKomentar->id_pengajuan = $id_pengajuan;
+                $addKomentar->komentar_staff = '';
+                $addKomentar->id_staff = Auth::user()->id;
+                $addKomentar->save();
             } else {
                 $addKomentar = new KomentarModel;
                 $addKomentar->id_pengajuan = $id_pengajuan;
@@ -1712,10 +1716,18 @@ class PengajuanKreditController extends Controller
                 }
             }
 
-            $id = $request->get('id_komentar_staff_text');
-            $updateKomentar = KomentarModel::find($id);
-            $updateKomentar->komentar_staff = $request->get('komentar_staff');
-            $updateKomentar->update();
+            if($request->get('id_komentar_staff_text') != null){
+                $id = $request->get('id_komentar_staff_text');
+                $updateKomentar = KomentarModel::find($id);
+                $updateKomentar->komentar_staff = $request->get('komentar_staff');
+                $updateKomentar->update();
+            } else {
+                $addKomentar = new KomentarModel;
+                $addKomentar->id_pengajuan = $id_pengajuan;
+                $addKomentar->komentar_staff = $request->get('komentar_staff');
+                $addKomentar->id_staff = Auth::user()->id;
+                $addKomentar->save();
+            }
 
             $updateData->posisi = 'Proses Input Data';
             $updateData->status_by_sistem = $status;
