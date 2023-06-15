@@ -486,15 +486,16 @@ $dataIndex = match ($skema) {
                                         <option value="">-- Pilih Ijin Usaha --</option>
                                         <option value="nib"{{ ($nib != '') ? 'selected' : '' }}>NIB</option>
                                         <option value="surat_keterangan_usaha"{{ ($sku != '') ? 'selected' : '' }}>Surat Keterangan Usaha</option>
-                                        <option value="tidak_ada_legalitas_usaha"{{ ($nib != '' && $sku != '' && $npwp != '') ? 'selected' : '' }}>Tidak Ada Legalitas Usaha</option>
+                                        <option value="tidak_ada_legalitas_usaha"{{ ($nib == '' && $sku == '' && $npwp == '') ? 'selected' : '' }}>Tidak Ada Legalitas Usaha</option>
                                     </select>
                                 </div>
-                                <div class="form-group col-md-6" id="npwpsku" style="display: {{ ($sku != '') ? '' : 'none' }}">
+                                <div class="form-group col-md-6" id="npwpsku" style="display: {{ ($npwp == '') ? '' : 'none' }}">
                                     <label for="">Memiliki NPWP</label>
                                     <br>
                                     <div class="row">
                                         <div class="col-md-3">
-                                            <input type="checkbox" name="isNpwp" id="isNpwp" class="form-control" @if($sku != null) checked @endif>
+                                            <input type="checkbox" name="isNpwp" id="isNpwp" class="form-control" @if($npwp != null) checked @endif>
+                                            <input type="hidden" name="isNpwp" id="statusNpwp" class="form-control" value="{{ ($npwp != null) ? '1' : '0' }}">
                                         </div>
                                     </div>
                                 </div>
@@ -1137,6 +1138,9 @@ $dataIndex = match ($skema) {
             var ijinUsahaSelect = $(form).find("#ijin_usaha");
             if (ijinUsahaSelect.length > 0) {
                 if (ijinUsahaSelect[0].value == 'nib' || ijinUsahaSelect[0].value == 'surat_keterangan_usaha') {
+                    if(!$("#isNpwp").attr('checked')){
+                        subtotalInput -= 4
+                    }
                     subtotalInput -= 2;
                 }
                 if (ijinUsahaSelect[0].value == 'tidak_ada_legalitas_usaha') {
@@ -1962,6 +1966,7 @@ $dataIndex = match ($skema) {
     $('#isNpwp').change(function() {
         console.log($(this).is(':checked'));
         if ($(this).is(':checked')) {
+            $("#statusNpwp").val('1');
             $('#npwp').show();
             $('#npwp_id').removeAttr('disabled', true);
             $('#npwp_text').removeAttr('disabled', true);
@@ -1973,6 +1978,7 @@ $dataIndex = match ($skema) {
             $('#docNPWP_update_file').removeAttr('disabled', true);
             $('#id_jawaban_npwp').removeAttr('disabled', true);
         } else {
+            $("#statusNpwp").val('0');
             $('#npwp').hide();
             $('#npwp_id').attr('disabled', true);
             $('#npwp_text').attr('disabled', true);

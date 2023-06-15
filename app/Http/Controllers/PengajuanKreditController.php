@@ -2821,7 +2821,7 @@ class PengajuanKreditController extends Controller
                             'opsi_text' => ($request->get('id_level')[$key] != '131' && $request->get('id_level')[$key] != '143' && $request->get('id_level')[$key] != '90' && $request->get('id_level')[$key] != '138') ?str_replace($find, '', $request->get('informasi')[$key]) : $request->get('informasi')[$key],
                         ]);
                 }
-                
+            }
 
             if($request->ijin_usaha == 'tidak_ada_legalitas_usaha'){
                 $dokumenUsaha = DB::table('item')
@@ -2836,7 +2836,7 @@ class PengajuanKreditController extends Controller
                         ->delete();
                 }
             }
-            if($request->statusNpwp == 0){
+            if($request->isNpwp == 0){
                 $dokumenUsaha = DB::table('item')
                     ->orWhere('nama', 'LIKE', '%NPWP%')
                     ->get();
@@ -2846,7 +2846,6 @@ class PengajuanKreditController extends Controller
                         ->where('id_jawaban', $idDoc->id)
                         ->delete();
                 }
-            }
             }
 
             $finalArray = array();
