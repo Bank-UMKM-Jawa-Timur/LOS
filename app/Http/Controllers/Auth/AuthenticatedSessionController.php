@@ -43,7 +43,7 @@ class AuthenticatedSessionController extends Controller
                     $request->session()->invalidate();
             
                     $request->session()->regenerateToken();
-                    return back()->withError("Akun telah digunakan di perangkat lain");
+                    return back()->withError("Akun sedang digunakan di perangkat lain.");
                 }
         
                 $request->session()->regenerate();
