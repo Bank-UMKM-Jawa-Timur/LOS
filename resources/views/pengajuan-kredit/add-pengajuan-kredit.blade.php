@@ -1577,7 +1577,7 @@ is-invalid
                         $.each(response.item.option, function(i, valOption) {
                             // console.log(valOption.skor);
                             $('#itemByKategori').append(`
-                            <option value="${valOption.skor}-${valOption.id}" ${(response.dataSelect == valOption.id) ? 'selected' : ''}>
+                            <option value="${valOption.skor}-${valOption.id}" selected>
                             ${valOption.option}
                             </option>`);
                         });

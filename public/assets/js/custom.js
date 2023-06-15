@@ -39,6 +39,10 @@ $(document).ready(function() {
             var ijinUsahaSelect = $(form).find("#ijin_usaha");
             if (ijinUsahaSelect.length > 0) {
                 if (ijinUsahaSelect[0].value == 'nib' || ijinUsahaSelect[0].value == 'surat_keterangan_usaha') {
+                    if(!$("#isNpwp").attr("checked")){
+                        console.log('test');
+                        subtotalInput -= 4;
+                    }
                     subtotalInput -= 2;
                 }
                 if (ijinUsahaSelect[0].value == 'tidak_ada_legalitas_usaha') {
