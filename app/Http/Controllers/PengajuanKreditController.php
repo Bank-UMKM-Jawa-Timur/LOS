@@ -34,6 +34,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 use Image;
 use Carbon\Carbon;
+use PhpParser\Node\Expr;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 
 class PengajuanKreditController extends Controller
@@ -1002,7 +1003,7 @@ class PengajuanKreditController extends Controller
                 $relPath = "upload/{$id_pengajuan}/{$tempFile->id_jawaban}";
 
                 File::isDirectory(public_path($relPath)) or File::makeDirectory(public_path($relPath), recursive: true);
-@File::move($tempPath, $newPath);
+                File::move($tempPath, $newPath);
 
                 JawabanTextModel::create([
                     'id_pengajuan' => $id_pengajuan,
@@ -1285,7 +1286,7 @@ class PengajuanKreditController extends Controller
     public function update(Request $request, $id)
     {
         // dd($request);
-        // return $request;
+        return $request;
         $find = array('Rp.', '.');
         $request->validate([
             'name' => 'required',
@@ -2700,31 +2701,37 @@ class PengajuanKreditController extends Controller
                 TemporaryService::convertNasabahReq($request)
             );
         }
-        foreach ($request->dataLevelDua as $key => $value) {
-            $dataSlik = $this->getDataLevel($value);
-            $cek = DB::table('jawaban_temp')
-                ->where('id_temporary_calon_nasabah', $request->id_nasabah ?? $nasabah->id)
-                ->where('id_jawaban', $dataSlik[1])
-                ->count('id');
-            if ($cek < 1) {
-                DB::table('jawaban_temp')
-                    ->insert([
-                        'id_temporary_calon_nasabah' => $request->id_nasabah ?? $nasabah->id,
-                        'id_jawaban' => $dataSlik[1],
-                        'skor' => $dataSlik[0],
-                        'id_option' => $key,
-                        'created_at' => now()
-                    ]);
-            } else {
-                DB::table('jawaban_temp')
+        
+        try {
+            foreach ($request->dataLevelDua as $key => $value) {
+                $dataSlik = $this->getDataLevel($value);
+                $cek = DB::table('jawaban_temp')
                     ->where('id_temporary_calon_nasabah', $request->id_nasabah ?? $nasabah->id)
-                    ->where('id_option', $key)
-                    ->update([
-                        'id_jawaban' => $dataSlik[1],
-                        'skor' => $dataSlik[0],
-                        'updated_at' => now()
-                    ]);
+                    ->where('id_jawaban', $dataSlik[1])
+                    ->count('id');
+                if ($cek < 1) {
+                    DB::table('jawaban_temp')
+                        ->insert([
+                            'id_temporary_calon_nasabah' => $request->id_nasabah ?? $nasabah->id,
+                            'id_jawaban' => $dataSlik[1],
+                            'skor' => $dataSlik[0],
+                            'id_option' => $key,
+                            'created_at' => now()
+                        ]);
+                } else {
+                    DB::table('jawaban_temp')
+                        ->where('id_temporary_calon_nasabah', $request->id_nasabah ?? $nasabah->id)
+                        ->where('id_option', $key)
+                        ->update([
+                            'id_jawaban' => $dataSlik[1],
+                            'skor' => $dataSlik[0],
+                            'updated_at' => now()
+                        ]);
+                }
             }
+        }
+        catch (\Exception $e) {
+            
         }
 
         return response()->json([
@@ -2775,7 +2782,7 @@ class PengajuanKreditController extends Controller
     public function tempJawaban(Request $request)
     {
         $find = array('Rp ', '.');
-
+        
         try {
             if ($request->kategori_jaminan_tambahan != null) {
                 DB::table('temporary_calon_nasabah')
@@ -2811,9 +2818,24 @@ class PengajuanKreditController extends Controller
                         ]);
                 }
             }
+        } catch (Exception $e) {
+            // DB::rollBack();
+            // return response()->json([
+            //     'status' => 'failed',
+            //     'message' => $e->getMessage(),
+            // ]);
+        } catch (QueryException $e) {
+            // DB::rollBack();
+            // return response()->json([
+            //     'status' => 'failed',
+            //     'message' => $e->getMessage(),
+            // ]);
+        }
+        
+        $finalArray = array();
+        $rata_rata = array();
 
-            $finalArray = array();
-            $rata_rata = array();
+        try {
             // data Level dua
             if ($request->dataLevelDua != null) {
                 $data = $request->dataLevelDua;
@@ -2847,7 +2869,10 @@ class PengajuanKreditController extends Controller
                 }
             } else {
             }
+        }
+        catch (Exception $e) {}
 
+        try {
             // data level tiga
             if ($request->dataLevelTiga != null) {
                 $dataLevelTiga = $request->dataLevelTiga;
@@ -2876,7 +2901,10 @@ class PengajuanKreditController extends Controller
                 }
             } else {
             }
+        }
+        catch (Exception $e) {}
 
+        try {
             // data level empat
             if ($request->dataLevelEmpat != null) {
                 $dataLevelEmpat = $request->dataLevelEmpat;
@@ -2905,7 +2933,10 @@ class PengajuanKreditController extends Controller
                 }
             } else {
             }
+        }
+        catch (Exception $e) {}
 
+        try {
             foreach ($request->pendapat_per_aspek as $i => $val) {
                 $cekUsulan = DB::table('temporary_usulan_dan_pendapat')
                     ->where('id_temp', $request->idCalonNasabah)
@@ -2929,7 +2960,10 @@ class PengajuanKreditController extends Controller
                         ]);
                 }
             }
-
+        }
+        catch (Exception $e) {}
+        
+        try {
             for ($i = 0; $i < count($finalArray); $i++) {
                 $cekDataSelect = DB::table('jawaban_temp')
                     ->where('id_temporary_calon_nasabah', $request->idCalonNasabah)
@@ -2950,16 +2984,13 @@ class PengajuanKreditController extends Controller
                     }
                 }
             }
-        } catch (Exception $e) {
-            DB::rollBack();
-            dd($e);
-        } catch (QueryException $e) {
-            DB::rollBack();
-            dd($e);
         }
+        catch (Exception $e) {}
 
         return response()->json([
-            'status' => 'ok'
+            'status' => 'ok',
+            'nasabah' => $request->idCalonNasabah,
+            'aspek' => $request->pendapat_per_aspek
         ]);
     }
 

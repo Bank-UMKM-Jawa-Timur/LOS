@@ -90,6 +90,7 @@
             method: 'POST',
             data: data,
             success(res) {
+                console.log('-----temp nasabah-----');
                 console.log(res);
                 $("#id_nasabah").val(res.data.id);
                 $("#wizard-data-umum input[type=file]").each(function() {
@@ -102,6 +103,8 @@
         });
     }
     function saveDataTemporary(i){
+        console.log('---saveDataTemporary---')
+        console.log('id_nasabah : '+$("#id_nasabah").val())
         let data = {
             idCalonNasabah: $("#id_nasabah").val(),
         };
@@ -112,7 +115,7 @@
             // console.log('test');
 
             data[input.attr('name')] = input.val();
-            data['id_nasabah'] = $("#id_nasabah").val();
+            data['idCalonNasabah'] = $("#id_nasabah").val();
         });
 
         console.log(data);
@@ -121,6 +124,7 @@
             method: 'POST',
             data: data,
             success(res) {
+                console.log('------temp jawaban------')
                 console.log(res);
             }
         });
