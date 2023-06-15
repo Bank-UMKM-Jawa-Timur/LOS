@@ -2144,9 +2144,8 @@ $dataIndex = match ($skema) {
                 if (val)
                     val = $(this).attr("id").toString().replaceAll("_", " ");
                 for(var i = 0; i < nullValue.length; i++){
-                    if(nullValue[i] == val){
+                    while(nullValue[i] == val){
                         nullValue.splice(i, 1)
-                        break;
                     }
                 }
             }
@@ -2164,9 +2163,8 @@ $dataIndex = match ($skema) {
                 if (val)
                     val = $(this).attr("id").toString().replaceAll("_", " ");
                 for(var i = 0; i < nullValue.length; i++){
-                    if(nullValue[i] == val){
+                    while(nullValue[i] == val){
                         nullValue.splice(i, 1)
-                        break;
                     }
                 }
             }
@@ -2182,9 +2180,8 @@ $dataIndex = match ($skema) {
             }else if(v.value != ''){
                 let val = $(this).attr("id").toString().replaceAll("_", " ");
                 for(var i = 0; i < nullValue.length; i++){
-                    if(nullValue[i] == val){
+                    while(nullValue[i] == val){
                         nullValue.splice(i, 1)
-                        break;
                     }
                 }
             }
@@ -2204,9 +2201,8 @@ $dataIndex = match ($skema) {
                 if (val)
                     val = $(this).attr("id").toString().replaceAll("_", " ");
                 for(var i = 0; i < nullValue.length; i++){
-                    if(nullValue[i] == val){
+                    while(nullValue[i] == val){
                         nullValue.splice(i, 1)
-                        break;
                     }
                 }
             }
@@ -2224,9 +2220,8 @@ $dataIndex = match ($skema) {
                 if (val)
                     val = $(this).attr("id").toString().replaceAll("_", " ");
                 for(var i = 0; i < nullValue.length; i++){
-                    if(nullValue[i] == val){
+                    while(nullValue[i] == val){
                         nullValue.splice(i, 1)
-                        break;
                     }
                 }
             }
