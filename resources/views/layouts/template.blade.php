@@ -167,12 +167,11 @@
                     Anda akan keluar dari Aplikasi Analisa Kredit
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST">
                         @csrf
-                        <button type="submit" class="btn btn-primary">Logout</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                        <button type="submit" id="logouts" class="btn btn-primary">Logout</button>
                     </form>
-
                 </div>
             </div>
         </div>
@@ -207,23 +206,13 @@
             format: 'yyyy-mm-dd',
             todayHighlight: true,
         });
-        // $("#logout").click(function(e) {
-        //     e.preventDefault()
-        //     swal({
-        //             title: "Apakah anda yakin?",
-        //             text: 'Anda akan keluar dari Aplikasi Analisa Kredit',
-        //             type: "warning",
-        //             showCancelButton: true,
-        //             confirmButtonColor: "#dc3545",
-        //             confirmButtonText: 'Logout',
-        //             closeOnConfirm: false,
-        //         },
-        //         function() {
-        //             $("#logout-form").submit()
-        //         }
-        //     );
-        // })
-        // })
+        $("#logouts").click(function(e) {
+            swal({
+                title: "Berhasil",
+                text: 'Berhasil Logout!!',
+                type: "success",
+            });
+        })
         $(".delete").click(function(e) {
             e.preventDefault()
             swal({
