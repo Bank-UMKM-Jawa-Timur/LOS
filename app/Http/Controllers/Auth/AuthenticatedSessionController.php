@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -36,6 +37,14 @@ class AuthenticatedSessionController extends Controller
         if ($user) {
             if (isset($user->nip)) {
                 $request->authenticate();
+                if(DB::table('sessions')->where('user_id', auth()->user()->id)->count() > 0){
+                    Auth::guard('web')->logout();
+            
+                    $request->session()->invalidate();
+            
+                    $request->session()->regenerateToken();
+                    return back()->withError("Akun sedang digunakan di perangkat lain.");
+                }
         
                 $request->session()->regenerate();
         

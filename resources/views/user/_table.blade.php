@@ -25,23 +25,37 @@
                     <td>{{ $item->role }}</td>
                     <td>{{ $item->cabang->cabang }}</td>
                     <td>
-                        <div class="form-inline btn-action">
-                            <a href="{{ route('user.edit', $item->id) }}" class="mr-2">
-                                <button type="button" id="PopoverCustomT-1" class="btn btn-rgb-primary btn-sm"
-                                    data-toggle="tooltip" title="Edit" data-placement="top"><span
-                                        class="fa fa-edit fa-sm"></span></button>
-                            </a>
-                            @if (auth()->user()->id != $item->id)
-                                <form action="{{ route('user.destroy', $item->id) }}" method="post">
-                                    @csrf
-                                    @method('delete')
-                                    <button type="button" class="btn btn-rgb-danger btn-sm" data-toggle="tooltip"
-                                        title="Hapus" data-placement="top"
-                                        onclick="confirm('{{ __('Apakah anda yakin ingin menghapus?') }}') ? this.parentElement.submit() : ''">
-                                        <span class="fa fa-trash fa-sm"></span>
-                                    </button>
-                                </form>
-                            @endif
+                        <div class="d-flex">
+                            <div class="btn-group">
+                                <button type="button" data-toggle="dropdown" class="btn btn-link">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                        fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16"
+                                        style="color: black">
+                                        <path
+                                            d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
+                                    </svg>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a href="{{ route('user.edit', $item->id) }}" class="dropdown-item">
+                                        Edit
+                                    </a>
+                                    @if (auth()->user()->id != $item->id)
+                                        <form action="{{ route('user.destroy', $item->id) }}" method="post">
+                                            @csrf
+                                            @method('delete')
+                                            <button type="button" class="dropdown-item"
+                                                onclick="confirm('{{ __('Apakah anda yakin ingin menghapus?') }}') ? this.parentElement.submit() : ''">
+                                                Hapus
+                                            </button>
+                                        </form>
+                                    @endif
+                                    <form action="{{ route('reset-password', $item->id) }}" method="post">
+                                        @csrf
+                                        <button class="dropdown-item" 
+                                        onclick="confirm('{{ __('Apakah anda yakin mereset password?') }}') ? this.parentElement.submit() : ''">Reset Password</button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </td>
                 </tr>

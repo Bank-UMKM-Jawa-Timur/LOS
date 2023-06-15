@@ -243,4 +243,19 @@ class UserController extends Controller
 
         return back()->withStatus('Password berhasil diperbarui.');
     }
+
+    function resetPassword($id) {
+        $user = User::findOrFail($id);
+        try{
+            $user->password = \Hash::make('12345678');
+            $user->password_change_at = null;
+            $user->save();
+        } catch(Exception $e){
+            return redirect()->back()->withError('Terjadi Kesalahan.'.$e);
+        } catch(Exception $e){
+            return redirect()->back()->withError('Terjadi Kesalahan.'.$e);
+        }
+
+        return back()->withStatus('Password berhasil di-reset.');
+    }
 }
