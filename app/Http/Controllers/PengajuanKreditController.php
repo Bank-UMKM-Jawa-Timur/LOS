@@ -1375,6 +1375,17 @@ class PengajuanKreditController extends Controller
                         ->delete();
                 }
             }
+            if($request->statusNpwp == 0){
+                $dokumenUsaha = DB::table('item')
+                    ->orWhere('nama', 'LIKE', '%NPWP%')
+                    ->get();
+                foreach($dokumenUsaha as $idDoc){
+                    DB::table('jawaban_text')
+                        ->where('id_pengajuan', $id_pengajuan)
+                        ->where('id_jawaban', $idDoc->id)
+                        ->delete();
+                }
+            }
 
             if (count($request->file()) > 0) {
                 foreach ($request->file('update_file') as $key => $value) {
@@ -2810,6 +2821,32 @@ class PengajuanKreditController extends Controller
                             'opsi_text' => ($request->get('id_level')[$key] != '131' && $request->get('id_level')[$key] != '143' && $request->get('id_level')[$key] != '90' && $request->get('id_level')[$key] != '138') ?str_replace($find, '', $request->get('informasi')[$key]) : $request->get('informasi')[$key],
                         ]);
                 }
+                
+
+            if($request->ijin_usaha == 'tidak_ada_legalitas_usaha'){
+                $dokumenUsaha = DB::table('item')
+                    ->where('nama', 'LIKE', '%NIB%')
+                    ->orWhere('nama', 'LIKE', '%Surat Keterangan Usaha%')
+                    ->orWhere('nama', 'LIKE', '%NPWP%')
+                    ->get();
+                foreach($dokumenUsaha as $idDoc){
+                    DB::table('temporary_jawaban_text')
+                        ->where('id_temporary_calon_nasabah', $request->idCalonNasabah)
+                        ->where('id_jawaban', $idDoc->id)
+                        ->delete();
+                }
+            }
+            if($request->statusNpwp == 0){
+                $dokumenUsaha = DB::table('item')
+                    ->orWhere('nama', 'LIKE', '%NPWP%')
+                    ->get();
+                foreach($dokumenUsaha as $idDoc){
+                    DB::table('temporary_jawaban_text')
+                        ->where('id_temporary_calon_nasabah', $request->idCalonNasabah)
+                        ->where('id_jawaban', $idDoc->id)
+                        ->delete();
+                }
+            }
             }
 
             $finalArray = array();
