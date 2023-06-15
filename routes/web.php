@@ -116,6 +116,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/get-merk-kendaraan', [PengajuanKreditController::class, 'getMerkKendaraan'])->name('get-merk-kendaraan');
     Route::get('/get-tipe-kendaraan', [PengajuanKreditController::class, 'getTipeByMerk'])->name('get-tipe-kendaraan');
+
+    Route::get('/reset-sessions', [UserController::class, 'indexSession'])->name('index-session');
+    Route::post('/reset-session/{id}', [UserController::class, 'resetSession'])->name('reset-session');
 });
 
 require __DIR__ . '/auth.php';
