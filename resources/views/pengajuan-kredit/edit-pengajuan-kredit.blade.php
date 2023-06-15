@@ -1810,13 +1810,13 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 $('#npwp_text').attr('disabled', true);
                 $('#npwp_opsi_jawaban').attr('disabled', true);
 
-                $('#docNPWP').hide();
-                $('#docNPWP_id').attr('disabled', true);
-                $('#docNPWPnama_file').attr('disabled', true);
-                $('#docNPWP_update_file').attr('disabled', true);
-                $('#id_jawaban_npwp').attr('disabled', true);
-            }
-        });
+            $('#docNPWP').hide();
+            $('#docNPWP_id').attr('disabled', true);
+            $('#docNPWPnama_file').attr('disabled', true);
+            $('#docNPWP_update_file').attr('disabled', true);
+            $('#id_jawaban_npwp').attr('disabled', true);
+        }
+    });
 
     function getJaminanutama(){
         //clear item
