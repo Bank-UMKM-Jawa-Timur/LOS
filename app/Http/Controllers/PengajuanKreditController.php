@@ -161,7 +161,7 @@ class PengajuanKreditController extends Controller
                     ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
                     ->where('pengajuan.id_cabang', $id_cabang)
                     ->paginate(5)
-                    ->withQueryString();;
+                    ->withQueryString();
                 return view('pengajuan-kredit.list-pengajuan-kredit', $param);
             } elseif (auth()->user()->role == 'PBO' || auth()->user()->role == 'PBP') {
                 $id_cabang = Auth::user()->id_cabang;

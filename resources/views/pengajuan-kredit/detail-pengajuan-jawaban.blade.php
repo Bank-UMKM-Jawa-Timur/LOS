@@ -390,7 +390,7 @@
                             placeholder="Masukkan Komentar"
                             value="{{ isset($komentarSlik->komentar) ? $komentarSlik->komentar : '' }}">
                         <div class="input-skor">
-                            <input type="number" class="form-control" placeholder="" name="skor_penyelia[]"
+                            <input type="number" class="form-control skorPenyeliaInput1" placeholder="" name="skor_penyelia[]"
                                 onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
                                 {{ $itemSlik?->status_skor == 0 ? 'readonly' : '' }}
                                 value="{{ $itemSlik?->skor_penyelia != null ? $itemSlik?->skor_penyelia : $itemSlik?->skor }}">
@@ -802,7 +802,7 @@
                                                                 name="komentar_penyelia[]" placeholder="Masukkan Komentar"
                                                                 value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                             <div class="input-skor">
-                                                                <input type="number" class="form-control" placeholder=""
+                                                                <input type="number" class="form-control skorPenyeliaInput2" placeholder=""
                                                                     name="skor_penyelia[]"
                                                                     onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
                                                                     {{ $item->status_skor == 0 ? 'readonly' : '' }}
@@ -1007,7 +1007,7 @@
                                                                         placeholder="Masukkan Komentar"
                                                                         value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                     <div class="input-skor">
-                                                                        <input type="number" class="form-control"
+                                                                        <input type="number" class="form-control skorPenyeliaInput3"
                                                                             placeholder="" name="skor_penyelia[]"
                                                                             onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
                                                                             {{ $itemTiga->status_skor == 0 ? 'readonly' : '' }}
@@ -1200,7 +1200,7 @@
                                                                         placeholder="Masukkan Komentar"
                                                                         value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                     <div class="input-skor">
-                                                                        <input type="number" class="form-control"
+                                                                        <input type="number" class="form-control skorPenyeliaInput4"
                                                                             placeholder="" name="skor_penyelia[]"
                                                                             onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
                                                                             {{ $itemEmpat->status_skor == 0 ? 'readonly' : '' }}
@@ -1594,5 +1594,88 @@
             cekBtn()
             e.preventDefault();
         })
+
+        // Penyelia
+        var skorPenyeliaInput1 = document.getElementsByClassName('skorPenyeliaInput1')
+        for(var i = 0; i < skorPenyeliaInput1.length; i++) {
+            skorPenyeliaInput1[i].addEventListener('wheel', function(event){
+                if (event.deltaY < 0)
+                {
+                    var valueInput = parseInt(this.value)+1;
+                    if (valueInput > 4) {
+                        this.value = 4-1
+                    }
+                }
+                else if (event.deltaY > 0)
+                {
+                    var valueInput = parseInt(this.value)-1;
+                    if (valueInput<0) {
+                        this.value=0+1
+                    }
+                }
+            });
+        }
+
+        var skorPenyeliaInput2 = document.getElementsByClassName('skorPenyeliaInput2')
+        for(var i = 0; i < skorPenyeliaInput2.length; i++) {
+            skorPenyeliaInput2[i].addEventListener('wheel', function(event){
+                if (event.deltaY < 0)
+                {
+                    var valueInput = parseInt(this.value)+1;
+                    if (valueInput > 4) {
+                        this.value = 4-1
+                    }
+                }
+                else if (event.deltaY > 0)
+                {
+                    var valueInput = parseInt(this.value)-1;
+                    if (valueInput<0) {
+                        this.value=0+1
+                    }
+                }
+            });
+        }
+
+        var skorPenyeliaInput3 = document.getElementsByClassName('skorPenyeliaInput3')
+        for(var i = 0; i < skorPenyeliaInput3.length; i++) {
+            skorPenyeliaInput3[i].addEventListener('wheel', function(event){
+                if (event.deltaY < 0)
+                {
+                    var valueInput = parseInt(this.value)+1;
+                    if (valueInput > 4) {
+                        this.value = 4-1
+                    }
+                }
+                else if (event.deltaY > 0)
+                {
+                    var valueInput = parseInt(this.value)-1;
+                    if (valueInput<0) {
+                        this.value=0+1
+                    }
+                }
+            });
+        }
+
+        var skorPenyeliaInput4 = document.getElementsByClassName('skorPenyeliaInput4')
+        for(var i = 0; i < skorPenyeliaInput4.length; i++) {
+            skorPenyeliaInput4[i].addEventListener('wheel', function(event){
+                if (event.deltaY < 0)
+                {
+                    var valueInput = parseInt(this.value)+1;
+                    if (valueInput > 4) {
+                        this.value = 4-1
+                    }
+                }
+                else if (event.deltaY > 0)
+                {
+                    var valueInput = parseInt(this.value)-1;
+                    if (valueInput<0) {
+                        this.value=0+1
+                    }
+                }
+            });
+        }
+
+
     </script>
 @endpush
