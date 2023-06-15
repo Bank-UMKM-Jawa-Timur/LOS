@@ -1595,6 +1595,11 @@ $dataIndex = match ($skema) {
                                         isCheck = "<input type='checkbox' class='checkKategori' checked>"
                                         isDisabled = ""
                                     }
+                                } else{
+                                    if(kategoriJaminan != 'Kendaraan Bermotor'){
+                                        isCheck = "<input type='checkbox' class='checkKategori'>"
+                                        isDisabled = "disabled"
+                                    }
                                 }
                                 $('#bukti_pemilikan_jaminan_tambahan').append(`
                                     <div class="form-group col-md-6 aspek_jaminan_kategori">
