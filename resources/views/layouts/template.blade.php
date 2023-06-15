@@ -113,11 +113,7 @@
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                 <a class="dropdown-item" href="{{ route('change_password') }}">Ganti Password</a>
-                                <a class="dropdown-item logout" href="#">Logout</a>
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                    style="display: none;">
-                                    @csrf
-                                </form>
+                                <a class="dropdown-item" data-toggle="modal" data-target="#logout">Logout</a>
                             </div>
                         </li>
                     </ul>
@@ -157,6 +153,31 @@
         </div>
 
     </div>
+
+    <div class="modal fade" id="logout" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Apakah anda yakin?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Anda akan keluar dari Aplikasi Analisa Kredit
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-primary">Logout</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
     @yield('modal')
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
         integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous">
@@ -186,22 +207,22 @@
             format: 'yyyy-mm-dd',
             todayHighlight: true,
         });
-        $(".logout").click(function(e) {
-            e.preventDefault()
-            swal({
-                    title: "Apakah anda yakin?",
-                    text: 'Anda akan keluar dari Aplikasi Analisa Kredit',
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#dc3545",
-                    confirmButtonText: 'Logout',
-                    closeOnConfirm: false,
-                },
-                function() {
-                    $("#logout-form").submit()
-                }
-            );
-        })
+        // $("#logout").click(function(e) {
+        //     e.preventDefault()
+        //     swal({
+        //             title: "Apakah anda yakin?",
+        //             text: 'Anda akan keluar dari Aplikasi Analisa Kredit',
+        //             type: "warning",
+        //             showCancelButton: true,
+        //             confirmButtonColor: "#dc3545",
+        //             confirmButtonText: 'Logout',
+        //             closeOnConfirm: false,
+        //         },
+        //         function() {
+        //             $("#logout-form").submit()
+        //         }
+        //     );
+        // })
         // })
         $(".delete").click(function(e) {
             e.preventDefault()
