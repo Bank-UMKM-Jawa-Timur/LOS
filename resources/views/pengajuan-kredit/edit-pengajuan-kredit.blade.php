@@ -2120,7 +2120,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
     //end triger hitung ratio covarege
 
     //triger hitung ratio coverage
-    $('#nilai_asuransi_penjaminan').change(function(e) {
+    $('#nilai_pertanggungan_asuransi').change(function(e) {
         hitungRatioCoverage();
     });
     //end triger hitung ratio covarege
@@ -2134,7 +2134,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
     // hitung ratio covarege
     function hitungRatioCoverage() {
         let thls = parseInt($('#thls').val());
-        let nilaiAsuransi = parseInt($('#nilai_asuransi_penjaminan').val());
+        let nilaiAsuransi = parseInt($('#nilai_pertanggungan_asuransi').val());
         let kreditYangDiminta = parseInt($('#jumlah_kredit').val());
 
         let ratioCoverage = (thls + nilaiAsuransi) / kreditYangDiminta * 100; //cek rumus nya lagi
