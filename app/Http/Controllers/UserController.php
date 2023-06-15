@@ -9,6 +9,7 @@ use \App\Models\Cabang;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -257,5 +258,45 @@ class UserController extends Controller
         }
 
         return back()->withStatus('Password berhasil di-reset.');
+    }
+
+    function indexSession(Request $request) {
+        $this->param['pageTitle'] = 'Master Session';
+        
+        try {
+            $keyword = $request->get('keyword');
+            $this->param['data'] = DB::table('sessions')
+                ->join('users', 'users.id', 'sessions.user_id')
+                ->select('users.email', 'users.role', 'sessions.id', 'users.id_cabang', 'sessions.user_id')
+                ->paginate(10);
+
+            if ($keyword) {
+                $this->param['data'] = DB::table('sessions')
+                    ->join('users', 'users.id', 'sessions.user_id')
+                    ->select('users.email', 'users.role', 'sessions.id', 'users.id_cabang', 'sessions.user_id')
+                    ->paginate(10);
+            }
+        } catch (\Illuminate\Database\QueryException $e) {
+            return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
+        }
+        catch (Exception $e) {
+            return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
+        }
+
+        return view('user.sessions.index', $this->param);
+    }
+
+    function resetSession($id) {
+        try{
+            DB::table('sessions')
+                ->where('id', $id)
+                ->delete();
+
+            return back()->withStatus('Berhasil menghapus session.');
+        } catch(Exception $e){
+            return redirect()->back()->withError('Terjadi Kesalahan.'.$e);
+        } catch(Exception $e){
+            return redirect()->back()->withError('Terjadi Kesalahan.'.$e);
+        }
     }
 }

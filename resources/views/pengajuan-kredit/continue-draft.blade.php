@@ -1370,6 +1370,7 @@ $dataIndex = match ($skema) {
     $('#repayment_capacity_opsi').hide();
     const nullValue = []
     hitungRatioCoverage()
+    hitungRepaymentCapacity()
 
     let urlCekSubColumn = "{{ route('cek-sub-column') }}";
     let urlGetItemByKategoriJaminanUtama =
@@ -1763,7 +1764,7 @@ $dataIndex = match ($skema) {
                     $.each(response.item.option, function(i, valOption) {
                         // console.log(valOption.skor);
                         $('#itemByKategori').append(`
-                        <option value="${valOption.skor}-${valOption.id}" ${(response.dataSelect == valOption.id) ? 'selected' : ''}>
+                        <option value="${valOption.skor}-${valOption.id}" selected>
                         ${valOption.option}
                         </option>`);
                     });
