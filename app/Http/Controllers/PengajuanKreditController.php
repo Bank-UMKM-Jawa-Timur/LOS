@@ -34,6 +34,8 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 use Image;
 use Carbon\Carbon;
+use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
+
 class PengajuanKreditController extends Controller
 {
     private $isMultipleFiles = [];
@@ -44,6 +46,69 @@ class PengajuanKreditController extends Controller
             'Foto Usaha'
         ];
     }
+
+    public function getPenyeliaJson()
+    {
+        $status = '';
+        $req_status = 0;
+        $message = '';
+        $data = null;
+        try {
+            $data = User::select('id', 'nip', 'email', 'name')
+                        ->where('role', 'Penyelia Kredit')
+                        ->where('id_cabang', Auth::user()->id_cabang)
+                        ->get();
+
+            foreach ($data as $key => $value) {
+                $karyawan = $this->getKaryawanFromAPI($value->nip);
+                if (array_key_exists('nama', $karyawan)) {
+                    $value->name = $karyawan['nama'];
+                }
+            }
+
+            $req_status = HttpFoundationResponse::HTTP_OK;
+            $status = 'success';
+            $message = 'Berhasil mengambil data';
+        } catch (Exception $e) {
+            $req_status = HttpFoundationResponse::HTTP_INTERNAL_SERVER_ERROR;
+            $status = 'failed';
+            $message = 'Terjadi kesalahan : ' . $e->getMessage();
+        } catch (QueryException $e) {
+            $req_status = HttpFoundationResponse::HTTP_INTERNAL_SERVER_ERROR;
+            $status = 'failed';
+            $message = 'Terjadi kesalahan pada database: ' . $e->getMessage();
+        } finally {
+            return response()->json([
+                'status' => $status,
+                'message' => $message,
+                'data' => $data,
+            ]);
+        }
+    }
+
+    public function getKaryawanFromAPI($nip) {
+        // retrieve from api
+        $host = env('HCS_HOST');
+        $apiURL = $host . '/api/karyawan';
+
+        try {
+            $response = Http::timeout(3)->withOptions(['verify' => false])->get($apiURL, [
+                'nip' => $nip,
+            ]);
+
+            $statusCode = $response->status();
+            $responseBody = json_decode($response->getBody(), true);
+
+            if (array_key_exists('data', $responseBody))
+                return $responseBody['data'];
+            else
+                return $responseBody;
+            return $responseBody;
+        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+            return $e->getMessage();
+        }
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -2332,16 +2397,22 @@ class PengajuanKreditController extends Controller
     }
 
     // check status penyelia data pengajuan
-    public function checkPenyeliaKredit($id)
+    public function checkPenyeliaKredit(Request $request)
     {
         try {
-            $statusPenyelia = PengajuanModel::find($id);
-            $statusPenyelia->posisi = "Review Penyelia";
-            if ($statusPenyelia->tanggal_review_penyelia == null) {
-                $statusPenyelia->tanggal_review_penyelia = date(now());
+            $statusPenyelia = PengajuanModel::find($request->id_pengajuan);
+            if ($statusPenyelia) {
+                $statusPenyelia->posisi = "Review Penyelia";
+                $statusPenyelia->id_penyelia = $request->select_penyelia;
+                if ($statusPenyelia->tanggal_review_penyelia == null) {
+                    $statusPenyelia->tanggal_review_penyelia = date(now());
+                }
+                $statusPenyelia->update();
+                return redirect()->back()->withStatus('Berhasil mengganti posisi.');
             }
-            $statusPenyelia->update();
-            return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+            else {
+                return back()->withError('Data pengajuan tidak ditemukan.');
+            }
         } catch (Exception $e) {
             return redirect()->back()->withError('Terjadi kesalahan.');
         } catch (QueryException $e) {

@@ -55,7 +55,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // check Staf analisa
     Route::get('pengajuan-kredit/staf-analisa/{id}', [PengajuanKreditController::class, "checkStafAnalisa"])->name('pengajuan.check.stafanalisa');
     // check penyelia
-    Route::get('pengajuan-kredit/penyelia-kredit/{id}', [PengajuanKreditController::class, "checkPenyeliaKredit"])->name('pengajuan.check.penyeliakredit');
+    Route::post('pengajuan-kredit/penyelia-kredit', [PengajuanKreditController::class, "checkPenyeliaKredit"])->name('pengajuan.check.penyeliakredit');
     Route::post('pengajuan-kredit/jawaban-pengajuan', [PengajuanKreditController::class, "getInsertKomentar"])->name('pengajuan.insertkomentar');
     Route::get('pengajuan-kredit/jawaban-pengajuan/{id}', [PengajuanKreditController::class, "getDetailJawaban"])->name('pengajuan.detailjawaban');
     Route::post('pengajuan-kredit/jawaban-pengajuan-penyelia', [PengajuanKreditController::class, "storeAspekPenyelia"])->name('pengajuan.insertkomentarPenyelia');
@@ -79,6 +79,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Route::post('pengajuan-kredit/create', PengajuanKreditController::class);
     Route::get('pengajuan-kredit/continue-draft', [PengajuanKreditController::class, 'continueDraft'])->name('pengajuan-kredit.continue');
     Route::get('lanjutkan-draft', [PengajuanKreditController::class, 'showContinueDraft'])->name('pengajuan-kredit.continue-draft');
+    Route::get('penyelia-json', [PengajuanKreditController::class, 'getPenyeliaJson'])->name('get_penyelia_json');
 
     Route::resource('kabupaten', KabupatenController::class);
     Route::resource('kecamatan', KecamatanController::class);
