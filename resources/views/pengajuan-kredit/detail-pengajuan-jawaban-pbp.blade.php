@@ -385,7 +385,7 @@
                             placeholder="Masukkan Komentar"
                             value="{{ isset($komentarSlik->komentar) ? $komentarSlik->komentar : '' }}">
                         <div class="input-skor">
-                            <input type="number" class="form-control" placeholder="" name="skor_pbp[]"
+                            <input type="number" class="form-control skorPbpInput1" placeholder="" name="skor_pbp[]"
                                 onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
                                 {{ $itemSlik->status_skor == 0 ? 'readonly' : '' }}
                                 value="{{ $itemSlik->skor_pbp != null ? $itemSlik->skor_pbp : $itemSlik->skor_penyelia }}">
@@ -631,7 +631,7 @@
                     ->where('level', 2)
                     ->where('id_parent', $value->id)
                     ->get();
-                
+
                 // check level 4
                 $dataLevelEmpat = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide')
                     ->where('level', 4)
@@ -736,13 +736,13 @@
                             $dataOption = \App\Models\OptionModel::where('option', '=', '-')
                                 ->where('id_item', $item->id)
                                 ->get();
-                            
+
                             $getKomentar = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', '=', 'detail_komentar.id_komentar')
                                 ->where('id_pengajuan', $dataUmum->id)
                                 ->where('id_item', $item->id)
                                 ->where('id_user', Auth::user()->id)
                                 ->first();
-                            
+
                             // check level 3
                             $dataLevelTiga = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide')
                                 ->where('level', 3)
@@ -819,7 +819,7 @@
                                                             name="komentar_pbp[]" placeholder="Masukkan Komentar"
                                                             value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                         <div class="input-skor">
-                                                            <input type="number" class="form-control" placeholder=""
+                                                            <input type="number" class="form-control skorPbpInput2" placeholder=""
                                                                 name="skor_pbp[]"
                                                                 onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
                                                                 {{ $item->status_skor == 0 ? 'readonly' : '' }}
@@ -964,7 +964,7 @@
                                                     $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia', 'skor_pbp')
                                                         ->where('id_pengajuan', $dataUmum->id)
                                                         ->get();
-                                                    
+
                                                     $getSkorPBP = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia', 'skor_pbp')
                                                         ->where('id_pengajuan', $dataUmum->id)
                                                         ->where('id_jawaban', $itemJawabanLevelTiga->id)
@@ -1000,7 +1000,7 @@
                                                                         placeholder="Masukkan Komentar"
                                                                         value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                     <div class="input-skor">
-                                                                        <input type="number" class="form-control"
+                                                                        <input type="number" class="form-control skorPbpInput3"
                                                                             placeholder="" name="skor_pbp[]"
                                                                             onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
                                                                             {{ $itemTiga->status_skor == 0 ? 'readonly' : '' }}
@@ -1119,7 +1119,7 @@
                                         ->where('jawaban.id_pengajuan', $dataUmum->id)
                                         ->where('id_item', $itemEmpat->id)
                                         ->count();
-                                    
+
                                     $getKomentar = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', '=', 'detail_komentar.id_komentar')
                                         ->where('id_pengajuan', $dataUmum->id)
                                         ->where('id_item', $itemEmpat->id)
@@ -1179,7 +1179,7 @@
                                                                     name="komentar_pbp[]" placeholder="Masukkan Komentar"
                                                                     value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                 <div class="input-skor">
-                                                                    <input type="number" class="form-control"
+                                                                    <input type="number" class="form-control skorPbpInput4"
                                                                         placeholder="" name="skor_pbp[]"
                                                                         onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
                                                                         {{ $itemEmpat->status_skor == 0 ? 'readonly' : '' }}
@@ -1596,5 +1596,86 @@
             cekBtn()
             e.preventDefault();
         })
+
+        // PBP
+        var skorPbpInput1 = document.getElementsByClassName('skorPbpInput1')
+        for(var i = 0; i < skorPbpInput1.length; i++) {
+            skorPbpInput1[i].addEventListener('wheel', function(event){
+                if (event.deltaY < 0)
+                {
+                    var valueInput = parseInt(this.value)+1;
+                    if (valueInput > 4) {
+                        this.value = 4-1
+                    }
+                }
+                else if (event.deltaY > 0)
+                {
+                    var valueInput = parseInt(this.value)-1;
+                    if (valueInput<0) {
+                        this.value=0+1
+                    }
+                }
+            });
+        }
+
+        var skorPbpInput2 = document.getElementsByClassName('skorPbpInput2')
+        for(var i = 0; i < skorPbpInput2.length; i++) {
+            skorPbpInput2[i].addEventListener('wheel', function(event){
+                if (event.deltaY < 0)
+                {
+                    var valueInput = parseInt(this.value)+1;
+                    if (valueInput > 4) {
+                        this.value = 4-1
+                    }
+                }
+                else if (event.deltaY > 0)
+                {
+                    var valueInput = parseInt(this.value)-1;
+                    if (valueInput<0) {
+                        this.value=0+1
+                    }
+                }
+            });
+        }
+
+        var skorPbpInput3 = document.getElementsByClassName('skorPbpInput3')
+        for(var i = 0; i < skorPbpInput3.length; i++) {
+            skorPbpInput3[i].addEventListener('wheel', function(event){
+                if (event.deltaY < 0)
+                {
+                    var valueInput = parseInt(this.value)+1;
+                    if (valueInput > 4) {
+                        this.value = 4-1
+                    }
+                }
+                else if (event.deltaY > 0)
+                {
+                    var valueInput = parseInt(this.value)-1;
+                    if (valueInput<0) {
+                        this.value=0+1
+                    }
+                }
+            });
+        }
+
+        var skorPbpInput4 = document.getElementsByClassName('skorPbpInput4')
+        for(var i = 0; i < skorPbpInput4.length; i++) {
+            skorPbpInput4[i].addEventListener('wheel', function(event){
+                if (event.deltaY < 0)
+                {
+                    var valueInput = parseInt(this.value)+1;
+                    if (valueInput > 4) {
+                        this.value = 4-1
+                    }
+                }
+                else if (event.deltaY > 0)
+                {
+                    var valueInput = parseInt(this.value)-1;
+                    if (valueInput<0) {
+                        this.value=0+1
+                    }
+                }
+            });
+        }
     </script>
 @endpush
