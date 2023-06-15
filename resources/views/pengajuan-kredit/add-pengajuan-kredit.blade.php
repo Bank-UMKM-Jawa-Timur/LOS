@@ -478,6 +478,15 @@ is-invalid
                                         <option value="tidak_ada_legalitas_usaha">Tidak Ada Legalitas Usaha</option>
                                     </select>
                                 </div>
+                                <div class="form-group col-md-6" id="npwpsku" style="display: ">
+                                    <label for="">Memiliki NPWP</label>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <input type="checkbox" id="isNpwp" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="row col-md-12">
@@ -1583,7 +1592,9 @@ is-invalid
         // milih ijin usaha
         $('#ijin_usaha').change(function(e) {
             let ijinUsaha = $(this).val();
+            $('#npwpsku').hide();
             if (ijinUsaha == 'nib') {
+                $('#npwpsku').hide();
                 $('#surat_keterangan_usaha').hide();
                 $('#surat_keterangan_usaha_id').attr('disabled', true);
                 $('#surat_keterangan_usaha_text').attr('disabled', true);
@@ -1619,6 +1630,7 @@ is-invalid
                 $('#docNPWP_text').val('');
                 $('#docNPWP_upload_file').removeAttr('disabled');
             } else if (ijinUsaha == 'surat_keterangan_usaha') {
+                $('#npwpsku').show();
                 $('#nib').hide();
                 $('#nib_id').attr('disabled', true);
                 $('#nib_text').attr('disabled', true);
@@ -1645,18 +1657,20 @@ is-invalid
                 $('#docSKU_text').removeAttr('disabled');
                 $('#docSKU_upload_file').removeAttr('disabled');
 
-                $('#npwp').show();
-                $('#npwp_id').removeAttr('disabled');
-                $('#npwp_text').removeAttr('disabled');
-                $('#npwp_file').removeAttr('disabled');
-                $('#npwp_opsi_jawaban').removeAttr('disabled');
+                $('#npwp').hide();
+                $('#npwp_id').attr('disabled', true);
+                $('#npwp_text').attr('disabled', true);
+                $('#npwp_file').attr('disabled', true);
+                $('#npwp_text').val('');
+                $('#npwp_opsi_jawaban').attr('disabled', true);
 
-                $('#docNPWP').show();
-                $('#docNPWP_id').removeAttr('disabled');
-                $('#docNPWP_text').removeAttr('disabled');
+                $('#docNPWP').hide();
+                $('#docNPWP_id').attr('disabled', true);
+                $('#docNPWP_text').attr('disabled', true);
                 $('#docNPWP_text').val('');
-                $('#docNPWP_upload_file').removeAttr('disabled');
+                $('#docNPWP_upload_file').attr('disabled', true);
             } else if (ijinUsaha == 'tidak_ada_legalitas_usaha') {
+                $('#npwpsku').hide();
                 $('#nib').hide();
                 $('#nib_id').attr('disabled', true);
                 $('#nib_text').attr('disabled', true);
@@ -1697,6 +1711,7 @@ is-invalid
                 $('#docNPWP_text').val('');
                 $('#docNPWP_upload_file').attr('disabled', true);
             } else {
+                $('#npwpsku').hide();
                 $('#nib').hide();
                 $('#nib_id').attr('disabled', true);
                 $('#nib_text').attr('disabled', true);
@@ -1728,6 +1743,38 @@ is-invalid
             }
         });
         // end milih ijin usaha
+
+        // Cek Npwp
+        $('#isNpwp').change(function() {
+            console.log($(this).is(':checked'));
+            if ($(this).is(':checked')) {
+                $('#npwp').show();
+                $('#npwp_id').removeAttr('disabled');
+                $('#npwp_text').removeAttr('disabled');
+                $('#npwp_file').removeAttr('disabled');
+                $('#npwp_opsi_jawaban').removeAttr('disabled');
+
+                $('#docNPWP').show();
+                $('#docNPWP_id').removeAttr('disabled');
+                $('#docNPWP_text').removeAttr('disabled');
+                $('#docNPWP_text').val('');
+                $('#docNPWP_upload_file').removeAttr('disabled');
+            } else {
+                $('#npwp').hide();
+                $('#npwp_id').attr('disabled', true);
+                $('#npwp_text').attr('disabled', true);
+                $('#npwp_file').attr('disabled', true);
+                $('#npwp_text').val('');
+                $('#npwp_opsi_jawaban').attr('disabled', true);
+
+                $('#docNPWP').hide();
+                $('#docNPWP_id').attr('disabled', true);
+                $('#docNPWP_text').attr('disabled', true);
+                $('#docNPWP_text').val('');
+                $('#docNPWP_upload_file').attr('disabled', true);
+            }
+        });
+
 
         //triger hitung ratio coverage
         $('#thls').change(function(e) {
