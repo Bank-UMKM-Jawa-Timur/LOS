@@ -1788,32 +1788,32 @@ $dataIndex = match ($dataUmum->skema_kredit) {
     }
 
     // Cek Npwp
-        $('#isNpwp').change(function() {
-            console.log($(this).is(':checked'));
-            if ($(this).is(':checked')) {
-                $('#npwp').show();
-                $('#npwp_id').removeAttr('disabled', true);
-                $('#npwp_text').removeAttr('disabled', true);
-                $('#npwp_opsi_jawaban').removeAttr('disabled', true);
+    $('#isNpwp').change(function() {
+        console.log($(this).is(':checked'));
+        if ($(this).is(':checked')) {
+            $('#npwp').show();
+            $('#npwp_id').removeAttr('disabled', true);
+            $('#npwp_text').removeAttr('disabled', true);
+            $('#npwp_opsi_jawaban').removeAttr('disabled', true);
 
-                $('#docNPWP').show();
-                $('#docNPWP_id').removeAttr('disabled', true);
-                $('#docNPWPnama_file').removeAttr('disabled', true);
-                $('#docNPWP_update_file').removeAttr('disabled', true);
-                $('#id_jawaban_npwp').removeAttr('disabled', true);
-            } else {
-                $('#npwp').hide();
-                $('#npwp_id').attr('disabled', true);
-                $('#npwp_text').attr('disabled', true);
-                $('#npwp_opsi_jawaban').attr('disabled', true);
+            $('#docNPWP').show();
+            $('#docNPWP_id').removeAttr('disabled', true);
+            $('#docNPWPnama_file').removeAttr('disabled', true);
+            $('#docNPWP_update_file').removeAttr('disabled', true);
+            $('#id_jawaban_npwp').removeAttr('disabled', true);
+        } else {
+            $('#npwp').hide();
+            $('#npwp_id').attr('disabled', true);
+            $('#npwp_text').attr('disabled', true);
+            $('#npwp_opsi_jawaban').attr('disabled', true);
 
-                $('#docNPWP').hide();
-                $('#docNPWP_id').attr('disabled', true);
-                $('#docNPWPnama_file').attr('disabled', true);
-                $('#docNPWP_update_file').attr('disabled', true);
-                $('#id_jawaban_npwp').attr('disabled', true);
-            }
-        });
+            $('#docNPWP').hide();
+            $('#docNPWP_id').attr('disabled', true);
+            $('#docNPWPnama_file').attr('disabled', true);
+            $('#docNPWP_update_file').attr('disabled', true);
+            $('#id_jawaban_npwp').attr('disabled', true);
+        }
+    });
 
     function getJaminanutama(){
         //clear item
