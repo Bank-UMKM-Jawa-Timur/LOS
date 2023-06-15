@@ -581,6 +581,9 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                         ->join('item', 'jawaban_text.id_jawaban', 'item.id')
                                         ->where('item.nama', 'npwp')->first();
 
+                            $jawabanDokNPWP = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
+                                            ->where('id_jawaban', $itemNPWP->id)
+                                            ->first();
                             // dump($dataIjin);
                         @endphp
                         {{-- item ijin usaha --}}
@@ -594,6 +597,15 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                             <option value="surat_keterangan_usaha" {{ ($dataIjin?->nama == 'Surat Keterangan Usaha') ? 'selected' : '' }}>Surat Keterangan Usaha</option>
                                             <option value="tidak_ada_legalitas_usaha" {{ (!$dataIjin) ? 'selected' : '' }}>Tidak Ada Legalitas Usaha</option>
                                     </select>
+                                </div>
+                                <div class="form-group col-md-6" id="npwpsku" style="display: {{ ($dataIjin?->nama == 'Surat Keterangan Usaha') ? '' : 'none' }}">
+                                    <label for="">Memiliki NPWP</label>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <input type="checkbox" name="isNpwp" id="isNpwp" class="form-control" @if(isset($jawabanDokNPWP->opsi_text) != null) checked @endif>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -685,11 +697,6 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                 </div>
 
                                 <div class="form-group col-md-6" id="docNPWP">
-                                    @php
-                                        $jawabanDokNPWP = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
-                                                        ->where('id_jawaban', $itemNPWP->id)
-                                                        ->first();
-                                    @endphp
                                     <label for="">Dokumen NPWP</label>
                                     <input type="hidden" name="id_file_text[]" value="154" id="docNPWP_id">
                                         @if (isset($jawabanDokNPWP->opsi_text) != null)
@@ -1611,6 +1618,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
     function getIjinUsaha(){
         let ijinUsaha = $('#ijin_usaha').val();
         if (ijinUsaha == 'nib') {
+            $('#npwpsku').hide();
             $('#surat_keterangan_usaha').hide();
             $('#surat_keterangan_usaha_id').attr('disabled', true);
             $('#surat_keterangan_usaha_text').attr('disabled', true);
@@ -1651,6 +1659,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
             $('#docNPWPnama_file').removeAttr('disabled', true);
             $('#docNPWP_update_file').removeAttr('disabled', true);
         } else if (ijinUsaha == 'surat_keterangan_usaha') {
+            $('#npwpsku').show();
             $('#nib').hide()
             $('#nib_id').attr('disabled', true);
             $('#nib_text').attr('disabled', true);
@@ -1677,18 +1686,34 @@ $dataIndex = match ($dataUmum->skema_kredit) {
             $('#docSKU_id').removeAttr('disabled');
             $('#docSKU_text').removeAttr('disabled');
             $('#docSKU_update_file').removeAttr('disabled');
+            var cekNpwp = "{{isset($jawabanDokNPWP->opsi_text) != null ? 'true' : 'false'}}"
+            if(cekNpwp == 'true'){
+                $('#npwp').show();
+                $('#npwp_id').removeAttr('disabled', true);
+                $('#npwp_text').removeAttr('disabled', true);
+                $('#npwp_opsi_jawaban').removeAttr('disabled', true);
 
-            $('#npwp').show();
-            $('#npwp_id').removeAttr('disabled', true);
-            $('#npwp_text').removeAttr('disabled', true);
-            $('#npwp_opsi_jawaban').removeAttr('disabled', true);
+                $('#docNPWP').show();
+                $('#docNPWP_id').removeAttr('disabled', true);
+                $('#docNPWPnama_file').removeAttr('disabled', true);
+                $('#docNPWP_update_file').removeAttr('disabled', true);
+                $('#id_jawaban_npwp').removeAttr('disabled', true);
+            }else{
+                $('#npwp').hide();
+                $('#npwp_id').attr('disabled', true);
+                $('#npwp_text').attr('disabled', true);
+                $('#npwp_file').attr('disabled', true);
+                $('#npwp_text').val('');
+                $('#npwp_opsi_jawaban').attr('disabled', true);
 
-            $('#docNPWP').show();
-            $('#docNPWP_id').removeAttr('disabled', true);
-            $('#docNPWPnama_file').removeAttr('disabled', true);
-            $('#docNPWP_update_file').removeAttr('disabled', true);
-            $('#id_jawaban_npwp').removeAttr('disabled', true);
+                $('#docNPWP').hide();
+                $('#docNPWP_id').attr('disabled', true);
+                $('#docNPWP_text').attr('disabled', true);
+                $('#docNPWP_text').val('');
+                $('#docNPWP_upload_file').attr('disabled', true);
+            }
         } else if (ijinUsaha == 'tidak_ada_legalitas_usaha') {
+            $('#npwpsku').hide();
             $('#nib').hide();
             $('#nib_id').attr('disabled', true);
             $('#nib_text').attr('disabled', true);
@@ -1761,6 +1786,34 @@ $dataIndex = match ($dataUmum->skema_kredit) {
             $('#docNPWP_update_file').removeAttr('disabled', true);
         }
     }
+
+    // Cek Npwp
+        $('#isNpwp').change(function() {
+            console.log($(this).is(':checked'));
+            if ($(this).is(':checked')) {
+                $('#npwp').show();
+                $('#npwp_id').removeAttr('disabled', true);
+                $('#npwp_text').removeAttr('disabled', true);
+                $('#npwp_opsi_jawaban').removeAttr('disabled', true);
+
+                $('#docNPWP').show();
+                $('#docNPWP_id').removeAttr('disabled', true);
+                $('#docNPWPnama_file').removeAttr('disabled', true);
+                $('#docNPWP_update_file').removeAttr('disabled', true);
+                $('#id_jawaban_npwp').removeAttr('disabled', true);
+            } else {
+                $('#npwp').hide();
+                $('#npwp_id').attr('disabled', true);
+                $('#npwp_text').attr('disabled', true);
+                $('#npwp_opsi_jawaban').attr('disabled', true);
+
+                $('#docNPWP').hide();
+                $('#docNPWP_id').attr('disabled', true);
+                $('#docNPWPnama_file').attr('disabled', true);
+                $('#docNPWP_update_file').attr('disabled', true);
+                $('#id_jawaban_npwp').attr('disabled', true);
+            }
+        });
 
     function getJaminanutama(){
         //clear item
