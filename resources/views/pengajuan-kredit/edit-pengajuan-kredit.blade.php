@@ -604,6 +604,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                     <div class="row">
                                         <div class="col-md-3">
                                             <input type="checkbox" name="isNpwp" id="isNpwp" class="form-control" @if(isset($jawabanDokNPWP->opsi_text) != null) checked @endif>
+                                            <input type="hidden" name="isNpwp" id="statusNpwp" class="form-control" value="{{ (isset($jawabanDokNPWP->opsi_text) != null) ? '1' : '0' }}">
                                         </div>
                                     </div>
                                 </div>
@@ -1791,6 +1792,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
         $('#isNpwp').change(function() {
             console.log($(this).is(':checked'));
             if ($(this).is(':checked')) {
+                $("#statusNpwp").val('1')
                 $('#npwp').show();
                 $('#npwp_id').removeAttr('disabled', true);
                 $('#npwp_text').removeAttr('disabled', true);
@@ -1802,18 +1804,19 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 $('#docNPWP_update_file').removeAttr('disabled', true);
                 $('#id_jawaban_npwp').removeAttr('disabled', true);
             } else {
+                $("#statusNpwp").val('0')
                 $('#npwp').hide();
                 $('#npwp_id').attr('disabled', true);
                 $('#npwp_text').attr('disabled', true);
                 $('#npwp_opsi_jawaban').attr('disabled', true);
 
-                $('#docNPWP').hide();
-                $('#docNPWP_id').attr('disabled', true);
-                $('#docNPWPnama_file').attr('disabled', true);
-                $('#docNPWP_update_file').attr('disabled', true);
-                $('#id_jawaban_npwp').attr('disabled', true);
-            }
-        });
+            $('#docNPWP').hide();
+            $('#docNPWP_id').attr('disabled', true);
+            $('#docNPWPnama_file').attr('disabled', true);
+            $('#docNPWP_update_file').attr('disabled', true);
+            $('#id_jawaban_npwp').attr('disabled', true);
+        }
+    });
 
     function getJaminanutama(){
         //clear item
@@ -2549,6 +2552,9 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 var ijinUsahaSelect = $(form).find("#ijin_usaha");
                 if (ijinUsahaSelect.length > 0) {
                     if (ijinUsahaSelect[0].value == 'nib' || ijinUsahaSelect[0].value == 'surat_keterangan_usaha') {
+                        if(!$("#isNpwp").attr('checked')){
+                            subtotalInput -= 4;
+                        }
                         subtotalInput -= 2;
                     }
                     if (ijinUsahaSelect[0].value == 'tidak_ada_legalitas_usaha') {

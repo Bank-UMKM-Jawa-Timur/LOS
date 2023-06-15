@@ -478,7 +478,7 @@ is-invalid
                                         <option value="tidak_ada_legalitas_usaha">Tidak Ada Legalitas Usaha</option>
                                     </select>
                                 </div>
-                                <div class="form-group col-md-6" id="npwpsku" style="display: ">
+                                <div class="form-group col-md-6" id="npwpsku" style="display:none ">
                                     <label for="">Memiliki NPWP</label>
                                     <br>
                                     <div class="row">

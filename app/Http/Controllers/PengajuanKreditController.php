@@ -1376,6 +1376,17 @@ class PengajuanKreditController extends Controller
                         ->delete();
                 }
             }
+            if($request->statusNpwp == 0){
+                $dokumenUsaha = DB::table('item')
+                    ->orWhere('nama', 'LIKE', '%NPWP%')
+                    ->get();
+                foreach($dokumenUsaha as $idDoc){
+                    DB::table('jawaban_text')
+                        ->where('id_pengajuan', $id_pengajuan)
+                        ->where('id_jawaban', $idDoc->id)
+                        ->delete();
+                }
+            }
 
             if (count($request->file()) > 0) {
                 foreach ($request->file('update_file') as $key => $value) {
@@ -2836,6 +2847,33 @@ class PengajuanKreditController extends Controller
         $rata_rata = array();
 
         try {
+            if($request->ijin_usaha == 'tidak_ada_legalitas_usaha'){
+                $dokumenUsaha = DB::table('item')
+                    ->where('nama', 'LIKE', '%NIB%')
+                    ->orWhere('nama', 'LIKE', '%Surat Keterangan Usaha%')
+                    ->orWhere('nama', 'LIKE', '%NPWP%')
+                    ->get();
+                foreach($dokumenUsaha as $idDoc){
+                    DB::table('temporary_jawaban_text')
+                        ->where('id_temporary_calon_nasabah', $request->idCalonNasabah)
+                        ->where('id_jawaban', $idDoc->id)
+                        ->delete();
+                }
+            }
+            if($request->isNpwp == 0){
+                $dokumenUsaha = DB::table('item')
+                    ->orWhere('nama', 'LIKE', '%NPWP%')
+                    ->get();
+                foreach($dokumenUsaha as $idDoc){
+                    DB::table('temporary_jawaban_text')
+                        ->where('id_temporary_calon_nasabah', $request->idCalonNasabah)
+                        ->where('id_jawaban', $idDoc->id)
+                        ->delete();
+                }
+            }
+
+            $finalArray = array();
+            $rata_rata = array();
             // data Level dua
             if ($request->dataLevelDua != null) {
                 $data = $request->dataLevelDua;

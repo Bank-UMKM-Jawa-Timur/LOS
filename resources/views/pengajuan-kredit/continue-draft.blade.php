@@ -486,8 +486,18 @@ $dataIndex = match ($skema) {
                                         <option value="">-- Pilih Ijin Usaha --</option>
                                         <option value="nib"{{ ($nib != '') ? 'selected' : '' }}>NIB</option>
                                         <option value="surat_keterangan_usaha"{{ ($sku != '') ? 'selected' : '' }}>Surat Keterangan Usaha</option>
-                                        <option value="tidak_ada_legalitas_usaha"{{ ($nib != '' && $sku != '' && $npwp != '') ? 'selected' : '' }}>Tidak Ada Legalitas Usaha</option>
+                                        <option value="tidak_ada_legalitas_usaha"{{ ($nib == '' && $sku == '' && $npwp == '') ? 'selected' : '' }}>Tidak Ada Legalitas Usaha</option>
                                     </select>
+                                </div>
+                                <div class="form-group col-md-6" id="npwpsku" style="display: {{ ($npwp == '') ? '' : 'none' }}">
+                                    <label for="">Memiliki NPWP</label>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <input type="checkbox" name="isNpwp" id="isNpwp" class="form-control" @if($npwp != null) checked @endif>
+                                            <input type="hidden" name="isNpwp" id="statusNpwp" class="form-control" value="{{ ($npwp != null) ? '1' : '0' }}">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -1128,6 +1138,9 @@ $dataIndex = match ($skema) {
             var ijinUsahaSelect = $(form).find("#ijin_usaha");
             if (ijinUsahaSelect.length > 0) {
                 if (ijinUsahaSelect[0].value == 'nib' || ijinUsahaSelect[0].value == 'surat_keterangan_usaha') {
+                    if(!$("#isNpwp").attr('checked')){
+                        subtotalInput -= 4
+                    }
                     subtotalInput -= 2;
                 }
                 if (ijinUsahaSelect[0].value == 'tidak_ada_legalitas_usaha') {
@@ -1817,6 +1830,7 @@ $dataIndex = match ($skema) {
             $('#docNPWP_text').val('');
             $('#docNPWP_upload_file').removeAttr('disabled');
         } else if (ijinUsaha == 'surat_keterangan_usaha') {
+            $('#npwpsku').show();
             $('#nib').hide();
             $('#nib_id').attr('disabled', true);
             $('#nib_text').attr('disabled', true);
@@ -1826,7 +1840,7 @@ $dataIndex = match ($skema) {
             $('#docNIB').hide();
             $('#docNIB_id').attr('disabled', true);
             $('#docNIB_text').attr('disabled', true);
-            $('#docNIB_text').val('{{ temporary($duTemp->id, 78)?->opsi_text }}');
+            $('#docNIB_text').val('');
             $('#docNIB_upload_file').attr('disabled', true);
             $('#nib_file').attr('disabled', true);
             $('#file_nib').attr('disabled', true);
@@ -1835,7 +1849,7 @@ $dataIndex = match ($skema) {
             $('#surat_keterangan_usaha').show();
             $('#surat_keterangan_usaha_id').removeAttr('disabled');
             $('#surat_keterangan_usaha_text').removeAttr('disabled');
-            $('#surat_keterangan_usaha_text').val('');
+            $('#surat_keterangan_usaha_text').val('{{ temporary($duTemp->id, 78)?->opsi_text }}');
             $('#surat_keterangan_usaha_opsi_jawaban').removeAttr('disabled');
             $('#surat_keterangan_usaha_file').removeAttr('disabled');
 
@@ -1844,18 +1858,35 @@ $dataIndex = match ($skema) {
             $('#docSKU_text').removeAttr('disabled');
             $('#docSKU_upload_file').removeAttr('disabled');
 
-            $('#npwp').show();
-            $('#npwp_id').removeAttr('disabled');
-            $('#npwp_text').removeAttr('disabled');
-            $('#npwp_text').val('{{ temporary($duTemp->id, 79)?->opsi_text }}');
-            $('#npwp_opsi_jawaban').removeAttr('disabled');
-            $('#npwp_file').removeAttr('disabled');
+            var cekNpwp = "{{ temporary($duTemp->id, 79)?->opsi_text }}";
+            if (cekNpwp != '') {
+                $('#npwp').show();
+                $('#npwp_id').removeAttr('disabled');
+                $('#npwp_text').removeAttr('disabled');
+                $('#npwp_text').val('{{ temporary($duTemp->id, 79)?->opsi_text }}');
+                $('#npwp_opsi_jawaban').removeAttr('disabled');
+                $('#npwp_file').removeAttr('disabled');
 
-            $('#docNPWP').show();
-            $('#docNPWP_id').removeAttr('disabled');
-            $('#docNPWP_text').removeAttr('disabled');
-            $('#docNPWP_text').val('');
-            $('#docNPWP_upload_file').removeAttr('disabled');
+                $('#docNPWP').show();
+                $('#docNPWP_id').removeAttr('disabled');
+                $('#docNPWP_text').removeAttr('disabled');
+                $('#docNPWP_text').val('');
+                $('#docNPWP_upload_file').removeAttr('disabled');
+            } else {
+                $('#npwp').hide();
+                $('#npwp_id').attr('disabled', true);
+                $('#npwp_text').attr('disabled', true);
+                $('#npwp_file').attr('disabled', true);
+                $('#npwp_text').val('');
+                $('#npwp_opsi_jawaban').attr('disabled', true);
+
+                $('#docNPWP').hide();
+                $('#docNPWP_id').attr('disabled', true);
+                $('#docNPWP_text').attr('disabled', true);
+                $('#docNPWP_text').val('');
+                $('#docNPWP_upload_file').attr('disabled', true);              
+            }
+            
         } else if (ijinUsaha == 'tidak_ada_legalitas_usaha') {
             $('#nib').hide();
             $('#nib_id').attr('disabled', true);
@@ -1929,6 +1960,37 @@ $dataIndex = match ($skema) {
         }
     });
     // end milih ijin usaha
+
+    
+    // Cek Npwp
+    $('#isNpwp').change(function() {
+        console.log($(this).is(':checked'));
+        if ($(this).is(':checked')) {
+            $("#statusNpwp").val('1');
+            $('#npwp').show();
+            $('#npwp_id').removeAttr('disabled', true);
+            $('#npwp_text').removeAttr('disabled', true);
+            $('#npwp_opsi_jawaban').removeAttr('disabled', true);
+
+            $('#docNPWP').show();
+            $('#docNPWP_id').removeAttr('disabled', true);
+            $('#docNPWPnama_file').removeAttr('disabled', true);
+            $('#docNPWP_update_file').removeAttr('disabled', true);
+            $('#id_jawaban_npwp').removeAttr('disabled', true);
+        } else {
+            $("#statusNpwp").val('0');
+            $('#npwp').hide();
+            $('#npwp_id').attr('disabled', true);
+            $('#npwp_text').attr('disabled', true);
+            $('#npwp_opsi_jawaban').attr('disabled', true);
+
+            $('#docNPWP').hide();
+            $('#docNPWP_id').attr('disabled', true);
+            $('#docNPWPnama_file').attr('disabled', true);
+            $('#docNPWP_update_file').attr('disabled', true);
+            $('#id_jawaban_npwp').attr('disabled', true);
+        }
+    });
 
     //triger hitung ratio coverage
     $('#thls').change(function(e) {
