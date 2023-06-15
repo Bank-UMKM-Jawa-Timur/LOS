@@ -47,7 +47,7 @@ class PengajuanKreditController extends Controller
         ];
     }
 
-    public function getPenyeliaJson()
+    public function getUserJson($role)
     {
         $status = '';
         $req_status = 0;
@@ -55,7 +55,8 @@ class PengajuanKreditController extends Controller
         $data = null;
         try {
             $data = User::select('id', 'nip', 'email', 'name')
-                        ->where('role', 'Penyelia Kredit')
+                        ->where('role', $role)
+                        ->whereNotNull('nip')
                         ->where('id_cabang', Auth::user()->id_cabang)
                         ->get();
 
@@ -116,17 +117,18 @@ class PengajuanKreditController extends Controller
      */
     public function index(Request $request)
     {
+        // dd(auth()->user()->id);
         $param['pageTitle'] = "Dashboard";
         $id_cabang = Auth::user()->id_cabang;
         $param['cabang'] = DB::table('cabang')
         ->get();
-        // dd($param['cabang'] );
-        // if($request->tAwal == null && $request->tAkhir == null && $request->sts == null){
             if (auth()->user()->role == 'Staf Analis Kredit') {
+                $id_staf = auth()->user()->id;
                 $param['pageTitle'] = 'Tambah Pengajuan Kredit';
                 $param['btnText'] = 'Tambah Pengajuan';
                 $param['btnLink'] = route('pengajuan-kredit.create');
                 $param['data_pengajuan'] = PengajuanModel::select(
+                    'pengajuan.id_staf',
                     'pengajuan.id',
                     'pengajuan.tanggal',
                     'pengajuan.posisi',
@@ -144,6 +146,7 @@ class PengajuanKreditController extends Controller
                     'pengajuan.po',
                     'pengajuan.pk',
                     'calon_nasabah.nama',
+                    'calon_nasabah.id_user',
                     'calon_nasabah.jenis_usaha',
                     'calon_nasabah.id_pengajuan'
                 )
@@ -171,17 +174,18 @@ class PengajuanKreditController extends Controller
                     return $query->whereRaw('FLOOR(pengajuan.average_by_sistem) = ?',$score)
                     ->orWhereRaw('FLOOR(pengajuan.average_by_penyelia) = ?',$score);
                 })
+                    ->where('pengajuan.id_staf',$id_staf)
                     ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
                     ->where('pengajuan.id_cabang', $id_cabang)
                     ->paginate(5)
                     ->withQueryString();
-                // return view('pengajuan-kredit.add-pengajuan-kredit',$param);
                 return view('pengajuan-kredit.list-edit-pengajuan-kredit', $param);
             } elseif (auth()->user()->role == 'Penyelia Kredit') {
                 // $param['dataAspek'] = ItemModel::select('*')->where('level',1)->get();
-
+                $id_penyelia = auth()->user()->id;
                 $id_cabang = Auth::user()->id_cabang;
                 $param['data_pengajuan'] = PengajuanModel::select(
+                    'pengajuan.id_penyelia',
                     'pengajuan.id',
                     'pengajuan.tanggal',
                     'pengajuan.posisi',
@@ -199,6 +203,7 @@ class PengajuanKreditController extends Controller
                     'calon_nasabah.jenis_usaha',
                     'calon_nasabah.id_pengajuan'
                 )
+                ->where('pengajuan.id_penyelia',$id_penyelia)
                 ->when($request->search,function($query,$search){
                     return $query->where('calon_nasabah.nama', 'like', '%' . $search . '%');
                 })
@@ -229,9 +234,12 @@ class PengajuanKreditController extends Controller
                     ->withQueryString();
                 return view('pengajuan-kredit.list-pengajuan-kredit', $param);
             } elseif (auth()->user()->role == 'PBO' || auth()->user()->role == 'PBP') {
+                $id_data = auth()->user()->id;
                 $id_cabang = Auth::user()->id_cabang;
                 $param['data_pengajuan'] = PengajuanModel::select(
                     'pengajuan.id',
+                    'pengajuan.id_pbo',
+                    'pengajuan.id_pbp',
                     'pengajuan.tanggal',
                     'pengajuan.posisi',
                     'pengajuan.progress_pengajuan_data',
@@ -248,6 +256,8 @@ class PengajuanKreditController extends Controller
                     'calon_nasabah.jenis_usaha',
                     'calon_nasabah.id_pengajuan'
                 )
+                ->where('pengajuan.id_pbo',$id_data)
+                ->orWhere('pengajuan.id_pbp',$id_data)
                 ->when($request->search,function($query,$search){
                     return $query->where('calon_nasabah.nama', 'like', '%' . $search . '%');
                 })
@@ -278,8 +288,10 @@ class PengajuanKreditController extends Controller
                     ->withQueryString();;
                 return view('pengajuan-kredit.list-pbp', $param);
             } elseif (auth()->user()->role == 'Pincab') {
+                $id_data = auth()->user()->id;
                 $param['data_pengajuan'] = PengajuanModel::select(
                     'pengajuan.id',
+                    'pengajuan.id_pincab',
                     'pengajuan.tanggal',
                     'pengajuan.posisi',
                     'pengajuan.progress_pengajuan_data',
@@ -296,6 +308,7 @@ class PengajuanKreditController extends Controller
                     'calon_nasabah.jenis_usaha',
                     'calon_nasabah.id_pengajuan'
                 )
+                ->where('pengajuan.id_pincab',$id_data)
                 ->when($request->search,function($query,$search){
                     return $query->where('calon_nasabah.nama', 'like', '%' . $search . '%');
                 })
@@ -377,178 +390,6 @@ class PengajuanKreditController extends Controller
                 // dd($param['data_pengajuan']);
                 return view('pengajuan-kredit.komentar-pincab-pengajuan', $param);
             }
-        // }else{
-        //     // filter
-        //     // $start = $request->tAwal;
-        //     // $end = $request->tAkhir;
-        //     // $sts = $request->sts;
-        //     // end-filter
-
-        //     // if (auth()->user()->role == 'Staf Analis Kredit') {
-        //     //     $param['pageTitle'] = 'Tambah Pengajuan Kredit';
-        //     //     $param['btnText'] = 'Tambah Pengajuan';
-        //     //     $param['btnLink'] = route('pengajuan-kredit.create');
-        //     //     $param['data_pengajuan'] = PengajuanModel::select(
-        //     //         'pengajuan.id',
-        //     //         'pengajuan.tanggal',
-        //     //         'pengajuan.posisi',
-        //     //         'pengajuan.progress_pengajuan_data',
-        //     //         'pengajuan.tanggal_review_penyelia',
-        //     //         'pengajuan.tanggal_review_pbp',
-        //     //         'pengajuan.tanggal_review_pincab',
-        //     //         'pengajuan.status',
-        //     //         'pengajuan.status_by_sistem',
-        //     //         'pengajuan.id_cabang',
-        //     //         'pengajuan.average_by_sistem',
-        //     //         'pengajuan.average_by_penyelia',
-        //     //         'pengajuan.skema_kredit',
-        //     //         'pengajuan.sppk',
-        //     //         'pengajuan.po',
-        //     //         'pengajuan.pk',
-        //     //         'calon_nasabah.nama',
-        //     //         'calon_nasabah.jenis_usaha',
-        //     //         'calon_nasabah.id_pengajuan'
-        //     //     )
-        //     //     ->whereBetween('pengajuan.tanggal',[$start,$end])
-        //     //         // ->where('pengajuan.status',$sts)
-        //     //         ->where('pengajuan.status_by_sistem',$sts)
-        //     //         ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
-        //     //         ->where('pengajuan.id_cabang', $id_cabang)
-        //     //         ->paginate(5)
-        //     //         ->withQueryString();
-        //     //     // return view('pengajuan-kredit.add-pengajuan-kredit',$param);
-        //     //     return view('pengajuan-kredit.list-edit-pengajuan-kredit', $param);
-        //     // } elseif (auth()->user()->role == 'Penyelia Kredit') {
-        //     //     // $param['dataAspek'] = ItemModel::select('*')->where('level',1)->get();
-
-        //     //     $id_cabang = Auth::user()->id_cabang;
-        //     //     $param['data_pengajuan'] = PengajuanModel::select(
-        //     //         'pengajuan.id',
-        //     //         'pengajuan.tanggal',
-        //     //         'pengajuan.posisi',
-        //     //         'pengajuan.progress_pengajuan_data',
-        //     //         'pengajuan.tanggal_review_penyelia',
-        //     //         'pengajuan.tanggal_review_pbp',
-        //     //         'pengajuan.tanggal_review_pincab',
-        //     //         'pengajuan.status',
-        //     //         'pengajuan.status_by_sistem',
-        //     //         'pengajuan.id_cabang',
-        //     //         'pengajuan.average_by_sistem',
-        //     //         'pengajuan.average_by_penyelia',
-        //     //         'pengajuan.skema_kredit',
-        //     //         'calon_nasabah.nama',
-        //     //         'calon_nasabah.jenis_usaha',
-        //     //         'calon_nasabah.id_pengajuan'
-        //     //     )
-        //     //     ->whereBetween('pengajuan.tanggal',[$start,$end])
-        //     //         // ->where('pengajuan.status',$sts)
-        //     //         ->where('pengajuan.status_by_sistem',$sts)
-        //     //         ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
-        //     //         ->where('pengajuan.id_cabang', $id_cabang)
-        //     //         ->paginate(5)
-        //     //         ->withQueryString();
-        //     //     return view('pengajuan-kredit.list-pengajuan-kredit', $param);
-        //     // } elseif (auth()->user()->role == 'PBO' || auth()->user()->role == 'PBP') {
-        //     //     $id_cabang = Auth::user()->id_cabang;
-        //     //     $param['data_pengajuan'] = PengajuanModel::select(
-        //     //         'pengajuan.id',
-        //     //         'pengajuan.tanggal',
-        //     //         'pengajuan.posisi',
-        //     //         'pengajuan.progress_pengajuan_data',
-        //     //         'pengajuan.tanggal_review_penyelia',
-        //     //         'pengajuan.tanggal_review_pbp',
-        //     //         'pengajuan.tanggal_review_pincab',
-        //     //         'pengajuan.status',
-        //     //         'pengajuan.status_by_sistem',
-        //     //         'pengajuan.id_cabang',
-        //     //         'pengajuan.average_by_sistem',
-        //     //         'pengajuan.average_by_penyelia',
-        //     //         'pengajuan.skema_kredit',
-        //     //         'calon_nasabah.nama',
-        //     //         'calon_nasabah.jenis_usaha',
-        //     //         'calon_nasabah.id_pengajuan'
-        //     //     )
-        //     //     ->whereBetween('pengajuan.tanggal',[$start,$end])
-        //     //         // ->where('pengajuan.status',$sts)
-        //     //         ->where('pengajuan.status_by_sistem',$sts)
-        //     //         ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
-        //     //         ->where('pengajuan.id_cabang', $id_cabang)
-        //     //         ->paginate(5)
-        //     //         ->withQueryString();
-        //     //     return view('pengajuan-kredit.list-pbp', $param);
-        //     // } elseif (auth()->user()->role == 'Pincab') {
-        //     //     $param['data_pengajuan'] = PengajuanModel::select(
-        //     //         'pengajuan.id',
-        //     //         'pengajuan.tanggal',
-        //     //         'pengajuan.posisi',
-        //     //         'pengajuan.progress_pengajuan_data',
-        //     //         'pengajuan.tanggal_review_penyelia',
-        //     //         'pengajuan.tanggal_review_pbp',
-        //     //         'pengajuan.tanggal_review_pincab',
-        //     //         'pengajuan.status',
-        //     //         'pengajuan.status_by_sistem',
-        //     //         'pengajuan.id_cabang',
-        //     //         'pengajuan.average_by_sistem',
-        //     //         'pengajuan.average_by_penyelia',
-        //     //         'pengajuan.skema_kredit',
-        //     //         'calon_nasabah.nama',
-        //     //         'calon_nasabah.jenis_usaha',
-        //     //         'calon_nasabah.id_pengajuan'
-        //     //     )
-        //     //         ->whereBetween('pengajuan.tanggal',[$start,$end])
-        //     //         // ->where('pengajuan.status',$sts)
-        //     //         ->where('pengajuan.status_by_sistem',$sts)
-        //     //         ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
-        //     //         ->where('pengajuan.id_cabang', Auth::user()->id_cabang)
-        //     //         ->whereIn('pengajuan.posisi', ['Pincab', 'Selesai', 'Ditolak'])
-        //     //         ->paginate(5)
-        //     //         ->withQueryString();
-        //     //     return view('pengajuan-kredit.komentar-pincab-pengajuan', $param);
-        //     // } else {
-        //         $id_cabang = Auth::user()->id_cabang;
-        //         $param['data_pengajuan'] = PengajuanModel::select(
-        //             'pengajuan.id',
-        //             'pengajuan.tanggal',
-        //             'pengajuan.posisi',
-        //             'pengajuan.progress_pengajuan_data',
-        //             'pengajuan.tanggal_review_penyelia',
-        //             'pengajuan.tanggal_review_pbp',
-        //             'pengajuan.tanggal_review_pincab',
-        //             'pengajuan.status',
-        //             'pengajuan.status_by_sistem',
-        //             'pengajuan.id_cabang',
-        //             'pengajuan.average_by_sistem',
-        //             'pengajuan.average_by_penyelia',
-        //             'pengajuan.skema_kredit',
-        //             'calon_nasabah.nama',
-        //             'calon_nasabah.jenis_usaha',
-        //             'calon_nasabah.id_pengajuan'
-        //         )
-        //             // ->whereBetween('pengajuan.tanggal',[$start,$end])
-        //             // ->where('pengajuan.status',$sts)
-        //             // ->where('pengajuan.status_by_sistem',$sts)
-        //             // ->when($request->score,function($query,$score){
-        //             //     return $query->where(DB::raw('CAST(pengajuan.average_by_sistem AS DECIMAL)'),'>=',floatval($score));
-        //             // })
-        //             ->when($request->cbg,function($query,$cbg){
-        //                 return $query->where('id_cabang',$cbg);
-        //             })
-        //             ->when($request->tAwal && $request->tAkhir,function($query)use ($request){
-        //                 return $query->whereBetween('pengajuan.tanggal',[$request->tAwal,$request->tAkhir]);
-        //             })
-        //             ->when($request->sts,function($query,$sts){
-        //                 return $query->where('pengajuan.status_by_sistem',$sts);
-        //             })
-        //             ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
-        //             ->paginate(5)
-        //             ->withQueryString();
-
-        //             // dd($param['data_pengajuan']);
-        //         return view('pengajuan-kredit.komentar-pincab-pengajuan', $param);
-        //     // }
-
-
-        // }
     }
 
     /**
@@ -1079,6 +920,7 @@ class PengajuanKreditController extends Controller
         DB::beginTransaction();
         try {
             $addPengajuan = new PengajuanModel;
+            $addPengajuan->id_staf = auth()->user()->id;
             $addPengajuan->tanggal = date(now());
             $addPengajuan->id_cabang = auth()->user()->id_cabang;
             $addPengajuan->progress_pengajuan_data = $request->progress;
@@ -2180,7 +2022,7 @@ class PengajuanKreditController extends Controller
                 } else {
                     $status = "merah";
                 }
-                
+
                 if ($role == 'PBP') {
                     foreach ($request->get('id_option') as $key => $value) {
                         if (array_key_exists($key, $request->skor_pbp)) {
@@ -2421,7 +2263,7 @@ class PengajuanKreditController extends Controller
     }
 
     // check status pincab
-    public function checkPincab($id)
+    public function checkPincab($id, Request $request)
     {
         if (auth()->user()->role == 'Penyelia Kredit') {
             if (auth()->user()->id_cabang == '1') {
@@ -2429,10 +2271,12 @@ class PengajuanKreditController extends Controller
                 $status = $dataPenyelia->status;
                 $userPBO = User::select('id')
                     ->where('id_cabang', $dataPenyelia->id_cabang)
+                    ->whereNotNull('nip')
                     ->where('role', 'PBO')
                     ->first();
                 if ($userPBO) {
                     if ($status != null) {
+                        $dataPenyelia->id_pbo = $userPBO->id;
                         $dataPenyelia->tanggal_review_pbo = date(now());
                         $dataPenyelia->posisi = "PBO";
                     } else {
@@ -2440,8 +2284,19 @@ class PengajuanKreditController extends Controller
                     }
                 } else {
                     if ($status != null) {
-                        $dataPenyelia->tanggal_review_pbp = date(now());
-                        $dataPenyelia->posisi = "PBP";
+                        $userPBP = User::select('id')
+                                        ->where('id_cabang', $dataPenyelia->id_cabang)
+                                        ->whereNotNull('nip')
+                                        ->where('role', 'PBP')
+                                        ->first();
+                        if ($userPBP) {
+                            $dataPenyelia->id_pbp = $userPBP->id;
+                            $dataPenyelia->tanggal_review_pbp = date(now());
+                            $dataPenyelia->posisi = "PBP";
+                        }
+                        else {
+                            return back()->withError('User pbp tidak ditemukan pada cabang ini.');
+                        }
                     } else {
                         return redirect()->back()->withError('Belum di review Penyelia.');
                     }
@@ -2453,10 +2308,12 @@ class PengajuanKreditController extends Controller
                 $status = $dataPenyelia->status;
                 $userPBO = User::select('id')
                     ->where('id_cabang', $dataPenyelia->id_cabang)
+                    ->whereNotNull('nip')
                     ->where('role', 'PBO')
                     ->first();
                 if ($userPBO) {
                     if ($status != null) {
+                        $dataPenyelia->id_pbo = $userPBO->id;
                         $dataPenyelia->tanggal_review_pbo = date(now());
                         $dataPenyelia->posisi = "PBO";
                     } else {
@@ -2464,8 +2321,19 @@ class PengajuanKreditController extends Controller
                     }
                 } else {
                     if ($status != null) {
-                        $dataPenyelia->tanggal_review_pincab = date(now());
-                        $dataPenyelia->posisi = "Pincab";
+                        $userPincab = User::select('id')
+                                ->where('id_cabang', $dataPenyelia->id_cabang)
+                                ->whereNotNull('nip')
+                                ->where('role', 'Pincab')
+                                ->first();
+                        if ($userPincab) {
+                            $dataPenyelia->id_pincab = $userPincab->id;
+                            $dataPenyelia->tanggal_review_pincab = date(now());
+                            $dataPenyelia->posisi = "Pincab";
+                        }
+                        else {
+                            return back()->withError('User pincab tidak ditemukan di cabang ini.');
+                        }
                     } else {
                         return redirect()->back()->withError('Belum di review Penyelia.');
                     }
@@ -2476,21 +2344,44 @@ class PengajuanKreditController extends Controller
         } elseif (auth()->user()->role == 'PBO') {
             $dataPenyelia = PengajuanModel::find($id);
             $status = $dataPenyelia->average_by_pbo;
+            
             if (auth()->user()->id_cabang == 1) {
                 if ($status != null) {
-                    $dataPenyelia->tanggal_review_pbp = date(now());
-                    $dataPenyelia->posisi = "PBP";
-                    $dataPenyelia->update();
-                    return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+                    $userPBP = User::select('id')
+                                    ->where('id_cabang', $dataPenyelia->id_cabang)
+                                    ->whereNotNull('nip')
+                                    ->where('role', 'PBP')
+                                    ->first();
+                    if ($userPBP) {
+                        $dataPenyelia->id_pbp = $userPBP->id;
+                        $dataPenyelia->tanggal_review_pbp = date(now());
+                        $dataPenyelia->posisi = "PBP";
+                        $dataPenyelia->update();
+                        return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+                    }
+                    else {
+                        return back()->withError('User pbp tidak ditemukan pada cabang ini.');
+                    }
                 } else {
                     return redirect()->back()->withError('Belum di review PBO.');
                 }
             } else {
                 if ($status != null) {
-                    $dataPenyelia->tanggal_review_pbp = date(now());
-                    $dataPenyelia->posisi = "Pincab";
-                    $dataPenyelia->update();
-                    return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+                    $userPincab = User::select('id')
+                                ->where('id_cabang', $dataPenyelia->id_cabang)
+                                ->whereNotNull('nip')
+                                ->where('role', 'Pincab')
+                                ->first();
+                    if ($userPincab) {
+                        $dataPenyelia->id_pincab = $userPincab->id;
+                        $dataPenyelia->tanggal_review_pincab = date(now());
+                        $dataPenyelia->posisi = "Pincab";
+                        $dataPenyelia->update();
+                        return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+                    }
+                    else {
+                        return back()->withError('User pincab tidak ditemukan pada cabang ini.');
+                    }
                 } else {
                     return redirect()->back()->withError('Belum di review PBO.');
                 }
@@ -2499,10 +2390,21 @@ class PengajuanKreditController extends Controller
             $dataPenyelia = PengajuanModel::find($id);
             $status = $dataPenyelia->average_by_pbp;
             if ($status != null) {
-                $dataPenyelia->tanggal_review_pincab = date(now());
-                $dataPenyelia->posisi = "Pincab";
-                $dataPenyelia->update();
-                return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+                $userPincab = User::select('id')
+                                ->where('id_cabang', $dataPenyelia->id_cabang)
+                                ->whereNotNull('nip')
+                                ->where('role', 'Pincab')
+                                ->first();
+                if ($userPincab) {
+                    $dataPenyelia->id_pincab = $userPincab->id;
+                    $dataPenyelia->tanggal_review_pincab = date(now());
+                    $dataPenyelia->posisi = "Pincab";
+                    $dataPenyelia->update();
+                    return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+                }
+                else {
+                    return back()->withError('User pincab tidak ditemukan pada cabang ini.');
+                }
             } else {
                 return redirect()->back()->withError('Belum di review PBP.');
             }
@@ -3066,6 +2968,7 @@ class PengajuanKreditController extends Controller
         $param['pageTitle'] = 'Tambah Pengajuan Kredit';
         $param['btnText'] = 'Tambah Pengajuan';
         $param['btnLink'] = route('pengajuan-kredit.create');
+        $id_staf = auth()->user()->id;
         // $param['data_pengajuan'] = PengajuanModel::select(
         //     'pengajuan.id',
         //     'pengajuan.tanggal',
@@ -3088,6 +2991,7 @@ class PengajuanKreditController extends Controller
         //     ->paginate(5);
         $param['data_pengajuan'] = CalonNasabahTemp::where('id_user', Auth::user()->id)
             ->whereNotNull('nama')
+            ->where('id_user',$id_staf)
             ->paginate(5);
 
         return view('pengajuan-kredit.draft_index', $param);

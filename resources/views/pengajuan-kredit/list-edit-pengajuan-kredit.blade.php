@@ -243,9 +243,7 @@
                                                 class="dropdown-item">
                                                 Edit data
                                             </a>
-                                            {{--  <a id="tindak-lanjut-penyelia-link" href="#" data-toggle="modal" data-target="#pilihPenyeliaModal"
-                                                class="dropdown-item">Tindak lanjut Review Penyelia</a>  --}}
-                                            <a href="#" data-id="{{$item->id_pengajuan}}"
+                                            <a href="#" data-id="{{$item->id_pengajuan}}" data-tipe="penyelia kredit"
                                                 class="dropdown-item tindak-lanjut-penyelia-link">Tindak lanjut Review Penyelia</a>
                                             <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
                                                 class="dropdown-item">Cetak</a>
@@ -322,9 +320,9 @@
         <div class="pull-right">
         </div>
     </div>
-    @include('pengajuan-kredit.modal.pilih-penyelia')
-@endsection
+    @endsection
 @include('pengajuan-kredit.modal-filter')
+@include('pengajuan-kredit.modal.pilih-penyelia')
 @include('layouts.popup-upload-sppk')
 @include('layouts.popup-upload-po')
 @include('layouts.popup-upload-pk')

@@ -79,7 +79,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Route::post('pengajuan-kredit/create', PengajuanKreditController::class);
     Route::get('pengajuan-kredit/continue-draft', [PengajuanKreditController::class, 'continueDraft'])->name('pengajuan-kredit.continue');
     Route::get('lanjutkan-draft', [PengajuanKreditController::class, 'showContinueDraft'])->name('pengajuan-kredit.continue-draft');
-    Route::get('penyelia-json', [PengajuanKreditController::class, 'getPenyeliaJson'])->name('get_penyelia_json');
+    Route::get('user-json/{role}', [PengajuanKreditController::class, 'getUserJson'])->name('get_user_json');
 
     Route::resource('kabupaten', KabupatenController::class);
     Route::resource('kecamatan', KecamatanController::class);

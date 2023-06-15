@@ -215,8 +215,8 @@
                                             <a href="{{ route('pengajuan.detailjawaban', $item->id_pengajuan) }}"
                                                 class="dropdown-item">Review</a>
                                             @if ($item->id_cabang == 1)
-                                                <a href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}"
-                                                    class="dropdown-item">Tindak lanjut PBP</a>
+                                                <a href="#" data-id="{{$item->id_pengajuan}}" data-tipe="pbp"
+                                                    class="dropdown-item tindak-lanjut-penyelia-link">Tindak lanjut PBP</a>
                                             @else
                                                 <a href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}"
                                                     class="dropdown-item">Tindak lanjut Pincab</a>
@@ -289,6 +289,7 @@
     </div>
 @endsection
 @include('pengajuan-kredit.modal-filter')
+@include('pengajuan-kredit.modal.pilih-penyelia')
 @include('layouts.popup-upload-sppk')
 @include('layouts.popup-upload-po')
 @include('layouts.popup-upload-pk')

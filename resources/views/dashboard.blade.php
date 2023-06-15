@@ -1,8 +1,12 @@
 @extends('layouts.template')
 @section('content')
     @php
-        $user = DB::table('users')->where('id', auth()->user()->id)->first();
-        $cabang = DB::table('cabang')->where('id', $user->id_cabang)->first();
+        $user = DB::table('users')
+            ->where('id', auth()->user()->id)
+            ->first();
+        $cabang = DB::table('cabang')
+            ->where('id', $user->id_cabang)
+            ->first();
     @endphp
     <div class="row mt-4">
         <div class="col">
@@ -11,7 +15,7 @@
     </div>
     {{-- @if ($user->level == 'Administrator' || $user->level == 'Admin' || $user->level == 'Kasat') --}}
     <div class="row">
-        @if (auth()->user()->role == "Administrator")
+        @if (auth()->user()->role == 'Administrator')
             {{-- Total Pengajuan --}}
             {{-- <div class="col-md-12 mb-4">
                 <div class="card bg-rgb-success border border-success">
@@ -47,7 +51,8 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="{{ route('pengajuan-kredit.index') }}" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
+                        <a href="{{ route('pengajuan-kredit.index') }}"
+                            class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
                     </div>
                 </div>
             </div>
@@ -65,7 +70,8 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="{{ route('pengajuan-kredit.index') }}" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
+                        <a href="{{ route('pengajuan-kredit.index') }}"
+                            class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
                     </div>
                 </div>
             </div>
@@ -83,7 +89,8 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="{{ route('pengajuan-kredit.index') }}" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
+                        <a href="{{ route('pengajuan-kredit.index') }}"
+                            class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
                     </div>
                 </div>
             </div>
@@ -101,7 +108,8 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="{{ route('pengajuan-kredit.index') }}" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
+                        <a href="{{ route('pengajuan-kredit.index') }}"
+                            class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
                     </div>
                 </div>
             </div>
@@ -119,7 +127,8 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="{{ route('pengajuan-kredit.index') }}" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
+                        <a href="{{ route('pengajuan-kredit.index') }}"
+                            class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
                     </div>
                 </div>
             </div>
@@ -137,11 +146,12 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="{{ route('pengajuan-kredit.index') }}" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
+                        <a href="{{ route('pengajuan-kredit.index') }}"
+                            class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
                     </div>
                 </div>
             </div>
-        @else    
+        @else
             <div class="col-md-3 mb-4">
                 <div class="card bg-rgb-primary border border-primary">
                     <div class="card-body py-4">
@@ -151,25 +161,32 @@
                                 Pengajuan Telah Ditinjak Lanjuti
                             </div>
                             <div class="col-md-4 pr-0 text-center">
-                                @if (auth()->user()->role == "Pincab")
-                                    <h1>{{ \App\Models\PengajuanModel::whereIn('posisi', ['Selesai','Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->count() }}</h1>
-                                @elseif (auth()->user()->role == "Penyelia Kredit")
+                                @if (auth()->user()->role == 'Pincab')
+                                    <h1>{{ \App\Models\PengajuanModel::whereIn('posisi', ['Selesai', 'Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->where('id_pincab', auth()->user()->id)->count() }}
+                                    </h1>
+                                @elseif (auth()->user()->role == 'Penyelia Kredit')
                                     @if (auth()->user()->id_cabang == '1')
-                                        <h1>{{ \App\Models\PengajuanModel::whereIn('posisi', ['PBP','Pincab','Selesai','Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->count() }}</h1>
+                                        <h1>{{ \App\Models\PengajuanModel::whereIn('posisi', ['PBP', 'Pincab', 'Selesai', 'Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->where('id_penyelia', auth()->user()->id)->count() }}
+                                        </h1>
                                     @else
-                                        <h1>{{ \App\Models\PengajuanModel::whereIn('posisi', ['Pincab','Selesai','Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->count() }}</h1>   
+                                        <h1>{{ \App\Models\PengajuanModel::whereIn('posisi', ['Pincab', 'Selesai', 'Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->where('id_penyelia', auth()->user()->id)->count() }}
+                                        </h1>
                                     @endif
-                                @elseif (auth()->user()->role == "PBP")
-                                    <h1>{{ \App\Models\PengajuanModel::whereIn('posisi', ['Pincab','Selesai','Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->count() }}</h1>
-                                @elseif (auth()->user()->role == "Staf Analis Kredit")
-                                    <h1>{{ \App\Models\PengajuanModel::whereIn('posisi', ['Review Penyelia','Pincab','Selesai', 'Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->count() }}</h1>
+                                @elseif (auth()->user()->role == 'PBP')
+                                    <h1>{{ \App\Models\PengajuanModel::whereIn('posisi', ['Pincab', 'Selesai', 'Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->where('id_pbp', auth()->user()->id)->count() }}
+                                    </h1>
+                                @elseif (auth()->user()->role == 'Staf Analis Kredit')
+                                    <h1>{{ \App\Models\PengajuanModel::whereIn('posisi', ['Review Penyelia', 'Pincab', 'Selesai', 'Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->where('id_staf', auth()->user()->id)->count() }}
+                                    </h1>
                                 @else
-                                    <h1>{{ \App\Models\PengajuanModel::whereIn('posisi', ['Selesai', 'Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->count() }}</h1>
+                                    <h1>{{ \App\Models\PengajuanModel::whereIn('posisi', ['Selesai', 'Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->count() }}
+                                    </h1>
                                 @endif
                             </div>
                         </div>
                         <hr>
-                        <a href="{{ route('pengajuan-kredit.index') }}" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
+                        <a href="{{ route('pengajuan-kredit.index') }}"
+                            class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
                             Detail</a>
                     </div>
                 </div>
@@ -183,14 +200,18 @@
                                 Pengajuan Belum Ditindak Lanjuti
                             </div>
                             <div class="col-md-4 pl-0 text-center">
-                                @if (auth()->user()->role == "Staf Analis Kredit")
-                                    <h1>{{ \App\Models\PengajuanModel::where('posisi','Proses Input Data')->where('id_cabang', $user->id_cabang)->count() }}</h1>
-                                @elseif (auth()->user()->role == "Penyelia Kredit")
-                                    <h1>{{ \App\Models\PengajuanModel::where('posisi','Review Penyelia')->where('id_cabang', $user->id_cabang)->count() }}</h1>
-                                @elseif (auth()->user()->role == "PBP")
-                                    <h1>{{ \App\Models\PengajuanModel::where('posisi','PBP')->where('id_cabang', $user->id_cabang)->count() }}</h1>
-                                @elseif (auth()->user()->role == "Pincab")
-                                    <h1>{{ \App\Models\PengajuanModel::where('posisi','Pincab')->where('id_cabang', $user->id_cabang)->count() }}</h1>
+                                @if (auth()->user()->role == 'Staf Analis Kredit')
+                                    <h1>{{ \App\Models\PengajuanModel::where('posisi', 'Proses Input Data')->where('id_cabang', $user->id_cabang)->where('id_staf', auth()->user()->id)->count() }}
+                                    </h1>
+                                @elseif (auth()->user()->role == 'Penyelia Kredit')
+                                    <h1>{{ \App\Models\PengajuanModel::where('posisi', 'Review Penyelia')->where('id_cabang', $user->id_cabang)->where('id_penyelia', auth()->user()->id)->count() }}
+                                    </h1>
+                                @elseif (auth()->user()->role == 'PBP')
+                                    <h1>{{ \App\Models\PengajuanModel::where('posisi', 'PBP')->where('id_cabang', $user->id_cabang)->where('id_pbp', auth()->user()->id)->count() }}
+                                    </h1>
+                                @elseif (auth()->user()->role == 'Pincab')
+                                    <h1>{{ \App\Models\PengajuanModel::where('posisi', 'Pincab')->where('id_cabang', $user->id_cabang)->where('id_pincab', auth()->user()->id)->count() }}
+                                    </h1>
                                 @else
                                     <h1>0</h1>
                                 @endif
@@ -204,9 +225,8 @@
             </div>
         @endif
     </div>
-    @if (auth()->user()->role == "Administrator")
-        
-    @else    
+    @if (auth()->user()->role == 'Administrator')
+    @else
         <br>
         <h5 class="color-darkBlue font-weight-bold">Pengajuan Belum Ditindak Lanjuti</h5>
         <hr>
@@ -231,14 +251,15 @@
                                     <td>{{ $item->nama }}</td>
                                     <td>{{ $item->sektor_kredit }}</td>
                                     <td>{{ $item->jenis_usaha }}</td>
-                                    <td>Rp.{{ (is_numeric($item->jumlah_kredit)) ? number_format($item->jumlah_kredit, 2, '.', ',') : $item->jumlah_kredit }}</td>
-                                    <td>{{ date('d-m-Y',strtotime( $item->tanggal ) ) }}</td>
+                                    <td>Rp.{{ is_numeric($item->jumlah_kredit) ? number_format($item->jumlah_kredit, 2, '.', ',') : $item->jumlah_kredit }}
+                                    </td>
+                                    <td>{{ date('d-m-Y', strtotime($item->tanggal)) }}</td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="text-center" style="background: rgba(71, 145,254,0.05) !important">Data Kosong</td>
+                                    <td colspan="7" class="text-center"
+                                        style="background: rgba(71, 145,254,0.05) !important">Data Kosong</td>
                                 </tr>
-
                             @endforelse
                         </tbody>
 
