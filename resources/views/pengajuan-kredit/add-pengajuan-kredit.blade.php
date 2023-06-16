@@ -506,8 +506,7 @@ is-invalid
                                     <input type="file" name="upload_file[{{ $itemNIB->id }}]" data-id=""
                                         placeholder="Masukkan informasi {{ $itemNIB->nama }}"
                                         class="form-control limit-size" id="file_nib">
-                                    <span class="invalid-tooltip" style="display: none" id="docNIB_text">Maximum upload
-                                        file size is 15 MB</span>
+                                    <span class="invalid-tooltip" style="display: none" id="docNIB_text">Besaran file tidak boleh lebih dari 5 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('dataLevelTiga.' . $key) }}
@@ -535,8 +534,7 @@ is-invalid
                                         id="surat_keterangan_usaha_file" data-id=""
                                         placeholder="Masukkan informasi {{ $itemSKU->nama }}"
                                         class="form-control limit-size">
-                                    <span class="invalid-tooltip" style="display: none" id="docSKU_text">Maximum upload
-                                        file size is 15 MB</span>
+                                    <span class="invalid-tooltip" style="display: none" id="docSKU_text">Besaran file tidak boleh lebih dari 5 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('dataLevelTiga.' . $key) }}
@@ -563,8 +561,7 @@ is-invalid
                                     <input type="file" name="upload_file[{{ $itemNPWP->id }}]" id="npwp_file"
                                         data-id="" placeholder="Masukkan informasi {{ $itemNPWP->nama }}"
                                         class="form-control limit-size">
-                                    <span class="invalid-tooltip" style="display: none" id="docNPWP_text">Maximum upload
-                                        file size is 15 MB</span>
+                                    <span class="invalid-tooltip" style="display: none" id="docNPWP_text">Besaran file tidak boleh lebih dari 5 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('dataLevelTiga.' . $key) }}
