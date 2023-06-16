@@ -1220,7 +1220,7 @@ is-invalid
             }
             $('.limit-size').on('change', function() {
                 var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-                if (size > 1) {
+                if (size > 5) {
                     $(this).next().css({
                         "display": "block"
                     });
@@ -2045,7 +2045,7 @@ is-invalid
         // Limit Upload
         $('.limit-size').on('change', function() {
             var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-            if (size > 1) {
+            if (size > 5) {
                 $(this).next().css({
                     "display": "block"
                 });
@@ -2067,7 +2067,7 @@ is-invalid
             $clone.insertAfter(wrapper);
             $('.limit-size').on('change', function() {
             var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-            if (size > 1) {
+            if (size > 5) {
                 $(this).next().css({
                     "display": "block"
                 });

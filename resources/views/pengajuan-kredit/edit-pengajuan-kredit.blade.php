@@ -1493,7 +1493,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 // Limit Upload
                 $('.limit-size').on('change', function() {
                     var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-                    if (size > 1) {
+                    if (size > 5) {
                         $(this).next().css({
                             "display": "block"
                         });
@@ -1535,7 +1535,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 // Limit Upload
                 $('.limit-size').on('change', function() {
                     var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-                    if (size > 1) {
+                    if (size > 5) {
                         $(this).next().css({
                             "display": "block"
                         });
@@ -2782,7 +2782,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
     $('.limit-size').on('change', function() {
         var size = (this.files[0].size / 1024 / 1024).toFixed(2)
         console.log(size);
-        if (size > 1) {
+        if (size > 5) {
             $(this).next().css({
                 "display": "block"
             });

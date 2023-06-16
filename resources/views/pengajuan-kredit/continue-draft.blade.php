@@ -107,7 +107,7 @@ $dataIndex = match ($skema) {
                     <label for="">{{ $itemSP->nama }}</label>
                     <input type="hidden" name="id_item_file[{{ $itemSP->id }}]" value="{{ $itemSP->id }}" id="">
                     <input type="file" name="upload_file[{{ $itemSP->id }}]" id="surat_permohonan" data-id="{{ temporary($duTemp->id, $itemSP->id)?->id }}" placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-control limit-size">
-                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
                             {{ $errors->first('dataLevelDua.' . $key) }}
@@ -269,7 +269,7 @@ $dataIndex = match ($skema) {
                     <label for="">{{ $itemP->nama }}</label>
                     <input type="hidden" name="id_item_file[{{ $itemP->id }}]" value="{{ $itemP->id }}" id="">
                     <input type="file" name="upload_file[{{ $itemP->id }}]" id="file_slik" data-id="{{ temporary($duTemp->id, $itemP->id)?->id }}" placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-control limit-size">
-                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
                             {{ $errors->first('dataLevelDua.' . $key) }}
@@ -514,7 +514,7 @@ $dataIndex = match ($skema) {
                                     <label for="">{{ $itemNIB->nama }}</label>
                                     <input type="hidden" name="id_item_file[{{ $itemNIB->id }}]" value="{{ $itemNIB->id }}" id="docNIB_id">
                                     <input type="file" name="upload_file[{{ $itemNIB->id }}]" data-id="{{ temporary($duTemp->id, $itemNIB->id)?->id }}" placeholder="Masukkan informasi {{ $itemNIB->nama }}" class="form-control limit-size">
-                                    <span class="invalid-tooltip" style="display: none" id="docNIB_text">Maximum upload file size is 15 MB</span>
+                                    <span class="invalid-tooltip" style="display: none" id="docNIB_text">Besaran file tidak boleh lebih dari 5 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('dataLevelTiga.' . $key) }}
@@ -536,7 +536,7 @@ $dataIndex = match ($skema) {
                                     <label for="">{{ $itemSKU->nama }}</label>
                                     <input type="hidden" name="id_item_file[{{ $itemSKU->id }}]" value="{{ $itemSKU->id }}" id="docSKU_id">
                                     <input type="file" name="upload_file[{{ $itemSKU->id }}]" data-id="{{ temporary($duTemp->id, $itemSKU->id)?->id }}" placeholder="Masukkan informasi {{ $itemSKU->nama }}" class="form-control limit-size">
-                                    <span class="invalid-tooltip" style="display: none" id="docSKU_text">Maximum upload file size is 15 MB</span>
+                                    <span class="invalid-tooltip" style="display: none" id="docSKU_text">Besaran file tidak boleh lebih dari 5 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('dataLevelTiga.' . $key) }}
@@ -560,7 +560,7 @@ $dataIndex = match ($skema) {
                                     <label for="">{{ $itemNPWP->nama }}</label>
                                     <input type="hidden" name="id_item_file[{{ $itemNPWP->id }}]" value="{{ $itemNPWP->id }}" id="docNPWP_id">
                                     <input type="file" name="upload_file[{{ $itemNPWP->id }}]" data-id="{{ temporary($duTemp->id, $itemNPWP->id)?->id }}" placeholder="Masukkan informasi {{ $itemNPWP->nama }}" class="form-control limit-size">
-                                    <span class="invalid-tooltip" style="display: none" id="docNPWP_text">Maximum upload file size is 15 MB</span>
+                                    <span class="invalid-tooltip" style="display: none" id="docNPWP_text">Besaran file tidak boleh lebih dari 5 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('dataLevelTiga.' . $key) }}
@@ -628,7 +628,7 @@ $dataIndex = match ($skema) {
                                     <input type="hidden" name="id_item_file[{{ $item->id }}]" value="{{ $item->id }}" id="">
                                     <input type="file" name="upload_file[{{ $item->id }}]" data-id="{{ temporary($duTemp->id, $item->id)?->id }}"
                                         placeholder="Masukkan informasi {{ $item->nama }}" class="form-control limit-size" id="{{ $idLevelDua }}">
-                                        <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                                     <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $item->id)?->opsi_text }}</span>
                                 </div>
                             @elseif ($item->opsi_jawaban == 'long text')
@@ -813,7 +813,7 @@ $dataIndex = match ($skema) {
                                                     <input type="file" name="upload_file[{{ $itemTiga->id }}]" data-id="{{ $tempData->id }}"
                                                         placeholder="Masukkan informasi {{ $itemTiga->nama }}"
                                                         class="form-control limit-size" id="{{ $idLevelTiga }}">
-                                                        <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                                                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                                                     <span class="filename" style="display: inline;">{{ $tempData->opsi_text }}</span>
                                                 </div>
                                                 @if(in_array(trim($itemTiga->nama), $multipleFiles))
@@ -839,7 +839,7 @@ $dataIndex = match ($skema) {
                                                     <input type="file" name="upload_file[{{ $itemTiga->id }}]" data-id="{{ temporary($duTemp->id, $itemTiga->id)?->id }}"
                                                         placeholder="Masukkan informasi {{ $itemTiga->nama }}"
                                                         class="form-control limit-size">
-                                                        <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                                                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                                                     <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemTiga->id)?->opsi_text }}</span>
                                                 </div>
                                                 @if(in_array(trim($itemTiga->nama), $multipleFiles))
@@ -975,7 +975,7 @@ $dataIndex = match ($skema) {
                                                 <input type="file" name="upload_file[{{ $itemEmpat->id }}]" data-id="{{ temporary($duTemp->id, $itemEmpat->id)?->id }}"
                                                     placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
                                                     class="form-control limit-size" id="{{ $idLevelEmpat }}">
-                                                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                                                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                                                 <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemEmpat->id)?->opsi_text }}</span>
                                             </div>
                                         @elseif ($itemEmpat->opsi_jawaban == 'long text')
@@ -1237,7 +1237,7 @@ $dataIndex = match ($skema) {
             <label for="">{{ $itemKTPIs->nama }}</label>
                 <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
                 <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" id="Foto_KTP_Istri" data-id="{{ temporary($duTemp->id, $itemKTPIs->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size">
-                <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                 @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                     <div class="invalid-feedback">
                         {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1249,7 +1249,7 @@ $dataIndex = match ($skema) {
             <label for="">{{ $itemKTPSu->nama }}</label>
                 <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
                 <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" id="Foto_KTP_Suami" data-id="{{ temporary($duTemp->id, $itemKTPSu->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size">
-                <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                 @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                     <div class="invalid-feedback">
                         {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1263,7 +1263,7 @@ $dataIndex = match ($skema) {
                 <label for="">{{ $itemKTPNas->nama }}</label>
                 <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
                 <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPNas->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-control limit-size">
-                <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                 @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                     <div class="invalid-feedback">
                         {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1272,6 +1272,16 @@ $dataIndex = match ($skema) {
                 <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPNas->id)?->opsi_text }}</span>
             `)
         }
+        // Limit Upload
+        $('.limit-size').on('change', function() {
+            var size = (this.files[0].size / 1024 / 1024).toFixed(2)
+            if (size > 5) {
+                $(this).next().css({"display": "block"});
+                this.value = ''
+            } else {
+                $(this).next().css({"display": "none"});
+            }
+        })
     }
     $("#status").change(function(){
         let value = $(this).val();
@@ -1289,7 +1299,7 @@ $dataIndex = match ($skema) {
             <label for="">{{ $itemKTPIs->nama }}</label>
                 <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
                 <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" id="Foto_KTP_Istri" data-id="{{ temporary($duTemp->id, $itemKTPIs->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size">
-                <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                 @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                     <div class="invalid-feedback">
                         {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1301,7 +1311,7 @@ $dataIndex = match ($skema) {
             <label for="">{{ $itemKTPSu->nama }}</label>
                 <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
                 <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" id="Foto_KTP_Suami" data-id="{{ temporary($duTemp->id, $itemKTPSu->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size">
-                <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                 @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                     <div class="invalid-feedback">
                         {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1315,7 +1325,7 @@ $dataIndex = match ($skema) {
                 <label for="">{{ $itemKTPNas->nama }}</label>
                 <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
                 <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPNas->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-control limit-size">
-                <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                 @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                     <div class="invalid-feedback">
                         {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1324,6 +1334,17 @@ $dataIndex = match ($skema) {
                 <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPNas->id)?->opsi_text }}</span>
             `)
         }
+
+        // Limit Upload
+        $('.limit-size').on('change', function() {
+            var size = (this.files[0].size / 1024 / 1024).toFixed(2)
+            if (size > 5) {
+                $(this).next().css({"display": "block"});
+                this.value = ''
+            } else {
+                $(this).next().css({"display": "none"});
+            }
+        })
     });
 
     $("#id_merk").change(function(){
@@ -1544,7 +1565,7 @@ $dataIndex = match ($skema) {
                                     <label>${valItem.nama}</label>
                                     <input type="hidden" name="id_item_file[${valItem.id}]" value="${valItem.id}" id="" class="input">
                                     <input type="file" name="upload_file[${valItem.id}]" data-id="" class="form-control limit-size">
-                                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                                     <span class="filename" style="display: inline;"></span>
                                 </div>`);
                             }
@@ -1679,7 +1700,7 @@ $dataIndex = match ($skema) {
                                             <input type="file" name="upload_file[${valItem.id}]" data-id="{{ $tempData->id }}"
                                                 placeholder="Masukkan informasi ${valItem.nama}"
                                                 class="form-control limit-size" id="${valItem.nama.toString().replaceAll(" ", "_")}">
-                                                <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                                                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                                             <span class="filename" style="display: inline;">{{ $tempData->opsi_text }}</span>
                                         </div>
                                         <div class="col-1">
@@ -1703,7 +1724,7 @@ $dataIndex = match ($skema) {
                                             <input type="file" name="upload_file[${valItem.id}]" data-id=""
                                                 placeholder="Masukkan informasi ${valItem.nama}"
                                                 class="form-control limit-size" id="${valItem.nama.toString().replaceAll(" ", "_")}">
-                                                <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                                                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                                             <span class="filename" style="display: inline;"></span>
                                         </div>
                                         <div class="col-1">
@@ -1786,6 +1807,16 @@ $dataIndex = match ($skema) {
                 }
             }
         });
+        // Limit Upload
+        $('.limit-size').on('change', function() {
+            var size = (this.files[0].size / 1024 / 1024).toFixed(2)
+            if (size > 5) {
+                $(this).next().css({"display": "block"});
+                this.value = ''
+            } else {
+                $(this).next().css({"display": "none"});
+            }
+        })
     });
     // end item kategori jaminan tambahan cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
 
@@ -2239,7 +2270,8 @@ $dataIndex = match ($skema) {
     // Limit Upload
     $('.limit-size').on('change', function() {
         var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-        if (size > 15) {
+        console.log(size);
+        if (size > 5) {
             $(this).next().css({"display": "block"});
             this.value = ''
         } else {
