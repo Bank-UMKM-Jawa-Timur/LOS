@@ -93,7 +93,7 @@
                         id="">
                     <input type="file" name="upload_file[{{ $itemSP->id }}]" data-id=""
                         placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-control limit-size" id="foto_sp">
-                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
                             {{ $errors->first('dataLevelDua.' . $key) }}
@@ -256,7 +256,7 @@ is-invalid
                         id="">
                     <input type="file" name="upload_file[{{ $itemP->id }}]" id="file_slik" data-id=""
                         placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-control limit-size">
-                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
                             {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1184,7 +1184,7 @@ is-invalid
                     <label for="">{{ $itemKTPIs->nama }}</label>
                     <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
                     <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size" id="foto_ktp_istri">
-                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
                             {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1196,7 +1196,7 @@ is-invalid
                         <label for="">{{ $itemKTPSu->nama }}</label>
                         <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
                         <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size" id="foto_ktp_suami">
-                        <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                         @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                             <div class="invalid-feedback">
                                 {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1211,7 +1211,7 @@ is-invalid
                     <label for="">{{ $itemKTPNas->nama }}</label>
                     <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
                     <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-control limit-size" id="foto_ktp_nasabah">
-                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
                             {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1221,6 +1221,19 @@ is-invalid
                     @endisset
                 `)
             }
+            $('.limit-size').on('change', function() {
+                var size = (this.files[0].size / 1024 / 1024).toFixed(2)
+                if (size > 1) {
+                    $(this).next().css({
+                        "display": "block"
+                    });
+                    this.value = ''
+                } else {
+                    $(this).next().css({
+                        "display": "none"
+                    });
+                }
+            })
         });
 
         $('#kabupaten').change(function() {
@@ -1376,7 +1389,7 @@ is-invalid
                                         <label>${valItem.nama}</label>
                                         <input type="hidden" name="id_item_file[${valItem.id}]" value="${valItem.id}" id="" class="input">
                                         <input type="file" name="upload_file[${valItem.id}]" data-id="" class="form-control limit-size">
-                                        <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                                         <span class="filename" style="display: inline;"></span>
                                     </div>`);
                                 } else {
@@ -1508,7 +1521,7 @@ is-invalid
                                                 <input type="file" id="${valItem.nama.toString().replaceAll(" ", "_")}" name="upload_file[${valItem.id}]" data-id=""
                                                     placeholder="Masukkan informasi ${valItem.nama}"
                                                     class="form-control limit-size">
-                                                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15 MB</span>
+                                                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                                                 <span class="filename" style="display: inline;"></span>
                                             </div>
                                             <div class="col-1">
@@ -1590,6 +1603,18 @@ is-invalid
         // end item kategori jaminan tambahan cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
 
         // milih ijin usaha
+        $('#npwp').hide();
+        $('#npwp_id').attr('disabled', true);
+        $('#npwp_text').attr('disabled', true);
+        $('#npwp_file').attr('disabled', true);
+        $('#npwp_text').val('');
+        $('#npwp_opsi_jawaban').attr('disabled', true);
+
+        $('#docNPWP').hide();
+        $('#docNPWP_id').attr('disabled', true);
+        $('#docNPWP_text').attr('disabled', true);
+        $('#docNPWP_text').val('');
+        $('#docNPWP_upload_file').attr('disabled', true);
         $('#ijin_usaha').change(function(e) {
             let ijinUsaha = $(this).val();
             $('#npwpsku').hide();
@@ -2023,7 +2048,7 @@ is-invalid
         // Limit Upload
         $('.limit-size').on('change', function() {
             var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-            if (size > 15) {
+            if (size > 1) {
                 $(this).next().css({
                     "display": "block"
                 });
@@ -2043,6 +2068,19 @@ is-invalid
             $clone.find('[type="file"]').val('');
             $clone.find('.filename').html('');
             $clone.insertAfter(wrapper);
+            $('.limit-size').on('change', function() {
+            var size = (this.files[0].size / 1024 / 1024).toFixed(2)
+            if (size > 1) {
+                $(this).next().css({
+                    "display": "block"
+                });
+                this.value = ''
+            } else {
+                $(this).next().css({
+                    "display": "none"
+                });
+            }
+        })
         });
 
         $('body').on('click', '.file-wrapper .btn-del-file', function(e) {
