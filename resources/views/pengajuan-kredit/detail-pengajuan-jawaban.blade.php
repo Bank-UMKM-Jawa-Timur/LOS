@@ -1100,7 +1100,12 @@
                                                             @else
                                                                 <p class="badge badge-info text-lg"><b>
                                                                         {{ $itemTextEmpat->opsi_text }}
-                                                                        {{ $itemEmpat->opsi_jawaban == 'persen' ? '%' : '' }}</b>
+                                                                        @if ($itemEmpat->opsi_jawaban == 'persen')
+                                                                            %
+                                                                        @elseif($itemEmpat->id == 130)
+                                                                            Tahun
+                                                                        @else
+                                                                        @endif</b>
                                                                 </p>
                                                                 @if ($itemTextEmpat->is_commentable == 'Ya')
                                                                     <div class="input-k-bottom">
