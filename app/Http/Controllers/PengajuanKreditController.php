@@ -750,7 +750,7 @@ class PengajuanKreditController extends Controller
         // item level 3
         $dataLev3 = $request->dataLevelTiga;
         // remove key 121, 134 & 149 from array
-        return $request;
+        // return $request;
         unset($dataLev3[121]);
         unset($dataLev3[134]);
         unset($dataLev3[149]);
@@ -1286,7 +1286,7 @@ class PengajuanKreditController extends Controller
     public function update(Request $request, $id)
     {
         // dd($request);
-        return $request;
+        // return $request;
         $find = array('Rp.', '.');
         $request->validate([
             'name' => 'required',
