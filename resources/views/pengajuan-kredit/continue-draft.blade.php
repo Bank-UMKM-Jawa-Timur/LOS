@@ -1085,7 +1085,7 @@ $dataIndex = match ($skema) {
 <script>
     $(document).ready(function() {
         var firstLoad = true;
-        
+
         $('.side-wizard').on('click', function () {
             firstLoad = false
             for (let index = 0; index < 7; index++) {
@@ -1884,9 +1884,9 @@ $dataIndex = match ($skema) {
                 $('#docNPWP_id').attr('disabled', true);
                 $('#docNPWP_text').attr('disabled', true);
                 $('#docNPWP_text').val('');
-                $('#docNPWP_upload_file').attr('disabled', true);              
+                $('#docNPWP_upload_file').attr('disabled', true);
             }
-            
+
         } else if (ijinUsaha == 'tidak_ada_legalitas_usaha') {
             $('#nib').hide();
             $('#nib_id').attr('disabled', true);
@@ -1961,7 +1961,7 @@ $dataIndex = match ($skema) {
     });
     // end milih ijin usaha
 
-    
+
     // Cek Npwp
     $('#isNpwp').change(function() {
         console.log($(this).is(':checked'));
@@ -2414,9 +2414,13 @@ $dataIndex = match ($skema) {
         if(nullValue.length > 0){
             let message = "";
             $.each(nullValue, (i, v) => {
-                message += v + ", "
+                message += v != '' ? v + ", " : ''
             })
-            alert("Field " + message + " harus diisi terlebih dahulu")
+            Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: "Field " + message + " harus diisi terlebih dahulu"
+                })
             e.preventDefault()
         }
     })
@@ -2424,7 +2428,7 @@ $dataIndex = match ($skema) {
     for(let i = 0; i <= parseInt(jumlahData); i++){
         cekValueKosong(i);
     }
-    
+
 </script>
 @include('pengajuan-kredit.partials.save-script')
 

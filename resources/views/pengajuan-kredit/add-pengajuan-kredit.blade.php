@@ -2,9 +2,9 @@
 
 @php
     $status = ['belum menikah', 'menikah', 'duda', 'janda'];
-    
+
     $sectors = ['perdagangan', 'perindustrian', 'dll'];
-    
+
     function rupiah($angka)
     {
         if ($angka != null || $angka != '') {
@@ -12,7 +12,7 @@
             return $hasil_rupiah;
         }
     }
-    
+
     $dataIndex = match ($skema) {
         'PKPJ' => 1,
         'KKB' => 2,
@@ -445,7 +445,7 @@ is-invalid
 
         @foreach ($dataAspek as $key => $value)
             @php
-                
+
                 $key += $dataIndex;
                 // check level 2
                 $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'level', 'opsi_jawaban', 'id_parent')
@@ -2188,9 +2188,13 @@ is-invalid
             if (nullValue.length > 0) {
                 let message = "";
                 $.each(nullValue, (i, v) => {
-                    message += v + ", "
+                    message += v != '' ? v + ", " : ''
                 })
-                alert("Field " + message + " harus diisi terlebih dahulu")
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: "Field " + message + " harus diisi terlebih dahulu"
+                })
                 e.preventDefault()
             }
         })
