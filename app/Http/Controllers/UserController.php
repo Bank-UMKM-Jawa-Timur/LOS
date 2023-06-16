@@ -158,7 +158,7 @@ class UserController extends Controller
             $user->id_cabang = $request['id_cabang'];
             $user->save();
 
-            
+
         } catch (\Exception $e) {
             return redirect()->back()->withError('Terjadi kesalahan.');
         } catch (\Illuminate\Database\QueryException $e) {
@@ -262,20 +262,16 @@ class UserController extends Controller
 
     function indexSession(Request $request) {
         $this->param['pageTitle'] = 'Master Session';
-        
+
         try {
             $keyword = $request->get('keyword');
             $this->param['data'] = DB::table('sessions')
                 ->join('users', 'users.id', 'sessions.user_id')
                 ->select('users.email', 'users.role', 'sessions.id', 'users.id_cabang', 'sessions.user_id')
+                ->when($request->keyword, function ($query, $search) {
+                    return $query->where('users.email', 'like', '%' . $search . '%');
+                })
                 ->paginate(10);
-
-            if ($keyword) {
-                $this->param['data'] = DB::table('sessions')
-                    ->join('users', 'users.id', 'sessions.user_id')
-                    ->select('users.email', 'users.role', 'sessions.id', 'users.id_cabang', 'sessions.user_id')
-                    ->paginate(10);
-            }
         } catch (\Illuminate\Database\QueryException $e) {
             return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
         }
