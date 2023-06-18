@@ -2814,8 +2814,6 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 selectedPathFile = arr.slice(-1)
             }
             filename.html(selectedPathFile)
-        }else{
-            alert('asd');
         }
         if (selectedPathFile) {
             var filename = $(this).parent().find('.filenameBukti');
@@ -2828,8 +2826,6 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 selectedPathFile = arr.slice(-1)
             }
             filename.html(selectedPathFile)
-        }else{
-            alert('asd1');
         }
     })
     
@@ -2902,8 +2898,6 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                         selectedPathFile = arr.slice(-1)
                     }
                     filename.html(selectedPathFile)
-                }else{
-                    alert('asd');
                 }
                 if (selectedPathFile) {
                     var filename = $(this).parent().find('.filenameBukti');
@@ -2917,8 +2911,6 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                         selectedPathFile = arr.slice(-1)
                     }
                     filename.html(selectedPathFile)
-                }else{
-                    alert('asd1');
                 }
             })
         })
