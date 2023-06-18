@@ -39,9 +39,9 @@
                             inputValidator: (value) => {
                                 return !value && 'Pilih Penyelia';
                             },
-                            customClass: {
-                                input: 'form-control sweetalert-select'
-                            },
+                            // customClass: {
+                            //     input: 'form-control sweetalert-select'
+                            // },
                             allowOutsideClick: false,
                             reverseButtons: true
                         }).then((result) => {
@@ -66,9 +66,9 @@
                             inputValidator: (value) => {
                                 return !value && 'Pilih PBP';
                             },
-                            customClass: {
-                                input: 'form-control sweetalert-select'
-                            },
+                            // customClass: {
+                            //     input: 'form-control sweetalert-select'
+                            // },
                             allowOutsideClick: false,
                             reverseButtons: true
                         }).then((result) => {
