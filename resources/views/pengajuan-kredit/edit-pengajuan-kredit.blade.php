@@ -683,7 +683,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
 
                         <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                                         @endif
-                                    <input type="hidden" id="id_update_sku" id="id_update_npwp" name="id_update_file[]" value="{{ $jawabanDokSKU->id ?? '' }}">
+                                    <input type="hidden" id="id_update_sku" id="id_update_sku" name="id_update_file[]" value="{{ $jawabanDokSKU->id ?? '' }}">
                                     <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
@@ -717,11 +717,10 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                         <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                                         @else
                                             <label for="update_file" style="display: none" id="docNPWPnama_file">Belum Upload Dokumen NPWP</label>
-                                            <input type="file" name="update_file[]" id="docNPWP_update_file" placeholder="Masukkan informasi Dokumen NPWP" class="form-control limit-size" value="Belum Upload Dokumen NPWP">
 
                         <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                                         @endif
-                                    <input type="hidden" name="id_update_file[]" value="{{ $jawabanDokNPWP->id ?? '' }}">
+                                    <input type="hidden" name="id_update_file[]" id="id_update_npwp" value="{{ $jawabanDokNPWP->id ?? '' }}">
                                     <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
@@ -1763,6 +1762,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 $('#docNPWP_text').attr('disabled', true);
                 $('#docNPWP_text').val('');
                 $('#docNPWP_upload_file').attr('disabled', true);
+                $('#id_update_npwp').attr('disabled', true);
             }
         } else if (ijinUsaha == 'tidak_ada_legalitas_usaha') {
             $('#npwpsku').hide();
@@ -1802,6 +1802,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
             $('#docNPWPnama_file').attr('disabled', true);
             $('#docNPWP_update_file').attr('disabled', true);
             $('#id_jawaban_npwp').attr('disabled', true);
+            $('#id_update_npwp').attr('disabled', true);
         } else {
             $('#nib').hide();
             $('#nib_id').attr('disabled', true);
@@ -1810,6 +1811,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
             $('#id_jawaban_sku').attr('disabled', true);
             $('#id_jawaban_nib').attr('disabled', true);
             $('#id_jawaban_npwp').attr('disabled', true);
+            $('#id_update_npwp').attr('disabled', true);
 
             $('#docNIB').hide();
             $('#docNIB_id').attr('disabled', true);
@@ -1866,6 +1868,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
             $('#docNPWPnama_file').attr('disabled', true);
             $('#docNPWP_update_file').attr('disabled', true);
             $('#id_jawaban_npwp').attr('disabled', true);
+            $('#id_update_npwp').attr('disabled', true);
         }
     });
 
