@@ -2769,14 +2769,44 @@ $dataIndex = match ($dataUmum->skema_kredit) {
         }
     })
 
+    $('input:file').on('change', function(e) {
+        var filename = $(this).parent().find('.filename');
+        var selectedPathFile = $(this).val()
+        if (selectedPathFile) {
+            if (selectedPathFile.includes("\\")) {
+                var arr = selectedPathFile.split("\\")
+                selectedPathFile = arr.slice(-1)
+            }
+            if (selectedPathFile.includes("/")) {
+                var arr = selectedPathFile.split("/")
+                selectedPathFile = arr.slice(-1)
+            }
+            filename.html(selectedPathFile)
+        }
+    })
+    
     $('body').on('click', '.file-wrapper .btn-add-file', function(e) {
-            const wrapper = $(this).parent().parent().parent();
-            const $clone = wrapper.clone();
+        const wrapper = $(this).parent().parent().parent();
+        const $clone = wrapper.clone();
 
-            $clone.find('[type="file"]').val('');
-            $clone.find('[name="id_update_file[]"]').val('');
-            $clone.insertAfter(wrapper);
-        });
+        $clone.find('[type="file"]').attr('data-id', '');
+        $clone.find('[type="file"]').val('');
+        $clone.find('.filename').html('');
+        $clone.insertAfter(wrapper);
+        $('.limit-size').on('change', function() {
+            var size = (this.files[0].size / 1024 / 1024).toFixed(2)
+            if (size > 5) {
+                $(this).next().css({
+                    "display": "block"
+                });
+                this.value = ''
+            } else {
+                $(this).next().css({
+                    "display": "none"
+                });
+            }
+        })
+    });
 
     $('body').on('click', '.file-wrapper .btn-del-file', function(e) {
         if($('.file-wrapper').get().length < 2) return;

@@ -225,7 +225,9 @@
     <script>
         $(function() {
             $('[data-toggle="tooltip"]').tooltip()
-        }) $(".select2").select2() $(".datepicker").datepicker({
+        })
+        $(".select2").select2();
+        $(".datepicker").datepicker({
             format: 'yyyy-mm-dd',
             todayHighlight: true,
         });
