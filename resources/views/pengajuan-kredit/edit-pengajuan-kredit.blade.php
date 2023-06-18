@@ -175,11 +175,11 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                     <div class="form-group col-md-6" id="foto-ktp-suami">
                         @php
                             $jawabanFotoKTPSu = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
-                                            ->where('id_jawaban', 151)
+                                            ->where('id_jawaban', 150)
                                             ->first();
                         @endphp
                         <label for="">Foto KTP Suami</label>
-                        <input type="hidden" name="id_file_text[]" value="151" id="">
+                        <input type="hidden" name="id_file_text[]" value="150" id="">
                             @if (isset($jawabanFotoKTPSu->opsi_text) != null)
                                 <label for="update_file" style="display: none" id="nama_file">{{ $jawabanFotoKTPSu->opsi_text }}</label>
                                 <input type="file" name="update_file[]" id="" placeholder="Masukkan informasi Foto KTP Suami" class="form-control limit-size" value="{{ $jawabanFotoKTPSu->opsi_text }}">
@@ -201,11 +201,11 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                     <div class="form-group col-md-6" id="foto-ktp-istri">
                         @php
                             $jawabanFotoKTPIs = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
-                                            ->where('id_jawaban', 152)
+                                            ->where('id_jawaban', 151)
                                             ->first();
                         @endphp
                         <label for="">Foto KTP Istri</label>
-                        <input type="hidden" name="id_file_text[]" value="152" id="">
+                        <input type="hidden" name="id_file_text[]" value="151" id="">
                             @if (isset($jawabanFotoKTPIs->opsi_text) != null)
                                 <label for="update_file" style="display: none" id="nama_file">{{ $jawabanFotoKTPIs->opsi_text }}</label>
                                 <input type="file" name="update_file[]" id="" placeholder="Masukkan informasi Foto KTP Istri" class="form-control limit-size" value="{{ $jawabanFotoKTPIs->opsi_text }}">
@@ -632,7 +632,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                         ->first();
                                     @endphp
                                     <label for="">Dokumen NIB</label>
-                                    <input type="hidden" name="id_file_text[]" value="153" id="docNIB_id">
+                                    <input type="hidden" name="id_file_text[]" value="152" id="docNIB_id">
                                         @if (isset($jawabanDokNIB->opsi_text) != null)
                                             <label for="update_file" style="display: none" id="docNIBnama_file">{{ $jawabanDokNIB->opsi_text }}</label>
                                             <input type="file" name="update_file[]" id="docNIB_update_file" placeholder="Masukkan informasi Dokumen NIB" class="form-control limit-size" value="{{ $jawabanDokNIB->opsi_text }}">
@@ -671,7 +671,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                         ->first();
                                     @endphp
                                     <label for="">Surat Keterangan Usaha</label>
-                                    <input type="hidden" name="id_file_text[]" value="157" id="docSKU_id">
+                                    <input type="hidden" name="id_file_text[]" value="155" id="docSKU_id">
                                         @if (isset($jawabanDokSKU->opsi_text) != null)
                                             <label for="update_file" style="display: none" id="docSKUnama_file">{{ $jawabanDokSKU->opsi_text }}</label>
                                             <input type="file" name="update_file[]" id="docSKU_update_file" placeholder="Masukkan informasi Dokumen SKU" class="form-control limit-size" value="{{ $jawabanDokSKU->opsi_text }}">
@@ -709,7 +709,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
 
                                 <div class="form-group col-md-6" id="docNPWP">
                                     <label for="">Dokumen NPWP</label>
-                                    <input type="hidden" name="id_file_text[]" value="154" id="docNPWP_id">
+                                    <input type="hidden" name="id_file_text[]" value="153" id="docNPWP_id">
                                         @if (isset($jawabanDokNPWP->opsi_text) != null)
                                             <label for="update_file" style="display: none" id="docNPWPnama_file">{{ $jawabanDokNPWP->opsi_text }}</label>
                                             <input type="file" name="update_file[]" id="docNPWP_update_file" placeholder="Masukkan informasi Dokumen NPWP" class="form-control limit-size" value="{{ $jawabanDokNPWP->opsi_text }}">
@@ -1067,7 +1067,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                         <label for="update_file" style="display: none" id="nama_file">{{ $itemTextTiga->opsi_text }}</label>
                                                         <input type="file" name="update_file[]" placeholder="Masukkan informasi"
                                                         class="form-control" id="{{ $idLevelTiga . 'file' }}"  value="{{ ($itemTextTiga->opsi_text != null) ? $itemTextTiga->opsi_text : null }}" title="{{ $itemTextTiga->opsi_text }}" >
-                                                        <input type="hidden" name="id_file_text[]" value="{{ $itemTextTiga->id }}">
+                                                        <input type="hidden" name="id_file_text[]" value="{{ $itemTextTiga->id_item }}">
                                                         <input type="hidden" name="skor_penyelia_text[]"
                                                             value="{{ $itemTextTiga->skor_penyelia }}">
                                                         <input type="hidden" name="id_update_file[]" value="{{ $itemTextTiga->id }}">
@@ -1441,11 +1441,11 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 $("#foto-ktp-istri").append(`
                 @php
                         $jawabanFotoKTPIs = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
-                                        ->where('id_jawaban', 152)
+                                        ->where('id_jawaban', 151)
                                         ->first();
                     @endphp
                     <label for="">Foto KTP Istri</label>
-                    <input type="hidden" name="id_file_text[]" value="152" id="">
+                    <input type="hidden" name="id_file_text[]" value="151" id="">
                         @if (isset($jawabanFotoKTPIs?->opsi_text) != null)
                             <label for="update_file" style="display: none" id="nama_file">{{ $jawabanFotoKTPIs?->opsi_text }}</label>
                             <input type="file" name="update_file[]" id="" placeholder="Masukkan informasi Foto KTP Istri" class="form-control limit-size" value="{{ $jawabanFotoKTPIs?->opsi_text }}">
@@ -1467,11 +1467,11 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 $("#foto-ktp-suami").append(`
                 @php
                         $jawabanFotoKTPSu = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id)
-                                        ->where('id_jawaban', 151)
+                                        ->where('id_jawaban', 150)
                                         ->first();
                     @endphp
                     <label for="">Foto KTP Suami</label>
-                    <input type="hidden" name="id_file_text[]" value="151" id="">
+                    <input type="hidden" name="id_file_text[]" value="150" id="">
                         @if (isset($jawabanFotoKTPSu?->opsi_text) != null)
                             <label for="update_file" style="display: none" id="nama_file">{{ $jawabanFotoKTPSu?->opsi_text }}</label>
                             <input type="file" name="update_file[]" id="" placeholder="Masukkan informasi Foto KTP Suami" class="form-control limit-size" value="{{ $jawabanFotoKTPSu?->opsi_text }}">
@@ -1513,7 +1513,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                         ->first();
                     @endphp
                     <label for="">Foto KTP Nasabah</label>
-                    <input type="hidden" name="id_file_text[]" value="151" id="">
+                    <input type="hidden" name="id_file_text[]" value="156" id="">
                         @if (isset($jawabanFotoKTPNas?->opsi_text) != null)
                             <label for="update_file" style="display: none" id="nama_file">{{ $jawabanFotoKTPNas?->opsi_text }}</label>
                             <input type="file" name="update_file[]" id="" placeholder="Masukkan informasi Foto KTP Suami" class="form-control limit-size" value="{{ $jawabanFotoKTPNas?->opsi_text }}">
