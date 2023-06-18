@@ -1461,9 +1461,8 @@ class PengajuanKreditController extends Controller
                         'harga'
                     ]);
             }
-
             foreach ($request->id_jawaban_text as $key => $value) {
-                if ($request->id_jawaban_text[$key] == null && $request->info_text[$key] != null) {
+                if ($request->id_jawaban_text[$key] != null && $request->info_text[$key] != null) {
                     if ($request->info_text[$key] == null) continue;
 
                     if ($request->id_jawaban_text[$key] == null && $request->info_text[$key] != null) {
@@ -1502,8 +1501,6 @@ class PengajuanKreditController extends Controller
                     }
                 }
             };
-
-            // dd($finalArray_text);
 
             // data Level dua
             if ($request->dataLevelDua != null) {
@@ -1611,38 +1608,38 @@ class PengajuanKreditController extends Controller
 
             // dd($finalArray_text);
             // return $finalArray_text;
-            // for ($i = 0; $i < count($request->id_text); $i++) {
-            //     /*
-            //     1. variabel a = query select k table jawaban where(id, id_jawaban)
-            //     2. jika variabel a itu ada maka proses update
-            //     3. jika variabel a itu null maka insert / data baru
-            //     */
-            //     $data = DB::table('jawaban_text');
-            //     if ($request->id_jawaban_text[$i] != null) {
-            //         $data->where('id', $request->get('id_jawaban_text')[$i])->update(['opsi_text' => ($request->id_text[$i] != '131' && $request->id_text[$i] != '143' && $request->id_text[$i] != '90' && $request->id_text[$i] != '138') ? str_replace($find, "", $request->info_text[$i]) : $request->info_text[$i]]);
-            //     }
-            //     // if (!empty($request->id_jawaban_text[$i])) {
-            //     // } else {
-            //     //     $data->insert($finalArray_text[$i]);
-            //     // }
-            // }
+            for ($i = 0; $i < count($request->id_text); $i++) {
+                /*
+                1. variabel a = query select k table jawaban where(id, id_jawaban)
+                2. jika variabel a itu ada maka proses update
+                3. jika variabel a itu null maka insert / data baru
+                */
+                $data = DB::table('jawaban_text');
+                if ($request->id_jawaban_text[$i] != null) {
+                    $data->where('id', $request->get('id_jawaban_text')[$i])->update(['opsi_text' => ($request->id_text[$i] != '131' && $request->id_text[$i] != '143' && $request->id_text[$i] != '90' && $request->id_text[$i] != '138') ? str_replace($find, "", $request->info_text[$i]) : $request->info_text[$i]]);
+                }
+                // if (!empty($request->id_jawaban_text[$i])) {
+                // } else {
+                //     $data->insert($finalArray_text[$i]);
+                // }
+            }
 
-            // for ($i = 0; $i < count($request->pendapat_per_aspek); $i++) {
-            //     $data = DB::table('pendapat_dan_usulan_per_aspek');
-            //     if ($request->id_jawaban_text[$i] != null) {
-            //         $data->where('id', $request->get('id_jawaban_aspek')[$i])->update(['pendapat_per_aspek' => $request->get('pendapat_per_aspek')[$i]]);
-            //     } else {
-            //         $data->insert([
-            //             'id_pengajuan' => $id_pengajuan,
-            //             'id_staf' => auth()->user()->id,
-            //             'id_penyelia' => null,
-            //             'id_pincab' => null,
-            //             'id_aspek' => $request->get('id_aspek')[$i],
-            //             'pendapat_per_aspek' => $request->get('pendapat_per_aspek')[$i],
-            //             'created_at' => date('Y-m-d H:i:s')
-            //         ]);
-            //     }
-            // }
+            for ($i = 0; $i < count($request->pendapat_per_aspek); $i++) {
+                $data = DB::table('pendapat_dan_usulan_per_aspek');
+                if ($request->id_jawaban_text[$i] != null) {
+                    $data->where('id', $request->get('id_jawaban_aspek')[$i])->update(['pendapat_per_aspek' => $request->get('pendapat_per_aspek')[$i]]);
+                } else {
+                    $data->insert([
+                        'id_pengajuan' => $id_pengajuan,
+                        'id_staf' => auth()->user()->id,
+                        'id_penyelia' => null,
+                        'id_pincab' => null,
+                        'id_aspek' => $request->get('id_aspek')[$i],
+                        'pendapat_per_aspek' => $request->get('pendapat_per_aspek')[$i],
+                        'created_at' => date('Y-m-d H:i:s')
+                    ]);
+                }
+            }
 
             if ($request->get('id_komentar_staff_text') != null) {
                 $id = $request->get('id_komentar_staff_text');
