@@ -2033,7 +2033,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                 <div class="col-md-9">
                                                     <input type="hidden" name="id_update_file[]" value="${valItem.id}" id="" class="input">
                                                     <label for="update_file" style="display: none" id="nama_file">${valItem.opsi_text}</label>
-                                                    <input type="hidden" name="id_file_text[]" value="${valItem.id}" id="" class="input">
+                                                    <input type="hidden" name="id_file_text[]" value="${valItem.id_item}" id="" class="input">
                                                     <input type="file" name="update_file[]" value="${valItem.opsi_text}" id="${valItem.nama}file" class="form-control">
                                                     <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
                                                     <span class="filenameBukti" style="display: inline;">${valItem.opsi_text}</span>
@@ -2117,7 +2117,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                         <div class="row">
                                             <div class="col-md-9">
                                                 <input type="hidden" name="id_update_file[]" value="" id="" class="input">
-                                                <input type="hidden" name="id_file_text[]" value="${valItem.id}" id="" class="input">
+                                                <input type="hidden" name="id_file_text[]" value="${valItem.id_item}" id="" class="input">
                                                 <input type="hidden" name="opsi_jawaban[]"
                                                     value="${valItem.opsi_jawaban}" id="" class="input">
                                                     <input type="file" name="update_file[]" placeholder="Masukkan informasi"
