@@ -114,7 +114,12 @@
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                 <a class="dropdown-item" href="{{ route('change_password') }}">Ganti Password</a>
-                                <a class="dropdown-item" data-toggle="modal" data-target="#logout">Logout</a>
+                                {{-- <a class="dropdown-item" data-toggle="modal" data-target="#logout">Logout</a> --}}
+                                <a class="dropdown-item" onclick="logouts()" href="#">Logout</a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                    style="display: none;">
+                                    @csrf
+                                </form>
                             </div>
                         </li>
                     </ul>
@@ -155,7 +160,7 @@
 
     </div>
 
-    <div class="modal fade" id="logout" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    {{-- <div class="modal fade" id="logout" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -176,7 +181,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     @yield('modal')
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
@@ -196,24 +201,34 @@
         });
         window.loading_screen.finish();
     </script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.12/dist/sweetalert2.all.min.js"></script>
     <script>
-        // $(document).ready(function(){
+        function logouts() {
+            // console.log("helloworld");
+            Swal.fire({
+                title: 'Apakah anda yakin?',
+                text: "Anda akan keluar dari Aplikasi Analisa Kredit",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#112042',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Batal',
+                confirmButtonText: 'Logout',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $("#logout-form").submit()
+                }
+            })
+        }
+    </script>
+    <script>
         $(function() {
             $('[data-toggle="tooltip"]').tooltip()
-        })
-        $(".select2").select2()
-        $(".datepicker").datepicker({
+        }) $(".select2").select2() $(".datepicker").datepicker({
             format: 'yyyy-mm-dd',
             todayHighlight: true,
         });
-        $("#logouts").click(function(e) {
-            swal({
-                title: "Berhasil",
-                text: 'Berhasil Logout!!',
-                type: "success",
-            });
-        })
         $(".delete").click(function(e) {
             e.preventDefault()
             swal({
