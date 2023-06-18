@@ -1590,7 +1590,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 url: "{{ route('getKecamatan') }}?kabID=" + kabID,
                 dataType: 'JSON',
                 success: function(res) {
-                    //    console.log(res);
+                    //    //console.log(res);
                     if (res) {
                         $("#kecamatan").empty();
                         $("#desa").empty();
@@ -1614,14 +1614,14 @@ $dataIndex = match ($dataUmum->skema_kredit) {
 
     $('#kecamatan').change(function() {
         var kecID = $(this).val();
-        // console.log(kecID);
+        // //console.log(kecID);
         if (kecID) {
             $.ajax({
                 type: "GET",
                 url: "{{ route('getDesa') }}?kecID=" + kecID,
                 dataType: 'JSON',
                 success: function(res) {
-                    //    console.log(res);
+                    //    //console.log(res);
                     if (res) {
                         $("#desa").empty();
                         $("#desa").append('<option>---Pilih Desa---</option>');
@@ -1841,7 +1841,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
 
     // Cek Npwp
         $('#isNpwp').change(function() {
-            console.log($(this).is(':checked'));
+            //console.log($(this).is(':checked'));
             if ($(this).is(':checked')) {
                 $("#statusNpwp").val('1')
                 $('#npwp').show();
@@ -1950,7 +1950,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                     `);
                     // add opsi dari item
                     $.each(response.item.option, function(i, valOption) {
-                            // console.log(valOption.skor);
+                            // //console.log(valOption.skor);
                             $('#itemByKategori').append(`
                             <option value="${valOption.skor}-${valOption.id}"` + (valOption.id === response.detailJawabanOption?.id_jawaban ? 'selected="selected"' : '') +`>
                             ${valOption.option}
@@ -2033,7 +2033,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                 <div class="col-md-9">
                                                     <input type="hidden" name="id_update_file[]" value="${valItem.id}" id="" class="input">
                                                     <label for="update_file" style="display: none" id="nama_file">${valItem.opsi_text}</label>
-                                                    <input type="hidden" name="id_file_text[]" value="${valItem.id_item}" id="" class="input">
+                                                    <input type="hidden" name="id_file_text[]" value="${valItem.id}" id="" class="input">
                                                     <input type="file" name="update_file[]" value="${valItem.opsi_text}" id="${valItem.nama}file" class="form-control">
                                                     <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
                                                     <span class="filenameBukti" style="display: inline;">${valItem.opsi_text}</span>
@@ -2083,7 +2083,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                             })
                         } else{
                             $.each(response.item.option, function(i, valOption) {
-                            // console.log(valOption.skor);
+                            // //console.log(valOption.skor);
                             $('#itemByKategori').append(`
                             <option value="${valOption.skor}-${valOption.id}"` + (valOption.id === response.detailJawabanOption.id_jawaban ? 'selected="selected"' : '') +`>
                             ${valOption.option}
@@ -2117,7 +2117,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                         <div class="row">
                                             <div class="col-md-9">
                                                 <input type="hidden" name="id_update_file[]" value="" id="" class="input">
-                                                <input type="hidden" name="id_file_text[]" value="${valItem.id_item}" id="" class="input">
+                                                <input type="hidden" name="id_file_text[]" value="${valItem.id}" id="" class="input">
                                                 <input type="hidden" name="opsi_jawaban[]"
                                                     value="${valItem.opsi_jawaban}" id="" class="input">
                                                     <input type="file" name="update_file[]" placeholder="Masukkan informasi"
@@ -2176,6 +2176,8 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                         $("#select_kategori_jaminan_tambahan").show()
                     }
                 } else {
+                    var opt = 0;
+                    var skor = 0;
                     $('#select_kategori_jaminan_tambahan').append(`
                         <label for="">${response.item.nama}</label>
                         <select name="dataLevelEmpat[${response.item.id}]" id="itemByKategori" class="form-control cek-sub-column"
@@ -2189,13 +2191,15 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                     `);
                     // add opsi dari item
                     $.each(response.item.option, function(i, valOption) {
-                        // console.log(valOption.skor);
+                        skor = valOption.skor;
+                        opt = valOption.id;
+                        // //console.log(valOption.skor);
                         $('#itemByKategori').append(`
                         <option value="${valOption.skor}-${valOption.id}" ${(response.dataSelect == valOption.id) ? 'selected' : ''}>
                         ${valOption.option}
                         </option>`);
                     });
-                    $("#itemByKategori").val('0-188')
+                    $("#itemByKategori").val(skor+'-'+opt);
                     $("#select_kategori_jaminan_tambahan").hide()
                 }
             }
@@ -2407,7 +2411,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
         let rencanaPeningkatan = parseInt($('#rencana_peningkatan').val()) / 100;
         let installment = parseInt($('#installment').val().split('.').join(''));
 
-        console.log(omzetPenjualan);
+        //console.log(omzetPenjualan);
 
         let repaymentCapacity = parseFloat(persentaseNetIncome * omzetPenjualan * (1 + rencanaPeningkatan) /
             installment).toFixed(2); //cek rumusnya lagi
@@ -2535,7 +2539,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
 
         function cekWizard(isNext = false) {
             var indexNow = $(".form-wizard.active").data('index')
-                // console.log(indexNow);
+                // //console.log(indexNow);
             if (isNext) {
                 $(".side-wizard li").removeClass('active')
             }
@@ -2663,7 +2667,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
             var subtotalFilled = ttlInputTextFilled + ttlInputNumberFilled + ttlInputFileFilled + ttlInputDateFilled + ttlSelectFilled + ttlTextAreaFilled;
             if (formIndex == 0) {
                 let value = $("#status").val();
-                console.log('status : '+value)
+                //console.log('status : '+value)
                 if (value == "menikah") {
                     // subtotalInput += 2;
                     subtotalFilled += 2;
@@ -2673,10 +2677,10 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                     subtotalFilled += 2;
                 }
             }
-            console.log("=============index : "+formIndex+"=============")
-            console.log('total input : ' + subtotalInput)
-            console.log('total input filled : ' + subtotalFilled)
-            console.log("===============================================")
+            //console.log("=============index : "+formIndex+"=============")
+            //console.log('total input : ' + subtotalInput)
+            //console.log('total input filled : ' + subtotalFilled)
+            //console.log("===============================================")
 
             var percentage = parseInt(subtotalFilled / subtotalInput * 100);
             percentage = Number.isNaN(percentage) ? 0 : percentage;
@@ -2695,10 +2699,10 @@ $dataIndex = match ($dataUmum->skema_kredit) {
             e.preventDefault();
             var indexNow = $(".form-wizard.active").data('index')
             var next = parseInt(indexNow) + 1
-                // console.log($(".form-wizard[data-index='"+next+"']").length==1);
-                // console.log($(".form-wizard[data-index='"+  +"']"));
+                // //console.log($(".form-wizard[data-index='"+next+"']").length==1);
+                // //console.log($(".form-wizard[data-index='"+  +"']"));
             if ($(".form-wizard[data-index='" + next + "']").length == 1) {
-                // console.log(indexNow);
+                // //console.log(indexNow);
                 $(".form-wizard").removeClass('active')
                 $(".form-wizard[data-index='" + next + "']").addClass('active')
                 $(".form-wizard[data-index='" + indexNow + "']").attr('data-done', 'true')
@@ -2752,6 +2756,15 @@ $dataIndex = match ($dataUmum->skema_kredit) {
     $("#bukti_pemilikan_jaminan_tambahan").on("click", "#btnHapusBukti", function(){
         if(x > 1){
             $(this).closest('.aspek_jaminan_kategori').remove();
+            const wrapper = $(this).parent().parent().parent();
+            const formKredit = $('#pengajuan_kredit');
+            const fileID = wrapper.find('input[name="id_update_file[]"]').val();
+            //console.log("file-delete: "+fileID);
+
+            wrapper.remove();
+            formKredit.append(`
+                <input type="hidden" name="id_delete_file[]" value="${fileID}">
+            `);
             x--
         }
     })
@@ -2771,6 +2784,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
         const wrapper = $(this).parent().parent().parent();
         const formKredit = $('#pengajuan_kredit');
         const fileID = wrapper.find('input[name="id_update_file[]"]').val();
+        //console.log("file-delete: "+fileID);
 
         wrapper.remove();
         formKredit.append(`
@@ -2781,7 +2795,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
     // Limit Upload
     $('.limit-size').on('change', function() {
         var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-        console.log(size);
+        //console.log(size);
         if (size > 5) {
             $(this).next().css({
                 "display": "block"

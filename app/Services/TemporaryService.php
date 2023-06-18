@@ -53,7 +53,7 @@ class TemporaryService
         $exist = JawabanTemp::find($fID);
 
         $path = public_path("upload/temp/{$aID}/");
-        $name = time() . '.' . $file->getClientOriginalExtension();
+        $name = auth()->user()->id . '-' . time() . '-' . $file->getClientOriginalName();
 
         if($exist) {
             @unlink($path . $exist->opsi_text);

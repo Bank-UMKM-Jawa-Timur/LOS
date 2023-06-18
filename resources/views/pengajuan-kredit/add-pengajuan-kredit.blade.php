@@ -1109,7 +1109,7 @@ is-invalid
 
             $("#exampleModal").on('click', "#btnSkema", function() {
                 let valSkema = $("#skema").val();
-                console.log(valSkema);
+                // //console.log(valSkema);
 
                 $("#skema_kredit").val(valSkema);
             });
@@ -1241,7 +1241,7 @@ is-invalid
                     url: "{{ route('getKecamatan') }}?kabID=" + kabID,
                     dataType: 'JSON',
                     success: function(res) {
-                        //    console.log(res);
+                        //    //console.log(res);
                         if (res) {
                             $("#kecamatan").empty();
                             $("#desa").empty();
@@ -1268,14 +1268,14 @@ is-invalid
 
         $('#kecamatan').change(function() {
             var kecID = $(this).val();
-            // console.log(kecID);
+            // //console.log(kecID);
             if (kecID) {
                 $.ajax({
                     type: "GET",
                     url: "{{ route('getDesa') }}?kecID=" + kecID,
                     dataType: 'JSON',
                     success: function(res) {
-                        //    console.log(res);
+                        //    //console.log(res);
                         if (res) {
                             $("#desa").empty();
                             $("#desa").append('<option>---Pilih Desa---</option>');
@@ -1352,7 +1352,7 @@ is-invalid
                         `);
                         // add opsi dari item
                         $.each(response.item.option, function(i, valOption) {
-                            // console.log(valOption.skor);
+                            // //console.log(valOption.skor);
                             $('#itemByKategoriJaminanUtama').append(`
                             <option value="${valOption.skor}-${valOption.id}">
                             ${valOption.option}
@@ -1484,7 +1484,7 @@ is-invalid
                         `);
                         // add opsi dari item
                         $.each(response.item.option, function(i, valOption) {
-                            // console.log(valOption.skor);
+                            // //console.log(valOption.skor);
                             $('#itemByKategori').append(`
                             <option value="${valOption.skor}-${valOption.id}" ${(response.dataSelect == valOption.id) ? 'selected' : ''}>
                             ${valOption.option}
@@ -1572,6 +1572,8 @@ is-invalid
                             }
                         })
                     } else {
+                        var skor = 0;
+                        var opt = 0;
                         $('#select_kategori_jaminan_tambahan').append(`
                             <label for="">${response.item.nama}</label>
                             <select name="dataLevelEmpat[${response.item.id}]" id="itemByKategori" class="form-control cek-sub-column"
@@ -1585,13 +1587,15 @@ is-invalid
                         `);
                         // add opsi dari item
                         $.each(response.item.option, function(i, valOption) {
-                            // console.log(valOption.skor);
+                            skor = valOption.skor;
+                            opt = valOption.id;
+                            // //console.log(valOption.skor);
                             $('#itemByKategori').append(`
                             <option value="${valOption.skor}-${valOption.id}" selected>
                             ${valOption.option}
                             </option>`);
                         });
-                        $("#itemByKategori").val('0-188')
+                        $("#itemByKategori").val(skor + '-' + opt);
                         $("#select_kategori_jaminan_tambahan").hide()
                     }
                 }
@@ -1768,7 +1772,7 @@ is-invalid
 
         // Cek Npwp
         $('#isNpwp').change(function() {
-            console.log($(this).is(':checked'));
+            //console.log($(this).is(':checked'));
             if ($(this).is(':checked')) {
                 $('#npwp').show();
                 $('#npwp_id').removeAttr('disabled');
@@ -2152,7 +2156,7 @@ is-invalid
             $.each(inputText, function(i, v) {
                 if (v.value == '' && !$(this).prop('disabled')) {
                     let val = $(this).attr("id").toString();
-                    console.log(val)
+                    //console.log(val)
                     nullValue.push(val.replaceAll("_", " "))
                 } else if (v.value != '') {
                     let val = $(this).attr("id").toString().replaceAll("_", " ");
@@ -2168,7 +2172,7 @@ is-invalid
             $.each(inputNumber, function(i, v) {
                 if (v.value == '' && !$(this).prop('disabled')) {
                     let val = $(this).attr("id").toString();
-                    console.log(val)
+                    //console.log(val)
                     nullValue.push(val.replaceAll("_", " "))
                 } else if (v.value != '') {
                     let val = $(this).attr("id").toString().replaceAll("_", " ");
@@ -2186,7 +2190,7 @@ is-invalid
                     let val = $(this).attr("id").toString();
                     if (val != "persentase_kebutuhan_kredit_opsi" && val != "ratio_tenor_asuransi_opsi" && val !=
                         "ratio_coverage_opsi") {
-                        console.log(val)
+                        //console.log(val)
                         nullValue.push(val.replaceAll("_", " "))
                     }
                 } else if (v.value != '') {
@@ -2203,7 +2207,7 @@ is-invalid
             $.each(textarea, function(i, v) {
                 if (v.value == '' && !$(this).prop('disabled')) {
                     let val = $(this).attr("id").toString();
-                    console.log(val)
+                    //console.log(val)
                     nullValue.push(val.replaceAll("_", " "))
                 } else if (v.value != '') {
                     let val = $(this).attr("id").toString().replaceAll("_", " ");
@@ -2216,7 +2220,7 @@ is-invalid
                 }
             })
 
-            console.log(nullValue);
+            //console.log(nullValue);
         }
 
         $(".btn-simpan").on('click', function(e) {

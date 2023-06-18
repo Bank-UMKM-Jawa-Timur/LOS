@@ -83,15 +83,15 @@
             const input = $(this);
             data[input.attr('name')] = input.val();
         });
-        console.log(data);
+        ////console.log(data);
 
         $.ajax({
             url: '{{ route('pengajuan-kredit.temp.nasabah') }}',
             method: 'POST',
             data: data,
             success(res) {
-                console.log('-----temp nasabah-----');
-                console.log(res);
+                ////console.log('-----temp nasabah-----');
+                ////console.log(res);
                 $("#id_nasabah").val(res.data.id);
                 $("#wizard-data-umum input[type=file]").each(function() {
                     const inputFile = $(this);
@@ -103,8 +103,8 @@
         });
     }
     function saveDataTemporary(i){
-        console.log('---saveDataTemporary---')
-        console.log('id_nasabah : '+$("#id_nasabah").val())
+        ////console.log('---saveDataTemporary---')
+        ////console.log('id_nasabah : '+$("#id_nasabah").val())
         let data = {
             idCalonNasabah: $("#id_nasabah").val(),
         };
@@ -112,20 +112,20 @@
 
         $(".form-wizard[data-index='" + i + "'] input, .form-wizard[data-index='" + i + "'] select, .form-wizard[data-index='" + i + "'] textarea").each(function(){
             let input = $(this)
-            // console.log('test');
+            // ////console.log('test');
 
             data[input.attr('name')] = input.val();
             data['idCalonNasabah'] = $("#id_nasabah").val();
         });
 
-        console.log(data);
+        ////console.log(data);
         $.ajax({
             url: '{{ route('pengajuan-kredit.temp.jawaban') }}',
             method: 'POST',
             data: data,
             success(res) {
-                console.log('------temp jawaban------')
-                console.log(res);
+                ////console.log('------temp jawaban------')
+                ////console.log(res);
             }
         });
     }

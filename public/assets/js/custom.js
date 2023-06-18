@@ -39,7 +39,7 @@ $(document).ready(function() {
             if (ijinUsahaSelect.length > 0) {
                 if (ijinUsahaSelect[0].value == 'nib' || ijinUsahaSelect[0].value == 'surat_keterangan_usaha') {
                     if(!$("#isNpwp").attr("checked")){
-                        console.log('test');
+                        //console.log('test');
                         subtotalInput -= 4;
                     }
                     subtotalInput -= 2;
@@ -99,7 +99,7 @@ $(document).ready(function() {
         var subtotalFilled = ttlInputTextFilled + ttlInputNumberFilled + ttlInputFileFilled + ttlInputDateFilled + ttlSelectFilled + ttlTextAreaFilled;
         if (formIndex == 0) {
             let value = $("#status").val();
-            console.log('status : '+value)
+            //console.log('status : '+value)
             if (value == "menikah") {
                 // subtotalInput += 2;
                 subtotalFilled += 2;
@@ -109,10 +109,10 @@ $(document).ready(function() {
                 subtotalFilled += 2;
             }
         }
-        console.log("=============index : "+formIndex+"=============")
-        console.log('total input : ' + subtotalInput)
-        console.log('total input filled : ' + subtotalFilled)
-        console.log("===============================================")
+        //console.log("=============index : "+formIndex+"=============")
+        //console.log('total input : ' + subtotalInput)
+        //console.log('total input filled : ' + subtotalFilled)
+        //console.log("===============================================")
 
         var percentage = parseInt(subtotalFilled / subtotalInput * 100);
         percentage = Number.isNaN(percentage) ? 0 : percentage;
@@ -148,7 +148,7 @@ $(document).ready(function() {
 
     function cekWizard(isNext = false) {
         var indexNow = $(".form-wizard.active").data('index')
-            // console.log(indexNow);
+            // //console.log(indexNow);
         if (isNext) {
             $(".side-wizard li").removeClass('active')
         }
@@ -211,10 +211,10 @@ $(document).ready(function() {
 
         if(cekNpwp(indexNow)[0]){
             var next = parseInt(indexNow) + 1
-                // console.log($(".form-wizard[data-index='"+next+"']").length==1);
-                // console.log($(".form-wizard[data-index='"+  +"']"));
+                // //console.log($(".form-wizard[data-index='"+next+"']").length==1);
+                // //console.log($(".form-wizard[data-index='"+  +"']"));
             if ($(".form-wizard[data-index='" + next + "']").length == 1) {
-                // console.log(indexNow);
+                // //console.log(indexNow);
                 $(".form-wizard").removeClass('active')
                 $(".form-wizard[data-index='" + next + "']").addClass('active')
                 $(".form-wizard[data-index='" + indexNow + "']").attr('data-done', 'true')

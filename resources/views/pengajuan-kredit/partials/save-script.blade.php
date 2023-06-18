@@ -66,14 +66,14 @@
             const input = $(this);
             data[input.attr('name')] = input.val();
         });
-        console.log(data);
+        //console.log(data);
 
         $.ajax({
             url: '{{ route('pengajuan-kredit.temp.nasabah') }}',
             method: 'POST',
             data,
             success(res) {
-                console.log(res);
+                //console.log(res);
             }
         });
     }
@@ -86,19 +86,19 @@
 
         $(".form-wizard[data-index='" + i + "'] input, .form-wizard[data-index='" + i + "'] select, .form-wizard[data-index='" + i + "'] textarea").each(function(){
             let input = $(this)
-            // console.log('test');
+            // //console.log('test');
 
             data[input.attr('name')] = input.val();
             data['id_nasabah'] = {{ $duTemp->id }};
         });
 
-        console.log(data);
+        //console.log(data);
         $.ajax({
             url: '{{ route('pengajuan-kredit.temp.jawaban') }}',
             method: 'POST',
             data: data,
             success(res) {
-                console.log(res);
+                //console.log(res);
             }
         });
     }

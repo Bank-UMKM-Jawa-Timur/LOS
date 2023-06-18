@@ -930,7 +930,7 @@ class PengajuanKreditController extends Controller
             $addPengajuan->save();
             $id_pengajuan = $addPengajuan->id;
 
-            $tempNasabah = TemporaryService::getNasabahData($request->id_nasabah);
+            $tempNasabah = TemporaryService::getNasabahData($request->idCalonNasabah);
             $idTempNasabah = DB::table('temporary_calon_nasabah')
                 ->where('id_user', $request->user()->id)
                 ->first('id_user');
@@ -1286,7 +1286,7 @@ class PengajuanKreditController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // dd($request);
+        // dd($request->all());
         // return $request->all();
         $find = array('Rp.', '.');
         $request->validate([
@@ -1398,7 +1398,7 @@ class PengajuanKreditController extends Controller
 
                     if ($request->id_update_file[$key] != null) {
                         $image = $value;
-                        $imageName = $key . time() . '.' . $image->getClientOriginalExtension();
+                        $imageName = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
 
                         $imageLama = JawabanTextModel::where('id_jawaban', $request->get('id_update_file')[$key])
                             ->select('opsi_text', 'id_jawaban')
@@ -1423,7 +1423,7 @@ class PengajuanKreditController extends Controller
                         $imgUpdate->where('id', $request->get('id_update_file')[$key])->update(['opsi_text' => $imageName]);
                     } else {
                         $image = $request->file('update_file')[$key];
-                        $imageName = $key . time() . '.' . $image->getClientOriginalExtension();
+                        $imageName = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
 
                         $filePath = public_path() . '/upload/' . $id_pengajuan . '/' . $request->id_file_text[$key];
 
@@ -2703,7 +2703,7 @@ class PengajuanKreditController extends Controller
 
     public function tempNasabah(Request $request)
     {
-        if (isset($request->id_nasabah)) {
+        if (isset($request->id)) {
             $nasabah = TemporaryService::saveNasabah(
                 $request->id_nasabah,
                 TemporaryService::convertNasabahReq($request)
@@ -2806,14 +2806,15 @@ class PengajuanKreditController extends Controller
                 $cekData = DB::table('temporary_jawaban_text')
                     ->where('id_temporary_calon_nasabah', $request->idCalonNasabah)
                     ->where('id_jawaban', $value)
-                    ->count('id');
-                if ($cekData < 1) {
+                    ->first();
+                if (!$cekData) {
                     $dataJawabanText = new JawabanTemp();
                     $dataJawabanText->id_temporary_calon_nasabah = $request->get('idCalonNasabah');
                     $dataJawabanText->id_jawaban = $request->get('id_level')[$key];
-                    $dataJawabanText->id_temporary_calon_nasabah = $request->id_nasabah;
+                    $dataJawabanText->id_temporary_calon_nasabah = $request->idCalonNasabah;
 
-                    if ($request->get('id_level')[$key] != '131' && $request->get('id_level')[$key] != '143' && $request->get('id_level')[$key] != '90' && $request->get('id_level')[$key] != '138') {
+                    $dataJawabanText->opsi_text = $request->get('informasi')[$key];
+                    if ($value != '131' && $value != '143' && $value != '90' && $value != '138') {
                         $dataJawabanText->opsi_text = str_replace($find, '', $request->get('informasi')[$key]);
                     } else {
                         $dataJawabanText->opsi_text = $request->get('informasi')[$key];
@@ -2825,7 +2826,7 @@ class PengajuanKreditController extends Controller
                         ->where('id_jawaban', $request->get('id_level')[$key])
                         ->where('id_temporary_calon_nasabah', $request?->idCalonNasabah)
                         ->update([
-                            'opsi_text' => ($request->get('id_level')[$key] != '131' && $request->get('id_level')[$key] != '143' && $request->get('id_level')[$key] != '90' && $request->get('id_level')[$key] != '138') ? str_replace($find, '', $request->get('informasi')[$key]) : $request->get('informasi')[$key],
+                            'opsi_text' => ($value != '131' && $value != '143' && $value != '90' && $value != '138') ? str_replace($find, '', $request->get('informasi')[$key]) : $request->get('informasi')[$key],
                         ]);
                 }
             }
@@ -3028,7 +3029,8 @@ class PengajuanKreditController extends Controller
         return response()->json([
             'status' => 'ok',
             'nasabah' => $request->idCalonNasabah,
-            'aspek' => $request->pendapat_per_aspek
+            'aspek' => $request->pendapat_per_aspek,
+            'all' => $request->all()
         ]);
     }
 

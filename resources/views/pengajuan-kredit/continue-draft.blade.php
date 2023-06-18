@@ -85,7 +85,7 @@ $dataIndex = match ($skema) {
 
     <form id="pengajuan_kredit" action="{{ route('pengajuan-kredit.store') }}" method="post" enctype="multipart/form-data">
         @csrf
-        <input type="hidden" name="id_nasabah" value="{{ $duTemp?->id }}">
+        <input type="hidden" name="idCalonNasabah" value="{{ $duTemp?->id }}">
         <input type="hidden" name="progress" class="progress">
 
         <div class="form-wizard active" data-index='0' data-done='true' id="wizard-data-umum">
@@ -1106,7 +1106,7 @@ $dataIndex = match ($skema) {
 
         $("#exampleModal").on('click', "#btnSkema", function(){
             let valSkema = $("#skema").val();
-            console.log(valSkema);
+            //console.log(valSkema);
 
             $("#skema_kredit").val(valSkema);
         });
@@ -1198,7 +1198,7 @@ $dataIndex = match ($skema) {
         var subtotalFilled = ttlInputTextFilled + ttlInputNumberFilled + ttlInputFileFilled + ttlInputDateFilled + ttlSelectFilled + ttlTextAreaFilled;
         if (formIndex == 0) {
             let value = $("#status").val();
-            console.log('status : '+value)
+            //console.log('status : '+value)
             if (value == "menikah") {
                 // subtotalInput += 2;
                 subtotalFilled += 2;
@@ -1208,10 +1208,10 @@ $dataIndex = match ($skema) {
                 subtotalFilled += 2;
             }
         }
-        console.log("=============index : "+formIndex+"=============")
-        console.log('total input : ' + subtotalInput)
-        console.log('total input filled : ' + subtotalFilled)
-        console.log("===============================================")
+        //console.log("=============index : "+formIndex+"=============")
+        //console.log('total input : ' + subtotalInput)
+        //console.log('total input filled : ' + subtotalFilled)
+        //console.log("===============================================")
 
         var percentage = parseInt(subtotalFilled / subtotalInput * 100);
         percentage = Number.isNaN(percentage) ? 0 : percentage;
@@ -1421,7 +1421,7 @@ $dataIndex = match ($skema) {
                 url: "{{ route('getKecamatan') }}?kabID=" + kabID,
                 dataType: 'JSON',
                 success: function(res) {
-                    //    console.log(res);
+                    //    //console.log(res);
                     if (res) {
                         $("#kecamatan").empty();
                         $("#desa").empty();
@@ -1448,14 +1448,14 @@ $dataIndex = match ($skema) {
 
     $('#kecamatan').change(function() {
         var kecID = $(this).val();
-        // console.log(kecID);
+        // //console.log(kecID);
         if (kecID) {
             $.ajax({
                 type: "GET",
                 url: "{{ route('getDesa') }}?kecID=" + kecID,
                 dataType: 'JSON',
                 success: function(res) {
-                    //    console.log(res);
+                    //    //console.log(res);
                     if (res) {
                         $("#desa").empty();
                         $("#desa").append('<option>---Pilih Desa---</option>');
@@ -1532,7 +1532,7 @@ $dataIndex = match ($skema) {
                     `);
                     // add opsi dari item
                     $.each(response.item.option, function(i, valOption) {
-                        // console.log(valOption.skor);
+                        // //console.log(valOption.skor);
                         $('#itemByKategoriJaminanUtama').append(`
                         <option value="${valOption.skor}-${valOption.id}">
                         ${valOption.option}
@@ -1664,7 +1664,7 @@ $dataIndex = match ($skema) {
                     `);
                     // add opsi dari item
                     $.each(response.item.option, function(i, valOption) {
-                        // console.log(valOption.skor);
+                        // //console.log(valOption.skor);
                         $('#itemByKategori').append(`
                         <option value="${valOption.skor}-${valOption.id}" ${(response.dataSelect == valOption.id) ? 'selected' : ''}>
                         ${valOption.option}
@@ -1676,7 +1676,7 @@ $dataIndex = match ($skema) {
                         "<input type='checkbox' class='checkKategori'>" : ""
                     var isDisabled = kategoriJaminan != 'Kendaraan Bermotor' ? 'disabled' : ''
                     $.each(response.itemBuktiPemilikan, function(i, valItem) {
-                        console.log('test');
+                        //console.log('test');
                         if (valItem.nama == 'Atas Nama') {
                             $('#bukti_pemilikan_jaminan_tambahan').append(`
                                 <div class="form-group col-md-6 aspek_jaminan_kategori">
@@ -1783,6 +1783,8 @@ $dataIndex = match ($skema) {
                         }
                     })
                 } else {
+                    var skor = 0;
+                    var opt = 0;
                     $('#select_kategori_jaminan_tambahan').append(`
                         <label for="">${response.item.nama}</label>
                         <select name="dataLevelEmpat[${response.item.id}]" id="itemByKategori" class="form-control cek-sub-column"
@@ -1796,13 +1798,15 @@ $dataIndex = match ($skema) {
                     `);
                     // add opsi dari item
                     $.each(response.item.option, function(i, valOption) {
-                        // console.log(valOption.skor);
+                        var skor = valOption.skor;
+                        var opt = valOption.id;
+                        // //console.log(valOption.skor);
                         $('#itemByKategori').append(`
                         <option value="${valOption.skor}-${valOption.id}" selected>
                         ${valOption.option}
                         </option>`);
                     });
-                    $("#itemByKategori").val('0-188')
+                    $("#itemByKategori").val(skor + '-' + opt)
                     $("#select_kategori_jaminan_tambahan").hide()
                 }
             }
@@ -1995,7 +1999,7 @@ $dataIndex = match ($skema) {
 
     // Cek Npwp
     $('#isNpwp').change(function() {
-        console.log($(this).is(':checked'));
+        //console.log($(this).is(':checked'));
         if ($(this).is(':checked')) {
             $("#statusNpwp").val('1');
             $('#npwp').show();
@@ -2270,7 +2274,7 @@ $dataIndex = match ($skema) {
     // Limit Upload
     $('.limit-size').on('change', function() {
         var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-        console.log(size);
+        //console.log(size);
         if (size > 5) {
             $(this).next().css({"display": "block"});
             this.value = ''
@@ -2368,7 +2372,7 @@ $dataIndex = match ($skema) {
                 let val = $(this).attr("id");
                 if (val)
                     val = $(this).attr("id").toString();
-                console.log(val)
+                //console.log(val)
                 nullValue.push(val.replaceAll("_", " "))
             }else if(v.value != ''){
                 let val = $(this).attr("id");
@@ -2387,7 +2391,7 @@ $dataIndex = match ($skema) {
                 let val = $(this).attr("id");
                 if (val)
                     val = $(this).attr("id").toString();
-                console.log(val)
+                //console.log(val)
                 nullValue.push(val.replaceAll("_", " "))
             }else if(v.value != ''){
                 let val = $(this).attr("id").toString().replaceAll("_", " ");
@@ -2405,7 +2409,7 @@ $dataIndex = match ($skema) {
                 if (val)
                     val = $(this).attr("id").toString();
                 if(val != "persentase_kebutuhan_kredit_opsi" && val != "ratio_tenor_asuransi_opsi" && val != "ratio_coverage_opsi"){
-                    console.log(val)
+                    //console.log(val)
                     nullValue.push(val.replaceAll("_", " "))
                 }
             }else if(v.value != ''){
@@ -2425,7 +2429,7 @@ $dataIndex = match ($skema) {
                 let val = $(this).attr("id");
                 if (val)
                     val = $(this).attr("id").toString();
-                console.log(val)
+                //console.log(val)
                 nullValue.push(val.replaceAll("_", " "))
             }else if(v.value != ''){
                 let val = $(this).attr("id");
@@ -2439,7 +2443,7 @@ $dataIndex = match ($skema) {
             }
         })
 
-        console.log(nullValue);
+        //console.log(nullValue);
     }
 
     $(".btn-simpan").on('click', function(e){
