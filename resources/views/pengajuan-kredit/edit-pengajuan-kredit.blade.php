@@ -2202,6 +2202,35 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                     $("#itemByKategori").val(skor+'-'+opt);
                     $("#select_kategori_jaminan_tambahan").hide()
                 }
+                $('input:file').on('change', function(e) {
+                    var filename = $(this).parent().find('.filename');
+                    var selectedPathFile = $(this).val()
+                    console.log(selectedPathFile)
+                    if (selectedPathFile) {
+                        if (selectedPathFile.includes("\\")) {
+                            var arr = selectedPathFile.split("\\")
+                            selectedPathFile = arr.slice(-1)
+                        }
+                        if (selectedPathFile.includes("/")) {
+                            var arr = selectedPathFile.split("/")
+                            selectedPathFile = arr.slice(-1)
+                        }
+                        filename.html(selectedPathFile)
+                    }
+                    if (selectedPathFile) {
+                        var filename = $(this).parent().find('.filenameBukti');
+                        console.log(filename)
+                        if (selectedPathFile.includes("\\")) {
+                            var arr = selectedPathFile.split("\\")
+                            selectedPathFile = arr.slice(-1)
+                        }
+                        if (selectedPathFile.includes("/")) {
+                            var arr = selectedPathFile.split("/")
+                            selectedPathFile = arr.slice(-1)
+                        }
+                        filename.html(selectedPathFile)
+                    }
+                })
             }
         });
     }
@@ -2782,6 +2811,22 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 selectedPathFile = arr.slice(-1)
             }
             filename.html(selectedPathFile)
+        }else{
+            alert('asd');
+        }
+        if (selectedPathFile) {
+            var filename = $(this).parent().find('.filenameBukti');
+            if (selectedPathFile.includes("\\")) {
+                var arr = selectedPathFile.split("\\")
+                selectedPathFile = arr.slice(-1)
+            }
+            if (selectedPathFile.includes("/")) {
+                var arr = selectedPathFile.split("/")
+                selectedPathFile = arr.slice(-1)
+            }
+            filename.html(selectedPathFile)
+        }else{
+            alert('asd1');
         }
     })
     
@@ -2837,5 +2882,42 @@ $dataIndex = match ($dataUmum->skema_kredit) {
             });
         }
     })
+    </script>
+    <script>
+        $(document).ready(function(){
+            $('input:file').on('change', function(e) {
+                var filename = $(this).parent().find('.filename');
+                var selectedPathFile = $(this).val()
+                console.log(selectedPathFile)
+                if (selectedPathFile) {
+                    if (selectedPathFile.includes("\\")) {
+                        var arr = selectedPathFile.split("\\")
+                        selectedPathFile = arr.slice(-1)
+                    }
+                    if (selectedPathFile.includes("/")) {
+                        var arr = selectedPathFile.split("/")
+                        selectedPathFile = arr.slice(-1)
+                    }
+                    filename.html(selectedPathFile)
+                }else{
+                    alert('asd');
+                }
+                if (selectedPathFile) {
+                    var filename = $(this).parent().find('.filenameBukti');
+                    console.log(filename)
+                    if (selectedPathFile.includes("\\")) {
+                        var arr = selectedPathFile.split("\\")
+                        selectedPathFile = arr.slice(-1)
+                    }
+                    if (selectedPathFile.includes("/")) {
+                        var arr = selectedPathFile.split("/")
+                        selectedPathFile = arr.slice(-1)
+                    }
+                    filename.html(selectedPathFile)
+                }else{
+                    alert('asd1');
+                }
+            })
+        })
     </script>
 @endpush
