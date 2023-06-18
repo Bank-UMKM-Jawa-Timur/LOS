@@ -243,8 +243,9 @@
                                                 class="dropdown-item">
                                                 Edit data
                                             </a>
-                                            <a href="#" data-id="{{$item->id_pengajuan}}" data-tipe="penyelia kredit"
-                                                class="dropdown-item tindak-lanjut-penyelia-link">Tindak lanjut Review Penyelia</a>
+                                            <a href="#"
+                                                onclick="showTindakLanjut({{ $item->id_pengajuan }},'penyelia kredit')"
+                                                class="dropdown-item">Tindak lanjut Review Penyelia</a>
                                             <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
                                                 class="dropdown-item">Cetak</a>
                                             @if ($item->skema_kredit == 'KKB')
@@ -276,7 +277,8 @@
                                                 @endif
 
                                                 @if ($item->sppk != null && $tglCetak?->tgl_cetak_sppk != null && $tglCetak?->tgl_cetak_po == null)
-                                                    <a target="_blank" href="{{ route('cetak-po', $item->id_pengajuan) }}"
+                                                    <a target="_blank"
+                                                        href="{{ route('cetak-po', $item->id_pengajuan) }}"
                                                         class="dropdown-item">Cetak PO</a>
                                                 @elseif($item->sppk != null && $tglCetak?->tgl_cetak_po != null && $item->po == null)
                                                     <a href="#" class="dropdown-item" data-toggle="modal"
@@ -320,7 +322,7 @@
         <div class="pull-right">
         </div>
     </div>
-    @endsection
+@endsection
 @include('pengajuan-kredit.modal-filter')
 @include('pengajuan-kredit.modal.pilih-penyelia')
 @include('layouts.popup-upload-sppk')
