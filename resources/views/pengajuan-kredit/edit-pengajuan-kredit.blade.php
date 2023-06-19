@@ -402,7 +402,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                     </select>  --}}
                     <div class="input-group">
                         <input type="text" name="tenor_yang_diminta" id="tenor_yang_diminta"
-                            class="form-control only-number @error('tenor_yang_diminta') is-invalid @enderror" aria-describedby="addon_tenor_yang_diminta" value="{{ $dataUmum->tenor_yang_diminta }}" required />
+                            class="form-control only-number @error('tenor_yang_diminta') is-invalid @enderror" aria-describedby="addon_tenor_yang_diminta" value="{{ $dataUmum->tenor_yang_diminta }}" required maxlength="3"/>
                         <div class="input-group-append">
                             <div class="input-group-text" id="addon_tenor_yang_diminta">Bulan</div>
                         </div>
