@@ -1367,7 +1367,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                                             @elseif ($itemEmpat->id == 130)
                                                                 <input type="text" readonly
                                                                     class="form-control-plaintext font-weight-bold" id="staticEmail"
-                                                                    value="{{$itemTextEmpat->opsi_text.' Tahun'}}">
+                                                                    value="{{$itemTextEmpat->opsi_text.' Bulan'}}">
                                                                 <input type="hidden" name="id[]" value="{{ $itemAspek->id }}">
                                                             @else
                                                                 <input type="text" readonly

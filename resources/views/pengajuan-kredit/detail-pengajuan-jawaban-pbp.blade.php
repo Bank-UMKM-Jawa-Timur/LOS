@@ -1065,33 +1065,27 @@
                                                                 @endif
                                                             alt="" width="800px">
                                                             {{-- Rupiah data empat --}}
-                                                        @elseif ($itemEmpat->opsi_jawaban == 'number')
-                                                            <p class="badge badge-info text-lg"><b>
-                                                                    Rp.
-                                                                    {{ number_format((int) $itemTextEmpat->opsi_text, 2, ',', '.') }}
-                                                                </b></p>
-                                                            @if ($itemTextEmpat->is_commentable == 'Ya')
-                                                                <div class="input-k-bottom">
-                                                                    <input type="hidden" name="id_item[]"
-                                                                        value="{{ $item->id }}">
-                                                                    <input type="text" class="form-control komentar"
-                                                                        name="komentar_pbp[]"
-                                                                        placeholder="Masukkan Komentar">
-                                                                </div>
-                                                            @endif
+                                                        @elseif ($itemEmpat->opsi_jawaban == 'number' && $itemEmpat->id != 130)
+                                                                <p class="badge badge-info text-lg"><b>
+                                                                        Rp.
+                                                                        {{ number_format((int) $itemTextEmpat->opsi_text, 2, ',', '.') }}
+                                                                    </b></p>
                                                         @else
-                                                            <p class="badge badge-info text-lg"><b>
-                                                                    {{ $itemTextEmpat->opsi_text }}
-                                                                    {{ $itemEmpat->opsi_jawaban == 'persen' ? '%' : '' }}</b>
-                                                            </p>
-                                                            @if ($itemTextEmpat->is_commentable == 'Ya')
-                                                                <div class="input-k-bottom">
-                                                                    <input type="hidden" name="id_item[]"
-                                                                        value="{{ $item->id }}">
-                                                                    <input type="text" class="form-control komentar"
-                                                                        name="komentar_pbp[]"
-                                                                        placeholder="Masukkan Komentar">
-                                                                </div>
+                                                            @if ($itemEmpat->id == 101)
+                                                                <input type="text" readonly
+                                                                    class="form-control-plaintext font-weight-bold" id="staticEmail"
+                                                                    value="{{ $itemEmpat->nama . '       : ' . $itemTextEmpat->opsi_text }} {{$itemEmpat->opsi_jawaban == 'persen' ? '%' : ''}}">
+                                                                <input type="hidden" name="id[]" value="{{ $value->id }}">
+                                                            @elseif ($itemEmpat->id == 130)
+                                                                <input type="text" readonly
+                                                                    class="form-control-plaintext font-weight-bold" id="staticEmail"
+                                                                    value="{{$itemTextEmpat->opsi_text.' Bulan'}}">
+                                                                <input type="hidden" name="id[]" value="{{ $value->id }}">
+                                                            @else
+                                                                <input type="text" readonly
+                                                                    class="form-control-plaintext font-weight-bold" id="staticEmail"
+                                                                    value="{{ $itemTextEmpat->opsi_text }} {{$itemEmpat->opsi_jawaban == 'persen' ? '%' : ''}}">
+                                                                <input type="hidden" name="id[]" value="{{ $value->id }}">
                                                             @endif
                                                         @endif
                                                 </div>
