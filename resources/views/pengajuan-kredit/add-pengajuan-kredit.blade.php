@@ -506,7 +506,8 @@ is-invalid
                                     <input type="file" name="upload_file[{{ $itemNIB->id }}]" data-id=""
                                         placeholder="Masukkan informasi {{ $itemNIB->nama }}"
                                         class="form-control limit-size" id="file_nib">
-                                    <span class="invalid-tooltip" style="display: none" id="docNIB_text">Besaran file tidak boleh lebih dari 5 MB</span>
+                                    <span class="invalid-tooltip" style="display: none" id="docNIB_text">Besaran file
+                                        tidak boleh lebih dari 5 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('dataLevelTiga.' . $key) }}
@@ -534,7 +535,8 @@ is-invalid
                                         id="surat_keterangan_usaha_file" data-id=""
                                         placeholder="Masukkan informasi {{ $itemSKU->nama }}"
                                         class="form-control limit-size">
-                                    <span class="invalid-tooltip" style="display: none" id="docSKU_text">Besaran file tidak boleh lebih dari 5 MB</span>
+                                    <span class="invalid-tooltip" style="display: none" id="docSKU_text">Besaran file
+                                        tidak boleh lebih dari 5 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('dataLevelTiga.' . $key) }}
@@ -561,7 +563,8 @@ is-invalid
                                     <input type="file" name="upload_file[{{ $itemNPWP->id }}]" id="npwp_file"
                                         data-id="" placeholder="Masukkan informasi {{ $itemNPWP->nama }}"
                                         class="form-control limit-size">
-                                    <span class="invalid-tooltip" style="display: none" id="docNPWP_text">Besaran file tidak boleh lebih dari 5 MB</span>
+                                    <span class="invalid-tooltip" style="display: none" id="docNPWP_text">Besaran file
+                                        tidak boleh lebih dari 5 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('dataLevelTiga.' . $key) }}
@@ -2070,18 +2073,18 @@ is-invalid
             $clone.find('.filename').html('');
             $clone.insertAfter(wrapper);
             $('.limit-size').on('change', function() {
-            var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-            if (size > 5) {
-                $(this).next().css({
-                    "display": "block"
-                });
-                this.value = ''
-            } else {
-                $(this).next().css({
-                    "display": "none"
-                });
-            }
-        })
+                var size = (this.files[0].size / 1024 / 1024).toFixed(2)
+                if (size > 5) {
+                    $(this).next().css({
+                        "display": "block"
+                    });
+                    this.value = ''
+                } else {
+                    $(this).next().css({
+                        "display": "none"
+                    });
+                }
+            })
         });
 
         $('body').on('click', '.file-wrapper .btn-del-file', function(e) {
@@ -2348,6 +2351,18 @@ is-invalid
             }
 
         }
+
+        $('#skema').change(function() {
+            if ($(this).val() == 'KKB') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: "Skema KKB Belum bisa dilakukan"
+                }).then(function() {
+                    $("#skema").val('').trigger("change");
+                })
+            }
+        });
     </script>
     @include('pengajuan-kredit.partials.create-save-script')
     <script src="{{ asset('') }}js/custom.js"></script>
