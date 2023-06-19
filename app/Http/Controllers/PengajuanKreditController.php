@@ -2311,7 +2311,6 @@ class PengajuanKreditController extends Controller
                     if ($status != null) {
                         $userPBP = User::select('id')
                             ->where('id_cabang', $dataPenyelia->id_cabang)
-                            ->whereNotNull('nip')
                             ->where('role', 'PBP')
                             ->first();
                         if ($userPBP) {
@@ -2372,7 +2371,6 @@ class PengajuanKreditController extends Controller
                 if ($status != null) {
                     $userPBP = User::select('id')
                         ->where('id_cabang', $dataPenyelia->id_cabang)
-                        ->whereNotNull('nip')
                         ->where('role', 'PBP')
                         ->first();
                     if ($userPBP) {
