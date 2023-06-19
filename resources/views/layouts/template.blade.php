@@ -106,11 +106,15 @@
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="fa fa-user"></span>
-                                @if (auth()->user()->role == 'Administrator')
+                                {{-- @if (auth()->user()->role == 'Administrator')
                                     {{ auth()->user()->role }}
                                 @else
                                     {{ auth()->user()->role }} - {{ $cabang->cabang }}
-                                @endif
+                                @endif --}}
+                                @php
+                                    $name_karyawan = App\Http\Controllers\DashboardController::getKaryawan();
+                                @endphp
+                                {{ $name_karyawan }}
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                 <a class="dropdown-item" href="{{ route('change_password') }}">Ganti Password</a>
