@@ -1,5 +1,8 @@
 $(document).ready(function () {
     var firstLoad = true;
+    $('.only-number').keyup(function(e) {
+        this.value=this.value.replace(/[^\d]/,'')
+    })
 
     $(".side-wizard").on("click", function () {
         firstLoad = false;

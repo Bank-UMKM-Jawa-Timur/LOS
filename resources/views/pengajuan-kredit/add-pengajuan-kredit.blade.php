@@ -289,15 +289,22 @@ is-invalid
                 </div>
                 <div class="form-group col-md-6">
                     <label for="">Tenor Yang Diminta</label>
-                    <select name="tenor_yang_diminta" id="tenor_yang_diminta"
+                    {{--  <select name="tenor_yang_diminta" id="tenor_yang_diminta"
                         class="form-control select2 @error('tenor_yang_diminta') is-invalid @enderror" required>
                         <option value="">-- Pilih Tenor --</option>
                         @for ($i = 1; $i <= 10; $i++)
                             <option value="{{ $i }}"> {{ $i . ' tahun' }} </option>
                         @endfor
-                    </select>
+                    </select>  --}}
+                    <div class="input-group">
+                        <input type="text" name="tenor_yang_diminta" id="tenor_yang_diminta"
+                            class="form-control only-number @error('tenor_yang_diminta') is-invalid @enderror" aria-describedby="addon_tenor_yang_diminta" required />
+                        <div class="input-group-append">
+                            <div class="input-group-text" id="addon_tenor_yang_diminta">Bulan</div>
+                        </div>
+                    </div>
                     @error('tenor_yang_diminta')
-                        <div class="invalid-feedback">
+                    <div class="invalid-feedback">
                             {{ $message }}
                         </div>
                     @enderror
