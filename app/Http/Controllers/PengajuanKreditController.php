@@ -1616,7 +1616,7 @@ class PengajuanKreditController extends Controller
                 3. jika variabel a itu null maka insert / data baru
                 */
                 $data = DB::table('jawaban_text');
-                if ($request->id_jawaban_text[$i] != null) {
+                if ($request->id_jawaban_text[$i] != null && $request->id_text[$i] != null) {
                     $data->where('id', $request->get('id_jawaban_text')[$i])->update(['opsi_text' => ($request->id_text[$i] != '131' && $request->id_text[$i] != '143' && $request->id_text[$i] != '90' && $request->id_text[$i] != '138') ? str_replace($find, "", $request->info_text[$i]) : $request->info_text[$i]]);
                 }
                 // if (!empty($request->id_jawaban_text[$i])) {
