@@ -1466,42 +1466,44 @@ class PengajuanKreditController extends Controller
                     ]);
             }
             foreach ($request->id_jawaban_text as $key => $value) {
-                if ($request->id_jawaban_text[$key] != null && $request->info_text[$key] != null) {
-                    if ($request->info_text[$key] == null) continue;
+                if (array_key_exists($key, $request->info_text) && array_key_exists($key, $request->id_text)) {
+                    if ($request->id_jawaban_text[$key] != null && $request->info_text[$key] != null) {
+                        if ($request->info_text[$key] == null) continue;
 
-                    if ($request->id_jawaban_text[$key] == null && $request->info_text[$key] != null) {
-                        if (isset($request->id_text[$key]) && isset($request->info_text[$key])) {
-                            // dd($request->id_jawaban_text)
-                            $data_baru = new JawabanTextModel();
-                            $data_baru->id_pengajuan = $id_pengajuan;
-                            $data_baru->id_jawaban = $request->id_text[$key];
-                            if ($request->id_text[$key] == '131' || $request->id_text[$key] == '143' || $request->id_text[$key] == '90' || $request->id_text[$key] == '138') {
-                                $data_baru->opsi_text = $request->info_text[$key];
-                            } else {
-                                $data_baru->opsi_text = str_replace($find, "", $request->info_text[$key]);
+                        if ($request->id_jawaban_text[$key] == null && $request->info_text[$key] != null) {
+                            if (isset($request->id_text[$key]) && isset($request->info_text[$key])) {
+                                // dd($request->id_jawaban_text)
+                                $data_baru = new JawabanTextModel();
+                                $data_baru->id_pengajuan = $id_pengajuan;
+                                $data_baru->id_jawaban = $request->id_text[$key];
+                                if ($request->id_text[$key] == '131' || $request->id_text[$key] == '143' || $request->id_text[$key] == '90' || $request->id_text[$key] == '138') {
+                                    $data_baru->opsi_text = $request->info_text[$key];
+                                } else {
+                                    $data_baru->opsi_text = str_replace($find, "", $request->info_text[$key]);
+                                }
+                                $data_baru->skor_penyelia = null;
+                                $data_baru->skor = null;
+                                $data_baru->save();
                             }
-                            $data_baru->skor_penyelia = null;
-                            $data_baru->skor = null;
-                            $data_baru->save();
-                        }
-                    } else {
-                        $skor[$key] = $request->skor_penyelia_text[$key];
-                        // ccd
-                        // ddd($request->id_text[27]);
-                        if (isset($request->id_text[$key]) && isset($request->info_text[$key])) {
-                            $skor = array();
-                            if ($request->skor_penyelia_text[$key] == 'null') {
-                                $skor[$key] = null;
-                            } else {
-                                $skor[$key] = $request->skor_penyelia_text[$key];
+                        } else {
+                            $skor[$key] = $request->skor_penyelia_text[$key];
+                            // ccd
+                            // ddd($request->id_text[27]);
+                            if (isset($request->id_text[$key]) && isset($request->info_text[$key])) {
+                                $skor = array();
+                                if ($request->skor_penyelia_text[$key] == 'null') {
+                                    $skor[$key] = null;
+                                } else {
+                                    $skor[$key] = $request->skor_penyelia_text[$key];
+                                }
+                                array_push($finalArray_text, array(
+                                    'id_pengajuan' => $id_pengajuan,
+                                    'id_jawaban' => $request->id_text[$key],
+                                    'opsi_text' => ($request->id_text[$key] != '131' && $request->id_text[$key] != '143' && $request->id_text[$key] != '90' && $request->id_text[$key] != '138') ? str_replace($find, "", $request->info_text[$key]) : $request->info_text[$key],
+                                    'skor_penyelia' => $skor[$key],
+                                    'updated_at' => date("Y-m-d H:i:s"),
+                                ));
                             }
-                            array_push($finalArray_text, array(
-                                'id_pengajuan' => $id_pengajuan,
-                                'id_jawaban' => $request->id_text[$key],
-                                'opsi_text' => ($request->id_text[$key] != '131' && $request->id_text[$key] != '143' && $request->id_text[$key] != '90' && $request->id_text[$key] != '138') ? str_replace($find, "", $request->info_text[$key]) : $request->info_text[$key],
-                                'skor_penyelia' => $skor[$key],
-                                'updated_at' => date("Y-m-d H:i:s"),
-                            ));
                         }
                     }
                 }
@@ -1620,8 +1622,10 @@ class PengajuanKreditController extends Controller
                 3. jika variabel a itu null maka insert / data baru
                 */
                 $data = DB::table('jawaban_text');
-                if ($request->id_jawaban_text[$i] != null && $request->id_text[$i] != null) {
-                    $data->where('id', $request->get('id_jawaban_text')[$i])->update(['opsi_text' => ($request->id_text[$i] != '131' && $request->id_text[$i] != '143' && $request->id_text[$i] != '90' && $request->id_text[$i] != '138') ? str_replace($find, "", $request->info_text[$i]) : $request->info_text[$i]]);
+                if (array_key_exists($i, $request->id_jawaban_text)) {
+                    if ($request->id_jawaban_text[$i] != null && $request->id_text[$i] != null) {
+                        $data->where('id', $request->get('id_jawaban_text')[$i])->update(['opsi_text' => ($request->id_text[$i] != '131' && $request->id_text[$i] != '143' && $request->id_text[$i] != '90' && $request->id_text[$i] != '138') ? str_replace($find, "", $request->info_text[$i]) : $request->info_text[$i]]);
+                    }
                 }
                 // if (!empty($request->id_jawaban_text[$i])) {
                 // } else {
