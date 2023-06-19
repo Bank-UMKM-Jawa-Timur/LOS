@@ -83,24 +83,25 @@
             const input = $(this);
             data[input.attr('name')] = input.val();
         });
-        ////console.log(data);
 
-        $.ajax({
-            url: '{{ route('pengajuan-kredit.temp.nasabah') }}',
-            method: 'POST',
-            data: data,
-            success(res) {
-                ////console.log('-----temp nasabah-----');
-                ////console.log(res);
-                $("#id_nasabah").val(res.data.id);
-                $("#wizard-data-umum input[type=file]").each(function() {
-                    const inputFile = $(this);
-                    if(inputFile.prop('files')[0] != null){
-                        saveTempFile(inputFile);
-                    }
-                })
-            }
-        });
+        if (idNasabah == null || idNasabah == "") {
+            $.ajax({
+                url: '{{ route('pengajuan-kredit.temp.nasabah') }}',
+                method: 'POST',
+                data: data,
+                success(res) {
+                    ////console.log('-----temp nasabah-----');
+                    ////console.log(res);
+                    $("#id_nasabah").val(res.data.id);
+                    $("#wizard-data-umum input[type=file]").each(function() {
+                        const inputFile = $(this);
+                        if(inputFile.prop('files')[0] != null){
+                            saveTempFile(inputFile);
+                        }
+                    })
+                }
+            });
+        }
     }
     function saveDataTemporary(i){
         ////console.log('---saveDataTemporary---')
