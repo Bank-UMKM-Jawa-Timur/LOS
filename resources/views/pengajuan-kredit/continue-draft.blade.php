@@ -1039,11 +1039,24 @@ is-invalid
                                                     value="{{ $itemEmpat->id }}" id="">
                                                 <input type="hidden" name="opsi_jawaban[{{ $itemEmpat->id }}]"
                                                     value="{{ $itemEmpat->opsi_jawaban }}" id="">
-                                                <input type="text" maxlength="255"
-                                                    name="informasi[{{ $itemEmpat->id }}]"
-                                                    id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan_/_ht' ? 'nilai_asuransi_penjaminan' : $idLevelEmpat }}"
-                                                    placeholder="Masukkan informasi" class="form-control"
-                                                    value="{{ temporary($duTemp->id, $itemEmpat->id)?->opsi_text }}">
+                                                @if ($itemEmpat->nama == 'Masa Berlaku Asuransi Penjaminan')
+                                                    <div class="input-group">
+                                                        <input type="text" maxlength="255"
+                                                            name="informasi[{{ $itemEmpat->id }}]"
+                                                            id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan_/_ht' ? 'nilai_asuransi_penjaminan' : $idLevelEmpat }}"
+                                                            placeholder="Masukkan informasi" class="form-control only-number"
+                                                            value="{{ temporary($duTemp->id, $itemEmpat->id)?->opsi_text }}">
+                                                        <div class="input-group-append">
+                                                            <div class="input-group-text" id="addon_tenor_yang_diminta">Bulan</div>
+                                                        </div>
+                                                    </div>
+                                                @else
+                                                    <input type="text" maxlength="255"
+                                                        name="informasi[{{ $itemEmpat->id }}]"
+                                                        id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan_/_ht' ? 'nilai_asuransi_penjaminan' : $idLevelEmpat }}"
+                                                        placeholder="Masukkan informasi" class="form-control"
+                                                        value="{{ temporary($duTemp->id, $itemEmpat->id)?->opsi_text }}">
+                                                @endif
                                             </div>
                                         @elseif ($itemEmpat->opsi_jawaban == 'number')
                                             <div class="form-group col-md-6">

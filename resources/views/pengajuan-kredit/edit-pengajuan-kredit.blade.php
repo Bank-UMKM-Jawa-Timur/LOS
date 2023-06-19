@@ -1208,8 +1208,18 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                             @foreach ($dataDetailJawabanTextEmpat as $itemTextEmpat)
                                                 <div class="form-group col-md-6">
                                                     <label for="">{{ $itemEmpat->nama }}</label>
-                                                    <input type="text" maxlength="255" name="info_text[]" id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan' ? '':$idLevelEmpat }}"
-                                                        placeholder="Masukkan informasi" class="form-control" value="{{ ($itemTextEmpat->opsi_text != null) ? $itemTextEmpat->opsi_text : null }}">
+                                                    @if ($itemEmpat->nama == 'Masa Berlaku Asuransi Penjaminan')
+                                                        <div class="input-group">
+                                                            <input type="text" maxlength="255" name="info_text[]" id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan' ? '':$idLevelEmpat }}"
+                                                                placeholder="Masukkan informasi" class="form-control only-number" value="{{ ($itemTextEmpat->opsi_text != null) ? $itemTextEmpat->opsi_text : null }}">
+                                                            <div class="input-group-append">
+                                                                <div class="input-group-text" id="addon_tenor_yang_diminta">Bulan</div>
+                                                            </div>
+                                                        </div>
+                                                    @else
+                                                        <input type="text" maxlength="255" name="info_text[]" id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan' ? '':$idLevelEmpat }}"
+                                                            placeholder="Masukkan informasi" class="form-control" value="{{ ($itemTextEmpat->opsi_text != null) ? $itemTextEmpat->opsi_text : null }}">
+                                                    @endif
                                                     <input type="hidden" name="skor_penyelia_text[]"
                                                         value="{{ $itemTextEmpat->skor_penyelia }}">
                                                     <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextEmpat->id }}">
