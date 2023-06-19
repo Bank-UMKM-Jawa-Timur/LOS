@@ -44,8 +44,7 @@ class UserController extends Controller
             $this->param['user'] = $getUser->paginate(10);
         } catch (\Illuminate\Database\QueryException $e) {
             return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
         }
 
@@ -90,7 +89,7 @@ class UserController extends Controller
             $user->email = $validated['email'];
             $user->role = $validated['role'];
             $user->password = \Hash::make('12345678');
-            $user->id_cabang = $validated['id_cabang'];
+            $user->id_cabang = $request->id_cabang;
             $user->save();
         } catch (Exception $e) {
             return back()->withError('Terjadi kesalahan.');
@@ -142,7 +141,7 @@ class UserController extends Controller
 
         $validatedData = $request->validate(
             [
-                'nip' => 'sometimes|nullable|unique:users,nip,'.$user->id,
+                'nip' => 'sometimes|nullable|unique:users,nip,' . $user->id,
                 'name' => 'required',
                 'email' => 'required',
                 'role' => 'required',
@@ -157,8 +156,6 @@ class UserController extends Controller
             $user->role = $request['role'];
             $user->id_cabang = $request['id_cabang'];
             $user->save();
-
-
         } catch (\Exception $e) {
             return redirect()->back()->withError('Terjadi kesalahan.');
         } catch (\Illuminate\Database\QueryException $e) {
@@ -192,7 +189,7 @@ class UserController extends Controller
     {
         $this->param['pageTitle'] = 'Edit Password';
         $this->param['user'] = User::find(auth()->user()->id);
-        if(Auth::user()->password_change_at == null){
+        if (Auth::user()->password_change_at == null) {
             $this->param['force'] = true;
         } else {
             $this->param['force'] = false;
@@ -206,10 +203,10 @@ class UserController extends Controller
         $old = $request->old_pass;
         $new = $request->password;
 
-        if(!\Hash::check($old, $user->password))
+        if (!\Hash::check($old, $user->password))
             return back()->withError('Password lama tidak cocok.');
 
-        if(\Hash::check($new, $user->password))
+        if (\Hash::check($new, $user->password))
             return back()->withError('Password baru tidak boleh sama dengan password lama.');
 
         $validatedData = $request->validate(
@@ -234,8 +231,6 @@ class UserController extends Controller
             $user->password = \Hash::make($request->get('password'));
             $user->password_change_at = now();
             $user->save();
-
-
         } catch (\Exception $e) {
             return redirect()->back()->withError('Terjadi kesalahan.');
         } catch (\Illuminate\Database\QueryException $e) {
@@ -245,22 +240,24 @@ class UserController extends Controller
         return back()->withStatus('Password berhasil diperbarui.');
     }
 
-    function resetPassword($id) {
+    function resetPassword($id)
+    {
         $user = User::findOrFail($id);
-        try{
+        try {
             $user->password = \Hash::make('12345678');
             $user->password_change_at = null;
             $user->save();
-        } catch(Exception $e){
-            return redirect()->back()->withError('Terjadi Kesalahan.'.$e);
-        } catch(Exception $e){
-            return redirect()->back()->withError('Terjadi Kesalahan.'.$e);
+        } catch (Exception $e) {
+            return redirect()->back()->withError('Terjadi Kesalahan.' . $e);
+        } catch (Exception $e) {
+            return redirect()->back()->withError('Terjadi Kesalahan.' . $e);
         }
 
         return back()->withStatus('Password berhasil di-reset.');
     }
 
-    function indexSession(Request $request) {
+    function indexSession(Request $request)
+    {
         $this->param['pageTitle'] = 'Master Session';
 
         try {
@@ -274,25 +271,25 @@ class UserController extends Controller
                 ->paginate(10);
         } catch (\Illuminate\Database\QueryException $e) {
             return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
         }
 
         return view('user.sessions.index', $this->param);
     }
 
-    function resetSession($id) {
-        try{
+    function resetSession($id)
+    {
+        try {
             DB::table('sessions')
                 ->where('id', $id)
                 ->delete();
 
             return back()->withStatus('Berhasil menghapus session.');
-        } catch(Exception $e){
-            return redirect()->back()->withError('Terjadi Kesalahan.'.$e);
-        } catch(Exception $e){
-            return redirect()->back()->withError('Terjadi Kesalahan.'.$e);
+        } catch (Exception $e) {
+            return redirect()->back()->withError('Terjadi Kesalahan.' . $e);
+        } catch (Exception $e) {
+            return redirect()->back()->withError('Terjadi Kesalahan.' . $e);
         }
     }
 }

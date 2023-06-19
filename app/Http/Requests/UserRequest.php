@@ -28,7 +28,7 @@ class UserRequest extends FormRequest
             'name' => 'required',
             'email' => 'required',
             'role' => 'required',
-            'id_cabang' => 'required',
+            // 'id_cabang' => 'required',
         ];
     }
 
@@ -39,7 +39,7 @@ class UserRequest extends FormRequest
             'name.required' => 'Name harus diisi.',
             'email.required' => 'Email harus diisi.',
             'role.required' => 'Role harus diisi.',
-            'id_cabang.required' => 'Kantor Cabang harus diisi.',
+            // 'id_cabang.required' => 'Kantor Cabang harus diisi.',
         ];
     }
 }
