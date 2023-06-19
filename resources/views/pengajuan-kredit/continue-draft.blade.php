@@ -1,45 +1,35 @@
 @extends('layouts.template')
 
 @php
-$status = [
-    'belum menikah',
-    'menikah',
-    'duda',
-    'janda',
-];
+    $status = ['belum menikah', 'menikah', 'duda', 'janda'];
 
-$sectors = [
-    'perdagangan',
-    'perindustrian',
-    'dll',
-];
+    $sectors = ['perdagangan', 'perindustrian', 'dll'];
 
-function rupiah($angka){
-    if ($angka != null || $angka != '') {
-        if (!is_numeric($angka)) {
-            return null;
-        }
-        else {
+    function rupiah($angka)
+    {
+        if ($angka != null || $angka != '') {
             if (!is_numeric($angka)) {
-                $hasil_rupiah = null;
+                return null;
+            } else {
+                if (!is_numeric($angka)) {
+                    $hasil_rupiah = null;
+                } else {
+                    $hasil_rupiah = number_format($angka, 0, ',', '.');
+                }
+                return $hasil_rupiah;
             }
-            else {
-                $hasil_rupiah = number_format($angka, 0, ",", ".");
-            }
-            return $hasil_rupiah;
         }
     }
-}
 
-$dataIndex = match ($skema) {
-    'PKPJ' => 1,
-    'KKB' => 2,
-    'Talangan Umroh' => 1,
-    'Prokesra' => 1,
-    'Kusuma' => 1,
-    null => 1
-};
-// dd($dataIndex);
+    $dataIndex = match ($skema) {
+        'PKPJ' => 1,
+        'KKB' => 2,
+        'Talangan Umroh' => 1,
+        'Prokesra' => 1,
+        'Kusuma' => 1,
+        null => 1,
+    };
+    // dd($dataIndex);
 @endphp
 
 @section('content')
@@ -91,12 +81,14 @@ $dataIndex = match ($skema) {
         <div class="form-wizard active" data-index='0' data-done='true' id="wizard-data-umum">
             <div class="row">
                 {{-- Input hidden for Skema Kredit --}}
-                <input type="hidden" name="skema_kredit" id="skema_kredit" @if($skema != null) value="{{ $skema ?? '' }}" @elseif($duTemp->skema_kredit != null) value="{{ $duTemp->skema_kredit ?? '' }}" @endif>
+                <input type="hidden" name="skema_kredit" id="skema_kredit"
+                    @if ($skema != null) value="{{ $skema ?? '' }}" @elseif($duTemp->skema_kredit != null) value="{{ $duTemp->skema_kredit ?? '' }}" @endif>
 
                 <div class="form-group col-md-6">
                     <label for="">Nama Lengkap</label>
-                    <input type="text" name="name" id="nama" class="form-control @error('name') is-invalid @enderror"
-                        placeholder="Nama sesuai dengan KTP" value="{{ $duTemp?->nama ?? '' }}" required maxlength="255">
+                    <input type="text" name="name" id="nama"
+                        class="form-control @error('name') is-invalid @enderror" placeholder="Nama sesuai dengan KTP"
+                        value="{{ $duTemp?->nama ?? '' }}" required maxlength="255">
                     @error('name')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -105,25 +97,28 @@ $dataIndex = match ($skema) {
                 </div>
                 <div class="form-group col-md-6">
                     <label for="">{{ $itemSP->nama }}</label>
-                    <input type="hidden" name="id_item_file[{{ $itemSP->id }}]" value="{{ $itemSP->id }}" id="">
-                    <input type="file" name="upload_file[{{ $itemSP->id }}]" id="surat_permohonan" data-id="{{ temporary($duTemp->id, $itemSP->id)?->id }}" placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-control limit-size">
+                    <input type="hidden" name="id_item_file[{{ $itemSP->id }}]" value="{{ $itemSP->id }}"
+                        id="">
+                    <input type="file" name="upload_file[{{ $itemSP->id }}]" id="surat_permohonan"
+                        data-id="{{ temporary($duTemp->id, $itemSP->id)?->id }}"
+                        placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
                             {{ $errors->first('dataLevelDua.' . $key) }}
                         </div>
                     @endif
-                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemSP->id)?->opsi_text }}</span>
+                    <span class="filename"
+                        style="display: inline;">{{ temporary($duTemp->id, $itemSP->id)?->opsi_text }}</span>
                 </div>
                 <div class="form-group col-md-4">
                     <label for="">Kabupaten</label>
-                    <select name="kabupaten" class="form-control @error('name') is-invalid @enderror select2" id="kabupaten">
+                    <select name="kabupaten" class="form-control @error('name') is-invalid @enderror select2"
+                        id="kabupaten">
                         <option value="">---Pilih Kabupaten----</option>
                         @foreach ($dataKabupaten as $item)
-                            <option
-                                {{ ($item->id == $duTemp?->id_kabupaten ?? '') ? 'selected' : '' }}
-                                value="{{ $item->id }}"
-                            >{{ $item->kabupaten }}</option>
+                            <option {{ $item->id == $duTemp?->id_kabupaten ?? '' ? 'selected' : '' }}
+                                value="{{ $item->id }}">{{ $item->kabupaten }}</option>
                         @endforeach
                     </select>
                     @error('kabupaten')
@@ -156,8 +151,8 @@ $dataIndex = match ($skema) {
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Alamat Rumah</label>
-                    <textarea name="alamat_rumah" class="form-control @error('alamat_rumah') is-invalid @enderror" maxlength="255" id="" cols="30" rows="4"
-                        placeholder="Alamat Rumah disesuaikan dengan KTP">{{ $duTemp?->alamat_rumah ?? '' }}</textarea>
+                    <textarea name="alamat_rumah" class="form-control @error('alamat_rumah') is-invalid @enderror" maxlength="255"
+                        id="" cols="30" rows="4" placeholder="Alamat Rumah disesuaikan dengan KTP">{{ $duTemp?->alamat_rumah ?? '' }}</textarea>
                     @error('alamat_rumah')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -167,8 +162,8 @@ $dataIndex = match ($skema) {
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Alamat Usaha</label>
-                    <textarea name="alamat_usaha" class="form-control @error('alamat_usaha') is-invalid @enderror" maxlength="255" id="" cols="30" rows="4"
-                        placeholder="Alamat Usaha">{{ $duTemp?->alamat_usaha ?? '' }}</textarea>
+                    <textarea name="alamat_usaha" class="form-control @error('alamat_usaha') is-invalid @enderror" maxlength="255"
+                        id="" cols="30" rows="4" placeholder="Alamat Usaha">{{ $duTemp?->alamat_usaha ?? '' }}</textarea>
                     @error('alamat_usaha')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -178,7 +173,8 @@ $dataIndex = match ($skema) {
                 <div class="form-group col-md-4">
                     <label for="">Tempat Lahir</label>
                     <input type="text" maxlength="255" name="tempat_lahir" id=""
-                        class="form-control @error('tempat_lahir') is-invalid @enderror" placeholder="Tempat Lahir" value="{{ $duTemp?->tempat_lahir ?? '' }}">
+                        class="form-control @error('tempat_lahir') is-invalid @enderror" placeholder="Tempat Lahir"
+                        value="{{ $duTemp?->tempat_lahir ?? '' }}">
                     @error('tempat_lahir')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -188,7 +184,8 @@ $dataIndex = match ($skema) {
                 <div class="form-group col-md-4">
                     <label for="">Tanggal Lahir</label>
                     <input type="date" name="tanggal_lahir" id=""
-                        class="form-control @error('tanggal_lahir') is-invalid @enderror" placeholder="Tempat Lahir" value="{{ $duTemp?->tanggal_lahir ?? '' }}">
+                        class="form-control @error('tanggal_lahir') is-invalid @enderror" placeholder="Tempat Lahir"
+                        value="{{ $duTemp?->tanggal_lahir ?? '' }}">
                     @error('tanggal_lahir')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -197,13 +194,12 @@ $dataIndex = match ($skema) {
                 </div>
                 <div class="form-group col-md-4">
                     <label for="">Status</label>
-                    <select name="status" id="status" class="form-control @error('status') is-invalid @enderror select2">
+                    <select name="status" id="status"
+                        class="form-control @error('status') is-invalid @enderror select2">
                         <option value=""> --Pilih Status --</option>
                         @foreach ($status as $sts)
-                            <option
-                                value="{{ $sts }}"
-                                {{ ($sts == $duTemp?->status ?? '') ? 'selected' : null }}
-                            >{{ ucfirst($sts) }}</option>
+                            <option value="{{ $sts }}" {{ $sts == $duTemp?->status ?? '' ? 'selected' : null }}>
+                                {{ ucfirst($sts) }}</option>
                         @endforeach
                     </select>
                     @error('alamat_rumah')
@@ -214,7 +210,11 @@ $dataIndex = match ($skema) {
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">No. KTP</label>
-                    <input type="number" maxlength="16" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" name="no_ktp" class="form-control @error('no_ktp') is-invalid @enderror" id=""
+                    <input type="number" maxlength="16"
+                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                        name="no_ktp" class="form-control @error('no_ktp')
+is-invalid
+@enderror" id=""
                         placeholder="Masukkan 16 digit No. KTP" value="{{ $duTemp?->no_ktp ?? '' }}">
                     @error('no_ktp')
                         <div class="invalid-feedback">
@@ -234,10 +234,9 @@ $dataIndex = match ($skema) {
                         class="form-control @error('sektor_kredit') is-invalid @enderror select2">
                         <option value=""> --Pilih Sektor Kredit -- </option>
                         @foreach ($sectors as $sector)
-                        <option
-                            value="{{ $sector }}"
-                            {{ ($sector == $duTemp?->sektor_kredit ?? '') ? 'selected' : '' }}
-                        >{{ ucfirst($sector) }}</option>
+                            <option value="{{ $sector }}"
+                                {{ $sector == $duTemp?->sektor_kredit ?? '' ? 'selected' : '' }}>{{ ucfirst($sector) }}
+                            </option>
                         @endforeach
                     </select>
                     @error('sektor_kredit')
@@ -252,7 +251,8 @@ $dataIndex = match ($skema) {
                         data-id_item={{ $itemSlik->id }}>
                         <option value=""> --Pilih Data -- </option>
                         @foreach ($itemSlik->option as $itemJawaban)
-                            <option value="{{ $itemJawaban->skor . '-' . $itemJawaban->id }}"  {{ (temporary_select($itemSlik->id, $duTemp->id)?->id_jawaban == $itemJawaban->id) ? 'selected' : '' }}>
+                            <option value="{{ $itemJawaban->skor . '-' . $itemJawaban->id }}"
+                                {{ temporary_select($itemSlik->id, $duTemp->id)?->id_jawaban == $itemJawaban->id ? 'selected' : '' }}>
                                 {{ $itemJawaban->option }}</option>
                         @endforeach
                     </select>
@@ -267,21 +267,25 @@ $dataIndex = match ($skema) {
                 </div>
                 <div class="form-group col-md-6">
                     <label for="">{{ $itemP->nama }}</label>
-                    <input type="hidden" name="id_item_file[{{ $itemP->id }}]" value="{{ $itemP->id }}" id="">
-                    <input type="file" name="upload_file[{{ $itemP->id }}]" id="file_slik" data-id="{{ temporary($duTemp->id, $itemP->id)?->id }}" placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-control limit-size">
+                    <input type="hidden" name="id_item_file[{{ $itemP->id }}]" value="{{ $itemP->id }}"
+                        id="">
+                    <input type="file" name="upload_file[{{ $itemP->id }}]" id="file_slik"
+                        data-id="{{ temporary($duTemp->id, $itemP->id)?->id }}"
+                        placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
                             {{ $errors->first('dataLevelDua.' . $key) }}
                         </div>
                     @endif
-                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemP->id)?->opsi_text }}</span>
+                    <span class="filename"
+                        style="display: inline;">{{ temporary($duTemp->id, $itemP->id)?->opsi_text }}</span>
                     {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Jenis Usaha</label>
-                    <textarea name="jenis_usaha" class="form-control @error('jenis_usaha') is-invalid @enderror" maxlength="255" id="" cols="30" rows="4"
-                        placeholder="Jenis Usaha secara spesifik">{{ $duTemp?->jenis_usaha ?? '' }}</textarea>
+                    <textarea name="jenis_usaha" class="form-control @error('jenis_usaha') is-invalid @enderror" maxlength="255"
+                        id="" cols="30" rows="4" placeholder="Jenis Usaha secara spesifik">{{ $duTemp?->jenis_usaha ?? '' }}</textarea>
                     @error('jenis_usaha')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -290,8 +294,8 @@ $dataIndex = match ($skema) {
                 </div>
                 <div class="form-group col-md-6">
                     <label for="">Jumlah Kredit yang diminta</label>
-                    <input type="text" name="jumlah_kredit" id="jumlah_kredit"
-                        class="form-control rupiah" value="{{ rupiah($duTemp?->jumlah_kredit) ?? '' }}">
+                    <input type="text" name="jumlah_kredit" id="jumlah_kredit" class="form-control rupiah"
+                        value="{{ rupiah($duTemp?->jumlah_kredit) ?? '' }}">
                     {{-- <textarea name="jumlah_kredit" class="form-control @error('jumlah_kredit') is-invalid @enderror" id="" cols="30"
                         rows="4" placeholder="Jumlah Kredit"></textarea> --}}
                     @error('jumlah_kredit')
@@ -306,10 +310,9 @@ $dataIndex = match ($skema) {
                         class="form-control select2 @error('tenor_yang_diminta') is-invalid @enderror" required>
                         <option value="">-- Pilih Tenor --</option>
                         @for ($i = 1; $i <= 10; $i++)
-                            <option
-                                value="{{ $i }}"
-                                {{ ($i == $duTemp?->tenor_yang_diminta ?? '') ? 'selected' : '' }}
-                            > {{ $i . ' tahun' }} </option>
+                            <option value="{{ $i }}"
+                                {{ $i == $duTemp?->tenor_yang_diminta ?? '' ? 'selected' : '' }}> {{ $i . ' tahun' }}
+                            </option>
                         @endfor
                     </select>
                     @error('tenor_yang_diminta')
@@ -320,8 +323,8 @@ $dataIndex = match ($skema) {
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Tujuan Kredit</label>
-                    <textarea name="tujuan_kredit" class="form-control @error('tujuan_kredit') is-invalid @enderror" maxlength="255" id="" cols="30"
-                        rows="4" placeholder="Tujuan Kredit">{{ $duTemp?->tujuan_kredit ?? '' }}</textarea>
+                    <textarea name="tujuan_kredit" class="form-control @error('tujuan_kredit') is-invalid @enderror" maxlength="255"
+                        id="" cols="30" rows="4" placeholder="Tujuan Kredit">{{ $duTemp?->tujuan_kredit ?? '' }}</textarea>
                     @error('tujuan_kredit')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -330,8 +333,8 @@ $dataIndex = match ($skema) {
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Jaminan yang disediakan</label>
-                    <textarea name="jaminan" class="form-control @error('jaminan') is-invalid @enderror" maxlength="255" id="" cols="30" rows="4"
-                        placeholder="Jaminan yang disediakan">{{ $duTemp?->jaminan_kredit }}</textarea>
+                    <textarea name="jaminan" class="form-control @error('jaminan') is-invalid @enderror" maxlength="255" id=""
+                        cols="30" rows="4" placeholder="Jaminan yang disediakan">{{ $duTemp?->jaminan_kredit }}</textarea>
                     @error('jaminan')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -340,8 +343,8 @@ $dataIndex = match ($skema) {
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Hubungan Bank</label>
-                    <textarea name="hubungan_bank" class="form-control @error('hubungan_bank') is-invalid @enderror" maxlength="255" id="" cols="30"
-                        rows="4" placeholder="Hubungan dengan Bank">{{ $duTemp?->hubungan_bank }}</textarea>
+                    <textarea name="hubungan_bank" class="form-control @error('hubungan_bank') is-invalid @enderror" maxlength="255"
+                        id="" cols="30" rows="4" placeholder="Hubungan dengan Bank">{{ $duTemp?->hubungan_bank }}</textarea>
                     @error('hubungan_bank')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -350,8 +353,8 @@ $dataIndex = match ($skema) {
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Hasil Verifikasi</label>
-                    <textarea name="hasil_verifikasi" class="form-control @error('hasil_verifikasi') is-invalid @enderror" maxlength="255" id="" cols="30"
-                        rows="4" placeholder="Hasil Verifikasi Karakter Umum">{{ $duTemp?->verifikasi_umum }}</textarea>
+                    <textarea name="hasil_verifikasi" class="form-control @error('hasil_verifikasi') is-invalid @enderror"
+                        maxlength="255" id="" cols="30" rows="4" placeholder="Hasil Verifikasi Karakter Umum">{{ $duTemp?->verifikasi_umum }}</textarea>
                     @error('hasil_verifikasi')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -369,7 +372,8 @@ $dataIndex = match ($skema) {
                     </div>
                     <div class="form-group col-md-6">
                         <label>Merk Kendaraan</label>
-                        <select name="id_merk" id="id_merk" class="select2 form-control" style="width: 100%;" required>
+                        <select name="id_merk" id="id_merk" class="select2 form-control" style="width: 100%;"
+                            required>
                             <option value="">Pilih Merk Kendaraan</option>
                             @foreach ($dataMerk as $item)
                                 <option value="{{ $item->id }}">{{ $item->merk }}</option>
@@ -383,7 +387,8 @@ $dataIndex = match ($skema) {
                     </div>
                     <div class="form-group col-md-6">
                         <label>Tipe Kendaraan</label>
-                        <select name="id_tipe" id="id_tipe" class="select2 form-control" style="width: 100%;" required>
+                        <select name="id_tipe" id="id_tipe" class="select2 form-control" style="width: 100%;"
+                            required>
                             <option value="">Pilih Tipe</option>
                         </select>
                         @error('id_tipe')
@@ -394,8 +399,9 @@ $dataIndex = match ($skema) {
                     </div>
                     <div class="form-group col-md-6">
                         <label for="">Tahun</label>
-                        <input type="number" name="tahun" id="tahun" class="form-control @error('tahun') is-invalid @enderror"
-                            placeholder="Tahun Kendaraan" value="{{ $duTemp?->tahun ?? '' }}" min="2000">
+                        <input type="number" name="tahun" id="tahun"
+                            class="form-control @error('tahun') is-invalid @enderror" placeholder="Tahun Kendaraan"
+                            value="{{ $duTemp?->tahun ?? '' }}" min="2000">
                         @error('tahun')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -404,8 +410,9 @@ $dataIndex = match ($skema) {
                     </div>
                     <div class="form-group col-md-6">
                         <label for="">Warna</label>
-                        <input type="text" maxlength="255" name="warna" id="warna" class="form-control @error('warna') is-invalid @enderror"
-                            placeholder="Warna Kendaraan" value="{{ $duTemp?->warna ?? '' }}">
+                        <input type="text" maxlength="255" name="warna" id="warna"
+                            class="form-control @error('warna') is-invalid @enderror" placeholder="Warna Kendaraan"
+                            value="{{ $duTemp?->warna ?? '' }}">
                         @error('warna')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -417,7 +424,8 @@ $dataIndex = match ($skema) {
                     </div>
                     <div class="form-group col-md-6">
                         <label for="">Pemesanan</label>
-                        <input type="text" maxlength="255" name="pemesanan" id="pemesanan" class="form-control @error('pemesanan') is-invalid @enderror"
+                        <input type="text" maxlength="255" name="pemesanan" id="pemesanan"
+                            class="form-control @error('pemesanan') is-invalid @enderror"
                             placeholder="Pemesanan Kendaraan" value="{{ $duTemp?->pemesanan ?? '' }}">
                         @error('pemesanan')
                             <div class="invalid-feedback">
@@ -427,8 +435,9 @@ $dataIndex = match ($skema) {
                     </div>
                     <div class="form-group col-md-6">
                         <label for="">Sejumlah</label>
-                        <input type="number" name="sejumlah" id="sejumlah" class="form-control @error('sejumlah') is-invalid @enderror"
-                            placeholder="Jumlah Kendaraan" value="{{ $duTemp?->sejumlah ?? '' }}">
+                        <input type="number" name="sejumlah" id="sejumlah"
+                            class="form-control @error('sejumlah') is-invalid @enderror" placeholder="Jumlah Kendaraan"
+                            value="{{ $duTemp?->sejumlah ?? '' }}">
                         @error('sejumlah')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -437,7 +446,8 @@ $dataIndex = match ($skema) {
                     </div>
                     <div class="form-group col-md-6">
                         <label for="">Harga</label>
-                        <input type="text" name="harga" id="harga" class="form-control rupiah @error('harga') is-invalid @enderror"
+                        <input type="text" name="harga" id="harga"
+                            class="form-control rupiah @error('harga') is-invalid @enderror"
                             placeholder="Harga Kendaraan" value="{{ $duTemp?->harga ?? '' }}">
                         @error('harga')
                             <div class="invalid-feedback">
@@ -484,18 +494,24 @@ $dataIndex = match ($skema) {
                                     <label for="">{{ $item->nama }}</label>
                                     <select name="ijin_usaha" id="ijin_usaha" class="form-control" required>
                                         <option value="">-- Pilih Ijin Usaha --</option>
-                                        <option value="nib"{{ ($nib != '') ? 'selected' : '' }}>NIB</option>
-                                        <option value="surat_keterangan_usaha"{{ ($sku != '') ? 'selected' : '' }}>Surat Keterangan Usaha</option>
-                                        <option value="tidak_ada_legalitas_usaha"{{ ($nib == '' && $sku == '' && $npwp == '') ? 'selected' : '' }}>Tidak Ada Legalitas Usaha</option>
+                                        <option value="nib"{{ $nib != '' ? 'selected' : '' }}>NIB</option>
+                                        <option value="surat_keterangan_usaha"{{ $sku != '' ? 'selected' : '' }}>Surat
+                                            Keterangan Usaha</option>
+                                        <option
+                                            value="tidak_ada_legalitas_usaha"{{ $nib == '' && $sku == '' && $npwp == '' ? 'selected' : '' }}>
+                                            Tidak Ada Legalitas Usaha</option>
                                     </select>
                                 </div>
-                                <div class="form-group col-md-6" id="npwpsku" style="display: {{ ($npwp == '') ? '' : 'none' }}">
+                                <div class="form-group col-md-6" id="npwpsku"
+                                    style="display: {{ $npwp == '' ? '' : 'none' }}">
                                     <label for="">Memiliki NPWP</label>
                                     <br>
                                     <div class="row">
                                         <div class="col-md-3">
-                                            <input type="checkbox" name="isNpwp" id="isNpwp" class="form-control" @if($npwp != null) checked @endif>
-                                            <input type="hidden" name="isNpwp" id="statusNpwp" class="form-control" value="{{ ($npwp != null) ? '1' : '0' }}">
+                                            <input type="checkbox" name="isNpwp" id="isNpwp" class="form-control"
+                                                @if ($npwp != null) checked @endif>
+                                            <input type="hidden" name="isNpwp" id="statusNpwp" class="form-control"
+                                                value="{{ $npwp != null ? '1' : '0' }}">
                                         </div>
                                     </div>
                                 </div>
@@ -505,116 +521,161 @@ $dataIndex = match ($skema) {
                                 <div class="form-group col-md-6" id="nib">
                                     <label for="">NIB</label>
                                     <input type="hidden" name="id_level[77]" value="77" id="nib_id">
-                                    <input type="hidden" name="opsi_jawaban[77]" value="input text" id="nib_opsi_jawaban">
-                                    <input type="text" maxlength="255" name="informasi[77]" id="nib_text" placeholder="Masukkan informasi"
-                                        class="form-control" value="{{ temporary($duTemp->id, 77)?->opsi_text }}">
+                                    <input type="hidden" name="opsi_jawaban[77]" value="input text"
+                                        id="nib_opsi_jawaban">
+                                    <input type="text" maxlength="255" name="informasi[77]" id="nib_text"
+                                        placeholder="Masukkan informasi" class="form-control"
+                                        value="{{ temporary($duTemp->id, 77)?->opsi_text }}">
                                 </div>
 
                                 <div class="form-group col-md-6" id="docNIB">
                                     <label for="">{{ $itemNIB->nama }}</label>
-                                    <input type="hidden" name="id_item_file[{{ $itemNIB->id }}]" value="{{ $itemNIB->id }}" id="docNIB_id">
-                                    <input type="file" name="upload_file[{{ $itemNIB->id }}]" data-id="{{ temporary($duTemp->id, $itemNIB->id)?->id }}" placeholder="Masukkan informasi {{ $itemNIB->nama }}" class="form-control limit-size">
-                                    <span class="invalid-tooltip" style="display: none" id="docNIB_text">Besaran file tidak boleh lebih dari 5 MB</span>
+                                    <input type="hidden" name="id_item_file[{{ $itemNIB->id }}]"
+                                        value="{{ $itemNIB->id }}" id="docNIB_id">
+                                    <input type="file" name="upload_file[{{ $itemNIB->id }}]"
+                                        data-id="{{ temporary($duTemp->id, $itemNIB->id)?->id }}"
+                                        placeholder="Masukkan informasi {{ $itemNIB->nama }}"
+                                        class="form-control limit-size">
+                                    <span class="invalid-tooltip" style="display: none" id="docNIB_text">Besaran file
+                                        tidak boleh lebih dari 5 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('dataLevelTiga.' . $key) }}
                                         </div>
                                     @endif
-                                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemNIB->id)?->opsi_text }}</span>
+                                    <span class="filename"
+                                        style="display: inline;">{{ temporary($duTemp->id, $itemNIB->id)?->opsi_text }}</span>
                                 </div>
 
                                 <div class="form-group col-md-6" id="surat_keterangan_usaha">
                                     <label for="">Surat Keterangan Usaha</label>
-                                    <input type="hidden" name="id_level[78]" value="78" id="surat_keterangan_usaha_id">
+                                    <input type="hidden" name="id_level[78]" value="78"
+                                        id="surat_keterangan_usaha_id">
                                     <input type="hidden" name="opsi_jawaban[78]" value="input text"
                                         id="surat_keterangan_usaha_opsi_jawaban">
-                                    <input type="text" maxlength="255" name="informasi[78]" id="surat_keterangan_usaha_text"
-                                        placeholder="Masukkan informasi" class="form-control">
+                                    <input type="text" maxlength="255" name="informasi[78]"
+                                        id="surat_keterangan_usaha_text" placeholder="Masukkan informasi"
+                                        class="form-control">
                                 </div>
 
                                 <div class="form-group col-md-6" id="docSKU">
                                     <label for="">{{ $itemSKU->nama }}</label>
-                                    <input type="hidden" name="id_item_file[{{ $itemSKU->id }}]" value="{{ $itemSKU->id }}" id="docSKU_id">
-                                    <input type="file" name="upload_file[{{ $itemSKU->id }}]" data-id="{{ temporary($duTemp->id, $itemSKU->id)?->id }}" placeholder="Masukkan informasi {{ $itemSKU->nama }}" class="form-control limit-size">
-                                    <span class="invalid-tooltip" style="display: none" id="docSKU_text">Besaran file tidak boleh lebih dari 5 MB</span>
+                                    <input type="hidden" name="id_item_file[{{ $itemSKU->id }}]"
+                                        value="{{ $itemSKU->id }}" id="docSKU_id">
+                                    <input type="file" name="upload_file[{{ $itemSKU->id }}]"
+                                        data-id="{{ temporary($duTemp->id, $itemSKU->id)?->id }}"
+                                        placeholder="Masukkan informasi {{ $itemSKU->nama }}"
+                                        class="form-control limit-size">
+                                    <span class="invalid-tooltip" style="display: none" id="docSKU_text">Besaran file
+                                        tidak boleh lebih dari 5 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('dataLevelTiga.' . $key) }}
                                         </div>
                                     @endif
-                                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemSKU->id)?->opsi_text }}</span>
+                                    <span class="filename"
+                                        style="display: inline;">{{ temporary($duTemp->id, $itemSKU->id)?->opsi_text }}</span>
                                 </div>
                             </div>
-
                         @elseif($item->nama == 'NPWP')
                             <div class="row col-md-12">
                                 <div class="form-group col-md-6" id="npwp">
                                     <label for="">NPWP</label>
                                     <input type="hidden" name="id_level[79]" value="79" id="npwp_id">
-                                    <input type="hidden" name="opsi_jawaban[79]" value="input text" id="npwp_opsi_jawaban">
-                                    <input type="text" maxlength="255" name="informasi[79]" id="npwp_text" placeholder="Masukkan informasi"
-                                        class="form-control" value="{{ temporary($duTemp->id, 79)?->opsi_text }}">
+                                    <input type="hidden" name="opsi_jawaban[79]" value="input text"
+                                        id="npwp_opsi_jawaban">
+                                    <input type="text" maxlength="255" name="informasi[79]" id="npwp_text"
+                                        placeholder="Masukkan informasi" class="form-control"
+                                        value="{{ temporary($duTemp->id, 79)?->opsi_text }}">
                                 </div>
 
                                 <div class="form-group col-md-6" id="docNPWP">
                                     <label for="">{{ $itemNPWP->nama }}</label>
-                                    <input type="hidden" name="id_item_file[{{ $itemNPWP->id }}]" value="{{ $itemNPWP->id }}" id="docNPWP_id">
-                                    <input type="file" name="upload_file[{{ $itemNPWP->id }}]" data-id="{{ temporary($duTemp->id, $itemNPWP->id)?->id }}" placeholder="Masukkan informasi {{ $itemNPWP->nama }}" class="form-control limit-size">
-                                    <span class="invalid-tooltip" style="display: none" id="docNPWP_text">Besaran file tidak boleh lebih dari 5 MB</span>
+                                    <input type="hidden" name="id_item_file[{{ $itemNPWP->id }}]"
+                                        value="{{ $itemNPWP->id }}" id="docNPWP_id">
+                                    <input type="file" name="upload_file[{{ $itemNPWP->id }}]"
+                                        data-id="{{ temporary($duTemp->id, $itemNPWP->id)?->id }}"
+                                        placeholder="Masukkan informasi {{ $itemNPWP->nama }}"
+                                        class="form-control limit-size" id="docNPWP_upload_file">
+                                    <span class="invalid-tooltip" style="display: none" id="docNPWP_text">Besaran file
+                                        tidak boleh lebih dari 5 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('dataLevelTiga.' . $key) }}
                                         </div>
                                     @endif
-                                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemNPWP->id)?->opsi_text }}</span>
+                                    <span class="filename"
+                                        style="display: inline;">{{ temporary($duTemp->id, $itemNPWP->id)?->opsi_text }}</span>
                                 </div>
                             </div>
                         @else
                             @if ($item->opsi_jawaban == 'input text')
                                 <div class="form-group col-md-6">
                                     <label for="">{{ $item->nama }}</label>
-                                    <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
-                                    <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
-                                    <input type="text" maxlength="255" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
-                                        placeholder="Masukkan informasi {{ $item->nama }}" class="form-control" value="{{ temporary($duTemp->id, $item->id)?->opsi_text }}">
+                                    <input type="hidden" name="opsi_jawaban[{{ $item->id }}]"
+                                        value="{{ $item->opsi_jawaban }}" id="">
+                                    <input type="hidden" name="id_level[{{ $item->id }}]"
+                                        value="{{ $item->id }}" id="">
+                                    <input type="text" maxlength="255" name="informasi[{{ $item->id }}]"
+                                        id="{{ $idLevelDua }}" placeholder="Masukkan informasi {{ $item->nama }}"
+                                        class="form-control"
+                                        value="{{ temporary($duTemp->id, $item->id)?->opsi_text }}">
                                 </div>
                             @elseif ($item->opsi_jawaban == 'number')
                                 @if ($item->nama == 'Repayment Capacity')
                                     <div class="form-group col-md-6">
                                         <label for="">{{ $item->nama }}</label>
-                                        <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
-                                        <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
-                                        <input type="text" maxlength="255" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
-                                            placeholder="Masukkan informasi {{ $item->nama }}" class="form-control" value="{{ temporary($duTemp->id, $item->id)?->opsi_text }}">
+                                        <input type="hidden" name="opsi_jawaban[{{ $item->id }}]"
+                                            value="{{ $item->opsi_jawaban }}" id="">
+                                        <input type="hidden" name="id_level[{{ $item->id }}]"
+                                            value="{{ $item->id }}" id="">
+                                        <input type="text" maxlength="255" name="informasi[{{ $item->id }}]"
+                                            id="{{ $idLevelDua }}"
+                                            placeholder="Masukkan informasi {{ $item->nama }}" class="form-control"
+                                            value="{{ temporary($duTemp->id, $item->id)?->opsi_text }}">
                                     </div>
                                 @else
                                     @if ($item->nama == 'Omzet Penjualan' || $item->nama == 'Installment')
                                         <div class="form-group col-md-6">
                                             <label for="">{{ $item->nama }}(Perbulan)</label>
-                                            <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
-                                            <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
-                                            <input type="text" maxlength="255" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
-                                                placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah" value="{{ rupiah(temporary($duTemp->id, $item->id)?->opsi_text) }}">
+                                            <input type="hidden" name="opsi_jawaban[{{ $item->id }}]"
+                                                value="{{ $item->opsi_jawaban }}" id="">
+                                            <input type="hidden" name="id_level[{{ $item->id }}]"
+                                                value="{{ $item->id }}" id="">
+                                            <input type="text" maxlength="255" step="any"
+                                                name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
+                                                placeholder="Masukkan informasi {{ $item->nama }}"
+                                                class="form-control rupiah"
+                                                value="{{ rupiah(temporary($duTemp->id, $item->id)?->opsi_text) }}">
                                         </div>
                                     @else
                                         <div class="form-group col-md-6">
                                             <label for="">{{ $item->nama }}</label>
-                                            <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
-                                            <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
-                                            <input type="text" maxlength="255" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
-                                                placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah" value="{{ rupiah(temporary($duTemp->id, $item->id)?->opsi_text) }}">
+                                            <input type="hidden" name="opsi_jawaban[{{ $item->id }}]"
+                                                value="{{ $item->opsi_jawaban }}" id="">
+                                            <input type="hidden" name="id_level[{{ $item->id }}]"
+                                                value="{{ $item->id }}" id="">
+                                            <input type="text" maxlength="255" step="any"
+                                                name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
+                                                placeholder="Masukkan informasi {{ $item->nama }}"
+                                                class="form-control rupiah"
+                                                value="{{ rupiah(temporary($duTemp->id, $item->id)?->opsi_text) }}">
                                         </div>
                                     @endif
                                 @endif
                             @elseif ($item->opsi_jawaban == 'persen')
                                 <div class="form-group col-md-6">
                                     <label for="">{{ $item->nama }}</label>
-                                    <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
-                                    <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
+                                    <input type="hidden" name="opsi_jawaban[{{ $item->id }}]"
+                                        value="{{ $item->opsi_jawaban }}" id="">
+                                    <input type="hidden" name="id_level[{{ $item->id }}]"
+                                        value="{{ $item->id }}" id="">
                                     <div class="input-group mb-3">
-                                        <input type="number" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
+                                        <input type="number" step="any" name="informasi[{{ $item->id }}]"
+                                            id="{{ $idLevelDua }}"
                                             placeholder="Masukkan informasi {{ $item->nama }}" class="form-control"
-                                            aria-label="Recipient's username" aria-describedby="basic-addon2" value="{{ temporary($duTemp->id, $item->id)?->opsi_text }}">
+                                            aria-label="Recipient's username" aria-describedby="basic-addon2"
+                                            value="{{ temporary($duTemp->id, $item->id)?->opsi_text }}">
                                         <div class="input-group-append">
                                             <span class="input-group-text" id="basic-addon2">%</span>
                                         </div>
@@ -624,20 +685,27 @@ $dataIndex = match ($skema) {
                                 <div class="form-group col-md-6">
                                     <label for="">{{ $item->nama }}</label>
                                     {{-- <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" --}}
-                                        {{-- id="{{ $idLevelDua }}"> --}}
-                                    <input type="hidden" name="id_item_file[{{ $item->id }}]" value="{{ $item->id }}" id="">
-                                    <input type="file" name="upload_file[{{ $item->id }}]" data-id="{{ temporary($duTemp->id, $item->id)?->id }}"
-                                        placeholder="Masukkan informasi {{ $item->nama }}" class="form-control limit-size" id="{{ $idLevelDua }}">
-                                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
-                                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $item->id)?->opsi_text }}</span>
+                                    {{-- id="{{ $idLevelDua }}"> --}}
+                                    <input type="hidden" name="id_item_file[{{ $item->id }}]"
+                                        value="{{ $item->id }}" id="">
+                                    <input type="file" name="upload_file[{{ $item->id }}]"
+                                        data-id="{{ temporary($duTemp->id, $item->id)?->id }}"
+                                        placeholder="Masukkan informasi {{ $item->nama }}"
+                                        class="form-control limit-size" id="{{ $idLevelDua }}">
+                                    <span class="invalid-tooltip" style="display: none">Besaran file tidak
+                                        boleh lebih dari 5 MB</span>
+                                    <span class="filename"
+                                        style="display: inline;">{{ temporary($duTemp->id, $item->id)?->opsi_text }}</span>
                                 </div>
                             @elseif ($item->opsi_jawaban == 'long text')
                                 <div class="form-group col-md-6">
                                     <label for="">{{ $item->nama }}</label>
-                                    <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
-                                    <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
-                                    <textarea name="informasi[{{ $item->id }}]" rows="4" id="{{ $idLevelDua }}" maxlength="255" class="form-control"
-                                        placeholder="Masukkan informasi {{ $item->nama }}">{{ temporary($duTemp->id, $item->id)?->opsi_text }}</textarea>
+                                    <input type="hidden" name="opsi_jawaban[{{ $item->id }}]"
+                                        value="{{ $item->opsi_jawaban }}" id="">
+                                    <input type="hidden" name="id_level[{{ $item->id }}]"
+                                        value="{{ $item->id }}" id="">
+                                    <textarea name="informasi[{{ $item->id }}]" rows="4" id="{{ $idLevelDua }}" maxlength="255"
+                                        class="form-control" placeholder="Masukkan informasi {{ $item->nama }}">{{ temporary($duTemp->id, $item->id)?->opsi_text }}</textarea>
                                 </div>
                             @endif
 
@@ -687,14 +755,16 @@ $dataIndex = match ($skema) {
 
                                 <div
                                     class="{{ $idLevelDua == 'persentase_kebutuhan_kredit_opsi' || $idLevelDua == 'repayment_capacity_opsi' ? '' : 'form-group col-md-6' }}">
-                                    <label for="" id="{{ $idLevelDua . '_label' }}">{{ $item->nama }}</label>
+                                    <label for=""
+                                        id="{{ $idLevelDua . '_label' }}">{{ $item->nama }}</label>
 
                                     <select name="dataLevelDua[{{ $item->id }}]" id="{{ $idLevelDua }}"
                                         class="form-control cek-sub-column" data-id_item={{ $item->id }}>
                                         <option value=""> --Pilih Opsi-- </option>
                                         @foreach ($dataJawaban as $key => $itemJawaban)
                                             <option id="{{ $idLevelDua . '_' . $key }}"
-                                                value="{{ ($itemJawaban->skor == null ? 'kosong' : $itemJawaban->skor) . '-' . $itemJawaban->id }}" {{ (temporary_select($item->id, $duTemp->id)?->id_jawaban == $itemJawaban->id) ? 'selected' : '' }}>
+                                                value="{{ ($itemJawaban->skor == null ? 'kosong' : $itemJawaban->skor) . '-' . $itemJawaban->id }}"
+                                                {{ temporary_select($item->id, $duTemp->id)?->id_jawaban == $itemJawaban->id ? 'selected' : '' }}>
                                                 {{ $itemJawaban->option }}</option>
                                         @endforeach
                                     </select>
@@ -736,10 +806,18 @@ $dataIndex = match ($skema) {
                                         <select name="kategori_jaminan_tambahan" id="kategori_jaminan_tambahan"
                                             class="form-control" required>
                                             <option value="">-- Pilih Kategori Jaminan Tambahan --</option>
-                                            <option value="Tidak Memiliki Jaminan Tambahan" {{ ($duTemp?->jaminan_tambahan == 'Tidak Memiliki Jaminan Tambahan') ? 'selected' : ''  }}>Tidak Memiliki Jaminan Tambahan</option>
-                                            <option value="Tanah" {{ ($duTemp?->jaminan_tambahan == 'Tanah') ? 'selected' : ''  }}>Tanah</option>
-                                            <option value="Kendaraan Bermotor" {{ ($duTemp?->jaminan_tambahan == 'Kendaraan Bermotor') ? 'selected' : ''  }}>Kendaraan Bermotor</option>
-                                            <option value="Tanah dan Bangunan" {{ ($duTemp?->jaminan_tambahan == 'Tanah dan Bangunan') ? 'selected' : ''  }}>Tanah dan Bangunan</option>
+                                            <option value="Tidak Memiliki Jaminan Tambahan"
+                                                {{ $duTemp?->jaminan_tambahan == 'Tidak Memiliki Jaminan Tambahan' ? 'selected' : '' }}>
+                                                Tidak Memiliki Jaminan Tambahan</option>
+                                            <option value="Tanah"
+                                                {{ $duTemp?->jaminan_tambahan == 'Tanah' ? 'selected' : '' }}>Tanah
+                                            </option>
+                                            <option value="Kendaraan Bermotor"
+                                                {{ $duTemp?->jaminan_tambahan == 'Kendaraan Bermotor' ? 'selected' : '' }}>
+                                                Kendaraan Bermotor</option>
+                                            <option value="Tanah dan Bangunan"
+                                                {{ $duTemp?->jaminan_tambahan == 'Tanah dan Bangunan' ? 'selected' : '' }}>
+                                                Tanah dan Bangunan</option>
                                         </select>
                                         {{-- <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
                                         <input type="hidden" name="opsi_jawaban[]" value="{{ $itemTiga->opsi_jawaban }}"
@@ -766,105 +844,125 @@ $dataIndex = match ($skema) {
                                     @if ($itemTiga->opsi_jawaban == 'input text')
                                         <div class="form-group col-md-6">
                                             <label for="">{{ $itemTiga->nama }}</label>
-                                            <input type="hidden" name="id_level[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}" id="">
+                                            <input type="hidden" name="id_level[{{ $itemTiga->id }}]"
+                                                value="{{ $itemTiga->id }}" id="">
                                             <input type="hidden" name="opsi_jawaban[{{ $itemTiga->id }}]"
                                                 value="{{ $itemTiga->opsi_jawaban }}" id="">
-                                            <input type="text" maxlength="255" name="informasi[{{ $itemTiga->id }}]" placeholder="Masukkan informasi"
-                                                class="form-control" id="{{ $idLevelTiga }}" value="{{ temporary($duTemp->id, $itemTiga->id)?->opsi_text }}">
+                                            <input type="text" maxlength="255" name="informasi[{{ $itemTiga->id }}]"
+                                                placeholder="Masukkan informasi" class="form-control"
+                                                id="{{ $idLevelTiga }}"
+                                                value="{{ temporary($duTemp->id, $itemTiga->id)?->opsi_text }}">
                                         </div>
                                     @elseif ($itemTiga->opsi_jawaban == 'number')
                                         <div class="form-group col-md-6">
                                             <label for="">{{ $itemTiga->nama }}</label>
                                             <input type="hidden" name="opsi_jawaban[{{ $itemTiga->id }}]"
                                                 value="{{ $itemTiga->opsi_jawaban }}" id="">
-                                            <input type="hidden" name="id_level[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}" id="">
-                                            <input type="text" step="any" name="informasi[{{ $itemTiga->id }}]" id="{{ $idLevelTiga }}"
+                                            <input type="hidden" name="id_level[{{ $itemTiga->id }}]"
+                                                value="{{ $itemTiga->id }}" id="">
+                                            <input type="text" step="any" name="informasi[{{ $itemTiga->id }}]"
+                                                id="{{ $idLevelTiga }}"
                                                 placeholder="Masukkan informasi {{ $itemTiga->nama }}"
-                                                class="form-control rupiah" value="{{ rupiah(temporary($duTemp->id, $itemTiga->id)?->opsi_text) }}">
+                                                class="form-control rupiah"
+                                                value="{{ rupiah(temporary($duTemp->id, $itemTiga->id)?->opsi_text) }}">
                                         </div>
                                     @elseif ($itemTiga->opsi_jawaban == 'persen')
                                         <div class="form-group col-md-6">
                                             @if ($itemTiga->nama == 'Ratio Tenor Asuransi')
-
                                             @else
-                                            <label for="">{{ $itemTiga->nama }}</label>
-                                            <input type="hidden" name="opsi_jawaban[{{ $itemTiga->id }}]"
-                                                value="{{ $itemTiga->opsi_jawaban }}" id="">
-                                            <input type="hidden" name="id_level[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}" id="">
-                                            <div class="input-group mb-3">
-                                                <input type="number" step="any" name="informasi[{{ $itemTiga->id }}]"
-                                                    id="{{ $idLevelTiga }}"
-                                                    placeholder="Masukkan informasi {{ $itemTiga->nama }}"
-                                                    class="form-control" aria-label="Recipient's username"
-                                                    aria-describedby="basic-addon2" value="{{ temporary($duTemp->id, $itemTiga->id)?->opsi_text }}">
-                                                <div class="input-group-append">
-                                                    <span class="input-group-text" id="basic-addon2">%</span>
+                                                <label for="">{{ $itemTiga->nama }}</label>
+                                                <input type="hidden" name="opsi_jawaban[{{ $itemTiga->id }}]"
+                                                    value="{{ $itemTiga->opsi_jawaban }}" id="">
+                                                <input type="hidden" name="id_level[{{ $itemTiga->id }}]"
+                                                    value="{{ $itemTiga->id }}" id="">
+                                                <div class="input-group mb-3">
+                                                    <input type="number" step="any"
+                                                        name="informasi[{{ $itemTiga->id }}]" id="{{ $idLevelTiga }}"
+                                                        placeholder="Masukkan informasi {{ $itemTiga->nama }}"
+                                                        class="form-control" aria-label="Recipient's username"
+                                                        aria-describedby="basic-addon2"
+                                                        value="{{ temporary($duTemp->id, $itemTiga->id)?->opsi_text }}">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text" id="basic-addon2">%</span>
+                                                    </div>
                                                 </div>
-                                            </div>
                                             @endif
                                         </div>
                                     @elseif ($itemTiga->opsi_jawaban == 'file')
                                         @forelse (temporary($duTemp->id, $itemTiga->id, true) as $tempData)
-                                        <div class="form-group col-md-6 file-wrapper item-{{ $itemTiga->id }}">
-                                            <label for="">{{ $itemTiga->nama }}</label>
-                                            <div class="row file-input">
-                                                <div class="col-md-9">
-                                                    <input type="hidden" name="id_item_file[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}" id="">
-                                                    <input type="file" name="upload_file[{{ $itemTiga->id }}]" data-id="{{ $tempData->id }}"
-                                                        placeholder="Masukkan informasi {{ $itemTiga->nama }}"
-                                                        class="form-control limit-size" id="{{ $idLevelTiga }}">
-                                                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
-                                                    <span class="filename" style="display: inline;">{{ $tempData->opsi_text }}</span>
+                                            <div class="form-group col-md-6 file-wrapper item-{{ $itemTiga->id }}">
+                                                <label for="">{{ $itemTiga->nama }}</label>
+                                                <div class="row file-input">
+                                                    <div class="col-md-9">
+                                                        <input type="hidden" name="id_item_file[{{ $itemTiga->id }}]"
+                                                            value="{{ $itemTiga->id }}" id="">
+                                                        <input type="file" name="upload_file[{{ $itemTiga->id }}]"
+                                                            data-id="{{ $tempData->id }}"
+                                                            placeholder="Masukkan informasi {{ $itemTiga->nama }}"
+                                                            class="form-control limit-size" id="{{ $idLevelTiga }}">
+                                                        <span class="invalid-tooltip" style="display: none">Besaran file
+                                                            tidak boleh lebih dari 5 MB</span>
+                                                        <span class="filename"
+                                                            style="display: inline;">{{ $tempData->opsi_text }}</span>
+                                                    </div>
+                                                    @if (in_array(trim($itemTiga->nama), $multipleFiles))
+                                                        <div class="col-1">
+                                                            <button class="btn btn-sm btn-success btn-add-file"
+                                                                type="button" data-id="{{ $itemTiga->id }}">
+                                                                <i class="fa fa-plus"></i>
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-1">
+                                                            <button class="btn btn-sm btn-danger btn-del-file"
+                                                                type="button" data-id="{{ $itemTiga->id }}">
+                                                                <i class="fa fa-minus"></i>
+                                                            </button>
+                                                        </div>
+                                                    @endif
                                                 </div>
-                                                @if(in_array(trim($itemTiga->nama), $multipleFiles))
-                                                <div class="col-1">
-                                                    <button class="btn btn-sm btn-success btn-add-file" type="button" data-id="{{ $itemTiga->id }}">
-                                                        <i class="fa fa-plus"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="col-1">
-                                                    <button class="btn btn-sm btn-danger btn-del-file" type="button" data-id="{{ $itemTiga->id }}">
-                                                        <i class="fa fa-minus"></i>
-                                                    </button>
-                                                </div>
-                                                @endif
                                             </div>
-                                        </div>
                                         @empty
-                                        <div class="form-group col-md-6 file-wrapper item-{{ $itemTiga->id }}">
-                                            <label for="">{{ $itemTiga->nama }}</label>
-                                            <div class="row file-input">
-                                                <div class="col-md-9">
-                                                    <input type="hidden" name="id_item_file[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}" id="">
-                                                    <input type="file" name="upload_file[{{ $itemTiga->id }}]" data-id="{{ temporary($duTemp->id, $itemTiga->id)?->id }}"
-                                                        placeholder="Masukkan informasi {{ $itemTiga->nama }}"
-                                                        class="form-control limit-size">
-                                                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
-                                                    <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemTiga->id)?->opsi_text }}</span>
+                                            <div class="form-group col-md-6 file-wrapper item-{{ $itemTiga->id }}">
+                                                <label for="">{{ $itemTiga->nama }}</label>
+                                                <div class="row file-input">
+                                                    <div class="col-md-9">
+                                                        <input type="hidden" name="id_item_file[{{ $itemTiga->id }}]"
+                                                            value="{{ $itemTiga->id }}" id="">
+                                                        <input type="file" name="upload_file[{{ $itemTiga->id }}]"
+                                                            data-id="{{ temporary($duTemp->id, $itemTiga->id)?->id }}"
+                                                            placeholder="Masukkan informasi {{ $itemTiga->nama }}"
+                                                            class="form-control limit-size">
+                                                        <span class="invalid-tooltip" style="display: none">Besaran file
+                                                            tidak boleh lebih dari 5 MB</span>
+                                                        <span class="filename"
+                                                            style="display: inline;">{{ temporary($duTemp->id, $itemTiga->id)?->opsi_text }}</span>
+                                                    </div>
+                                                    @if (in_array(trim($itemTiga->nama), $multipleFiles))
+                                                        <div class="col-1">
+                                                            <button class="btn btn-sm btn-success btn-add-file"
+                                                                type="button" data-id="{{ $itemTiga->id }}">
+                                                                <i class="fa fa-plus"></i>
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-1">
+                                                            <button class="btn btn-sm btn-danger btn-del-file"
+                                                                type="button" data-id="{{ $itemTiga->id }}">
+                                                                <i class="fa fa-minus"></i>
+                                                            </button>
+                                                        </div>
+                                                    @endif
                                                 </div>
-                                                @if(in_array(trim($itemTiga->nama), $multipleFiles))
-                                                <div class="col-1">
-                                                    <button class="btn btn-sm btn-success btn-add-file" type="button" data-id="{{ $itemTiga->id }}">
-                                                        <i class="fa fa-plus"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="col-1">
-                                                    <button class="btn btn-sm btn-danger btn-del-file" type="button" data-id="{{ $itemTiga->id }}">
-                                                        <i class="fa fa-minus"></i>
-                                                    </button>
-                                                </div>
-                                                @endif
                                             </div>
-                                        </div>
                                         @endforelse
                                     @elseif ($itemTiga->opsi_jawaban == 'long text')
                                         <div class="form-group col-md-6">
                                             <label for="">{{ $itemTiga->nama }}</label>
                                             <input type="hidden" name="opsi_jawaban[{{ $itemTiga->id }}]"
                                                 value="{{ $itemTiga->opsi_jawaban }}" id="">
-                                            <input type="hidden" name="id_level[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}" id="">
-                                            <textarea name="informasi[{{ $itemTiga->id }}]" rows="4" id="{{ $idLevelTiga }}" maxlength="255" class="form-control"
-                                                placeholder="Masukkan informasi {{ $itemTiga->nama }}">{{ temporary($duTemp->id, $itemTiga->id)?->opsi_text }}</textarea>
+                                            <input type="hidden" name="id_level[{{ $itemTiga->id }}]"
+                                                value="{{ $itemTiga->id }}" id="">
+                                            <textarea name="informasi[{{ $itemTiga->id }}]" rows="4" id="{{ $idLevelTiga }}" maxlength="255"
+                                                class="form-control" placeholder="Masukkan informasi {{ $itemTiga->nama }}">{{ temporary($duTemp->id, $itemTiga->id)?->opsi_text }}</textarea>
                                         </div>
                                     @endif
 
@@ -904,12 +1002,14 @@ $dataIndex = match ($skema) {
                                                 <label for=""
                                                     id="{{ $idLevelTiga . '_label' }}">{{ $itemTiga->nama }}</label>
 
-                                                <select name="dataLevelTiga[{{ $itemTiga->id }}]" id="{{ $idLevelTiga }}"
-                                                    class="form-control cek-sub-column" data-id_item={{ $itemTiga->id }}>
+                                                <select name="dataLevelTiga[{{ $itemTiga->id }}]"
+                                                    id="{{ $idLevelTiga }}" class="form-control cek-sub-column"
+                                                    data-id_item={{ $itemTiga->id }}>
                                                     <option value=""> --Pilih Opsi-- </option>
                                                     @foreach ($dataJawabanLevelTiga as $key => $itemJawabanTiga)
                                                         <option id="{{ $idLevelTiga . '_' . $key }}"
-                                                            value="{{ ($itemJawabanTiga->skor == null ? 'kosong' : $itemJawabanTiga->skor) . '-' . $itemJawabanTiga->id }}" {{ (temporary_select($itemTiga->id, $duTemp->id)?->id_jawaban == $itemJawabanTiga->id) ? 'selected' : '' }}>
+                                                            value="{{ ($itemJawabanTiga->skor == null ? 'kosong' : $itemJawabanTiga->skor) . '-' . $itemJawabanTiga->id }}"
+                                                            {{ temporary_select($itemTiga->id, $duTemp->id)?->id_jawaban == $itemJawabanTiga->id ? 'selected' : '' }}>
                                                             {{ $itemJawabanTiga->option }}</option>
                                                     @endforeach
                                                 </select>
@@ -928,38 +1028,45 @@ $dataIndex = match ($skema) {
                                         @if ($itemEmpat->opsi_jawaban == 'input text')
                                             <div class="form-group col-md-6">
                                                 <label for="">{{ $itemEmpat->nama }}</label>
-                                                <input type="hidden" name="id_level[{{ $itemEmpat->id }}]" value="{{ $itemEmpat->id }}"
-                                                    id="">
+                                                <input type="hidden" name="id_level[{{ $itemEmpat->id }}]"
+                                                    value="{{ $itemEmpat->id }}" id="">
                                                 <input type="hidden" name="opsi_jawaban[{{ $itemEmpat->id }}]"
                                                     value="{{ $itemEmpat->opsi_jawaban }}" id="">
-                                                <input type="text" maxlength="255" name="informasi[{{ $itemEmpat->id }}]" id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan_/_ht' ? 'nilai_asuransi_penjaminan' : $idLevelEmpat }}"
-                                                    placeholder="Masukkan informasi" class="form-control" value="{{ temporary($duTemp->id, $itemEmpat->id)?->opsi_text }}">
+                                                <input type="text" maxlength="255"
+                                                    name="informasi[{{ $itemEmpat->id }}]"
+                                                    id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan_/_ht' ? 'nilai_asuransi_penjaminan' : $idLevelEmpat }}"
+                                                    placeholder="Masukkan informasi" class="form-control"
+                                                    value="{{ temporary($duTemp->id, $itemEmpat->id)?->opsi_text }}">
                                             </div>
                                         @elseif ($itemEmpat->opsi_jawaban == 'number')
                                             <div class="form-group col-md-6">
                                                 <label for="">{{ $itemEmpat->nama }}</label>
                                                 <input type="hidden" name="opsi_jawaban[{{ $itemEmpat->id }}]"
                                                     value="{{ $itemEmpat->opsi_jawaban }}" id="">
-                                                <input type="hidden" name="id_level[{{ $itemEmpat->id }}]" value="{{ $itemEmpat->id }}"
-                                                    id="">
-                                                <input type="text" step="any" name="informasi[{{ $itemEmpat->id }}]"
+                                                <input type="hidden" name="id_level[{{ $itemEmpat->id }}]"
+                                                    value="{{ $itemEmpat->id }}" id="">
+                                                <input type="text" step="any"
+                                                    name="informasi[{{ $itemEmpat->id }}]"
                                                     id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan_/_ht' ? 'nilai_asuransi_penjaminan' : $idLevelEmpat }}"
                                                     placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
-                                                    class="form-control rupiah" value="{{ rupiah(temporary($duTemp->id, $itemEmpat->id)?->opsi_text) }}">
+                                                    class="form-control rupiah"
+                                                    value="{{ rupiah(temporary($duTemp->id, $itemEmpat->id)?->opsi_text) }}">
                                             </div>
                                         @elseif ($itemEmpat->opsi_jawaban == 'persen')
                                             <div class="form-group col-md-6">
                                                 <label for="">{{ $itemEmpat->nama }}</label>
                                                 <input type="hidden" name="opsi_jawaban[{{ $itemEmpat->id }}]"
                                                     value="{{ $itemEmpat->opsi_jawaban }}" id="">
-                                                <input type="hidden" name="id_level[{{ $itemEmpat->id }}]" value="{{ $itemEmpat->id }}"
-                                                    id="">
+                                                <input type="hidden" name="id_level[{{ $itemEmpat->id }}]"
+                                                    value="{{ $itemEmpat->id }}" id="">
                                                 <div class="input-group mb-3">
-                                                    <input type="number" step="any" name="informasi[{{ $itemEmpat->id }}]"
+                                                    <input type="number" step="any"
+                                                        name="informasi[{{ $itemEmpat->id }}]"
                                                         id="{{ $idLevelEmpat }}"
                                                         placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
                                                         class="form-control" aria-label="Recipient's username"
-                                                        aria-describedby="basic-addon2" value="{{ temporary($duTemp->id, $itemEmpat->id)?->opsi_text }}">
+                                                        aria-describedby="basic-addon2"
+                                                        value="{{ temporary($duTemp->id, $itemEmpat->id)?->opsi_text }}">
                                                     <div class="input-group-append">
                                                         <span class="input-group-text" id="basic-addon2">%</span>
                                                     </div>
@@ -970,23 +1077,26 @@ $dataIndex = match ($skema) {
                                                 <label for="">{{ $itemEmpat->nama }}</label>
                                                 {{-- <input type="hidden" name="opsi_jawaban[]"
                                                     value="{{ $itemEmpat->opsi_jawaban }}" id=""> --}}
-                                                <input type="hidden" name="id_item_file[{{ $itemEmpat->id }}]" value="{{ $itemEmpat->id }}"
-                                                    id="">
-                                                <input type="file" name="upload_file[{{ $itemEmpat->id }}]" data-id="{{ temporary($duTemp->id, $itemEmpat->id)?->id }}"
+                                                <input type="hidden" name="id_item_file[{{ $itemEmpat->id }}]"
+                                                    value="{{ $itemEmpat->id }}" id="">
+                                                <input type="file" name="upload_file[{{ $itemEmpat->id }}]"
+                                                    data-id="{{ temporary($duTemp->id, $itemEmpat->id)?->id }}"
                                                     placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
                                                     class="form-control limit-size" id="{{ $idLevelEmpat }}">
-                                                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
-                                                <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemEmpat->id)?->opsi_text }}</span>
+                                                <span class="invalid-tooltip" style="display: none">Besaran file tidak
+                                                    boleh lebih dari 5 MB</span>
+                                                <span class="filename"
+                                                    style="display: inline;">{{ temporary($duTemp->id, $itemEmpat->id)?->opsi_text }}</span>
                                             </div>
                                         @elseif ($itemEmpat->opsi_jawaban == 'long text')
                                             <div class="form-group col-md-6">
                                                 <label for="">{{ $itemEmpat->nama }}</label>
                                                 <input type="hidden" name="opsi_jawaban[{{ $itemEmpat->id }}]"
                                                     value="{{ $itemEmpat->opsi_jawaban }}" id="">
-                                                <input type="hidden" name="id_level[{{ $itemEmpat->id }}]" value="{{ $itemEmpat->id }}"
-                                                    id="">
-                                                <textarea name="informasi[{{ $itemEmpat->id }}]" rows="4" id="{{ $idLevelEmpat }}" maxlength="255" class="form-control"
-                                                    placeholder="Masukkan informasi {{ $itemEmpat->nama }}"></textarea>
+                                                <input type="hidden" name="id_level[{{ $itemEmpat->id }}]"
+                                                    value="{{ $itemEmpat->id }}" id="">
+                                                <textarea name="informasi[{{ $itemEmpat->id }}]" rows="4" id="{{ $idLevelEmpat }}" maxlength="255"
+                                                    class="form-control" placeholder="Masukkan informasi {{ $itemEmpat->nama }}"></textarea>
                                             </div>
                                         @endif
                                         @php
@@ -1010,13 +1120,14 @@ $dataIndex = match ($skema) {
                                         @if (count($dataJawabanLevelEmpat) != 0)
                                             <div class="form-group col-md-6">
                                                 <label for="">{{ $itemEmpat->nama }}</label>
-                                                <select name="dataLevelEmpat[{{ $itemEmpat->id }}]" id="{{ $idLevelEmpat }}"
-                                                    class="form-control cek-sub-column"
+                                                <select name="dataLevelEmpat[{{ $itemEmpat->id }}]"
+                                                    id="{{ $idLevelEmpat }}" class="form-control cek-sub-column"
                                                     data-id_item={{ $itemEmpat->id }}>
                                                     <option value=""> --Pilih Opsi -- </option>
                                                     @foreach ($dataJawabanLevelEmpat as $itemJawabanEmpat)
                                                         <option id="{{ $idLevelEmpat . '_' . $key }}"
-                                                            value="{{ ($itemJawabanEmpat->skor == null ? 'kosong' : $itemJawabanEmpat->skor) . '-' . $itemJawabanEmpat->id }}" {{ (temporary_select($itemEmpat->id, $duTemp->id)?->id_jawaban == $itemJawabanEmpat->id) ? 'selected' : '' }}>
+                                                            value="{{ ($itemJawabanEmpat->skor == null ? 'kosong' : $itemJawabanEmpat->skor) . '-' . $itemJawabanEmpat->id }}"
+                                                            {{ temporary_select($itemEmpat->id, $duTemp->id)?->id_jawaban == $itemJawabanEmpat->id ? 'selected' : '' }}>
                                                             {{ $itemJawabanEmpat->option }}</option>
                                                     @endforeach
                                                 </select>
@@ -1035,7 +1146,8 @@ $dataIndex = match ($skema) {
                         <hr style="border: 0.2px solid #E3E6EA;">
                         <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
                         <input type="hidden" name="id_aspek[{{ $value->id }}]" value="{{ $value->id }}">
-                        <textarea name="pendapat_per_aspek[{{ $value->id }}]" class="form-control @error('pendapat_per_aspek') is-invalid @enderror" id="" maxlength="255"
+                        <textarea name="pendapat_per_aspek[{{ $value->id }}]"
+                            class="form-control @error('pendapat_per_aspek') is-invalid @enderror" id="" maxlength="255"
                             cols="30" rows="4" placeholder="Pendapat Per Aspek">{{ temporary_usulan($value->id, $duTemp->id)?->usulan }}</textarea>
                         @error('pendapat_per_aspek')
                             <div class="invalid-feedback">
@@ -1052,8 +1164,8 @@ $dataIndex = match ($skema) {
             <div class="row">
                 <div class="form-group col-md-12">
                     <label for="">Pendapat dan Usulan</label>
-                    <textarea name="komentar_staff" class="form-control @error('komentar_staff') is-invalid @enderror" maxlength="255" id="" cols="30"
-                        rows="4" placeholder="Pendapat dan Usulan Staf/Analis Kredit"></textarea>
+                    <textarea name="komentar_staff" class="form-control @error('komentar_staff') is-invalid @enderror" maxlength="255"
+                        id="" cols="30" rows="4" placeholder="Pendapat dan Usulan Staf/Analis Kredit"></textarea>
                     @error('komentar_staff')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -1067,10 +1179,13 @@ $dataIndex = match ($skema) {
         <div class="row form-group">
             <div class="col text-right">
                 <a href="{{ route('pengajuan-kredit-draft') }}">
-                    <button class="btn btn-warning" type="button"><span class="fa fa-arrow-left"></span> Kembali</button>
+                    <button class="btn btn-warning" type="button"><span class="fa fa-arrow-left"></span>
+                        Kembali</button>
                 </a>
-                <button class="btn btn-default btn-prev" type="button"><span class="fa fa-chevron-left"></span> Sebelumnya</button>
-                <button class="btn btn-danger btn-next" type="button">Selanjutnya <span class="fa fa-chevron-right"></span></button>
+                <button class="btn btn-default btn-prev" type="button"><span class="fa fa-chevron-left"></span>
+                    Sebelumnya</button>
+                <button class="btn btn-danger btn-next" type="button">Selanjutnya <span
+                        class="fa fa-chevron-right"></span></button>
                 <button type="submit" class="btn btn-info btn-simpan" id="submit">Simpan <span
                         class="fa fa-save"></span></button>
                 {{-- <button class="btn btn-info ">Simpan <span class="fa fa-chevron-right"></span></button> --}}
@@ -1080,160 +1195,163 @@ $dataIndex = match ($skema) {
 @endsection
 
 @push('custom-script')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="{{ asset('') }}js/custom.js"></script>
-<script>
-    $(document).ready(function() {
-        var firstLoad = true;
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ asset('') }}js/custom.js"></script>
+    <script>
+        $(document).ready(function() {
+            var firstLoad = true;
 
-        $('.side-wizard').on('click', function () {
-            firstLoad = false
-            for (let index = 0; index < 7; index++) {
-                setPercentage(index);
-            }
-        })
-        var jumlahData = $('#jumlahData').val();
+            $('.side-wizard').on('click', function() {
+                firstLoad = false
+                for (let index = 0; index < 7; index++) {
+                    setPercentage(index);
+                }
+            })
+            var jumlahData = $('#jumlahData').val();
 
-        let valSkema = $("#skema").val();
-        cekStatusNikah()
-        setPercentage(0);
-
-        @if($duTemp->nama == null)
-            if(valSkema == null || valSkema == ''){
-                $('#exampleModal').modal('show');
-            }
-        @endif
-
-        $("#exampleModal").on('click', "#btnSkema", function(){
             let valSkema = $("#skema").val();
-            //console.log(valSkema);
+            cekStatusNikah()
+            setPercentage(0);
 
-            $("#skema_kredit").val(valSkema);
+            @if ($duTemp->nama == null)
+                if (valSkema == null || valSkema == '') {
+                    $('#exampleModal').modal('show');
+                }
+            @endif
+
+            $("#exampleModal").on('click', "#btnSkema", function() {
+                let valSkema = $("#skema").val();
+                //console.log(valSkema);
+
+                $("#skema_kredit").val(valSkema);
+            });
         });
-    });
-    function setPercentage(formIndex) {
-        var form = ".form-wizard[data-index='" + formIndex + "']"
-        var inputText = $(form + " .row input[type=text]")
-        var inputNumber = $(form + " input[type=number]")
-        var inputDisabled = $(form + " input:disabled")
-        var inputReadonly = $(form + " input").find("readonly")
-        var inputHidden = $(form + " input[type=hidden]")
-        var inputFile = $(form + " .filename")
-        var inputDate = $(form + " input[type=date]")
-        var select = $(form + " select")
-        var textarea = $(form + " textarea")
-        var totalText = inputText ? inputText.length : 0
-        var totalNumber = inputNumber ? inputNumber.length : 0
-        var totalDisabled = inputDisabled ? inputDisabled.length : 0
-        var totalReadonly = inputReadonly ? inputReadonly.length : 0
-        var totalHidden = inputHidden ? inputHidden.length : 0
-        var totalFile = inputFile ? inputFile.length : 0
-        var totalDate = inputDate ? inputDate.length : 0
-        var totalSelect = select ? select.length : 0
-        var totalTextArea = textarea ? textarea.length : 0
 
-        var subtotalInput = (totalText + totalNumber + totalFile + totalDate + totalSelect + totalTextArea)
+        function setPercentage(formIndex) {
+            var form = ".form-wizard[data-index='" + formIndex + "']"
+            var inputText = $(form + " .row input[type=text]")
+            var inputNumber = $(form + " input[type=number]")
+            var inputDisabled = $(form + " input:disabled")
+            var inputReadonly = $(form + " input").find("readonly")
+            var inputHidden = $(form + " input[type=hidden]")
+            var inputFile = $(form + " .filename")
+            var inputDate = $(form + " input[type=date]")
+            var select = $(form + " select")
+            var textarea = $(form + " textarea")
+            var totalText = inputText ? inputText.length : 0
+            var totalNumber = inputNumber ? inputNumber.length : 0
+            var totalDisabled = inputDisabled ? inputDisabled.length : 0
+            var totalReadonly = inputReadonly ? inputReadonly.length : 0
+            var totalHidden = inputHidden ? inputHidden.length : 0
+            var totalFile = inputFile ? inputFile.length : 0
+            var totalDate = inputDate ? inputDate.length : 0
+            var totalSelect = select ? select.length : 0
+            var totalTextArea = textarea ? textarea.length : 0
 
-        if (formIndex == 2) {
-            var ijinUsahaSelect = $(form).find("#ijin_usaha");
-            if (ijinUsahaSelect.length > 0) {
-                if (ijinUsahaSelect[0].value == 'nib' || ijinUsahaSelect[0].value == 'surat_keterangan_usaha') {
-                    if(!$("#isNpwp").attr('checked')){
-                        subtotalInput -= 4
+            var subtotalInput = (totalText + totalNumber + totalFile + totalDate + totalSelect + totalTextArea)
+
+            if (formIndex == 2) {
+                var ijinUsahaSelect = $(form).find("#ijin_usaha");
+                if (ijinUsahaSelect.length > 0) {
+                    if (ijinUsahaSelect[0].value == 'nib' || ijinUsahaSelect[0].value == 'surat_keterangan_usaha') {
+                        if (!$("#isNpwp").attr('checked')) {
+                            subtotalInput -= 4
+                        }
+                        subtotalInput -= 2;
                     }
-                    subtotalInput -= 2;
+                    if (ijinUsahaSelect[0].value == 'tidak_ada_legalitas_usaha') {
+                        subtotalInput -= 6;
+                    }
                 }
-                if (ijinUsahaSelect[0].value == 'tidak_ada_legalitas_usaha') {
-                    subtotalInput -= 6;
+            }
+
+            if (formIndex == 3) {
+                subtotalInput -= firstLoad ? 2 : 8;
+            }
+
+            if (formIndex == 6) {
+                subtotalInput -= 1;
+            }
+
+            var ttlInputTextFilled = 0;
+            $.each(inputText, function(i, v) {
+                if (v.value != '') {
+                    ttlInputTextFilled++
+                }
+            })
+            var ttlInputNumberFilled = 0;
+            $.each(inputNumber, function(i, v) {
+                if (v.value != '') {
+                    ttlInputNumberFilled++
+                }
+            })
+            var ttlInputFileFilled = 0;
+            $.each(inputFile, function(i, v) {
+                if (v.innerHTML != '') {
+                    ttlInputFileFilled++
+                }
+            })
+            var ttlInputDateFilled = 0;
+            $.each(inputDate, function(i, v) {
+                if (v.value != '') {
+                    ttlInputDateFilled++
+                }
+            })
+            var ttlSelectFilled = 0;
+            $.each(select, function(i, v) {
+                var data = v.value;
+                if (data != "" && data != '' && data != null && data != ' --Pilih Opsi-- ' && data !=
+                    '--Pilih Opsi--') {
+                    ttlSelectFilled++
+                }
+            })
+            var ttlTextAreaFilled = 0;
+            $.each(textarea, function(i, v) {
+                if (v.value != '') {
+                    ttlTextAreaFilled++
+                }
+            })
+
+            var subtotalFilled = ttlInputTextFilled + ttlInputNumberFilled + ttlInputFileFilled + ttlInputDateFilled +
+                ttlSelectFilled + ttlTextAreaFilled;
+            if (formIndex == 0) {
+                let value = $("#status").val();
+                //console.log('status : '+value)
+                if (value == "menikah") {
+                    // subtotalInput += 2;
+                    subtotalFilled += 2;
+                } else {
+                    // subtotalInput += 1;
+                    subtotalFilled += 2;
                 }
             }
+            // console.log("=============index : " + formIndex + "=============")
+            // console.log('total input : ' + subtotalInput)
+            // console.log('total input filled : ' + subtotalFilled)
+            // console.log("===============================================")
+
+            var percentage = parseInt(subtotalFilled / subtotalInput * 100);
+            percentage = Number.isNaN(percentage) ? 0 : percentage;
+            percentage = percentage > 100 ? 100 : percentage;
+            percentage = percentage < 0 ? 0 : percentage;
+
+            $(".side-wizard li[data-index='" + formIndex + "'] a span i").html(percentage + "%")
         }
 
-        if (formIndex == 3) {
-            subtotalInput -= firstLoad ? 2 : 8;
-        }
+        function cekStatusNikah() {
 
-        if (formIndex == 6) {
-            subtotalInput -= 1;
-        }
-
-        var ttlInputTextFilled = 0;
-        $.each(inputText, function(i, v) {
-            if (v.value != '') {
-                ttlInputTextFilled++
-            }
-        })
-        var ttlInputNumberFilled = 0;
-        $.each(inputNumber, function(i, v) {
-            if (v.value != '') {
-                ttlInputNumberFilled++
-            }
-        })
-        var ttlInputFileFilled = 0;
-        $.each(inputFile, function(i, v) {
-            if (v.innerHTML != '') {
-                ttlInputFileFilled++
-            }
-        })
-        var ttlInputDateFilled = 0;
-        $.each(inputDate, function(i, v) {
-            if (v.value != '') {
-                ttlInputDateFilled++
-            }
-        })
-        var ttlSelectFilled = 0;
-        $.each(select, function(i, v) {
-            var data = v.value;
-            if (data != "" && data != '' && data != null && data != ' --Pilih Opsi-- ' && data != '--Pilih Opsi--') {
-                ttlSelectFilled++
-            }
-        })
-        var ttlTextAreaFilled = 0;
-        $.each(textarea, function(i, v) {
-            if (v.value != '') {
-                ttlTextAreaFilled++
-            }
-        })
-
-        var subtotalFilled = ttlInputTextFilled + ttlInputNumberFilled + ttlInputFileFilled + ttlInputDateFilled + ttlSelectFilled + ttlTextAreaFilled;
-        if (formIndex == 0) {
             let value = $("#status").val();
-            //console.log('status : '+value)
+            $("#foto-ktp-istri").empty();
+            $("#foto-ktp-suami").empty();
+            $("#foto-ktp-nasabah").empty();
+            $("#foto-ktp-istri").removeClass('form-group col-md-6');
+            $("#foto-ktp-suami").removeClass('form-group col-md-6');
+            $("#foto-ktp-nasabah").removeClass('form-group col-md-6');
+
             if (value == "menikah") {
-                // subtotalInput += 2;
-                subtotalFilled += 2;
-            }
-            else {
-                // subtotalInput += 1;
-                subtotalFilled += 2;
-            }
-        }
-        //console.log("=============index : "+formIndex+"=============")
-        //console.log('total input : ' + subtotalInput)
-        //console.log('total input filled : ' + subtotalFilled)
-        //console.log("===============================================")
-
-        var percentage = parseInt(subtotalFilled / subtotalInput * 100);
-        percentage = Number.isNaN(percentage) ? 0 : percentage;
-        percentage = percentage > 100 ? 100 : percentage;
-        percentage = percentage < 0 ? 0 : percentage;
-
-        $(".side-wizard li[data-index='" + formIndex + "'] a span i").html(percentage + "%")
-    }
-    function cekStatusNikah(){
-
-        let value = $("#status").val();
-        $("#foto-ktp-istri").empty();
-        $("#foto-ktp-suami").empty();
-        $("#foto-ktp-nasabah").empty();
-        $("#foto-ktp-istri").removeClass('form-group col-md-6');
-        $("#foto-ktp-suami").removeClass('form-group col-md-6');
-        $("#foto-ktp-nasabah").removeClass('form-group col-md-6');
-
-        if(value == "menikah"){
-            $("#foto-ktp-istri").addClass('form-group col-md-6')
-            $("#foto-ktp-suami").addClass('form-group col-md-6')
-            $("#foto-ktp-istri").append(`
+                $("#foto-ktp-istri").addClass('form-group col-md-6')
+                $("#foto-ktp-suami").addClass('form-group col-md-6')
+                $("#foto-ktp-istri").append(`
             <label for="">{{ $itemKTPIs->nama }}</label>
                 <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
                 <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" id="Foto_KTP_Istri" data-id="{{ temporary($duTemp->id, $itemKTPIs->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size">
@@ -1245,7 +1363,7 @@ $dataIndex = match ($skema) {
                 @endif
                 <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPIs->id)?->opsi_text }}</span>
             `)
-            $("#foto-ktp-suami").append(`
+                $("#foto-ktp-suami").append(`
             <label for="">{{ $itemKTPSu->nama }}</label>
                 <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
                 <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" id="Foto_KTP_Suami" data-id="{{ temporary($duTemp->id, $itemKTPSu->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size">
@@ -1257,9 +1375,9 @@ $dataIndex = match ($skema) {
                 @endif
                 <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPSu->id)?->opsi_text }}</span>
             `);
-        } else {
-            $("#foto-ktp-nasabah").addClass('form-group col-md-12')
-            $("#foto-ktp-nasabah").append(`
+            } else {
+                $("#foto-ktp-nasabah").addClass('form-group col-md-12')
+                $("#foto-ktp-nasabah").append(`
                 <label for="">{{ $itemKTPNas->nama }}</label>
                 <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
                 <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPNas->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-control limit-size">
@@ -1271,31 +1389,35 @@ $dataIndex = match ($skema) {
                 @endif
                 <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPNas->id)?->opsi_text }}</span>
             `)
-        }
-        // Limit Upload
-        $('.limit-size').on('change', function() {
-            var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-            if (size > 5) {
-                $(this).next().css({"display": "block"});
-                this.value = ''
-            } else {
-                $(this).next().css({"display": "none"});
             }
-        })
-    }
-    $("#status").change(function(){
-        let value = $(this).val();
-        $("#foto-ktp-istri").empty();
-        $("#foto-ktp-suami").empty();
-        $("#foto-ktp-nasabah").empty();
-        $("#foto-ktp-istri").removeClass('form-group col-md-6');
-        $("#foto-ktp-suami").removeClass('form-group col-md-6');
-        $("#foto-ktp-nasabah").removeClass('form-group col-md-6');
+            // Limit Upload
+            $('.limit-size').on('change', function() {
+                var size = (this.files[0].size / 1024 / 1024).toFixed(2)
+                if (size > 5) {
+                    $(this).next().css({
+                        "display": "block"
+                    });
+                    this.value = ''
+                } else {
+                    $(this).next().css({
+                        "display": "none"
+                    });
+                }
+            })
+        }
+        $("#status").change(function() {
+            let value = $(this).val();
+            $("#foto-ktp-istri").empty();
+            $("#foto-ktp-suami").empty();
+            $("#foto-ktp-nasabah").empty();
+            $("#foto-ktp-istri").removeClass('form-group col-md-6');
+            $("#foto-ktp-suami").removeClass('form-group col-md-6');
+            $("#foto-ktp-nasabah").removeClass('form-group col-md-6');
 
-        if(value == "menikah"){
-            $("#foto-ktp-istri").addClass('form-group col-md-6')
-            $("#foto-ktp-suami").addClass('form-group col-md-6')
-            $("#foto-ktp-istri").append(`
+            if (value == "menikah") {
+                $("#foto-ktp-istri").addClass('form-group col-md-6')
+                $("#foto-ktp-suami").addClass('form-group col-md-6')
+                $("#foto-ktp-istri").append(`
             <label for="">{{ $itemKTPIs->nama }}</label>
                 <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
                 <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" id="Foto_KTP_Istri" data-id="{{ temporary($duTemp->id, $itemKTPIs->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size">
@@ -1307,7 +1429,7 @@ $dataIndex = match ($skema) {
                 @endif
                 <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPIs->id)?->opsi_text }}</span>
             `)
-            $("#foto-ktp-suami").append(`
+                $("#foto-ktp-suami").append(`
             <label for="">{{ $itemKTPSu->nama }}</label>
                 <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
                 <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" id="Foto_KTP_Suami" data-id="{{ temporary($duTemp->id, $itemKTPSu->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size">
@@ -1319,9 +1441,9 @@ $dataIndex = match ($skema) {
                 @endif
                 <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPSu->id)?->opsi_text }}</span>
             `);
-        } else {
-            $("#foto-ktp-nasabah").addClass('form-group col-md-12')
-            $("#foto-ktp-nasabah").append(`
+            } else {
+                $("#foto-ktp-nasabah").addClass('form-group col-md-12')
+                $("#foto-ktp-nasabah").append(`
                 <label for="">{{ $itemKTPNas->nama }}</label>
                 <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
                 <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPNas->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-control limit-size">
@@ -1333,193 +1455,197 @@ $dataIndex = match ($skema) {
                 @endif
                 <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemKTPNas->id)?->opsi_text }}</span>
             `)
-        }
-
-        // Limit Upload
-        $('.limit-size').on('change', function() {
-            var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-            if (size > 5) {
-                $(this).next().css({"display": "block"});
-                this.value = ''
-            } else {
-                $(this).next().css({"display": "none"});
             }
-        })
-    });
 
-    $("#id_merk").change(function(){
-        let val = $(this).val();
+            // Limit Upload
+            $('.limit-size').on('change', function() {
+                var size = (this.files[0].size / 1024 / 1024).toFixed(2)
+                if (size > 5) {
+                    $(this).next().css({
+                        "display": "block"
+                    });
+                    this.value = ''
+                } else {
+                    $(this).next().css({
+                        "display": "none"
+                    });
+                }
+            })
+        });
 
-        $.ajax({
-            type: "get",
-            url: "{{ route('get-tipe-kendaraan') }}?id_merk="+val,
-            dataType: "json",
-            success: (res) => {
-                if(res){
-                    $("#id_tipe").empty();
-                    $("#id_tipe").append(`<option>Pilih Tipe</option>`)
+        $("#id_merk").change(function() {
+            let val = $(this).val();
 
-                    $.each(res.tipe, function(i, value){
-                        $("#id_tipe").append(`
+            $.ajax({
+                type: "get",
+                url: "{{ route('get-tipe-kendaraan') }}?id_merk=" + val,
+                dataType: "json",
+                success: (res) => {
+                    if (res) {
+                        $("#id_tipe").empty();
+                        $("#id_tipe").append(`<option>Pilih Tipe</option>`)
+
+                        $.each(res.tipe, function(i, value) {
+                            $("#id_tipe").append(`
                             <option value="${value.id}">${value.tipe}</option>
                         `);
-                    })
+                        })
+                    }
                 }
-            }
+            })
         })
-    })
 
-    @if($nib != '')
-        $('#docSKU').hide();
-        $('#surat_keterangan_usaha').hide();
-    @elseif($sku != '')
-        $('#nib').hide();
-        $('#docNIB').hide();
-    @elseif($sku == '' && $npwp == '' && $nib == '')
-        $('#docSKU').hide();
-        $('#surat_keterangan_usaha').hide();
-        $('#nib').hide();
-        $('#docNIB').hide();
-        $('#npwp').hide();
-        $('#docNPWP').hide();
-        $('#ijin_usaha').val('tidak_ada_legalitas_usaha')
-    @endif
-    $(window).on('load', () => {
-        $("#ijin_usaha").trigger("change")
-    })
-    //make input readonly
-    $('#ratio_coverage').attr('readonly', true);
-    $('#ratio_tenor_asuransi').attr('readonly', true);
-    $('#persentase_kebutuhan_kredit').attr('readonly', true);
-    $('#repayment_capacity').attr('readonly', true);
+        @if ($nib != '')
+            $('#docSKU').hide();
+            $('#surat_keterangan_usaha').hide();
+        @elseif ($sku != '')
+            $('#nib').hide();
+            $('#docNIB').hide();
+        @elseif ($sku == '' && $npwp == '' && $nib == '')
+            $('#docSKU').hide();
+            $('#surat_keterangan_usaha').hide();
+            $('#nib').hide();
+            $('#docNIB').hide();
+            $('#npwp').hide();
+            $('#docNPWP').hide();
+            $('#ijin_usaha').val('tidak_ada_legalitas_usaha')
+        @endif
+        $(window).on('load', () => {
+            $("#ijin_usaha").trigger("change")
+        })
+        //make input readonly
+        $('#ratio_coverage').attr('readonly', true);
+        $('#ratio_tenor_asuransi').attr('readonly', true);
+        $('#persentase_kebutuhan_kredit').attr('readonly', true);
+        $('#repayment_capacity').attr('readonly', true);
 
-    // make select option hidden
-    $('#ratio_coverage_opsi_label').hide();
-    $('#ratio_tenor_asuransi_opsi_label').hide();
-    $('#ratio_coverage_opsi').hide();
-    $('#ratio_tenor_asuransi_opsi').hide();
-    $('#persentase_kebutuhan_kredit_opsi_label').hide();
-    $('#persentase_kebutuhan_kredit_opsi').hide();
-    $('#repayment_capacity_opsi_label').hide();
-    $('#repayment_capacity_opsi').hide();
-    const nullValue = []
-    hitungRatioCoverage()
-    hitungRepaymentCapacity()
+        // make select option hidden
+        $('#ratio_coverage_opsi_label').hide();
+        $('#ratio_tenor_asuransi_opsi_label').hide();
+        $('#ratio_coverage_opsi').hide();
+        $('#ratio_tenor_asuransi_opsi').hide();
+        $('#persentase_kebutuhan_kredit_opsi_label').hide();
+        $('#persentase_kebutuhan_kredit_opsi').hide();
+        $('#repayment_capacity_opsi_label').hide();
+        $('#repayment_capacity_opsi').hide();
+        const nullValue = []
+        hitungRatioCoverage()
+        hitungRepaymentCapacity()
 
-    let urlCekSubColumn = "{{ route('cek-sub-column') }}";
-    let urlGetItemByKategoriJaminanUtama =
-        "{{ route('get-item-jaminan-by-kategori-jaminan-utama') }}"; // jaminan tambahan
-    let urlGetItemByKategori = "{{ route('get-item-jaminan-by-kategori') }}"; // jaminan tambahan
+        let urlCekSubColumn = "{{ route('cek-sub-column') }}";
+        let urlGetItemByKategoriJaminanUtama =
+            "{{ route('get-item-jaminan-by-kategori-jaminan-utama') }}"; // jaminan tambahan
+        let urlGetItemByKategori = "{{ route('get-item-jaminan-by-kategori') }}"; // jaminan tambahan
 
-    var x = 1;
+        var x = 1;
 
-    $('#kabupaten').change(function() {
-        var kabID = $(this).val();
-        if (kabID) {
-            $.ajax({
-                type: "GET",
-                url: "{{ route('getKecamatan') }}?kabID=" + kabID,
-                dataType: 'JSON',
-                success: function(res) {
-                    //    //console.log(res);
-                    if (res) {
-                        $("#kecamatan").empty();
-                        $("#desa").empty();
-                        $("#kecamatan").append('<option>---Pilih Kecamatan---</option>');
-                        $("#desa").append('<option>---Pilih Desa---</option>');
-                        $.each(res, function(nama, kode) {
-                            $('#kecamatan').append(`
-                                <option value="${kode}" ${kode == {{$duTemp?->id_kecamatan ?? 'null'}} ? 'selected' : '' }>${nama}</option>
+        $('#kabupaten').change(function() {
+            var kabID = $(this).val();
+            if (kabID) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ route('getKecamatan') }}?kabID=" + kabID,
+                    dataType: 'JSON',
+                    success: function(res) {
+                        //    //console.log(res);
+                        if (res) {
+                            $("#kecamatan").empty();
+                            $("#desa").empty();
+                            $("#kecamatan").append('<option>---Pilih Kecamatan---</option>');
+                            $("#desa").append('<option>---Pilih Desa---</option>');
+                            $.each(res, function(nama, kode) {
+                                $('#kecamatan').append(`
+                                <option value="${kode}" ${kode == {{ $duTemp?->id_kecamatan ?? 'null' }} ? 'selected' : '' }>${nama}</option>
                             `);
-                        });
+                            });
 
-                        $('#kecamatan').trigger('change');
-                    } else {
-                        $("#kecamatan").empty();
-                        $("#desa").empty();
+                            $('#kecamatan').trigger('change');
+                        } else {
+                            $("#kecamatan").empty();
+                            $("#desa").empty();
+                        }
                     }
-                }
-            });
-        } else {
-            $("#kecamatan").empty();
-            $("#desa").empty();
-        }
-    });
+                });
+            } else {
+                $("#kecamatan").empty();
+                $("#desa").empty();
+            }
+        });
 
-    $('#kecamatan').change(function() {
-        var kecID = $(this).val();
-        // //console.log(kecID);
-        if (kecID) {
-            $.ajax({
-                type: "GET",
-                url: "{{ route('getDesa') }}?kecID=" + kecID,
-                dataType: 'JSON',
-                success: function(res) {
-                    //    //console.log(res);
-                    if (res) {
-                        $("#desa").empty();
-                        $("#desa").append('<option>---Pilih Desa---</option>');
-                        $.each(res, function(nama, kode) {
-                            $('#desa').append(`
-                                <option value="${kode}" ${kode == {{$duTemp?->id_desa ?? 'null'}} ? 'selected' : '' }>${nama}</option>
+        $('#kecamatan').change(function() {
+            var kecID = $(this).val();
+            // //console.log(kecID);
+            if (kecID) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ route('getDesa') }}?kecID=" + kecID,
+                    dataType: 'JSON',
+                    success: function(res) {
+                        //    //console.log(res);
+                        if (res) {
+                            $("#desa").empty();
+                            $("#desa").append('<option>---Pilih Desa---</option>');
+                            $.each(res, function(nama, kode) {
+                                $('#desa').append(`
+                                <option value="${kode}" ${kode == {{ $duTemp?->id_desa ?? 'null' }} ? 'selected' : '' }>${nama}</option>
                             `);
-                        });
-                    } else {
-                        $("#desa").empty();
+                            });
+                        } else {
+                            $("#desa").empty();
+                        }
                     }
-                }
-            });
-        } else {
-            $("#desa").empty();
-        }
-    });
+                });
+            } else {
+                $("#desa").empty();
+            }
+        });
 
-    //cek apakah opsi yg dipilih memiliki sub column
-    $('.cek-sub-column').change(function(e) {
-        let idOption = $(this).val();
-        let idItem = $(this).data('id_item');
-        // cek option apakah ada turunan
-        $(`#item${idItem}`).empty();
-        $.ajax({
-            type: "get",
-            url: `${urlCekSubColumn}?idOption=${idOption}`,
-            dataType: "json",
-            success: function(response) {
-                if (response.sub_column != null) {
-                    $(`#item${idItem}`).append(`
+        //cek apakah opsi yg dipilih memiliki sub column
+        $('.cek-sub-column').change(function(e) {
+            let idOption = $(this).val();
+            let idItem = $(this).data('id_item');
+            // cek option apakah ada turunan
+            $(`#item${idItem}`).empty();
+            $.ajax({
+                type: "get",
+                url: `${urlCekSubColumn}?idOption=${idOption}`,
+                dataType: "json",
+                success: function(response) {
+                    if (response.sub_column != null) {
+                        $(`#item${idItem}`).append(`
                     <div class="form-group sub mt-2">
                         <label for="">${response.sub_column}</label>
                         <input type="hidden" name="id_option_sub_column[]" value="${idOption}">
                         <input type="text" name="jawaban_sub_column[]" placeholder="Masukkan informasi tambahan" class="form-control">
                     </div>
                     `);
-                } else {
-                    $(`#item${idItem}`).empty();
+                    } else {
+                        $(`#item${idItem}`).empty();
+                    }
                 }
-            }
+            });
         });
-    });
 
-    //item kategori jaminan utama cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
-    $('#kategori_jaminan_utama').change(function(e) {
-        //clear item
-        $('#select_kategori_jaminan_utama').empty();
+        //item kategori jaminan utama cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
+        $('#kategori_jaminan_utama').change(function(e) {
+            //clear item
+            $('#select_kategori_jaminan_utama').empty();
 
-        // clear bukti pemilikan
-        $('#bukti_pemilikan_jaminan_utama').empty();
+            // clear bukti pemilikan
+            $('#bukti_pemilikan_jaminan_utama').empty();
 
-        //get item by kategori
-        let kategoriJaminanUtama = $(this).val();
+            //get item by kategori
+            let kategoriJaminanUtama = $(this).val();
 
-        $.ajax({
-            type: "get",
-            url: `${urlGetItemByKategoriJaminanUtama}?kategori=${kategoriJaminanUtama}`,
-            dataType: "json",
-            success: function(response) {
-                // jika kategori bukan stock dan piutang
-                if (kategoriJaminanUtama != 'Stock' && kategoriJaminanUtama != 'Piutang') {
-                    // add item by kategori
-                    $('#select_kategori_jaminan_utama').append(`
+            $.ajax({
+                type: "get",
+                url: `${urlGetItemByKategoriJaminanUtama}?kategori=${kategoriJaminanUtama}`,
+                dataType: "json",
+                success: function(response) {
+                    // jika kategori bukan stock dan piutang
+                    if (kategoriJaminanUtama != 'Stock' && kategoriJaminanUtama != 'Piutang') {
+                        // add item by kategori
+                        $('#select_kategori_jaminan_utama').append(`
                         <label for="">${response.item.nama}</label>
                         <select name="dataLevelEmpat[]" id="itemByKategoriJaminanUtama" class="form-control cek-sub-column"
                             data-id_item="${response.item.id}">
@@ -1530,25 +1656,25 @@ $dataIndex = match ($skema) {
 
                         </div>
                     `);
-                    // add opsi dari item
-                    $.each(response.item.option, function(i, valOption) {
-                        // //console.log(valOption.skor);
-                        $('#itemByKategoriJaminanUtama').append(`
+                        // add opsi dari item
+                        $.each(response.item.option, function(i, valOption) {
+                            // //console.log(valOption.skor);
+                            $('#itemByKategoriJaminanUtama').append(`
                         <option value="${valOption.skor}-${valOption.id}">
                         ${valOption.option}
                         </option>`);
-                    });
+                        });
 
-                    // add item bukti pemilikan
-                    var isCheck = kategoriJaminanUtama != 'Kendaraan Bermotor' &&
-                        kategoriJaminanUtama != 'Stock' && kategoriJaminanUtama != 'Piutang' ?
-                        "<input type='checkbox' class='checkKategoriJaminanUtama'>" : ""
-                    var isDisabled = kategoriJaminanUtama != 'Kendaraan Bermotor' &&
-                        kategoriJaminanUtama != 'Stock' && kategoriJaminanUtama != 'Piutang' ?
-                        'disabled' : ''
-                    $.each(response.itemBuktiPemilikan, function(i, valItem) {
-                        if (valItem.nama == 'Atas Nama') {
-                            $('#bukti_pemilikan_jaminan_utama').append(`
+                        // add item bukti pemilikan
+                        var isCheck = kategoriJaminanUtama != 'Kendaraan Bermotor' &&
+                            kategoriJaminanUtama != 'Stock' && kategoriJaminanUtama != 'Piutang' ?
+                            "<input type='checkbox' class='checkKategoriJaminanUtama'>" : ""
+                        var isDisabled = kategoriJaminanUtama != 'Kendaraan Bermotor' &&
+                            kategoriJaminanUtama != 'Stock' && kategoriJaminanUtama != 'Piutang' ?
+                            'disabled' : ''
+                        $.each(response.itemBuktiPemilikan, function(i, valItem) {
+                            if (valItem.nama == 'Atas Nama') {
+                                $('#bukti_pemilikan_jaminan_utama').append(`
                             <div class="form-group col-md-6 aspek_jaminan_kategori_jaminan_utama">
                                 <label>${valItem.nama}</label>
                                 <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input">
@@ -1557,10 +1683,11 @@ $dataIndex = match ($skema) {
                                 <input type="text" name="informasi[]" placeholder="Masukkan informasi"
                                     class="form-control input">
                             </div>
-                        `);m
-                        } else {
-                            if(valItem.nama == 'Foto') {
-                                $('#bukti_pemilikan_jaminan_utama').append(`
+                        `);
+                                m
+                            } else {
+                                if (valItem.nama == 'Foto') {
+                                    $('#bukti_pemilikan_jaminan_utama').append(`
                                 <div class="form-group col-md-6 aspek_jaminan_kategori_jaminan_utama">
                                     <label>${valItem.nama}</label>
                                     <input type="hidden" name="id_item_file[${valItem.id}]" value="${valItem.id}" id="" class="input">
@@ -1568,9 +1695,8 @@ $dataIndex = match ($skema) {
                                     <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                                     <span class="filename" style="display: inline;"></span>
                                 </div>`);
-                            }
-                            else {
-                                $('#bukti_pemilikan_jaminan_utama').append(`
+                                } else {
+                                    $('#bukti_pemilikan_jaminan_utama').append(`
                                 <div class="form-group col-md-6 aspek_jaminan_kategori_jaminan_utama">
                                     <label>${isCheck} ${valItem.nama}</label>
                                     <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input" ${isDisabled}>
@@ -1579,31 +1705,31 @@ $dataIndex = match ($skema) {
                                     <input type="text" name="informasi[]" placeholder="Masukkan informasi ${valItem.nama}"
                                         class="form-control input" ${isDisabled}>
                                 </div>`);
+                                }
                             }
-                        }
-                    });
+                        });
 
-                    $(".checkKategoriJaminanUtama").click(function() {
-                        var input = $(this).closest('.form-group').find(".input")
-                        // var input_id = $(this).closest('.form-group').find("input_id").last()
-                        // var input_opsi_jawaban = $(this).closest('.form-group').find("input_opsi_jawaban").last()
-                        if ($(this).is(':checked')) {
-                            input.prop('disabled', false)
-                            // input_id.prop('disabled',false)
-                            // input_opsi_jawaban.prop('disabled',false)
-                        } else {
-                            input.val('')
-                            input.prop('disabled', true)
-                            // input_id.prop('disabled',true)
-                            // input_opsi_jawaban.prop('disabled',true)
-                        }
-                    })
-                }
-                // jika kategori = stock dan piutang
-                else {
-                    $.each(response.itemBuktiPemilikan, function(i, valItem) {
-                        if (valItem.nama == 'Atas Nama') {
-                            $('#select_kategori_jaminan_utama').append(`
+                        $(".checkKategoriJaminanUtama").click(function() {
+                            var input = $(this).closest('.form-group').find(".input")
+                            // var input_id = $(this).closest('.form-group').find("input_id").last()
+                            // var input_opsi_jawaban = $(this).closest('.form-group').find("input_opsi_jawaban").last()
+                            if ($(this).is(':checked')) {
+                                input.prop('disabled', false)
+                                // input_id.prop('disabled',false)
+                                // input_opsi_jawaban.prop('disabled',false)
+                            } else {
+                                input.val('')
+                                input.prop('disabled', true)
+                                // input_id.prop('disabled',true)
+                                // input_opsi_jawaban.prop('disabled',true)
+                            }
+                        })
+                    }
+                    // jika kategori = stock dan piutang
+                    else {
+                        $.each(response.itemBuktiPemilikan, function(i, valItem) {
+                            if (valItem.nama == 'Atas Nama') {
+                                $('#select_kategori_jaminan_utama').append(`
                             <div class="aspek_jaminan_kategori_jaminan_utama">
                                 <label>${valItem.nama}</label>
                                 <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input">
@@ -1613,8 +1739,8 @@ $dataIndex = match ($skema) {
                                     class="form-control input">
                             </div>
                         `);
-                        } else {
-                            $('#select_kategori_jaminan_utama').append(`
+                            } else {
+                                $('#select_kategori_jaminan_utama').append(`
                             <div class="aspek_jaminan_kategori_jaminan_utama">
                                 <label>${valItem.nama}</label>
                                 <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input" >
@@ -1624,34 +1750,34 @@ $dataIndex = match ($skema) {
                                     class="form-control input">
                             </div>
                         `);
-                        }
-                    });
+                            }
+                        });
+                    }
                 }
-            }
+            });
         });
-    });
-    // end item kategori jaminan utama cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
+        // end item kategori jaminan utama cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
 
-    //item kategori jaminan tambahan cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
-    $('#kategori_jaminan_tambahan').change(function(e) {
-        //clear item
-        $('#select_kategori_jaminan_tambahan').empty();
+        //item kategori jaminan tambahan cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
+        $('#kategori_jaminan_tambahan').change(function(e) {
+            //clear item
+            $('#select_kategori_jaminan_tambahan').empty();
 
-        // clear bukti pemilikan
-        $('#bukti_pemilikan_jaminan_tambahan').empty();
+            // clear bukti pemilikan
+            $('#bukti_pemilikan_jaminan_tambahan').empty();
 
-        //get item by kategori
-        let kategoriJaminan = $(this).val();
+            //get item by kategori
+            let kategoriJaminan = $(this).val();
 
-        $.ajax({
-            type: "get",
-            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}&idCalonNasabah={{ $duTemp?->id }}`,
-            dataType: "json",
-            success: function(response) {
-                if(kategoriJaminan != "Tidak Memiliki Jaminan Tambahan"){
-                    $("#select_kategori_jaminan_tambahan").show()
-                    // add item by kategori
-                    $('#select_kategori_jaminan_tambahan').append(`
+            $.ajax({
+                type: "get",
+                url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}&idCalonNasabah={{ $duTemp?->id }}`,
+                dataType: "json",
+                success: function(response) {
+                    if (kategoriJaminan != "Tidak Memiliki Jaminan Tambahan") {
+                        $("#select_kategori_jaminan_tambahan").show()
+                        // add item by kategori
+                        $('#select_kategori_jaminan_tambahan').append(`
                         <label for="">${response.item.nama}</label>
                         <select name="dataLevelEmpat[${response.item.id}]" id="itemByKategori" class="form-control cek-sub-column"
                             data-id_item="${response.item.id}">
@@ -1662,23 +1788,23 @@ $dataIndex = match ($skema) {
 
                         </div>
                     `);
-                    // add opsi dari item
-                    $.each(response.item.option, function(i, valOption) {
-                        // //console.log(valOption.skor);
-                        $('#itemByKategori').append(`
+                        // add opsi dari item
+                        $.each(response.item.option, function(i, valOption) {
+                            // //console.log(valOption.skor);
+                            $('#itemByKategori').append(`
                         <option value="${valOption.skor}-${valOption.id}" ${(response.dataSelect == valOption.id) ? 'selected' : ''}>
                         ${valOption.option}
                         </option>`);
-                    });
+                        });
 
-                    // add item bukti pemilikan
-                    var isCheck = kategoriJaminan != 'Kendaraan Bermotor' ?
-                        "<input type='checkbox' class='checkKategori'>" : ""
-                    var isDisabled = kategoriJaminan != 'Kendaraan Bermotor' ? 'disabled' : ''
-                    $.each(response.itemBuktiPemilikan, function(i, valItem) {
-                        //console.log('test');
-                        if (valItem.nama == 'Atas Nama') {
-                            $('#bukti_pemilikan_jaminan_tambahan').append(`
+                        // add item bukti pemilikan
+                        var isCheck = kategoriJaminan != 'Kendaraan Bermotor' ?
+                            "<input type='checkbox' class='checkKategori'>" : ""
+                        var isDisabled = kategoriJaminan != 'Kendaraan Bermotor' ? 'disabled' : ''
+                        $.each(response.itemBuktiPemilikan, function(i, valItem) {
+                            //console.log('test');
+                            if (valItem.nama == 'Atas Nama') {
+                                $('#bukti_pemilikan_jaminan_tambahan').append(`
                                 <div class="form-group col-md-6 aspek_jaminan_kategori">
                                     <label>${valItem.nama}</label>
                                     <input type="hidden" name="id_level[${valItem.id}]" value="${valItem.id}" id="" class="input">
@@ -1688,9 +1814,9 @@ $dataIndex = match ($skema) {
                                         class="form-control input" value="${response.dataJawaban[i]}">
                                 </div>
                             `);
-                        } else {
-                            if(valItem.nama == 'Foto') {
-                                $('#bukti_pemilikan_jaminan_tambahan').append(`
+                            } else {
+                                if (valItem.nama == 'Foto') {
+                                    $('#bukti_pemilikan_jaminan_tambahan').append(`
                                 @forelse (temporary($duTemp->id, 148, true) as $tempData)
                                 <div class="form-group col-md-6 file-wrapper item-${valItem.id}">
                                     <label for="">${valItem.nama}</label>
@@ -1741,19 +1867,22 @@ $dataIndex = match ($skema) {
                                 </div>
                                 @endforelse
                                 `);
-                            } else {
-                                if(response.dataJawaban[i] != null && response.dataJawaban[i] != ""){
-                                    if(kategoriJaminan != 'Kendaraan Bermotor'){
-                                        isCheck = "<input type='checkbox' class='checkKategori' checked>"
-                                        isDisabled = ""
+                                } else {
+                                    if (response.dataJawaban[i] != null && response.dataJawaban[
+                                            i] != "") {
+                                        if (kategoriJaminan != 'Kendaraan Bermotor') {
+                                            isCheck =
+                                                "<input type='checkbox' class='checkKategori' checked>"
+                                            isDisabled = ""
+                                        }
+                                    } else {
+                                        if (kategoriJaminan != 'Kendaraan Bermotor') {
+                                            isCheck =
+                                                "<input type='checkbox' class='checkKategori'>"
+                                            isDisabled = "disabled"
+                                        }
                                     }
-                                } else{
-                                    if(kategoriJaminan != 'Kendaraan Bermotor'){
-                                        isCheck = "<input type='checkbox' class='checkKategori'>"
-                                        isDisabled = "disabled"
-                                    }
-                                }
-                                $('#bukti_pemilikan_jaminan_tambahan').append(`
+                                    $('#bukti_pemilikan_jaminan_tambahan').append(`
                                     <div class="form-group col-md-6 aspek_jaminan_kategori">
                                         <label>${isCheck} ${valItem.nama}</label>
                                         <input type="hidden" name="id_level[${valItem.id}]" value="${valItem.id}" id="" class="input" ${isDisabled}>
@@ -1763,29 +1892,29 @@ $dataIndex = match ($skema) {
                                             class="form-control input" ${isDisabled} value="${response.dataJawaban[i]}">
                                     </div>
                                 `);
+                                }
                             }
-                        }
-                    });
+                        });
 
-                    $(".checkKategori").click(function() {
-                        var input = $(this).closest('.form-group').find(".input")
-                        // var input_id = $(this).closest('.form-group').find("input_id").last()
-                        // var input_opsi_jawaban = $(this).closest('.form-group').find("input_opsi_jawaban").last()
-                        if ($(this).is(':checked')) {
-                            input.prop('disabled', false)
-                            // input_id.prop('disabled',false)
-                            // input_opsi_jawaban.prop('disabled',false)
-                        } else {
-                            input.val('')
-                            input.prop('disabled', true)
-                            // input_id.prop('disabled',true)
-                            // input_opsi_jawaban.prop('disabled',true)
-                        }
-                    })
-                } else {
-                    var skor = 0;
-                    var opt = 0;
-                    $('#select_kategori_jaminan_tambahan').append(`
+                        $(".checkKategori").click(function() {
+                            var input = $(this).closest('.form-group').find(".input")
+                            // var input_id = $(this).closest('.form-group').find("input_id").last()
+                            // var input_opsi_jawaban = $(this).closest('.form-group').find("input_opsi_jawaban").last()
+                            if ($(this).is(':checked')) {
+                                input.prop('disabled', false)
+                                // input_id.prop('disabled',false)
+                                // input_opsi_jawaban.prop('disabled',false)
+                            } else {
+                                input.val('')
+                                input.prop('disabled', true)
+                                // input_id.prop('disabled',true)
+                                // input_opsi_jawaban.prop('disabled',true)
+                            }
+                        })
+                    } else {
+                        var skor = 0;
+                        var opt = 0;
+                        $('#select_kategori_jaminan_tambahan').append(`
                         <label for="">${response.item.nama}</label>
                         <select name="dataLevelEmpat[${response.item.id}]" id="itemByKategori" class="form-control cek-sub-column"
                             data-id_item="${response.item.id}">
@@ -1796,105 +1925,66 @@ $dataIndex = match ($skema) {
 
                         </div>
                     `);
-                    // add opsi dari item
-                    $.each(response.item.option, function(i, valOption) {
-                        var skor = valOption.skor;
-                        var opt = valOption.id;
-                        // //console.log(valOption.skor);
-                        $('#itemByKategori').append(`
+                        // add opsi dari item
+                        $.each(response.item.option, function(i, valOption) {
+                            var skor = valOption.skor;
+                            var opt = valOption.id;
+                            // //console.log(valOption.skor);
+                            $('#itemByKategori').append(`
                         <option value="${valOption.skor}-${valOption.id}" selected>
                         ${valOption.option}
                         </option>`);
-                    });
-                    $("#itemByKategori").val(skor + '-' + opt)
-                    $("#select_kategori_jaminan_tambahan").hide()
+                        });
+                        $("#itemByKategori").val(skor + '-' + opt)
+                        $("#select_kategori_jaminan_tambahan").hide()
+                    }
                 }
-            }
+            });
+            // Limit Upload
+            $('.limit-size').on('change', function() {
+                var size = (this.files[0].size / 1024 / 1024).toFixed(2)
+                if (size > 5) {
+                    $(this).next().css({
+                        "display": "block"
+                    });
+                    this.value = ''
+                } else {
+                    $(this).next().css({
+                        "display": "none"
+                    });
+                }
+            })
         });
-        // Limit Upload
-        $('.limit-size').on('change', function() {
-            var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-            if (size > 5) {
-                $(this).next().css({"display": "block"});
-                this.value = ''
-            } else {
-                $(this).next().css({"display": "none"});
-            }
-        })
-    });
-    // end item kategori jaminan tambahan cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
+        // end item kategori jaminan tambahan cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
 
-    // milih ijin usaha
-    $('#ijin_usaha').change(function(e) {
-        let ijinUsaha = $(this).val();
-        if (ijinUsaha == 'nib') {
-            $('#surat_keterangan_usaha').hide();
-            $('#surat_keterangan_usaha_id').attr('disabled', true);
-            $('#surat_keterangan_usaha_text').attr('disabled', true);
-            $('#surat_keterangan_usaha_file').attr('disabled', true);
-            $('#surat_keterangan_usaha_text').val("");
-            $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
+        // milih ijin usaha
+        $('#ijin_usaha').change(function(e) {
+            let ijinUsaha = $(this).val();
+            if (ijinUsaha == 'nib') {
+                $('#surat_keterangan_usaha').hide();
+                $('#surat_keterangan_usaha_id').attr('disabled', true);
+                $('#surat_keterangan_usaha_text').attr('disabled', true);
+                $('#surat_keterangan_usaha_file').attr('disabled', true);
+                $('#surat_keterangan_usaha_text').val("");
+                $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
 
-            $('#docSKU').hide();
-            $('#docSKU_id').attr('disabled', true);
-            $('#docSKU_text').attr('disabled', true);
-            $('#docSKU_upload_file').attr('disabled', true);
+                $('#docSKU').hide();
+                $('#docSKU_id').attr('disabled', true);
+                $('#docSKU_text').attr('disabled', true);
+                $('#docSKU_upload_file').attr('disabled', true);
 
-            $('#nib').show();
-            $('#nib_id').removeAttr('disabled');
-            $('#nib_text').removeAttr('disabled');
-            $('#nib_text').val('{{ temporary($duTemp->id, 77)?->opsi_text }}');
-            $('#nib_opsi_jawaban').removeAttr('disabled');
+                $('#nib').show();
+                $('#nib_id').removeAttr('disabled');
+                $('#nib_text').removeAttr('disabled');
+                $('#nib_text').val('{{ temporary($duTemp->id, 77)?->opsi_text }}');
+                $('#nib_opsi_jawaban').removeAttr('disabled');
 
-            $('#docNIB').show();
-            $('#docNIB_id').removeAttr('disabled');
-            $('#docNIB_text').removeAttr('disabled');
-            $('#docNIB_upload_file').removeAttr('disabled');
-            $('#file_nib').removeAttr('disabled');
+                $('#docNIB').show();
+                $('#docNIB_id').removeAttr('disabled');
+                $('#docNIB_text').removeAttr('disabled');
+                $('#docNIB_upload_file').removeAttr('disabled');
+                $('#file_nib').removeAttr('disabled');
 
-            $('#npwp').show();
-            $('#npwp_id').removeAttr('disabled');
-            $('#npwp_text').removeAttr('disabled');
-            $('#npwp_text').val('{{ temporary($duTemp->id, 79)?->opsi_text }}');
-            $('#npwp_opsi_jawaban').removeAttr('disabled');
-            $('#npwp_file').removeAttr('disabled');
-
-            $('#docNPWP').show();
-            $('#docNPWP_id').removeAttr('disabled');
-            $('#docNPWP_text').removeAttr('disabled');
-            $('#docNPWP_text').val('');
-            $('#docNPWP_upload_file').removeAttr('disabled');
-        } else if (ijinUsaha == 'surat_keterangan_usaha') {
-            $('#npwpsku').show();
-            $('#nib').hide();
-            $('#nib_id').attr('disabled', true);
-            $('#nib_text').attr('disabled', true);
-            $('#nib_text').val('');
-            $('#nib_opsi_jawaban').attr('disabled', true);
-
-            $('#docNIB').hide();
-            $('#docNIB_id').attr('disabled', true);
-            $('#docNIB_text').attr('disabled', true);
-            $('#docNIB_text').val('');
-            $('#docNIB_upload_file').attr('disabled', true);
-            $('#nib_file').attr('disabled', true);
-            $('#file_nib').attr('disabled', true);
-            $('#docNIB_file').attr('disabled', true);
-
-            $('#surat_keterangan_usaha').show();
-            $('#surat_keterangan_usaha_id').removeAttr('disabled');
-            $('#surat_keterangan_usaha_text').removeAttr('disabled');
-            $('#surat_keterangan_usaha_text').val('{{ temporary($duTemp->id, 78)?->opsi_text }}');
-            $('#surat_keterangan_usaha_opsi_jawaban').removeAttr('disabled');
-            $('#surat_keterangan_usaha_file').removeAttr('disabled');
-
-            $('#docSKU').show();
-            $('#docSKU_id').removeAttr('disabled');
-            $('#docSKU_text').removeAttr('disabled');
-            $('#docSKU_upload_file').removeAttr('disabled');
-
-            var cekNpwp = "{{ temporary($duTemp->id, 79)?->opsi_text }}";
-            if (cekNpwp != '') {
                 $('#npwp').show();
                 $('#npwp_id').removeAttr('disabled');
                 $('#npwp_text').removeAttr('disabled');
@@ -1907,7 +1997,94 @@ $dataIndex = match ($skema) {
                 $('#docNPWP_text').removeAttr('disabled');
                 $('#docNPWP_text').val('');
                 $('#docNPWP_upload_file').removeAttr('disabled');
-            } else {
+            } else if (ijinUsaha == 'surat_keterangan_usaha') {
+                $('#npwpsku').show();
+                $('#nib').hide();
+                $('#nib_id').attr('disabled', true);
+                $('#nib_text').attr('disabled', true);
+                $('#nib_text').val('');
+                $('#nib_opsi_jawaban').attr('disabled', true);
+
+                $('#docNIB').hide();
+                $('#docNIB_id').attr('disabled', true);
+                $('#docNIB_text').attr('disabled', true);
+                $('#docNIB_text').val('');
+                $('#docNIB_upload_file').attr('disabled', true);
+                $('#nib_file').attr('disabled', true);
+                $('#file_nib').attr('disabled', true);
+                $('#docNIB_file').attr('disabled', true);
+
+                $('#surat_keterangan_usaha').show();
+                $('#surat_keterangan_usaha_id').removeAttr('disabled');
+                $('#surat_keterangan_usaha_text').removeAttr('disabled');
+                $('#surat_keterangan_usaha_text').val('{{ temporary($duTemp->id, 78)?->opsi_text }}');
+                $('#surat_keterangan_usaha_opsi_jawaban').removeAttr('disabled');
+                $('#surat_keterangan_usaha_file').removeAttr('disabled');
+
+                $('#docSKU').show();
+                $('#docSKU_id').removeAttr('disabled');
+                $('#docSKU_text').removeAttr('disabled');
+                $('#docSKU_upload_file').removeAttr('disabled');
+
+                var cekNpwp = "{{ temporary($duTemp->id, 79)?->opsi_text }}";
+                if (cekNpwp != '') {
+                    console.log('asd1');
+                    $('#npwp').show();
+                    $('#npwp_id').removeAttr('disabled');
+                    $('#npwp_text').removeAttr('disabled');
+                    $('#npwp_text').val('{{ temporary($duTemp->id, 79)?->opsi_text }}');
+                    $('#npwp_opsi_jawaban').removeAttr('disabled');
+                    $('#npwp_file').removeAttr('disabled');
+
+                    $('#docNPWP').show();
+                    $('#docNPWP_id').removeAttr('disabled');
+                    $('#docNPWP_text').removeAttr('disabled');
+                    $('#docNPWP_text').val('');
+                    $('#docNPWP_upload_file').removeAttr('disabled');
+                } else {
+                    console.log('asd');
+                    $('#npwp').hide();
+                    $('#npwp_id').attr('disabled', true);
+                    $('#npwp_text').attr('disabled', true);
+                    $('#npwp_file').attr('disabled', true);
+                    $('#npwp_text').val('');
+                    $('#npwp_opsi_jawaban').attr('disabled', true);
+
+                    $('#docNPWP').hide();
+                    $('#docNPWP_id').attr('disabled', true);
+                    $('#docNPWP_text').attr('disabled', true);
+                    $('#docNPWP_text').val('');
+                    $('#docNPWP_upload_file').attr('disabled', true);
+                }
+
+            } else if (ijinUsaha == 'tidak_ada_legalitas_usaha') {
+                $('#nib').hide();
+                $('#nib_id').attr('disabled', true);
+                $('#nib_text').attr('disabled', true);
+                $('#nib_text').val('');
+                $('#nib_opsi_jawaban').attr('disabled', true);
+                $('#file_nib').attr('disabled', true);
+
+                $('#docNIB').hide();
+                $('#docNIB_id').attr('disabled', true);
+                $('#docNIB_text').attr('disabled', true);
+                $('#docNIB_text').val('');
+                $('#docNIB_file').attr('disabled', true);
+                $('#docNIB_upload_file').attr('disabled', true);
+
+                $('#surat_keterangan_usaha').hide();
+                $('#surat_keterangan_usaha_id').attr('disabled', true);
+                $('#surat_keterangan_usaha_text').attr('disabled', true);
+                $('#surat_keterangan_usaha_text').val('');
+                $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
+                $('#surat_keterangan_usaha_file').attr('disabled', true);
+
+                $('#docSKU').hide();
+                $('#docSKU_id').attr('disabled', true);
+                $('#docSKU_text').attr('disabled', true);
+                $('#docSKU_text').val('');
+                $('#docSKU_upload_file').attr('disabled', true);
+
                 $('#npwp').hide();
                 $('#npwp_id').attr('disabled', true);
                 $('#npwp_text').attr('disabled', true);
@@ -1920,552 +2097,517 @@ $dataIndex = match ($skema) {
                 $('#docNPWP_text').attr('disabled', true);
                 $('#docNPWP_text').val('');
                 $('#docNPWP_upload_file').attr('disabled', true);
-            }
+            } else {
+                $('#nib').hide();
+                $('#nib_id').attr('disabled', true);
+                $('#nib_text').attr('disabled', true);
+                $('#nib_text').val('');
+                $('#nib_opsi_jawaban').attr('disabled', true);
 
-        } else if (ijinUsaha == 'tidak_ada_legalitas_usaha') {
-            $('#nib').hide();
-            $('#nib_id').attr('disabled', true);
-            $('#nib_text').attr('disabled', true);
-            $('#nib_text').val('');
-            $('#nib_opsi_jawaban').attr('disabled', true);
-            $('#file_nib').attr('disabled', true);
+                $('#docNIB').hide();
+                $('#docNIB_id').attr('disabled', true);
+                $('#docNIB_text').attr('disabled', true);
+                $('#docNIB_text').val('');
+                $('#docNIB_upload_file').attr('disabled', true);
 
-            $('#docNIB').hide();
-            $('#docNIB_id').attr('disabled', true);
-            $('#docNIB_text').attr('disabled', true);
-            $('#docNIB_text').val('');
-            $('#docNIB_file').attr('disabled', true);
-            $('#docNIB_upload_file').attr('disabled', true);
+                $('#surat_keterangan_usaha').hide();
+                $('#surat_keterangan_usaha_id').attr('disabled', true);
+                $('#surat_keterangan_usaha_text').attr('disabled', true);
+                $('#surat_keterangan_usaha_text').val('');
+                $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
 
-            $('#surat_keterangan_usaha').hide();
-            $('#surat_keterangan_usaha_id').attr('disabled', true);
-            $('#surat_keterangan_usaha_text').attr('disabled', true);
-            $('#surat_keterangan_usaha_text').val('');
-            $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
-            $('#surat_keterangan_usaha_file').attr('disabled', true);
+                $('#npwp').show();
+                $('#npwp_id').removeAttr('disabled');
+                $('#npwp_text').removeAttr('disabled');
+                $('#npwp_text').val('{{ temporary($duTemp->id, 79)?->opsi_text }}');
+                $('#npwp_opsi_jawaban').removeAttr('disabled');
 
-            $('#docSKU').hide();
-            $('#docSKU_id').attr('disabled', true);
-            $('#docSKU_text').attr('disabled', true);
-            $('#docSKU_text').val('');
-            $('#docSKU_upload_file').attr('disabled', true);
-
-            $('#npwp').hide();
-            $('#npwp_id').attr('disabled', true);
-            $('#npwp_text').attr('disabled', true);
-            $('#npwp_file').attr('disabled', true);
-            $('#npwp_text').val('');
-            $('#npwp_opsi_jawaban').attr('disabled', true);
-
-            $('#docNPWP').hide();
-            $('#docNPWP_id').attr('disabled', true);
-            $('#docNPWP_text').attr('disabled', true);
-            $('#docNPWP_text').val('');
-            $('#docNPWP_upload_file').attr('disabled', true);
-        } else {
-            $('#nib').hide();
-            $('#nib_id').attr('disabled', true);
-            $('#nib_text').attr('disabled', true);
-            $('#nib_text').val('');
-            $('#nib_opsi_jawaban').attr('disabled', true);
-
-            $('#docNIB').hide();
-            $('#docNIB_id').attr('disabled', true);
-            $('#docNIB_text').attr('disabled', true);
-            $('#docNIB_text').val('');
-            $('#docNIB_upload_file').attr('disabled', true);
-
-            $('#surat_keterangan_usaha').hide();
-            $('#surat_keterangan_usaha_id').attr('disabled', true);
-            $('#surat_keterangan_usaha_text').attr('disabled', true);
-            $('#surat_keterangan_usaha_text').val('');
-            $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
-
-            $('#npwp').show();
-            $('#npwp_id').removeAttr('disabled');
-            $('#npwp_text').removeAttr('disabled');
-            $('#npwp_text').val('{{ temporary($duTemp->id, 79)?->opsi_text }}');
-            $('#npwp_opsi_jawaban').removeAttr('disabled');
-
-            $('#docNPWP').show();
-            $('#docNPWP_id').removeAttr('disabled');
-            $('#docNPWP_text').removeAttr('disabled');
-            $('#docNPWP_text').val('');
-            $('#docNPWP_upload_file').removeAttr('disabled');
-        }
-    });
-    // end milih ijin usaha
-
-
-    // Cek Npwp
-    $('#isNpwp').change(function() {
-        //console.log($(this).is(':checked'));
-        if ($(this).is(':checked')) {
-            $("#statusNpwp").val('1');
-            $('#npwp').show();
-            $('#npwp_id').removeAttr('disabled', true);
-            $('#npwp_text').removeAttr('disabled', true);
-            $('#npwp_opsi_jawaban').removeAttr('disabled', true);
-
-            $('#docNPWP').show();
-            $('#docNPWP_id').removeAttr('disabled', true);
-            $('#docNPWPnama_file').removeAttr('disabled', true);
-            $('#docNPWP_update_file').removeAttr('disabled', true);
-            $('#id_jawaban_npwp').removeAttr('disabled', true);
-        } else {
-            $("#statusNpwp").val('0');
-            $('#npwp').hide();
-            $('#npwp_id').attr('disabled', true);
-            $('#npwp_text').attr('disabled', true);
-            $('#npwp_opsi_jawaban').attr('disabled', true);
-
-            $('#docNPWP').hide();
-            $('#docNPWP_id').attr('disabled', true);
-            $('#docNPWPnama_file').attr('disabled', true);
-            $('#docNPWP_update_file').attr('disabled', true);
-            $('#id_jawaban_npwp').attr('disabled', true);
-        }
-    });
-
-    //triger hitung ratio coverage
-    $('#thls').change(function(e) {
-        hitungRatioCoverage();
-    });
-    //end triger hitung ratio covarege
-
-    //triger hitung ratio coverage
-    $('#nilai_pertanggungan_asuransi').change(function(e) {
-        hitungRatioCoverage();
-    });
-    //end triger hitung ratio covarege
-
-    //triger hitung ratio coverage
-    $('#jumlah_kredit').change(function(e) {
-        hitungRatioCoverage();
-    });
-    //end triger hitung ratio covarege
-
-    // hitung ratio covarege
-    function hitungRatioCoverage() {
-        let thls = $('#thls').val() ? parseInt($('#thls').val().split('.').join('')) : '';
-        let nilaiAsuransi = $('#nilai_pertanggungan_asuransi').val() ? parseInt($('#nilai_pertanggungan_asuransi').val().split('.').join('')) : '';
-        let kreditYangDiminta = $('#jumlah_kredit').val() ? parseInt($('#jumlah_kredit').val().split('.').join('')) : '';
-
-        let ratioCoverage = (thls + nilaiAsuransi) / kreditYangDiminta * 100; //cek rumus nya lagi
-        $('#ratio_coverage').val(ratioCoverage);
-
-        if (ratioCoverage >= 150) {
-            $('#ratio_coverage_opsi_0').attr('selected', true);
-            $('#ratio_coverage_opsi_1').removeAttr('selected');
-            $('#ratio_coverage_opsi_2').removeAttr('selected');
-            $('#ratio_coverage_opsi_3').removeAttr('selected');
-        } else if (ratioCoverage >= 131 && ratioCoverage < 150) {
-            $('#ratio_coverage_opsi_0').removeAttr('selected');
-            $('#ratio_coverage_opsi_1').attr('selected', true);
-            $('#ratio_coverage_opsi_2').removeAttr('selected');
-            $('#ratio_coverage_opsi_3').removeAttr('selected');
-        } else if (ratioCoverage >= 110 && ratioCoverage <= 130) {
-            $('#ratio_coverage_opsi_0').removeAttr('selected');
-            $('#ratio_coverage_opsi_1').removeAttr('selected');
-            $('#ratio_coverage_opsi_2').attr('selected', true);
-            $('#ratio_coverage_opsi_3').removeAttr('selected');
-        } else if (ratioCoverage < 110 && !isNaN(ratioCoverage)) {
-            $('#ratio_coverage_opsi_0').removeAttr('selected');
-            $('#ratio_coverage_opsi_1').removeAttr('selected');
-            $('#ratio_coverage_opsi_2').removeAttr('selected');
-            $('#ratio_coverage_opsi_3').attr('selected', true);
-        } else {
-            $('#ratio_coverage_opsi_0').removeAttr('selected');
-            $('#ratio_coverage_opsi_1').removeAttr('selected');
-            $('#ratio_coverage_opsi_2').removeAttr('selected');
-            $('#ratio_coverage_opsi_3').removeAttr('selected');
-        }
-    }
-    //end hitung ratio covarege
-
-    //triger hitung ratio Tenor Asuransi
-    $('#masa_berlaku_asuransi_penjaminan').change(function(e) {
-        hitungRatioTenorAsuransi();
-    });
-    //end triger hitung ratio Tenor Asuransi
-
-    //triger hitung ratio Tenor Asuransi
-    $('#tenor_yang_diminta').change(function(e) {
-        hitungRatioTenorAsuransi();
-    });
-    //end triger hitung ratio Tenor Asuransi
-
-    // hitung ratio Tenor Asuransi
-    function hitungRatioTenorAsuransi() {
-        let masaBerlakuAsuransi = parseInt($('#masa_berlaku_asuransi_penjaminan').val());
-        let tenorYangDiminta = parseInt($('#tenor_yang_diminta').val());
-
-        let ratioTenorAsuransi = parseInt(masaBerlakuAsuransi / tenorYangDiminta * 100); //cek rumusnya lagi
-
-        $('#ratio_tenor_asuransi').val(ratioTenorAsuransi);
-
-        if (ratioTenorAsuransi >= 200) {
-            $('#ratio_tenor_asuransi_opsi_0').attr('selected', true);
-            $('#ratio_tenor_asuransi_opsi_1').removeAttr('selected');
-            $('#ratio_tenor_asuransi_opsi_2').removeAttr('selected');
-            $('#ratio_tenor_asuransi_opsi_3').removeAttr('selected');
-        } else if (ratioTenorAsuransi >= 150 && ratioTenorAsuransi < 200) {
-            $('#ratio_tenor_asuransi_opsi_0').removeAttr('selected');
-            $('#ratio_tenor_asuransi_opsi_1').attr('selected', true);
-            $('#ratio_tenor_asuransi_opsi_2').removeAttr('selected');
-            $('#ratio_tenor_asuransi_opsi_3').removeAttr('selected');
-        } else if (ratioTenorAsuransi >= 100 && ratioTenorAsuransi < 150) {
-            $('#ratio_tenor_asuransi_opsi_0').removeAttr('selected');
-            $('#ratio_tenor_asuransi_opsi_1').removeAttr('selected');
-            $('#ratio_tenor_asuransi_opsi_2').attr('selected', true);
-            $('#ratio_tenor_asuransi_opsi_3').removeAttr('selected');
-        } else if (ratioTenorAsuransi < 100 && !isNaN(ratioTenorAsuransi)) {
-            $('#ratio_tenor_asuransi_opsi_0').removeAttr('selected');
-            $('#ratio_tenor_asuransi_opsi_1').removeAttr('selected');
-            $('#ratio_tenor_asuransi_opsi_2').removeAttr('selected');
-            $('#ratio_tenor_asuransi_opsi_3').attr('selected', true);
-        } else {
-            $('#ratio_tenor_asuransi_opsi_0').removeAttr('selected');
-            $('#ratio_tenor_asuransi_opsi_1').removeAttr('selected');
-            $('#ratio_tenor_asuransi_opsi_2').removeAttr('selected');
-            $('#ratio_tenor_asuransi_opsi_3').removeAttr('selected');
-        }
-    }
-    //end hitung ratio covarege
-
-    // //triger hitung Persentase Kebutuhan Kredit
-    // $('#kebutuhan_kredit').change(function(e) {
-    //     hitungPersentaseKebutuhanKredit();
-    // });
-    // //end triger hitung Persentase Kebutuhan Kredit
-
-    // //triger hitung Persentase Kebutuhan Kredit
-    // $('#jumlah_kredit').change(function(e) {
-    //     hitungPersentaseKebutuhanKredit();
-    // });
-    //end triger hitung Persentase Kebutuhan Kredit
-
-    // hitung Persentase Kebutuhan Kredit
-    // function hitungPersentaseKebutuhanKredit() {
-    //     let kebutuhanKredit = parseInt($('#kebutuhan_kredit').val());
-    //     let jumlahKredit = parseInt($('#jumlah_kredit').val());
-
-    //     let persentaseKebutuhanKredit = parseInt(jumlahKredit / kebutuhanKredit * 100); //cek rumusnya lagi
-
-    //     $('#persentase_kebutuhan_kredit').val(persentaseKebutuhanKredit);
-
-    //     if (persentaseKebutuhanKredit <= 80 && !isNaN(persentaseKebutuhanKredit)) {
-    //         $('#persentase_kebutuhan_kredit_opsi_0').attr('selected', true);
-    //         $('#persentase_kebutuhan_kredit_opsi_1').removeAttr('selected');
-    //         $('#persentase_kebutuhan_kredit_opsi_2').removeAttr('selected');
-    //         $('#persentase_kebutuhan_kredit_opsi_3').removeAttr('selected');
-    //     } else if (persentaseKebutuhanKredit >= 81 && persentaseKebutuhanKredit <= 89) {
-    //         $('#persentase_kebutuhan_kredit_opsi_0').removeAttr('selected');
-    //         $('#persentase_kebutuhan_kredit_opsi_1').attr('selected', true);
-    //         $('#persentase_kebutuhan_kredit_opsi_2').removeAttr('selected');
-    //         $('#persentase_kebutuhan_kredit_opsi_3').removeAttr('selected');
-    //     } else if (persentaseKebutuhanKredit >= 90 && persentaseKebutuhanKredit <= 100) {
-    //         $('#persentase_kebutuhan_kredit_opsi_0').removeAttr('selected');
-    //         $('#persentase_kebutuhan_kredit_opsi_1').removeAttr('selected');
-    //         $('#persentase_kebutuhan_kredit_opsi_2').attr('selected', true);
-    //         $('#persentase_kebutuhan_kredit_opsi_3').removeAttr('selected');
-    //     } else if (persentaseKebutuhanKredit > 100 && !isNaN(persentaseKebutuhanKredit)) {
-    //         $('#persentase_kebutuhan_kredit_opsi_0').removeAttr('selected');
-    //         $('#persentase_kebutuhan_kredit_opsi_1').removeAttr('selected');
-    //         $('#persentase_kebutuhan_kredit_opsi_2').removeAttr('selected');
-    //         $('#persentase_kebutuhan_kredit_opsi_3').attr('selected', true);
-    //     } else {
-    //         $('#persentase_kebutuhan_kredit_opsi_0').removeAttr('selected');
-    //         $('#persentase_kebutuhan_kredit_opsi_1').removeAttr('selected');
-    //         $('#persentase_kebutuhan_kredit_opsi_2').removeAttr('selected');
-    //         $('#persentase_kebutuhan_kredit_opsi_3').removeAttr('selected');
-    //     }
-    // }
-    //end Persentase Kebutuhan Kredit
-
-    //triger hitung Repayment Capacity
-    $('#persentase_net_income').change(function(e) {
-        hitungRepaymentCapacity();
-    });
-    //end triger hitung Repayment Capacity
-
-    //triger hitung Repayment Capacity
-    $('#omzet_penjualan').change(function(e) {
-        hitungRepaymentCapacity();
-    });
-    //end triger hitung Repayment Capacity
-
-    //triger hitung Repayment Capacity
-    $('#rencana_peningkatan').change(function(e) {
-        hitungRepaymentCapacity();
-    });
-    //end triger hitung Repayment Capacity
-
-    //triger hitung Repayment Capacity
-    $('#installment').change(function(e) {
-        hitungRepaymentCapacity();
-    });
-    //end triger hitung Repayment Capacity
-
-    // hitung Repayment Capacity
-    function hitungRepaymentCapacity() {
-        let omzetPenjualan = parseInt($('#omzet_penjualan').val().split('.').join(''));
-        let persentaseNetIncome = parseInt($('#persentase_net_income').val()) / 100;
-        let rencanaPeningkatan = parseInt($('#rencana_peningkatan').val()) / 100;
-        let installment = parseInt($('#installment').val().split('.').join(''));
-
-        let repaymentCapacity = parseFloat(persentaseNetIncome * omzetPenjualan * (1 + rencanaPeningkatan) /
-            installment); //cek rumusnya lagi
-
-        $('#repayment_capacity').val(repaymentCapacity.toFixed(2));
-
-        if (repaymentCapacity > 2) {
-            $('#repayment_capacity_opsi_0').attr('selected', true);
-            $('#repayment_capacity_opsi_1').removeAttr('selected');
-            $('#repayment_capacity_opsi_2').removeAttr('selected');
-            $('#repayment_capacity_opsi_3').removeAttr('selected');
-        } else if (repaymentCapacity >= 1.5 && repaymentCapacity < 2) {
-            $('#repayment_capacity_opsi_0').removeAttr('selected');
-            $('#repayment_capacity_opsi_1').attr('selected', true);
-            $('#repayment_capacity_opsi_2').removeAttr('selected');
-            $('#repayment_capacity_opsi_3').removeAttr('selected');
-        } else if (repaymentCapacity >= 1.25 && repaymentCapacity < 1.5) {
-            $('#repayment_capacity_opsi_0').removeAttr('selected');
-            $('#repayment_capacity_opsi_1').removeAttr('selected');
-            $('#repayment_capacity_opsi_2').attr('selected', true);
-            $('#repayment_capacity_opsi_3').removeAttr('selected');
-        } else if (repaymentCapacity < 1.25 && !isNaN(repaymentCapacity)) {
-            $('#repayment_capacity_opsi_0').removeAttr('selected');
-            $('#repayment_capacity_opsi_1').removeAttr('selected');
-            $('#repayment_capacity_opsi_2').removeAttr('selected');
-            $('#repayment_capacity_opsi_3').attr('selected', true);
-        } else {
-            $('#repayment_capacity_opsi_0').removeAttr('selected');
-            $('#repayment_capacity_opsi_1').removeAttr('selected');
-            $('#repayment_capacity_opsi_2').removeAttr('selected');
-            $('#repayment_capacity_opsi_3').removeAttr('selected');
-        }
-    }
-    //end Repayment Capacity
-
-    $('.rupiah').keyup(function(e){
-        var input = $(this).val()
-        $(this).val(formatrupiah(input))
-    });
-
-    function formatrupiah(angka, prefix) {
-        var number_string = angka ? angka.replace(/[^,\d]/g, '').toString() : angka,
-        split   		= number_string.split(','),
-        sisa     		= split[0].length % 3,
-        rupiah     		= split[0].substr(0, sisa),
-        ribuan     		= split[0].substr(sisa).match(/\d{3}/gi);
-
-        // tambahkan titik jika yang di input sudah menjadi angka ribuan
-        if(ribuan){
-            separator = sisa ? '.' : '';
-            rupiah += separator + ribuan.join('.');
-        }
-
-        rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-        return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
-    }
-    // End Format Rupiah
-
-    // Limit Upload
-    $('.limit-size').on('change', function() {
-        var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-        //console.log(size);
-        if (size > 5) {
-            $(this).next().css({"display": "block"});
-            this.value = ''
-        } else {
-            $(this).next().css({"display": "none"});
-        }
-    })
-
-    $('body').on('click', '.file-wrapper .btn-add-file', function(e) {
-        const wrapper = $(this).parent().parent().parent();
-        const $clone = wrapper.clone();
-
-        $clone.find('[type="file"]').attr('data-id', '');
-        $clone.find('[type="file"]').val('');
-        $clone.find('.filename').html('');
-        $clone.insertAfter(wrapper);
-    });
-
-    $('body').on('click', '.file-wrapper .btn-del-file', function(e) {
-        const inputData = $(this).parent().parent().find('input[type="file"]');
-        const wrapperEl = $(this).parent().parent().parent();
-
-        $.ajax({
-            url: '{{ route('pengajuan-kredit.temp.file') }}',
-            method: 'DELETE',
-            data: {
-                answer_id: inputData.data('id'),
-            },
-            success: (res) => {
-                inputData.parent().find('.filename').text('');
-                inputData.val('');
-
-                if(wrapperEl.siblings('.file-wrapper').get().length < 1) return;
-                wrapperEl.remove();
+                $('#docNPWP').show();
+                $('#docNPWP_id').removeAttr('disabled');
+                $('#docNPWP_text').removeAttr('disabled');
+                $('#docNPWP_text').val('');
+                $('#docNPWP_upload_file').removeAttr('disabled');
             }
         });
-    });
-    // End Limit Upload
+        // end milih ijin usaha
 
-    @if(count($errors->all()))
-    Swal.fire({
-        icon: 'error',
-        title: 'Error Validation',
-        html: `
+
+        // Cek Npwp
+        $('#isNpwp').change(function() {
+            //console.log($(this).is(':checked'));
+            if ($(this).is(':checked')) {
+                $("#statusNpwp").val('1');
+                $('#npwp').show();
+                $('#npwp_id').removeAttr('disabled', true);
+                $('#npwp_text').removeAttr('disabled', true);
+                $('#npwp_opsi_jawaban').removeAttr('disabled', true);
+
+                $('#docNPWP').show();
+                $('#docNPWP_id').removeAttr('disabled', true);
+                $('#docNPWPnama_file').removeAttr('disabled', true);
+                $('#docNPWP_upload_file').removeAttr('disabled', true);
+                $('#docNPWP_text').removeAttr('disabled', true);
+                $('#id_jawaban_npwp').removeAttr('disabled', true);
+            } else {
+                $("#statusNpwp").val('0');
+                $('#npwp').hide();
+                $('#npwp_id').attr('disabled', true);
+                $('#npwp_text').attr('disabled', true);
+                $('#npwp_opsi_jawaban').attr('disabled', true);
+
+                $('#docNPWP').hide();
+                $('#docNPWP_id').attr('disabled', true);
+                $('#docNPWPnama_file').attr('disabled', true);
+                $('#docNPWP_upload_file').attr('disabled', true);
+                $('#docNPWP_text').attr('disabled', true);
+                $('#id_jawaban_npwp').attr('disabled', true);
+            }
+        });
+
+        //triger hitung ratio coverage
+        $('#thls').change(function(e) {
+            hitungRatioCoverage();
+        });
+        //end triger hitung ratio covarege
+
+        //triger hitung ratio coverage
+        $('#nilai_pertanggungan_asuransi').change(function(e) {
+            hitungRatioCoverage();
+        });
+        //end triger hitung ratio covarege
+
+        //triger hitung ratio coverage
+        $('#jumlah_kredit').change(function(e) {
+            hitungRatioCoverage();
+        });
+        //end triger hitung ratio covarege
+
+        // hitung ratio covarege
+        function hitungRatioCoverage() {
+            let thls = $('#thls').val() ? parseInt($('#thls').val().split('.').join('')) : '';
+            let nilaiAsuransi = $('#nilai_pertanggungan_asuransi').val() ? parseInt($('#nilai_pertanggungan_asuransi').val()
+                .split('.').join('')) : '';
+            let kreditYangDiminta = $('#jumlah_kredit').val() ? parseInt($('#jumlah_kredit').val().split('.').join('')) :
+                '';
+
+            let ratioCoverage = (thls + nilaiAsuransi) / kreditYangDiminta * 100; //cek rumus nya lagi
+            $('#ratio_coverage').val(ratioCoverage);
+
+            if (ratioCoverage >= 150) {
+                $('#ratio_coverage_opsi_0').attr('selected', true);
+                $('#ratio_coverage_opsi_1').removeAttr('selected');
+                $('#ratio_coverage_opsi_2').removeAttr('selected');
+                $('#ratio_coverage_opsi_3').removeAttr('selected');
+            } else if (ratioCoverage >= 131 && ratioCoverage < 150) {
+                $('#ratio_coverage_opsi_0').removeAttr('selected');
+                $('#ratio_coverage_opsi_1').attr('selected', true);
+                $('#ratio_coverage_opsi_2').removeAttr('selected');
+                $('#ratio_coverage_opsi_3').removeAttr('selected');
+            } else if (ratioCoverage >= 110 && ratioCoverage <= 130) {
+                $('#ratio_coverage_opsi_0').removeAttr('selected');
+                $('#ratio_coverage_opsi_1').removeAttr('selected');
+                $('#ratio_coverage_opsi_2').attr('selected', true);
+                $('#ratio_coverage_opsi_3').removeAttr('selected');
+            } else if (ratioCoverage < 110 && !isNaN(ratioCoverage)) {
+                $('#ratio_coverage_opsi_0').removeAttr('selected');
+                $('#ratio_coverage_opsi_1').removeAttr('selected');
+                $('#ratio_coverage_opsi_2').removeAttr('selected');
+                $('#ratio_coverage_opsi_3').attr('selected', true);
+            } else {
+                $('#ratio_coverage_opsi_0').removeAttr('selected');
+                $('#ratio_coverage_opsi_1').removeAttr('selected');
+                $('#ratio_coverage_opsi_2').removeAttr('selected');
+                $('#ratio_coverage_opsi_3').removeAttr('selected');
+            }
+        }
+        //end hitung ratio covarege
+
+        //triger hitung ratio Tenor Asuransi
+        $('#masa_berlaku_asuransi_penjaminan').change(function(e) {
+            hitungRatioTenorAsuransi();
+        });
+        //end triger hitung ratio Tenor Asuransi
+
+        //triger hitung ratio Tenor Asuransi
+        $('#tenor_yang_diminta').change(function(e) {
+            hitungRatioTenorAsuransi();
+        });
+        //end triger hitung ratio Tenor Asuransi
+
+        // hitung ratio Tenor Asuransi
+        function hitungRatioTenorAsuransi() {
+            let masaBerlakuAsuransi = parseInt($('#masa_berlaku_asuransi_penjaminan').val());
+            let tenorYangDiminta = parseInt($('#tenor_yang_diminta').val());
+
+            let ratioTenorAsuransi = parseInt(masaBerlakuAsuransi / tenorYangDiminta * 100); //cek rumusnya lagi
+
+            $('#ratio_tenor_asuransi').val(ratioTenorAsuransi);
+
+            if (ratioTenorAsuransi >= 200) {
+                $('#ratio_tenor_asuransi_opsi_0').attr('selected', true);
+                $('#ratio_tenor_asuransi_opsi_1').removeAttr('selected');
+                $('#ratio_tenor_asuransi_opsi_2').removeAttr('selected');
+                $('#ratio_tenor_asuransi_opsi_3').removeAttr('selected');
+            } else if (ratioTenorAsuransi >= 150 && ratioTenorAsuransi < 200) {
+                $('#ratio_tenor_asuransi_opsi_0').removeAttr('selected');
+                $('#ratio_tenor_asuransi_opsi_1').attr('selected', true);
+                $('#ratio_tenor_asuransi_opsi_2').removeAttr('selected');
+                $('#ratio_tenor_asuransi_opsi_3').removeAttr('selected');
+            } else if (ratioTenorAsuransi >= 100 && ratioTenorAsuransi < 150) {
+                $('#ratio_tenor_asuransi_opsi_0').removeAttr('selected');
+                $('#ratio_tenor_asuransi_opsi_1').removeAttr('selected');
+                $('#ratio_tenor_asuransi_opsi_2').attr('selected', true);
+                $('#ratio_tenor_asuransi_opsi_3').removeAttr('selected');
+            } else if (ratioTenorAsuransi < 100 && !isNaN(ratioTenorAsuransi)) {
+                $('#ratio_tenor_asuransi_opsi_0').removeAttr('selected');
+                $('#ratio_tenor_asuransi_opsi_1').removeAttr('selected');
+                $('#ratio_tenor_asuransi_opsi_2').removeAttr('selected');
+                $('#ratio_tenor_asuransi_opsi_3').attr('selected', true);
+            } else {
+                $('#ratio_tenor_asuransi_opsi_0').removeAttr('selected');
+                $('#ratio_tenor_asuransi_opsi_1').removeAttr('selected');
+                $('#ratio_tenor_asuransi_opsi_2').removeAttr('selected');
+                $('#ratio_tenor_asuransi_opsi_3').removeAttr('selected');
+            }
+        }
+        //end hitung ratio covarege
+
+        // //triger hitung Persentase Kebutuhan Kredit
+        // $('#kebutuhan_kredit').change(function(e) {
+        //     hitungPersentaseKebutuhanKredit();
+        // });
+        // //end triger hitung Persentase Kebutuhan Kredit
+
+        // //triger hitung Persentase Kebutuhan Kredit
+        // $('#jumlah_kredit').change(function(e) {
+        //     hitungPersentaseKebutuhanKredit();
+        // });
+        //end triger hitung Persentase Kebutuhan Kredit
+
+        // hitung Persentase Kebutuhan Kredit
+        // function hitungPersentaseKebutuhanKredit() {
+        //     let kebutuhanKredit = parseInt($('#kebutuhan_kredit').val());
+        //     let jumlahKredit = parseInt($('#jumlah_kredit').val());
+
+        //     let persentaseKebutuhanKredit = parseInt(jumlahKredit / kebutuhanKredit * 100); //cek rumusnya lagi
+
+        //     $('#persentase_kebutuhan_kredit').val(persentaseKebutuhanKredit);
+
+        //     if (persentaseKebutuhanKredit <= 80 && !isNaN(persentaseKebutuhanKredit)) {
+        //         $('#persentase_kebutuhan_kredit_opsi_0').attr('selected', true);
+        //         $('#persentase_kebutuhan_kredit_opsi_1').removeAttr('selected');
+        //         $('#persentase_kebutuhan_kredit_opsi_2').removeAttr('selected');
+        //         $('#persentase_kebutuhan_kredit_opsi_3').removeAttr('selected');
+        //     } else if (persentaseKebutuhanKredit >= 81 && persentaseKebutuhanKredit <= 89) {
+        //         $('#persentase_kebutuhan_kredit_opsi_0').removeAttr('selected');
+        //         $('#persentase_kebutuhan_kredit_opsi_1').attr('selected', true);
+        //         $('#persentase_kebutuhan_kredit_opsi_2').removeAttr('selected');
+        //         $('#persentase_kebutuhan_kredit_opsi_3').removeAttr('selected');
+        //     } else if (persentaseKebutuhanKredit >= 90 && persentaseKebutuhanKredit <= 100) {
+        //         $('#persentase_kebutuhan_kredit_opsi_0').removeAttr('selected');
+        //         $('#persentase_kebutuhan_kredit_opsi_1').removeAttr('selected');
+        //         $('#persentase_kebutuhan_kredit_opsi_2').attr('selected', true);
+        //         $('#persentase_kebutuhan_kredit_opsi_3').removeAttr('selected');
+        //     } else if (persentaseKebutuhanKredit > 100 && !isNaN(persentaseKebutuhanKredit)) {
+        //         $('#persentase_kebutuhan_kredit_opsi_0').removeAttr('selected');
+        //         $('#persentase_kebutuhan_kredit_opsi_1').removeAttr('selected');
+        //         $('#persentase_kebutuhan_kredit_opsi_2').removeAttr('selected');
+        //         $('#persentase_kebutuhan_kredit_opsi_3').attr('selected', true);
+        //     } else {
+        //         $('#persentase_kebutuhan_kredit_opsi_0').removeAttr('selected');
+        //         $('#persentase_kebutuhan_kredit_opsi_1').removeAttr('selected');
+        //         $('#persentase_kebutuhan_kredit_opsi_2').removeAttr('selected');
+        //         $('#persentase_kebutuhan_kredit_opsi_3').removeAttr('selected');
+        //     }
+        // }
+        //end Persentase Kebutuhan Kredit
+
+        //triger hitung Repayment Capacity
+        $('#persentase_net_income').change(function(e) {
+            hitungRepaymentCapacity();
+        });
+        //end triger hitung Repayment Capacity
+
+        //triger hitung Repayment Capacity
+        $('#omzet_penjualan').change(function(e) {
+            hitungRepaymentCapacity();
+        });
+        //end triger hitung Repayment Capacity
+
+        //triger hitung Repayment Capacity
+        $('#rencana_peningkatan').change(function(e) {
+            hitungRepaymentCapacity();
+        });
+        //end triger hitung Repayment Capacity
+
+        //triger hitung Repayment Capacity
+        $('#installment').change(function(e) {
+            hitungRepaymentCapacity();
+        });
+        //end triger hitung Repayment Capacity
+
+        // hitung Repayment Capacity
+        function hitungRepaymentCapacity() {
+            let omzetPenjualan = parseInt($('#omzet_penjualan').val().split('.').join(''));
+            let persentaseNetIncome = parseInt($('#persentase_net_income').val()) / 100;
+            let rencanaPeningkatan = parseInt($('#rencana_peningkatan').val()) / 100;
+            let installment = parseInt($('#installment').val().split('.').join(''));
+
+            let repaymentCapacity = parseFloat(persentaseNetIncome * omzetPenjualan * (1 + rencanaPeningkatan) /
+                installment); //cek rumusnya lagi
+
+            $('#repayment_capacity').val(repaymentCapacity.toFixed(2));
+
+            if (repaymentCapacity > 2) {
+                $('#repayment_capacity_opsi_0').attr('selected', true);
+                $('#repayment_capacity_opsi_1').removeAttr('selected');
+                $('#repayment_capacity_opsi_2').removeAttr('selected');
+                $('#repayment_capacity_opsi_3').removeAttr('selected');
+            } else if (repaymentCapacity >= 1.5 && repaymentCapacity < 2) {
+                $('#repayment_capacity_opsi_0').removeAttr('selected');
+                $('#repayment_capacity_opsi_1').attr('selected', true);
+                $('#repayment_capacity_opsi_2').removeAttr('selected');
+                $('#repayment_capacity_opsi_3').removeAttr('selected');
+            } else if (repaymentCapacity >= 1.25 && repaymentCapacity < 1.5) {
+                $('#repayment_capacity_opsi_0').removeAttr('selected');
+                $('#repayment_capacity_opsi_1').removeAttr('selected');
+                $('#repayment_capacity_opsi_2').attr('selected', true);
+                $('#repayment_capacity_opsi_3').removeAttr('selected');
+            } else if (repaymentCapacity < 1.25 && !isNaN(repaymentCapacity)) {
+                $('#repayment_capacity_opsi_0').removeAttr('selected');
+                $('#repayment_capacity_opsi_1').removeAttr('selected');
+                $('#repayment_capacity_opsi_2').removeAttr('selected');
+                $('#repayment_capacity_opsi_3').attr('selected', true);
+            } else {
+                $('#repayment_capacity_opsi_0').removeAttr('selected');
+                $('#repayment_capacity_opsi_1').removeAttr('selected');
+                $('#repayment_capacity_opsi_2').removeAttr('selected');
+                $('#repayment_capacity_opsi_3').removeAttr('selected');
+            }
+        }
+        //end Repayment Capacity
+
+        $('.rupiah').keyup(function(e) {
+            var input = $(this).val()
+            $(this).val(formatrupiah(input))
+        });
+
+        function formatrupiah(angka, prefix) {
+            var number_string = angka ? angka.replace(/[^,\d]/g, '').toString() : angka,
+                split = number_string.split(','),
+                sisa = split[0].length % 3,
+                rupiah = split[0].substr(0, sisa),
+                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+            // tambahkan titik jika yang di input sudah menjadi angka ribuan
+            if (ribuan) {
+                separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+
+            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+            return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
+        }
+        // End Format Rupiah
+
+        // Limit Upload
+        $('.limit-size').on('change', function() {
+            var size = (this.files[0].size / 1024 / 1024).toFixed(2)
+            //console.log(size);
+            if (size > 5) {
+                $(this).next().css({
+                    "display": "block"
+                });
+                this.value = ''
+            } else {
+                $(this).next().css({
+                    "display": "none"
+                });
+            }
+        })
+
+        $('body').on('click', '.file-wrapper .btn-add-file', function(e) {
+            const wrapper = $(this).parent().parent().parent();
+            const $clone = wrapper.clone();
+
+            $clone.find('[type="file"]').attr('data-id', '');
+            $clone.find('[type="file"]').val('');
+            $clone.find('.filename').html('');
+            $clone.insertAfter(wrapper);
+        });
+
+        $('body').on('click', '.file-wrapper .btn-del-file', function(e) {
+            const inputData = $(this).parent().parent().find('input[type="file"]');
+            const wrapperEl = $(this).parent().parent().parent();
+
+            $.ajax({
+                url: '{{ route('pengajuan-kredit.temp.file') }}',
+                method: 'DELETE',
+                data: {
+                    answer_id: inputData.data('id'),
+                },
+                success: (res) => {
+                    inputData.parent().find('.filename').text('');
+                    inputData.val('');
+
+                    if (wrapperEl.siblings('.file-wrapper').get().length < 1) return;
+                    wrapperEl.remove();
+                }
+            });
+        });
+        // End Limit Upload
+
+        @if (count($errors->all()))
+            Swal.fire({
+                icon: 'error',
+                title: 'Error Validation',
+                html: `
         <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
-            @foreach($errors->all() as $error)
+            @foreach ($errors->all() as $error)
             <ul>
                 <li>{{ $error }}</li>
             </ul>
             @endforeach
         </div>
         `
-    });
-    @endif
+            });
+        @endif
 
-    function cekValueKosong(formIndex){
-        var skema = $("#skema_kredit").val()
-        var form = ".form-wizard[data-index="+ formIndex +"]";
-        var inputFile = $(form + " input[type=file]")
-        var inputText = $(form + " input[type=text]")
-        var inputNumber = $(form + " input[type=number]")
-        var select = $(form + " select")
-        var textarea = $(form + " textarea")
+        function cekValueKosong(formIndex) {
+            var skema = $("#skema_kredit").val()
+            var form = ".form-wizard[data-index=" + formIndex + "]";
+            var inputFile = $(form + " input[type=file]")
+            var inputText = $(form + " input[type=text]")
+            var inputNumber = $(form + " input[type=number]")
+            var select = $(form + " select")
+            var textarea = $(form + " textarea")
 
-        $.each(inputFile, function(i, v){
-            if(v.value == '' && !$(this).prop('disabled') && $(this).closest('.filename') == ''){
-                if(form == ".form-wizard[data-index='2']"){
-                    var ijin = $(form + " select[name=ijin_usaha]")
-                    if(ijin != "tidak_ada_legalitas_usaha"){
+            $.each(inputFile, function(i, v) {
+                if (v.value == '' && !$(this).prop('disabled') && $(this).closest('.filename') == '') {
+                    if (form == ".form-wizard[data-index='2']") {
+                        var ijin = $(form + " select[name=ijin_usaha]")
+                        if (ijin != "tidak_ada_legalitas_usaha") {
+                            let val = $(this).attr("id");
+                            if (val)
+                                val = $(this).attr("id").toString()
+                            nullValue.push(val.replaceAll("_", " "))
+                        }
+                    } else {
                         let val = $(this).attr("id");
                         if (val)
-                            val = $(this).attr("id").toString()
+                            val = $(this).attr("id").toString();
                         nullValue.push(val.replaceAll("_", " "))
                     }
-                } else{
+                } else if (v.value != '') {
+                    let val = $(this).attr("id");
+                    if (val)
+                        val = $(this).attr("id").toString().replaceAll("_", " ");
+                    for (var i = 0; i < nullValue.length; i++) {
+                        while (nullValue[i] == val) {
+                            nullValue.splice(i, 1)
+                        }
+                    }
+                }
+            })
+
+            $.each(inputText, function(i, v) {
+                if (v.value == '' && !$(this).prop('disabled')) {
                     let val = $(this).attr("id");
                     if (val)
                         val = $(this).attr("id").toString();
-                    nullValue.push(val.replaceAll("_", " "))
-                }
-            } else if(v.value != ''){
-                let val = $(this).attr("id");
-                if (val)
-                    val = $(this).attr("id").toString().replaceAll("_", " ");
-                for(var i = 0; i < nullValue.length; i++){
-                    while(nullValue[i] == val){
-                        nullValue.splice(i, 1)
-                    }
-                }
-            }
-        })
-
-        $.each(inputText, function(i, v){
-            if(v.value == '' && !$(this).prop('disabled')){
-                let val = $(this).attr("id");
-                if (val)
-                    val = $(this).attr("id").toString();
-                //console.log(val)
-                nullValue.push(val.replaceAll("_", " "))
-            }else if(v.value != ''){
-                let val = $(this).attr("id");
-                if (val)
-                    val = $(this).attr("id").toString().replaceAll("_", " ");
-                for(var i = 0; i < nullValue.length; i++){
-                    while(nullValue[i] == val){
-                        nullValue.splice(i, 1)
-                    }
-                }
-            }
-        })
-
-        $.each(inputNumber, function(i, v){
-            if(v.value == '' && !$(this).prop('disabled')){
-                let val = $(this).attr("id");
-                if (val)
-                    val = $(this).attr("id").toString();
-                //console.log(val)
-                nullValue.push(val.replaceAll("_", " "))
-            }else if(v.value != ''){
-                let val = $(this).attr("id").toString().replaceAll("_", " ");
-                for(var i = 0; i < nullValue.length; i++){
-                    while(nullValue[i] == val){
-                        nullValue.splice(i, 1)
-                    }
-                }
-            }
-        })
-
-        $.each(select, function(i, v){
-            if(v.value == '' && !$(this).prop('disabled')){
-                let val = $(this).attr("id");
-                if (val)
-                    val = $(this).attr("id").toString();
-                if(val != "persentase_kebutuhan_kredit_opsi" && val != "ratio_tenor_asuransi_opsi" && val != "ratio_coverage_opsi"){
                     //console.log(val)
                     nullValue.push(val.replaceAll("_", " "))
-                }
-            }else if(v.value != ''){
-                let val = $(this).attr("id");
-                if (val)
-                    val = $(this).attr("id").toString().replaceAll("_", " ");
-                for(var i = 0; i < nullValue.length; i++){
-                    while(nullValue[i] == val){
-                        nullValue.splice(i, 1)
+                } else if (v.value != '') {
+                    let val = $(this).attr("id");
+                    if (val)
+                        val = $(this).attr("id").toString().replaceAll("_", " ");
+                    for (var i = 0; i < nullValue.length; i++) {
+                        while (nullValue[i] == val) {
+                            nullValue.splice(i, 1)
+                        }
                     }
                 }
-            }
-        })
-
-        $.each(textarea, function(i, v){
-            if(v.value == '' && !$(this).prop('disabled')){
-                let val = $(this).attr("id");
-                if (val)
-                    val = $(this).attr("id").toString();
-                //console.log(val)
-                nullValue.push(val.replaceAll("_", " "))
-            }else if(v.value != ''){
-                let val = $(this).attr("id");
-                if (val)
-                    val = $(this).attr("id").toString().replaceAll("_", " ");
-                for(var i = 0; i < nullValue.length; i++){
-                    while(nullValue[i] == val){
-                        nullValue.splice(i, 1)
-                    }
-                }
-            }
-        })
-
-        //console.log(nullValue);
-    }
-
-    $(".btn-simpan").on('click', function(e){
-        if(nullValue.length > 0){
-            let message = "";
-            $.each(nullValue, (i, v) => {
-                message += v != '' ? v + ", " : ''
             })
-            Swal.fire({
+
+            $.each(inputNumber, function(i, v) {
+                if (v.value == '' && !$(this).prop('disabled')) {
+                    let val = $(this).attr("id");
+                    if (val)
+                        val = $(this).attr("id").toString();
+                    //console.log(val)
+                    nullValue.push(val.replaceAll("_", " "))
+                } else if (v.value != '') {
+                    let val = $(this).attr("id").toString().replaceAll("_", " ");
+                    for (var i = 0; i < nullValue.length; i++) {
+                        while (nullValue[i] == val) {
+                            nullValue.splice(i, 1)
+                        }
+                    }
+                }
+            })
+
+            $.each(select, function(i, v) {
+                if (v.value == '' && !$(this).prop('disabled')) {
+                    let val = $(this).attr("id");
+                    if (val)
+                        val = $(this).attr("id").toString();
+                    if (val != "persentase_kebutuhan_kredit_opsi" && val != "ratio_tenor_asuransi_opsi" && val !=
+                        "ratio_coverage_opsi") {
+                        //console.log(val)
+                        nullValue.push(val.replaceAll("_", " "))
+                    }
+                } else if (v.value != '') {
+                    let val = $(this).attr("id");
+                    if (val)
+                        val = $(this).attr("id").toString().replaceAll("_", " ");
+                    for (var i = 0; i < nullValue.length; i++) {
+                        while (nullValue[i] == val) {
+                            nullValue.splice(i, 1)
+                        }
+                    }
+                }
+            })
+
+            $.each(textarea, function(i, v) {
+                if (v.value == '' && !$(this).prop('disabled')) {
+                    let val = $(this).attr("id");
+                    if (val)
+                        val = $(this).attr("id").toString();
+                    //console.log(val)
+                    nullValue.push(val.replaceAll("_", " "))
+                } else if (v.value != '') {
+                    let val = $(this).attr("id");
+                    if (val)
+                        val = $(this).attr("id").toString().replaceAll("_", " ");
+                    for (var i = 0; i < nullValue.length; i++) {
+                        while (nullValue[i] == val) {
+                            nullValue.splice(i, 1)
+                        }
+                    }
+                }
+            })
+
+            //console.log(nullValue);
+        }
+
+        $(".btn-simpan").on('click', function(e) {
+            if (nullValue.length > 0) {
+                let message = "";
+                $.each(nullValue, (i, v) => {
+                    message += v != '' ? v + ", " : ''
+                })
+                Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
                     text: "Field " + message + " harus diisi terlebih dahulu"
                 })
-            e.preventDefault()
+                e.preventDefault()
+            }
+        })
+
+        for (let i = 0; i <= parseInt(jumlahData); i++) {
+            cekValueKosong(i);
         }
-    })
-
-    for(let i = 0; i <= parseInt(jumlahData); i++){
-        cekValueKosong(i);
-    }
-
-</script>
-@include('pengajuan-kredit.partials.save-script')
-
+    </script>
+    @include('pengajuan-kredit.partials.save-script')
 @endpush

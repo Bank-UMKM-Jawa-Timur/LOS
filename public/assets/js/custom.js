@@ -128,10 +128,10 @@ $(document).ready(function () {
                 subtotalFilled += 2;
             }
         }
-        //console.log("=============index : "+formIndex+"=============")
-        //console.log('total input : ' + subtotalInput)
-        //console.log('total input filled : ' + subtotalFilled)
-        //console.log("===============================================")
+        // console.log("=============index : " + formIndex + "=============");
+        // console.log("total input : " + subtotalInput);
+        // console.log("total input filled : " + subtotalFilled);
+        // console.log("===============================================");
 
         var percentage = parseInt((subtotalFilled / subtotalInput) * 100);
         percentage = Number.isNaN(percentage) ? 0 : percentage;
