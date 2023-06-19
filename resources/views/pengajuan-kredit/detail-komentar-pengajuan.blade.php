@@ -484,7 +484,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                         </label>
                         <div class="col-sm-7">
                             <input type="text" readonly class="form-control-plaintext" id="staticEmail"
-                                value="{{$dataNasabah->tenor_yang_diminta}} tahun">
+                                value="{{$dataNasabah->tenor_yang_diminta}} Bulan">
                         </div>
                     </div>
                     <hr>

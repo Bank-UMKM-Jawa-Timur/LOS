@@ -464,7 +464,7 @@
                     <input type="text" disabled name="tenor_yang_diminta"
                         class="form-control @error('tenor_yang_diminta') is-invalid @enderror"
                         placeholder="Tenor Yang Diminta"
-                        value="{{ old('tenor_yang_diminta', $dataUmumNasabah->tenor_yang_diminta) }} Tahun">
+                        value="{{ old('tenor_yang_diminta', $dataUmumNasabah->tenor_yang_diminta) }} Bulan">
                     @error('tenor_yang_diminta')
                         <div class="invalid-feedback">
                             {{ $message }}
