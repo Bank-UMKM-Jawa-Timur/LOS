@@ -1103,7 +1103,7 @@
                                                                         @if ($itemEmpat->opsi_jawaban == 'persen')
                                                                             %
                                                                         @elseif($itemEmpat->id == 130)
-                                                                            Tahun
+                                                                            Bulan
                                                                         @else
                                                                         @endif</b>
                                                                 </p>
