@@ -401,34 +401,38 @@ class PengajuanKreditController extends Controller
      */
     public function create(Request $request)
     {
-        $param['pageTitle'] = "Dashboard";
-        $param['multipleFiles'] = $this->isMultipleFiles;
+        if ($request->skema != 'KKB') {
+            $param['pageTitle'] = "Dashboard";
+            $param['multipleFiles'] = $this->isMultipleFiles;
 
-        $param['dataDesa'] = Desa::all();
-        $param['dataKecamatan'] = Kecamatan::all();
-        $param['dataKabupaten'] = Kabupaten::all();
-        $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->where('nama', '!=', 'Data Umum')->get();
-        $param['itemSlik'] = ItemModel::with('option')->where('nama', 'SLIK')->first();
-        $param['itemSP'] = ItemModel::where('nama', 'Surat Permohonan')->first();
-        $param['itemP'] = ItemModel::where('nama', 'Laporan SLIK')->first();
-        $param['itemKTPSu'] = ItemModel::where('nama', 'Foto KTP Suami')->first();
-        $param['itemKTPIs'] = ItemModel::where('nama', 'Foto KTP Istri')->first();
-        $param['itemKTPNas'] = ItemModel::where('nama', 'Foto KTP Nasabah')->first();
-        $param['itemNIB'] = ItemModel::where('nama', 'Dokumen NIB')->first();
-        $param['itemNPWP'] = ItemModel::where('nama', 'Dokumen NPWP')->first();
-        $param['itemSKU'] = ItemModel::where('nama', 'Dokumen Surat Keterangan Usaha')->first();
+            $param['dataDesa'] = Desa::all();
+            $param['dataKecamatan'] = Kecamatan::all();
+            $param['dataKabupaten'] = Kabupaten::all();
+            $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->where('nama', '!=', 'Data Umum')->get();
+            $param['itemSlik'] = ItemModel::with('option')->where('nama', 'SLIK')->first();
+            $param['itemSP'] = ItemModel::where('nama', 'Surat Permohonan')->first();
+            $param['itemP'] = ItemModel::where('nama', 'Laporan SLIK')->first();
+            $param['itemKTPSu'] = ItemModel::where('nama', 'Foto KTP Suami')->first();
+            $param['itemKTPIs'] = ItemModel::where('nama', 'Foto KTP Istri')->first();
+            $param['itemKTPNas'] = ItemModel::where('nama', 'Foto KTP Nasabah')->first();
+            $param['itemNIB'] = ItemModel::where('nama', 'Dokumen NIB')->first();
+            $param['itemNPWP'] = ItemModel::where('nama', 'Dokumen NPWP')->first();
+            $param['itemSKU'] = ItemModel::where('nama', 'Dokumen Surat Keterangan Usaha')->first();
 
-        $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
-        $param['dataMerk'] = MerkModel::all();
+            $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
+            $param['dataMerk'] = MerkModel::all();
 
-        $param['skema'] = $request->skema;
+            $param['skema'] = $request->skema;
 
-        // dump($param['dataAspek']);
-        // dump($param['itemSlik']);
-        // dump($param['itemSP']);
-        // dump($param['dataPertanyaanSatu']);
-        // dd($param['itemP']);
-        return view('pengajuan-kredit.add-pengajuan-kredit', $param);
+            // dump($param['dataAspek']);
+            // dump($param['itemSlik']);
+            // dump($param['itemSP']);
+            // dump($param['dataPertanyaanSatu']);
+            // dd($param['itemP']);
+            return view('pengajuan-kredit.add-pengajuan-kredit', $param);
+        } else {
+            return redirect()->route('pengajuan-kredit.create');
+        }
     }
 
     public function checkSubColumn(Request $request)
