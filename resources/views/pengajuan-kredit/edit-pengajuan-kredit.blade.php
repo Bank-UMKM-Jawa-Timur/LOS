@@ -458,87 +458,89 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                 $keterangan = $dataPO->keterangan;
                 $pemesanan = str_replace("Pemesanan ", "", $keterangan);
             @endphp
-            <div class="row" id="data-po">
-                <div class="form-group col-md-12">
-                    <span style="color: black; font-weight: bold; font-size: 18px;">Jenis Kendaraan Roda 2 :</span>
-                </div>
-                <div class="form-group col-md-6">
-                    <label>Merk Kendaraan</label>
-                    <select name="id_merk" id="id_merk" class="select2 form-control" style="width: 100%;" required>
-                        <option value="">Pilih Merk Kendaraan</option>
-                        @foreach ($dataMerk as $item)
-                            <option value="{{ $item->id }}"  {{ ($dataPOMerk->id_merk == $item->id) ? 'selected' : '' }} >{{ $item->merk }}</option>
-                        @endforeach
-                    </select>
-                    @error('id_merk')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-6">
-                    <label>Tipe Kendaraan</label>
-                    <select name="id_tipe" id="id_tipe" class="select2 form-control" style="width: 100%;" required>
-                        <option value="">Pilih Tipe</option>
-                    </select>
-                    @error('id_tipe')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="">Tahun</label>
-                    <input type="number" name="tahun" id="tahun" class="form-control @error('tahun') is-invalid @enderror"
-                        placeholder="Tahun Kendaraan" value="{{ $dataPO?->tahun_kendaraan ?? '' }}" min="2000">
-                    @error('tahun')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="">Warna</label>
-                    <input type="text" name="warna" id="warna" maxlength="255" class="form-control @error('warna') is-invalid @enderror"
-                        placeholder="Warna Kendaraan" value="{{ $dataPO?->warna ?? '' }}">
-                    @error('warna')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-12">
-                    <span style="color: black">Keterangan :</span>
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="">Pemesanan</label>
-                    <input type="text" maxlength="255" name="pemesanan" id="pemesanan" class="form-control @error('pemesanan') is-invalid @enderror"
-                        placeholder="Pemesanan Kendaraan" value="{{ $pemesanan ?? '' }}">
-                    @error('pemesanan')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="">Sejumlah</label>
-                    <input type="number" name="sejumlah" id="sejumlah" class="form-control @error('sejumlah') is-invalid @enderror"
-                        placeholder="Jumlah Kendaraan" value="{{ $dataPO?->jumlah ?? '' }}">
-                    @error('sejumlah')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="">Harga</label>
-                    <input type="text" name="harga" id="harga" class="form-control rupiah @error('harga') is-invalid @enderror"
-                        placeholder="Harga Kendaraan" value="{{ $dataPO?->harga ?? '' }}">
-                    @error('harga')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
+            <div class="form-wizard" data-index='1' data-done='true'>
+                <div class="row" id="data-po">
+                    <div class="form-group col-md-12">
+                        <span style="color: black; font-weight: bold; font-size: 18px;">Jenis Kendaraan Roda 2 :</span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Merk Kendaraan</label>
+                        <select name="id_merk" id="id_merk" class="select2 form-control" style="width: 100%;" required>
+                            <option value="">Pilih Merk Kendaraan</option>
+                            @foreach ($dataMerk as $item)
+                                <option value="{{ $item->id }}"  {{ ($dataPOMerk->id_merk == $item->id) ? 'selected' : '' }} >{{ $item->merk }}</option>
+                            @endforeach
+                        </select>
+                        @error('id_merk')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Tipe Kendaraan</label>
+                        <select name="id_tipe" id="id_tipe" class="select2 form-control" style="width: 100%;" required>
+                            <option value="">Pilih Tipe</option>
+                        </select>
+                        @error('id_tipe')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="">Tahun</label>
+                        <input type="number" name="tahun" id="tahun" class="form-control @error('tahun') is-invalid @enderror"
+                            placeholder="Tahun Kendaraan" value="{{ $dataPO?->tahun_kendaraan ?? '' }}" min="2000">
+                        @error('tahun')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="">Warna</label>
+                        <input type="text" name="warna" id="warna" maxlength="255" class="form-control @error('warna') is-invalid @enderror"
+                            placeholder="Warna Kendaraan" value="{{ $dataPO?->warna ?? '' }}">
+                        @error('warna')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="form-group col-md-12">
+                        <span style="color: black">Keterangan :</span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="">Pemesanan</label>
+                        <input type="text" maxlength="255" name="pemesanan" id="pemesanan" class="form-control @error('pemesanan') is-invalid @enderror"
+                            placeholder="Pemesanan Kendaraan" value="{{ $pemesanan ?? '' }}">
+                        @error('pemesanan')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="">Sejumlah</label>
+                        <input type="number" name="sejumlah" id="sejumlah" class="form-control @error('sejumlah') is-invalid @enderror"
+                            placeholder="Jumlah Kendaraan" value="{{ $dataPO?->jumlah ?? '' }}">
+                        @error('sejumlah')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="">Harga</label>
+                        <input type="text" name="harga" id="harga" class="form-control rupiah @error('harga') is-invalid @enderror"
+                            placeholder="Harga Kendaraan" value="{{ $dataPO?->harga ?? '' }}">
+                        @error('harga')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
                 </div>
             </div>
         @endif
@@ -2828,7 +2830,7 @@ $dataIndex = match ($dataUmum->skema_kredit) {
             filename.html(selectedPathFile)
         }
     })
-    
+
     $('body').on('click', '.file-wrapper .btn-add-file', function(e) {
         const wrapper = $(this).parent().parent().parent();
         const $clone = wrapper.clone();
