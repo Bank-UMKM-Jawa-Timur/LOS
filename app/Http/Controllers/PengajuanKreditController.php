@@ -3120,8 +3120,21 @@ class PengajuanKreditController extends Controller
 
     public function deleteDraft($id)
     {
-        $tempNasabah = CalonNasabahTemp::findOrFail($id);
-        $tempNasabah->delete();
+        DB::beginTransaction();
+        try {
+            DB::table('jawaban_temp')->where('id_temporary_calon_nasabah', $id)->delete();
+            DB::table('temporary_jawaban_text')->where('id_temporary_calon_nasabah', $id)->delete();
+            DB::table('temporary_usulan_dan_pendapat')->where('id_temp', $id)->delete();
+            DB::table('temporary_calon_nasabah')->where('id', $id)->delete();
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withError('Terjadi kesalahan : '.$e->getMessage());
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollBack();
+            return back()->withError('Terjadi kesalahan pada database');
+        }
 
         return back()->withStatus('Berhasil menghapus draft');
     }
