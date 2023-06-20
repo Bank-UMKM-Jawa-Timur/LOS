@@ -49,10 +49,13 @@
                                             </button>
                                         </form>
                                     @endif
-                                    <form action="{{ route('reset-password', $item->id) }}" method="post">
+                                    <button class="dropdown-item" onclick="resetPassword('{{ $item->name }}')">Reset
+                                        Password</button>
+                                    <form action="{{ route('reset-password', $item->id) }}" id="resetPasswordForm"
+                                        method="post">
                                         @csrf
-                                        <button class="dropdown-item" 
-                                        onclick="confirm('{{ __('Apakah anda yakin mereset password?') }}') ? this.parentElement.submit() : ''">Reset Password</button>
+                                        {{-- <button class="dropdown-item"
+                                        onclick="confirm('{{ __('Apakah anda yakin mereset password?') }}') ? this.parentElement.submit() : ''">Reset Password</button> --}}
                                     </form>
                                 </div>
                             </div>
@@ -69,3 +72,24 @@
         {{ $user->appends(Request::all())->links('vendor.pagination.custom') }}
     </div>
 </div>
+@push('custom-script')
+    <script>
+        function resetPassword(name) {
+            Swal.fire({
+                title: 'Perhatian!!',
+                text: "Apakah anda yakin mereset password " + name + " ?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#112042',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Batal',
+                confirmButtonText: 'ResetPassword',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $("#resetPasswordForm").submit()
+                }
+            })
+        }
+    </script>
+@endpush
