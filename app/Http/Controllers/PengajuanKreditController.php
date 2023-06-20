@@ -401,7 +401,7 @@ class PengajuanKreditController extends Controller
      */
     public function create(Request $request)
     {
-        if ($request->skema != 'KKB') {
+        // if ($request->skema != 'KKB') {
             $param['pageTitle'] = "Dashboard";
             $param['multipleFiles'] = $this->isMultipleFiles;
 
@@ -430,9 +430,9 @@ class PengajuanKreditController extends Controller
             // dump($param['dataPertanyaanSatu']);
             // dd($param['itemP']);
             return view('pengajuan-kredit.add-pengajuan-kredit', $param);
-        } else {
-            return redirect()->route('pengajuan-kredit.create');
-        }
+        // } else {
+        //     return redirect()->route('pengajuan-kredit.create');
+        // }
     }
 
     public function checkSubColumn(Request $request)
@@ -994,7 +994,9 @@ class PengajuanKreditController extends Controller
                     ->insert([
                         'id_pengajuan' => $id_pengajuan,
                         'tahun_kendaraan' => $request->tahun,
-                        'id_type' => $request->id_tipe,
+                        // 'id_type' => $request->id_tipe,
+                        'merk' => $request->merk,
+                        'tipe' => $request->tipe,
                         'warna' => $request->warna,
                         'keterangan' => 'Pemesanan ' . $request->pemesanan,
                         'jumlah' => $request->sejumlah,
@@ -1158,6 +1160,7 @@ class PengajuanKreditController extends Controller
             DB::table('temporary_usulan_dan_pendapat')
                 ->where('id_temp', $tempNasabah->id)
                 ->delete();
+            DB::table('data_po_temp')->where('id_calon_nasabah_temp', $tempNasabah->id)->delete();
 
             DB::commit();
             return redirect()->route('pengajuan-kredit.index')->withStatus('Data berhasil disimpan.');
@@ -1247,9 +1250,9 @@ class PengajuanKreditController extends Controller
             $param['dataPO'] = DB::table('data_po')
                 ->where('id_pengajuan', $id)
                 ->first();
-            $param['dataPOMerk'] = DB::table('mst_tipe')
-                ->where('id', $param['dataPO']->id_type)
-                ->first();
+            // $param['dataPOMerk'] = DB::table('mst_tipe')
+            //     ->where('id', $param['dataPO']->id_type)
+            //     ->first();
         }
         $param['skema'] = $param['dataUmum']->skema_kredit;
 
@@ -2759,6 +2762,33 @@ class PengajuanKreditController extends Controller
             'data' => $nasabah,
         ]);
     }
+    
+    public function saveDataPOTemp(Request $request) {
+        try {
+            $find = array('Rp ', '.');
+
+            $po = DB::table('data_po_temp')->insert([
+                'id_calon_nasabah_temp' => $request->id_calon_nasabah,
+                'tahun_kendaraan' => $request->tahun,
+                'merk' => $request->merk,
+                'tipe' => $request->tipe_kendaraan,
+                'warna' => $request->warna,
+                'keterangan' => 'Pemesanan ' . $request->pemesanan,
+                'jumlah' => $request->sejumlah,
+                'harga' => str_replace($find, '', $request->harga)
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'failed', 'message' => $e->getMessage()]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response()->json(['status' => 'failed', 'message' => $e->getMessage()]);
+        }
+
+        return response()->json([
+            'status' => 'ok',
+            'code' => 200,
+            'data' => $po,
+        ]);
+    }
 
     public function tempFile(Request $request)
     {
@@ -3107,6 +3137,8 @@ class PengajuanKreditController extends Controller
 
         $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
         $param['dataMerk'] = MerkModel::all();
+        $param['dataPO'] = DB::table('data_po_temp')->where('id_calon_nasabah_temp', $request->tempId)->first();
+        // return $param['dataPO'];
 
         $param['skema'] = $request->skema ?? $param['duTemp']?->skema_kredit;
 

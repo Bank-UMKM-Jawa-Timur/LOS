@@ -71,9 +71,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('pengajuan-kredit.temp.file');
 
     Route::delete('pengajuan-kredit/temp/file', [PengajuanKreditController::class, 'delTempFile']);
-
+    
     Route::post('pengajuan-kredit/temp/jawaban', [PengajuanKreditController::class, 'tempJawaban'])
-        ->name('pengajuan-kredit.temp.jawaban');
+    ->name('pengajuan-kredit.temp.jawaban');
+    Route::post('pengajuan-kredit/temp/data-po', [PengajuanKreditController::class, 'saveDataPOTemp'])->name('pengajuan-kredit.save-data-po');
 
     Route::resource('pengajuan-kredit', PengajuanKreditController::class);
     // Route::post('pengajuan-kredit/create', PengajuanKreditController::class);

@@ -379,7 +379,14 @@ is-invalid
                     </div>
                     <div class="form-group col-md-6">
                         <label>Merk Kendaraan</label>
-                        <select name="id_merk" id="id_merk" class="select2 form-control" style="width: 100%;"
+                        <input type="text" name="merk" id="merk" class="form-control @error('merk') is-invalid @enderror"
+                            placeholder="Merk kendaraan" value="{{$dataPO->merk}}">
+                        @error('merk')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                        {{--  <select name="id_merk" id="id_merk" class="select2 form-control" style="width: 100%;"
                             required>
                             <option value="">Pilih Merk Kendaraan</option>
                             @foreach ($dataMerk as $item)
@@ -390,11 +397,17 @@ is-invalid
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
-                        @enderror
+                        @enderror  --}}
                     </div>
                     <div class="form-group col-md-6">
                         <label>Tipe Kendaraan</label>
-                        <select name="id_tipe" id="id_tipe" class="select2 form-control" style="width: 100%;"
+                        <input type="text" name="tipe_kendaraan" id="tipe_kendaraan" class="form-control @error('tipe_kendaraan') is-invalid @enderror" placeholder="Tipe kendaraan" value="{{$dataPO->tipe}}">
+                        @error('tipe_kendaraan')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                        {{--  <select name="id_tipe" id="id_tipe" class="select2 form-control" style="width: 100%;"
                             required>
                             <option value="">Pilih Tipe</option>
                         </select>
@@ -402,13 +415,13 @@ is-invalid
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
-                        @enderror
+                        @enderror  --}}
                     </div>
                     <div class="form-group col-md-6">
                         <label for="">Tahun</label>
                         <input type="number" name="tahun" id="tahun"
                             class="form-control @error('tahun') is-invalid @enderror" placeholder="Tahun Kendaraan"
-                            value="{{ $duTemp?->tahun ?? '' }}" min="2000">
+                            value="{{ $dataPO?->tahun_kendaraan ?? '' }}" min="2000">
                         @error('tahun')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -419,7 +432,7 @@ is-invalid
                         <label for="">Warna</label>
                         <input type="text" maxlength="255" name="warna" id="warna"
                             class="form-control @error('warna') is-invalid @enderror" placeholder="Warna Kendaraan"
-                            value="{{ $duTemp?->warna ?? '' }}">
+                            value="{{ $dataPO?->warna ?? '' }}">
                         @error('warna')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -433,7 +446,7 @@ is-invalid
                         <label for="">Pemesanan</label>
                         <input type="text" maxlength="255" name="pemesanan" id="pemesanan"
                             class="form-control @error('pemesanan') is-invalid @enderror"
-                            placeholder="Pemesanan Kendaraan" value="{{ $duTemp?->pemesanan ?? '' }}">
+                            placeholder="Pemesanan Kendaraan" value="{{ $dataPO?->keterangan ?? '' }}">
                         @error('pemesanan')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -444,7 +457,7 @@ is-invalid
                         <label for="">Sejumlah</label>
                         <input type="number" name="sejumlah" id="sejumlah"
                             class="form-control @error('sejumlah') is-invalid @enderror" placeholder="Jumlah Kendaraan"
-                            value="{{ $duTemp?->sejumlah ?? '' }}">
+                            value="{{ $dataPO?->jumlah ?? '' }}">
                         @error('sejumlah')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -455,7 +468,7 @@ is-invalid
                         <label for="">Harga</label>
                         <input type="text" name="harga" id="harga"
                             class="form-control rupiah @error('harga') is-invalid @enderror"
-                            placeholder="Harga Kendaraan" value="{{ $duTemp?->harga ?? '' }}">
+                            placeholder="Harga Kendaraan" value="{{ $dataPO?->harga ?? '' }}">
                         @error('harga')
                             <div class="invalid-feedback">
                                 {{ $message }}
