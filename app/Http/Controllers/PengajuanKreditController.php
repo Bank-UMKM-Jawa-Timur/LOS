@@ -968,16 +968,18 @@ class PengajuanKreditController extends Controller
 
             //untuk jawaban yg teks, number, persen, long text
             foreach ($request->id_level as $key => $value) {
-                $dataJawabanText = new JawabanTextModel;
-                $dataJawabanText->id_pengajuan = $id_pengajuan;
-                $dataJawabanText->id_jawaban = $request->get('id_level')[$key];
-                if ($request->get('id_level')[$key] != '131' && $request->get('id_level')[$key] != '143' && $request->get('id_level')[$key] != '90' && $request->get('id_level')[$key] != '138') {
-                    $dataJawabanText->opsi_text = str_replace($find, '', $request->get('informasi')[$key]);
-                } else {
-                    $dataJawabanText->opsi_text = $request->get('informasi')[$key];
+                if ($value != null) {
+                    $dataJawabanText = new JawabanTextModel;
+                    $dataJawabanText->id_pengajuan = $id_pengajuan;
+                    $dataJawabanText->id_jawaban = $request->get('id_level')[$key];
+                    if ($request->get('id_level')[$key] != '131' && $request->get('id_level')[$key] != '143' && $request->get('id_level')[$key] != '90' && $request->get('id_level')[$key] != '138') {
+                        $dataJawabanText->opsi_text = str_replace($find, '', $request->get('informasi')[$key]);
+                    } else {
+                        $dataJawabanText->opsi_text = $request->get('informasi')[$key];
+                    }
+                    // $dataJawabanText->opsi_text = $request->get('informasi')[$key] == null ? '-' : $request->get('informasi')[$key];
+                    $dataJawabanText->save();
                 }
-                // $dataJawabanText->opsi_text = $request->get('informasi')[$key] == null ? '-' : $request->get('informasi')[$key];
-                $dataJawabanText->save();
             }
 
             $dataJawabanText = new JawabanTextModel;
@@ -1010,14 +1012,16 @@ class PengajuanKreditController extends Controller
                 File::isDirectory(public_path($relPath)) or File::makeDirectory(public_path($relPath), recursive: true);
                 File::move($tempPath, $newPath);
 
-                JawabanTextModel::create([
-                    'id_pengajuan' => $id_pengajuan,
-                    'id_jawaban' => $tempFile->id_jawaban,
-                    'opsi_text' => $tempFile->opsi_text,
-                    'skor_penyelia' => null,
-                    'skor_pbp' => null,
-                    'skor' => null,
-                ]);
+                if ($tempFile->id_jawaban != null) {
+                    JawabanTextModel::create([
+                        'id_pengajuan' => $id_pengajuan,
+                        'id_jawaban' => $tempFile->id_jawaban,
+                        'opsi_text' => $tempFile->opsi_text,
+                        'skor_penyelia' => null,
+                        'skor_pbp' => null,
+                        'skor' => null,
+                    ]);
+                }
 
                 $tempFile->delete();
             }
