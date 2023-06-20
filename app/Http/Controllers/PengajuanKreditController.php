@@ -3130,7 +3130,7 @@ class PengajuanKreditController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->withError('Terjadi kesalahan : '.$e->getMessage());
+            return back()->withError('Terjadi kesalahan : ' . $e->getMessage());
         } catch (\Illuminate\Database\QueryException $e) {
             DB::rollBack();
             return back()->withError('Terjadi kesalahan pada database');
