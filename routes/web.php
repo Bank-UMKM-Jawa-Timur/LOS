@@ -12,6 +12,7 @@ use \App\Http\Controllers\UserController;
 use \App\Http\Controllers\MerkController;
 use \App\Http\Controllers\TipeController;
 use \App\Http\Controllers\CetakSuratController;
+use \App\Http\Controllers\LogPengajuanController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -36,6 +37,10 @@ Route::post('tes-skor', [PengajuanKreditController::class, 'countScore'])->name(
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index']);
+
+    // log pengajuan
+    Route::get('pengajuan-kredit/logPengajuan/{id}',[LogPengajuanController::class,'index'])->name('pengajuan.logPengajuan');
+
     // check Pincab
     Route::post('pengajuan-kredit/pincabStatusDetailPost', [PengajuanKreditController::class, "checkPincabStatusDetailPost"])->name('pengajuan.check.pincab.status.detail.post');
     Route::get('pengajuan-kredit/pincabStatusDetail/{id}', [PengajuanKreditController::class, "checkPincabStatusDetail"])->name('pengajuan.check.pincab.status.detail');
@@ -99,7 +104,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('master-item', MasterItemController::class);
     // Cetak Surat
     Route::get('cetak-surat/{id}', [CetakSuratController::class, 'cetak'])->name('cetak');
-    
+
     // Route::gety('cetak-surat', CetakSuratController::class);
 
     Route::get('/pengajuan-kredit/get-item-jaminan-by-kategori-jaminan-utama-edit', [PengajuanKreditController::class, 'getEditJaminanKategori'])->name('get-item-jaminan-by-kategori-jaminan-utama-edit');
