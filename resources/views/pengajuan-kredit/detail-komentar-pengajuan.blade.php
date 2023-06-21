@@ -1868,17 +1868,25 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                                 </div>
                             </label>
                             <div class="col-sm-7">
-                                <input type="hidden" name="id_pengajuan" id="" value="{{ $dataUmum->id }}">
-                                <textarea name="komentar_pincab" class="form-control" id="" cols="5" rows="3"
-                                    placeholder="Masukkan Pendapat Pemimpin Cabang">{{ $pendapatDanUsulan->komentar_pincab }}</textarea>
+                                @if (Auth::user()->role == 'Pincab')
+                                    <input type="hidden" name="id_pengajuan" id="" value="{{ $dataUmum->id }}">
+                                    <textarea name="komentar_pincab" class="form-control" id="" cols="5" rows="3"
+                                        placeholder="Masukkan Pendapat Pemimpin Cabang">{{ $pendapatDanUsulan->komentar_pincab }}</textarea>
+                                @endif
+                                @if (Auth::user()->role == 'SPI')
+                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                                    value="{{ $pendapatDanUsulan->komentar_pincab }}">
+                                @endif
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary mr-2"><i class="fa fa-save"></i> Simpan</button>
-            <button type="reset" class="btn btn-default"><i class="fa fa-times"></i> Reset</button>
+            @if (Auth::user()->role == 'Pincab')
+                <button type="submit" class="btn btn-primary mr-2"><i class="fa fa-save"></i> Simpan</button>
+                <button type="reset" class="btn btn-default"><i class="fa fa-times"></i> Reset</button>
+            @endif
         </form>
     </div>
 @endsection

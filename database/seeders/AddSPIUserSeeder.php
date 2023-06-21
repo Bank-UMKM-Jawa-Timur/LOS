@@ -20,6 +20,7 @@ class AddSPIUserSeeder extends Seeder
                 'email' => 'spi@mail.com',
                 'password' => \Hash::make('12345678'),
                 'role' => 'SPI',
+                'nip' => '123',
                 'created_at' => now(),
             ]
         );

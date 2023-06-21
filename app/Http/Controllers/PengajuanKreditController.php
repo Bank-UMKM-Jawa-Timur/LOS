@@ -124,7 +124,8 @@ class PengajuanKreditController extends Controller
         $id_cabang = Auth::user()->id_cabang;
         $param['cabang'] = DB::table('cabang')
             ->get();
-        if (auth()->user()->role == 'Staf Analis Kredit') {
+        $role = auth()->user()->role;
+        if ($role == 'Staf Analis Kredit') {
             $id_staf = auth()->user()->id;
             $param['pageTitle'] = 'Tambah Pengajuan Kredit';
             $param['btnText'] = 'Tambah Pengajuan';
@@ -182,7 +183,7 @@ class PengajuanKreditController extends Controller
                 ->paginate(5)
                 ->withQueryString();
             return view('pengajuan-kredit.list-edit-pengajuan-kredit', $param);
-        } elseif (auth()->user()->role == 'Penyelia Kredit') {
+        } elseif ($role == 'Penyelia Kredit') {
             // $param['dataAspek'] = ItemModel::select('*')->where('level',1)->get();
             $id_penyelia = auth()->user()->id;
             $id_cabang = Auth::user()->id_cabang;
@@ -235,7 +236,7 @@ class PengajuanKreditController extends Controller
                 ->paginate(5)
                 ->withQueryString();
             return view('pengajuan-kredit.list-pengajuan-kredit', $param);
-        } elseif (auth()->user()->role == 'PBO' || auth()->user()->role == 'PBP') {
+        } elseif ($role == 'PBO' || $role == 'PBP') {
             $id_data = auth()->user()->id;
             $id_cabang = Auth::user()->id_cabang;
             $param['data_pengajuan'] = PengajuanModel::select(
@@ -289,7 +290,7 @@ class PengajuanKreditController extends Controller
                 ->paginate(5)
                 ->withQueryString();;
             return view('pengajuan-kredit.list-pbp', $param);
-        } elseif (auth()->user()->role == 'Pincab') {
+        } elseif ($role == 'Pincab') {
             $id_data = auth()->user()->id;
             $param['data_pengajuan'] = PengajuanModel::select(
                 'pengajuan.id',
