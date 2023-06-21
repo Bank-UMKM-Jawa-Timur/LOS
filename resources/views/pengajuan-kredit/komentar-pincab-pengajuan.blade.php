@@ -249,7 +249,7 @@
                                             <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
                                                 class="dropdown-item">Cetak</a>
                                             @if (Auth::user()->role == 'SPI')
-                                                <a href="{{ route('pengajuan.logPengajuan', $item->id_pengajuan) }}"
+                                                <a href="{{ route('pengajuan.check.pincab.status.detail', $item->id_pengajuan) }}"
                                                     class="dropdown-item">Log Pengajuan</a>
                                             @endif
                                             @if ($item->skema_kredit == 'KKB')
@@ -314,8 +314,12 @@
                                                         PK</a>
                                                 @endif
                                             @endif
+                                            @if (Auth::user()->role == 'Pincab')
+                                                <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
+                                                    class="dropdown-item">Cetak</a>
+                                            @endif
                                             @if (Auth::user()->role == 'SPI')
-                                                <a href="{{ route('pengajuan.logPengajuan', $item->id_pengajuan) }}"
+                                                <a href="{{ route('pengajuan.check.pincab.status.detail', $item->id_pengajuan) }}"
                                                     class="dropdown-item">Log Pengajuan</a>
                                             @endif
                                         </div>
@@ -332,7 +336,7 @@
                                         </button>
                                         <div class="dropdown-menu">
                                             @if (Auth::user()->role == 'SPI')
-                                                <a href="{{ route('pengajuan.logPengajuan', $item->id_pengajuan) }}"
+                                                <a href="{{ route('pengajuan.check.pincab.status.detail', $item->id_pengajuan) }}"
                                                     class="dropdown-item">Log Pengajuan</a>
                                             @endif
                                             <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"

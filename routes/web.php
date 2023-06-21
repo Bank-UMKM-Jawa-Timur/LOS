@@ -37,10 +37,6 @@ Route::post('tes-skor', [PengajuanKreditController::class, 'countScore'])->name(
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index']);
-
-    // log pengajuan
-    Route::get('pengajuan-kredit/logPengajuan/{id}',[LogPengajuanController::class,'index'])->name('pengajuan.logPengajuan');
-
     // check Pincab
     Route::post('pengajuan-kredit/pincabStatusDetailPost', [PengajuanKreditController::class, "checkPincabStatusDetailPost"])->name('pengajuan.check.pincab.status.detail.post');
     Route::get('pengajuan-kredit/pincabStatusDetail/{id}', [PengajuanKreditController::class, "checkPincabStatusDetail"])->name('pengajuan.check.pincab.status.detail');
