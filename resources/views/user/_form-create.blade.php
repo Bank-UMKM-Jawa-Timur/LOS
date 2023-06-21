@@ -40,6 +40,7 @@
                 <option value="PBO / PBP" {{ old('role') == 'PBO / PBP' ? ' selected' : '' }}>PBO / PBP</option>
                 <option value="Penyelia Kredit" {{ old('role') == 'Penyelia Kredit' ? ' selected' : '' }}>Penyelia Kredit</option>
                 <option value="Staf Analis Kredit" {{ old('role') == 'Staf Analis Kredit' ? ' selected' : '' }}>Staf Analis Kredit</option>
+                <option value="SPI" {{ old('role') == 'SPI' ? ' selected' : '' }}>SPI</option>
             </select>
             @error('role')
                 <div class="invalid-feedback">
@@ -73,9 +74,9 @@
             $('#role').change(function() {
                 let role = $(this).val();
 
-                if (role != 'Administrator') {
+                if (role != 'Administrator' && role != 'SPI') {
                     $('#rowCabang').show();
-                } else if (role == 'Administrator') {
+                } else if (role == 'Administrator' && role == 'SPI') {
                     $('#rowCabang').hide();
                 }
             });
