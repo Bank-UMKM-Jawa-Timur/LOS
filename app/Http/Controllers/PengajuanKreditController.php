@@ -19,6 +19,7 @@ use App\Models\PendapatPerAspek;
 use App\Models\DetailPendapatPerAspek;
 use App\Models\JawabanTemp;
 use App\Models\JawabanTempModel;
+use App\Models\LogPengajuan;
 use App\Models\MerkModel;
 use App\Models\TipeModel;
 use App\Models\User;
@@ -2594,6 +2595,7 @@ class PengajuanKreditController extends Controller
             $countDoc += $count;
         }
         $param['countIjin'] = $countDoc;
+        $param['logPengajuan'] = DB::table('log_pengajuan')->selectRaw("DISTINCT(date(created_at)) as tgl")->where('id_pengajuan', $id)->get();
 
         return view('pengajuan-kredit.detail-komentar-pengajuan', $param);
     }

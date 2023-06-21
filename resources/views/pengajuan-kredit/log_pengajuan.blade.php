@@ -21,42 +21,23 @@
     <div class="card-body collapse multi-collapse" id="logPengajuan">
         <div class="timeline">
             <div class="conten-timeline right">
-                <div class="content">
-                    <h2 class="title-log">21/April/2023</h2>
-                    <table>
-                        <tr>
-                            <td class="jrk"><span class="fa fa-clock mr-1"></span> 10:30:00</td>
-                            <td><span class="fa fa-check mr-1"></span> Telah Di Konfirmasi Oleh Penyelia</td>
-                        </tr>
-                        <tr>
-                            <td class="jrk"><span class="fa fa-clock mr-1"></span> 10:30:00</td>
-                            <td><span class="fa fa-check mr-1"></span> Telah Di Konfirmasi Oleh Penyelia</td>
-                        </tr>
-                        <tr>
-                            <td class="jrk"><span class="fa fa-clock mr-1"></span> 10:30:00</td>
-                            <td><span class="fa fa-check mr-1"></span> Telah Di Konfirmasi Oleh Penyelia</td>
-                        </tr>
-                    </table>
-                    <hr>
-                </div>
-                <div class="content">
-                    <h2 class="title-log">19/April/2023</h2>
-                    <table>
-                        <tr>
-                            <td class="jrk"><span class="fa fa-clock mr-1"></span> 10:30:00</td>
-                            <td><span class="fa fa-check mr-1"></span> Telah Di Konfirmasi Oleh Penyelia</td>
-                        </tr>
-                        <tr>
-                            <td class="jrk"><span class="fa fa-clock mr-1"></span> 10:30:00</td>
-                            <td><span class="fa fa-check mr-1"></span> Telah Di Konfirmasi Oleh Penyelia</td>
-                        </tr>
-                        <tr>
-                            <td class="jrk"><span class="fa fa-clock mr-1"></span> 10:30:00</td>
-                            <td><span class="fa fa-check mr-1"></span> Telah Di Konfirmasi Oleh Penyelia</td>
-                        </tr>
-                    </table>
-                    <hr>
-                </div>
+                @foreach ($logPengajuan as $item)
+                    <div class="content">
+                        @php
+                            $itemLog = DB::table('log_pengajuan')->where('id_pengajuan', $dataUmum->id)->whereDate('created_at', $item->tgl)->get();
+                        @endphp
+                        <h2 class="title-log">{{ date("d F Y", strtotime($item->tgl)) }}</h2>
+                        <table>
+                            @foreach ($itemLog as $itemLog)
+                                <tr>
+                                    <td class="jrk"><span class="fa fa-clock mr-1"></span> {{ date('H:i:s', strtotime($itemLog->created_at)) }}</td>
+                                    <td><span class="fa fa-check mr-1"></span> {{ $itemLog->activity }}</td>
+                                </tr>
+                            @endforeach
+                        </table>
+                        <hr>
+                    </div>
+                @endforeach
             </div>
         </div>
     </div>
