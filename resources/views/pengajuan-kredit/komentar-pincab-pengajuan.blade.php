@@ -2,6 +2,7 @@
 @section('content')
     @include('components.notification')
     {{-- @include('pengajuan-kredit.filter-pengajuan') --}}
+
     <div class="row d-flex justify-content-end">
         @if (Request()->query() == null)
             <div class="col-sm-4 d-inline-flex">
@@ -247,6 +248,10 @@
                                             @endif
                                             <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
                                                 class="dropdown-item">Cetak</a>
+                                            @if (Auth::user()->role == 'SPI')
+                                                <a href="{{ route('pengajuan.check.pincab.status.detail', $item->id_pengajuan) }}"
+                                                    class="dropdown-item">Log Pengajuan</a>
+                                            @endif
                                             @if ($item->skema_kredit == 'KKB')
                                                 <a target="_blank" href="{{ route('cetak-sppk', $item->id_pengajuan) }}"
                                                     class="dropdown-item">Cetak SPPK</a>
@@ -292,7 +297,8 @@
                                                 @elseif($item->sppk != null && $tglCetak->tgl_cetak_po != null && $item->po == null)
                                                     <a href="#" class="dropdown-item" data-toggle="modal"
                                                         data-id="{{ $item->id_pengajuan }}"
-                                                        data-target="#uploadPOModal-{{ $item->id_pengajuan }}">Upload File
+                                                        data-target="#uploadPOModal-{{ $item->id_pengajuan }}">Upload
+                                                        File
                                                         PO</a>
                                                 @endif
 
@@ -303,9 +309,18 @@
                                                 @elseif($item->po != null && $tglCetak?->tgl_cetak_pk != null && $item->pk == null)
                                                     <a href="#" class="dropdown-item" data-toggle="modal"
                                                         data-id="{{ $item->id_pengajuan }}"
-                                                        data-target="#uploadPKModal-{{ $item->id_pengajuan }}">Upload File
+                                                        data-target="#uploadPKModal-{{ $item->id_pengajuan }}">Upload
+                                                        File
                                                         PK</a>
                                                 @endif
+                                            @endif
+                                            @if (Auth::user()->role == 'Pincab')
+                                                <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
+                                                    class="dropdown-item">Cetak</a>
+                                            @endif
+                                            @if (Auth::user()->role == 'SPI')
+                                                <a href="{{ route('pengajuan.check.pincab.status.detail', $item->id_pengajuan) }}"
+                                                    class="dropdown-item">Log Pengajuan</a>
                                             @endif
                                         </div>
                                     </div>
@@ -320,6 +335,10 @@
                                             </svg>
                                         </button>
                                         <div class="dropdown-menu">
+                                            @if (Auth::user()->role == 'SPI')
+                                                <a href="{{ route('pengajuan.check.pincab.status.detail', $item->id_pengajuan) }}"
+                                                    class="dropdown-item">Log Pengajuan</a>
+                                            @endif
                                             <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
                                                 class="dropdown-item">Cetak</a>
                                         </div>

@@ -12,6 +12,7 @@ use \App\Http\Controllers\UserController;
 use \App\Http\Controllers\MerkController;
 use \App\Http\Controllers\TipeController;
 use \App\Http\Controllers\CetakSuratController;
+use \App\Http\Controllers\LogPengajuanController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -100,7 +101,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('master-item', MasterItemController::class);
     // Cetak Surat
     Route::get('cetak-surat/{id}', [CetakSuratController::class, 'cetak'])->name('cetak');
-    
+
     // Route::gety('cetak-surat', CetakSuratController::class);
 
     Route::get('/pengajuan-kredit/get-item-jaminan-by-kategori-jaminan-utama-edit', [PengajuanKreditController::class, 'getEditJaminanKategori'])->name('get-item-jaminan-by-kategori-jaminan-utama-edit');
