@@ -223,14 +223,14 @@
                                                 <a href="{{ route('pengajuan.backToInputProses', $item->id_pengajuan) }}"
                                                     class="dropdown-item">Kembalikan Ke Staff</a>
                                                 @if ($userPBO)
-                                                    <a href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}"
+                                                    <a href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbo"
                                                         class="dropdown-item">Lanjutkan Ke PBO</a>
                                                 @else
                                                     @if ($userPBP)
-                                                        <a href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}"
+                                                        <a href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbp"
                                                             class="dropdown-item">Lanjutkan Ke PBP</a>
                                                     @else
-                                                        <a href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}"
+                                                        <a href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pincab"
                                                             class="dropdown-item">Lanjutkan Ke Pincab</a>
                                                     @endif
                                                 @endif
