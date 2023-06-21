@@ -1993,9 +1993,6 @@ class PengajuanKreditController extends Controller
                 $param['dataPO'] = DB::table('data_po')
                     ->where('id_pengajuan', $id)
                     ->first();
-                $param['dataPOMerk'] = DB::table('mst_tipe')
-                    ->where('id', $param['dataPO']->id_type)
-                    ->first();
             }
             $param['skema'] = $param['dataUmumNasabah']->skema_kredit;
             $dokumenUsaha = DB::table('item')
