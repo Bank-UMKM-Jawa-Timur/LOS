@@ -40,9 +40,11 @@ use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 class PengajuanKreditController extends Controller
 {
     private $isMultipleFiles = [];
+    private $logPengajuan;
 
     public function __construct()
     {
+        $this->logPengajuan = new LogPengajuanController;
         $this->isMultipleFiles = [
             'Foto Usaha'
         ];
@@ -1159,6 +1161,9 @@ class PengajuanKreditController extends Controller
                 ->where('id_temp', $tempNasabah->id)
                 ->delete();
 
+            // Log Pengajuan Baru
+            $this->logPengajuan->store('Pengguna ' . Auth::user()->name . ' membuat pengajuan baru.', $id_pengajuan);
+
             DB::commit();
             return redirect()->route('pengajuan-kredit.index')->withStatus('Data berhasil disimpan.');
         } catch (Exception $e) {
@@ -1671,6 +1676,9 @@ class PengajuanKreditController extends Controller
             $updateData->status_by_sistem = $status;
             $updateData->average_by_sistem = $result;
             $updateData->update();
+
+            // Log Edit Pengajuan
+            $this->logPengajuan->store('Pengguna ' . Auth::user()->name . ' mengubah pengajuan.', $id);
             // Session::put('id',$addData->id);
             DB::commit();
             return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil mengupdate data.');
@@ -2062,6 +2070,9 @@ class PengajuanKreditController extends Controller
                                 ]);
                         }
                     }
+
+                    // Log Pengajuan PBP
+                    $this->logPengajuan->store('Pengguna ' . Auth::user()->name . ' memberi komentar.', $request->id_pengajuan);
                 } else {
                     foreach ($request->get('id_option') as $key => $value) {
                         if (array_key_exists($key, $request->skor_pbp)) {
@@ -2071,6 +2082,9 @@ class PengajuanKreditController extends Controller
                                 ]);
                         }
                     }
+
+                    // Log Pengajuan PBO
+                    $this->logPengajuan->store('Pengguna ' . Auth::user()->name . ' memberi komentar.', $request->id_pengajuan);
                 }
 
                 $updateData->status = $status;
@@ -2255,6 +2269,9 @@ class PengajuanKreditController extends Controller
                         $pendapatperaspekpenyelia->save();
                     }
                 }
+
+                // Log Pengajuan Penyelia
+                $this->logPengajuan->store('Pengguna ' . Auth::user()->name . ' memberi komentar pengajuan.', $request->id_pengajuan);
                 return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil Mereview');
             } catch (Exception $e) {
                 // return $e;
@@ -2280,6 +2297,10 @@ class PengajuanKreditController extends Controller
                     $statusPenyelia->tanggal_review_penyelia = date(now());
                 }
                 $statusPenyelia->update();
+
+                // Log Pengajuan melanjutkan dan mendapatkan
+                $this->logPengajuan->store('Pengguna ' . Auth::user()->name . ' membuat melanjutkan ke penyelia.', $statusPenyelia->id);
+                $this->logPengajuan->store('Penyelia medapatkan pengajuan baru untuk direview.', $statusPenyelia->id);
                 return redirect()->back()->withStatus('Berhasil mengganti posisi.');
             } else {
                 return back()->withError('Data pengajuan tidak ditemukan.');
@@ -2308,6 +2329,10 @@ class PengajuanKreditController extends Controller
                         $dataPenyelia->id_pbo = $userPBO->id;
                         $dataPenyelia->tanggal_review_pbo = date(now());
                         $dataPenyelia->posisi = "PBO";
+
+                        // Log Pengajuan melanjutkan pbo dan mendapatkan
+                        $this->logPengajuan->store('Pengguna ' . Auth::user()->name . ' membuat melanjutkan ke PBO.', $id);
+                        $this->logPengajuan->store('PBO medapatkan pengajuan baru untuk direview.', $id);
                     } else {
                         return redirect()->back()->withError('Belum di review Penyelia.');
                     }
@@ -2321,6 +2346,11 @@ class PengajuanKreditController extends Controller
                             $dataPenyelia->id_pbp = $userPBP->id;
                             $dataPenyelia->tanggal_review_pbp = date(now());
                             $dataPenyelia->posisi = "PBP";
+
+
+                            // Log Pengajuan melanjutkan PBP dan mendapatkan
+                            $this->logPengajuan->store('Pengguna ' . Auth::user()->name . ' membuat melanjutkan ke PBP.', $id);
+                            $this->logPengajuan->store('PBP medapatkan pengajuan baru untuk direview.', $id);
                         } else {
                             return back()->withError('User pbp tidak ditemukan pada cabang ini.');
                         }
@@ -2343,6 +2373,10 @@ class PengajuanKreditController extends Controller
                         $dataPenyelia->id_pbo = $userPBO->id;
                         $dataPenyelia->tanggal_review_pbo = date(now());
                         $dataPenyelia->posisi = "PBO";
+
+                        // Log Pengajuan melanjutkan pbo dan mendapatkan
+                        $this->logPengajuan->store('Pengguna ' . Auth::user()->name . ' membuat melanjutkan ke PBO.', $id);
+                        $this->logPengajuan->store('PBO medapatkan pengajuan baru untuk direview.', $id);
                     } else {
                         return redirect()->back()->withError('Belum di review Penyelia.');
                     }
@@ -2357,6 +2391,11 @@ class PengajuanKreditController extends Controller
                             $dataPenyelia->id_pincab = $userPincab->id;
                             $dataPenyelia->tanggal_review_pincab = date(now());
                             $dataPenyelia->posisi = "Pincab";
+
+
+                            // Log Pengajuan melanjutkan PINCAB dan mendapatkan
+                            $this->logPengajuan->store('Pengguna ' . Auth::user()->name . ' membuat melanjutkan ke PINCAB.', $id);
+                            $this->logPengajuan->store('PINCAB medapatkan pengajuan baru untuk direview.', $id);
                         } else {
                             return back()->withError('User pincab tidak ditemukan di cabang ini.');
                         }
@@ -2381,6 +2420,10 @@ class PengajuanKreditController extends Controller
                         $dataPenyelia->id_pbp = $userPBP->id;
                         $dataPenyelia->tanggal_review_pbp = date(now());
                         $dataPenyelia->posisi = "PBP";
+
+                        // Log Pengajuan melanjutkan PBP dan mendapatkan
+                        $this->logPengajuan->store('Pengguna ' . Auth::user()->name . ' membuat melanjutkan ke PBP.', $id);
+                        $this->logPengajuan->store('PBP medapatkan pengajuan baru untuk direview.', $id);
                         $dataPenyelia->update();
                         return redirect()->back()->withStatus('Berhasil mengganti posisi.');
                     } else {
@@ -2423,6 +2466,9 @@ class PengajuanKreditController extends Controller
                     $dataPenyelia->tanggal_review_pincab = date(now());
                     $dataPenyelia->posisi = "Pincab";
                     $dataPenyelia->update();
+                    // Log Pengajuan melanjutkan PINCAB dan mendapatkan
+                    $this->logPengajuan->store('Pengguna ' . Auth::user()->name . ' membuat melanjutkan ke PINCAB.', $id);
+                    $this->logPengajuan->store('PINCAB medapatkan pengajuan baru untuk direview.', $id);
                     return redirect()->back()->withStatus('Berhasil mengganti posisi.');
                 } else {
                     return back()->withError('User pincab tidak ditemukan pada cabang ini.');
