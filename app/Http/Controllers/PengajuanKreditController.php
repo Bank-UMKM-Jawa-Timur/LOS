@@ -1915,12 +1915,8 @@ class PengajuanKreditController extends Controller
             $param['pendapatDanUsulanStaf'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff')->first();
             $param['pendapatDanUsulanPenyelia'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_penyelia')->first();
             if ($param['dataUmumNasabah']->skema_kredit == 'KKB') {
-                $param['dataMerk'] = MerkModel::all();
                 $param['dataPO'] = DB::table('data_po')
                     ->where('id_pengajuan', $id)
-                    ->first();
-                $param['dataPOMerk'] = DB::table('mst_tipe')
-                    ->where('id', $param['dataPO']->id_type)
                     ->first();
             }
             $param['skema'] = $param['dataUmumNasabah']->skema_kredit;
@@ -1996,9 +1992,6 @@ class PengajuanKreditController extends Controller
                 $param['dataMerk'] = MerkModel::all();
                 $param['dataPO'] = DB::table('data_po')
                     ->where('id_pengajuan', $id)
-                    ->first();
-                $param['dataPOMerk'] = DB::table('mst_tipe')
-                    ->where('id', $param['dataPO']->id_type)
                     ->first();
             }
             $param['skema'] = $param['dataUmumNasabah']->skema_kredit;
@@ -2499,9 +2492,6 @@ class PengajuanKreditController extends Controller
         if ($param['dataUmum']->skema_kredit == 'KKB') {
             $param['dataPO'] = DB::table('data_po')
                 ->where('id_pengajuan', $id)
-                ->join('mst_tipe', 'data_po.id_type', 'mst_tipe.id')
-                ->join('mst_merk', 'mst_tipe.id_merk', 'mst_merk.id')
-                ->select('data_po.*', 'mst_tipe.tipe', 'mst_merk.merk')
                 ->first();
         }
         $dokumenUsaha = DB::table('item')
