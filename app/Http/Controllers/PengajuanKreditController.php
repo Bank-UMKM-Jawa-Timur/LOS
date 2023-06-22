@@ -1705,7 +1705,7 @@ class PengajuanKreditController extends Controller
             $updateData->update();
 
             // Log Edit Pengajuan
-            $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan proses perubahan data pengajuan.', $id);
+            $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan proses perubahan data pengajuan.', $updateData->id);
             // Session::put('id',$addData->id);
             DB::commit();
             return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil mengupdate data.');
@@ -2501,7 +2501,7 @@ class PengajuanKreditController extends Controller
                     $dataPenyelia->posisi = "Pincab";
                     $dataPenyelia->update();
                     // Log Pengajuan melanjutkan PINCAB dan mendapatkan
-                    $this->logPengajuan->store('Pengguna ' . Auth::user()->name . ' membuat melanjutkan ke PINCAB.', $id);
+                    $this->logPengajuan->store('PBP ' . Auth::user()->name . ' melanjutkan ke PINCAB.', $id);
                     $this->logPengajuan->store('PINCAB medapatkan pengajuan baru untuk direview.', $id);
                     return redirect()->back()->withStatus('Berhasil mengganti posisi.');
                 } else {
@@ -2782,6 +2782,11 @@ class PengajuanKreditController extends Controller
             $statusPenyelia = PengajuanModel::find($id);
             $statusPenyelia->posisi = "Proses Input Data";
             $statusPenyelia->update();
+
+            // Log Pengajuan melanjutkan PINCAB dan mendapatkan
+            $userStaff = User::find($statusPenyelia->id_staf);
+            $this->logPengajuan->store('Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' mengembalikan pengajuan ke Staff dengan NIP ' . $userStaff->nip . ' atas nama ' . $this->getNameKaryawan($userStaff->nip) . ' .', $id);
+            $this->logPengajuan->store('Staff dengan NIP ' . $userStaff->nip . ' atas nama ' . $this->getNameKaryawan($userStaff->nip) . ' medapatkan pengajuan sebelumnya untuk diubah.', $id);
             return redirect()->back()->withStatus('Berhasil mengganti posisi.');
         } catch (Exception $e) {
             return redirect()->back()->withError('Terjadi kesalahan.');
