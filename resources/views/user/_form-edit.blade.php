@@ -42,6 +42,7 @@
                 <option value="PBO / PBP" {{ old('role', $user->role) == 'PBO / PBP' ? ' selected' : '' }}>PBO / PBP</option>
                 <option value="Penyelia Kredit" {{ old('role', $user->role) == 'Penyelia Kredit' ? ' selected' : '' }}>Penyelia Kredit</option>
                 <option value="Staf Analis Kredit" {{ old('role', $user->role) == 'Staf Analis Kredit' ? ' selected' : '' }}>Staf Analis Kredit</option>
+                <option value="SPI" {{ old('role', $user->role) == 'SPI' ? ' selected' : '' }}>SPI</option>
             </select>
             @error('role')
                 <div class="invalid-feedback">
