@@ -841,7 +841,7 @@ is-invalid
 
                                     </div> --}}
                                 @elseif ($itemTiga->nama == 'Bukti Pemilikan Jaminan Tambahan')
-                                    <div class="form-group col-md-12">
+                                    <div class="form-group col-md-12" id="jaminan_tambahan">
                                         <h5>{{ $itemTiga->nama }}</h5>
                                     </div>
                                     <div id="bukti_pemilikan_jaminan_tambahan" class="form-group col-md-12 row">
@@ -1548,6 +1548,7 @@ is-invalid
         $('#persentase_kebutuhan_kredit_opsi').hide();
         $('#repayment_capacity_opsi_label').hide();
         $('#repayment_capacity_opsi').hide();
+        $("#jaminan_tambahan").hide()
         const nullValue = []
         hitungRatioCoverage()
         hitungRepaymentCapacity()
@@ -1796,6 +1797,7 @@ is-invalid
                 success: function(response) {
                     if (kategoriJaminan != "Tidak Memiliki Jaminan Tambahan") {
                         $("#select_kategori_jaminan_tambahan").show()
+                        $("#jaminan_tambahan").show()
                         // add item by kategori
                         $('#select_kategori_jaminan_tambahan').append(`
                         <label for="">${response.item.nama}</label>
@@ -1957,6 +1959,7 @@ is-invalid
                         });
                         $("#itemByKategori").val(skor + '-' + opt)
                         $("#select_kategori_jaminan_tambahan").hide()
+                        $("#jaminan_tambahan").hide()
                     }
                 }
             });

@@ -1136,7 +1136,7 @@
 
                                     </div> --}}
                                 @elseif ($itemTiga->nama == 'Bukti Pemilikan Jaminan Tambahan')
-                                    <div class="form-group col-md-12">
+                                    <div class="form-group col-md-12" id="jaminan_tambahan">
                                         <h5>{{ $itemTiga->nama }}</h5>
                                     </div>
                                     <div id="bukti_pemilikan_jaminan_tambahan" class="form-group col-md-12 row">
@@ -2147,6 +2147,7 @@
                 dataType: "json",
                 success: function(response) {
                     if (kategoriJaminan != "Tidak Memiliki Jaminan Tambahan") {
+                        $("#jaminan_tambahan").show()
                         // add item by kategori
                         $('#select_kategori_jaminan_tambahan').append(`
                         <label for="">${response.item.nama}</label>
@@ -2383,12 +2384,15 @@
 
                         if (kategoriJaminan == "Tidak Memiliki Jaminan Tambahan") {
                             $("#select_kategori_jaminan_tambahan").hide()
+                            $("#jaminan_tambahan").hide()
                             $("#itemByKategori").val('0-188')
                             $("#bukti_pemilikan_jaminan_tambahan").empty()
                         } else {
                             $("#select_kategori_jaminan_tambahan").show()
+                            $("#jaminan_tambahan").show()
                         }
                     } else {
+                        $("#jaminan_tambahan").hide()
                         var opt = 0;
                         var skor = 0;
                         $('#select_kategori_jaminan_tambahan').append(`
