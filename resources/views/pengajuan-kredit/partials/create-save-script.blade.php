@@ -26,13 +26,23 @@
     $('.btn-next').click(function(e) {
         if($('#wizard-data-umum').hasClass('active')) saveDataUmum();
         let dataIndex = $(".form-wizard.active").attr("data-index");
+        const skema = $('#skema_kredit').val();
+        console.log('skema : '+skema)
+        if (skema == 'KKB') {
+            if (dataIndex == 1) {
+                const id_data_po_temp = $('#id_data_po_temp').val();
+                if (id_data_po_temp == null || id_data_po_temp == '') {
+                    saveDataPO();
+                }
+            }
+        }
         if(dataIndex > 0){
-            $(".form-wizard[data-index="+dataIndex+"] input[type=file]").each(function(){
+            /*$(".form-wizard[data-index="+dataIndex+"] input[type=file]").each(function(){
                 const inputFile = $(this);
                 if(inputFile.prop('files')[0] != null){
                     saveTempFile(inputFile);
                 }
-            })
+            })*/
         }
 
         cekValueKosong(dataIndex);
@@ -40,6 +50,42 @@
 
     function sendFile(dataIndex){
         
+    }
+
+    function saveDataPO() {
+        const url = `{{ route('pengajuan-kredit.save-data-po') }}`;
+        const id_calon_nasabah = $("#id_nasabah").val()
+        const merk = $("#merk").val()
+        const tipe = $("#tipe_kendaraan").val()
+        const tahun = $("#tahun").val()
+        const warna = $("#warna").val()
+        const pemesanan = $("#pemesanan").val()
+        const sejumlah = $("#sejumlah").val()
+        const harga = $("#harga").val()
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: {
+                'id_calon_nasabah': id_calon_nasabah,
+                'merk': merk,
+                'tipe_kendaraan': tipe,
+                'tahun': tahun,
+                'warna': warna,
+                'pemesanan': pemesanan,
+                'sejumlah': sejumlah,
+                'harga': harga,
+            },
+            success: (res) => {
+                console.log('------save data po temp-------')
+                console.log(res)
+                if (res) {
+                    if (res.data.id) {
+                        $('#id_data_po_temp').val(res.data.id)
+                    }
+                }
+            }
+        });
     }
 
     function saveTempFile(inputFile){

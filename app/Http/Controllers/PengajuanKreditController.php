@@ -135,7 +135,7 @@ class PengajuanKreditController extends Controller
         curl_close($curl);
         $json = json_decode($response);
 
-        if ($json->data)
+        if (isset($json->data))
             return $json->data->nama_karyawan;
         return Auth::user()->name;
     }
@@ -430,7 +430,7 @@ class PengajuanKreditController extends Controller
      */
     public function create(Request $request)
     {
-        if ($request->skema != 'KKB') {
+        // if ($request->skema != 'KKB') {
             $param['pageTitle'] = "Dashboard";
             $param['multipleFiles'] = $this->isMultipleFiles;
 
@@ -459,9 +459,9 @@ class PengajuanKreditController extends Controller
             // dump($param['dataPertanyaanSatu']);
             // dd($param['itemP']);
             return view('pengajuan-kredit.add-pengajuan-kredit', $param);
-        } else {
-            return redirect()->route('pengajuan-kredit.create');
-        }
+        // } else {
+        //     return redirect()->route('pengajuan-kredit.create');
+        // }
     }
 
     public function checkSubColumn(Request $request)
@@ -1023,7 +1023,9 @@ class PengajuanKreditController extends Controller
                     ->insert([
                         'id_pengajuan' => $id_pengajuan,
                         'tahun_kendaraan' => $request->tahun,
-                        'id_type' => $request->id_tipe,
+                        // 'id_type' => $request->id_tipe,
+                        'merk' => $request->merk,
+                        'tipe' => $request->tipe,
                         'warna' => $request->warna,
                         'keterangan' => 'Pemesanan ' . $request->pemesanan,
                         'jumlah' => $request->sejumlah,
@@ -1187,9 +1189,10 @@ class PengajuanKreditController extends Controller
             DB::table('temporary_usulan_dan_pendapat')
                 ->where('id_temp', $tempNasabah->id)
                 ->delete();
+            DB::table('data_po_temp')->where('id_calon_nasabah_temp', $tempNasabah->id)->delete();
 
             // Log Pengajuan Baru
-            $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan proses pembuatan data pengajuan.', $id_pengajuan);
+            $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan proses pembuatan data pengajuan.', $id_pengajuan, Auth::user()->id, Auth::user()->nip);
 
             DB::commit();
             return redirect()->route('pengajuan-kredit.index')->withStatus('Data berhasil disimpan.');
@@ -1279,9 +1282,9 @@ class PengajuanKreditController extends Controller
             $param['dataPO'] = DB::table('data_po')
                 ->where('id_pengajuan', $id)
                 ->first();
-            $param['dataPOMerk'] = DB::table('mst_tipe')
-                ->where('id', $param['dataPO']->id_type)
-                ->first();
+            // $param['dataPOMerk'] = DB::table('mst_tipe')
+            //     ->where('id', $param['dataPO']->id_type)
+            //     ->first();
         }
         $param['skema'] = $param['dataUmum']->skema_kredit;
 
@@ -1687,8 +1690,8 @@ class PengajuanKreditController extends Controller
             }
 
             if ($request->get('id_komentar_staff_text') != null) {
-                $id = $request->get('id_komentar_staff_text');
-                $updateKomentar = KomentarModel::find($id);
+                $id_komentar_staff = $request->get('id_komentar_staff_text');
+                $updateKomentar = KomentarModel::find($id_komentar_staff);
                 $updateKomentar->komentar_staff = $request->get('komentar_staff');
                 $updateKomentar->update();
             } else {
@@ -1705,7 +1708,7 @@ class PengajuanKreditController extends Controller
             $updateData->update();
 
             // Log Edit Pengajuan
-            $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan proses perubahan data pengajuan.', $updateData->id);
+            $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan proses perubahan data pengajuan.', $id, Auth::user()->id, Auth::user()->nip);
             // Session::put('id',$addData->id);
             DB::commit();
             return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil mengupdate data.');
@@ -1947,12 +1950,8 @@ class PengajuanKreditController extends Controller
             $param['pendapatDanUsulanStaf'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff')->first();
             $param['pendapatDanUsulanPenyelia'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_penyelia')->first();
             if ($param['dataUmumNasabah']->skema_kredit == 'KKB') {
-                $param['dataMerk'] = MerkModel::all();
                 $param['dataPO'] = DB::table('data_po')
                     ->where('id_pengajuan', $id)
-                    ->first();
-                $param['dataPOMerk'] = DB::table('mst_tipe')
-                    ->where('id', $param['dataPO']->id_type)
                     ->first();
             }
             $param['skema'] = $param['dataUmumNasabah']->skema_kredit;
@@ -2028,9 +2027,6 @@ class PengajuanKreditController extends Controller
                 $param['dataMerk'] = MerkModel::all();
                 $param['dataPO'] = DB::table('data_po')
                     ->where('id_pengajuan', $id)
-                    ->first();
-                $param['dataPOMerk'] = DB::table('mst_tipe')
-                    ->where('id', $param['dataPO']->id_type)
                     ->first();
             }
             $param['skema'] = $param['dataUmumNasabah']->skema_kredit;
@@ -2327,8 +2323,8 @@ class PengajuanKreditController extends Controller
 
                 // Log Pengajuan melanjutkan dan mendapatkan
                 $penyelia = User::find($request->select_penyelia);
-                $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan ke penyelia dengan NIP ' . $penyelia->nip . ' atas nama ' . $this->getNameKaryawan($penyelia->nip) . ' .', $statusPenyelia->id);
-                $this->logPengajuan->store('Penyelia dengan NIP ' . $penyelia->nip . ' atas nama ' . $this->getNameKaryawan($penyelia->nip) . ' menerima data pengajuan dari staf dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $statusPenyelia->id);
+                $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan ke penyelia dengan NIP ' . $penyelia->nip . ' atas nama ' . $this->getNameKaryawan($penyelia->nip) . ' .', $statusPenyelia->id, Auth::user()->id, Auth::user()->nip);
+                $this->logPengajuan->store('Penyelia dengan NIP ' . $penyelia->nip . ' atas nama ' . $this->getNameKaryawan($penyelia->nip) . ' menerima data pengajuan dari staf dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $statusPenyelia->id, $penyelia->id, $penyelia->nip);
                 return redirect()->back()->withStatus('Berhasil mengganti posisi.');
             } else {
                 return back()->withError('Data pengajuan tidak ditemukan.');
@@ -2343,30 +2339,143 @@ class PengajuanKreditController extends Controller
     // check status pincab
     public function checkPincab($id, Request $request)
     {
-        if (auth()->user()->role == 'Penyelia Kredit') {
-            if (auth()->user()->id_cabang == '1') {
-                $dataPenyelia = PengajuanModel::find($id);
-                $status = $dataPenyelia->status;
-                $userPBO = User::select('id')
-                    ->where('id_cabang', $dataPenyelia->id_cabang)
-                    ->whereNotNull('nip')
-                    ->where('role', 'PBO')
-                    ->first();
-                if ($userPBO) {
-                    if ($status != null) {
-                        $dataPenyelia->id_pbo = $userPBO->id;
-                        $dataPenyelia->tanggal_review_pbo = date(now());
-                        $dataPenyelia->posisi = "PBO";
-
-                        // Log Pengajuan melanjutkan pbo dan mendapatkan
-                        $this->logPengajuan->store('Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan ke PBO dengan NIP ' . $userPBO->nip . ' atas nama ' . $this->getNameKaryawan($userPBO->nip) . ' .', $id);
-                        $this->logPengajuan->store('PBO dengan NIP ' . $userPBO->nip . ' atas nama ' . $this->getNameKaryawan($userPBO->nip) . ' menerima data pengajuan dari Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id);
-                    } else {
-                        return redirect()->back()->withError('Belum di review Penyelia.');
+        DB::beginTransaction();
+        try {
+            if (auth()->user()->role == 'Penyelia Kredit') {
+                if (auth()->user()->id_cabang == '1') {
+                    $dataPenyelia = PengajuanModel::find($id);
+                    $status = $dataPenyelia->status;
+                    $to = $request->to;
+                    if ($to == 'pbo') {
+                        $userPBO = User::select('id', 'nip')
+                            ->where('id_cabang', $dataPenyelia->id_cabang)
+                            ->whereNotNull('nip')
+                            ->where('role', 'PBO')
+                            ->first();
+    
+                        if ($userPBO) {
+                            if ($status != null) {
+                                $dataPenyelia->id_pbo = $userPBO->id;
+                                $dataPenyelia->tanggal_review_pbo = date(now());
+                                $dataPenyelia->posisi = "PBO";
+        
+                                // Log Pengajuan melanjutkan pbo dan mendapatkan
+                                $this->logPengajuan->store('Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan ke PBO dengan NIP ' . $userPBO->nip . ' atas nama ' . $this->getNameKaryawan($userPBO->nip) . ' .', $id, Auth::user()->id, Auth::user()->nip);
+                                $this->logPengajuan->store('PBO dengan NIP ' . $userPBO->nip . ' atas nama ' . $this->getNameKaryawan($userPBO->nip) . ' menerima data pengajuan dari Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $userPBO->id, $userPBO->nip);
+                            } else {
+                                return redirect()->back()->withError('Belum di review Penyelia.');
+                            }
+                        }
+                        else {
+                            return back()->withError('User pbo tidak ditemukan pada cabang ini.');
+                        }
                     }
+                    else if ($to == 'pbp') {
+                        if ($status != null) {
+                            $userPBP = User::select('id', 'nip')
+                                ->where('id_cabang', $dataPenyelia->id_cabang)
+                                ->where('role', 'PBP')
+                                ->whereNotNull('nip')
+                                ->first();
+                            if ($userPBP) {
+                                $dataPenyelia->id_pbp = $userPBP->id;
+                                $dataPenyelia->tanggal_review_pbp = date(now());
+                                $dataPenyelia->posisi = "PBP";
+    
+                                // Log Pengajuan melanjutkan PBP dan mendapatkan
+                                $this->logPengajuan->store('Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan ke PBP dengan NIP ' . $userPBP->nip . ' atas nama ' . $this->getNameKaryawan($userPBP->nip) . ' .', $id, Auth::user()->id, Auth::user()->nip);
+                                $this->logPengajuan->store('PBP dengan NIP ' . $userPBP->nip . ' atas nama ' . $this->getNameKaryawan($userPBP->nip) . ' menerima data pengajuan dari Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $userPBP->id, $userPBP->nip);
+                            } else {
+                                return back()->withError('User pbp tidak ditemukan pada cabang ini.');
+                            }
+                        } else {
+                            return redirect()->back()->withError('Belum di review Penyelia.');
+                        }
+                    }
+                    else if ($to == 'pincab') {
+                        if ($status != null) {
+                            $userPincab = User::select('id', 'nip')
+                                ->where('id_cabang', $dataPenyelia->id_cabang)
+                                ->where('role', 'Pincab')
+                                ->whereNotNull('nip')
+                                ->first();
+                            if ($userPincab) {
+                                $dataPenyelia->id_pincab = $userPincab->id;
+                                $dataPenyelia->tanggal_review_pbp = date(now());
+                                $dataPenyelia->posisi = "Pincab";
+    
+                                // Log Pengajuan melanjutkan PBP dan mendapatkan
+                                $this->logPengajuan->store('Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan ke Pincab dengan NIP ' . $userPincab->nip . ' atas nama ' . $this->getNameKaryawan($userPincab->nip) . ' .', $id, Auth::user()->id, Auth::user()->nip);
+    
+                                $this->logPengajuan->store('Pincab dengan NIP ' . $userPincab->nip . ' atas nama ' . $this->getNameKaryawan($userPincab->nip) . ' menerima data pengajuan dari Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $userPincab->id, $userPincab->nip);
+                            } else {
+                                return back()->withError('User pincab tidak ditemukan pada cabang ini.');
+                            }
+                        } else {
+                            return redirect()->back()->withError('Belum di review Penyelia.');
+                        }
+                    }
+                    $dataPenyelia->update();
+                    return redirect()->back()->withStatus('Berhasil mengganti posisi.');
                 } else {
+                    $dataPenyelia = PengajuanModel::find($id);
+                    $status = $dataPenyelia->status;
+                    $to = $request->to;
+    
+                    if ($to == 'pbo') {
+                        $userPBO = User::select('id', 'nip')
+                            ->where('id_cabang', $dataPenyelia->id_cabang)
+                            ->whereNotNull('nip')
+                            ->where('role', 'PBO')
+                            ->first();
+                        if ($userPBO) {
+                            if ($status != null) {
+                                $dataPenyelia->id_pbo = $userPBO->id;
+                                $dataPenyelia->tanggal_review_pbo = date(now());
+                                $dataPenyelia->posisi = "PBO";
+    
+                                // Log Pengajuan melanjutkan pbo dan mendapatkan
+                                $this->logPengajuan->store('Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan ke PBO dengan NIP ' . $userPBO->nip . ' atas nama ' . $this->getNameKaryawan($userPBO->nip) . ' .', $id, Auth::user()->id, Auth::user()->nip);
+                                $this->logPengajuan->store('PBO dengan NIP ' . $userPBO->nip . ' atas nama ' . $this->getNameKaryawan($userPBO->nip) . ' menerima data pengajuan dari Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $userPBO->id, $userPBO->nip);
+                            } else {
+                                return redirect()->back()->withError('Belum di review Penyelia.');
+                            }
+                        }
+                    }
+                    else {
+                        if ($status != null) {
+                            $userPincab = User::select('id', 'nip')
+                                ->where('id_cabang', $dataPenyelia->id_cabang)
+                                ->whereNotNull('nip')
+                                ->where('role', 'Pincab')
+                                ->first();
+                            if ($userPincab) {
+                                $dataPenyelia->id_pincab = $userPincab->id;
+                                $dataPenyelia->tanggal_review_pincab = date(now());
+                                $dataPenyelia->posisi = "Pincab";
+    
+    
+                                // Log Pengajuan melanjutkan PINCAB dan mendapatkan
+                                $pincab = User::find($userPincab->id);
+                                $this->logPengajuan->store('Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan ke Pincab dengan NIP ' . $pincab->nip . ' atas nama ' . $this->getNameKaryawan($pincab->nip) . ' .', $id, Auth::user()->id, Auth::user()->nip);
+                                $this->logPengajuan->store('Pincab dengan NIP ' . $pincab->nip . ' atas nama ' . $this->getNameKaryawan($pincab->nip) . ' menerima data pengajuan dari Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $userPincab->id, $userPincab->nip);
+                            } else {
+                                return back()->withError('User pincab tidak ditemukan di cabang ini.');
+                            }
+                        } else {
+                            return redirect()->back()->withError('Belum di review Penyelia.');
+                        }
+                    }
+                    $dataPenyelia->update();
+                    return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+                }
+            } elseif (auth()->user()->role == 'PBO') {
+                $dataPenyelia = PengajuanModel::find($id);
+                $status = $dataPenyelia->average_by_pbo;
+    
+                if (auth()->user()->id_cabang == 1) {
                     if ($status != null) {
-                        $userPBP = User::select('id')
+                        $userPBP = User::select('id', 'nip')
                             ->where('id_cabang', $dataPenyelia->id_cabang)
                             ->where('role', 'PBP')
                             ->whereNotNull('nip')
@@ -2375,42 +2484,21 @@ class PengajuanKreditController extends Controller
                             $dataPenyelia->id_pbp = $userPBP->id;
                             $dataPenyelia->tanggal_review_pbp = date(now());
                             $dataPenyelia->posisi = "PBP";
-
+                            $dataPenyelia->update();
+    
                             // Log Pengajuan melanjutkan PBP dan mendapatkan
-                            $this->logPengajuan->store('Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan ke PBP dengan NIP ' . $userPBP->nip . ' atas nama ' . $this->getNameKaryawan($userPBP->nip) . ' .', $id);
-                            $this->logPengajuan->store('PBP dengan NIP ' . $userPBP->nip . ' atas nama ' . $this->getNameKaryawan($userPBP->nip) . ' menerima data pengajuan dari Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id);
+                            $this->logPengajuan->store('PBO dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan ke PBP dengan NIP ' . $userPBP->nip . ' atas nama ' . $this->getNameKaryawan($userPBP->nip) . ' .', $id, Auth::user()->id, Auth::user()->nip);
+                            $this->logPengajuan->store('PBP dengan NIP ' . $userPBP->nip . ' atas nama ' . $this->getNameKaryawan($userPBP->nip) . ' menerima data pengajuan dari PBO dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $userPBP->id, $userPBP->nip);
+                            return redirect()->back()->withStatus('Berhasil mengganti posisi.');
                         } else {
                             return back()->withError('User pbp tidak ditemukan pada cabang ini.');
                         }
                     } else {
-                        return redirect()->back()->withError('Belum di review Penyelia.');
-                    }
-                }
-                $dataPenyelia->update();
-                return redirect()->back()->withStatus('Berhasil mengganti posisi.');
-            } else {
-                $dataPenyelia = PengajuanModel::find($id);
-                $status = $dataPenyelia->status;
-                $userPBO = User::select('id')
-                    ->where('id_cabang', $dataPenyelia->id_cabang)
-                    ->whereNotNull('nip')
-                    ->where('role', 'PBO')
-                    ->first();
-                if ($userPBO) {
-                    if ($status != null) {
-                        $dataPenyelia->id_pbo = $userPBO->id;
-                        $dataPenyelia->tanggal_review_pbo = date(now());
-                        $dataPenyelia->posisi = "PBO";
-
-                        // Log Pengajuan melanjutkan pbo dan mendapatkan
-                        $this->logPengajuan->store('Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan ke PBO dengan NIP ' . $userPBO->nip . ' atas nama ' . $this->getNameKaryawan($userPBO->nip) . ' .', $id);
-                        $this->logPengajuan->store('PBO dengan NIP ' . $userPBO->nip . ' atas nama ' . $this->getNameKaryawan($userPBO->nip) . ' menerima data pengajuan dari Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id);
-                    } else {
-                        return redirect()->back()->withError('Belum di review Penyelia.');
+                        return redirect()->back()->withError('Belum di review PBO.');
                     }
                 } else {
                     if ($status != null) {
-                        $userPincab = User::select('id')
+                        $userPincab = User::select('id', 'nip')
                             ->where('id_cabang', $dataPenyelia->id_cabang)
                             ->whereNotNull('nip')
                             ->where('role', 'Pincab')
@@ -2419,52 +2507,24 @@ class PengajuanKreditController extends Controller
                             $dataPenyelia->id_pincab = $userPincab->id;
                             $dataPenyelia->tanggal_review_pincab = date(now());
                             $dataPenyelia->posisi = "Pincab";
-
-
-                            // Log Pengajuan melanjutkan PINCAB dan mendapatkan
-                            $pincab = User::find($userPincab->id);
-                            $this->logPengajuan->store('Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan ke Pincab dengan NIP ' . $pincab->nip . ' atas nama ' . $this->getNameKaryawan($pincab->nip) . ' .', $id);
-                            $this->logPengajuan->store('Pincab dengan NIP ' . $pincab->nip . ' atas nama ' . $this->getNameKaryawan($pincab->nip) . ' menerima data pengajuan dari Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id);
+                            $dataPenyelia->update();
+    
+                            // Log Pengajuan melanjutkan PBP dan mendapatkan
+                            $this->logPengajuan->store('PBO dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan ke Pincab dengan NIP ' . $userPincab->nip . ' atas nama ' . $this->getNameKaryawan($userPincab->nip) . ' .', $id, Auth::user()->id, Auth::user()->nip);
+                            $this->logPengajuan->store('Pincab dengan NIP ' . $userPincab->nip . ' atas nama ' . $this->getNameKaryawan($userPincab->nip) . ' menerima data pengajuan dari PBO dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $userPincab->id, $userPincab->nip);
+                            return redirect()->back()->withStatus('Berhasil mengganti posisi.');
                         } else {
-                            return back()->withError('User pincab tidak ditemukan di cabang ini.');
+                            return back()->withError('User pincab tidak ditemukan pada cabang ini.');
                         }
                     } else {
-                        return redirect()->back()->withError('Belum di review Penyelia.');
+                        return redirect()->back()->withError('Belum di review PBO.');
                     }
                 }
-                $dataPenyelia->update();
-                return redirect()->back()->withStatus('Berhasil mengganti posisi.');
-            }
-        } elseif (auth()->user()->role == 'PBO') {
-            $dataPenyelia = PengajuanModel::find($id);
-            $status = $dataPenyelia->average_by_pbo;
-
-            if (auth()->user()->id_cabang == 1) {
+            } elseif (auth()->user()->role == 'PBP') {
+                $dataPenyelia = PengajuanModel::find($id);
+                $status = $dataPenyelia->average_by_pbp;
                 if ($status != null) {
-                    $userPBP = User::select('id')
-                        ->where('id_cabang', $dataPenyelia->id_cabang)
-                        ->where('role', 'PBP')
-                        ->whereNotNull('nip')
-                        ->first();
-                    if ($userPBP) {
-                        $dataPenyelia->id_pbp = $userPBP->id;
-                        $dataPenyelia->tanggal_review_pbp = date(now());
-                        $dataPenyelia->posisi = "PBP";
-                        $dataPenyelia->update();
-
-                        // Log Pengajuan melanjutkan PBP dan mendapatkan
-                        $this->logPengajuan->store('PBO dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan ke PBP dengan NIP ' . $userPBP->nip . ' atas nama ' . $this->getNameKaryawan($userPBP->nip) . ' .', $id);
-                        $this->logPengajuan->store('PBP dengan NIP ' . $userPBP->nip . ' atas nama ' . $this->getNameKaryawan($userPBP->nip) . ' menerima data pengajuan dari PBO dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id);
-                        return redirect()->back()->withStatus('Berhasil mengganti posisi.');
-                    } else {
-                        return back()->withError('User pbp tidak ditemukan pada cabang ini.');
-                    }
-                } else {
-                    return redirect()->back()->withError('Belum di review PBO.');
-                }
-            } else {
-                if ($status != null) {
-                    $userPincab = User::select('id')
+                    $userPincab = User::select('id', 'nip')
                         ->where('id_cabang', $dataPenyelia->id_cabang)
                         ->whereNotNull('nip')
                         ->where('role', 'Pincab')
@@ -2474,44 +2534,28 @@ class PengajuanKreditController extends Controller
                         $dataPenyelia->tanggal_review_pincab = date(now());
                         $dataPenyelia->posisi = "Pincab";
                         $dataPenyelia->update();
-
-                        // Log Pengajuan melanjutkan PBP dan mendapatkan
-                        $this->logPengajuan->store('PBO dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan ke Pincab dengan NIP ' . $userPincab->nip . ' atas nama ' . $this->getNameKaryawan($userPincab->nip) . ' .', $id);
-                        $this->logPengajuan->store('Pincab dengan NIP ' . $userPincab->nip . ' atas nama ' . $this->getNameKaryawan($userPincab->nip) . ' menerima data pengajuan dari PBO dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id);
+                        // Log Pengajuan melanjutkan PINCAB dan mendapatkan
+                        $this->logPengajuan->store('Pengguna ' . Auth::user()->name . ' membuat melanjutkan ke PINCAB.', $id, Auth::user()->id, Auth::user()->nip);
+                        $this->logPengajuan->store('PINCAB medapatkan pengajuan baru untuk direview.', $id, $userPincab->id, $userPincab->nip);
                         return redirect()->back()->withStatus('Berhasil mengganti posisi.');
                     } else {
                         return back()->withError('User pincab tidak ditemukan pada cabang ini.');
                     }
                 } else {
-                    return redirect()->back()->withError('Belum di review PBO.');
-                }
-            }
-        } elseif (auth()->user()->role == 'PBP') {
-            $dataPenyelia = PengajuanModel::find($id);
-            $status = $dataPenyelia->average_by_pbp;
-            if ($status != null) {
-                $userPincab = User::select('id')
-                    ->where('id_cabang', $dataPenyelia->id_cabang)
-                    ->whereNotNull('nip')
-                    ->where('role', 'Pincab')
-                    ->first();
-                if ($userPincab) {
-                    $dataPenyelia->id_pincab = $userPincab->id;
-                    $dataPenyelia->tanggal_review_pincab = date(now());
-                    $dataPenyelia->posisi = "Pincab";
-                    $dataPenyelia->update();
-                    // Log Pengajuan melanjutkan PINCAB dan mendapatkan
-                    $this->logPengajuan->store('PBP ' . Auth::user()->name . ' melanjutkan ke PINCAB.', $id);
-                    $this->logPengajuan->store('PINCAB medapatkan pengajuan baru untuk direview.', $id);
-                    return redirect()->back()->withStatus('Berhasil mengganti posisi.');
-                } else {
-                    return back()->withError('User pincab tidak ditemukan pada cabang ini.');
+                    return redirect()->back()->withError('Belum di review PBP.');
                 }
             } else {
-                return redirect()->back()->withError('Belum di review PBP.');
+                return redirect()->back()->withError('Tidak memiliki hak akses.');
             }
-        } else {
-            return redirect()->back()->withError('Tidak memiliki hak akses.');
+            DB::commit();
+        }
+        catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withError('Terjadi kesalahan');
+        }
+        catch (\Illuminate\Database\QueryException $e) {
+            DB::rollBack();
+            return back()->withError('Terjadi kesalahan pada database');
         }
     }
     // check status pincab
@@ -2576,9 +2620,6 @@ class PengajuanKreditController extends Controller
         if ($param['dataUmum']->skema_kredit == 'KKB') {
             $param['dataPO'] = DB::table('data_po')
                 ->where('id_pengajuan', $id)
-                ->join('mst_tipe', 'data_po.id_type', 'mst_tipe.id')
-                ->join('mst_merk', 'mst_tipe.id_merk', 'mst_merk.id')
-                ->select('data_po.*', 'mst_tipe.tipe', 'mst_merk.merk')
                 ->first();
         }
         $dokumenUsaha = DB::table('item')
@@ -2627,6 +2668,9 @@ class PengajuanKreditController extends Controller
                 $statusPincab->posisi = "Selesai";
                 $statusPincab->tanggal_review_pincab = date(now());
                 $statusPincab->update();
+
+                $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menyetujui pengajuan.', $id, Auth::user()->id, Auth::user()->nip);
+
                 return redirect()->back()->withStatus('Berhasil mengganti posisi.');
             } else {
                 return redirect()->back()->withError('Belum di review Pincab.');
@@ -2644,6 +2688,8 @@ class PengajuanKreditController extends Controller
                 $statusPincab->posisi = "Ditolak";
                 $statusPincab->tanggal_review_pincab = date(now());
                 $statusPincab->update();
+
+                $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menolak pengajuan.', $id, Auth::user()->id, Auth::user()->nip);
                 return redirect()->back()->withStatus('Berhasil mengganti posisi.');
             } else {
                 return redirect()->back()->withError('Belum di review Pincab.');
@@ -2783,10 +2829,16 @@ class PengajuanKreditController extends Controller
             $statusPenyelia->posisi = "Proses Input Data";
             $statusPenyelia->update();
 
-            // Log Pengajuan melanjutkan PINCAB dan mendapatkan
-            $userStaff = User::find($statusPenyelia->id_staf);
-            $this->logPengajuan->store('Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' mengembalikan pengajuan ke Staff dengan NIP ' . $userStaff->nip . ' atas nama ' . $this->getNameKaryawan($userStaff->nip) . ' .', $id);
-            $this->logPengajuan->store('Staff dengan NIP ' . $userStaff->nip . ' atas nama ' . $this->getNameKaryawan($userStaff->nip) . ' medapatkan pengajuan sebelumnya untuk diubah.', $id);
+            // Log Pengajuan Kembalikan ke staff
+            $firstLog = LogPengajuan::select('user_id', 'nip')->where('id_pengajuan', $id)->orderBy('id')->first();
+            if ($firstLog) {
+                $this->logPengajuan->store('Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' mengembalikan data pengajuan kepada staf dengan NIP ' . $firstLog->nip . ' atas nama ' . $this->getNameKaryawan($firstLog->nip) . '.', $id, Auth::user()->id, Auth::user()->nip);
+
+                $this->logPengajuan->store('Staff dengan NIP ' . $firstLog->nip . ' atas nama ' . $this->getNameKaryawan($firstLog->nip) . ' menerima data pengajuan dari Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $firstLog->user_id, $firstLog->nip);
+            }
+
+            return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+
             return redirect()->back()->withStatus('Berhasil mengganti posisi.');
         } catch (Exception $e) {
             return redirect()->back()->withError('Terjadi kesalahan.');
@@ -2843,6 +2895,33 @@ class PengajuanKreditController extends Controller
             'status' => 'ok',
             'code' => 200,
             'data' => $nasabah,
+        ]);
+    }
+    
+    public function saveDataPOTemp(Request $request) {
+        try {
+            $find = array('Rp ', '.');
+
+            $po = DB::table('data_po_temp')->insert([
+                'id_calon_nasabah_temp' => $request->id_calon_nasabah,
+                'tahun_kendaraan' => $request->tahun,
+                'merk' => $request->merk,
+                'tipe' => $request->tipe_kendaraan,
+                'warna' => $request->warna,
+                'keterangan' => 'Pemesanan ' . $request->pemesanan,
+                'jumlah' => $request->sejumlah,
+                'harga' => str_replace($find, '', $request->harga)
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'failed', 'message' => $e->getMessage()]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return response()->json(['status' => 'failed', 'message' => $e->getMessage()]);
+        }
+
+        return response()->json([
+            'status' => 'ok',
+            'code' => 200,
+            'data' => $po,
         ]);
     }
 
@@ -3193,6 +3272,8 @@ class PengajuanKreditController extends Controller
 
         $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
         $param['dataMerk'] = MerkModel::all();
+        $param['dataPO'] = DB::table('data_po_temp')->where('id_calon_nasabah_temp', $request->tempId)->first();
+        // return $param['dataPO'];
 
         $param['skema'] = $request->skema ?? $param['duTemp']?->skema_kredit;
 

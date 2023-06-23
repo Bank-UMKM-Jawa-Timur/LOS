@@ -201,16 +201,16 @@
                             </div>
                             <div class="col-md-4 pl-0 text-center">
                                 @if (auth()->user()->role == 'Staf Analis Kredit')
-                                    <h1>{{ \App\Models\PengajuanModel::where('posisi', 'Proses Input Data')->where('id_cabang', $user->id_cabang)->where('id_staf', auth()->user()->id)->count() }}
+                                    <h1>{{ \App\Models\PengajuanModel::join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->where('pengajuan.posisi', 'Proses Input Data')->where('pengajuan.id_cabang', $user->id_cabang)->where('pengajuan.id_staf', auth()->user()->id)->count() }}
                                     </h1>
                                 @elseif (auth()->user()->role == 'Penyelia Kredit')
-                                    <h1>{{ \App\Models\PengajuanModel::where('posisi', 'Review Penyelia')->where('id_cabang', $user->id_cabang)->where('id_penyelia', auth()->user()->id)->count() }}
+                                    <h1>{{ \App\Models\PengajuanModel::join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->where('pengajuan.posisi', 'Review Penyelia')->where('pengajuan.id_cabang', $user->id_cabang)->where('pengajuan.id_penyelia', auth()->user()->id)->count() }}
                                     </h1>
                                 @elseif (auth()->user()->role == 'PBP')
-                                    <h1>{{ \App\Models\PengajuanModel::where('posisi', 'PBP')->where('id_cabang', $user->id_cabang)->where('id_pbp', auth()->user()->id)->count() }}
+                                    <h1>{{ \App\Models\PengajuanModel::join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->where('pengajuan.posisi', 'PBP')->where('pengajuan.id_cabang', $user->id_cabang)->where('id_pbp', auth()->user()->id)->count() }}
                                     </h1>
                                 @elseif (auth()->user()->role == 'Pincab')
-                                    <h1>{{ \App\Models\PengajuanModel::where('posisi', 'Pincab')->where('id_cabang', $user->id_cabang)->where('id_pincab', auth()->user()->id)->count() }}
+                                    <h1>{{ \App\Models\PengajuanModel::join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->where('pengajuan.posisi', 'Pincab')->where('pengajuan.id_cabang', $user->id_cabang)->where('id_pincab', auth()->user()->id)->count() }}
                                     </h1>
                                 @else
                                     <h1>0</h1>

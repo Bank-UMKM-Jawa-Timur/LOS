@@ -356,12 +356,19 @@ is-invalid
         @if ($skema == 'KKB')
             <div class="form-wizard" data-index='1' data-done='true' id="wizard-data-po">
                 <div class="row">
+                    <input type="hidden" name="id_data_po_temp" id="id_data_po_temp">
                     <div class="form-group col-md-12">
                         <span style="color: black; font-weight: bold; font-size: 18px;">Jenis Kendaraan Roda 2 :</span>
                     </div>
                     <div class="form-group col-md-6">
                         <label>Merk Kendaraan</label>
-                        <select name="id_merk" id="id_merk" class="select2 form-control" style="width: 100%;"
+                        <input type="text" name="merk" id="merk" class="form-control @error('merk') is-invalid @enderror" placeholder="Merk kendaraan">
+                        @error('merk')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                        {{--  <select name="id_merk" id="id_merk" class="select2 form-control" style="width: 100%;"
                             required>
                             <option value="">Pilih Merk Kendaraan</option>
                             @foreach ($dataMerk as $item)
@@ -372,11 +379,17 @@ is-invalid
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
-                        @enderror
+                        @enderror  --}}
                     </div>
                     <div class="form-group col-md-6">
                         <label>Tipe Kendaraan</label>
-                        <select name="id_tipe" id="id_tipe" class="select2 form-control" style="width: 100%;"
+                        <input type="text" name="tipe_kendaraan" id="tipe_kendaraan" class="form-control @error('tipe_kendaraan') is-invalid @enderror" placeholder="Tipe kendaraan">
+                        @error('tipe_kendaraan')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                        {{--  <select name="id_tipe" id="id_tipe" class="select2 form-control" style="width: 100%;"
                             required>
                             <option value="">Pilih Tipe</option>
                         </select>
@@ -384,7 +397,7 @@ is-invalid
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
-                        @enderror
+                        @enderror  --}}
                     </div>
                     <div class="form-group col-md-6">
                         <label for="">Tahun</label>
@@ -1137,7 +1150,7 @@ is-invalid
             });
         });
 
-        $("#id_merk").change(function() {
+        /*$("#id_merk").change(function() {
             let val = $(this).val();
 
             $.ajax({
@@ -1157,7 +1170,7 @@ is-invalid
                     }
                 }
             })
-        })
+        })*/
 
         $('#docSKU').hide();
         $('#surat_keterangan_usaha').hide();
@@ -2374,7 +2387,7 @@ is-invalid
 
         }
 
-        $('#skema').change(function() {
+        /*$('#skema').change(function() {
             if ($(this).val() == 'KKB') {
                 Swal.fire({
                     icon: 'error',
@@ -2384,7 +2397,7 @@ is-invalid
                     $("#skema").val('').trigger("change");
                 })
             }
-        });
+        });*/
     </script>
     @include('pengajuan-kredit.partials.create-save-script')
     <script src="{{ asset('') }}js/custom.js"></script>

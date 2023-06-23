@@ -510,7 +510,14 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label>Merk Kendaraan</label>
-                        <select name="id_merk" id="id_merk" class="select2 form-control" style="width: 100%;"
+                        <input type="text" name="merk" id="merk" class="form-control @error('merk') is-invalid @enderror"
+                            placeholder="Merk kendaraan" value="{{$dataPO->merk}}">
+                        @error('merk')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                        {{--  <select name="id_merk" id="id_merk" class="select2 form-control" style="width: 100%;"
                             required>
                             <option value="">Pilih Merk Kendaraan</option>
                             @foreach ($dataMerk as $item)
@@ -523,11 +530,17 @@
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
-                        @enderror
+                        @enderror  --}}
                     </div>
                     <div class="form-group col-md-6">
                         <label>Tipe Kendaraan</label>
-                        <select name="id_tipe" id="id_tipe" class="select2 form-control" style="width: 100%;"
+                        <input type="text" name="tipe_kendaraan" id="tipe_kendaraan" class="form-control @error('tipe_kendaraan') is-invalid @enderror" placeholder="Tipe kendaraan" value="{{$dataPO->tipe}}">
+                        @error('tipe_kendaraan')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                        {{--  <select name="id_tipe" id="id_tipe" class="select2 form-control" style="width: 100%;"
                             required>
                             <option value="">Pilih Tipe</option>
                         </select>
@@ -535,7 +548,7 @@
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
-                        @enderror
+                        @enderror  --}}
                     </div>
                     <div class="form-group col-md-6">
                         <label for="">Tahun</label>
@@ -1600,7 +1613,7 @@
 @push('custom-script')
     <script>
         $(window).on('load', function() {
-            $("#id_merk").trigger("change");
+            // $("#id_merk").trigger("change");
         })
         $('#nib').hide();
         $('#docNIB').hide();
@@ -1765,7 +1778,7 @@
         hitungRatioTenorAsuransi();
         hitungRepaymentCapacity();
 
-        @if ($dataUmum->skema_kredit == 'KKB')
+        {{--  @if ($dataUmum->skema_kredit == 'KKB')
             $("#id_merk").change(function() {
                 let val = $(this).val();
 
@@ -1787,7 +1800,7 @@
                     }
                 })
             })
-        @endif
+        @endif  --}}
 
         $('#kabupaten').change(function() {
             var kabID = $(this).val();
