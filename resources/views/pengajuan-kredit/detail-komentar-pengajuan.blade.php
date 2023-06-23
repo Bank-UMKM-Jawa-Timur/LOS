@@ -8,6 +8,46 @@ $dataIndex = match ($dataUmum->skema_kredit) {
     'Kusuma' => 1,
     null => 1
 };
+
+if ($dataUmum->id_cabang == 1) {
+    $roles = [
+        'Staf Analis Kredit',
+        'Penyelia Kredit',
+        'PBO',
+        'PBP',
+        'Pincab',
+    ];
+} else {
+    $roles = [
+        'Staf Analis Kredit',
+        'Penyelia Kredit',
+        'Pincab',
+    ];
+}
+
+function getKaryawan($nip){
+    $host = env('HCS_HOST');
+    $curl = curl_init();
+    curl_setopt_array($curl, [
+        CURLOPT_URL => $host . '/api/v1/karyawan/' . $nip,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+    ]);
+
+    $response = curl_exec($curl);
+
+    curl_close($curl);
+    $json = json_decode($response);
+
+    if ($json->data)
+        return $json->data->nama_karyawan;
+}
+
 @endphp
 @section('content')
     @include('components.notification')
@@ -45,6 +85,10 @@ $dataIndex = match ($dataUmum->skema_kredit) {
     <div class="">
         <form action="{{ route('pengajuan.check.pincab.status.detail.post') }}" method="POST">
             @csrf
+
+            @if (Auth::user()->role == 'SPI')
+                @include('pengajuan-kredit.log_pengajuan')
+            @endif
 
             {{-- calon nasabah --}}
             <div class="card mb-3">
@@ -1882,10 +1926,6 @@ $dataIndex = match ($dataUmum->skema_kredit) {
                     </div>
                 </div>
             </div>
-
-            @if (Auth::user()->role == 'SPI')
-                @include('pengajuan-kredit.log_pengajuan')
-            @endif
 
             @if (Auth::user()->role == 'Pincab')
                 <button type="submit" class="btn btn-primary mr-2"><i class="fa fa-save"></i> Simpan</button>

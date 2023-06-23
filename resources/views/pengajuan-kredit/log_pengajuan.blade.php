@@ -19,6 +19,35 @@
         Log Pengajuan
     </div>
     <div class="card-body collapse multi-collapse" id="logPengajuan">
+        <div class="">
+            @foreach ($roles as $key => $itemRole)
+                <div class="form-group row">
+                    <label for="staticEmail" class="col-sm-3 col-form-label">{{ $itemRole }}</label>
+                    <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                        <div class="d-flex justify-content-end">
+                            <div style="width: 20px">
+                                :
+                            </div>
+                        </div>
+                    </label>
+                    <div class="col-sm-7">
+                        @php
+                            $user = DB::table('log_pengajuan')
+                                ->join('users', 'users.id', 'log_pengajuan.user_id')
+                                ->select('users.role', 'users.nip', 'users.email', 'log_pengajuan.nip as nip_users')
+                                ->where('log_pengajuan.id_pengajuan', $dataUmum->id)
+                                ->where('users.role', $itemRole)
+                                ->first();
+                        @endphp
+                        <div class="col-sm-12">
+                            <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                                value="{{ ($user) ? $user->nip_users . ' - ' . getKaryawan($user->nip) . ' ' . '('. $user->email .')' : '-' }}">
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+        <hr>
         <div class="timeline">
             <div class="conten-timeline right">
                 @foreach ($logPengajuan as $item)
