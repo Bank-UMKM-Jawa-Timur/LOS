@@ -18,7 +18,7 @@
     <div class="card-header bg-info color-white font-weight-bold collapsed" data-toggle="collapse" href="#logPengajuan">
         Log Pengajuan
     </div>
-    <div class="card-body collapse multi-collapse" id="logPengajuan">
+    <div class="card-body collapse multi-collapse show" id="logPengajuan">
         <div class="timeline">
             <div class="conten-timeline right">
                 @foreach ($logPengajuan as $item)
