@@ -200,7 +200,8 @@
                     <label for="">No. KTP</label>
                     <input type="number" maxlength="16"
                         oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        name="no_ktp" class="form-control @error('no_ktp')
+                        onkeydown="return event.keyCode !== 69" name="no_ktp"
+                        class="form-control @error('no_ktp')
 is-invalid
 @enderror" id="no_ktp"
                         placeholder="Masukkan 16 digit No. KTP" value="">
@@ -298,13 +299,14 @@ is-invalid
                     </select>  --}}
                     <div class="input-group">
                         <input type="text" name="tenor_yang_diminta" id="tenor_yang_diminta"
-                            class="form-control only-number @error('tenor_yang_diminta') is-invalid @enderror" aria-describedby="addon_tenor_yang_diminta" required maxlength="3"/>
+                            class="form-control only-number @error('tenor_yang_diminta') is-invalid @enderror"
+                            aria-describedby="addon_tenor_yang_diminta" required maxlength="3" />
                         <div class="input-group-append">
                             <div class="input-group-text" id="addon_tenor_yang_diminta">Bulan</div>
                         </div>
                     </div>
                     @error('tenor_yang_diminta')
-                    <div class="invalid-feedback">
+                        <div class="invalid-feedback">
                             {{ $message }}
                         </div>
                     @enderror
@@ -644,7 +646,8 @@ is-invalid
                                             id="{{ $idLevelDua }}"
                                             placeholder="Masukkan informasi {{ $item->nama }}" class="form-control"
                                             aria-label="Recipient's username" aria-describedby="basic-addon2"
-                                            value="">
+                                            value=""
+                                            onkeydown="return event.keyCode !== 69">
                                         <div class="input-group-append">
                                             <span class="input-group-text" id="basic-addon2">%</span>
                                         </div>
@@ -855,7 +858,7 @@ is-invalid
                                                     <input type="file" name="upload_file[{{ $itemTiga->id }}]"
                                                         id="{{ $idLevelTiga }}" data-id=""
                                                         placeholder="Masukkan informasi {{ $itemTiga->nama }}"
-                                                        class="form-control limit-size file-usaha">
+                                                        class="form-control limit-size file-usaha" accept="image/*">
                                                     <span class="invalid-tooltip" style="display: none">Maximum upload
                                                         file size is 15 MB</span>
                                                     <span class="filename" style="display: inline;"></span>
@@ -954,18 +957,21 @@ is-invalid
                                                 @if ($itemEmpat->nama == 'Masa Berlaku Asuransi Penjaminan')
                                                     <div class="input-group">
                                                         <input type="text" maxlength="255"
-                                                        name="informasi[{{ $itemEmpat->id }}]"
-                                                        id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan_/_ht' ? '' : $idLevelEmpat }}"
-                                                        placeholder="Masukkan informasi" class="form-control only-number" value="">
+                                                            name="informasi[{{ $itemEmpat->id }}]"
+                                                            id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan_/_ht' ? '' : $idLevelEmpat }}"
+                                                            placeholder="Masukkan informasi"
+                                                            class="form-control only-number" value="">
                                                         <div class="input-group-append">
-                                                            <div class="input-group-text" id="addon_tenor_yang_diminta">Bulan</div>
+                                                            <div class="input-group-text" id="addon_tenor_yang_diminta">
+                                                                Bulan</div>
                                                         </div>
                                                     </div>
                                                 @else
-                                                <input type="text" maxlength="255"
-                                                    name="informasi[{{ $itemEmpat->id }}]"
-                                                    id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan_/_ht' ? '' : $idLevelEmpat }}"
-                                                    placeholder="Masukkan informasi" class="form-control" value="">
+                                                    <input type="text" maxlength="255"
+                                                        name="informasi[{{ $itemEmpat->id }}]"
+                                                        id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan_/_ht' ? '' : $idLevelEmpat }}"
+                                                        placeholder="Masukkan informasi" class="form-control"
+                                                        value="">
                                                 @endif
                                             </div>
                                         @elseif ($itemEmpat->opsi_jawaban == 'number')
