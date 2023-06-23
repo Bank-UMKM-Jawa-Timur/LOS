@@ -6,8 +6,16 @@ $(document).ready(function () {
 
     $(".side-wizard").on("click", function () {
         firstLoad = false;
-        for (let index = 0; index < 7; index++) {
-            setPercentage(index);
+        const skema = "{{$_GET['skema']}}"
+        if (skema == 'KKB') {
+            for (let index = 0; index < 8; index++) {
+                setPercentage(index);
+            }
+        }
+        else {
+            for (let index = 0; index < 7; index++) {
+                setPercentage(index);
+            }
         }
     });
     var jumlahData = $("#jumlahData").val();
@@ -20,7 +28,7 @@ $(document).ready(function () {
         var inputDisabled = $(form + " input:disabled");
         var inputReadonly = $(form + " input").find("readonly");
         var inputHidden = $(form + " input[type=hidden]");
-        var inputFile = $(form + " .filename");
+        var inputFile = $(form + " input[type=file]");
         var inputDate = $(form + " input[type=date]");
         var select = $(form + " select");
         var textarea = $(form + " textarea");
@@ -43,19 +51,22 @@ $(document).ready(function () {
             totalTextArea;
 
         if (formIndex == 2) {
-            var ijinUsahaSelect = $(form).find("#ijin_usaha");
-            if (ijinUsahaSelect.length > 0) {
-                if (
-                    ijinUsahaSelect[0].value == "nib" ||
-                    ijinUsahaSelect[0].value == "surat_keterangan_usaha"
-                ) {
-                    if (!$("#isNpwp").attr("checked")) {
-                        //console.log('test');
-                        subtotalInput -= 4;
-                    }
+            // var ijinUsahaSelect = $(form).find("#ijin_usaha");
+            var ijinUsahaSelect = $('#ijin_usaha').val()
+            console.log('length : '+ijinUsahaSelect)
+            if (ijinUsahaSelect != '' || ijinUsahaSelect != null) {
+                if (ijinUsahaSelect == "nib") {
                     subtotalInput -= 2;
                 }
-                if (ijinUsahaSelect[0].value == "tidak_ada_legalitas_usaha") {
+                if (ijinUsahaSelect == "surat_keterangan_usaha") {
+                    if ($("#isNpwp").is(":checked")) {
+                        subtotalInput -= 2;
+                    }
+                    else {
+                        subtotalInput -= 4;
+                    }
+                }
+                if (ijinUsahaSelect == "tidak_ada_legalitas_usaha") {
                     subtotalInput -= 6;
                 }
             }
@@ -83,7 +94,10 @@ $(document).ready(function () {
         });
         var ttlInputFileFilled = 0;
         $.each(inputFile, function (i, v) {
-            if (v.innerHTML != "") {
+            if (formIndex == 0) {
+                console.log("file "+v.value)
+            }
+            if (v.value != "") {
                 ttlInputFileFilled++;
             }
         });
@@ -128,13 +142,23 @@ $(document).ready(function () {
                 subtotalFilled += 2;
             } else {
                 // subtotalInput += 1;
-                subtotalFilled += 2;
+                if (status != '')
+                    subtotalFilled += 2;
             }
         }
-        // console.log("=============index : " + formIndex + "=============");
-        // console.log("total input : " + subtotalInput);
-        // console.log("total input filled : " + subtotalFilled);
-        // console.log("===============================================");
+        if (formIndex == 0) {
+            console.log("=============index : " + formIndex + "=============");
+            console.log("total input : " + subtotalInput);
+            console.log("total input filled : " + subtotalFilled);
+            console.log({
+                ttlInputTextFilled,
+                ttlInputNumberFilled,
+                ttlInputFileFilled,
+                ttlInputDateFilled,
+                ttlSelectFilled,
+                ttlTextAreaFilled})
+            console.log("===============================================");
+        }
 
         var percentage = parseInt((subtotalFilled / subtotalInput) * 100);
         percentage = Number.isNaN(percentage) ? 0 : percentage;
@@ -245,7 +269,7 @@ $(document).ready(function () {
                     saveDataTemporary(indexNow);
                 }
             }
-            saveDataTemporary(indexNow);
+            // saveDataTemporary(indexNow);
         }
 
         if (cekNpwp(indexNow)[0]) {

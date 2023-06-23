@@ -628,7 +628,7 @@ is-invalid
                                             <input type="text" maxlength="255" step="any"
                                                 name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
                                                 placeholder="Masukkan informasi {{ $item->nama }}"
-                                                class="form-control rupiah" value="">
+                                                class="form-control only-number" value="">
                                         </div>
                                     @endif
                                 @endif
