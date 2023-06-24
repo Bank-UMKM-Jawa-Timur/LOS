@@ -17,11 +17,23 @@ if ($dataUmum->id_cabang == 1) {
         'PBP',
         'Pincab',
     ];
+    $idRoles = [
+        'id_staf',
+        'id_penyelia',
+        'id_pbo',
+        'id_pbp',
+        'id_pincab'
+    ];
 } else {
     $roles = [
         'Staf Analis Kredit',
         'Penyelia Kredit',
         'Pincab',
+    ];
+    $idRoles = [
+        'id_staf',
+        'id_penyelia',
+        'id_pincab'
     ];
 }
 

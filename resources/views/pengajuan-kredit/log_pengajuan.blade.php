@@ -32,12 +32,19 @@
                     </label>
                     <div class="col-sm-7">
                         @php
-                            $user = DB::table('log_pengajuan')
-                                ->join('users', 'users.id', 'log_pengajuan.user_id')
-                                ->select('users.role', 'users.nip', 'users.email', 'log_pengajuan.nip as nip_users')
-                                ->where('log_pengajuan.id_pengajuan', $dataUmum->id)
-                                ->where('users.role', $itemRole)
-                                ->first();
+                            if ($dataUmum->tanggal < "26-05-2023") {
+                                $user = DB::table('pengajuan')
+                                    ->join('users', 'users.id', 'pengajuan.' . $idRoles[$key])
+                                    ->select('users.role', 'users.nip', 'users.email', 'users.nip as nip_users')
+                                    ->first();
+                            } else {
+                                $user = DB::table('log_pengajuan')
+                                    ->join('users', 'users.id', 'log_pengajuan.user_id')
+                                    ->select('users.role', 'users.nip', 'users.email', 'log_pengajuan.nip as nip_users')
+                                    ->where('log_pengajuan.id_pengajuan', $dataUmum->id)
+                                    ->where('users.role', $itemRole)
+                                    ->first();
+                            }
                         @endphp
                         <div class="col-sm-12">
                             <input type="text" readonly class="form-control-plaintext" id="staticEmail"
@@ -50,23 +57,31 @@
         <hr>
         <div class="timeline">
             <div class="conten-timeline right">
-                @foreach ($logPengajuan as $item)
-                    <div class="content">
-                        @php
-                            $itemLog = DB::table('log_pengajuan')->where('id_pengajuan', $dataUmum->id)->whereDate('created_at', $item->tgl)->get();
-                        @endphp
-                        <h2 class="title-log">{{ date("d F Y", strtotime($item->tgl)) }}</h2>
-                        <table>
-                            @foreach ($itemLog as $itemLog)
-                                <tr>
-                                    <td class="jrk"><span class="fa fa-clock mr-1"></span> {{ date('H:i:s', strtotime($itemLog->created_at)) }}</td>
-                                    <td><span class="fa fa-check mr-1"></span> {{ $itemLog->activity }}</td>
-                                </tr>
-                            @endforeach
-                        </table>
-                        <hr>
+                @if ($dataUmum->tanggal < date("26-05-2003"))
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <p>Tidak ada log pengajuan pada data ini, dikarenakan data dikategorikan data lama pada domain <a href="https://los.bankumkm.id">los.bankumkm.id</a>.</p>
+                        </div>
                     </div>
-                @endforeach
+                @else
+                    @foreach ($logPengajuan as $item)
+                        <div class="content">
+                            @php
+                                $itemLog = DB::table('log_pengajuan')->where('id_pengajuan', $dataUmum->id)->whereDate('created_at', $item->tgl)->get();
+                            @endphp
+                            <h2 class="title-log">{{ date("d F Y", strtotime($item->tgl)) }}</h2>
+                            <table>
+                                @foreach ($itemLog as $itemLog)
+                                    <tr>
+                                        <td class="jrk"><span class="fa fa-clock mr-1"></span> {{ date('H:i:s', strtotime($itemLog->created_at)) }}</td>
+                                        <td><span class="fa fa-check mr-1"></span> {{ $itemLog->activity }}</td>
+                                    </tr>
+                                @endforeach
+                            </table>
+                            <hr>
+                        </div>
+                    @endforeach
+                @endif
             </div>
         </div>
     </div>
