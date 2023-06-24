@@ -172,7 +172,7 @@
                     <label for="">No. KTP</label>
                     <input type="text" name="no_ktp" maxlength="255"
                         class="form-control @error('no_ktp') is-invalid @enderror" id=""
-                        value="{{ old('no_ktp', $dataUmum->no_ktp) }}" placeholder="Masukkan 16 digit No. KTP">
+                        value="{{ old('no_ktp', $dataUmum->no_ktp) }}" placeholder="Masukkan 16 digit No. KTP"  onkeydown="return event.keyCode !== 69" name="no_ktp">
                     @error('no_ktp')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -211,7 +211,7 @@
                                 {{ $errors->first('dataLevelDua.' . $key) }}
                             </div>
                         @endif
-                        <span class="filename" style="display: inline;">{{ $jawabanFotoSP?->opsi_text }}</span>
+                        <span class="filename" style="display: inline;">{{ $jawabanFotoKTPSu?->opsi_text }}</span>
                         {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
                     </div>
                     <div class="form-group col-md-6" id="foto-ktp-istri">
@@ -245,7 +245,7 @@
                                 {{ $errors->first('dataLevelDua.' . $key) }}
                             </div>
                         @endif
-                        <span class="filename" style="display: inline;">{{ $jawabanFotoSP?->opsi_text }}</span>
+                        <span class="filename" style="display: inline;">{{ $jawabanFotoKTPIs?->opsi_text }}</span>
                         {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
                     </div>
                 @else
@@ -280,7 +280,7 @@
                                 {{ $errors->first('dataLevelDua.' . $key) }}
                             </div>
                         @endif
-                        <span class="filename" style="display: inline;">{{ $jawabanFotoSP?->opsi_text }}</span>
+                        <span class="filename" style="display: inline;">{{ $jawabanFotoKTPNas?->opsi_text }}</span>
                     </div>
                 @endif
                 <div class="" id="foto-ktp-suami">
@@ -919,7 +919,7 @@
                                                 placeholder="Masukkan informasi {{ $item->nama }}"
                                                 class="form-control" aria-label="Recipient's username"
                                                 aria-describedby="basic-addon2"
-                                                value="{{ $itemTextDua != null ? $itemTextDua->opsi_text : null }}">
+                                                value="{{ $itemTextDua != null ? $itemTextDua->opsi_text : null }}"  onkeydown="return event.keyCode !== 69" name="no_ktp">
                                             <input type="hidden" name="skor_penyelia_text[]"
                                                 value="{{ $itemTextDua->skor_penyelia }}">
                                             <input type="hidden" name="id_text[]" value="{{ $itemTextDua->id_item }}">
