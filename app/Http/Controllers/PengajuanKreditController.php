@@ -430,7 +430,14 @@ class PengajuanKreditController extends Controller
      */
     public function create(Request $request)
     {
-        // if ($request->skema != 'KKB') {
+        $currentUrl = url()->current();
+        $isPincetar = str_contains($currentUrl, 'pincetar') ? 1 : 0;
+        // return $isPincetar;
+        if ($request->skema == 'KKB' && $isPincetar) {
+            return 'if';
+            return redirect()->route('pengajuan-kredit.create');
+        } else {
+            // return 'else';
             $param['pageTitle'] = "Dashboard";
             $param['multipleFiles'] = $this->isMultipleFiles;
 
@@ -459,9 +466,7 @@ class PengajuanKreditController extends Controller
             // dump($param['dataPertanyaanSatu']);
             // dd($param['itemP']);
             return view('pengajuan-kredit.add-pengajuan-kredit', $param);
-        // } else {
-        //     return redirect()->route('pengajuan-kredit.create');
-        // }
+        }
     }
 
     public function checkSubColumn(Request $request)

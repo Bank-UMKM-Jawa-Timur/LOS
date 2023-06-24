@@ -1136,6 +1136,7 @@ is-invalid
 @push('custom-script')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        var isPincetar = "{{Request::url()}}".includes('pincetar');
         $(document).ready(function() {
             let valSkema = $("#skema").val();
             if (valSkema == null || valSkema == '') {
@@ -2386,9 +2387,8 @@ is-invalid
             }
 
         }
-
-        /*$('#skema').change(function() {
-            if ($(this).val() == 'KKB') {
+        $('#skema').change(function() {
+        if ($(this).val() == 'KKB' && isPincetar) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
@@ -2397,7 +2397,7 @@ is-invalid
                     $("#skema").val('').trigger("change");
                 })
             }
-        });*/
+        });
     </script>
     @include('pengajuan-kredit.partials.create-save-script')
     <script src="{{ asset('') }}js/custom.js"></script>
