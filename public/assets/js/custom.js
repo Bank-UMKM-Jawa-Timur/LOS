@@ -1,18 +1,17 @@
 $(document).ready(function () {
     var firstLoad = true;
-    $('.only-number').keyup(function(e) {
-        this.value=this.value.replace(/[^\d]/,'')
-    })
+    $(".only-number").keyup(function (e) {
+        this.value = this.value.replace(/[^\d]/, "");
+    });
 
     $(".side-wizard").on("click", function () {
         firstLoad = false;
-        const skema = "{{$_GET['skema']}}"
-        if (skema == 'KKB') {
+        const skema = "{{$_GET['skema']}}";
+        if (skema == "KKB") {
             for (let index = 0; index < 8; index++) {
                 setPercentage(index);
             }
-        }
-        else {
+        } else {
             for (let index = 0; index < 7; index++) {
                 setPercentage(index);
             }
@@ -52,17 +51,16 @@ $(document).ready(function () {
 
         if (formIndex == 2) {
             // var ijinUsahaSelect = $(form).find("#ijin_usaha");
-            var ijinUsahaSelect = $('#ijin_usaha').val()
-            console.log('length : '+ijinUsahaSelect)
-            if (ijinUsahaSelect != '' || ijinUsahaSelect != null) {
+            var ijinUsahaSelect = $("#ijin_usaha").val();
+            console.log("length : " + ijinUsahaSelect);
+            if (ijinUsahaSelect != "" || ijinUsahaSelect != null) {
                 if (ijinUsahaSelect == "nib") {
                     subtotalInput -= 2;
                 }
                 if (ijinUsahaSelect == "surat_keterangan_usaha") {
                     if ($("#isNpwp").is(":checked")) {
                         subtotalInput -= 2;
-                    }
-                    else {
+                    } else {
                         subtotalInput -= 4;
                     }
                 }
@@ -95,7 +93,7 @@ $(document).ready(function () {
         var ttlInputFileFilled = 0;
         $.each(inputFile, function (i, v) {
             if (formIndex == 0) {
-                console.log("file "+v.value)
+                console.log("file " + v.value);
             }
             if (v.value != "") {
                 ttlInputFileFilled++;
@@ -142,8 +140,7 @@ $(document).ready(function () {
                 subtotalFilled += 2;
             } else {
                 // subtotalInput += 1;
-                if (status != '')
-                    subtotalFilled += 2;
+                if (status != "") subtotalFilled += 2;
             }
         }
         if (formIndex == 0) {
@@ -156,7 +153,8 @@ $(document).ready(function () {
                 ttlInputFileFilled,
                 ttlInputDateFilled,
                 ttlSelectFilled,
-                ttlTextAreaFilled})
+                ttlTextAreaFilled,
+            });
             console.log("===============================================");
         }
 
@@ -265,6 +263,10 @@ $(document).ready(function () {
 
         if (indexNow != 0) {
             if (indexNow == 1) {
+                if (valSkema != "KKB") {
+                    saveDataTemporary(indexNow);
+                }
+            } else {
                 if (valSkema != "KKB") {
                     saveDataTemporary(indexNow);
                 }
