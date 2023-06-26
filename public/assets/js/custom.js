@@ -71,7 +71,15 @@ $(document).ready(function () {
         }
 
         if (formIndex == 3) {
-            subtotalInput -= firstLoad ? 2 : 8;
+            var jaminanTambSel = $("#kategori_jaminan_tambahan").val();
+            if (jaminanTambSel == "Tanah dan Bangunan") {
+                subtotalInput -= 5;
+            } else if (jaminanTambSel == "Tanah") {
+                subtotalInput -= 5;
+            } else {
+                subtotalInput -= 2;
+            }
+            // subtotalInput -= firstLoad ? 2 : 8;
         }
 
         if (formIndex == 6) {
