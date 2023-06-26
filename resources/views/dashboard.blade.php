@@ -151,6 +151,124 @@
                     </div>
                 </div>
             </div>
+        @elseif (auth()->user()->role == 'SPI')
+            <div class="col-md-12 mb-4">
+                Total Pengajuan : {{ \App\models\PengajuanModel::count() }}
+            </div>
+            {{-- Pengajuan Approve --}}
+            <div class="col-md-4 mb-4">
+                <div class="card bg-rgb-success border border-success">
+                    <div class="card-body py-4">
+                        {{-- <span class="fa fa-calendar-check sticky-fa-card"></span> --}}
+                        <div class="row align-items-center">
+                            <div class="col-md-8 pr-0 font-weight-bold">
+                                Pengajuan Disetujui
+                            </div>
+                            <div class="col-md-4 pr-0 font-wight-bold">
+                                <h1>{{ \App\models\PengajuanModel::where('posisi', 'Selesai')->count() }}</h1>
+                            </div>
+                        </div>
+                        <hr>
+                        <a href="{{ route('pengajuan-kredit.index') }}"
+                            class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
+                    </div>
+                </div>
+            </div>
+            {{-- Pengajuan Ditolak --}}
+            <div class="col-md-4 mb-4">
+                <div class="card bg-rgb-danger border border-danger">
+                    <div class="card-body py-4">
+                        {{-- <span class="fa fa-ban sticky-fa-card"></span> --}}
+                        <div class="row align-items-center">
+                            <div class="col-md-8 pr-0 font-weight-bold">
+                                Pengajuan Ditolak
+                            </div>
+                            <div class="col-md-4 pr-0 font-wight-bold">
+                                <h1>{{ \App\models\PengajuanModel::where('posisi', 'Ditolak')->count() }}</h1>
+                            </div>
+                        </div>
+                        <hr>
+                        <a href="{{ route('pengajuan-kredit.index') }}"
+                            class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
+                    </div>
+                </div>
+            </div>
+            {{-- Pengajuan Posisi Pincab --}}
+            <div class="col-md-4 mb-4">
+                <div class="card bg-rgb-primary border border-primary">
+                    <div class="card-body py-4">
+                        {{-- <span class="fa fa-ban sticky-fa-card"></span> --}}
+                        <div class="row align-items-center">
+                            <div class="col-md-8 pr-0 font-weight-bold">
+                                Pengajuan Posisi Pincab
+                            </div>
+                            <div class="col-md-4 pr-0 font-wight-bold">
+                                <h1>{{ \App\models\PengajuanModel::where('posisi', 'Pincab')->count() }}</h1>
+                            </div>
+                        </div>
+                        <hr>
+                        <a href="{{ route('pengajuan-kredit.index') }}"
+                            class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
+                    </div>
+                </div>
+            </div>
+            {{-- Pengajuan Posisi PBP --}}
+            <div class="col-md-4 mb-4">
+                <div class="card bg-rgb-primary border border-primary">
+                    <div class="card-body py-4">
+                        {{-- <span class="fa fa-ban sticky-fa-card"></span> --}}
+                        <div class="row align-items-center">
+                            <div class="col-md-8 pr-0 font-weight-bold">
+                                Pengajuan Posisi PBP Cabang 001
+                            </div>
+                            <div class="col-md-4 pr-0 font-wight-bold">
+                                <h1>{{ \App\models\PengajuanModel::where('posisi', 'PBP')->count() }}</h1>
+                            </div>
+                        </div>
+                        <hr>
+                        <a href="{{ route('pengajuan-kredit.index') }}"
+                            class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
+                    </div>
+                </div>
+            </div>
+            {{-- Pengajuan Posisi Penyelia --}}
+            <div class="col-md-4 mb-4">
+                <div class="card bg-rgb-primary border border-primary">
+                    <div class="card-body py-4">
+                        {{-- <span class="fa fa-ban sticky-fa-card"></span> --}}
+                        <div class="row align-items-center">
+                            <div class="col-md-8 pr-0 font-weight-bold">
+                                Pengajuan Posisi Penyelia
+                            </div>
+                            <div class="col-md-4 pr-0 font-wight-bold">
+                                <h1>{{ \App\models\PengajuanModel::where('posisi', 'Review Penyelia')->count() }}</h1>
+                            </div>
+                        </div>
+                        <hr>
+                        <a href="{{ route('pengajuan-kredit.index') }}"
+                            class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
+                    </div>
+                </div>
+            </div>
+            {{-- Pengajuan Posisi Staff --}}
+            <div class="col-md-4 mb-4">
+                <div class="card bg-rgb-primary border border-primary">
+                    <div class="card-body py-4">
+                        {{-- <span class="fa fa-ban sticky-fa-card"></span> --}}
+                        <div class="row align-items-center">
+                            <div class="col-md-8 pr-0 font-weight-bold">
+                                Pengajuan Posisi Staff
+                            </div>
+                            <div class="col-md-4 pr-0 font-wight-bold">
+                                <h1>{{ \App\models\PengajuanModel::where('posisi', 'Proses Input Data')->count() }}</h1>
+                            </div>
+                        </div>
+                        <hr>
+                        <a href="{{ route('pengajuan-kredit.index') }}"
+                            class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
+                    </div>
+                </div>
+            </div>
         @else
             <div class="col-md-3 mb-4">
                 <div class="card bg-rgb-primary border border-primary">
@@ -218,7 +336,8 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="{{ route('pengajuan-kredit.index') }}" class="btn btn-danger btn-sm b-radius-3 px-3">Lihat
+                        <a href="{{ route('pengajuan-kredit.index') }}"
+                            class="btn btn-danger btn-sm b-radius-3 px-3">Lihat
                             Detail</a>
                     </div>
                 </div>
@@ -226,6 +345,7 @@
         @endif
     </div>
     @if (auth()->user()->role == 'Administrator')
+    @elseif(auth()->user()->role == 'SPI')
     @else
         <br>
         <h5 class="color-darkBlue font-weight-bold">Pengajuan Belum Ditindak Lanjuti</h5>
