@@ -15,10 +15,10 @@
 </style>
 
 <div class="card mb-3">
-    <div class="card-header bg-info color-white font-weight-bold collapsed" data-toggle="collapse" href="#logPengajuan">
+    <div class="card-header bg-info color-white font-weight-bold" data-toggle="collapse" href="#logPengajuan">
         Log Pengajuan
     </div>
-    <div class="card-body collapse multi-collapse" id="logPengajuan">
+    <div class="card-body collapse multi-collapse show" id="logPengajuan">
         <div class="">
             @foreach ($roles as $key => $itemRole)
                 <div class="form-group row">
@@ -32,7 +32,8 @@
                     </label>
                     <div class="col-sm-7">
                         @php
-                            if ($dataUmum->tanggal < "26-05-2023") {
+                            $log = DB::table('log_pengajuan')->select('id')->where('id_pengajuan', $dataUmum->id)->first();
+                            if (!$log) {
                                 $user = DB::table('pengajuan')
                                     ->join('users', 'users.id', 'pengajuan.' . $idRoles[$key])
                                     ->select('users.role', 'users.nip', 'users.email', 'users.nip as nip_users')
@@ -57,7 +58,7 @@
         <hr>
         <div class="timeline">
             <div class="conten-timeline right">
-                @if ($dataUmum->tanggal < date("26-05-2003"))
+                @if (!$log)
                     <div class="row">
                         <div class="col-md-12 text-center">
                             <p>Tidak ada log pengajuan pada data ini, dikarenakan data dikategorikan data lama pada domain <a href="https://los.bankumkm.id">los.bankumkm.id</a>.</p>
