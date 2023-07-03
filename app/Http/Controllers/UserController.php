@@ -89,7 +89,7 @@ class UserController extends Controller
             $user->email = $validated['email'];
             $user->role = $validated['role'];
             $user->password = \Hash::make('12345678');
-            $user->id_cabang = $request->id_cabang;
+            $user->id_cabang = $validated['role'] == 'PBP' ? 1 : $request->id_cabang;
             $user->save();
         } catch (Exception $e) {
             return back()->withError('Terjadi kesalahan.');

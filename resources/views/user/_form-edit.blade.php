@@ -39,7 +39,8 @@
                 <option value="">Pilih Role User</option>
                 <option value="Administrator" {{ old('role', $user->role) == 'Administrator' ? ' selected' : '' }}>Administrator</option>
                 <option value="Pincab" {{ old('role', $user->role) == 'Pincab' ? ' selected' : '' }}>Pincab</option>
-                <option value="PBO / PBP" {{ old('role', $user->role) == 'PBO / PBP' ? ' selected' : '' }}>PBO / PBP</option>
+                <option value="PBO" {{ old('role', $user->role) == 'PBO' ? ' selected' : '' }}>PBO</option>
+                <option value="PBP" {{ old('role', $user->role) == 'PBP' ? ' selected' : '' }}>PBP</option>
                 <option value="Penyelia Kredit" {{ old('role', $user->role) == 'Penyelia Kredit' ? ' selected' : '' }}>Penyelia Kredit</option>
                 <option value="Staf Analis Kredit" {{ old('role', $user->role) == 'Staf Analis Kredit' ? ' selected' : '' }}>Staf Analis Kredit</option>
                 <option value="SPI" {{ old('role', $user->role) == 'SPI' ? ' selected' : '' }}>SPI</option>
@@ -70,9 +71,9 @@
 @push('custom-script')
     <script>
         $(document).ready(function() {
-            $('#rowCabang').hide();
-
             var role = $("#role option:selected").val()
+            rowCabangVisibility(role)
+
             // Role on change
             if (role == "Staf Analis Kredit") {
                 $('#rowCabang').show();
@@ -85,23 +86,22 @@
             }
             $('#role').change(function() {
                 var hasilRole = $(this).val();
-                console.log(hasilRole);
-                if (hasilRole == "Penyelia Kredit") {
-                    $('#rowCabang').show();
-                }else if (hasilRole == "Pincab"){
-                    $('#rowCabang').show();
-                }else if (hasilRole == "Staf Analis Kredit"){
-                    $('#rowCabang').show();
-                }else{
-                    $('#rowCabang').hide();
-                }
-
-                // if (role != 'Administrator') {
-                //     $('#rowCabang').show();
-                // } else if (role == 'Administrator') {
-                //     $('#rowCabang').hide();
-                // }
+                rowCabangVisibility(hasilRole)
             });
         });
+
+        function rowCabangVisibility(role) {
+            if (role == "Penyelia Kredit") {
+                $('#rowCabang').show();
+            }else if (role == "Pincab"){
+                $('#rowCabang').show();
+            }else if (role == "Staf Analis Kredit"){
+                $('#rowCabang').show();
+            }else if (role == "PBO") {
+                $('#rowCabang').show();
+            }else{
+                $('#rowCabang').hide();
+            }
+        }
     </script>
 @endpush

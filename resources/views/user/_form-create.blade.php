@@ -37,7 +37,8 @@
                 <option value="">Pilih Role User</option>
                 <option value="Administrator" {{ old('role') == 'Administrator' ? ' selected' : '' }}>Administrator</option>
                 <option value="Pincab" {{ old('role') == 'Pincab' ? ' selected' : '' }}>Pincab</option>
-                <option value="PBO / PBP" {{ old('role') == 'PBO / PBP' ? ' selected' : '' }}>PBO / PBP</option>
+                <option value="PBO" {{ old('role') == 'PBO' ? ' selected' : '' }}>PBO</option>
+                <option value="PBP" {{ old('role') == 'PBP' ? ' selected' : '' }}>PBP</option>
                 <option value="Penyelia Kredit" {{ old('role') == 'Penyelia Kredit' ? ' selected' : '' }}>Penyelia Kredit</option>
                 <option value="Staf Analis Kredit" {{ old('role') == 'Staf Analis Kredit' ? ' selected' : '' }}>Staf Analis Kredit</option>
                 <option value="SPI" {{ old('role') == 'SPI' ? ' selected' : '' }}>SPI</option>
@@ -73,10 +74,17 @@
             // Role on change
             $('#role').change(function() {
                 let role = $(this).val();
+                console.log(role)
 
-                if (role != 'Administrator' && role != 'SPI') {
+                if (role == "Penyelia Kredit") {
                     $('#rowCabang').show();
-                } else if (role == 'Administrator' && role == 'SPI') {
+                }else if (role == "Pincab"){
+                    $('#rowCabang').show();
+                }else if (role == "Staf Analis Kredit"){
+                    $('#rowCabang').show();
+                }else if (role == "PBO") {
+                    $('#rowCabang').show();
+                }else{
                     $('#rowCabang').hide();
                 }
             });
