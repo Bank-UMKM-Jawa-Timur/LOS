@@ -113,6 +113,25 @@
                     </div>
                 </div>
             </div>
+            {{-- Pengajuan Posisi PBO --}}
+            <div class="col-md-4 mb-4">
+                <div class="card bg-rgb-primary border border-primary">
+                    <div class="card-body py-4">
+                        {{-- <span class="fa fa-ban sticky-fa-card"></span> --}}
+                        <div class="row align-items-center">
+                            <div class="col-md-8 pr-0 font-weight-bold">
+                                Pengajuan Posisi PBO
+                            </div>
+                            <div class="col-md-4 pr-0 font-wight-bold">
+                                <h1>{{ \App\models\PengajuanModel::where('posisi', 'PBO')->count() }}</h1>
+                            </div>
+                        </div>
+                        <hr>
+                        <a href="{{ route('pengajuan-kredit.index') }}"
+                            class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
+                    </div>
+                </div>
+            </div>
             {{-- Pengajuan Posisi Penyelia --}}
             <div class="col-md-4 mb-4">
                 <div class="card bg-rgb-primary border border-primary">
@@ -223,6 +242,25 @@
                             </div>
                             <div class="col-md-4 pr-0 font-wight-bold">
                                 <h1>{{ \App\models\PengajuanModel::where('posisi', 'PBP')->count() }}</h1>
+                            </div>
+                        </div>
+                        <hr>
+                        <a href="{{ route('pengajuan-kredit.index') }}"
+                            class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
+                    </div>
+                </div>
+            </div>
+            {{-- Pengajuan Posisi PBO --}}
+            <div class="col-md-4 mb-4">
+                <div class="card bg-rgb-primary border border-primary">
+                    <div class="card-body py-4">
+                        {{-- <span class="fa fa-ban sticky-fa-card"></span> --}}
+                        <div class="row align-items-center">
+                            <div class="col-md-8 pr-0 font-weight-bold">
+                                Pengajuan Posisi PBO
+                            </div>
+                            <div class="col-md-4 pr-0 font-wight-bold">
+                                <h1>{{ \App\models\PengajuanModel::where('posisi', 'PBO')->count() }}</h1>
                             </div>
                         </div>
                         <hr>
