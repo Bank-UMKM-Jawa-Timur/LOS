@@ -44,6 +44,7 @@
                 <option value="Penyelia Kredit" {{ old('role', $user->role) == 'Penyelia Kredit' ? ' selected' : '' }}>Penyelia Kredit</option>
                 <option value="Staf Analis Kredit" {{ old('role', $user->role) == 'Staf Analis Kredit' ? ' selected' : '' }}>Staf Analis Kredit</option>
                 <option value="SPI" {{ old('role', $user->role) == 'SPI' ? ' selected' : '' }}>SPI</option>
+                <option value="Kredit Umum" {{ old('role', $user->role) == 'Kredit Umum' ? ' selected' : '' }}>Kredit Umum</option>
             </select>
             @error('role')
                 <div class="invalid-feedback">

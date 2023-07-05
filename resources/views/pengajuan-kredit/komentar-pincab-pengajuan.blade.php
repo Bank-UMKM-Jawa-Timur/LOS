@@ -248,7 +248,7 @@
                                             @endif
                                             <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
                                                 class="dropdown-item">Cetak</a>
-                                            @if (Auth::user()->role == 'SPI')
+                                            @if (Auth::user()->role == 'SPI' || Auth::user()->role == 'Kredit Umum')
                                                 <a href="{{ route('pengajuan.check.pincab.status.detail', $item->id_pengajuan) }}"
                                                     class="dropdown-item">Log Pengajuan</a>
                                             @endif
@@ -318,7 +318,7 @@
                                                 <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
                                                     class="dropdown-item">Cetak</a>
                                             @endif
-                                            @if (Auth::user()->role == 'SPI')
+                                            @if (Auth::user()->role == 'SPI' || Auth::user()->role == 'Kredit Umum')
                                                 <a href="{{ route('pengajuan.check.pincab.status.detail', $item->id_pengajuan) }}"
                                                     class="dropdown-item">Log Pengajuan</a>
                                             @endif
@@ -335,7 +335,7 @@
                                             </svg>
                                         </button>
                                         <div class="dropdown-menu">
-                                            @if (Auth::user()->role == 'SPI')
+                                            @if (Auth::user()->role == 'SPI' || Auth::user()->role == 'Kredit Umum')
                                                 <a href="{{ route('pengajuan.check.pincab.status.detail', $item->id_pengajuan) }}"
                                                     class="dropdown-item">Log Pengajuan</a>
                                             @endif

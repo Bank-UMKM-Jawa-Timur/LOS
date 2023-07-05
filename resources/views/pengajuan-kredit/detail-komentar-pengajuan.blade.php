@@ -98,7 +98,7 @@ function getKaryawan($nip){
         <form action="{{ route('pengajuan.check.pincab.status.detail.post') }}" method="POST">
             @csrf
 
-            @if (Auth::user()->role == 'SPI')
+            @if (Auth::user()->role == 'SPI' || Auth::user()->role == 'Kredit Umum')
                 @include('pengajuan-kredit.log_pengajuan')
             @endif
 
@@ -1929,7 +1929,7 @@ function getKaryawan($nip){
                                     <textarea name="komentar_pincab" class="form-control" id="" cols="5" rows="3"
                                         placeholder="Masukkan Pendapat Pemimpin Cabang">{{ $pendapatDanUsulan->komentar_pincab }}</textarea>
                                 @endif
-                                @if (Auth::user()->role == 'SPI')
+                                @if (Auth::user()->role == 'SPI' || Auth::user()->role == 'Kredit Umum')
                                     <input type="text" readonly class="form-control-plaintext" id="staticEmail"
                                     value="{{ $pendapatDanUsulan->komentar_pincab }}">
                                 @endif

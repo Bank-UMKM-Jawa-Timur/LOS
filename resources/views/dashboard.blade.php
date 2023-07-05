@@ -151,7 +151,7 @@
                     </div>
                 </div>
             </div>
-        @elseif (auth()->user()->role == 'SPI')
+        @elseif (auth()->user()->role == 'SPI' || auth()->user()->role == 'Kredit Umum')
             <div class="col-md-12 mb-4">
                 Total Pengajuan : {{ \App\models\PengajuanModel::count() }}
             </div>
@@ -345,7 +345,7 @@
         @endif
     </div>
     @if (auth()->user()->role == 'Administrator')
-    @elseif(auth()->user()->role == 'SPI')
+    @elseif(auth()->user()->role == 'SPI' || auth()->user()->role == 'Kredit Umum')
     @else
         <br>
         <h5 class="color-darkBlue font-weight-bold">Pengajuan Belum Ditindak Lanjuti</h5>

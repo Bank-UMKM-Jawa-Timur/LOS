@@ -12,7 +12,7 @@
     };
 @endphp
 <div class="row">
-    @if (Auth::user()->role != 'Pincab' && Auth::user()->role != 'SPI')
+    @if (Auth::user()->role != 'Pincab' && Auth::user()->role != 'SPI' && auth()->user()->role != 'Kredit Umum')
         <div class="col-md-3">
             <div class="box-content side-wizard px-4 py-4 ">
                 <ul>
@@ -55,7 +55,7 @@
             </div>
         </div>
     @endif
-    <div class="@if (Auth::user()->role != 'Pincab' && Auth::user()->role != 'SPI') col-md-9 @else col-md-12 @endif">
+    <div class="@if (Auth::user()->role != 'Pincab' && Auth::user()->role != 'SPI' && auth()->user()->role != 'Kredit Umum') col-md-9 @else col-md-12 @endif">
         <div class="box-content px-3 py-4 ">
             <div class="container cusutom">
                 <div class="row row-breadcrumbs align-items-center">
