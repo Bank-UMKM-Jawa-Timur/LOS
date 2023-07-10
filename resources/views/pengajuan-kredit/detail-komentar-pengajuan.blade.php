@@ -1837,6 +1837,18 @@ function getKaryawan($nip){
                     </div>
                 </div>
             @endforeach
+            @php
+                $userPBO = \App\Models\User::select('id')
+                    ->where('id_cabang', $dataUmum->id_cabang)
+                    ->where('role', 'PBO')
+                    ->first();
+
+                $userPBP = \App\Models\User::select('id')
+                    ->where('id_cabang', $dataUmum->id_cabang)
+                    ->where('role', 'PBP')
+                    ->whereNotNull('nip')
+                    ->first();
+            @endphp
             <div class="card mb-3">
                 <div class="card-header bg-info color-white font-weight-bold" data-toggle="collapse" href=#cardPendapatUsulan>
                     Pendapat & Usulan
@@ -1853,9 +1865,12 @@ function getKaryawan($nip){
                                     </div>
                                 </div>
                             </label>
-                            <div class="col-sm-7">
-                                <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                            <div class="col">
+                                {{--  <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                                    value="{{ $pendapatDanUsulan->komentar_staff }}">  --}}
+                                <input type="hidden" class="form-control-plaintext" id="staticEmail"
                                     value="{{ $pendapatDanUsulan->komentar_staff }}">
+                                    <p class="form-control-plaintext text-justify">{{ $pendapatDanUsulan->komentar_staff }}</p>
                             </div>
                         </div>
                     </div>
@@ -1870,18 +1885,15 @@ function getKaryawan($nip){
                                     </div>
                                 </div>
                             </label>
-                            <div class="col-sm-7">
-                                <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                            <div class="col">
+                                {{--  <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                                    value="{{ $pendapatDanUsulan->komentar_penyelia }}">  --}}
+                                <input type="hidden" class="form-control-plaintext" id="staticEmail"
                                     value="{{ $pendapatDanUsulan->komentar_penyelia }}">
+                                <p class="form-control-plaintext text-justify">{{ $pendapatDanUsulan->komentar_penyelia }}</p>
                             </div>
                         </div>
                     </div>
-                    @php
-                        $userPBO = \App\Models\User::select('id')
-                                                    ->where('id_cabang', $dataUmum->id_cabang)
-                                                    ->where('role', 'PBO')
-                                                    ->first();
-                    @endphp
                     @if ($userPBO)
                         <div class="alert alert-success ">
                             <div class="form-group row sub mb-0" style="">
@@ -1894,31 +1906,39 @@ function getKaryawan($nip){
                                         </div>
                                     </div>
                                 </label>
-                                <div class="col-sm-7">
-                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                                <div class="col">
+                                    {{--  <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                                        value="{{ $pendapatDanUsulan->komentar_pbo }}">  --}}
+                                    <input type="hidden" class="form-control-plaintext" id="staticEmail"
                                         value="{{ $pendapatDanUsulan->komentar_pbo }}">
+                                    <p class="form-control-plaintext text-justify">{{ $pendapatDanUsulan->komentar_pbo }}</p>
                                 </div>
                             </div>
                         </div>
                     @endif
                     @if ($dataUmum->id_cabang == 1)
-                        <div class="alert alert-success">
-                            <div class="form-group row sub mb-0">
-                                <label for="staticEmail" class="col-sm-3 col-form-label font-weight-bold">Pendapat
-                                    & Usulan <br> (PBP)</label>
-                                <label for="staticEmail" class="col-sm-1 col-form-label px-0">
-                                    <div class="d-flex justify-content-end">
-                                        <div style="width: 20px">
-                                            :
+                        @if ($userPBP)
+                            <div class="alert alert-success">
+                                <div class="form-group row sub mb-0">
+                                    <label for="staticEmail" class="col-sm-3 col-form-label font-weight-bold">Pendapat
+                                        & Usulan <br> (PBP)</label>
+                                    <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                                        <div class="d-flex justify-content-end">
+                                            <div style="width: 20px">
+                                                :
+                                            </div>
                                         </div>
+                                    </label>
+                                    <div class="col">
+                                        {{--  <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                                            value="{{ $pendapatDanUsulan->komentar_pbp }}">  --}}
+                                        <input type="hidden" class="form-control-plaintext" id="staticEmail"
+                                            value="{{ $pendapatDanUsulan->komentar_pbp }}">
+                                        <p class="form-control-plaintext text-justify">{{ $pendapatDanUsulan->komentar_pbp }}</p>
                                     </div>
-                                </label>
-                                <div class="col-sm-7">
-                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail"
-                                        value="{{ $pendapatDanUsulan->komentar_pbp }}">
                                 </div>
                             </div>
-                        </div>
+                        @endif
                     @endif
                     <div class="alert alert-success ">
                         <div class="form-group row">
@@ -1930,15 +1950,18 @@ function getKaryawan($nip){
                                     </div>
                                 </div>
                             </label>
-                            <div class="col-sm-7">
+                            <div class="col">
                                 @if (Auth::user()->role == 'Pincab')
                                     <input type="hidden" name="id_pengajuan" id="" value="{{ $dataUmum->id }}">
                                     <textarea name="komentar_pincab" class="form-control" id="" cols="5" rows="3"
                                         placeholder="Masukkan Pendapat Pemimpin Cabang">{{ $pendapatDanUsulan->komentar_pincab }}</textarea>
                                 @endif
                                 @if (Auth::user()->role == 'SPI' || Auth::user()->role == 'Kredit Umum')
-                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                                    {{--  <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                                    value="{{ $pendapatDanUsulan->komentar_pincab }}">  --}}
+                                    <input type="hidden" class="form-control-plaintext" id="staticEmail"
                                     value="{{ $pendapatDanUsulan->komentar_pincab }}">
+                                    <p class="form-control-plaintext text-justify">{{ $pendapatDanUsulan->komentar_pincab }}</p>
                                 @endif
                             </div>
                         </div>
