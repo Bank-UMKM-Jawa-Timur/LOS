@@ -33,21 +33,6 @@
     <link rel="stylesheet" href="{{ asset('') }}css/custom.css" />
     <link rel="icon" href="{{ asset('') }}img/favicon.png" type="image/gif" sizes="16x6" />
     <script src="https://cdn.jsdelivr.net/npm/autonumeric@4.5.4"></script>
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-    <style>
-        .datepicker {
-            background: #ffffff !important;
-            font-weight: 400;
-        }
-    </style>
-    <script>
-    $( function() {
-        $(".datepicker").attr('readonly', true)
-        $( ".datepicker" ).datepicker({
-            format: 'dd-mm-yyyy'
-        });
-    } );
-    </script>
 </head>
 
 <body ng-controller="MainCtrl">
@@ -247,7 +232,7 @@
         })
         $(".select2").select2();
         $(".datepicker").datepicker({
-            format: 'yyyy-mm-dd',
+            format: 'dd-mm-yyyy',
             todayHighlight: true,
         });
         $(".delete").click(function(e) {

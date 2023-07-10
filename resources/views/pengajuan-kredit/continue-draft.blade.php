@@ -184,7 +184,7 @@
                 <div class="form-group col-md-4">
                     <label for="">Tanggal Lahir</label>
                     <input type="text" name="tanggal_lahir" id=""
-                        class="form-control datepicker @error('tanggal_lahir') is-invalid @enderror" placeholder="yyyy-mm-dd"
+                        class="form-control datepicker @error('tanggal_lahir') is-invalid @enderror" placeholder="dd-mm-yyyy"
                         value="{{ $duTemp?->tanggal_lahir ?? '' }}">
                     @error('tanggal_lahir')
                         <div class="invalid-feedback">
