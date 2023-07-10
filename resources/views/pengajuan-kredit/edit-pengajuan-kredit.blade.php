@@ -302,8 +302,8 @@
                 </div>
                 <div class="form-group col-md-4">
                     <label for="">Tanggal Lahir</label>
-                    <input type="date" name="tanggal_lahir" id=""
-                        class="form-control @error('tanggal_lahir') is-invalid @enderror"
+                    <input type="text" name="tanggal_lahir" id=""
+                        class="form-control datepicker @error('tanggal_lahir') is-invalid @enderror"
                         value="{{ old('tanggal_lahir', $dataUmum->tanggal_lahir) }}" placeholder="Tempat Lahir">
                     @error('tanggal_lahir')
                         <div class="invalid-feedback">
