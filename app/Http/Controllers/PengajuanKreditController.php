@@ -140,6 +140,13 @@ class PengajuanKreditController extends Controller
         return Auth::user()->name;
     }
 
+    public function formatDate($date) {
+        if ($date) {
+            $arr = explode('-', $date);
+            return $arr[2].'-'.$arr[1].'-'.$arr[0]; // yyyy-mm-dd
+        }
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -982,7 +989,7 @@ class PengajuanKreditController extends Controller
             $addData->alamat_usaha = $request->alamat_usaha;
             $addData->no_ktp = $request->no_ktp;
             $addData->tempat_lahir = $request->tempat_lahir;
-            $addData->tanggal_lahir = $request->tanggal_lahir;
+            $addData->tanggal_lahir = $this->formatDate($request->tanggal_lahir);
             $addData->status = $request->status;
             $addData->sektor_kredit = $request->sektor_kredit;
             $addData->jenis_usaha = $request->jenis_usaha;
@@ -1282,6 +1289,9 @@ class PengajuanKreditController extends Controller
         )
             ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
             ->find($id);
+        if ($param['dataUmum']) {
+            $param['dataUmum']->tanggal_lahir = $this->formatDate($param['dataUmum']->tanggal_lahir);
+        }
         $param['allKab'] = Kabupaten::get();
         $param['allKec'] = Kecamatan::where('id_kabupaten', $param['dataUmum']->id_kabupaten)->get();
         $param['allDesa'] = Desa::where('id_kecamatan', $param['dataUmum']->id_kecamatan)->get();
@@ -1380,7 +1390,7 @@ class PengajuanKreditController extends Controller
             $updateData->alamat_usaha = $request->alamat_usaha;
             $updateData->no_ktp = $request->no_ktp;
             $updateData->tempat_lahir = $request->tempat_lahir;
-            $updateData->tanggal_lahir = $request->tanggal_lahir;
+            $updateData->tanggal_lahir = $this->formatDate($request->tanggal_lahir);
             $updateData->status = $request->status;
             $updateData->sektor_kredit = $request->sektor_kredit;
             $updateData->jenis_usaha = $request->jenis_usaha;
@@ -2910,7 +2920,7 @@ class PengajuanKreditController extends Controller
 
     public function tempNasabah(Request $request)
     {
-        if (isset($request->id)) {
+        if (isset($request->id_nasabah)) {
             $nasabah = TemporaryService::saveNasabah(
                 $request->id_nasabah,
                 TemporaryService::convertNasabahReq($request)

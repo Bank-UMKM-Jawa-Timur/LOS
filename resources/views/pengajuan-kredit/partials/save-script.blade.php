@@ -73,7 +73,8 @@
             method: 'POST',
             data,
             success(res) {
-                //console.log(res);
+                console.log(res);
+                $('#idCalonNasabah').val()
             }
         });
     }

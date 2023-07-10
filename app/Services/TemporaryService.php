@@ -1,6 +1,7 @@
 <?php
 namespace App\Services;
 
+use App\Http\Controllers\PengajuanKreditController;
 use App\Models\CalonNasabahTemp;
 use App\Models\JawabanTemp;
 use App\Models\User;
@@ -27,7 +28,11 @@ class TemporaryService
             return $nasData;
         }
 
-        if($nasData = CalonNasabahTemp::find($tempId)) return $nasData;
+        if($nasData = CalonNasabahTemp::find($tempId)) {
+            $controller = new PengajuanKreditController;
+            $nasData->tanggal_lahir = $controller->formatDate($nasData->tanggal_lahir);
+            return $nasData;
+        };
 
         return CalonNasabahTemp::create([
             'id_user' => Auth::user()->id,
@@ -88,13 +93,14 @@ class TemporaryService
 
     public static function convertNasabahReq(Request $request): array
     {
+        $controller = new PengajuanKreditController;
         return [
             'nama' => $request->name,
             'alamat_rumah' => $request->alamat_rumah,
             'alamat_usaha' => $request->alamat_usaha,
             'no_ktp' => $request->no_ktp,
             'tempat_lahir' => $request->tempat_lahir,
-            'tanggal_lahir' => $request->tanggal_lahir,
+            'tanggal_lahir' => $controller->formatDate($request->tanggal_lahir),
             'status' => $request->status,
             'sektor_kredit' => $request->sektor_kredit,
             'jenis_usaha' => $request->jenis_usaha,
