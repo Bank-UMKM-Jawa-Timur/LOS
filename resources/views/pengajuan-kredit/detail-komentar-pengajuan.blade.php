@@ -346,26 +346,33 @@ function getKaryawan($nip){
                         </label>
                         <div class="col-sm-7">
                             <input type="text" readonly class="form-control-plaintext" id="staticEmail"
-                                value="{{ $itemSlik->option }}">
+                                @if ($itemSlik != null)
+                                    value="{{ $itemSlik?->option }}"
+                                @else
+                                    value="-"
+                                @endif
+                            >
                         </div>
                     </div>
                     @php
-                        $komentarSlikPenyelia = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', '=', 'detail_komentar.id_komentar')
-                            ->where('id_pengajuan', $dataUmum->id)
-                            ->where('id_item', $itemSlik->id_item)
-                            ->where('id_user', $comment->id_penyelia)
-                            ->first();
-                        $komentarSlikPBO = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', '=', 'detail_komentar.id_komentar')
-                            ->where('id_pengajuan', $dataUmum->id)
-                            ->where('id_item', $itemSlik->id_item)
-                            ->where('id_user', $comment->id_pbo)
-                            ->first();
-                        if ($dataUmum->id_cabang == 1) {
-                            $komentarSlikPBP = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', '=', 'detail_komentar.id_komentar')
+                        if ($itemSlik != null) {
+                            $komentarSlikPenyelia = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', '=', 'detail_komentar.id_komentar')
                                 ->where('id_pengajuan', $dataUmum->id)
                                 ->where('id_item', $itemSlik->id_item)
-                                ->where('id_user', $comment->id_pbp)
+                                ->where('id_user', $comment->id_penyelia)
                                 ->first();
+                            $komentarSlikPBO = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', '=', 'detail_komentar.id_komentar')
+                                ->where('id_pengajuan', $dataUmum->id)
+                                ->where('id_item', $itemSlik->id_item)
+                                ->where('id_user', $comment->id_pbo)
+                                ->first();
+                            if ($dataUmum->id_cabang == 1) {
+                                $komentarSlikPBP = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', '=', 'detail_komentar.id_komentar')
+                                    ->where('id_pengajuan', $dataUmum->id)
+                                    ->where('id_item', $itemSlik->id_item)
+                                    ->where('id_user', $comment->id_pbp)
+                                    ->first();
+                            }
                         }
                     @endphp
                         <div class="row form-group sub pl-4">
@@ -386,7 +393,7 @@ function getKaryawan($nip){
 
 
                                         <p class="badge badge-info text-lg"><b>
-                                                {{ $itemSlik->skor_penyelia != null ? $itemSlik->skor_penyelia : $itemSlik->skor }}</b></p>
+                                                {{ ($itemSlik != null) ? $itemSlik->skor_penyelia != null ? $itemSlik->skor_penyelia : $itemSlik->skor : '-' }}</b></p>
 
                                     </div>
                                 </div>
@@ -407,7 +414,7 @@ function getKaryawan($nip){
                                     <div style="width: 30%">
                                         <p class="p-0 m-0"><strong>Komentar Penyelia : </strong></p>
                                     </div>
-                                    <h6 class="font-italic">{{ $komentarSlikPenyelia?->komentar }}</h6>
+                                    <h6 class="font-italic">{{ ($itemSlik != null) ? $komentarSlikPenyelia?->komentar : '-' }}</h6>
                                     {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
 
                                 </div>
@@ -428,7 +435,7 @@ function getKaryawan($nip){
                                     <div style="width: 30%">
                                         <p class="p-0 m-0"><strong>Komentar PBO : </strong></p>
                                     </div>
-                                    <h6 class="font-italic">{{ $komentarSlikPBO?->komentar }}</h6>
+                                    <h6 class="font-italic">{{ $itemSlik != null ? $komentarSlikPBO?->komentar : '-' }}</h6>
                                     {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
 
                                 </div>
@@ -450,7 +457,7 @@ function getKaryawan($nip){
                                         <div style="width: 30%">
                                             <p class="p-0 m-0"><strong>Komentar PBP : </strong></p>
                                         </div>
-                                        <h6 class="font-italic">{{ $komentarSlikPBP?->komentar }}</h6>
+                                        <h6 class="font-italic">{{ $itemSlik ? $komentarSlikPBP?->komentar : '-' }}</h6>
                                         {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
 
                                     </div>
