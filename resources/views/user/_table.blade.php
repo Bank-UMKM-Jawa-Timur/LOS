@@ -49,9 +49,9 @@
                                             </button>
                                         </form>
                                     @endif
-                                    <button class="dropdown-item" onclick="resetPassword('{{ $item->name }}')">Reset
+                                    <button class="dropdown-item" onclick="resetPassword('{{ $item->name }}', '{{ $item->id }}')">Reset
                                         Password</button>
-                                    <form action="{{ route('reset-password', $item->id) }}" id="resetPasswordForm"
+                                    <form action="{{ route('reset-password', $item->id) }}" id="resetPasswordForm{{ $item->id }}"
                                         method="post">
                                         @csrf
                                         {{-- <button class="dropdown-item"
@@ -74,7 +74,7 @@
 </div>
 @push('custom-script')
     <script>
-        function resetPassword(name) {
+        function resetPassword(name, id) {
             Swal.fire({
                 title: 'Perhatian!!',
                 text: "Apakah anda yakin mereset password " + name + " ?",
@@ -87,7 +87,7 @@
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
-                    $("#resetPasswordForm").submit()
+                    $("#resetPasswordForm"+id).submit()
                 }
             })
         }
