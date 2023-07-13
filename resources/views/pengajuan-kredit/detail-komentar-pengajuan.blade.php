@@ -98,7 +98,7 @@ function getKaryawan($nip){
         <form action="{{ route('pengajuan.check.pincab.status.detail.post') }}" method="POST">
             @csrf
 
-            @if (Auth::user()->role == 'SPI' || Auth::user()->role == 'Kredit Umum')
+            @if (Auth::user()->role == 'SPI' || Auth::user()->role == 'Kredit Umum' || Auth::user()->role == 'Pincab')
                 @include('pengajuan-kredit.log_pengajuan')
             @endif
 
