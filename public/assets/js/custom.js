@@ -4,23 +4,12 @@ $(document).ready(function () {
         this.value = this.value.replace(/[^\d]/, "");
     });
 
-    $(".side-wizard").on("click", function () {
-        firstLoad = false;
-        const skema = "{{$_GET['skema']}}";
-        if (skema == "KKB") {
-            for (let index = 0; index < 8; index++) {
-                setPercentage(index);
-            }
-        } else {
-            for (let index = 0; index < 7; index++) {
-                setPercentage(index);
-            }
-        }
-    });
     var jumlahData = $("#jumlahData").val();
     // setPercentage(0);
 
     function setPercentage(formIndex) {
+        let valSkema = $("#skema").val();
+
         var form = ".form-wizard[data-index='" + formIndex + "']";
         var inputText = $(form + " .row input[type=text]");
         var inputNumber = $(form + " input[type=number]");
@@ -28,6 +17,7 @@ $(document).ready(function () {
         var inputReadonly = $(form + " input").find("readonly");
         var inputHidden = $(form + " input[type=hidden]");
         var inputFile = $(form + " input[type=file]");
+        var inputFilename = $(form).find('.filename');
         var inputDate = $(form + " input[type=date]");
         var select = $(form + " select");
         var textarea = $(form + " textarea");
@@ -49,41 +39,81 @@ $(document).ready(function () {
             totalSelect +
             totalTextArea;
 
-        if (formIndex == 2) {
-            // var ijinUsahaSelect = $(form).find("#ijin_usaha");
-            var ijinUsahaSelect = $("#ijin_usaha").val();
-            console.log("length : " + ijinUsahaSelect);
-            if (ijinUsahaSelect != "" || ijinUsahaSelect != null) {
-                if (ijinUsahaSelect == "nib") {
-                    subtotalInput -= 2;
-                }
-                if (ijinUsahaSelect == "surat_keterangan_usaha") {
-                    if ($("#isNpwp").is(":checked")) {
+        if (valSkema == "KKB") {
+            if (formIndex == 3) {
+                // var ijinUsahaSelect = $(form).find("#ijin_usaha");
+                var ijinUsahaSelect = $("#ijin_usaha").val();
+                console.log("length : " + ijinUsahaSelect);
+                if (ijinUsahaSelect != "" || ijinUsahaSelect != null) {
+                    if (ijinUsahaSelect == "nib") {
                         subtotalInput -= 2;
-                    } else {
-                        subtotalInput -= 4;
+                    }
+                    if (ijinUsahaSelect == "surat_keterangan_usaha") {
+                        if ($("#isNpwp").is(":checked")) {
+                            subtotalInput -= 2;
+                        } else {
+                            subtotalInput -= 4;
+                        }
+                    }
+                    if (ijinUsahaSelect == "tidak_ada_legalitas_usaha") {
+                        subtotalInput -= 6;
                     }
                 }
-                if (ijinUsahaSelect == "tidak_ada_legalitas_usaha") {
-                    subtotalInput -= 6;
+            }
+    
+            if (formIndex == 4) {
+                var jaminanTambSel = $("#kategori_jaminan_tambahan").val();
+                if (jaminanTambSel == "Tanah dan Bangunan") {
+                    subtotalInput -= 5;
+                } else if (jaminanTambSel == "Tanah") {
+                    subtotalInput -= 5;
+                } else {
+                    subtotalInput -= 2;
+                }
+                // subtotalInput -= firstLoad ? 2 : 8;
+            }
+    
+            if (formIndex == 7) {
+                subtotalInput -= 1;
+            }
+        }
+        else {
+            if (formIndex == 2) {
+                // var ijinUsahaSelect = $(form).find("#ijin_usaha");
+                var ijinUsahaSelect = $("#ijin_usaha").val();
+                console.log("length : " + ijinUsahaSelect);
+                if (ijinUsahaSelect != "" || ijinUsahaSelect != null) {
+                    if (ijinUsahaSelect == "nib") {
+                        subtotalInput -= 2;
+                    }
+                    if (ijinUsahaSelect == "surat_keterangan_usaha") {
+                        if ($("#isNpwp").is(":checked")) {
+                            subtotalInput -= 2;
+                        } else {
+                            subtotalInput -= 4;
+                        }
+                    }
+                    if (ijinUsahaSelect == "tidak_ada_legalitas_usaha") {
+                        subtotalInput -= 6;
+                    }
                 }
             }
-        }
-
-        if (formIndex == 3) {
-            var jaminanTambSel = $("#kategori_jaminan_tambahan").val();
-            if (jaminanTambSel == "Tanah dan Bangunan") {
-                subtotalInput -= 5;
-            } else if (jaminanTambSel == "Tanah") {
-                subtotalInput -= 5;
-            } else {
-                subtotalInput -= 2;
+    
+            if (formIndex == 3) {
+                var jaminanTambSel = $("#kategori_jaminan_tambahan").val();
+                if (jaminanTambSel == "Tanah dan Bangunan") {
+                    subtotalInput -= 5;
+                } else if (jaminanTambSel == "Tanah") {
+                    subtotalInput -= 5;
+                } else {
+                    subtotalInput -= 2;
+                }
+                // subtotalInput -= firstLoad ? 2 : 8;
             }
-            // subtotalInput -= firstLoad ? 2 : 8;
-        }
-
-        if (formIndex == 6) {
-            subtotalInput -= 1;
+    
+            if (formIndex == 6) {
+                subtotalInput -= 1;
+            }
         }
 
         var ttlInputTextFilled = 0;
@@ -100,10 +130,8 @@ $(document).ready(function () {
         });
         var ttlInputFileFilled = 0;
         $.each(inputFile, function (i, v) {
-            if (formIndex == 0) {
-                console.log("file " + v.value);
-            }
-            if (v.value != "") {
+            var filename = inputFilename[i].innerHTML
+            if (v.value != "" || filename != "") {
                 ttlInputFileFilled++;
             }
         });
@@ -116,12 +144,15 @@ $(document).ready(function () {
         var ttlSelectFilled = 0;
         $.each(select, function (i, v) {
             var data = v.value;
+            var displayValue = $('#'+v.id).css('display');
             if (
                 data != "" &&
                 data != "" &&
                 data != null &&
                 data != " --Pilih Opsi-- " &&
-                data != "--Pilih Opsi--"
+                data != "--Pilih Opsi--" &&
+                data != "-- Pilih Kategori Jaminan Tambahan --" &&
+                displayValue != "none"
             ) {
                 ttlSelectFilled++;
             }
@@ -151,7 +182,7 @@ $(document).ready(function () {
                 if (status != "") subtotalFilled += 2;
             }
         }
-        if (formIndex == 0) {
+        // if (formIndex == 0) {
             console.log("=============index : " + formIndex + "=============");
             console.log("total input : " + subtotalInput);
             console.log("total input filled : " + subtotalFilled);
@@ -164,7 +195,7 @@ $(document).ready(function () {
                 ttlTextAreaFilled,
             });
             console.log("===============================================");
-        }
+        // }
 
         var percentage = parseInt((subtotalFilled / subtotalInput) * 100);
         percentage = Number.isNaN(percentage) ? 0 : percentage;
@@ -244,6 +275,7 @@ $(document).ready(function () {
             cekWizard();
             cekBtn();
             saveDataTemporary(indexNow);
+            setPercentage(dataIndex)
         }
     });
 
@@ -267,7 +299,7 @@ $(document).ready(function () {
 
         let valSkema = $("#skema").val();
         var indexNow = $(".form-wizard.active").data("index");
-        setPercentage(indexNow + 1);
+        // setPercentage(indexNow);
 
         if (indexNow != 0) {
             if (indexNow == 1) {
@@ -297,15 +329,15 @@ $(document).ready(function () {
             }
 
             cekWizard();
-            cekBtn(true);
-            setPercentage(indexNow);
+            cekBtn();
+            // setPercentage(indexNow);
         }
         $("#npwp")
             .closest(".form-group")
             .find("label")
             .html(cekNpwp(indexNow)[1]);
         cekWizard();
-        cekBtn(true);
+        cekBtn();
         setPercentage(indexNow);
     });
 
