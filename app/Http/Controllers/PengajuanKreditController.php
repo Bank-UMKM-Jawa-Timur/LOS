@@ -1037,7 +1037,7 @@ class PengajuanKreditController extends Controller
                         'tahun_kendaraan' => $request->tahun,
                         // 'id_type' => $request->id_tipe,
                         'merk' => $request->merk,
-                        'tipe' => $request->tipe,
+                        'tipe' => $request->tipe_kendaraan,
                         'warna' => $request->warna,
                         'keterangan' => 'Pemesanan ' . $request->pemesanan,
                         'jumlah' => $request->sejumlah,

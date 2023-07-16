@@ -513,108 +513,122 @@
                     <hr>
                 </div>
             </div>
-
-            @if ($dataUmumNasabah->skema_kredit == 'KKB')
-                @php
-                    $keterangan = $dataPO->keterangan;
-                    $pemesanan = str_replace('Pemesanan ', '', $keterangan);
-                @endphp
-                <div class="row" id="data-po">
-                    <div class="form-group col-md-12">
-                        <span style="color: black; font-weight: bold; font-size: 18px;">Jenis Kendaraan Roda 2 :</span>
-                    </div>
-                    <div class="form-group col-md-12">
-                        <label>Merk Kendaraan</label>
-                        <select name="id_merk" id="id_merk" class="select2 form-control" style="width: 100%;"
-                            disabled>
-                            <option value="">Pilih Merk Kendaraan</option>
-                            @foreach ($dataMerk as $item)
-                                <option value="{{ $item->id }}"
-                                    {{ $dataPOMerk->id_merk == $item->id ? 'selected' : '' }}>{{ $item->merk }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('id_merk')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                    <div class="form-group col-md-12">
-                        <label>Tipe Kendaraan</label>
-                        <select name="id_tipe" id="id_tipe" class="select2 form-control" style="width: 100%;"
-                            disabled>
-                            <option value="">Pilih Tipe</option>
-                        </select>
-                        @error('id_tipe')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                    <div class="form-group col-md-12">
-                        <label for="">Tahun</label>
-                        <input type="number" name="tahun" id="tahun"
-                            class="form-control @error('tahun') is-invalid @enderror" placeholder="Tahun Kendaraan"
-                            value="{{ $dataPO?->tahun_kendaraan ?? '' }}" min="2000" disabled>
-                        @error('tahun')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                    <div class="form-group col-md-12">
-                        <label for="">Warna</label>
-                        <input type="text" name="warna" id="warna"
-                            class="form-control @error('warna') is-invalid @enderror" placeholder="Warna Kendaraan"
-                            value="{{ $dataPO?->warna ?? '' }}" disabled>
-                        @error('warna')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                    <div class="form-group col-md-12">
-                        <span style="color: black">Keterangan :</span>
-                    </div>
-                    <div class="form-group col-md-12">
-                        <label for="">Pemesanan</label>
-                        <input type="text" name="pemesanan" id="pemesanan"
-                            class="form-control @error('pemesanan') is-invalid @enderror"
-                            placeholder="Pemesanan Kendaraan" value="{{ $pemesanan ?? '' }}" disabled>
-                        @error('pemesanan')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                    <div class="form-group col-md-12">
-                        <label for="">Sejumlah</label>
-                        <input type="number" name="sejumlah" id="sejumlah"
-                            class="form-control @error('sejumlah') is-invalid @enderror" placeholder="Jumlah Kendaraan"
-                            value="{{ $dataPO?->jumlah ?? '' }}" disabled>
-                        @error('sejumlah')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                    <div class="form-group col-md-12">
-                        <label for="">Harga</label>
-                        <input type="text" name="harga" id="harga"
-                            class="form-control rupiah @error('harga') is-invalid @enderror"
-                            placeholder="Harga Kendaraan" value="{{ $dataPO?->harga ?? '' }}" disabled>
-                        @error('harga')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                </div>
-            @endif
         </div>
 
-        <input type="hidden" id="jumlahData" name="jumlahData" hidden value="{{ count($dataAspek) + $dataIndex }}">
+        @if ($dataUmumNasabah->skema_kredit == 'KKB')
+            @php
+                $keterangan = $dataPO->keterangan;
+                $pemesanan = str_replace('Pemesanan ', '', $keterangan);
+            @endphp
+            <div class="form-wizard" data-index='1' data-done='true' id="data-po">
+            {{--  <div class="row" id="data-po">  --}}
+                <div class="form-group col-md-12">
+                    <span style="color: black; font-weight: bold; font-size: 18px;">Jenis Kendaraan Roda 2 :</span>
+                </div>
+                <div class="form-group col-md-12">
+                    <label>Merk Kendaraan</label>
+                    <input type="text" name="merk" id="merk" class="form-control @error('merk') is-invalid @enderror" value="{{ $dataPO->merk }}" placeholder="Merk kendaraan">
+                    @error('merk')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                    {{--  <label>Merk Kendaraan</label>
+                    <select name="id_merk" id="id_merk" class="select2 form-control" style="width: 100%;"
+                        disabled>
+                        <option value="">Pilih Merk Kendaraan</option>
+                        @foreach ($dataMerk as $item)
+                            <option value="{{ $item->id }}"
+                                {{ $dataPOMerk->id_merk == $item->id ? 'selected' : '' }}>{{ $item->merk }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('id_merk')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror  --}}
+                </div>
+                <div class="form-group col-md-12">
+                    <label>Tipe Kendaraan</label>
+                    <input type="text" name="tipe_kendaraan" id="tipe_kendaraan" class="form-control @error('tipe_kendaraan') is-invalid @enderror" value="{{ $dataPO->tipe }}" placeholder="Tipe kendaraan">
+                    @error('tipe_kendaraan')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                    {{--  <select name="id_tipe" id="id_tipe" class="select2 form-control" style="width: 100%;"
+                        disabled>
+                        <option value="">Pilih Tipe</option>
+                    </select>
+                    @error('id_tipe')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror  --}}
+                </div>
+                <div class="form-group col-md-12">
+                    <label for="">Tahun</label>
+                    <input type="number" name="tahun" id="tahun"
+                        class="form-control @error('tahun') is-invalid @enderror" placeholder="Tahun Kendaraan"
+                        value="{{ $dataPO?->tahun_kendaraan ?? '' }}" min="2000" disabled>
+                    @error('tahun')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="form-group col-md-12">
+                    <label for="">Warna</label>
+                    <input type="text" name="warna" id="warna"
+                        class="form-control @error('warna') is-invalid @enderror" placeholder="Warna Kendaraan"
+                        value="{{ $dataPO?->warna ?? '' }}" disabled>
+                    @error('warna')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="form-group col-md-12">
+                    <span style="color: black">Keterangan :</span>
+                </div>
+                <div class="form-group col-md-12">
+                    <label for="">Pemesanan</label>
+                    <input type="text" name="pemesanan" id="pemesanan"
+                        class="form-control @error('pemesanan') is-invalid @enderror"
+                        placeholder="Pemesanan Kendaraan" value="{{ $pemesanan ?? '' }}" disabled>
+                    @error('pemesanan')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="form-group col-md-12">
+                    <label for="">Sejumlah</label>
+                    <input type="number" name="sejumlah" id="sejumlah"
+                        class="form-control @error('sejumlah') is-invalid @enderror" placeholder="Jumlah Kendaraan"
+                        value="{{ $dataPO?->jumlah ?? '' }}" disabled>
+                    @error('sejumlah')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+                <div class="form-group col-md-12">
+                    <label for="">Harga</label>
+                    <input type="text" name="harga" id="harga"
+                        class="form-control rupiah @error('harga') is-invalid @enderror"
+                        placeholder="Harga Kendaraan" value="{{ $dataPO?->harga ?? '' }}" disabled>
+                    @error('harga')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+            </div>
+        @endif
+
+        <input type="hidden" id="jumlahData" name="jumlahData" hidden value="{{ $dataUmumNasabah->skema_kredit == 'KKB' ? count($dataAspek) + $dataIndex + 1 : count($dataAspek) + $dataIndex }}">
         <input type="hidden" id="id_pengajuan" name="id_pengajuan" value="{{ $dataUmum->id }}">
         @php
             $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor')
@@ -626,7 +640,11 @@
         @endforeach
         @foreach ($dataAspek as $key => $value)
             @php
-                $key += $dataIndex;
+                if ($dataUmumNasabah->skema_kredit == 'KKB')
+                    $key += ($dataIndex + 1);
+                else
+                    $key += $dataIndex;
+
                 // check level 2
                 $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide')
                     ->where('level', 2)
@@ -1286,7 +1304,7 @@
         @endforeach
         {{-- pendapat dan usulan --}}
         @if (Auth::user()->role == 'PBP')
-            <div class="form-wizard" data-index='{{ count($dataAspek) + $dataIndex }}' data-done='true'>
+            <div class="form-wizard" data-index='{{ $dataUmumNasabah->skema_kredit == 'KKB' ? count($dataAspek) + $dataIndex + 1 : count($dataAspek) + $dataIndex }}' data-done='true'>
                 <div class="row">
                     <div class="form-group col-md-12">
                         <label for="">Pendapat dan Usulan Staf Kredit</label>
@@ -1319,7 +1337,7 @@
                 </div>
             </div>
         @else
-            <div class="form-wizard" data-index='{{ count($dataAspek) + $dataIndex }}' data-done='true'>
+            <div class="form-wizard" data-index='{{ $dataUmumNasabah->skema_kredit == 'KKB' ? count($dataAspek) + $dataIndex + 1 : count($dataAspek) + $dataIndex }}' data-done='true'>
                 <div class="row">
                     <div class="form-group col-md-12">
                         <label for="">Pendapat dan Usulan Staf Kredit</label>
@@ -1526,7 +1544,6 @@
             } else {
                 $(".btn-next").show()
                 $(".btn-simpan").hide()
-
             }
         }
 
@@ -1582,7 +1599,7 @@
 
             console.log(next);
             cekWizard()
-            cekBtn(true)
+            cekBtn()
             setPercentage(indexNow)
         })
         setPercentage(0)

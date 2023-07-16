@@ -194,6 +194,13 @@
                         </td>
                         <td>
                             <div class="d-flex">
+                                @php
+                                    $userPBP = \App\Models\User::select('id')
+                                                ->where('id_cabang', $item->id_cabang)
+                                                ->where('role', 'PBP')
+                                                ->whereNotNull('nip')
+                                                ->first();
+                                @endphp
                                 <div class="btn-group">
                                     <button type="button" data-toggle="dropdown" class="btn btn-link">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -215,8 +222,10 @@
                                             <a href="{{ route('pengajuan.detailjawaban', $item->id_pengajuan) }}"
                                                 class="dropdown-item">Review</a>
                                             @if ($item->id_cabang == 1)
-                                                <a href="#" data-id="{{$item->id_pengajuan}}" data-tipe="pbp"
-                                                    class="dropdown-item tindak-lanjut-penyelia-link">Tindak lanjut PBP</a>
+                                                @if ($userPBP)
+                                                    <a href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbp"
+                                                        class="dropdown-item tindak-lanjut-penyelia-link">Tindak lanjut PBP</a>
+                                                @endif
                                             @else
                                                 <a href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}"
                                                     class="dropdown-item">Tindak lanjut Pincab</a>

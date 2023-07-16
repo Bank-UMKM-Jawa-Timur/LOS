@@ -199,9 +199,7 @@ class CetakSuratController extends Controller
 
         $param['dataKendaraan'] = DB::table('data_po')
             ->where('id_pengajuan', $id)
-            ->join('mst_tipe', 'mst_tipe.id', 'data_po.id_type')
-            ->join('mst_merk', 'mst_tipe.id_merk', 'mst_merk.id')
-            ->select('mst_tipe.tipe', 'mst_merk.merk')
+            ->select('tipe', 'merk')
             ->first();
         $param['dataPO'] = DB::table('data_po')
             ->where('id_pengajuan', $id)
