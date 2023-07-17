@@ -382,9 +382,19 @@ $(document).ready(function () {
     }
 
     if (new URLSearchParams(window.location.href).get("continue")) {
-        for (i = 0; i <= 7; i++) {
-            openWizard(i);
-            setPercentage(i);
+        const skema = $('#skema_kredit').val()
+
+        if (skema == 'KKB') {
+            for (i = 0; i <= 9; i++) {
+                openWizard(i);
+                setPercentage(i);
+            }
+        }
+        else {
+            for (i = 0; i <= 8; i++) {
+                openWizard(i);
+                setPercentage(i);
+            }
         }
         $("#kategori_jaminan_tambahan").trigger("change");
     }

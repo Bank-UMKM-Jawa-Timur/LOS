@@ -1276,7 +1276,8 @@ is-invalid
             var inputDisabled = $(form + " input:disabled")
             var inputReadonly = $(form + " input").find("readonly")
             var inputHidden = $(form + " input[type=hidden]")
-            var inputFile = $(form + " .filename")
+            var inputFile = $(form + " input[type=file]");
+            var inputFilename = $(form).find('.filename');
             var inputDate = $(form + " input[type=date]")
             var select = $(form + " select")
             var textarea = $(form + " textarea")
@@ -1381,7 +1382,9 @@ is-invalid
             })
             var ttlInputFileFilled = 0;
             $.each(inputFile, function(i, v) {
-                if (v.innerHTML != '') {
+                var filename = inputFilename[i].innerHTML
+                //if (v.innerHTML != '') {
+                if (v.value != "" || filename != "") {
                     ttlInputFileFilled++
                 }
             })
@@ -1407,12 +1410,12 @@ is-invalid
                     data != "" &&
                     data != "" &&
                     data != null &&
-                    data != " --Pilih Opsi-- " &&
-                    data != " --Pilih Status --" &&
-                    data != "-- Pilih Kategori Jaminan Tambahan --" &&
-                    data != "---Pilih Kabupaten----" &&
-                    data != "---Pilih Kecamatan----" &&
-                    data != "---Pilih Desa----" &&
+                    !data.includes(" --Pilih Opsi-- ") &&
+                    !data.includes(" --Pilih Status --") &&
+                    !data.includes("-- Pilih Kategori Jaminan Tambahan --") &&
+                    !data.includes("---Pilih Kabupaten----") &&
+                    !data.includes("---Pilih Kecamatan----") &&
+                    !data.includes("---Pilih Desa----") &&
                     displayValue != "" &&
                     displayValue != "none"
                 ) {
@@ -1453,7 +1456,6 @@ is-invalid
         }
 
         function cekStatusNikah() {
-
             let value = $("#status").val();
             $("#foto-ktp-istri").empty();
             $("#foto-ktp-suami").empty();
@@ -1662,7 +1664,6 @@ is-invalid
                     url: "{{ route('getKecamatan') }}?kabID=" + kabID,
                     dataType: 'JSON',
                     success: function(res) {
-                        //    //console.log(res);
                         if (res) {
                             $("#kecamatan").empty();
                             $("#desa").empty();
