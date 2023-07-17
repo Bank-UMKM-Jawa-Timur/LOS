@@ -151,7 +151,7 @@
                 <td>5.</td>
                 <td style="width: 25%">Jangka Waktu Pinjaman</td>
                 <td style="width: 2%">:</td>
-                <td>{{ intval($dataNasabah->tenor_yang_diminta) * 12 }} bulan</td>
+                <td>{{ intval($dataNasabah->tenor_yang_diminta) }} bulan</td>
             </tr>
             <tr>
                 <td>6.</td>

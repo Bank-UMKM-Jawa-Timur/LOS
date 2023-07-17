@@ -630,7 +630,7 @@ function getKaryawan($nip){
                             </label>
                             <div class="col-sm-7">
                                 <input type="text" readonly class="form-control-plaintext" id="staticEmail"
-                                    value="{{ $dataPO->merk }} {{ $dataPO->tipe }}">
+                                    value="{{ $dataPO?->merk }} {{ $dataPO?->tipe }}">
                             </div>
                         </div>
                         <hr>
@@ -645,7 +645,7 @@ function getKaryawan($nip){
                             </label>
                             <div class="col-sm-7">
                                 <input type="text" readonly class="form-control-plaintext" id="staticEmail"
-                                    value="{{ $dataPO->tahun_kendaraan }}">
+                                    value="{{ $dataPO?->tahun_kendaraan }}">
                             </div>
                         </div>
                         <hr>
@@ -660,13 +660,13 @@ function getKaryawan($nip){
                             </label>
                             <div class="col-sm-7">
                                 <input type="text" readonly class="form-control-plaintext" id="staticEmail"
-                                    value="{{ $dataPO->warna }}">
+                                    value="{{ $dataPO?->warna }}">
                             </div>
                         </div>
                         <hr>
                         <div class="form-group row">
                             @php
-                                $keterangan = $dataPO->keterangan;
+                                $keterangan = $dataPO?->keterangan;
                                 $pemesanan = str_replace("Pemesanan ", "", $keterangan);
                             @endphp
                             <label for="staticEmail" class="col-sm-3 col-form-label">Pemesanan</label>
@@ -694,7 +694,7 @@ function getKaryawan($nip){
                             </label>
                             <div class="col-sm-7">
                                 <input type="text" readonly class="form-control-plaintext" id="staticEmail"
-                                    value="{{ $dataPO->jumlah }}">
+                                    value="{{ $dataPO?->jumlah }}">
                             </div>
                         </div>
                         <hr>
@@ -709,7 +709,7 @@ function getKaryawan($nip){
                             </label>
                             <div class="col-sm-7">
                                 <input type="text" readonly class="form-control-plaintext" id="staticEmail"
-                                    value="Rp.{{ number_format($dataNasabah->harga, 2, '.', ',') }}">
+                                    value="Rp.{{ number_format($dataPO?->harga, 2, '.', ',') }}">
                             </div>
                         </div>
                     </div>

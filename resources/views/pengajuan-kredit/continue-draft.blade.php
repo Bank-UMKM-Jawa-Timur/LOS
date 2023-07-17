@@ -1233,12 +1233,17 @@ is-invalid
     <script src="{{ asset('') }}js/custom.js"></script>
     <script>
         $(document).ready(function() {
-            var firstLoad = true;
-
+            const skema = $('#skema_kredit').val()
             $('.side-wizard').on('click', function() {
-                firstLoad = false
-                for (let index = 0; index < 7; index++) {
-                    setPercentage(index);
+                if (skema == 'KKB') {
+                    for (let index = 0; index < 9; index++) {
+                        setPercentage(index);
+                    }
+                }
+                else {
+                    for (let index = 0; index < 8; index++) {
+                        setPercentage(index);
+                    }
                 }
             })
             var jumlahData = $('#jumlahData').val();
@@ -1246,6 +1251,7 @@ is-invalid
             let valSkema = $("#skema").val();
             cekStatusNikah()
             setPercentage(0);
+            visibiltyInputNPWP()
 
             @if ($duTemp->nama == null)
                 if (valSkema == null || valSkema == '') {
@@ -1288,48 +1294,74 @@ is-invalid
 
             if (valSkema == "KKB") {
                 if (formIndex == 3) {
-                    var ijinUsahaSelect = $(form).find("#ijin_usaha");
-                    if (ijinUsahaSelect.length > 0) {
-                        if (ijinUsahaSelect[0].value == 'nib' || ijinUsahaSelect[0].value == 'surat_keterangan_usaha') {
-                            if (!$("#isNpwp").attr('checked')) {
-                                subtotalInput -= 4
-                            }
+                    // var ijinUsahaSelect = $(form).find("#ijin_usaha");
+                    var ijinUsahaSelect = $("#ijin_usaha").val();
+                    console.log("length : " + ijinUsahaSelect);
+                    if (ijinUsahaSelect != "" || ijinUsahaSelect != null) {
+                        if (ijinUsahaSelect == "nib") {
                             subtotalInput -= 2;
                         }
-                        if (ijinUsahaSelect[0].value == 'tidak_ada_legalitas_usaha') {
+                        if (ijinUsahaSelect == "surat_keterangan_usaha") {
+                            if ($("#isNpwp").is(":checked")) {
+                                subtotalInput -= 2;
+                            } else {
+                                subtotalInput -= 4;
+                            }
+                        }
+                        if (ijinUsahaSelect == "tidak_ada_legalitas_usaha") {
                             subtotalInput -= 6;
                         }
                     }
                 }
-    
+        
                 if (formIndex == 4) {
-                    subtotalInput -= firstLoad ? 2 : 8;
+                    var jaminanTambSel = $("#kategori_jaminan_tambahan").val();
+                    if (jaminanTambSel == "Tanah dan Bangunan") {
+                        subtotalInput -= 5;
+                    } else if (jaminanTambSel == "Tanah") {
+                        subtotalInput -= 5;
+                    } else {
+                        subtotalInput -= 2;
+                    }
                 }
-    
+        
                 if (formIndex == 7) {
                     subtotalInput -= 1;
                 }
             }
             else {
                 if (formIndex == 2) {
-                    var ijinUsahaSelect = $(form).find("#ijin_usaha");
-                    if (ijinUsahaSelect.length > 0) {
-                        if (ijinUsahaSelect[0].value == 'nib' || ijinUsahaSelect[0].value == 'surat_keterangan_usaha') {
-                            if (!$("#isNpwp").attr('checked')) {
-                                subtotalInput -= 4
-                            }
+                    // var ijinUsahaSelect = $(form).find("#ijin_usaha");
+                    var ijinUsahaSelect = $("#ijin_usaha").val();
+                    console.log("length : " + ijinUsahaSelect);
+                    if (ijinUsahaSelect != "" || ijinUsahaSelect != null) {
+                        if (ijinUsahaSelect == "nib") {
                             subtotalInput -= 2;
                         }
-                        if (ijinUsahaSelect[0].value == 'tidak_ada_legalitas_usaha') {
+                        if (ijinUsahaSelect == "surat_keterangan_usaha") {
+                            if ($("#isNpwp").is(":checked")) {
+                                subtotalInput -= 2;
+                            } else {
+                                subtotalInput -= 4;
+                            }
+                        }
+                        if (ijinUsahaSelect == "tidak_ada_legalitas_usaha") {
                             subtotalInput -= 6;
                         }
                     }
                 }
-    
+        
                 if (formIndex == 3) {
-                    subtotalInput -= firstLoad ? 2 : 8;
+                    var jaminanTambSel = $("#kategori_jaminan_tambahan").val();
+                    if (jaminanTambSel == "Tanah dan Bangunan") {
+                        subtotalInput -= 5;
+                    } else if (jaminanTambSel == "Tanah") {
+                        subtotalInput -= 5;
+                    } else {
+                        subtotalInput -= 2;
+                    }
                 }
-    
+        
                 if (formIndex == 6) {
                     subtotalInput -= 1;
                 }
@@ -1361,10 +1393,30 @@ is-invalid
             })
             var ttlSelectFilled = 0;
             $.each(select, function(i, v) {
-                var data = v.value;
+                /*var data = v.value;
                 if (data != "" && data != '' && data != null && data != ' --Pilih Opsi-- ' && data !=
                     '--Pilih Opsi--') {
                     ttlSelectFilled++
+                }*/
+                var data = v.value;
+                var displayValue = "";
+                if (v.id != '')
+                    displayValue = $('#'+v.id).css('display');
+
+                if (
+                    data != "" &&
+                    data != "" &&
+                    data != null &&
+                    data != " --Pilih Opsi-- " &&
+                    data != " --Pilih Status --" &&
+                    data != "-- Pilih Kategori Jaminan Tambahan --" &&
+                    data != "---Pilih Kabupaten----" &&
+                    data != "---Pilih Kecamatan----" &&
+                    data != "---Pilih Desa----" &&
+                    displayValue != "" &&
+                    displayValue != "none"
+                ) {
+                    ttlSelectFilled++;
                 }
             })
             var ttlTextAreaFilled = 0;
@@ -2022,10 +2074,38 @@ is-invalid
         });
         // end item kategori jaminan tambahan cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
 
+        function visibiltyInputNPWP() {
+            const ijinUsaha = $('#ijin_usaha').val();
+            const checkboxNPWP = $('#isNpwp').is(':checked')
+            if (checkboxNPWP) {
+                if (ijinUsaha == '-- Pilih Ijin Usaha --') {
+                    $('#npwp').hide();
+                    $('#docNPWP').hide();
+                }
+                else if (ijinUsaha == 'nib' || ijinUsaha == 'surat_keterangan_usaha') {
+                    $('#npwp').show();
+                    $('#docNPWP').show();
+                }
+                else {
+                    $('#npwp').hide();
+                    $('#docNPWP').hide();
+                }
+            }
+            else {
+                $('#npwp').hide();
+                $('#docNPWP').hide();
+            }
+        }
         // milih ijin usaha
         $('#ijin_usaha').change(function(e) {
             let ijinUsaha = $(this).val();
+            $('#isNpwp').hide();
+            $('#npwpsku').hide();
+            $('#npwp').hide();
+            $('#docNPWP').hide();
             if (ijinUsaha == 'nib') {
+                $('#isNpwp').show();
+                $('#npwpsku').show();
                 $('#surat_keterangan_usaha').hide();
                 $('#surat_keterangan_usaha_id').attr('disabled', true);
                 $('#surat_keterangan_usaha_text').attr('disabled', true);
@@ -2063,7 +2143,10 @@ is-invalid
                 $('#docNPWP_text').val('');
                 $('#docNPWP_upload_file').removeAttr('disabled');
             } else if (ijinUsaha == 'surat_keterangan_usaha') {
+                $('#isNpwp').show();
                 $('#npwpsku').show();
+                $('#npwp').show();
+                $('#docNPWP').show();
                 $('#nib').hide();
                 $('#nib_id').attr('disabled', true);
                 $('#nib_text').attr('disabled', true);
@@ -2093,7 +2176,6 @@ is-invalid
 
                 var cekNpwp = "{{ temporary($duTemp->id, 79)?->opsi_text }}";
                 if (cekNpwp != '') {
-                    console.log('asd1');
                     $('#npwp').show();
                     $('#npwp_id').removeAttr('disabled');
                     $('#npwp_text').removeAttr('disabled');
@@ -2107,7 +2189,6 @@ is-invalid
                     $('#docNPWP_text').val('');
                     $('#docNPWP_upload_file').removeAttr('disabled');
                 } else {
-                    console.log('asd');
                     $('#npwp').hide();
                     $('#npwp_id').attr('disabled', true);
                     $('#npwp_text').attr('disabled', true);
@@ -2123,6 +2204,10 @@ is-invalid
                 }
 
             } else if (ijinUsaha == 'tidak_ada_legalitas_usaha') {
+                $('#isNpwp').hide();
+                $('#npwpsku').hide();
+                $('#npwp').hide();
+                $('#docNPWP').hide();
                 $('#nib').hide();
                 $('#nib_id').attr('disabled', true);
                 $('#nib_text').attr('disabled', true);
@@ -2163,6 +2248,11 @@ is-invalid
                 $('#docNPWP_text').val('');
                 $('#docNPWP_upload_file').attr('disabled', true);
             } else {
+                $('#isNpwp').hide();
+                $('#npwpsku').hide();
+                $('#npwp').hide();
+                $('#docNPWP').hide();
+
                 $('#nib').hide();
                 $('#nib_id').attr('disabled', true);
                 $('#nib_text').attr('disabled', true);
@@ -2193,6 +2283,7 @@ is-invalid
                 $('#docNPWP_text').val('');
                 $('#docNPWP_upload_file').removeAttr('disabled');
             }
+            visibiltyInputNPWP()
         });
         // end milih ijin usaha
 

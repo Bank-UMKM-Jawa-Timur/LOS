@@ -3465,23 +3465,6 @@ class PengajuanKreditController extends Controller
                             ->join('calon_nasabah as cn', 'cn.id_pengajuan', 'p.id')
                             ->select('cn.tenor_yang_diminta as tenor', 'dp.harga')
                             ->where('dp.id_pengajuan', $id)->first();
-                        // $curl = curl_init();
-                        // curl_setopt_array($curl, array(
-                        //     CURLOPT_URL => 'http://192.168.63.31:8001/api/v1/store-kredit',
-                        //     CURLOPT_RETURNTRANSFER => true,
-                        //     CURLOPT_ENCODING => '',
-                        //     CURLOPT_MAXREDIRS => 10,
-                        //     CURLOPT_TIMEOUT => 0,
-                        //     CURLOPT_FOLLOWLOCATION => true,
-                        //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                        //     CURLOPT_CUSTOMREQUEST => 'POST',
-                        //     CURLOPT_POSTFIELDS => array('pengajuan_id' => $id, 'kode_cabang' => $kode_cabang->kode_cabang, 'nomor_po' => $po, 'harga_kendaraan' => $getPo->harga, 'tenor' => intval($getPo->tenor) * 12),
-                        //     CURLOPT_HTTPHEADER => array(
-                        //         'mid_client_key: $2y$10$uK7wv2xbmgOFAWOA./7nn.RMkuDfg4FKy64ad4h0AVqKxEpt0Co2u'
-                        //     ),
-                        // ));
-                        // $response = curl_exec($curl);
-                        // curl_close($curl);
 
                         // store api
                         $host = env('DWH_HOST');
@@ -3495,7 +3478,7 @@ class PengajuanKreditController extends Controller
                                 'kode_cabang' => $kode_cabang->kode_cabang,
                                 'nomor_po' => $po,
                                 'harga_kendaraan' => $getPo->harga,
-                                'tenor' => intval($getPo->tenor) * 12
+                                'tenor' => intval($getPo->tenor)
                             ]);
 
                             $statusCode = $response->status();

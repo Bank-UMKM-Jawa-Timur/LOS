@@ -1,5 +1,4 @@
 $(document).ready(function () {
-    var firstLoad = true;
     $(".only-number").keyup(function (e) {
         this.value = this.value.replace(/[^\d]/, "");
     });
@@ -70,7 +69,6 @@ $(document).ready(function () {
                 } else {
                     subtotalInput -= 2;
                 }
-                // subtotalInput -= firstLoad ? 2 : 8;
             }
     
             if (formIndex == 7) {
@@ -108,7 +106,6 @@ $(document).ready(function () {
                 } else {
                     subtotalInput -= 2;
                 }
-                // subtotalInput -= firstLoad ? 2 : 8;
             }
     
             if (formIndex == 6) {
@@ -142,21 +139,33 @@ $(document).ready(function () {
             }
         });
         var ttlSelectFilled = 0;
-        $.each(select, function (i, v) {
+        $.each(select, function(i, v) {
+            /*var data = v.value;
+            if (data != "" && data != '' && data != null && data != ' --Pilih Opsi-- ' && data !=
+                '--Pilih Opsi--') {
+                ttlSelectFilled++
+            }*/
             var data = v.value;
-            var displayValue = $('#'+v.id).css('display');
+            var displayValue = "";
+            if (v.id != '')
+                displayValue = $('#'+v.id).css('display');
+
             if (
                 data != "" &&
                 data != "" &&
                 data != null &&
                 data != " --Pilih Opsi-- " &&
-                data != "--Pilih Opsi--" &&
+                data != " --Pilih Status --" &&
                 data != "-- Pilih Kategori Jaminan Tambahan --" &&
+                data != "---Pilih Kabupaten----" &&
+                data != "---Pilih Kecamatan----" &&
+                data != "---Pilih Desa----" &&
+                displayValue != "" &&
                 displayValue != "none"
             ) {
                 ttlSelectFilled++;
             }
-        });
+        })
         var ttlTextAreaFilled = 0;
         $.each(textarea, function (i, v) {
             if (v.value != "") {
@@ -295,7 +304,6 @@ $(document).ready(function () {
 
     $(".btn-next").click(function (e) {
         e.preventDefault();
-        firstLoad = false;
 
         let valSkema = $("#skema").val();
         var indexNow = $(".form-wizard.active").data("index");
@@ -343,7 +351,6 @@ $(document).ready(function () {
 
     $(".btn-prev").click(function (e) {
         e.preventDefault(e);
-        firstLoad = false;
 
         var indexNow = $(".form-wizard.active").data("index");
         var prev = parseInt(indexNow) - 1;

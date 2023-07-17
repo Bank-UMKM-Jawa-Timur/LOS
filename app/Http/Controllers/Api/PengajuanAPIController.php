@@ -58,7 +58,7 @@ class PengajuanAPIController extends Controller
                 'nama' => $data->nama,
                 'jumlah_kredit' => intval($data->jumlah_kredit),
                 'no_po' => $data->no_po,
-                'tenor' => intval($data->tenor_yang_diminta) * 12,
+                'tenor' => intval($data->tenor_yang_diminta),
                 'sppk' => $data->sppk ?? null,
                 'po' => $data->po ?? null,
                 'pk' => $data->pk ?? null,

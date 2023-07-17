@@ -131,7 +131,7 @@
                 <td style="vertical-align: top; width: 3%;">1.</td>
                 <td style="text-align: justify">
                     BANK memberikan kepada DEBITUR fasilitas kredit sampai sejumlah Rp. {{ rupiah($dataNasabah->jumlah_kredit) }} (...terbilang...), yang dipergunakan untuk
-                    <b><i>konsumsi (Pembelian Kendaraan Bermotor)</i></b> untuk jangka waktu {{ intval($dataNasabah->tenor_yang_diminta) * 12 }} (.................) bulan terhitung sejak tanggal .................... 
+                    <b><i>konsumsi (Pembelian Kendaraan Bermotor)</i></b> untuk jangka waktu {{ intval($dataNasabah->tenor_yang_diminta) }} (.................) bulan terhitung sejak tanggal .................... 
                     sampai dengan tanggal .................
                 </td>
             </tr>
@@ -206,7 +206,7 @@
             <tr>
                 <td style="vertical-align: top; width: 3%;">1.</td>
                 <td style="text-align: justify">
-                    Kredit sebesar yang ditentukan dalam pasal 1 ayat 1 tersebut harus dibayar lunas dalam waktu {{ intval($dataNasabah->tenor_yang_diminta) * 12 }} (................) bulan dan diangsur dalam ................. (.................)
+                    Kredit sebesar yang ditentukan dalam pasal 1 ayat 1 tersebut harus dibayar lunas dalam waktu {{ intval($dataNasabah->tenor_yang_diminta) }} (................) bulan dan diangsur dalam ................. (.................)
                     kali angsuran, setiap 1 (satu) bulan sekali seperti ditentukan dalam lampiran yang merupakan satu kesatuan dengan perjanjian ini.
                 </td>
             </tr>
