@@ -26,8 +26,18 @@
     $('.btn-next').click(function(e) {
         if($('#wizard-data-umum').hasClass('active')) saveDataUmum();
         let dataIndex = $(".form-wizard.active").attr("data-index");
+        const skema = $('#skema_kredit').val();
 
         cekValueKosong(dataIndex);
+
+        if (skema == 'KKB') {
+            if (dataIndex == 1) {
+                const id_data_po_temp = $('#id_data_po_temp').val();
+                if (id_data_po_temp == null || id_data_po_temp == '') {
+                    saveDataPOTemp();
+                }
+            }
+        }
     });
 
     $('body').on('change', 'input[type=file]', function(e) {
@@ -75,6 +85,45 @@
             success(res) {
                 console.log(res);
                 $('#idCalonNasabah').val()
+            }
+        });
+    }
+
+    function saveDataPOTemp() {
+        const url = `{{ route('pengajuan-kredit.save-data-po') }}`;
+        const id_data_po_temp = $("#id_data_po_temp").val()
+        const id_calon_nasabah = $("#idCalonNasabah").val()
+        const merk = $("#merk").val()
+        const tipe = $("#tipe_kendaraan").val()
+        const tahun = $("#tahun").val()
+        const warna = $("#warna").val()
+        const pemesanan = $("#pemesanan").val()
+        const sejumlah = $("#sejumlah").val()
+        const harga = $("#harga").val()
+        console.log('id nasabah : '+id_calon_nasabah)
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: {
+                'id_data_po_temp': id_data_po_temp,
+                'id_calon_nasabah': id_calon_nasabah,
+                'merk': merk,
+                'tipe_kendaraan': tipe,
+                'tahun': tahun,
+                'warna': warna,
+                'pemesanan': pemesanan,
+                'sejumlah': sejumlah,
+                'harga': harga,
+            },
+            success: (res) => {
+                console.log('------save data po temp-------')
+                console.log(res)
+                if (res) {
+                    if (res.data.id) {
+                        $('#id_data_po_temp').val(res.data)
+                    }
+                }
             }
         });
     }

@@ -2973,16 +2973,30 @@ class PengajuanKreditController extends Controller
         try {
             $find = array('Rp ', '.');
 
-            $po = DB::table('data_po_temp')->insert([
-                'id_calon_nasabah_temp' => $request->id_calon_nasabah,
-                'tahun_kendaraan' => $request->tahun,
-                'merk' => $request->merk,
-                'tipe' => $request->tipe_kendaraan,
-                'warna' => $request->warna,
-                'keterangan' => 'Pemesanan ' . $request->pemesanan,
-                'jumlah' => $request->sejumlah,
-                'harga' => str_replace($find, '', $request->harga)
-            ]);
+            if ($request->id_data_po_temp) {
+                $po = DB::table('data_po_temp')->where('id', $request->id_data_po_temp)->update([
+                    'id_calon_nasabah_temp' => $request->id_calon_nasabah,
+                    'tahun_kendaraan' => $request->tahun,
+                    'merk' => $request->merk,
+                    'tipe' => $request->tipe_kendaraan,
+                    'warna' => $request->warna,
+                    'keterangan' => 'Pemesanan ' . $request->pemesanan,
+                    'jumlah' => $request->sejumlah,
+                    'harga' => str_replace($find, '', $request->harga)
+                ]);
+            }
+            else {
+                $po = DB::table('data_po_temp')->insertGetId([
+                    'id_calon_nasabah_temp' => $request->id_calon_nasabah,
+                    'tahun_kendaraan' => $request->tahun,
+                    'merk' => $request->merk,
+                    'tipe' => $request->tipe_kendaraan,
+                    'warna' => $request->warna,
+                    'keterangan' => 'Pemesanan ' . $request->pemesanan,
+                    'jumlah' => $request->sejumlah,
+                    'harga' => str_replace($find, '', $request->harga)
+                ]);
+            }
         } catch (\Exception $e) {
             return response()->json(['status' => 'failed', 'message' => $e->getMessage()]);
         } catch (\Illuminate\Database\QueryException $e) {

@@ -75,7 +75,7 @@
 
     <form id="pengajuan_kredit" action="{{ route('pengajuan-kredit.store') }}" method="post" enctype="multipart/form-data">
         @csrf
-        <input type="hidden" name="idCalonNasabah" value="{{ $duTemp?->id }}">
+        <input type="hidden" name="idCalonNasabah" id="idCalonNasabah" value="{{ $duTemp?->id }}">
         <input type="hidden" name="progress" class="progress">
 
         <div class="form-wizard active" data-index='0' data-done='true' id="wizard-data-umum">
@@ -374,13 +374,14 @@ is-invalid
         @if ($skema == 'KKB' || $duTemp?->skema_kredit == 'KKB')
             <div class="form-wizard" data-index='1' data-done='true' id="wizard-data-po">
                 <div class="row">
+                    <input type="hidden" name="id_data_po_temp" id="id_data_po_temp">
                     <div class="form-group col-md-12">
                         <span style="color: black; font-weight: bold; font-size: 18px;">Jenis Kendaraan Roda 2 :</span>
                     </div>
                     <div class="form-group col-md-6">
                         <label>Merk Kendaraan</label>
                         <input type="text" name="merk" id="merk" class="form-control @error('merk') is-invalid @enderror"
-                            placeholder="Merk kendaraan" value="{{$dataPO->merk}}">
+                            placeholder="Merk kendaraan" value="{{$dataPO?->merk}}">
                         @error('merk')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -401,7 +402,7 @@ is-invalid
                     </div>
                     <div class="form-group col-md-6">
                         <label>Tipe Kendaraan</label>
-                        <input type="text" name="tipe_kendaraan" id="tipe_kendaraan" class="form-control @error('tipe_kendaraan') is-invalid @enderror" placeholder="Tipe kendaraan" value="{{$dataPO->tipe}}">
+                        <input type="text" name="tipe_kendaraan" id="tipe_kendaraan" class="form-control @error('tipe_kendaraan') is-invalid @enderror" placeholder="Tipe kendaraan" value="{{$dataPO?->tipe}}">
                         @error('tipe_kendaraan')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -1261,6 +1262,8 @@ is-invalid
         });
 
         function setPercentage(formIndex) {
+            let valSkema = $("#skema").val();
+
             var form = ".form-wizard[data-index='" + formIndex + "']"
             var inputText = $(form + " .row input[type=text]")
             var inputNumber = $(form + " input[type=number]")
@@ -1283,27 +1286,53 @@ is-invalid
 
             var subtotalInput = (totalText + totalNumber + totalFile + totalDate + totalSelect + totalTextArea)
 
-            if (formIndex == 2) {
-                var ijinUsahaSelect = $(form).find("#ijin_usaha");
-                if (ijinUsahaSelect.length > 0) {
-                    if (ijinUsahaSelect[0].value == 'nib' || ijinUsahaSelect[0].value == 'surat_keterangan_usaha') {
-                        if (!$("#isNpwp").attr('checked')) {
-                            subtotalInput -= 4
+            if (valSkema == "KKB") {
+                if (formIndex == 3) {
+                    var ijinUsahaSelect = $(form).find("#ijin_usaha");
+                    if (ijinUsahaSelect.length > 0) {
+                        if (ijinUsahaSelect[0].value == 'nib' || ijinUsahaSelect[0].value == 'surat_keterangan_usaha') {
+                            if (!$("#isNpwp").attr('checked')) {
+                                subtotalInput -= 4
+                            }
+                            subtotalInput -= 2;
                         }
-                        subtotalInput -= 2;
-                    }
-                    if (ijinUsahaSelect[0].value == 'tidak_ada_legalitas_usaha') {
-                        subtotalInput -= 6;
+                        if (ijinUsahaSelect[0].value == 'tidak_ada_legalitas_usaha') {
+                            subtotalInput -= 6;
+                        }
                     }
                 }
+    
+                if (formIndex == 4) {
+                    subtotalInput -= firstLoad ? 2 : 8;
+                }
+    
+                if (formIndex == 7) {
+                    subtotalInput -= 1;
+                }
             }
-
-            if (formIndex == 3) {
-                subtotalInput -= firstLoad ? 2 : 8;
-            }
-
-            if (formIndex == 6) {
-                subtotalInput -= 1;
+            else {
+                if (formIndex == 2) {
+                    var ijinUsahaSelect = $(form).find("#ijin_usaha");
+                    if (ijinUsahaSelect.length > 0) {
+                        if (ijinUsahaSelect[0].value == 'nib' || ijinUsahaSelect[0].value == 'surat_keterangan_usaha') {
+                            if (!$("#isNpwp").attr('checked')) {
+                                subtotalInput -= 4
+                            }
+                            subtotalInput -= 2;
+                        }
+                        if (ijinUsahaSelect[0].value == 'tidak_ada_legalitas_usaha') {
+                            subtotalInput -= 6;
+                        }
+                    }
+                }
+    
+                if (formIndex == 3) {
+                    subtotalInput -= firstLoad ? 2 : 8;
+                }
+    
+                if (formIndex == 6) {
+                    subtotalInput -= 1;
+                }
             }
 
             var ttlInputTextFilled = 0;
