@@ -850,6 +850,12 @@
                                     ->where('id_cabang', $dataUmum->id_cabang)
                                     ->where('role', 'PBO')
                                     ->first();
+
+        $userPBP = \App\Models\User::select('id')
+                                    ->where('id_cabang', $dataUmum->id_cabang)
+                                    ->where('role', 'PBP')
+                                    ->whereNotNull('nip')
+                                    ->first();
     @endphp
     @if ($userPBO)
         <table style="border-spacing:10px;">
@@ -863,16 +869,18 @@
         </table>
     @endif
     @if (Auth::user()->id_cabang == '1')
+        @if ($userPBP)
+            <table style="border-spacing:10px;">
+                <tr>
+                    <td style="width: 100%;" ><b><u><span>PENDAPAT dan USULAN PBP</span></u></b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>{{$komentar->komentar_pbp}}</td>
+                </tr>
+            </table>
+        @endif
         <br>
-        <table style="border-spacing:10px;">
-            <tr>
-                <td style="width: 100%;" ><b><u><span>PENDAPAT dan USULAN PBP</span></u></b>
-                </td>
-            </tr>
-            <tr>
-                <td>{{$komentar->komentar_pbp}}</td>
-            </tr>
-        </table>
     @endif
     <br>
     <table style="border-spacing:10px;">
