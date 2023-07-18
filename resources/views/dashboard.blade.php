@@ -411,6 +411,9 @@
                                         <h1>{{ \App\Models\PengajuanModel::whereIn('posisi', ['Pincab', 'Selesai', 'Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->where('id_penyelia', auth()->user()->id)->count() }}
                                         </h1>
                                     @endif
+                                @elseif (auth()->user()->role == 'PBO')
+                                    <h1>{{ \App\Models\PengajuanModel::whereIn('posisi', ['PBP', 'Pincab', 'Selesai', 'Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->where('id_pbo', auth()->user()->id)->count() }}
+                                    </h1>
                                 @elseif (auth()->user()->role == 'PBP')
                                     <h1>{{ \App\Models\PengajuanModel::whereIn('posisi', ['Pincab', 'Selesai', 'Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->where('id_pbp', auth()->user()->id)->count() }}
                                     </h1>
@@ -444,6 +447,9 @@
                                     </h1>
                                 @elseif (auth()->user()->role == 'Penyelia Kredit')
                                     <h1>{{ \App\Models\PengajuanModel::join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->where('pengajuan.posisi', 'Review Penyelia')->where('pengajuan.id_cabang', $user->id_cabang)->where('pengajuan.id_penyelia', auth()->user()->id)->count() }}
+                                    </h1>
+                                @elseif (auth()->user()->role == 'PBO')
+                                    <h1>{{ \App\Models\PengajuanModel::join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->where('pengajuan.posisi', 'PBO')->where('pengajuan.id_cabang', $user->id_cabang)->where('id_pbo', auth()->user()->id)->count() }}
                                     </h1>
                                 @elseif (auth()->user()->role == 'PBP')
                                     <h1>{{ \App\Models\PengajuanModel::join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->where('pengajuan.posisi', 'PBP')->where('pengajuan.id_cabang', $user->id_cabang)->where('id_pbp', auth()->user()->id)->count() }}
