@@ -35,6 +35,8 @@
                 const id_data_po_temp = $('#id_data_po_temp').val();
                 if (id_data_po_temp == null || id_data_po_temp == '') {
                     saveDataPOTemp();
+                }else{
+                    saveDataPOTemp();
                 }
             }
         }
@@ -91,7 +93,7 @@
 
     function saveDataPOTemp() {
         const url = `{{ route('pengajuan-kredit.save-data-po') }}`;
-        const id_data_po_temp = $(".id-data-po-temp").val()
+        const id_data_po_temp = $("#id_data_po_temp").val()
         const id_calon_nasabah = $("#idCalonNasabah").val()
         const merk = $("#merk").val()
         const tipe = $("#tipe_kendaraan").val()
@@ -101,7 +103,7 @@
         const sejumlah = $("#sejumlah").val()
         const harga = $("#harga").val()
         console.log('id nasabah : '+id_calon_nasabah)
-        console.log('id po temp : ' + id_data_po_temp)
+        console.log('id po temp : '+id_data_po_temp)
 
         $.ajax({
             url: url,
@@ -120,12 +122,10 @@
             success: (res) => {
                 console.log('------save data po temp-------')
                 console.log(res)
+                console.log("CEKK id : "+id_data_po_temp);
                 if (res) {
-                    if (res.data.id) {
+                    if (res.data) {
                         $('#id_data_po_temp').val(res.data)
-                    }else{
-                        $('#id_data_po_temp').val(res.data)
-                        console.log("TESSS" + res.data);
                     }
                 }
             }
