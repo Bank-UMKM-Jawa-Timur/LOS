@@ -1,1148 +1,1070 @@
 @extends('layouts.template')
 
 @php
-    $status = ['belum menikah', 'menikah', 'duda', 'janda'];
+$status = ['belum menikah', 'menikah', 'duda', 'janda'];
 
-    $sectors = ['perdagangan', 'perindustrian', 'dll'];
+$sectors = ['perdagangan', 'perindustrian', 'dll'];
 
-    function rupiah($angka)
-    {
-        if ($angka != null || $angka != '') {
-            $hasil_rupiah = number_format($angka, 0, ',', '.');
-            return $hasil_rupiah;
-        }
-    }
+function rupiah($angka)
+{
+if ($angka != null || $angka != '') {
+$hasil_rupiah = number_format($angka, 0, ',', '.');
+return $hasil_rupiah;
+}
+}
 
-    $dataIndex = match ($skema) {
-        'PKPJ' => 1,
-        'KKB' => 2,
-        'Talangan Umroh' => 1,
-        'Prokesra' => 1,
-        'Kusuma' => 1,
-        null => 1,
-    };
-    // dd($dataIndex);
+$dataIndex = match ($skema) {
+'PKPJ' => 1,
+'KKB' => 2,
+'Talangan Umroh' => 1,
+'Prokesra' => 1,
+'Kusuma' => 1,
+null => 1,
+};
+// dd($dataIndex);
 @endphp
 
 @section('content')
-    @include('components.notification')
-    @include('layouts.popup')
-    <style>
-        .form-wizard .sub label:not(.info) {
-            font-weight: 400;
-        }
+@include('components.notification')
+@include('layouts.popup')
+<style>
+    .form-wizard .sub label:not(.info) {
+        font-weight: 400;
+    }
 
-        .form-wizard h4 {
-            color: #1f1d62;
-            font-weight: 600 !important;
-            font-size: 20px;
-            /* border-bottom: 1px solid #dc3545; */
-        }
+    .form-wizard h4 {
+        color: #1f1d62;
+        font-weight: 600 !important;
+        font-size: 20px;
+        /* border-bottom: 1px solid #dc3545; */
+    }
 
-        .form-wizard h5 {
-            color: #1f1d62;
-            font-weight: 600 !important;
-            font-size: 18px;
-            /* border-bottom: 1px solid #dc3545; */
-        }
+    .form-wizard h5 {
+        color: #1f1d62;
+        font-weight: 600 !important;
+        font-size: 18px;
+        /* border-bottom: 1px solid #dc3545; */
+    }
 
-        .form-wizard h6 {
-            color: #c2c7cf;
-            font-weight: 600 !important;
-            font-size: 16px;
-            /* border-bottom: 1px solid #dc3545; */
-        }
+    .form-wizard h6 {
+        color: #c2c7cf;
+        font-weight: 600 !important;
+        font-size: 16px;
+        /* border-bottom: 1px solid #dc3545; */
+    }
 
-        span.filename {
-            position: absolute;
-            top: 40px;
-            left: 139px;
-            background: white;
-        }
+    span.filename {
+        position: absolute;
+        top: 40px;
+        left: 139px;
+        background: white;
+    }
 
-        .file-wrapper span.filename {
-            top: 10px;
-        }
-    </style>
+    .file-wrapper span.filename {
+        top: 10px;
+    }
+</style>
 
-    <form id="pengajuan_kredit" action="{{ route('pengajuan-kredit.store') }}" method="post" enctype="multipart/form-data">
-        @csrf
-        <input type="hidden" name="id_nasabah" value="" id="id_nasabah">
-        <input type="hidden" name="progress" class="progress">
+<form id="pengajuan_kredit" action="{{ route('pengajuan-kredit.store') }}" method="post" enctype="multipart/form-data">
+    @csrf
+    <input type="hidden" name="id_nasabah" value="" id="id_nasabah">
+    <input type="hidden" name="progress" class="progress">
 
-        <div class="form-wizard active" data-index='0' data-done='true' id="wizard-data-umum">
-            <div class="row">
-                {{-- Input hidden for Skema Kredit --}}
-                <input type="hidden" name="skema_kredit" id="skema_kredit"
-                    @if ($skema != null) value="{{ $skema ?? '' }}" @endif>
+    <div class="form-wizard active" data-index='0' data-done='true' id="wizard-data-umum">
+        <div class="row">
+            {{-- Input hidden for Skema Kredit --}}
+            <input type="hidden" name="skema_kredit" id="skema_kredit" @if ($skema !=null) value="{{ $skema ?? '' }}"
+                @endif>
 
-                <div class="form-group col-md-6">
-                    <label for="">Nama Lengkap</label>
-                    <input type="text" name="name" id="nama"
-                        class="form-control @error('name') is-invalid @enderror" placeholder="Nama sesuai dengan KTP"
-                        value="" required maxlength="255">
-                    @error('name')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
+            <div class="form-group col-md-6">
+                <label for="">Nama Lengkap</label>
+                <input type="text" name="name" id="nama" class="form-control @error('name') is-invalid @enderror"
+                    placeholder="Nama sesuai dengan KTP" value="" required maxlength="255">
+                @error('name')
+                <div class="invalid-feedback">
+                    {{ $message }}
                 </div>
-                <div class="form-group col-md-6">
-                    <label for="">{{ $itemSP->nama }}</label>
-                    <input type="hidden" name="id_item_file[{{ $itemSP->id }}]" value="{{ $itemSP->id }}"
-                        id="">
-                    <input type="file" name="upload_file[{{ $itemSP->id }}]" data-id=""
-                        placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-control limit-size" id="foto_sp">
-                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
-                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
-                        <div class="invalid-feedback">
-                            {{ $errors->first('dataLevelDua.' . $key) }}
-                        </div>
-                    @endif
-                    <span class="filename" style="display: inline;"></span>
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="">Kabupaten</label>
-                    <select name="kabupaten" class="form-control @error('name') is-invalid @enderror select2"
-                        id="kabupaten">
-                        <option value="">---Pilih Kabupaten----</option>
-                        @foreach ($dataKabupaten as $item)
-                            <option value="{{ $item->id }}">{{ $item->kabupaten }}</option>
-                        @endforeach
-                    </select>
-                    @error('kabupaten')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="">Kecamatan</label>
-                    <select name="kec" id="kecamatan" class="form-control @error('kec') is-invalid @enderror  select2">
-                        <option value="">---Pilih Kecamatan----</option>
-                    </select>
-                    @error('kec')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="">Desa</label>
-                    <select name="desa" id="desa" class="form-control @error('desa') is-invalid @enderror select2">
-                        <option value="">---Pilih Desa----</option>
-                    </select>
-                    @error('desa')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-12">
-                    <label for="">Alamat Rumah</label>
-                    <textarea name="alamat_rumah" class="form-control @error('alamat_rumah') is-invalid @enderror" maxlength="255"
-                        id="alamat_rumah" cols="30" rows="4" placeholder="Alamat Rumah disesuaikan dengan KTP"></textarea>
-                    @error('alamat_rumah')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                    <hr>
-                </div>
-                <div class="form-group col-md-12">
-                    <label for="">Alamat Usaha</label>
-                    <textarea name="alamat_usaha" class="form-control @error('alamat_usaha') is-invalid @enderror" maxlength="255"
-                        id="alamat_usaha" cols="30" rows="4" placeholder="Alamat Usaha"></textarea>
-                    @error('alamat_usaha')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="">Tempat Lahir</label>
-                    <input type="text" maxlength="255" name="tempat_lahir" id="tempat_lahir"
-                        class="form-control @error('tempat_lahir') is-invalid @enderror" placeholder="Tempat Lahir"
-                        value="">
-                    @error('tempat_lahir')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="">Tanggal Lahir</label>
-                    <input type="text" name="tanggal_lahir" id="tanggal_lahir"
-                        class="form-control datepicker @error('tanggal_lahir') is-invalid @enderror" placeholder="dd-mm-yyyy"
-                        value="">
-                    @error('tanggal_lahir')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="">Status</label>
-                    <select name="status" id="status"
-                        class="form-control @error('status') is-invalid @enderror select2">
-                        <option value=""> --Pilih Status --</option>
-                        @foreach ($status as $sts)
-                            <option value="{{ $sts }}">{{ ucfirst($sts) }}</option>
-                        @endforeach
-                    </select>
-                    @error('alamat_rumah')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-12">
-                    <label for="">No. KTP</label>
-                    <input type="number" maxlength="16"
-                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                        onkeydown="return event.keyCode !== 69" name="no_ktp"
-                        class="form-control @error('no_ktp')
-is-invalid
-@enderror" id="no_ktp"
-                        placeholder="Masukkan 16 digit No. KTP" value="">
-                    @error('no_ktp')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="" id="foto-ktp-suami">
-                </div>
-                <div class="" id="foto-ktp-istri">
-                </div>
-                <div class="" id="foto-ktp-nasabah">
-                </div>
-                <div class="form-group col-md-12">
-                    <label for="">Sektor Kredit</label>
-                    <select name="sektor_kredit" id="sektor_kredit"
-                        class="form-control @error('sektor_kredit') is-invalid @enderror select2">
-                        <option value=""> --Pilih Sektor Kredit -- </option>
-                        @foreach ($sectors as $sector)
-                            <option value="{{ $sector }}">{{ ucfirst($sector) }}</option>
-                        @endforeach
-                    </select>
-                    @error('sektor_kredit')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="">{{ $itemSlik->nama }}</label>
-                    <select name="dataLevelDua[{{ $itemSlik->id }}]" id="dataLevelDua" class="form-control select2"
-                        data-id_item={{ $itemSlik->id }}>
-                        <option value=""> --Pilih Data -- </option>
-                        @foreach ($itemSlik->option as $itemJawaban)
-                            <option value="{{ $itemJawaban->skor . '-' . $itemJawaban->id }}">
-                                {{ $itemJawaban->option }}</option>
-                        @endforeach
-                    </select>
-                    <div id="item{{ $itemSlik->id }}">
-
-                    </div>
-                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
-                        <div class="invalid-feedback">
-                            {{ $errors->first('dataLevelDua.' . $key) }}
-                        </div>
-                    @endif
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="">{{ $itemP->nama }}</label>
-                    <input type="hidden" name="id_item_file[{{ $itemP->id }}]" value="{{ $itemP->id }}"
-                        id="">
-                    <input type="file" name="upload_file[{{ $itemP->id }}]" id="file_slik" data-id=""
-                        placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-control limit-size">
-                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
-                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
-                        <div class="invalid-feedback">
-                            {{ $errors->first('dataLevelDua.' . $key) }}
-                        </div>
-                    @endif
-                    <span class="filename" style="display: inline;"></span>
-                    {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
-                </div>
-                <div class="form-group col-md-12">
-                    <label for="">Jenis Usaha</label>
-                    <textarea name="jenis_usaha" class="form-control @error('jenis_usaha') is-invalid @enderror" maxlength="255"
-                        id="" cols="30" rows="4" placeholder="Jenis Usaha secara spesifik"></textarea>
-                    @error('jenis_usaha')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="">Jumlah Kredit yang diminta</label>
-                    <input type="text" name="jumlah_kredit" id="jumlah_kredit" class="form-control rupiah"
-                        value="">
-                    {{-- <textarea name="jumlah_kredit" class="form-control @error('jumlah_kredit') is-invalid @enderror" id="" cols="30"
-                        rows="4" placeholder="Jumlah Kredit"></textarea> --}}
-                    @error('jumlah_kredit')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-6">
-                    <label for="">Tenor Yang Diminta</label>
-                    {{--  <select name="tenor_yang_diminta" id="tenor_yang_diminta"
-                        class="form-control select2 @error('tenor_yang_diminta') is-invalid @enderror" required>
-                        <option value="">-- Pilih Tenor --</option>
-                        @for ($i = 1; $i <= 10; $i++)
-                            <option value="{{ $i }}"> {{ $i . ' tahun' }} </option>
-                        @endfor
-                    </select>  --}}
-                    <div class="input-group">
-                        <input type="text" name="tenor_yang_diminta" id="tenor_yang_diminta"
-                            class="form-control only-number @error('tenor_yang_diminta') is-invalid @enderror"
-                            aria-describedby="addon_tenor_yang_diminta" required maxlength="3" />
-                        <div class="input-group-append">
-                            <div class="input-group-text" id="addon_tenor_yang_diminta">Bulan</div>
-                        </div>
-                    </div>
-                    @error('tenor_yang_diminta')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-12">
-                    <label for="">Tujuan Kredit</label>
-                    <textarea name="tujuan_kredit" class="form-control @error('tujuan_kredit') is-invalid @enderror" maxlength="255"
-                        id="tujuan_kredit" cols="30" rows="4" placeholder="Tujuan Kredit"></textarea>
-                    @error('tujuan_kredit')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-12">
-                    <label for="">Jaminan yang disediakan</label>
-                    <textarea name="jaminan" class="form-control @error('jaminan') is-invalid @enderror" maxlength="255" id=""
-                        cols="30" rows="4" placeholder="Jaminan yang disediakan"></textarea>
-                    @error('jaminan')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-12">
-                    <label for="">Hubungan Bank</label>
-                    <textarea name="hubungan_bank" class="form-control @error('hubungan_bank') is-invalid @enderror" maxlength="255"
-                        id="hubungan_bank" cols="30" rows="4" placeholder="Hubungan dengan Bank"></textarea>
-                    @error('hubungan_bank')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-12">
-                    <label for="">Hasil Verifikasi</label>
-                    <textarea name="hasil_verifikasi" class="form-control @error('hasil_verifikasi') is-invalid @enderror"
-                        maxlength="255" id="hasil_verivikasi" cols="30" rows="4"
-                        placeholder="Hasil Verifikasi Karakter Umum"></textarea>
-                    @error('hasil_verifikasi')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
+                @enderror
             </div>
-        </div>
-
-        @if ($skema == 'KKB')
-            <div class="form-wizard" data-index='1' data-done='true' id="wizard-data-po">
-                <div class="row">
-                    <input type="hidden" name="id_data_po_temp" id="id_data_po_temp">
-                    <div class="form-group col-md-12">
-                        <span style="color: black; font-weight: bold; font-size: 18px;">Jenis Kendaraan Roda 2 :</span>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label>Merk Kendaraan</label>
-                        <input type="text" name="merk" id="merk" class="form-control @error('merk') is-invalid @enderror" placeholder="Merk kendaraan">
-                        @error('merk')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                        {{--  <select name="id_merk" id="id_merk" class="select2 form-control" style="width: 100%;"
-                            required>
-                            <option value="">Pilih Merk Kendaraan</option>
-                            @foreach ($dataMerk as $item)
-                                <option value="{{ $item->id }}">{{ $item->merk }}</option>
-                            @endforeach
-                        </select>
-                        @error('id_merk')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror  --}}
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label>Tipe Kendaraan</label>
-                        <input type="text" name="tipe_kendaraan" id="tipe_kendaraan" class="form-control @error('tipe_kendaraan') is-invalid @enderror" placeholder="Tipe kendaraan">
-                        @error('tipe_kendaraan')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                        {{--  <select name="id_tipe" id="id_tipe" class="select2 form-control" style="width: 100%;"
-                            required>
-                            <option value="">Pilih Tipe</option>
-                        </select>
-                        @error('id_tipe')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror  --}}
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="">Tahun</label>
-                        <input type="number" name="tahun" id="tahun"
-                            class="form-control @error('tahun') is-invalid @enderror" placeholder="Tahun Kendaraan"
-                            value="" min="2000">
-                        @error('tahun')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="">Warna</label>
-                        <input type="text" maxlength="25" name="warna" id="warna"
-                            class="form-control @error('warna') is-invalid @enderror" placeholder="Warna Kendaraan"
-                            value="">
-                        @error('warna')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                    <div class="form-group col-md-12">
-                        <span style="color: black">Keterangan :</span>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="">Pemesanan</label>
-                        <input type="text" maxlength="255" name="pemesanan" id="pemesanan"
-                            class="form-control @error('pemesanan') is-invalid @enderror"
-                            placeholder="Pemesanan Kendaraan" value="">
-                        @error('pemesanan')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="">Sejumlah</label>
-                        <input type="number" name="sejumlah" id="sejumlah"
-                            class="form-control @error('sejumlah') is-invalid @enderror" placeholder="Jumlah Kendaraan"
-                            value="">
-                        @error('sejumlah')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="">Harga</label>
-                        <input type="text" name="harga" id="harga"
-                            class="form-control rupiah @error('harga') is-invalid @enderror"
-                            placeholder="Harga Kendaraan" value="">
-                        @error('harga')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
+            <div class="form-group col-md-6">
+                <label for="">{{ $itemSP->nama }}</label>
+                <input type="hidden" name="id_item_file[{{ $itemSP->id }}]" value="{{ $itemSP->id }}" id="">
+                <input type="file" name="upload_file[{{ $itemSP->id }}]" data-id=""
+                    placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-control limit-size" id="foto_sp">
+                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                <div class="invalid-feedback">
+                    {{ $errors->first('dataLevelDua.' . $key) }}
                 </div>
+                @endif
+                <span class="filename" style="display: inline;"></span>
             </div>
-        @endif
-
-        <input type="text" id="jumlahData" name="jumlahData" hidden value="{{ count($dataAspek) + $dataIndex }}">
-
-        @foreach ($dataAspek as $key => $value)
-            @php
-
-                $key += $dataIndex;
-                // check level 2
-                $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'level', 'opsi_jawaban', 'id_parent')
-                    ->where('level', 2)
-                    ->where('id_parent', $value->id)
-                    ->get();
-                // check level 4
-                $dataLevelEmpat = \App\Models\ItemModel::select('id', 'nama', 'level', 'opsi_jawaban', 'id_parent')
-                    ->where('level', 4)
-                    ->where('id_parent', $value->id)
-                    ->get();
-            @endphp
-            {{-- level level 2 --}}
-            <div class="form-wizard" data-index='{{ $key }}' data-done='true'>
-
-                <div class="row">
-                    @foreach ($dataLevelDua as $item)
-                        @php
-                            $idLevelDua = str_replace(' ', '_', strtolower($item->nama));
-                        @endphp
-                        {{-- item ijin usaha --}}
-                        @if ($item->nama == 'Ijin Usaha')
-                            <div class="row col-md-12">
-                                <div class="form-group col-md-6">
-                                    <label for="">{{ $item->nama }}</label>
-                                    <select name="ijin_usaha" id="ijin_usaha" class="form-control" required>
-                                        <option value="">-- Pilih Ijin Usaha --</option>
-                                        <option value="nib">NIB</option>
-                                        <option value="surat_keterangan_usaha">Surat Keterangan Usaha</option>
-                                        <option value="tidak_ada_legalitas_usaha">Tidak Ada Legalitas Usaha</option>
-                                    </select>
-                                </div>
-                                <div class="form-group col-md-6" id="npwpsku" style="display:none ">
-                                    <label for="">Memiliki NPWP</label>
-                                    <br>
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <input type="checkbox" id="isNpwp" class="form-control">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row col-md-12">
-                                <div class="form-group col-md-6" id="nib">
-                                    <label for="">NIB</label>
-                                    <input type="hidden" name="id_level[77]" value="77" id="nib_id">
-                                    <input type="hidden" name="opsi_jawaban[77]" value="input text"
-                                        id="nib_opsi_jawaban">
-                                    <input type="text" maxlength="255" name="informasi[77]" id="nib_text"
-                                        placeholder="Masukkan informasi" class="form-control" value="">
-                                </div>
-
-                                <div class="form-group col-md-6" id="docNIB">
-                                    <label for="">{{ $itemNIB->nama }}</label>
-                                    <input type="hidden" name="id_item_file[{{ $itemNIB->id }}]"
-                                        value="{{ $itemNIB->id }}" id="docNIB_id">
-                                    <input type="file" name="upload_file[{{ $itemNIB->id }}]" data-id=""
-                                        placeholder="Masukkan informasi {{ $itemNIB->nama }}"
-                                        class="form-control limit-size" id="file_nib">
-                                    <span class="invalid-tooltip" style="display: none" id="docNIB_text">Besaran file
-                                        tidak boleh lebih dari 5 MB</span>
-                                    @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
-                                        <div class="invalid-feedback">
-                                            {{ $errors->first('dataLevelTiga.' . $key) }}
-                                        </div>
-                                    @endif
-                                    <span class="filename" style="display: inline;"></span>
-                                </div>
-
-                                <div class="form-group col-md-6" id="surat_keterangan_usaha">
-                                    <label for="">Surat Keterangan Usaha</label>
-                                    <input type="hidden" name="id_level[78]" value="78"
-                                        id="surat_keterangan_usaha_id">
-                                    <input type="hidden" name="opsi_jawaban[78]" value="input text"
-                                        id="surat_keterangan_usaha_opsi_jawaban">
-                                    <input type="text" maxlength="255" name="informasi[78]"
-                                        id="surat_keterangan_usaha_text" placeholder="Masukkan informasi"
-                                        class="form-control">
-                                </div>
-
-                                <div class="form-group col-md-6" id="docSKU">
-                                    <label for="">{{ $itemSKU->nama }}</label>
-                                    <input type="hidden" name="id_item_file[{{ $itemSKU->id }}]"
-                                        value="{{ $itemSKU->id }}" id="docSKU_id">
-                                    <input type="file" name="upload_file[{{ $itemSKU->id }}]"
-                                        id="surat_keterangan_usaha_file" data-id=""
-                                        placeholder="Masukkan informasi {{ $itemSKU->nama }}"
-                                        class="form-control limit-size">
-                                    <span class="invalid-tooltip" style="display: none" id="docSKU_text">Besaran file
-                                        tidak boleh lebih dari 5 MB</span>
-                                    @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
-                                        <div class="invalid-feedback">
-                                            {{ $errors->first('dataLevelTiga.' . $key) }}
-                                        </div>
-                                    @endif
-                                    <span class="filename" style="display: inline;"></span>
-                                </div>
-                            </div>
-                        @elseif($item->nama == 'NPWP')
-                            <div class="row col-md-12">
-                                <div class="form-group col-md-6" id="npwp">
-                                    <label for="">NPWP</label>
-                                    <input type="hidden" name="id_level[79]" value="79" id="npwp_id">
-                                    <input type="hidden" name="opsi_jawaban[79]" value="input text"
-                                        id="npwp_opsi_jawaban">
-                                    <input type="text" maxlength="255" name="informasi[79]" id="npwp_text"
-                                        placeholder="Masukkan informasi" class="form-control" value="">
-                                </div>
-
-                                <div class="form-group col-md-6" id="docNPWP">
-                                    <label for="">{{ $itemNPWP->nama }}</label>
-                                    <input type="hidden" name="id_item_file[{{ $itemNPWP->id }}]"
-                                        value="{{ $itemNPWP->id }}" id="docNPWP_id">
-                                    <input type="file" name="upload_file[{{ $itemNPWP->id }}]" id="npwp_file"
-                                        data-id="" placeholder="Masukkan informasi {{ $itemNPWP->nama }}"
-                                        class="form-control limit-size">
-                                    <span class="invalid-tooltip" style="display: none" id="docNPWP_text">Besaran file
-                                        tidak boleh lebih dari 5 MB</span>
-                                    @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
-                                        <div class="invalid-feedback">
-                                            {{ $errors->first('dataLevelTiga.' . $key) }}
-                                        </div>
-                                    @endif
-                                    <span class="filename" style="display: inline;"></span>
-                                </div>
-                            </div>
-                        @else
-                            @if ($item->opsi_jawaban == 'input text')
-                                <div class="form-group col-md-6">
-                                    <label for="">{{ $item->nama }}</label>
-                                    <input type="hidden" name="opsi_jawaban[{{ $item->id }}]"
-                                        value="{{ $item->opsi_jawaban }}" id="">
-                                    <input type="hidden" name="id_level[{{ $item->id }}]"
-                                        value="{{ $item->id }}" id="">
-                                    <input type="text" maxlength="255" name="informasi[{{ $item->id }}]"
-                                        id="{{ $idLevelDua }}" placeholder="Masukkan informasi {{ $item->nama }}"
-                                        class="form-control" value="">
-                                </div>
-                            @elseif ($item->opsi_jawaban == 'number')
-                                @if ($item->nama == 'Repayment Capacity')
-                                    <div class="form-group col-md-6">
-                                        <label for="">{{ $item->nama }}</label>
-                                        <input type="hidden" name="opsi_jawaban[{{ $item->id }}]"
-                                            value="{{ $item->opsi_jawaban }}" id="">
-                                        <input type="hidden" name="id_level[{{ $item->id }}]"
-                                            value="{{ $item->id }}" id="">
-                                        <input type="text" maxlength="255" name="informasi[{{ $item->id }}]"
-                                            id="{{ $idLevelDua }}"
-                                            placeholder="Masukkan informasi {{ $item->nama }}" class="form-control"
-                                            value="">
-                                    </div>
-                                @else
-                                    @if ($item->nama == 'Omzet Penjualan' || $item->nama == 'Installment')
-                                        <div class="form-group col-md-6">
-                                            <label for="">{{ $item->nama }}(Perbulan)</label>
-                                            <input type="hidden" name="opsi_jawaban[{{ $item->id }}]"
-                                                value="{{ $item->opsi_jawaban }}" id="">
-                                            <input type="hidden" name="id_level[{{ $item->id }}]"
-                                                value="{{ $item->id }}" id="">
-                                            <input type="text" maxlength="255" step="any"
-                                                name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
-                                                placeholder="Masukkan informasi {{ $item->nama }}"
-                                                class="form-control rupiah" value="">
-                                        </div>
-                                    @else
-                                        <div class="form-group col-md-6">
-                                            <label for="">{{ $item->nama }}</label>
-                                            <input type="hidden" name="opsi_jawaban[{{ $item->id }}]"
-                                                value="{{ $item->opsi_jawaban }}" id="">
-                                            <input type="hidden" name="id_level[{{ $item->id }}]"
-                                                value="{{ $item->id }}" id="">
-                                            <input type="text" maxlength="255" step="any"
-                                                name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
-                                                placeholder="Masukkan informasi {{ $item->nama }}"
-                                                class="form-control only-number" value="">
-                                        </div>
-                                    @endif
-                                @endif
-                            @elseif ($item->opsi_jawaban == 'persen')
-                                <div class="form-group col-md-6">
-                                    <label for="">{{ $item->nama }}</label>
-                                    <input type="hidden" name="opsi_jawaban[{{ $item->id }}]"
-                                        value="{{ $item->opsi_jawaban }}" id="">
-                                    <input type="hidden" name="id_level[{{ $item->id }}]"
-                                        value="{{ $item->id }}" id="">
-                                    <div class="input-group mb-3">
-                                        <input type="number" step="any" name="informasi[{{ $item->id }}]"
-                                            id="{{ $idLevelDua }}"
-                                            placeholder="Masukkan informasi {{ $item->nama }}" class="form-control"
-                                            aria-label="Recipient's username" aria-describedby="basic-addon2"
-                                            value=""
-                                            onkeydown="return event.keyCode !== 69">
-                                        <div class="input-group-append">
-                                            <span class="input-group-text" id="basic-addon2">%</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            @elseif ($item->opsi_jawaban == 'file')
-                                <div class="form-group col-md-6">
-                                    <label for="">{{ $item->nama }}</label>
-                                    {{-- <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" --}}
-                                    {{-- id="{{ $idLevelDua }}"> --}}
-                                    <input type="hidden" name="id_item_file[{{ $item->id }}]"
-                                        value="{{ $item->id }}" id="">
-                                    <input type="file" name="upload_file[{{ $item->id }}]"
-                                        id="{{ $idLevelDua }}" data-id=""
-                                        placeholder="Masukkan informasi {{ $item->nama }}"
-                                        class="form-control limit-size">
-                                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15
-                                        MB</span>
-                                    <span class="filename" style="display: inline;"></span>
-                                </div>
-                            @elseif ($item->opsi_jawaban == 'long text')
-                                <div class="form-group col-md-6">
-                                    <label for="">{{ $item->nama }}</label>
-                                    <input type="hidden" name="opsi_jawaban[{{ $item->id }}]"
-                                        value="{{ $item->opsi_jawaban }}" id="">
-                                    <input type="hidden" name="id_level[{{ $item->id }}]"
-                                        value="{{ $item->id }}" id="">
-                                    <textarea name="informasi[{{ $item->id }}]" rows="4" id="{{ $idLevelDua }}" maxlength="255"
-                                        class="form-control" placeholder="Masukkan informasi {{ $item->nama }}"></textarea>
-                                </div>
-                            @endif
-
-                            @php
-                                $dataJawaban = \App\Models\OptionModel::where('option', '!=', '-')
-                                    ->where('id_item', $item->id)
-                                    ->get();
-                                $dataOption = \App\Models\OptionModel::where('option', '=', '-')
-                                    ->where('id_item', $item->id)
-                                    ->get();
-                                // check level 3
-                                $dataLevelTiga = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent')
-                                    ->where('level', 3)
-                                    ->where('id_parent', $item->id)
-                                    ->get();
-                            @endphp
-
-                            @foreach ($dataOption as $itemOption)
-                                @if ($itemOption->option == '-')
-                                    <div class="form-group col-md-12">
-                                        <h4>{{ $item->nama }}</h4>
-                                    </div>
-                                @endif
-                            @endforeach
-
-                            @if (count($dataJawaban) != 0)
-                                {{-- <div class="form-group col-md-6">
-                                    <label for="">{{ $item->nama }}</label>
-                                    <select name="dataLevelDua[]" id="dataLevelDua" class="form-control cek-sub-column"
-                                        data-id_item={{ $item->id }}>
-                                        <option value=""> --Pilih Data -- </option>
-                                        @foreach ($dataJawaban as $itemJawaban)
-                                            <option
-                                                value="{{ ($itemJawaban->skor == null ? 'kosong' : $itemJawaban->skor) . '-' . $itemJawaban->id }}">
-                                                {{ $itemJawaban->option }}</option>
-                                        @endforeach
-                                    </select>
-                                    <div id="item{{ $item->id }}">
-
-                                    </div>
-                                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
-                                        <div class="invalid-feedback">
-                                            {{ $errors->first('dataLevelDua.' . $key) }}
-                                        </div>
-                                    @endif
-                                </div> --}}
-
-                                <div
-                                    class="{{ $idLevelDua == 'persentase_kebutuhan_kredit_opsi' || $idLevelDua == 'repayment_capacity_opsi' ? '' : 'form-group col-md-6' }}">
-                                    <label for=""
-                                        id="{{ $idLevelDua . '_label' }}">{{ $item->nama }}</label>
-
-                                    <select name="dataLevelDua[{{ $item->id }}]" id="{{ $idLevelDua }}"
-                                        class="form-control cek-sub-column" data-id_item={{ $item->id }}>
-                                        <option value=""> --Pilih Opsi-- </option>
-                                        @foreach ($dataJawaban as $key => $itemJawaban)
-                                            <option id="{{ $idLevelDua . '_' . $key }}"
-                                                value="{{ ($itemJawaban->skor == null ? 'kosong' : $itemJawaban->skor) . '-' . $itemJawaban->id }}">
-                                                {{ $itemJawaban->option }}</option>
-                                        @endforeach
-                                    </select>
-                                    <div id="item{{ $item->id }}">
-
-                                    </div>
-                                </div>
-                            @endif
-
-                            @foreach ($dataLevelTiga as $keyTiga => $itemTiga)
-                                @php
-                                    $idLevelTiga = str_replace(' ', '_', strtolower($itemTiga->nama));
-                                @endphp
-                                @if ($itemTiga->nama == 'Kategori Jaminan Utama')
-                                    {{-- <div class="form-group col-md-6">
-                                        <label for="">{{ $itemTiga->nama }}</label>
-                                        <select name="kategori_jaminan_utama" id="kategori_jaminan_utama"
-                                            class="form-control">
-                                            <option value="">-- Pilih Kategori Jaminan Utama --</option>
-                                            <option value="Tanah">Tanah</option>
-                                            <option value="Kendaraan Bermotor">Kendaraan Bermotor</option>
-                                            <option value="Tanah dan Bangunan">Tanah dan Bangunan</option>
-                                            <option value="Stock">Stock</option>
-                                            <option value="Piutang">Piutang</option>
-                                        </select>
-                                        {{-- <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
-                                        <input type="hidden" name="opsi_jawaban[]" value="{{ $itemTiga->opsi_jawaban }}"
-                                            id="">
-                                        <input type="text" name="informasi[]" id="" placeholder="Masukkan informasi"
-                                            class="form-control">
-                                    </div>
-
-                                    <div class="form-group col-md-6" id="select_kategori_jaminan_utama">
-
-                                    </div> --}}
-                                @elseif ($itemTiga->nama == 'Kategori Jaminan Tambahan')
-                                    <div class="form-group col-md-6">
-                                        <label for="">{{ $itemTiga->nama }}</label>
-                                        <select name="kategori_jaminan_tambahan" id="kategori_jaminan_tambahan"
-                                            class="form-control" required>
-                                            <option value="">-- Pilih Kategori Jaminan Tambahan --</option>
-                                            <option value="Tidak Memiliki Jaminan Tambahan">Tidak Memiliki Jaminan Tambahan
-                                            </option>
-                                            <option value="Tanah">Tanah</option>
-                                            <option value="Kendaraan Bermotor">Kendaraan Bermotor</option>
-                                            <option value="Tanah dan Bangunan">Tanah dan Bangunan</option>
-                                        </select>
-                                        {{-- <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
-                                        <input type="hidden" name="opsi_jawaban[]" value="{{ $itemTiga->opsi_jawaban }}"
-                                            id="">
-                                        <input type="text" name="informasi[]" id="" placeholder="Masukkan informasi"
-                                            class="form-control"> --}}
-                                    </div>
-                                    <div class="form-group col-md-6" id="select_kategori_jaminan_tambahan"></div>
-                                @elseif ($itemTiga->nama == 'Bukti Pemilikan Jaminan Utama')
-                                    {{-- <div class="form-group col-md-12">
-                                        <h5>{{ $itemTiga->nama }}</h5>
-                                    </div>
-                                    <div id="bukti_pemilikan_jaminan_utama" class="form-group col-md-12 row">
-
-                                    </div> --}}
-                                @elseif ($itemTiga->nama == 'Bukti Pemilikan Jaminan Tambahan')
-                                    <div class="form-group col-md-12" id="jaminan_tambahan">
-                                        <h5>{{ $itemTiga->nama }}</h5>
-                                    </div>
-                                    <div id="bukti_pemilikan_jaminan_tambahan" class="form-group col-md-12 row">
-
-                                    </div>
-                                @else
-                                    @if ($itemTiga->opsi_jawaban == 'input text')
-                                        <div class="form-group col-md-6">
-                                            <label for="">{{ $itemTiga->nama }}</label>
-                                            <input type="hidden" name="id_level[{{ $itemTiga->id }}]"
-                                                value="{{ $itemTiga->id }}" id="">
-                                            <input type="hidden" name="opsi_jawaban[{{ $itemTiga->id }}]"
-                                                value="{{ $itemTiga->opsi_jawaban }}" id="">
-                                            <input type="text" maxlength="255" name="informasi[{{ $itemTiga->id }}]"
-                                                placeholder="Masukkan informasi" class="form-control"
-                                                id="{{ $idLevelTiga }}" value="">
-                                        </div>
-                                    @elseif ($itemTiga->opsi_jawaban == 'number')
-                                        <div class="form-group col-md-6">
-                                            <label for="">{{ $itemTiga->nama }}</label>
-                                            <input type="hidden" name="opsi_jawaban[{{ $itemTiga->id }}]"
-                                                value="{{ $itemTiga->opsi_jawaban }}" id="">
-                                            <input type="hidden" name="id_level[{{ $itemTiga->id }}]"
-                                                value="{{ $itemTiga->id }}" id="">
-                                            <input type="text" step="any" name="informasi[{{ $itemTiga->id }}]"
-                                                id="{{ $idLevelTiga }}"
-                                                placeholder="Masukkan informasi {{ $itemTiga->nama }}"
-                                                class="form-control rupiah" value="">
-                                        </div>
-                                    @elseif ($itemTiga->opsi_jawaban == 'persen')
-                                        <div class="form-group col-md-6">
-                                            @if ($itemTiga->nama == 'Ratio Tenor Asuransi')
-                                            @else
-                                                <label for="">{{ $itemTiga->nama }}</label>
-                                                <input type="hidden" name="opsi_jawaban[{{ $itemTiga->id }}]"
-                                                    value="{{ $itemTiga->opsi_jawaban }}" id="">
-                                                <input type="hidden" name="id_level[{{ $itemTiga->id }}]"
-                                                    value="{{ $itemTiga->id }}" id="">
-                                                <div class="input-group mb-3">
-                                                    <input type="number" step="any"
-                                                        name="informasi[{{ $itemTiga->id }}]" id="{{ $idLevelTiga }}"
-                                                        placeholder="Masukkan informasi {{ $itemTiga->nama }}"
-                                                        class="form-control" aria-label="Recipient's username"
-                                                        aria-describedby="basic-addon2" value="">
-                                                    <div class="input-group-append">
-                                                        <span class="input-group-text" id="basic-addon2">%</span>
-                                                    </div>
-                                                </div>
-                                            @endif
-                                        </div>
-                                    @elseif ($itemTiga->opsi_jawaban == 'file')
-                                        <div class="form-group col-md-6 file-wrapper item-{{ $itemTiga->id }}">
-                                            <label for="">{{ $itemTiga->nama }}</label>
-                                            <div class="row file-input">
-                                                <div class="col-md-9">
-                                                    <input type="hidden" name="id_item_file[{{ $itemTiga->id }}]"
-                                                        value="{{ $itemTiga->id }}" id="">
-                                                    <input type="file" name="upload_file[{{ $itemTiga->id }}]"
-                                                        id="{{ $idLevelTiga }}" data-id=""
-                                                        placeholder="Masukkan informasi {{ $itemTiga->nama }}"
-                                                        class="form-control limit-size file-usaha" accept="image/*">
-                                                    <span class="invalid-tooltip" style="display: none">Maximum upload
-                                                        file size is 15 MB</span>
-                                                    <span class="filename" style="display: inline;"></span>
-                                                </div>
-                                                <div class="col-1">
-                                                    <button class="btn btn-sm btn-success btn-add-file" type="button"
-                                                        data-id="{{ $itemTiga->id }}">
-                                                        <i class="fa fa-plus"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="col-1">
-                                                    <button class="btn btn-sm btn-danger btn-del-file" type="button"
-                                                        data-id="{{ $itemTiga->id }}">
-                                                        <i class="fa fa-minus"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    @elseif ($itemTiga->opsi_jawaban == 'long text')
-                                        <div class="form-group col-md-6">
-                                            <label for="">{{ $itemTiga->nama }}</label>
-                                            <input type="hidden" name="opsi_jawaban[{{ $itemTiga->id }}]"
-                                                value="{{ $itemTiga->opsi_jawaban }}" id="">
-                                            <input type="hidden" name="id_level[{{ $itemTiga->id }}]"
-                                                value="{{ $itemTiga->id }}" id="">
-                                            <textarea name="informasi[{{ $itemTiga->id }}]" rows="4" id="{{ $idLevelTiga }}" maxlength="255"
-                                                class="form-control" placeholder="Masukkan informasi {{ $itemTiga->nama }}"></textarea>
-                                        </div>
-                                    @endif
-
-                                    @php
-                                        // check  jawaban level tiga
-                                        $dataJawabanLevelTiga = \App\Models\OptionModel::where('option', '!=', '-')
-                                            ->where('id_item', $itemTiga->id)
-                                            ->get();
-                                        $dataOptionTiga = \App\Models\OptionModel::where('option', '=', '-')
-                                            ->where('id_item', $itemTiga->id)
-                                            ->get();
-                                        // check level empat
-                                        $dataLevelEmpat = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent')
-                                            ->where('level', 4)
-                                            ->where('id_parent', $itemTiga->id)
-                                            ->get();
-                                    @endphp
-
-                                    @foreach ($dataOptionTiga as $itemOptionTiga)
-                                        @if ($itemOptionTiga->option == '-')
-                                            <div class="form-group col-md-12">
-                                                <h5>{{ $itemTiga->nama }}</h5>
-                                            </div>
-                                        @endif
-                                    @endforeach
-                                    {{-- @foreach ($dataOptionEmpat as $itemOptionEmpat)
-                                    @if ($itemOptionEmpat->option == '-')
-                                        <div class="form-group col-md-12">
-                                            <h5>{{ $itemTiga->nama }}</h5>
-                                        </div>
-                                    @endif
-                                @endforeach --}}
-                                    @if (count($dataJawabanLevelTiga) != 0)
-                                        @if ($itemTiga->nama != 'Pengikatan Jaminan Utama')
-                                            <div
-                                                class="{{ $idLevelTiga == 'ratio_tenor_asuransi_opsi' || $idLevelTiga == 'ratio_coverage_opsi' ? '' : 'form-group col-md-6' }}">
-                                                <label for=""
-                                                    id="{{ $idLevelTiga . '_label' }}">{{ $itemTiga->nama }}</label>
-
-                                                <select name="dataLevelTiga[{{ $itemTiga->id }}]"
-                                                    id="{{ $idLevelTiga }}" class="form-control cek-sub-column"
-                                                    data-id_item={{ $itemTiga->id }}>
-                                                    <option value=""> --Pilih Opsi-- </option>
-                                                    @foreach ($dataJawabanLevelTiga as $key => $itemJawabanTiga)
-                                                        <option id="{{ $idLevelTiga . '_' . $key }}"
-                                                            value="{{ ($itemJawabanTiga->skor == null ? 'kosong' : $itemJawabanTiga->skor) . '-' . $itemJawabanTiga->id }}">
-                                                            {{ $itemJawabanTiga->option }}</option>
-                                                    @endforeach
-                                                </select>
-                                                <div id="item{{ $itemTiga->id }}">
-
-                                                </div>
-                                            </div>
-                                        @endif
-                                    @endif
-
-                                    @foreach ($dataLevelEmpat as $keyEmpat => $itemEmpat)
-                                        @php
-                                            $idLevelEmpat = str_replace(' ', '_', strtolower($itemEmpat->nama));
-                                        @endphp
-
-                                        @if ($itemEmpat->opsi_jawaban == 'input text')
-                                            <div class="form-group col-md-6">
-                                                <label for="">{{ $itemEmpat->nama }}</label>
-                                                <input type="hidden" name="id_level[{{ $itemEmpat->id }}]"
-                                                    value="{{ $itemEmpat->id }}" id="">
-                                                <input type="hidden" name="opsi_jawaban[{{ $itemEmpat->id }}]"
-                                                    value="{{ $itemEmpat->opsi_jawaban }}" id="">
-                                                @if ($itemEmpat->nama == 'Masa Berlaku Asuransi Penjaminan')
-                                                    <div class="input-group">
-                                                        <input type="text" maxlength="255"
-                                                            name="informasi[{{ $itemEmpat->id }}]"
-                                                            id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan_/_ht' ? '' : $idLevelEmpat }}"
-                                                            placeholder="Masukkan informasi"
-                                                            class="form-control only-number" value="">
-                                                        <div class="input-group-append">
-                                                            <div class="input-group-text" id="addon_tenor_yang_diminta">
-                                                                Bulan</div>
-                                                        </div>
-                                                    </div>
-                                                @else
-                                                    <input type="text" maxlength="255"
-                                                        name="informasi[{{ $itemEmpat->id }}]"
-                                                        id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan_/_ht' ? '' : $idLevelEmpat }}"
-                                                        placeholder="Masukkan informasi" class="form-control"
-                                                        value="">
-                                                @endif
-                                            </div>
-                                        @elseif ($itemEmpat->opsi_jawaban == 'number')
-                                            <div class="form-group col-md-6">
-                                                <label for="">{{ $itemEmpat->nama }}</label>
-                                                <input type="hidden" name="opsi_jawaban[{{ $itemEmpat->id }}]"
-                                                    value="{{ $itemEmpat->opsi_jawaban }}" id="">
-                                                <input type="hidden" name="id_level[{{ $itemEmpat->id }}]"
-                                                    value="{{ $itemEmpat->id }}" id="">
-                                                <input type="text" step="any"
-                                                    name="informasi[{{ $itemEmpat->id }}]"
-                                                    id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan_/_ht' ? 'nilai_asuransi_penjaminan' : $idLevelEmpat }}"
-                                                    placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
-                                                    class="form-control rupiah" value="">
-                                            </div>
-                                        @elseif ($itemEmpat->opsi_jawaban == 'persen')
-                                            <div class="form-group col-md-6">
-                                                <label for="">{{ $itemEmpat->nama }}</label>
-                                                <input type="hidden" name="opsi_jawaban[{{ $itemEmpat->id }}]"
-                                                    value="{{ $itemEmpat->opsi_jawaban }}" id="">
-                                                <input type="hidden" name="id_level[{{ $itemEmpat->id }}]"
-                                                    value="{{ $itemEmpat->id }}" id="">
-                                                <div class="input-group mb-3">
-                                                    <input type="number" step="any"
-                                                        name="informasi[{{ $itemEmpat->id }}]"
-                                                        id="{{ $idLevelEmpat }}"
-                                                        placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
-                                                        class="form-control" aria-label="Recipient's username"
-                                                        aria-describedby="basic-addon2" value="">
-                                                    <div class="input-group-append">
-                                                        <span class="input-group-text" id="basic-addon2">%</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @elseif ($itemEmpat->opsi_jawaban == 'file')
-                                            <div class="form-group col-md-6">
-                                                <label for="">{{ $itemEmpat->nama }}</label>
-                                                {{-- <input type="hidden" name="opsi_jawaban[]"
-                                                    value="{{ $itemEmpat->opsi_jawaban }}" id=""> --}}
-                                                <input type="hidden" name="id_item_file[{{ $itemEmpat->id }}]"
-                                                    value="{{ $itemEmpat->id }}" id="">
-                                                <input type="file" id="{{ $idLevelEmpat }}"
-                                                    name="upload_file[{{ $itemEmpat->id }}]" data-id=""
-                                                    placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
-                                                    class="form-control limit-size">
-                                                <span class="invalid-tooltip" style="display: none">Maximum upload file
-                                                    size is 15 MB</span>
-                                                <span class="filename" style="display: inline;"></span>
-                                            </div>
-                                        @elseif ($itemEmpat->opsi_jawaban == 'long text')
-                                            <div class="form-group col-md-6">
-                                                <label for="">{{ $itemEmpat->nama }}</label>
-                                                <input type="hidden" name="opsi_jawaban[{{ $itemEmpat->id }}]"
-                                                    value="{{ $itemEmpat->opsi_jawaban }}" id="">
-                                                <input type="hidden" name="id_level[{{ $itemEmpat->id }}]"
-                                                    value="{{ $itemEmpat->id }}" id="">
-                                                <textarea name="informasi[{{ $itemEmpat->id }}]" rows="4" id="{{ $idLevelEmpat }}" maxlength="255"
-                                                    class="form-control" placeholder="Masukkan informasi {{ $itemEmpat->nama }}"></textarea>
-                                            </div>
-                                        @endif
-                                        @php
-                                            // check level empat
-                                            $dataJawabanLevelEmpat = \App\Models\OptionModel::where('option', '!=', '-')
-                                                ->where('id_item', $itemEmpat->id)
-                                                ->get();
-                                            $dataOptionEmpat = \App\Models\OptionModel::where('option', '=', '-')
-                                                ->where('id_item', $itemEmpat->id)
-                                                ->get();
-                                        @endphp
-
-                                        @foreach ($dataOptionEmpat as $itemOptionEmpat)
-                                            @if ($itemOptionEmpat->option == '-')
-                                                <div class="form-group col-md-12">
-                                                    <h6>{{ $itemEmpat->nama }}</h6>
-                                                </div>
-                                            @endif
-                                        @endforeach
-
-                                        @if (count($dataJawabanLevelEmpat) != 0)
-                                            <div class="form-group col-md-6">
-                                                <label for="">{{ $itemEmpat->nama }}</label>
-                                                <select name="dataLevelEmpat[{{ $itemEmpat->id }}]"
-                                                    id="{{ $idLevelEmpat }}" class="form-control cek-sub-column"
-                                                    data-id_item={{ $itemEmpat->id }}>
-                                                    <option value=""> --Pilih Opsi -- </option>
-                                                    @foreach ($dataJawabanLevelEmpat as $itemJawabanEmpat)
-                                                        <option id="{{ $idLevelEmpat . '_' . $key }}"
-                                                            value="{{ ($itemJawabanEmpat->skor == null ? 'kosong' : $itemJawabanEmpat->skor) . '-' . $itemJawabanEmpat->id }}">
-                                                            {{ $itemJawabanEmpat->option }}</option>
-                                                    @endforeach
-                                                </select>
-                                                <div id="item{{ $itemEmpat->id }}">
-
-                                                </div>
-                                            </div>
-                                        @endif
-                                    @endforeach
-                                @endif
-                            @endforeach
-                        @endif
+            <div class="form-group col-md-4">
+                <label for="">Kabupaten</label>
+                <select name="kabupaten" class="form-control @error('name') is-invalid @enderror select2"
+                    id="kabupaten">
+                    <option value="">---Pilih Kabupaten----</option>
+                    @foreach ($dataKabupaten as $item)
+                    <option value="{{ $item->id }}">{{ $item->kabupaten }}</option>
                     @endforeach
+                </select>
+                @error('kabupaten')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+            </div>
+            <div class="form-group col-md-4">
+                <label for="">Kecamatan</label>
+                <select name="kec" id="kecamatan" class="form-control @error('kec') is-invalid @enderror  select2">
+                    <option value="">---Pilih Kecamatan----</option>
+                </select>
+                @error('kec')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+            </div>
+            <div class="form-group col-md-4">
+                <label for="">Desa</label>
+                <select name="desa" id="desa" class="form-control @error('desa') is-invalid @enderror select2">
+                    <option value="">---Pilih Desa----</option>
+                </select>
+                @error('desa')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+            </div>
+            <div class="form-group col-md-12">
+                <label for="">Alamat Rumah</label>
+                <textarea name="alamat_rumah" class="form-control @error('alamat_rumah') is-invalid @enderror"
+                    maxlength="255" id="alamat_rumah" cols="30" rows="4"
+                    placeholder="Alamat Rumah disesuaikan dengan KTP"></textarea>
+                @error('alamat_rumah')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+                <hr>
+            </div>
+            <div class="form-group col-md-12">
+                <label for="">Alamat Usaha</label>
+                <textarea name="alamat_usaha" class="form-control @error('alamat_usaha') is-invalid @enderror"
+                    maxlength="255" id="alamat_usaha" cols="30" rows="4" placeholder="Alamat Usaha"></textarea>
+                @error('alamat_usaha')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+            </div>
+            <div class="form-group col-md-4">
+                <label for="">Tempat Lahir</label>
+                <input type="text" maxlength="255" name="tempat_lahir" id="tempat_lahir"
+                    class="form-control @error('tempat_lahir') is-invalid @enderror" placeholder="Tempat Lahir"
+                    value="">
+                @error('tempat_lahir')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+            </div>
+            <div class="form-group col-md-4">
+                <label for="">Tanggal Lahir</label>
+                <input type="text" name="tanggal_lahir" id="tanggal_lahir"
+                    class="form-control datepicker @error('tanggal_lahir') is-invalid @enderror"
+                    placeholder="dd-mm-yyyy" value="">
+                @error('tanggal_lahir')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+            </div>
+            <div class="form-group col-md-4">
+                <label for="">Status</label>
+                <select name="status" id="status" class="form-control @error('status') is-invalid @enderror select2">
+                    <option value=""> --Pilih Status --</option>
+                    @foreach ($status as $sts)
+                    <option value="{{ $sts }}">{{ ucfirst($sts) }}</option>
+                    @endforeach
+                </select>
+                @error('alamat_rumah')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+            </div>
+            <div class="form-group col-md-12">
+                <label for="">No. KTP</label>
+                <input type="number" maxlength="16"
+                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                    onkeydown="return event.keyCode !== 69" name="no_ktp" class="form-control @error('no_ktp')
+is-invalid
+@enderror" id="no_ktp" placeholder="Masukkan 16 digit No. KTP" value="">
+                @error('no_ktp')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+            </div>
+            <div class="" id="foto-ktp-suami">
+            </div>
+            <div class="" id="foto-ktp-istri">
+            </div>
+            <div class="" id="foto-ktp-nasabah">
+            </div>
+            <div class="form-group col-md-12">
+                <label for="">Sektor Kredit</label>
+                <select name="sektor_kredit" id="sektor_kredit"
+                    class="form-control @error('sektor_kredit') is-invalid @enderror select2">
+                    <option value=""> --Pilih Sektor Kredit -- </option>
+                    @foreach ($sectors as $sector)
+                    <option value="{{ $sector }}">{{ ucfirst($sector) }}</option>
+                    @endforeach
+                </select>
+                @error('sektor_kredit')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+            </div>
+            <div class="form-group col-md-6">
+                <label for="">{{ $itemSlik->nama }}</label>
+                <select name="dataLevelDua[{{ $itemSlik->id }}]" id="dataLevelDua" class="form-control select2"
+                    data-id_item={{ $itemSlik->id }}>
+                    <option value=""> --Pilih Data -- </option>
+                    @foreach ($itemSlik->option as $itemJawaban)
+                    <option value="{{ $itemJawaban->skor . '-' . $itemJawaban->id }}">
+                        {{ $itemJawaban->option }}</option>
+                    @endforeach
+                </select>
+                <div id="item{{ $itemSlik->id }}">
 
-                    <div class="form-group col-md-12">
-                        <hr style="border: 0.2px solid #E3E6EA;">
-                        <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
-                        <input type="hidden" name="id_aspek[{{ $value->id }}]" value="{{ $value->id }}">
-                        <textarea name="pendapat_per_aspek[{{ $value->id }}]"
-                            class="form-control @error('pendapat_per_aspek') is-invalid @enderror" id="" maxlength="255"
-                            cols="30" rows="4" placeholder="Pendapat Per Aspek"></textarea>
-                        @error('pendapat_per_aspek')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
+                </div>
+                @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                <div class="invalid-feedback">
+                    {{ $errors->first('dataLevelDua.' . $key) }}
+                </div>
+                @endif
+            </div>
+            <div class="form-group col-md-6">
+                <label for="">{{ $itemP->nama }}</label>
+                <input type="hidden" name="id_item_file[{{ $itemP->id }}]" value="{{ $itemP->id }}" id="">
+                <input type="file" name="upload_file[{{ $itemP->id }}]" id="file_slik" data-id=""
+                    placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-control limit-size">
+                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                <div class="invalid-feedback">
+                    {{ $errors->first('dataLevelDua.' . $key) }}
+                </div>
+                @endif
+                <span class="filename" style="display: inline;"></span>
+                {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
+            </div>
+            <div class="form-group col-md-12">
+                <label for="">Jenis Usaha</label>
+                <textarea name="jenis_usaha" class="form-control @error('jenis_usaha') is-invalid @enderror"
+                    maxlength="255" id="" cols="30" rows="4" placeholder="Jenis Usaha secara spesifik"></textarea>
+                @error('jenis_usaha')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+            </div>
+            <div class="form-group col-md-6">
+                <label for="">Jumlah Kredit yang diminta</label>
+                <input type="text" name="jumlah_kredit" id="jumlah_kredit" class="form-control rupiah" value="">
+                {{-- <textarea name="jumlah_kredit" class="form-control @error('jumlah_kredit') is-invalid @enderror"
+                    id="" cols="30" rows="4" placeholder="Jumlah Kredit"></textarea> --}}
+                @error('jumlah_kredit')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+            </div>
+            <div class="form-group col-md-6">
+                <label for="">Tenor Yang Diminta</label>
+                {{-- <select name="tenor_yang_diminta" id="tenor_yang_diminta"
+                    class="form-control select2 @error('tenor_yang_diminta') is-invalid @enderror" required>
+                    <option value="">-- Pilih Tenor --</option>
+                    @for ($i = 1; $i <= 10; $i++) <option value="{{ $i }}"> {{ $i . ' tahun' }} </option>
+                        @endfor
+                </select> --}}
+                <div class="input-group">
+                    <input type="text" name="tenor_yang_diminta" id="tenor_yang_diminta"
+                        class="form-control only-number @error('tenor_yang_diminta') is-invalid @enderror"
+                        aria-describedby="addon_tenor_yang_diminta" required maxlength="3" />
+                    <div class="input-group-append">
+                        <div class="input-group-text" id="addon_tenor_yang_diminta">Bulan</div>
                     </div>
                 </div>
-
+                @error('tenor_yang_diminta')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
             </div>
-        @endforeach
-        {{-- pendapat dan usulan --}}
-        <div class="form-wizard" data-index='{{ count($dataAspek) + $dataIndex }}' data-done='true'>
-            <div class="row">
-                <div class="form-group col-md-12">
-                    <label for="">Pendapat dan Usulan</label>
-                    <textarea name="komentar_staff" class="form-control @error('komentar_staff') is-invalid @enderror" maxlength="255"
-                        id="" cols="30" rows="4" placeholder="Pendapat dan Usulan Staf/Analis Kredit"></textarea>
-                    @error('komentar_staff')
-                        <div class="invalid-feedback">
-                            {{ $message }}
+            <div class="form-group col-md-12">
+                <label for="">Tujuan Kredit</label>
+                <textarea name="tujuan_kredit" class="form-control @error('tujuan_kredit') is-invalid @enderror"
+                    maxlength="255" id="tujuan_kredit" cols="30" rows="4" placeholder="Tujuan Kredit"></textarea>
+                @error('tujuan_kredit')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+            </div>
+            <div class="form-group col-md-12">
+                <label for="">Jaminan yang disediakan</label>
+                <textarea name="jaminan" class="form-control @error('jaminan') is-invalid @enderror" maxlength="255"
+                    id="" cols="30" rows="4" placeholder="Jaminan yang disediakan"></textarea>
+                @error('jaminan')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+            </div>
+            <div class="form-group col-md-12">
+                <label for="">Hubungan Bank</label>
+                <textarea name="hubungan_bank" class="form-control @error('hubungan_bank') is-invalid @enderror"
+                    maxlength="255" id="hubungan_bank" cols="30" rows="4" placeholder="Hubungan dengan Bank"></textarea>
+                @error('hubungan_bank')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+            </div>
+            <div class="form-group col-md-12">
+                <label for="">Hasil Verifikasi</label>
+                <textarea name="hasil_verifikasi" class="form-control @error('hasil_verifikasi') is-invalid @enderror"
+                    maxlength="255" id="hasil_verivikasi" cols="30" rows="4"
+                    placeholder="Hasil Verifikasi Karakter Umum"></textarea>
+                @error('hasil_verifikasi')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+            </div>
+        </div>
+    </div>
+
+    @if ($skema == 'KKB')
+    <div class="form-wizard" data-index='1' data-done='true' id="wizard-data-po">
+        <div class="row">
+            <input type="hidden" name="id_data_po_temp" id="id_data_po_temp">
+            <div class="form-group col-md-12">
+                <span style="color: black; font-weight: bold; font-size: 18px;">Jenis Kendaraan Roda 2 :</span>
+            </div>
+            <div class="form-group col-md-6">
+                <label>Merk Kendaraan</label>
+                <input type="text" name="merk" id="merk" class="form-control @error('merk') is-invalid @enderror"
+                    placeholder="Merk kendaraan">
+                @error('merk')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+                {{-- <select name="id_merk" id="id_merk" class="select2 form-control" style="width: 100%;" required>
+                    <option value="">Pilih Merk Kendaraan</option>
+                    @foreach ($dataMerk as $item)
+                    <option value="{{ $item->id }}">{{ $item->merk }}</option>
+                    @endforeach
+                </select>
+                @error('id_merk')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror --}}
+            </div>
+            <div class="form-group col-md-6">
+                <label>Tipe Kendaraan</label>
+                <input type="text" name="tipe_kendaraan" id="tipe_kendaraan"
+                    class="form-control @error('tipe_kendaraan') is-invalid @enderror" placeholder="Tipe kendaraan">
+                @error('tipe_kendaraan')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+                {{-- <select name="id_tipe" id="id_tipe" class="select2 form-control" style="width: 100%;" required>
+                    <option value="">Pilih Tipe</option>
+                </select>
+                @error('id_tipe')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror --}}
+            </div>
+            <div class="form-group col-md-6">
+                <label for="">Tahun</label>
+                <input type="number" name="tahun" id="tahun" class="form-control @error('tahun') is-invalid @enderror"
+                    placeholder="Tahun Kendaraan" value="" min="2000">
+                @error('tahun')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+            </div>
+            <div class="form-group col-md-6">
+                <label for="">Warna</label>
+                <input type="text" maxlength="25" name="warna" id="warna"
+                    class="form-control @error('warna') is-invalid @enderror" placeholder="Warna Kendaraan" value="">
+                @error('warna')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+            </div>
+            <div class="form-group col-md-12">
+                <span style="color: black">Keterangan :</span>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="">Pemesanan</label>
+                <input type="text" maxlength="255" name="pemesanan" id="pemesanan"
+                    class="form-control @error('pemesanan') is-invalid @enderror" placeholder="Pemesanan Kendaraan"
+                    value="">
+                @error('pemesanan')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+            </div>
+            <div class="form-group col-md-6">
+                <label for="">Sejumlah</label>
+                <input type="number" name="sejumlah" id="sejumlah"
+                    class="form-control @error('sejumlah') is-invalid @enderror" placeholder="Jumlah Kendaraan"
+                    value="">
+                @error('sejumlah')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+            </div>
+            <div class="form-group col-md-6">
+                <label for="">Harga</label>
+                <input type="text" name="harga" id="harga"
+                    class="form-control rupiah @error('harga') is-invalid @enderror" placeholder="Harga Kendaraan"
+                    value="">
+                @error('harga')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+            </div>
+        </div>
+    </div>
+    @endif
+
+    <input type="text" id="jumlahData" name="jumlahData" hidden value="{{ count($dataAspek) + $dataIndex }}">
+
+    @foreach ($dataAspek as $key => $value)
+    @php
+
+    $key += $dataIndex;
+    // check level 2
+    $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'level', 'opsi_jawaban', 'id_parent')
+    ->where('level', 2)
+    ->where('id_parent', $value->id)
+    ->get();
+    // check level 4
+    $dataLevelEmpat = \App\Models\ItemModel::select('id', 'nama', 'level', 'opsi_jawaban', 'id_parent')
+    ->where('level', 4)
+    ->where('id_parent', $value->id)
+    ->get();
+    @endphp
+    {{-- level level 2 --}}
+    <div class="form-wizard" data-index='{{ $key }}' data-done='true'>
+
+        <div class="row">
+            @foreach ($dataLevelDua as $item)
+            @php
+            $idLevelDua = str_replace(' ', '_', strtolower($item->nama));
+            @endphp
+            {{-- item ijin usaha --}}
+            @if ($item->nama == 'Ijin Usaha')
+            <div class="row col-md-12">
+                <div class="form-group col-md-6">
+                    <label for="">{{ $item->nama }}</label>
+                    <select name="ijin_usaha" id="ijin_usaha" class="form-control" required>
+                        <option value="">-- Pilih Ijin Usaha --</option>
+                        <option value="nib">NIB</option>
+                        <option value="surat_keterangan_usaha">Surat Keterangan Usaha</option>
+                        <option value="tidak_ada_legalitas_usaha">Tidak Ada Legalitas Usaha</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-6" id="npwpsku" style="display:none ">
+                    <label for="">Memiliki NPWP</label>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <input type="checkbox" id="isNpwp" class="form-control">
                         </div>
-                    @enderror
-                    <hr>
+                    </div>
                 </div>
             </div>
-        </div>
-        {{-- end pendapat dan usulan --}}
-        <div class="row form-group">
-            <div class="col text-right">
-                <a href="{{ route('pengajuan-kredit-draft') }}">
-                    <button class="btn btn-warning" type="button"><span class="fa fa-arrow-left"></span>
-                        Kembali</button>
-                </a>
-                <button class="btn btn-default btn-prev" type="button"><span class="fa fa-chevron-left"></span>
-                    Sebelumnya</button>
-                <button class="btn btn-danger btn-next" type="button">Selanjutnya <span
-                        class="fa fa-chevron-right"></span></button>
-                <button type="submit" class="btn btn-info btn-simpan" id="submit">Simpan <span
-                        class="fa fa-save"></span></button>
-                {{-- <button class="btn btn-info ">Simpan <span class="fa fa-chevron-right"></span></button> --}}
+
+            <div class="row col-md-12">
+                <div class="form-group col-md-6" id="nib">
+                    <label for="">NIB</label>
+                    <input type="hidden" name="id_level[77]" value="77" id="nib_id">
+                    <input type="hidden" name="opsi_jawaban[77]" value="input text" id="nib_opsi_jawaban">
+                    <input type="text" maxlength="255" name="informasi[77]" id="nib_text"
+                        placeholder="Masukkan informasi" class="form-control" value="">
+                </div>
+
+                <div class="form-group col-md-6" id="docNIB">
+                    <label for="">{{ $itemNIB->nama }}</label>
+                    <input type="hidden" name="id_item_file[{{ $itemNIB->id }}]" value="{{ $itemNIB->id }}"
+                        id="docNIB_id">
+                    <input type="file" name="upload_file[{{ $itemNIB->id }}]" data-id=""
+                        placeholder="Masukkan informasi {{ $itemNIB->nama }}" class="form-control limit-size"
+                        id="file_nib">
+                    <span class="invalid-tooltip" style="display: none" id="docNIB_text">Besaran file
+                        tidak boleh lebih dari 5 MB</span>
+                    @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('dataLevelTiga.' . $key) }}
+                    </div>
+                    @endif
+                    <span class="filename" style="display: inline;"></span>
+                </div>
+
+                <div class="form-group col-md-6" id="surat_keterangan_usaha">
+                    <label for="">Surat Keterangan Usaha</label>
+                    <input type="hidden" name="id_level[78]" value="78" id="surat_keterangan_usaha_id">
+                    <input type="hidden" name="opsi_jawaban[78]" value="input text"
+                        id="surat_keterangan_usaha_opsi_jawaban">
+                    <input type="text" maxlength="255" name="informasi[78]" id="surat_keterangan_usaha_text"
+                        placeholder="Masukkan informasi" class="form-control">
+                </div>
+
+                <div class="form-group col-md-6" id="docSKU">
+                    <label for="">{{ $itemSKU->nama }}</label>
+                    <input type="hidden" name="id_item_file[{{ $itemSKU->id }}]" value="{{ $itemSKU->id }}"
+                        id="docSKU_id">
+                    <input type="file" name="upload_file[{{ $itemSKU->id }}]" id="surat_keterangan_usaha_file"
+                        data-id="" placeholder="Masukkan informasi {{ $itemSKU->nama }}"
+                        class="form-control limit-size">
+                    <span class="invalid-tooltip" style="display: none" id="docSKU_text">Besaran file
+                        tidak boleh lebih dari 5 MB</span>
+                    @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('dataLevelTiga.' . $key) }}
+                    </div>
+                    @endif
+                    <span class="filename" style="display: inline;"></span>
+                </div>
+            </div>
+            @elseif($item->nama == 'NPWP')
+            <div class="row col-md-12">
+                <div class="form-group col-md-6" id="npwp">
+                    <label for="">NPWP</label>
+                    <input type="hidden" name="id_level[79]" value="79" id="npwp_id">
+                    <input type="hidden" name="opsi_jawaban[79]" value="input text" id="npwp_opsi_jawaban">
+                    <input type="text" maxlength="255" name="informasi[79]" id="npwp_text"
+                        placeholder="Masukkan informasi" class="form-control" value="">
+                </div>
+
+                <div class="form-group col-md-6" id="docNPWP">
+                    <label for="">{{ $itemNPWP->nama }}</label>
+                    <input type="hidden" name="id_item_file[{{ $itemNPWP->id }}]" value="{{ $itemNPWP->id }}"
+                        id="docNPWP_id">
+                    <input type="file" name="upload_file[{{ $itemNPWP->id }}]" id="npwp_file" data-id=""
+                        placeholder="Masukkan informasi {{ $itemNPWP->nama }}" class="form-control limit-size">
+                    <span class="invalid-tooltip" style="display: none" id="docNPWP_text">Besaran file
+                        tidak boleh lebih dari 5 MB</span>
+                    @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
+                    <div class="invalid-feedback">
+                        {{ $errors->first('dataLevelTiga.' . $key) }}
+                    </div>
+                    @endif
+                    <span class="filename" style="display: inline;"></span>
+                </div>
+            </div>
+            @else
+            @if ($item->opsi_jawaban == 'input text')
+            <div class="form-group col-md-6">
+                <label for="">{{ $item->nama }}</label>
+                <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
+                <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
+                <input type="text" maxlength="255" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
+                    placeholder="Masukkan informasi {{ $item->nama }}" class="form-control" value="">
+            </div>
+            @elseif ($item->opsi_jawaban == 'number')
+            @if ($item->nama == 'Repayment Capacity')
+            <div class="form-group col-md-6">
+                <label for="">{{ $item->nama }}</label>
+                <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
+                <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
+                <input type="text" maxlength="255" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
+                    placeholder="Masukkan informasi {{ $item->nama }}" class="form-control" value="">
+            </div>
+            @else
+            @if ($item->nama == 'Omzet Penjualan' || $item->nama == 'Installment')
+            <div class="form-group col-md-6">
+                <label for="">{{ $item->nama }}(Perbulan)</label>
+                <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
+                <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
+                <input type="text" maxlength="255" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
+                    placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah" value="">
+            </div>
+            @else
+            <div class="form-group col-md-6">
+                <label for="">{{ $item->nama }}</label>
+                <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
+                <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
+                <input type="text" maxlength="255" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
+                    placeholder="Masukkan informasi {{ $item->nama }}" class="form-control only-number" value="">
+            </div>
+            @endif
+            @endif
+            @elseif ($item->opsi_jawaban == 'persen')
+            <div class="form-group col-md-6">
+                <label for="">{{ $item->nama }}</label>
+                <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
+                <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
+                <div class="input-group mb-3">
+                    <input type="number" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
+                        placeholder="Masukkan informasi {{ $item->nama }}" class="form-control"
+                        aria-label="Recipient's username" aria-describedby="basic-addon2" value=""
+                        onkeydown="return event.keyCode !== 69">
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon2">%</span>
+                    </div>
+                </div>
+            </div>
+            @elseif ($item->opsi_jawaban == 'file')
+            <div class="form-group col-md-6">
+                <label for="">{{ $item->nama }}</label>
+                {{-- <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" --}} {{--
+                    id="{{ $idLevelDua }}"> --}}
+                <input type="hidden" name="id_item_file[{{ $item->id }}]" value="{{ $item->id }}" id="">
+                <input type="file" name="upload_file[{{ $item->id }}]" id="{{ $idLevelDua }}" data-id=""
+                    placeholder="Masukkan informasi {{ $item->nama }}" class="form-control limit-size">
+                <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15
+                    MB</span>
+                <span class="filename" style="display: inline;"></span>
+            </div>
+            @elseif ($item->opsi_jawaban == 'long text')
+            <div class="form-group col-md-6">
+                <label for="">{{ $item->nama }}</label>
+                <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
+                <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
+                <textarea name="informasi[{{ $item->id }}]" rows="4" id="{{ $idLevelDua }}" maxlength="255"
+                    class="form-control" placeholder="Masukkan informasi {{ $item->nama }}"></textarea>
+            </div>
+            @endif
+
+            @php
+            $dataJawaban = \App\Models\OptionModel::where('option', '!=', '-')
+            ->where('id_item', $item->id)
+            ->get();
+            $dataOption = \App\Models\OptionModel::where('option', '=', '-')
+            ->where('id_item', $item->id)
+            ->get();
+            // check level 3
+            $dataLevelTiga = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent')
+            ->where('level', 3)
+            ->where('id_parent', $item->id)
+            ->get();
+            @endphp
+
+            @foreach ($dataOption as $itemOption)
+            @if ($itemOption->option == '-')
+            <div class="form-group col-md-12">
+                <h4>{{ $item->nama }}</h4>
+            </div>
+            @endif
+            @endforeach
+
+            @if (count($dataJawaban) != 0)
+            {{-- <div class="form-group col-md-6">
+                <label for="">{{ $item->nama }}</label>
+                <select name="dataLevelDua[]" id="dataLevelDua" class="form-control cek-sub-column" data-id_item={{
+                    $item->id }}>
+                    <option value=""> --Pilih Data -- </option>
+                    @foreach ($dataJawaban as $itemJawaban)
+                    <option
+                        value="{{ ($itemJawaban->skor == null ? 'kosong' : $itemJawaban->skor) . '-' . $itemJawaban->id }}">
+                        {{ $itemJawaban->option }}</option>
+                    @endforeach
+                </select>
+                <div id="item{{ $item->id }}">
+
+                </div>
+                @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                <div class="invalid-feedback">
+                    {{ $errors->first('dataLevelDua.' . $key) }}
+                </div>
+                @endif
+            </div> --}}
+
+            <div
+                class="{{ $idLevelDua == 'persentase_kebutuhan_kredit_opsi' || $idLevelDua == 'repayment_capacity_opsi' ? '' : 'form-group col-md-6' }}">
+                <label for="" id="{{ $idLevelDua . '_label' }}">{{ $item->nama }}</label>
+
+                <select name="dataLevelDua[{{ $item->id }}]" id="{{ $idLevelDua }}" class="form-control cek-sub-column"
+                    data-id_item={{ $item->id }}>
+                    <option value=""> --Pilih Opsi-- </option>
+                    @foreach ($dataJawaban as $key => $itemJawaban)
+                    <option id="{{ $idLevelDua . '_' . $key }}"
+                        value="{{ ($itemJawaban->skor == null ? 'kosong' : $itemJawaban->skor) . '-' . $itemJawaban->id }}">
+                        {{ $itemJawaban->option }}</option>
+                    @endforeach
+                </select>
+                <div id="item{{ $item->id }}">
+
+                </div>
+            </div>
+            @endif
+
+            @foreach ($dataLevelTiga as $keyTiga => $itemTiga)
+            @php
+            $idLevelTiga = str_replace(' ', '_', strtolower($itemTiga->nama));
+            @endphp
+            @if ($itemTiga->nama == 'Kategori Jaminan Utama')
+            {{-- <div class="form-group col-md-6">
+                <label for="">{{ $itemTiga->nama }}</label>
+                <select name="kategori_jaminan_utama" id="kategori_jaminan_utama" class="form-control">
+                    <option value="">-- Pilih Kategori Jaminan Utama --</option>
+                    <option value="Tanah">Tanah</option>
+                    <option value="Kendaraan Bermotor">Kendaraan Bermotor</option>
+                    <option value="Tanah dan Bangunan">Tanah dan Bangunan</option>
+                    <option value="Stock">Stock</option>
+                    <option value="Piutang">Piutang</option>
+                </select>
+                {{-- <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
+                <input type="hidden" name="opsi_jawaban[]" value="{{ $itemTiga->opsi_jawaban }}" id="">
+                <input type="text" name="informasi[]" id="" placeholder="Masukkan informasi" class="form-control">
+            </div>
+
+            <div class="form-group col-md-6" id="select_kategori_jaminan_utama">
+
+            </div> --}}
+            @elseif ($itemTiga->nama == 'Kategori Jaminan Tambahan')
+            <div class="form-group col-md-6">
+                <label for="">{{ $itemTiga->nama }}</label>
+                <select name="kategori_jaminan_tambahan" id="kategori_jaminan_tambahan" class="form-control" required>
+                    <option value="">-- Pilih Kategori Jaminan Tambahan --</option>
+                    <option value="Tidak Memiliki Jaminan Tambahan">Tidak Memiliki Jaminan Tambahan
+                    </option>
+                    <option value="Tanah">Tanah</option>
+                    <option value="Kendaraan Bermotor">Kendaraan Bermotor</option>
+                    <option value="Tanah dan Bangunan">Tanah dan Bangunan</option>
+                </select>
+                {{-- <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
+                <input type="hidden" name="opsi_jawaban[]" value="{{ $itemTiga->opsi_jawaban }}" id="">
+                <input type="text" name="informasi[]" id="" placeholder="Masukkan informasi" class="form-control"> --}}
+            </div>
+            <div class="form-group col-md-6" id="select_kategori_jaminan_tambahan"></div>
+            @elseif ($itemTiga->nama == 'Bukti Pemilikan Jaminan Utama')
+            {{-- <div class="form-group col-md-12">
+                <h5>{{ $itemTiga->nama }}</h5>
+            </div>
+            <div id="bukti_pemilikan_jaminan_utama" class="form-group col-md-12 row">
+
+            </div> --}}
+            @elseif ($itemTiga->nama == 'Bukti Pemilikan Jaminan Tambahan')
+            <div class="form-group col-md-12" id="jaminan_tambahan">
+                <h5>{{ $itemTiga->nama }}</h5>
+            </div>
+            <div id="bukti_pemilikan_jaminan_tambahan" class="form-group col-md-12 row">
+
+            </div>
+            @else
+            @if ($itemTiga->opsi_jawaban == 'input text')
+            <div class="form-group col-md-6">
+                <label for="">{{ $itemTiga->nama }}</label>
+                <input type="hidden" name="id_level[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}" id="">
+                <input type="hidden" name="opsi_jawaban[{{ $itemTiga->id }}]" value="{{ $itemTiga->opsi_jawaban }}"
+                    id="">
+                <input type="text" maxlength="255" name="informasi[{{ $itemTiga->id }}]"
+                    placeholder="Masukkan informasi" class="form-control" id="{{ $idLevelTiga }}" value="">
+            </div>
+            @elseif ($itemTiga->opsi_jawaban == 'number')
+            <div class="form-group col-md-6">
+                <label for="">{{ $itemTiga->nama }}</label>
+                <input type="hidden" name="opsi_jawaban[{{ $itemTiga->id }}]" value="{{ $itemTiga->opsi_jawaban }}"
+                    id="">
+                <input type="hidden" name="id_level[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}" id="">
+                <input type="text" step="any" name="informasi[{{ $itemTiga->id }}]" id="{{ $idLevelTiga }}"
+                    placeholder="Masukkan informasi {{ $itemTiga->nama }}" class="form-control rupiah" value="">
+            </div>
+            @elseif ($itemTiga->opsi_jawaban == 'persen')
+            <div class="form-group col-md-6">
+                @if ($itemTiga->nama == 'Ratio Tenor Asuransi')
+                @else
+                <label for="">{{ $itemTiga->nama }}</label>
+                <input type="hidden" name="opsi_jawaban[{{ $itemTiga->id }}]" value="{{ $itemTiga->opsi_jawaban }}"
+                    id="">
+                <input type="hidden" name="id_level[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}" id="">
+                <div class="input-group mb-3">
+                    <input type="number" step="any" name="informasi[{{ $itemTiga->id }}]" id="{{ $idLevelTiga }}"
+                        placeholder="Masukkan informasi {{ $itemTiga->nama }}" class="form-control"
+                        aria-label="Recipient's username" aria-describedby="basic-addon2" value="">
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon2">%</span>
+                    </div>
+                </div>
+                @endif
+            </div>
+            @elseif ($itemTiga->opsi_jawaban == 'file')
+            <div class="form-group col-md-6 file-wrapper item-{{ $itemTiga->id }}">
+                <label for="">{{ $itemTiga->nama }}</label>
+                <div class="row file-input">
+                    <div class="col-md-9">
+                        <input type="hidden" name="id_item_file[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}" id="">
+                        <input type="file" name="upload_file[{{ $itemTiga->id }}]" id="{{ $idLevelTiga }}" data-id=""
+                            placeholder="Masukkan informasi {{ $itemTiga->nama }}"
+                            class="form-control limit-size file-usaha" accept="image/*">
+                        <span class="invalid-tooltip" style="display: none">Maximum upload
+                            file size is 15 MB</span>
+                        <span class="filename" style="display: inline;"></span>
+                    </div>
+                    <div class="col-1">
+                        <button class="btn btn-sm btn-success btn-add-file" type="button" data-id="{{ $itemTiga->id }}">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="col-1">
+                        <button class="btn btn-sm btn-danger btn-del-file" type="button" data-id="{{ $itemTiga->id }}">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            @elseif ($itemTiga->opsi_jawaban == 'long text')
+            <div class="form-group col-md-6">
+                <label for="">{{ $itemTiga->nama }}</label>
+                <input type="hidden" name="opsi_jawaban[{{ $itemTiga->id }}]" value="{{ $itemTiga->opsi_jawaban }}"
+                    id="">
+                <input type="hidden" name="id_level[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}" id="">
+                <textarea name="informasi[{{ $itemTiga->id }}]" rows="4" id="{{ $idLevelTiga }}" maxlength="255"
+                    class="form-control" placeholder="Masukkan informasi {{ $itemTiga->nama }}"></textarea>
+            </div>
+            @endif
+
+            @php
+            // check jawaban level tiga
+            $dataJawabanLevelTiga = \App\Models\OptionModel::where('option', '!=', '-')
+            ->where('id_item', $itemTiga->id)
+            ->get();
+            $dataOptionTiga = \App\Models\OptionModel::where('option', '=', '-')
+            ->where('id_item', $itemTiga->id)
+            ->get();
+            // check level empat
+            $dataLevelEmpat = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent')
+            ->where('level', 4)
+            ->where('id_parent', $itemTiga->id)
+            ->get();
+            @endphp
+
+            @foreach ($dataOptionTiga as $itemOptionTiga)
+            @if ($itemOptionTiga->option == '-')
+            <div class="form-group col-md-12">
+                <h5>{{ $itemTiga->nama }}</h5>
+            </div>
+            @endif
+            @endforeach
+            {{-- @foreach ($dataOptionEmpat as $itemOptionEmpat)
+            @if ($itemOptionEmpat->option == '-')
+            <div class="form-group col-md-12">
+                <h5>{{ $itemTiga->nama }}</h5>
+            </div>
+            @endif
+            @endforeach --}}
+            @if (count($dataJawabanLevelTiga) != 0)
+            @if ($itemTiga->nama != 'Pengikatan Jaminan Utama')
+            <div
+                class="{{ $idLevelTiga == 'ratio_tenor_asuransi_opsi' || $idLevelTiga == 'ratio_coverage_opsi' ? '' : 'form-group col-md-6' }}">
+                <label for="" id="{{ $idLevelTiga . '_label' }}">{{ $itemTiga->nama }}</label>
+
+                <select name="dataLevelTiga[{{ $itemTiga->id }}]" id="{{ $idLevelTiga }}"
+                    class="form-control cek-sub-column" data-id_item={{ $itemTiga->id }}>
+                    <option value=""> --Pilih Opsi-- </option>
+                    @foreach ($dataJawabanLevelTiga as $key => $itemJawabanTiga)
+                    <option id="{{ $idLevelTiga . '_' . $key }}"
+                        value="{{ ($itemJawabanTiga->skor == null ? 'kosong' : $itemJawabanTiga->skor) . '-' . $itemJawabanTiga->id }}">
+                        {{ $itemJawabanTiga->option }}</option>
+                    @endforeach
+                </select>
+                <div id="item{{ $itemTiga->id }}">
+
+                </div>
+            </div>
+            @endif
+            @endif
+
+            @foreach ($dataLevelEmpat as $keyEmpat => $itemEmpat)
+            @php
+            $idLevelEmpat = str_replace(' ', '_', strtolower($itemEmpat->nama));
+            @endphp
+
+            @if ($itemEmpat->opsi_jawaban == 'input text')
+            <div class="form-group col-md-6">
+                <label for="">{{ $itemEmpat->nama }}</label>
+                <input type="hidden" name="id_level[{{ $itemEmpat->id }}]" value="{{ $itemEmpat->id }}" id="">
+                <input type="hidden" name="opsi_jawaban[{{ $itemEmpat->id }}]" value="{{ $itemEmpat->opsi_jawaban }}"
+                    id="">
+                @if ($itemEmpat->nama == 'Masa Berlaku Asuransi Penjaminan')
+                <div class="input-group">
+                    <input type="text" maxlength="255" name="informasi[{{ $itemEmpat->id }}]"
+                        id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan_/_ht' ? '' : $idLevelEmpat }}"
+                        placeholder="Masukkan informasi" class="form-control only-number" value="">
+                    <div class="input-group-append">
+                        <div class="input-group-text" id="addon_tenor_yang_diminta">
+                            Bulan</div>
+                    </div>
+                </div>
+                @else
+                <input type="text" maxlength="255" name="informasi[{{ $itemEmpat->id }}]"
+                    id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan_/_ht' ? '' : $idLevelEmpat }}"
+                    placeholder="Masukkan informasi" class="form-control" value="">
+                @endif
+            </div>
+            @elseif ($itemEmpat->opsi_jawaban == 'number')
+            <div class="form-group col-md-6">
+                <label for="">{{ $itemEmpat->nama }}</label>
+                <input type="hidden" name="opsi_jawaban[{{ $itemEmpat->id }}]" value="{{ $itemEmpat->opsi_jawaban }}"
+                    id="">
+                <input type="hidden" name="id_level[{{ $itemEmpat->id }}]" value="{{ $itemEmpat->id }}" id="">
+                <input type="text" step="any" name="informasi[{{ $itemEmpat->id }}]"
+                    id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan_/_ht' ? 'nilai_asuransi_penjaminan' : $idLevelEmpat }}"
+                    placeholder="Masukkan informasi {{ $itemEmpat->nama }}" class="form-control rupiah" value="">
+            </div>
+            @elseif ($itemEmpat->opsi_jawaban == 'persen')
+            <div class="form-group col-md-6">
+                <label for="">{{ $itemEmpat->nama }}</label>
+                <input type="hidden" name="opsi_jawaban[{{ $itemEmpat->id }}]" value="{{ $itemEmpat->opsi_jawaban }}"
+                    id="">
+                <input type="hidden" name="id_level[{{ $itemEmpat->id }}]" value="{{ $itemEmpat->id }}" id="">
+                <div class="input-group mb-3">
+                    <input type="number" step="any" name="informasi[{{ $itemEmpat->id }}]" id="{{ $idLevelEmpat }}"
+                        placeholder="Masukkan informasi {{ $itemEmpat->nama }}" class="form-control"
+                        aria-label="Recipient's username" aria-describedby="basic-addon2" value="">
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon2">%</span>
+                    </div>
+                </div>
+            </div>
+            @elseif ($itemEmpat->opsi_jawaban == 'file')
+            <div class="form-group col-md-6">
+                <label for="">{{ $itemEmpat->nama }}</label>
+                {{-- <input type="hidden" name="opsi_jawaban[]" value="{{ $itemEmpat->opsi_jawaban }}" id=""> --}}
+                <input type="hidden" name="id_item_file[{{ $itemEmpat->id }}]" value="{{ $itemEmpat->id }}" id="">
+                <input type="file" id="{{ $idLevelEmpat }}" name="upload_file[{{ $itemEmpat->id }}]" data-id=""
+                    placeholder="Masukkan informasi {{ $itemEmpat->nama }}" class="form-control limit-size">
+                <span class="invalid-tooltip" style="display: none">Maximum upload file
+                    size is 15 MB</span>
+                <span class="filename" style="display: inline;"></span>
+            </div>
+            @elseif ($itemEmpat->opsi_jawaban == 'long text')
+            <div class="form-group col-md-6">
+                <label for="">{{ $itemEmpat->nama }}</label>
+                <input type="hidden" name="opsi_jawaban[{{ $itemEmpat->id }}]" value="{{ $itemEmpat->opsi_jawaban }}"
+                    id="">
+                <input type="hidden" name="id_level[{{ $itemEmpat->id }}]" value="{{ $itemEmpat->id }}" id="">
+                <textarea name="informasi[{{ $itemEmpat->id }}]" rows="4" id="{{ $idLevelEmpat }}" maxlength="255"
+                    class="form-control" placeholder="Masukkan informasi {{ $itemEmpat->nama }}"></textarea>
+            </div>
+            @endif
+            @php
+            // check level empat
+            $dataJawabanLevelEmpat = \App\Models\OptionModel::where('option', '!=', '-')
+            ->where('id_item', $itemEmpat->id)
+            ->get();
+            $dataOptionEmpat = \App\Models\OptionModel::where('option', '=', '-')
+            ->where('id_item', $itemEmpat->id)
+            ->get();
+            @endphp
+
+            @foreach ($dataOptionEmpat as $itemOptionEmpat)
+            @if ($itemOptionEmpat->option == '-')
+            <div class="form-group col-md-12">
+                <h6>{{ $itemEmpat->nama }}</h6>
+            </div>
+            @endif
+            @endforeach
+
+            @if (count($dataJawabanLevelEmpat) != 0)
+            <div class="form-group col-md-6">
+                <label for="">{{ $itemEmpat->nama }}</label>
+                <select name="dataLevelEmpat[{{ $itemEmpat->id }}]" id="{{ $idLevelEmpat }}"
+                    class="form-control cek-sub-column" data-id_item={{ $itemEmpat->id }}>
+                    <option value=""> --Pilih Opsi -- </option>
+                    @foreach ($dataJawabanLevelEmpat as $itemJawabanEmpat)
+                    <option id="{{ $idLevelEmpat . '_' . $key }}"
+                        value="{{ ($itemJawabanEmpat->skor == null ? 'kosong' : $itemJawabanEmpat->skor) . '-' . $itemJawabanEmpat->id }}">
+                        {{ $itemJawabanEmpat->option }}</option>
+                    @endforeach
+                </select>
+                <div id="item{{ $itemEmpat->id }}">
+
+                </div>
+            </div>
+            @endif
+            @endforeach
+            @endif
+            @endforeach
+            @endif
+            @endforeach
+
+            <div class="form-group col-md-12">
+                <hr style="border: 0.2px solid #E3E6EA;">
+                <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
+                <input type="hidden" name="id_aspek[{{ $value->id }}]" value="{{ $value->id }}">
+                <textarea name="pendapat_per_aspek[{{ $value->id }}]"
+                    class="form-control @error('pendapat_per_aspek') is-invalid @enderror" id="" maxlength="255"
+                    cols="30" rows="4" placeholder="Pendapat Per Aspek"></textarea>
+                @error('pendapat_per_aspek')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
             </div>
         </div>
-    </form>
+
+    </div>
+    @endforeach
+    {{-- pendapat dan usulan --}}
+    <div class="form-wizard" data-index='{{ count($dataAspek) + $dataIndex }}' data-done='true'>
+        <div class="row">
+            <div class="form-group col-md-12">
+                <label for="">Pendapat dan Usulan</label>
+                <textarea name="komentar_staff" class="form-control @error('komentar_staff') is-invalid @enderror"
+                    maxlength="255" id="" cols="30" rows="4"
+                    placeholder="Pendapat dan Usulan Staf/Analis Kredit"></textarea>
+                @error('komentar_staff')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+                <hr>
+            </div>
+        </div>
+    </div>
+    {{-- end pendapat dan usulan --}}
+    <div class="row form-group">
+        <div class="col text-right">
+            <a href="{{ route('pengajuan-kredit-draft') }}">
+                <button class="btn btn-warning" type="button"><span class="fa fa-arrow-left"></span>
+                    Kembali</button>
+            </a>
+            <button class="btn btn-default btn-prev" type="button"><span class="fa fa-chevron-left"></span>
+                Sebelumnya</button>
+            <button class="btn btn-danger btn-next" type="button">Selanjutnya <span
+                    class="fa fa-chevron-right"></span></button>
+            <button type="submit" class="btn btn-info btn-simpan" id="submit">Simpan <span
+                    class="fa fa-save"></span></button>
+            {{-- <button class="btn btn-info ">Simpan <span class="fa fa-chevron-right"></span></button> --}}
+        </div>
+    </div>
+</form>
 @endsection
 
 @push('custom-script')
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        var isPincetar = "{{Request::url()}}".includes('pincetar');
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    var isPincetar = "{{Request::url()}}".includes('pincetar');
         $(document).ready(function() {
             let valSkema = $("#skema").val();
             if (valSkema == null || valSkema == '') {
@@ -2404,7 +2326,7 @@ is-invalid
                 })
             }
         });
-    </script>
-    @include('pengajuan-kredit.partials.create-save-script')
-    <script src="{{ asset('') }}js/custom.js"></script>
+</script>
+@include('pengajuan-kredit.partials.create-save-script')
+<script src="{{ asset('') }}js/custom.js"></script>
 @endpush
