@@ -8,6 +8,24 @@
                 <div class="col-sm-5 d-inline-flex">
         @endif
         <form action="" class="d-inline-flex">
+            @if (Request()->tAwal != null)
+                <input type="text" name="tAwal" value="{{ Request()->tAwal }}" hidden>
+            @endif
+            @if (Request()->tAkhir != null)
+                <input type="text" name="tAkhir" value="{{ Request()->tAkhir }}" hidden>
+            @endif
+            @if (Request()->cbg != null)
+                <input type="text" name="cbg" value="{{ Request()->cbg }}" hidden>
+            @endif
+            @if (Request()->pss != null)
+                <input type="text" name="pss" value="{{ Request()->pss }}" hidden>
+            @endif
+            @if (Request()->score != null)
+                <input type="text" name="score" value="{{ Request()->score }}" hidden>
+            @endif
+            @if (Request()->sts != null)
+                <input type="text" name="sts" value="{{ Request()->sts }}" hidden>
+            @endif
             <input required type="search" value="{{ Request()->query('search') }}" name="search" class="form-control mb-2"
                 placeholder="Cari Nama Nasabah" value="" required>
             <button type="submit" class="btn btn-sm btn-primary mb-2 ml-2">
@@ -196,10 +214,10 @@
                             <div class="d-flex">
                                 @php
                                     $userPBP = \App\Models\User::select('id')
-                                                ->where('id_cabang', $item->id_cabang)
-                                                ->where('role', 'PBP')
-                                                ->whereNotNull('nip')
-                                                ->first();
+                                        ->where('id_cabang', $item->id_cabang)
+                                        ->where('role', 'PBP')
+                                        ->whereNotNull('nip')
+                                        ->first();
                                 @endphp
                                 <div class="btn-group">
                                     <button type="button" data-toggle="dropdown" class="btn btn-link">
@@ -224,7 +242,8 @@
                                             @if ($item->id_cabang == 1)
                                                 @if ($userPBP)
                                                     <a href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbp"
-                                                        class="dropdown-item tindak-lanjut-penyelia-link">Tindak lanjut PBP</a>
+                                                        class="dropdown-item tindak-lanjut-penyelia-link">Tindak lanjut
+                                                        PBP</a>
                                                 @endif
                                             @else
                                                 <a href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}"
