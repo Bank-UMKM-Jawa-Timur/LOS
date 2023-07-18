@@ -16,6 +16,24 @@
         </div>
         <div class="col-md-6 d-flex justify-content-end">
             <form action="" class="d-inline-flex">
+                @if (Request()->tAwal != null)
+                    <input type="text" name="tAwal" value="{{ Request()->tAwal }}" hidden>
+                @endif
+                @if (Request()->tAkhir != null)
+                    <input type="text" name="tAkhir" value="{{ Request()->tAkhir }}" hidden>
+                @endif
+                @if (Request()->cbg != null)
+                    <input type="text" name="cbg" value="{{ Request()->cbg }}" hidden>
+                @endif
+                @if (Request()->pss != null)
+                    <input type="text" name="pss" value="{{ Request()->pss }}" hidden>
+                @endif
+                @if (Request()->score != null)
+                    <input type="text" name="score" value="{{ Request()->score }}" hidden>
+                @endif
+                @if (Request()->sts != null)
+                    <input type="text" name="sts" value="{{ Request()->sts }}" hidden>
+                @endif
                 <input required type="search" value="{{ Request()->query('search') }}" name="search"
                     class="form-control mb-2" placeholder="Cari Nama Nasabah" value="" required>
                 <button type="submit" class="btn btn-sm btn-primary mb-2 ml-2">
