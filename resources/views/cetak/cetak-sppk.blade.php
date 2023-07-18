@@ -163,7 +163,7 @@
                 <td>7.</td>
                 <td style="width: 25%">Angsuran Perbulan</td>
                 <td style="width: 2%">:</td>
-                <td>Rp. {{ rupiah(intval($installment?->opsi_text) ?? 0) }}</td>
+                <td>Rp. {{ $installment ? rupiah(intval($installment?->opsi_text)) : 0 }}</td>
             </tr>
             <tr>
                 <td>8.</td>

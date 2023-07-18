@@ -128,27 +128,27 @@
             <tr>
                 <td style="width: 13%">Merk/Type</td>
                 <td style="width: 2%">:</td>
-                <td>{{ $dataKendaraan->merk }}</td>
+                <td>{{ $dataPO?->merk }}</td>
             </tr>
             <tr>
                 <td style="width: 13%">Tahun</td>
                 <td style="width: 2%">:</td>
-                <td>{{ $dataPO->tahun_kendaraan }}</td>
+                <td>{{ $dataPO?->tahun_kendaraan }}</td>
             </tr>
             <tr>
                 <td style="width: 13%">Warna</td>
                 <td style="width: 2%">:</td>
-                <td>{{ $dataPO->warna }}</td>
+                <td>{{ $dataPO?->warna }}</td>
             </tr>
             <tr>
                 <td style="width: 13%">Keterangan</td>
                 <td style="width: 2%">:</td>
-                <td>{{ $dataPO->keterangan }} sejumlah {{ $dataPO->jumlah }}</td>
+                <td>{{ $dataPO?->keterangan }} sejumlah {{ $dataPO?->jumlah }}</td>
             </tr>
             <tr>
                 <td style="width: 13%">Harga</td>
                 <td style="width: 2%">:</td>
-                <td>Rp. {{ number_format($dataPO->harga,0,',','.') }}</td>
+                <td>Rp. {{ number_format($dataPO?->harga,0,',','.') }}</td>
             </tr>
         </table>
 
