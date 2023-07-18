@@ -35,7 +35,17 @@
                 </div>
             </div> --}}
             <div class="col-md-12 mb-4">
-                Total Pengajuan : {{ \App\models\PengajuanModel::count() }}
+                Total Pengajuan :
+                {{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                })->when(Request()->cbg, function ($query, $cbg) {
+                        return $query->where('id_cabang', $cbg);
+                    })->count() }}
+                <div class=" d-flex justify-content-end">
+                    <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal" data-target="#exampleModal">
+                        <i class="fa fa-filter"></i> Filter
+                    </button>
+                </div>
             </div>
             {{-- Pengajuan Approve --}}
             <div class="col-md-4 mb-4">
@@ -47,7 +57,12 @@
                                 Pengajuan Disetujui
                             </div>
                             <div class="col-md-4 pr-0 font-wight-bold">
-                                <h1>{{ \App\models\PengajuanModel::where('posisi', 'Selesai')->count() }}</h1>
+                                <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                                })->when(Request()->cbg, function ($query, $cbg) {
+                                        return $query->where('id_cabang', $cbg);
+                                    })->where('posisi', 'Selesai')->count() }}
+                                </h1>
                             </div>
                         </div>
                         <hr>
@@ -66,7 +81,12 @@
                                 Pengajuan Ditolak
                             </div>
                             <div class="col-md-4 pr-0 font-wight-bold">
-                                <h1>{{ \App\models\PengajuanModel::where('posisi', 'Ditolak')->count() }}</h1>
+                                <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                                })->when(Request()->cbg, function ($query, $cbg) {
+                                        return $query->where('id_cabang', $cbg);
+                                    })->where('posisi', 'Ditolak')->count() }}
+                                </h1>
                             </div>
                         </div>
                         <hr>
@@ -85,7 +105,12 @@
                                 Pengajuan Posisi Pincab
                             </div>
                             <div class="col-md-4 pr-0 font-wight-bold">
-                                <h1>{{ \App\models\PengajuanModel::where('posisi', 'Pincab')->count() }}</h1>
+                                <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                                })->when(Request()->cbg, function ($query, $cbg) {
+                                        return $query->where('id_cabang', $cbg);
+                                    })->where('posisi', 'Pincab')->count() }}
+                                </h1>
                             </div>
                         </div>
                         <hr>
@@ -104,7 +129,12 @@
                                 Pengajuan Posisi PBP Cabang 001
                             </div>
                             <div class="col-md-4 pr-0 font-wight-bold">
-                                <h1>{{ \App\models\PengajuanModel::where('posisi', 'PBP')->count() }}</h1>
+                                <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                                })->when(Request()->cbg, function ($query, $cbg) {
+                                        return $query->where('id_cabang', $cbg);
+                                    })->where('posisi', 'PBP')->count() }}
+                                </h1>
                             </div>
                         </div>
                         <hr>
@@ -123,7 +153,12 @@
                                 Pengajuan Posisi PBO
                             </div>
                             <div class="col-md-4 pr-0 font-wight-bold">
-                                <h1>{{ \App\models\PengajuanModel::where('posisi', 'PBO')->count() }}</h1>
+                                <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                                })->when(Request()->cbg, function ($query, $cbg) {
+                                        return $query->where('id_cabang', $cbg);
+                                    })->where('posisi', 'PBO')->count() }}
+                                </h1>
                             </div>
                         </div>
                         <hr>
@@ -142,7 +177,12 @@
                                 Pengajuan Posisi Penyelia
                             </div>
                             <div class="col-md-4 pr-0 font-wight-bold">
-                                <h1>{{ \App\models\PengajuanModel::where('posisi', 'Review Penyelia')->count() }}</h1>
+                                <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                                })->when(Request()->cbg, function ($query, $cbg) {
+                                        return $query->where('id_cabang', $cbg);
+                                    })->where('posisi', 'Review Penyelia')->count() }}
+                                </h1>
                             </div>
                         </div>
                         <hr>
@@ -161,7 +201,12 @@
                                 Pengajuan Posisi Staff
                             </div>
                             <div class="col-md-4 pr-0 font-wight-bold">
-                                <h1>{{ \App\models\PengajuanModel::where('posisi', 'Proses Input Data')->count() }}</h1>
+                                <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                                })->when(Request()->cbg, function ($query, $cbg) {
+                                        return $query->where('id_cabang', $cbg);
+                                    })->where('posisi', 'Proses Input Data')->count() }}
+                                </h1>
                             </div>
                         </div>
                         <hr>
@@ -172,7 +217,17 @@
             </div>
         @elseif (auth()->user()->role == 'SPI' || auth()->user()->role == 'Kredit Umum')
             <div class="col-md-12 mb-4">
-                Total Pengajuan : {{ \App\models\PengajuanModel::count() }}
+                Total Pengajuan : {{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                })->when(Request()->cbg, function ($query, $cbg) {
+                        return $query->where('id_cabang', $cbg);
+                    })->count() }}
+                <div class=" d-flex justify-content-end">
+                    <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
+                        data-target="#exampleModal">
+                        <i class="fa fa-filter"></i> Filter
+                    </button>
+                </div>
             </div>
             {{-- Pengajuan Approve --}}
             <div class="col-md-4 mb-4">
@@ -184,7 +239,11 @@
                                 Pengajuan Disetujui
                             </div>
                             <div class="col-md-4 pr-0 font-wight-bold">
-                                <h1>{{ \App\models\PengajuanModel::where('posisi', 'Selesai')->count() }}</h1>
+                                <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                                })->when(Request()->cbg, function ($query, $cbg) {
+                                        return $query->where('id_cabang', $cbg);
+                                    })->where('posisi', 'Selesai')->count() }}</h1>
                             </div>
                         </div>
                         <hr>
@@ -203,7 +262,11 @@
                                 Pengajuan Ditolak
                             </div>
                             <div class="col-md-4 pr-0 font-wight-bold">
-                                <h1>{{ \App\models\PengajuanModel::where('posisi', 'Ditolak')->count() }}</h1>
+                                <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                                })->when(Request()->cbg, function ($query, $cbg) {
+                                        return $query->where('id_cabang', $cbg);
+                                    })->where('posisi', 'Ditolak')->count() }}</h1>
                             </div>
                         </div>
                         <hr>
@@ -222,7 +285,11 @@
                                 Pengajuan Posisi Pincab
                             </div>
                             <div class="col-md-4 pr-0 font-wight-bold">
-                                <h1>{{ \App\models\PengajuanModel::where('posisi', 'Pincab')->count() }}</h1>
+                                <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                                })->when(Request()->cbg, function ($query, $cbg) {
+                                        return $query->where('id_cabang', $cbg);
+                                    })->where('posisi', 'Pincab')->count() }}</h1>
                             </div>
                         </div>
                         <hr>
@@ -241,7 +308,11 @@
                                 Pengajuan Posisi PBP Cabang 001
                             </div>
                             <div class="col-md-4 pr-0 font-wight-bold">
-                                <h1>{{ \App\models\PengajuanModel::where('posisi', 'PBP')->count() }}</h1>
+                                <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                                })->when(Request()->cbg, function ($query, $cbg) {
+                                        return $query->where('id_cabang', $cbg);
+                                    })->where('posisi', 'PBP')->count() }}</h1>
                             </div>
                         </div>
                         <hr>
@@ -260,7 +331,11 @@
                                 Pengajuan Posisi PBO
                             </div>
                             <div class="col-md-4 pr-0 font-wight-bold">
-                                <h1>{{ \App\models\PengajuanModel::where('posisi', 'PBO')->count() }}</h1>
+                                <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                                })->when(Request()->cbg, function ($query, $cbg) {
+                                        return $query->where('id_cabang', $cbg);
+                                    })->where('posisi', 'PBO')->count() }}</h1>
                             </div>
                         </div>
                         <hr>
@@ -279,7 +354,11 @@
                                 Pengajuan Posisi Penyelia
                             </div>
                             <div class="col-md-4 pr-0 font-wight-bold">
-                                <h1>{{ \App\models\PengajuanModel::where('posisi', 'Review Penyelia')->count() }}</h1>
+                                <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                                })->when(Request()->cbg, function ($query, $cbg) {
+                                        return $query->where('id_cabang', $cbg);
+                                    })->where('posisi', 'Review Penyelia')->count() }}</h1>
                             </div>
                         </div>
                         <hr>
@@ -298,7 +377,11 @@
                                 Pengajuan Posisi Staff
                             </div>
                             <div class="col-md-4 pr-0 font-wight-bold">
-                                <h1>{{ \App\models\PengajuanModel::where('posisi', 'Proses Input Data')->count() }}</h1>
+                                <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                                })->when(Request()->cbg, function ($query, $cbg) {
+                                        return $query->where('id_cabang', $cbg);
+                                    })->where('posisi', 'Proses Input Data')->count() }}</h1>
                             </div>
                         </div>
                         <hr>
@@ -436,4 +519,64 @@
         </div>
     </div>
     <hr class="mt-2"> --}}
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Filter Data</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="" method="get">
+                    <div class="modal-body">
+                        <div class="row ">
+                            <div class="col-sm-6">
+                                <label>Tanggal Awal</label>
+                                <input type="date" name="tAwal" id="tAwal" class="form-control"
+                                    value="{{ Request()->query('tAwal') }}">
+                            </div>
+                            <div class="col-sm-6">
+                                <label>Tanggal Akhir</label>
+                                <input type="date" name="tAkhir" id="tAkhir" class="form-control"
+                                    value="{{ Request()->query('tAkhir') }}">
+                            </div>
+                            <div class="col-sm-6 mt-2">
+                                <label>Cabang</label>
+                                <select class="custom-select" id="inputGroupSelect01" name="cbg">
+                                    @if (Request()->query('cbg') != null)
+                                        @foreach ($cabangs as $items)
+                                            @if ($items->id == Request()->query('cbg'))
+                                                <option selected value="{{ $items->id }}">
+                                                    {{ $items->cabang }}</option>
+                                            @break
+                                        @endif
+                                    @endforeach
+                                @else
+                                    <option selected disabled value="">Pilih Cabang</option>
+                                @endif
+                                @foreach ($cabangs as $item)
+                                    <option value="{{ $item->id }}">{{ $item->cabang }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#tAwal").on("change", function() {
+        var result = $(this).val();
+        if (result != null) {
+            $("#tAkhir").prop("required", true)
+        }
+    });
+</script>
 @endsection
