@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\PengajuanModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -14,6 +15,8 @@ class DashboardController extends Controller
         if (Auth::user()->password_change_at == null) {
             return redirect()->route('change_password');
         }
+        $param['cabangs'] = DB::table('cabang')
+            ->get();
         $id_cabang = Auth::user()->id_cabang;
         if (Auth::user()->role == "Staf Analis Kredit") {
             $id_data = auth()->user()->id;
