@@ -97,4 +97,12 @@ class PengajuanAPIController extends Controller
 
         return response()->json($data);
     }
+
+    public function getAllCabang() {
+        $data = DB::table('cabang')
+            ->select('kode_cabang', 'cabang')
+            ->get();
+
+        return response()->json($data);
+    }
 }
