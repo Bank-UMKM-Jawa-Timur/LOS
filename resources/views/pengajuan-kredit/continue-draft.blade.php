@@ -377,7 +377,7 @@ is-invalid
     @if ($skema == 'KKB' || $duTemp?->skema_kredit == 'KKB')
     <div class="form-wizard" data-index='1' data-done='true' id="wizard-data-po">
         <div class="row">
-            <input type="text" name="id_data_po_temp" class="id-data-po-temp" id="id_data_po_temp" value="">
+            <input type="hidden" name="id_data_po_temp" class="id-data-po-temp" id="id_data_po_temp" value="">
             <div class="form-group col-md-12">
                 <span style="color: black; font-weight: bold; font-size: 18px;">Jenis Kendaraan Roda 2 :</span>
             </div>
