@@ -450,9 +450,13 @@
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Jumlah Kredit yang diminta</label>
-                    <input type="number" disabled name="jumlah_kredit"
+                    <input type="text" disabled name="jumlah_kredit"
+                        class="form-control @error('jumlah_kredit') is-invalid @enderror"
+                        placeholder="Jumlah Kredit"
+                        value="{{ old('jumlah_kredit', 'Rp ' . number_format($dataUmumNasabah->jumlah_kredit, 2, ',', '.')) }}">
+                    {{-- <input type="number" disabled name="jumlah_kredit"
                         class="form-control @error('jumlah_kredit') is-invalid @enderror" placeholder="Jumlah Kredit"
-                        value="{{ old('jumlah_kredit', $dataUmumNasabah->jumlah_kredit) }}">
+                        value="{{old('jumlah_kredit', $dataUmumNasabah->jumlah_kredit) }}"> --}}
                     @error('jumlah_kredit')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -618,7 +622,7 @@
                     <label for="">Harga</label>
                     <input type="text" name="harga" id="harga"
                         class="form-control rupiah @error('harga') is-invalid @enderror"
-                        placeholder="Harga Kendaraan" value="{{ $dataPO?->harga ?? '' }}" disabled>
+                        placeholder="Harga Kendaraan" value="{{ 'Rp ' . number_format($dataPO?->harga ?? '', 2, ',', '.') }}" disabled>
                     @error('harga')
                         <div class="invalid-feedback">
                             {{ $message }}

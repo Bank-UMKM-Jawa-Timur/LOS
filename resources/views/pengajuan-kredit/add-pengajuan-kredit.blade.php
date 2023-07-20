@@ -613,7 +613,7 @@ is-invalid
                 <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
                 <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
                 <input type="text" maxlength="255" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
-                    placeholder="Masukkan informasi {{ $item->nama }}" class="form-control only-number" value="">
+                    placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah" value="">
             </div>
             @endif
             @endif
