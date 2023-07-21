@@ -1923,7 +1923,7 @@ class PengajuanKreditController extends Controller
     {
         // return $this->getAnswer($id);
 
-        if (auth()->user()->role == 'Penyelia Kredit' || auth()->user()->role == 'PBO' || auth()->user()->role == 'PBP') {
+        if (auth()->user()->role == 'Penyelia Kredit') {
             $param['pageTitle'] = "Dashboard";
             $param['dataAspek'] = ItemModel::where('level', 1)->where('nama', '!=', 'Data Umum')->get();
             $param['itemSlik'] = ItemModel::join('option as o', 'o.id_item', 'item.id')
@@ -1972,10 +1972,6 @@ class PengajuanKreditController extends Controller
                 ->find($id);
             $param['pendapatDanUsulanStaf'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff')->first();
             $param['pendapatDanUsulanPenyelia'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_penyelia')->first();
-            if (auth()->user()->role == 'PBO' || auth()->user()->role == 'PBP')
-                $param['pendapatDanUsulanPBO'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_pbo')->first();
-            if (auth()->user()->role == 'PBP')
-                $param['pendapatDanUsulanPBP'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_pbp')->first();
             if ($param['dataUmumNasabah']->skema_kredit == 'KKB') {
                 $param['dataPO'] = DB::table('data_po')
                     ->where('id_pengajuan', $id)
@@ -1999,6 +1995,81 @@ class PengajuanKreditController extends Controller
             // $param['dataAnswer'] = $this->getAnswer($id);
 
             return view('pengajuan-kredit.detail-pengajuan-jawaban', $param);
+        } elseif (auth()->user()->role == 'PBO' || auth()->user()->role == 'PBP') {
+            $param['pageTitle'] = "Dashboard";
+            $param['dataAspek'] = ItemModel::where('level', 1)->where('nama', '!=', 'Data Umum')->get();
+            $param['itemSlik'] = ItemModel::join('option as o', 'o.id_item', 'item.id')
+                ->join('jawaban as j', 'j.id_jawaban', 'o.id')
+                ->join('pengajuan as p', 'p.id', 'j.id_pengajuan')
+                ->where('p.id', $id)
+                ->where('nama', 'SLIK')
+                ->first();
+            $param['itemSP'] = ItemModel::where('level', 1)->where('nama', '=', 'Data Umum')->first();
+            $param['itemKTPSu'] = ItemModel::where('level', 1)->where('nama', '=', 'Data Umum')->first();
+            $param['itemKTPIs'] = ItemModel::where('level', 1)->where('nama', '=', 'Data Umum')->first();
+
+            $param['dataUmumNasabah'] = PengajuanModel::select(
+                'pengajuan.id',
+                'pengajuan.tanggal',
+                'pengajuan.posisi',
+                'pengajuan.tanggal_review_pbp',
+                'pengajuan.skema_kredit',
+                'calon_nasabah.id as id_calon_nasabah',
+                'calon_nasabah.nama',
+                'calon_nasabah.alamat_rumah',
+                'calon_nasabah.alamat_usaha',
+                'calon_nasabah.no_ktp',
+                'calon_nasabah.tempat_lahir',
+                'calon_nasabah.tanggal_lahir',
+                'calon_nasabah.status',
+                'calon_nasabah.sektor_kredit',
+                'calon_nasabah.jenis_usaha',
+                'calon_nasabah.jumlah_kredit',
+                'calon_nasabah.tujuan_kredit',
+                'calon_nasabah.jaminan_kredit',
+                'calon_nasabah.hubungan_bank',
+                'calon_nasabah.hubungan_bank',
+                'calon_nasabah.verifikasi_umum',
+                'calon_nasabah.id_kabupaten',
+                'calon_nasabah.id_kecamatan',
+                'calon_nasabah.id_desa',
+                'calon_nasabah.tenor_yang_diminta',
+            )
+                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                ->find($id);
+            $param['allKab'] = Kabupaten::get();
+            $param['allKec'] = Kecamatan::where('id_kabupaten', $param['dataUmumNasabah']->id_kabupaten)->get();
+            $param['allDesa'] = Desa::where('id_kecamatan', $param['dataUmumNasabah']->id_kecamatan)->get();
+            $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia')
+                ->find($id);
+            $param['pendapatDanUsulanStaf'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff')->first();
+            $param['pendapatDanUsulanPenyelia'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_penyelia')->first();
+            $param['pendapatDanUsulanPBP'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_pbp')->first();
+            $param['pendapatDanUsulanPBO'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_pbo')->first();
+            if ($param['dataUmumNasabah']->skema_kredit == 'KKB') {
+                $param['dataMerk'] = MerkModel::all();
+                $param['dataPO'] = DB::table('data_po')
+                    ->where('id_pengajuan', $id)
+                    ->first();
+            }
+            $param['skema'] = $param['dataUmumNasabah']->skema_kredit;
+            $dokumenUsaha = DB::table('item')
+                ->where('nama', 'LIKE', '%NIB%')
+                ->orWhere('nama', 'LIKE', '%Surat Keterangan Usaha%')
+                ->orWhere('nama', 'LIKE', '%NPWP%')
+                ->get('id');
+            $countDoc = 0;
+            foreach ($dokumenUsaha as $idDoc) {
+                $count = DB::table('jawaban_text')
+                    ->where('id_pengajuan', $id)
+                    ->where('id_jawaban', $idDoc->id)
+                    ->count();
+                $countDoc += $count;
+            }
+            $param['countIjin'] = $countDoc;
+            // $param['dataAnswer'] = $this->getAnswer($id);
+
+            return view('pengajuan-kredit.detail-pengajuan-jawaban-pbp', $param);
         } else {
             return redirect()->back()->withError('Tidak memiliki hak akses.');
         }
@@ -2006,9 +2077,171 @@ class PengajuanKreditController extends Controller
     // insert komentar
     public function getInsertKomentar(Request $request)
     {
-        // return $request;
         $role = Auth::user()->role;
-        if ($role == 'Penyelia Kredit' || $role == 'PBO' || $role == 'PBP') {
+        if ($role == 'PBO' || $role == 'PBP') {
+            try {
+                $finalArray = array();
+                $finalArray_text = array();
+                $totalDataNull = 0;
+                foreach ($request->skor_pbp as $key => $value) {
+                    if ($value != '' || $value != null) {
+                        array_push($finalArray, [
+                            'skor_pbp' => $value
+                        ]);
+                    } else {
+                        $totalDataNull++;
+                    }
+                };
+                $sum_select = array_sum($request->skor_pbp);
+                $average = ($sum_select) / (count($request->skor_pbp) - $totalDataNull);
+                $result = round($average, 2);
+                $status = "";
+                $updateData = PengajuanModel::find($request->id_pengajuan);
+                if ($result > 0 && $result <= 1) {
+                    $status = "merah";
+                } elseif ($result >= 2 && $result <= 3) {
+                    $status = "kuning";
+                } elseif ($result > 3) {
+                    $status = "hijau";
+                } else {
+                    $status = "merah";
+                }
+
+                if ($role == 'PBP') {
+                    foreach ($request->get('id_option') as $key => $value) {
+                        if (array_key_exists($key, $request->skor_pbp)) {
+                            JawabanPengajuanModel::where('id_jawaban', $value)->where('id_pengajuan', $request->get('id_pengajuan'))
+                                ->update([
+                                    'skor_pbp' => $request->get('skor_pbp')[$key]
+                                ]);
+                        }
+                    }
+
+                    // Log Pengajuan PBP
+                    // $this->logPengajuan->store('Pengguna ' . Auth::user()->name . ' memberi komentar.', $request->id_pengajuan);
+                } else {
+                    foreach ($request->get('id_option') as $key => $value) {
+                        if (array_key_exists($key, $request->skor_pbp)) {
+                            JawabanPengajuanModel::where('id_jawaban', $value)->where('id_pengajuan', $request->get('id_pengajuan'))
+                                ->update([
+                                    'skor_pbo' => $request->get('skor_pbp')[$key]
+                                ]);
+                        }
+                    }
+
+                    // Log Pengajuan PBO
+                    // $this->logPengajuan->store('Pengguna ' . Auth::user()->name . ' memberi komentar.', $request->id_pengajuan);
+                }
+
+                $updateData->status = $status;
+                if ($role == 'PBP') {
+                    $updateData->average_by_pbp = $result;
+                } else {
+                    $updateData->average_by_pbo = $result;
+                }
+                $updateData->update();
+
+                $idKomentar = KomentarModel::where('id_pengajuan', $request->id_pengajuan)->first();
+                if ($role == 'PBP') {
+                    KomentarModel::where('id', $idKomentar->id)->update(
+                        [
+                            'komentar_pbp' => $request->komentar_pbp_keseluruhan,
+                            'id_pbp' => Auth::user()->id,
+                            'updated_at' => date('Y-m-d H:i:s')
+                        ]
+                    );
+                } else {
+                    KomentarModel::where('id', $idKomentar->id)->update(
+                        [
+                            'komentar_pbo' => $request->komentar_pbp_keseluruhan,
+                            'id_pbo' => Auth::user()->id,
+                            'updated_at' => date('Y-m-d H:i:s')
+                        ]
+                    );
+                }
+
+                $countDK = DetailKomentarModel::where('id_komentar', $idKomentar->id)->where('id_user', Auth::user()->id)->count();
+                if ($countDK > 0) {
+                    foreach ($request->id_item as $key => $value) {
+                        if (array_key_exists($key, $request->komentar_pbp)) {
+                            $dk = DetailKomentarModel::where('id_komentar', $idKomentar->id)->where('id_user', Auth::user()->id)->where('id_item', $value)->first();
+                            $dk->komentar = $_POST['komentar_pbp'][$key];
+                            $dk->save();
+                        }
+                    }
+                } else {
+                    foreach ($request->id_item as $key => $value) {
+                        if (array_key_exists($key, $request->komentar_pbp)) {
+                            $dk = new DetailKomentarModel;
+                            $dk->id_komentar = $idKomentar->id;
+                            $dk->id_user = Auth::user()->id;
+                            $dk->id_item = $value;
+                            $dk->komentar = $_POST['komentar_pbp'][$key];
+                            $dk->save();
+                        }
+                    }
+                }
+
+                // pendapat penyelia
+                if ($role == 'PBP')
+                    $countpendapat = PendapatPerAspek::where('id_pengajuan', $request->get('id_pengajuan'))->where('id_pbp', Auth::user()->id)->count();
+                else
+                    $countpendapat = PendapatPerAspek::where('id_pengajuan', $request->get('id_pengajuan'))->where('id_pbo', Auth::user()->id)->count();
+
+                if ($countpendapat > 0) {
+                    if ($role == 'PBP') {
+                        foreach ($request->get('id_aspek') as $key => $value) {
+                            $pendapatperaspekpenyelia = PendapatPerAspek::where('id_pengajuan', $request->get('id_pengajuan'))->where('id_aspek', $value)->where('id_pbp', Auth::user()->id)->first();
+                            $pendapatperaspekpenyelia->pendapat_per_aspek = $_POST['pendapat_per_aspek'][$key];
+                            $pendapatperaspekpenyelia->save();
+                        }
+                    } else {
+                        foreach ($request->get('id_aspek') as $key => $value) {
+                            $pendapatperaspekpenyelia = PendapatPerAspek::where('id_pengajuan', $request->get('id_pengajuan'))->where('id_aspek', $value)->where('id_pbo', Auth::user()->id)->first();
+                            $pendapatperaspekpenyelia->pendapat_per_aspek = $_POST['pendapat_per_aspek'][$key];
+                            $pendapatperaspekpenyelia->save();
+                        }
+                    }
+                } else {
+                    if ($role == 'PBP') {
+                        foreach ($request->get('id_aspek') as $key => $value) {
+                            $pendapatperaspekpenyelia = new PendapatPerAspek;
+                            $pendapatperaspekpenyelia->id_pengajuan = $request->get('id_pengajuan');
+                            $pendapatperaspekpenyelia->id_pbp = Auth::user()->id;
+                            $pendapatperaspekpenyelia->id_aspek = $value;
+                            $pendapatperaspekpenyelia->pendapat_per_aspek = $request->get('pendapat_per_aspek')[$key];
+                            $pendapatperaspekpenyelia->save();
+                        }
+                    } else {
+                        foreach ($request->get('id_aspek') as $key => $value) {
+                            $pendapatperaspekpenyelia = new PendapatPerAspek;
+                            $pendapatperaspekpenyelia->id_pengajuan = $request->get('id_pengajuan');
+                            $pendapatperaspekpenyelia->id_pbo = Auth::user()->id;
+                            $pendapatperaspekpenyelia->id_aspek = $value;
+                            $pendapatperaspekpenyelia->pendapat_per_aspek = $request->get('pendapat_per_aspek')[$key];
+                            $pendapatperaspekpenyelia->save();
+                        }
+                    }
+                }
+
+                // Log Pengajuan review
+                $nasabah = CalonNasabah::select('id', 'nama')->where('id_pengajuan', $updateData->id)->first();
+                $namaNasabah = 'undifined';
+
+                if ($nasabah)
+                    $namaNasabah = $nasabah->nama;
+
+                $this->logPengajuan->store($role.' dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan review terhadap pengajuan atas nama '.$namaNasabah, $updateData->id, Auth::user()->id, Auth::user()->nip);
+
+                return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil Mereview');
+            } catch (Exception $e) {
+                return $e->getMessage();
+                return redirect()->back()->withError('Terjadi kesalahan.' . $e->getMessage());
+            } catch (QueryException $e) {
+                return $e->getMessage();
+                return redirect()->back()->withError('Terjadi kesalahan.' . $e->getMessage());
+            }
+        } else {
             try {
                 $finalArray = array();
                 $finalArray_text = array();
@@ -2037,76 +2270,31 @@ class PengajuanKreditController extends Controller
                     $status = "merah";
                 }
 
-                if ($role == 'Penyelia Kredit') {
-                    foreach ($request->get('id_option') as $key => $value) {
-                        JawabanPengajuanModel::where('id_jawaban', $value)->where('id_pengajuan', $request->get('id_pengajuan'))
-                            ->update([
-                                'skor_penyelia' => $request->get('skor_penyelia')[$key]
-                            ]);
-                    }
+                foreach ($request->get('id_option') as $key => $value) {
+                    JawabanPengajuanModel::where('id_jawaban', $value)->where('id_pengajuan', $request->get('id_pengajuan'))
+                        ->update([
+                            'skor_penyelia' => $request->get('skor_penyelia')[$key]
+                        ]);
                 }
-                else if ($role == 'PBO') {
-                    foreach ($request->get('id_option') as $key => $value) {
-                        JawabanPengajuanModel::where('id_jawaban', $value)->where('id_pengajuan', $request->get('id_pengajuan'))
-                            ->update([
-                                'skor_pbo' => $request->get('skor_penyelia')[$key]
-                            ]);
-                    }
-                } else {
-                    foreach ($request->get('id_option') as $key => $value) {
-                        JawabanPengajuanModel::where('id_jawaban', $value)->where('id_pengajuan', $request->get('id_pengajuan'))
-                            ->update([
-                                'skor_pbp' => $request->get('skor_penyelia')[$key]
-                            ]);
-                    }
-                }
-
                 $updateData->status = $status;
-                if ($role == 'Penyelia Kredit')
-                    $updateData->average_by_penyelia = $result;
-                else if ($role == 'PBO')
-                    $updateData->average_by_pbo = $result;
-                else
-                    $updateData->average_by_pbp = $result;
-
+                $updateData->average_by_penyelia = $result;
                 $updateData->update();
 
                 $idKomentar = KomentarModel::where('id_pengajuan', $request->id_pengajuan)->first();
-                if ($role == 'Penyelia Kredit') {
-                    KomentarModel::where('id', $idKomentar->id)->update(
-                        [
-                            'komentar_penyelia' => $request->komentar_penyelia_keseluruhan,
-                            'id_penyelia' => Auth::user()->id,
-                            'updated_at' => date('Y-m-d H:i:s')
-                        ]
-                    );
-                }
-                else if ($role == 'PBO') {
-                    KomentarModel::where('id', $idKomentar->id)->update(
-                        [
-                            'komentar_pbo' => $request->komentar_pbo_keseluruhan,
-                            'id_pbo' => Auth::user()->id,
-                            'updated_at' => date('Y-m-d H:i:s')
-                        ]
-                    );
-                } else {
-                    KomentarModel::where('id', $idKomentar->id)->update(
-                        [
-                            'komentar_pbp' => $request->komentar_pbp_keseluruhan,
-                            'id_pbp' => Auth::user()->id,
-                            'updated_at' => date('Y-m-d H:i:s')
-                        ]
-                    );
-                }
+                KomentarModel::where('id', $idKomentar->id)->update(
+                    [
+                        'komentar_penyelia' => $request->komentar_penyelia_keseluruhan,
+                        'id_penyelia' => Auth::user()->id,
+                        'updated_at' => date('Y-m-d H:i:s')
+                    ]
+                );
 
                 $countDK = DetailKomentarModel::where('id_komentar', $idKomentar->id)->count();
                 if ($countDK > 0) {
                     foreach ($request->id_item as $key => $value) {
                         $dk = DetailKomentarModel::where('id_komentar', $idKomentar->id)->where('id_user', Auth::user()->id)->where('id_item', $value)->first();
-                        if ($dk) {
-                            $dk->komentar = $_POST['komentar_penyelia'][$key];
-                            $dk->save();
-                        }
+                        $dk->komentar = $_POST['komentar_penyelia'][$key];
+                        $dk->save();
                     }
                 } else {
                     foreach ($request->id_item as $key => $value) {
@@ -2120,63 +2308,21 @@ class PengajuanKreditController extends Controller
                 }
 
                 // pendapat penyelia
-                if ($role == 'Penyelia Kredit')
-                    $countpendapat = PendapatPerAspek::where('id_pengajuan', $request->get('id_pengajuan'))->where('id_penyelia', Auth::user()->id)->count();
-                else if ($role == 'PBO')
-                    $countpendapat = PendapatPerAspek::where('id_pengajuan', $request->get('id_pengajuan'))->where('id_pbo', Auth::user()->id)->count();
-                else
-                    $countpendapat = PendapatPerAspek::where('id_pengajuan', $request->get('id_pengajuan'))->where('id_pbp', Auth::user()->id)->count();
-
+                $countpendapat = PendapatPerAspek::where('id_pengajuan', $request->get('id_pengajuan'))->where('id_penyelia', Auth::user()->id)->count();
                 if ($countpendapat > 0) {
-                    if ($role == 'Penyelia Kredit') {
-                        foreach ($request->get('id_aspek') as $key => $value) {
-                            $pendapatperaspekpenyelia = PendapatPerAspek::where('id_pengajuan', $request->get('id_pengajuan'))->where('id_aspek', $value)->where('id_penyelia', Auth::user()->id)->first();
-                            $pendapatperaspekpenyelia->pendapat_per_aspek = $_POST['pendapat_per_aspek'][$key];
-                            $pendapatperaspekpenyelia->save();
-                        }
-                    }
-                    else if ($role == 'PBO') {
-                        foreach ($request->get('id_aspek') as $key => $value) {
-                            $pendapatperaspekpenyelia = PendapatPerAspek::where('id_pengajuan', $request->get('id_pengajuan'))->where('id_aspek', $value)->where('id_pbo', Auth::user()->id)->first();
-                            $pendapatperaspekpenyelia->pendapat_per_aspek = $_POST['pendapat_per_aspek'][$key];
-                            $pendapatperaspekpenyelia->save();
-                        }
-                    } else {
-                        foreach ($request->get('id_aspek') as $key => $value) {
-                            $pendapatperaspekpenyelia = PendapatPerAspek::where('id_pengajuan', $request->get('id_pengajuan'))->where('id_aspek', $value)->where('id_pbp', Auth::user()->id)->first();
-                            $pendapatperaspekpenyelia->pendapat_per_aspek = $_POST['pendapat_per_aspek'][$key];
-                            $pendapatperaspekpenyelia->save();
-                        }
+                    foreach ($request->get('id_aspek') as $key => $value) {
+                        $pendapatperaspekpenyelia = PendapatPerAspek::where('id_pengajuan', $request->get('id_pengajuan'))->where('id_aspek', $value)->where('id_penyelia', Auth::user()->id)->first();
+                        $pendapatperaspekpenyelia->pendapat_per_aspek = $_POST['pendapat_per_aspek'][$key];
+                        $pendapatperaspekpenyelia->save();
                     }
                 } else {
-                    if ($role == 'Penyelia Kredit') {
-                        foreach ($request->get('id_aspek') as $key => $value) {
-                            $pendapatperaspekpenyelia = new PendapatPerAspek;
-                            $pendapatperaspekpenyelia->id_pengajuan = $request->get('id_pengajuan');
-                            $pendapatperaspekpenyelia->id_penyelia = Auth::user()->id;
-                            $pendapatperaspekpenyelia->id_aspek = $value;
-                            $pendapatperaspekpenyelia->pendapat_per_aspek = $request->get('pendapat_per_aspek')[$key];
-                            $pendapatperaspekpenyelia->save();
-                        }
-                    }
-                    else if ($role == 'PBO') {
-                        foreach ($request->get('id_aspek') as $key => $value) {
-                            $pendapatperaspekpenyelia = new PendapatPerAspek;
-                            $pendapatperaspekpenyelia->id_pengajuan = $request->get('id_pengajuan');
-                            $pendapatperaspekpenyelia->id_pbo = Auth::user()->id;
-                            $pendapatperaspekpenyelia->id_aspek = $value;
-                            $pendapatperaspekpenyelia->pendapat_per_aspek = $request->get('pendapat_per_aspek')[$key];
-                            $pendapatperaspekpenyelia->save();
-                        }
-                    } else {
-                        foreach ($request->get('id_aspek') as $key => $value) {
-                            $pendapatperaspekpenyelia = new PendapatPerAspek;
-                            $pendapatperaspekpenyelia->id_pengajuan = $request->get('id_pengajuan');
-                            $pendapatperaspekpenyelia->id_pbp = Auth::user()->id;
-                            $pendapatperaspekpenyelia->id_aspek = $value;
-                            $pendapatperaspekpenyelia->pendapat_per_aspek = $request->get('pendapat_per_aspek')[$key];
-                            $pendapatperaspekpenyelia->save();
-                        }
+                    foreach ($request->get('id_aspek') as $key => $value) {
+                        $pendapatperaspekpenyelia = new PendapatPerAspek;
+                        $pendapatperaspekpenyelia->id_pengajuan = $request->get('id_pengajuan');
+                        $pendapatperaspekpenyelia->id_penyelia = Auth::user()->id;
+                        $pendapatperaspekpenyelia->id_aspek = $value;
+                        $pendapatperaspekpenyelia->pendapat_per_aspek = $request->get('pendapat_per_aspek')[$key];
+                        $pendapatperaspekpenyelia->save();
                     }
                 }
 
@@ -2196,8 +2342,6 @@ class PengajuanKreditController extends Controller
                 // return $e;
                 return redirect()->back()->withError('Terjadi kesalahan.' . $e->getMessage());
             }
-        } else {
-            return redirect()->back()->withError('Tidak memiliki hak akses.');
         }
 
         // return $request->skor_penyelia;
