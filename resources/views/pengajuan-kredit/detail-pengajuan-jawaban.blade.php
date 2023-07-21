@@ -390,6 +390,16 @@
                             placeholder="Masukkan Komentar"
                             value="{{ isset($komentarSlik->komentar) ? $komentarSlik->komentar : '' }}">
                         <div class="input-skor">
+                            @php
+                                if ($itemSlik) {
+                                    if ($itemSlik->skor_penyelia <= 0) {
+                                        $itemSlik->skor_penyelia = 1;
+                                    }
+                                    if ($itemSlik->skor <= 0) {
+                                        $itemSlik->skor = 1;
+                                    }
+                                }
+                            @endphp
                             <input type="number" class="form-control skorPenyeliaInput1" placeholder="" name="skor_penyelia[]"
                                 onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
                                 min="1"
@@ -826,6 +836,14 @@
                                                                 name="komentar_penyelia[]" placeholder="Masukkan Komentar"
                                                                 value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                             <div class="input-skor">
+                                                                @php
+                                                                    if (!$itemJawaban->skor)
+                                                                        $itemJawaban->skor = 1;
+                                                                    if ($getSkorPenyelia) {
+                                                                        if (!$getSkorPenyelia->skor_penyelia <= 0)
+                                                                            $getSkorPenyelia->skor_penyelia = 1;
+                                                                    }
+                                                                @endphp
                                                                 <input type="number" class="form-control skorPenyeliaInput2" placeholder=""
                                                                     name="skor_penyelia[]"
                                                                     min="1"
@@ -1033,6 +1051,14 @@
                                                                         placeholder="Masukkan Komentar"
                                                                         value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                     <div class="input-skor">
+                                                                        @php
+                                                                            if (!$itemJawabanLevelTiga->skor)
+                                                                                $itemJawabanLevelTiga->skor = 1;
+                                                                            if ($getSkorPenyelia) {
+                                                                                if (!$getSkorPenyelia->skor_penyelia <= 0)
+                                                                                    $getSkorPenyelia->skor_penyelia = 1;
+                                                                            }
+                                                                        @endphp
                                                                         <input type="number" class="form-control skorPenyeliaInput3"
                                                                             min="1"
                                                                             max="4"
@@ -1233,6 +1259,14 @@
                                                                         placeholder="Masukkan Komentar"
                                                                         value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                     <div class="input-skor">
+                                                                        @php
+                                                                            if (!$itemJawabanLevelEmpat->skor)
+                                                                                $itemJawabanLevelEmpat->skor = 1;
+                                                                            if ($getSkorPenyelia) {
+                                                                                if (!$getSkorPenyelia->skor_penyelia <= 0)
+                                                                                    $getSkorPenyelia->skor_penyelia = 1;
+                                                                            }
+                                                                        @endphp
                                                                         <input type="number" class="form-control skorPenyeliaInput4"
                                                                             placeholder="" name="skor_penyelia[]"
                                                                             min="1"
@@ -1329,8 +1363,8 @@
                     <div class="form-group col-md-12">
                         <label for="">Pendapat dan Usulan Penyelia</label>
                         <textarea name="komentar_penyelia_keseluruhan"
-                            class="form-control @error('komentar_penyelia_keseluruhan') is-invalid @enderror" id="" cols="30"
-                            rows="4" placeholder="Pendapat dan Usulan Penyelia" required>{{ isset($pendapatDanUsulanPenyelia->komentar_penyelia) ? $pendapatDanUsulanPenyelia->komentar_penyelia : '' }}</textarea>
+                            class="form-control @error('komentar_penyelia_keseluruhan') is-invalid @enderror" id="komentar_penyelia_keseluruhan" cols="30"
+                            rows="4" placeholder="Pendapat dan Usulan Penyelia" >{{ isset($pendapatDanUsulanPenyelia->komentar_penyelia) ? $pendapatDanUsulanPenyelia->komentar_penyelia : '' }}</textarea>
                         @error('komentar_penyelia_keseluruhan')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -1362,8 +1396,8 @@
                     <div class="form-group col-md-12">
                         <label for="">Pendapat dan Usulan PBO</label>
                         <textarea name="komentar_pbo_keseluruhan"
-                            class="form-control @error('komentar_pbo_keseluruhan') is-invalid @enderror" id="" cols="30"
-                            rows="4" placeholder="Pendapat dan Usulan Penyelia Kredit" required>{{ isset($pendapatDanUsulanPBO->komentar_pbO) ? $pendapatDanUsulanPBO->komentar_pbO : '' }}</textarea>
+                            class="form-control @error('komentar_pbo_keseluruhan') is-invalid @enderror" id="komentar_pbo_keseluruhan" cols="30"
+                            rows="4" placeholder="Pendapat dan Usulan Penyelia Kredit" >{{ isset($pendapatDanUsulanPBO->komentar_pbO) ? $pendapatDanUsulanPBO->komentar_pbO : '' }}</textarea>
                         @error('komentar_pbo_keseluruhan')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -1403,8 +1437,8 @@
                     <div class="form-group col-md-12">
                         <label for="">Pendapat dan Usulan PBP</label>
                         <textarea name="komentar_pbp_keseluruhan"
-                            class="form-control @error('komentar_pbp_keseluruhan') is-invalid @enderror" id="" cols="30"
-                            rows="4" placeholder="Pendapat dan Usulan Penyelia Kredit" required>{{ isset($pendapatDanUsulanPBP->komentar_pbp) ? $pendapatDanUsulanPBP->komentar_pbp : '' }}</textarea>
+                            class="form-control @error('komentar_pbp_keseluruhan') is-invalid @enderror" id="komentar_pbp_keseluruhan" cols="30"
+                            rows="4" placeholder="Pendapat dan Usulan Penyelia Kredit" >{{ isset($pendapatDanUsulanPBP->komentar_pbp) ? $pendapatDanUsulanPBP->komentar_pbp : '' }}</textarea>
                         @error('komentar_pbp_keseluruhan')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -1433,6 +1467,205 @@
         $(window).on('load', function() {
             $("#id_merk").trigger("change");
         });
+
+        $(document).ready(function() {
+            const nullValue = []
+            
+            function cekValueKosong(formIndex) {
+                var skema = $("#skema_kredit").val()
+                var form = ".form-wizard[data-index=" + formIndex + "]";
+                var inputFile = $(form + " input[type=file]")
+                var inputText = $(form + " input[type=text]")
+                var inputNumber = $(form + " input[type=number]")
+                var select = $(form + " select")
+                var textarea = $(form + " textarea")
+    
+                $.each(inputFile, function(i, v) {
+                    if (v.value == '' && !$(this).prop('disabled') && $(this).closest('.filename') == '') {
+                        if (form == ".form-wizard[data-index='2']") {
+                            var ijin = $(form + " select[name=ijin_usaha]")
+                            if (ijin != "tidak_ada_legalitas_usaha") {
+                                let val = $(this).attr("id").toString();
+                                nullValue.push(val.replaceAll("_", " "))
+                            }
+                        } else {
+                            let val = $(this).attr("id").toString();
+                            nullValue.push(val.replaceAll("_", " "))
+                        }
+                    } else if (v.value != '') {
+                        let val = $(this).attr("id").toString().replaceAll("_", " ");
+                        for (var i = 0; i < nullValue.length; i++) {
+                            while (nullValue[i] == val) {
+                                nullValue.splice(i, 1)
+                                break;
+                            }
+                        }
+                    }
+                })
+    
+                $.each(inputText, function(i, v) {
+                    if (v.value == '' && !$(this).prop('disabled')) {
+                        let val = $(this).attr("id").toString();
+                        //console.log(val)
+                        nullValue.push(val.replaceAll("_", " "))
+                    } else if (v.value != '') {
+                        let val = $(this).attr("id").toString().replaceAll("_", " ");
+                        for (var i = 0; i < nullValue.length; i++) {
+                            while (nullValue[i] == val) {
+                                nullValue.splice(i, 1)
+                                break;
+                            }
+                        }
+                    }
+                })
+    
+                $.each(inputNumber, function(i, v) {
+                    if (v.value == '' && !$(this).prop('disabled')) {
+                        let val = $(this).attr("id").toString();
+                        //console.log(val)
+                        nullValue.push(val.replaceAll("_", " "))
+                    } else if (v.value != '') {
+                        let val = $(this).attr("id").toString().replaceAll("_", " ");
+                        for (var i = 0; i < nullValue.length; i++) {
+                            while (nullValue[i] == val) {
+                                nullValue.splice(i, 1)
+                                break;
+                            }
+                        }
+                    }
+                })
+    
+                $.each(select, function(i, v) {
+                    if (v.value == '' && !$(this).prop('disabled')) {
+                        let val = $(this).attr("id").toString();
+                        if (val != "persentase_kebutuhan_kredit_opsi" && val != "ratio_tenor_asuransi_opsi" && val !=
+                            "ratio_coverage_opsi") {
+                            //console.log(val)
+                            nullValue.push(val.replaceAll("_", " "))
+                        }
+                    } else if (v.value != '') {
+                        let val = $(this).attr("id").toString().replaceAll("_", " ");
+                        for (var i = 0; i < nullValue.length; i++) {
+                            while (nullValue[i] == val) {
+                                nullValue.splice(i, 1)
+                                break;
+                            }
+                        }
+                    }
+                })
+    
+                $.each(textarea, function(i, v) {
+                    if (v.value == '' && !$(this).prop('disabled')) {
+                        let val = $(this).attr("id").toString();
+                        //console.log(val)
+                        nullValue.push(val.replaceAll("_", " "))
+                    } else if (v.value != '') {
+                        let val = $(this).attr("id").toString().replaceAll("_", " ");
+                        for (var i = 0; i < nullValue.length; i++) {
+                            while (nullValue[i] == val) {
+                                nullValue.splice(i, 1)
+                                break;
+                            }
+                        }
+                    }
+                })
+    
+                //console.log(nullValue);
+            }
+
+            $(".btn-simpan").on('click', function(e) {
+                const role = "{{Auth::user()->role}}"
+                if (role == 'Penyelia Kredit') {
+                    if ($('#komentar_penyelia_keseluruhan').val() == '') {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: "Field Pendapat dan usulan harus diisi"
+                        })
+                        e.preventDefault()
+                    }
+                    else {
+                        if (nullValue.length > 0) {
+                            let message = "";
+                            $.each(nullValue, (i, v) => {
+                                console.log('validasi')
+                                console.log(v)
+                                console.log('end validasi')
+                                message += v != '' ? v + ", " : ''
+                            })
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: "Field " + message + " harus diisi terlebih dahulu"
+                            })
+                            e.preventDefault()
+                        }
+                    }
+                }
+                else if (role == 'PBO') {
+                    if ($('#komentar_pbo_keseluruhan').val() == '') {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: "Field Pendapat dan usulan harus diisi"
+                        })
+                        e.preventDefault()
+                    }
+                    else {
+                        if (nullValue.length > 0) {
+                            let message = "";
+                            $.each(nullValue, (i, v) => {
+                                console.log('validasi')
+                                console.log(v)
+                                console.log('end validasi')
+                                message += v != '' ? v + ", " : ''
+                            })
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: "Field " + message + " harus diisi terlebih dahulu"
+                            })
+                            e.preventDefault()
+                        }
+                    }
+                }
+                else if (role == 'PBP') {
+                    if ($('#komentar_pbp_keseluruhan').val() == '') {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: "Field Pendapat dan usulan harus diisi"
+                        })
+                        e.preventDefault()
+                    }
+                    else {
+                        if (nullValue.length > 0) {
+                            let message = "";
+                            $.each(nullValue, (i, v) => {
+                                console.log('validasi')
+                                console.log(v)
+                                console.log('end validasi')
+                                message += v != '' ? v + ", " : ''
+                            })
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: "Field " + message + " harus diisi terlebih dahulu"
+                            })
+                            e.preventDefault()
+                        }
+                    }
+                }
+                else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: "Tidak memiliki hak akses untuk melakukan aktivitas ini"
+                    })
+                    e.preventDefault()
+                }
+            })
+        })
 
         @if ($dataUmum->skema_kredit == 'KKB')
             $("#id_merk").change(function() {
