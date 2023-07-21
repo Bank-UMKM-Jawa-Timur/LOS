@@ -386,6 +386,8 @@
                             value="{{ isset($komentarSlik->komentar) ? $komentarSlik->komentar : '' }}">
                         <div class="input-skor">
                             <input type="number" class="form-control skorPbpInput1" placeholder="" name="skor_pbp[]"
+                                min="0"
+                                max="4"
                                 onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
                                 {{ $itemSlik->status_skor == 0 ? 'readonly' : '' }}
                                 value="{{ $itemSlik->skor_pbp != null ? $itemSlik->skor_pbp : $itemSlik->skor_penyelia }}">
@@ -821,6 +823,8 @@
                                                         <div class="input-skor">
                                                             <input type="number" class="form-control skorPbpInput2" placeholder=""
                                                                 name="skor_pbp[]"
+                                                                min="0"
+                                                                max="4"
                                                                 onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
                                                                 {{ $item->status_skor == 0 ? 'readonly' : '' }}
                                                                 value="{{ $getSkorPBP->skor_pbp != null ? $getSkorPBP->skor_pbp : $getSkorPBP->skor_penyelia }}">
@@ -1001,6 +1005,8 @@
                                                                         value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                     <div class="input-skor">
                                                                         <input type="number" class="form-control skorPbpInput3"
+                                                                            min="0"
+                                                                            max="4"
                                                                             placeholder="" name="skor_pbp[]"
                                                                             onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
                                                                             {{ $itemTiga->status_skor == 0 ? 'readonly' : '' }}
@@ -1174,6 +1180,8 @@
                                                                     value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                 <div class="input-skor">
                                                                     <input type="number" class="form-control skorPbpInput4"
+                                                                        min="0"
+                                                                        max="4"
                                                                         placeholder="" name="skor_pbp[]"
                                                                         onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
                                                                         {{ $itemEmpat->status_skor == 0 ? 'readonly' : '' }}
