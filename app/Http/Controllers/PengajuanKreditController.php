@@ -1114,8 +1114,14 @@ class PengajuanKreditController extends Controller
                 if ($mergedDataLevel[$i]) {
                     // jika data tersedia
                     $data = $this->getDataLevel($mergedDataLevel[$i]);
-                    if (is_numeric($data[0]))
+                    if (is_numeric($data[0])){
+                        if($data[1] == 71 || $data[1] == 186){
+                            if($data[0] == '1'){
+                                $statusSlik = true;
+                            }
+                        }
                         $totalScore += $data[0];
+                    }
                     else
                         $totalDataNull++;
                 } else {
