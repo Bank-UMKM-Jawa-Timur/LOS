@@ -72,7 +72,7 @@ $(document).ready(function () {
             }
     
             if (formIndex == 7) {
-                subtotalInput -= 1;
+                subtotalInput -= 2;
             }
         }
         else {
@@ -109,7 +109,7 @@ $(document).ready(function () {
             }
     
             if (formIndex == 6) {
-                subtotalInput -= 1;
+                subtotalInput -= 2;
             }
         }
 
