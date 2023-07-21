@@ -56,8 +56,10 @@ function getKaryawan($nip){
     curl_close($curl);
     $json = json_decode($response);
 
-    if ($json->data)
-        return $json->data->nama_karyawan;
+    if ($json) {
+        if ($json->data)
+            return $json->data->nama_karyawan;
+    }
 }
 
 @endphp
