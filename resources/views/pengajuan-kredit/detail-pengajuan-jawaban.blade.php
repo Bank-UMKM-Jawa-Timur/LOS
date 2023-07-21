@@ -391,8 +391,8 @@
                             value="{{ isset($komentarSlik->komentar) ? $komentarSlik->komentar : '' }}">
                         <div class="input-skor">
                             <input type="number" class="form-control skorPenyeliaInput1" placeholder="" name="skor_penyelia[]"
-                                onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
-                                min="0"
+                                onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
+                                min="1"
                                 max="4"
                                 {{ $itemSlik?->status_skor == 0 ? 'readonly' : '' }}
                                 value="{{ $itemSlik?->skor_penyelia != null ? $itemSlik?->skor_penyelia : $itemSlik?->skor }}">
@@ -828,9 +828,9 @@
                                                             <div class="input-skor">
                                                                 <input type="number" class="form-control skorPenyeliaInput2" placeholder=""
                                                                     name="skor_penyelia[]"
-                                                                    min="0"
+                                                                    min="1"
                                                                     max="4"
-                                                                    onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
+                                                                    onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
                                                                     {{ $item->status_skor == 0 ? 'readonly' : '' }}
                                                                     value="{{ $getSkorPenyelia->skor_penyelia != null ? $getSkorPenyelia->skor_penyelia : $itemJawaban->skor }}">
                                                             </div>
@@ -1034,10 +1034,10 @@
                                                                         value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                     <div class="input-skor">
                                                                         <input type="number" class="form-control skorPenyeliaInput3"
-                                                                            min="0"
+                                                                            min="1"
                                                                             max="4"
                                                                             placeholder="" name="skor_penyelia[]"
-                                                                            onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
+                                                                            onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
                                                                             {{ $itemTiga->status_skor == 0 ? 'readonly' : '' }}
                                                                             value="{{ $getSkorPenyelia->skor_penyelia != null ? $getSkorPenyelia->skor_penyelia : $itemJawabanLevelTiga->skor }}">
                                                                     </div>
@@ -1235,9 +1235,9 @@
                                                                     <div class="input-skor">
                                                                         <input type="number" class="form-control skorPenyeliaInput4"
                                                                             placeholder="" name="skor_penyelia[]"
-                                                                            min="0"
+                                                                            min="1"
                                                                             max="4"
-                                                                            onKeyUp="if(this.value>4){this.value='4';}else if(this.value<0){this.value='0';}"
+                                                                            onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
                                                                             {{ $itemEmpat->status_skor == 0 ? 'readonly' : '' }}
                                                                             value="{{ $getSkorPenyelia->skor_penyelia != null ? $getSkorPenyelia->skor_penyelia : $itemJawabanLevelEmpat->skor }}">
                                                                     </div>
