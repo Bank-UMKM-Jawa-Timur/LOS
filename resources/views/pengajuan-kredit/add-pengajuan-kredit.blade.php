@@ -1030,9 +1030,9 @@ is-invalid
         <div class="row">
             <div class="form-group col-md-12">
                 <label for="">Pendapat dan Usulan</label>
-                <textarea name="komentar_staff" class="form-control @error('komentar_staff') is-invalid @enderror"
+                <textarea name="komentar_staff" id="komentar_staff" class="form-control @error('komentar_staff') is-invalid @enderror"
                     maxlength="255" id="" cols="30" rows="4"
-                    placeholder="Pendapat dan Usulan Staf/Analis Kredit"></textarea>
+                    placeholder="Pendapat dan Usulan Staf/Analis Kredit" required></textarea>
                 @error('komentar_staff')
                 <div class="invalid-feedback">
                     {{ $message }}
@@ -2191,17 +2191,30 @@ is-invalid
         }
 
         $(".btn-simpan").on('click', function(e) {
-            if (nullValue.length > 0) {
-                let message = "";
-                $.each(nullValue, (i, v) => {
-                    message += v != '' ? v + ", " : ''
-                })
+            if ($('#komentar_staff').val() == '') {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: "Field " + message + " harus diisi terlebih dahulu"
+                    text: "Field Pendapat dan usulan harus diisi"
                 })
                 e.preventDefault()
+            }
+            else {
+                if (nullValue.length > 0) {
+                    let message = "";
+                    $.each(nullValue, (i, v) => {
+                        console.log('validasi')
+                        console.log(v)
+                        console.log('end validasi')
+                        message += v != '' ? v + ", " : ''
+                    })
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: "Field " + message + " harus diisi terlebih dahulu"
+                    })
+                    e.preventDefault()
+                }
             }
         })
 
