@@ -1321,6 +1321,10 @@
                     <label for="">Pendapat dan Usulan Staf Kredit</label>
                     <p>{{ $pendapatStafPerAspek->pendapat_per_aspek }}</p>
                 </div>
+                <div class="form-group col-md-12">
+                    <label for="">Pendapat dan Usulan Staf PBO</label>
+                    <p>{{ $pendapatDanUsulanPBO->komentar_pbo }}</p>
+                </div>
             @else
                 @php
                     $getPendapatPerAspek = \App\Models\PendapatPerAspek::where('id_pengajuan', $dataUmum->id)
