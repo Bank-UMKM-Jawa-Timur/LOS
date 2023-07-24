@@ -187,7 +187,7 @@ class PengajuanKreditController extends Controller
                 'calon_nasabah.id_user',
                 'calon_nasabah.jenis_usaha',
                 'calon_nasabah.id_pengajuan'
-            )
+            )->orderBy('tanggal','desc')
                 ->when($request->search, function ($query, $search) {
                     return $query->where('calon_nasabah.nama', 'like', '%' . $search . '%');
                 })
@@ -240,7 +240,7 @@ class PengajuanKreditController extends Controller
                 'calon_nasabah.nama',
                 'calon_nasabah.jenis_usaha',
                 'calon_nasabah.id_pengajuan'
-            )
+            )->orderBy('tanggal','desc')
                 ->where('pengajuan.id_penyelia', $id_penyelia)
                 ->when($request->search, function ($query, $search) {
                     return $query->where('calon_nasabah.nama', 'like', '%' . $search . '%');
@@ -293,7 +293,7 @@ class PengajuanKreditController extends Controller
                 'calon_nasabah.nama',
                 'calon_nasabah.jenis_usaha',
                 'calon_nasabah.id_pengajuan'
-            )
+            )->orderBy('tanggal','desc')
                 ->where('pengajuan.id_pbo', $id_data)
                 ->orWhere('pengajuan.id_pbp', $id_data)
                 ->when($request->search, function ($query, $search) {
@@ -345,7 +345,7 @@ class PengajuanKreditController extends Controller
                 'calon_nasabah.nama',
                 'calon_nasabah.jenis_usaha',
                 'calon_nasabah.id_pengajuan'
-            )
+            )->orderBy('tanggal','desc')
                 ->where('pengajuan.id_pincab', $id_data)
                 ->when($request->search, function ($query, $search) {
                     return $query->where('calon_nasabah.nama', 'like', '%' . $search . '%');
@@ -375,7 +375,7 @@ class PengajuanKreditController extends Controller
                 ->where('pengajuan.id_cabang', Auth::user()->id_cabang)
                 ->whereIn('pengajuan.posisi', ['Pincab', 'Selesai', 'Ditolak'])
                 ->paginate(5)
-                ->withQueryString();;
+                ->withQueryString();
             return view('pengajuan-kredit.komentar-pincab-pengajuan', $param);
         } else {
             $id_cabang = Auth::user()->id_cabang;
@@ -396,7 +396,7 @@ class PengajuanKreditController extends Controller
                 'calon_nasabah.nama',
                 'calon_nasabah.jenis_usaha',
                 'calon_nasabah.id_pengajuan'
-            )
+            )->orderBy('tanggal','desc')
                 ->when($request->search, function ($query, $search) {
                     return $query->where('calon_nasabah.nama', 'like', '%' . $search . '%');
                 })
@@ -425,7 +425,7 @@ class PengajuanKreditController extends Controller
                 ->paginate(5)
                 ->withQueryString();
 
-            // dd($param['data_pengajuan']);
+
             return view('pengajuan-kredit.komentar-pincab-pengajuan', $param);
         }
     }
