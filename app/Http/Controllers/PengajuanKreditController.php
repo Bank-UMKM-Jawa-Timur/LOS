@@ -472,7 +472,7 @@ class PengajuanKreditController extends Controller
             // dump($param['itemSP']);
             // dump($param['dataPertanyaanSatu']);
             // dd($param['itemP']);
-            return view('pengajuan-kredit.add-pengajuan-kredit', $param);
+            return view('pengajuan-kredit.add-pengajuan-kredit-old', $param);
         }
     }
 
@@ -933,17 +933,27 @@ class PengajuanKreditController extends Controller
      */
     public function store(Request $request)
     {
+        // return $request;
         $arr = [];
         $arrK = [];
         $arrPath = [];
-        // foreach ($request->upload_file as $key => $value) {
-        //     array_push($arr, $value->getClientOriginalName());
-        //     array_push($arrK, $key);
-        //     array_push($arrPath, $value->getPathName());
-        // }
-        // dd($arr, $arrK, $arrPath, $request->upload_file);
+        foreach ($request->upload_file as $key => $value) {
+            if (is_array($value)) {
+                for ($i=0; $i < count($value); $i++) { 
+                    array_push($arr, $value[$i]->getClientOriginalName());
+                    array_push($arrK, $key);
+                    array_push($arrPath, $value[$i]->getPathName());
+                }
+            }
+            else {
+                array_push($arr, $value->getClientOriginalName());
+                array_push($arrK, $key);
+                array_push($arrPath, $value->getPathName());
+            }
+        }
+        dd($arr, $arrK, $arrPath, $request->upload_file);
         // // dd($request->all(), $request->id_item_file, $request->upload_file, $request->upload_file);
-        // return $request;
+        return $request;
         // return $_POST;
         // return 'jumlah id level = ' . count($request->get('id_level')) . '; jumlah input = ' . count($request->get('informasi'));
         // $checkLevelDua = $request->dataLevelDua != null ? 'required' : '';
@@ -1162,9 +1172,9 @@ class PengajuanKreditController extends Controller
             $avgResult = round($totalScore / (count($mergedDataLevel) - $totalDataNull), 2);
             $status = "";
             $updateData = PengajuanModel::find($id_pengajuan);
-            if ($avgResult > 0 && $avgResult <= 1) {
+            if ($avgResult > 0 && $avgResult <= 2) {
                 $status = "merah";
-            } elseif ($avgResult >= 2 && $avgResult <= 3) {
+            } elseif ($avgResult > 2 && $avgResult <= 3) {
                 // $updateData->status = "kuning";
                 $status = "kuning";
             } elseif ($avgResult > 3) {
@@ -2546,7 +2556,7 @@ class PengajuanKreditController extends Controller
             ->join('desa', 'desa.id', 'calon_nasabah.id_desa')
             ->where('calon_nasabah.id_pengajuan', $id)
             ->first();
-        $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit')
+        $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit', 'pengajuan.average_by_sistem', 'pengajuan.average_by_penyelia', 'pengajuan.average_by_pbo', 'pengajuan.average_by_pbp')
             ->find($id);
         $param['comment'] = KomentarModel::where('id_pengajuan', $id)->first();
         // $param['jawabanpengajuan'] = JawabanPengajuanModel::select('jawaban.id','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','option.id as id_option','option.option as name_option','option.id_item','item.id as id_item','item.nama','item.level','item.id_parent')

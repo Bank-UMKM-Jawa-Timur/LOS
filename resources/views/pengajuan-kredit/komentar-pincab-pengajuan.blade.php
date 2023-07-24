@@ -200,10 +200,9 @@
                         <td>
                             @php
                                 $avgResult = $item->average_by_penyelia != null ? $item->average_by_penyelia : $item->average_by_sistem;
-                                if ($avgResult > 0 && $avgResult <= 1) {
+                                if ($avgResult > 0 && $avgResult <= 2) {
                                     $status = "merah";
-                                } elseif ($avgResult >= 2 && $avgResult <= 3) {
-                                    // $updateData->status = "kuning";
+                                } elseif ($avgResult > 2 && $avgResult <= 3) {
                                     $status = "kuning";
                                 } elseif ($avgResult > 3) {
                                     $status = "hijau";

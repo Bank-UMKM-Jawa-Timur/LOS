@@ -63,10 +63,32 @@
                                             ->where('users.role', $itemRole)
                                             ->first();
                                     }
+
+                                    if ($dataUmum->average_by_pbo > 0 && $dataUmum->average_by_pbo <= 2) {
+                                        $status = "merah";
+                                    } elseif ($dataUmum->average_by_pbo > 2 && $dataUmum->average_by_pbo <= 3) {
+                                        $status = "kuning";
+                                    } elseif ($dataUmum->average_by_pbo > 3) {
+                                        $status = "hijau";
+                                    } else {
+                                        $status = "merah";
+                                    }
                                 @endphp
                                 <div class="col-sm-12">
-                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail"
-                                        value="{{ ($user) ? $user->nip_users . ' - ' . getKaryawan($user->nip) . ' ' . '('. $user->email .')' : '-' }}">
+                                    <span class="text-dark">{{ ($user) ? $user->nip_users . ' - ' . getKaryawan($user->nip) . ' ' . '('. $user->email .')' : '-' }}</span>
+                                    @if ($status == 'hijau')
+                                        <span class="text-success">Skor {{$dataUmum->average_by_pbo}}</span>
+                                    @elseif ($status == 'kuning')
+                                        <span class="text-warning">Skor {{$dataUmum->average_by_pbo}}</span>
+                                    @elseif ($status == 'merah')
+                                        <span class="text-danger">
+                                            {{ $dataUmum->average_by_pbo }}
+                                        </span>
+                                    @else
+                                        <span class="text-secondary">
+                                            {{ $dataUmum->average_by_pbo }}
+                                        </span>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -98,10 +120,32 @@
                                             ->where('users.role', $itemRole)
                                             ->first();
                                     }
+
+                                    if ($dataUmum->average_by_pbp > 0 && $dataUmum->average_by_pbp <= 2) {
+                                        $status = "merah";
+                                    } elseif ($dataUmum->average_by_pbp > 2 && $dataUmum->average_by_pbo <= 3) {
+                                        $status = "kuning";
+                                    } elseif ($dataUmum->average_by_pbp > 3) {
+                                        $status = "hijau";
+                                    } else {
+                                        $status = "merah";
+                                    }
                                 @endphp
                                 <div class="col-sm-12">
-                                    <input type="text" readonly class="form-control-plaintext" id="staticEmail"
-                                        value="{{ ($user) ? $user->nip_users . ' - ' . getKaryawan($user->nip) . ' ' . '('. $user->email .')' : '-' }}">
+                                    <span class="text-dark">{{ ($user) ? $user->nip_users . ' - ' . getKaryawan($user->nip) . ' ' . '('. $user->email .')' : '-' }}</span>
+                                    @if ($status == 'hijau')
+                                        <span class="text-success">Skor {{$dataUmum->average_by_pbp}}</span>
+                                    @elseif ($status == 'kuning')
+                                        <span class="text-warning">Skor {{$dataUmum->average_by_pbp}}</span>
+                                    @elseif ($status == 'merah')
+                                        <span class="text-danger">
+                                            {{ $dataUmum->average_by_pbp }}
+                                        </span>
+                                    @else
+                                        <span class="text-secondary">
+                                            {{ $dataUmum->average_by_pbp }}
+                                        </span>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -119,6 +163,22 @@
                     <div class="col-sm-7">
                         @php
                             $log = DB::table('log_pengajuan')->select('id')->where('id_pengajuan', $dataUmum->id)->first();
+                            $avg = 0;
+                            if ($itemRole == 'Staf Analis Kredit')
+                                $avg = $dataUmum->average_by_sistem;
+                            else if ($itemRole == 'Penyelia Kredit')
+                                $avg = $dataUmum->average_by_penyelia;
+                            
+                            if ($avg > 0 && $avg <= 2) {
+                                $status = "merah";
+                            } elseif ($avg > 2 && $avg <= 3) {
+                                $status = "kuning";
+                            } elseif ($avg > 3) {
+                                $status = "hijau";
+                            } else {
+                                $status = "merah";
+                            }
+                            
                             if (!$log) {
                                 $user = DB::table('pengajuan')
                                     ->join('users', 'users.id', 'pengajuan.' . $idRoles[$key])
@@ -134,8 +194,24 @@
                             }
                         @endphp
                         <div class="col-sm-12">
-                            <input type="text" readonly class="form-control-plaintext" id="staticEmail"
-                                value="{{ ($user) ? $user->nip_users . ' - ' . getKaryawan($user->nip) . ' ' . '('. $user->email .')' : '-' }}">
+                            @if ($itemRole == 'Pincab')
+                                <span class="text-dark">{{ ($user) ? $user->nip_users . ' - ' . getKaryawan($user->nip) . ' ' . '('. $user->email .')' : '-' }}</span>
+                            @else
+                                <span class="text-dark">{{ ($user) ? $user->nip_users . ' - ' . getKaryawan($user->nip) . ' ' . '('. $user->email .')' : '-' }}</span>
+                                @if ($status == 'hijau')
+                                    <span class="text-success">Skor {{$avg}}</span>
+                                @elseif ($status == 'kuning')
+                                    <span class="text-warning">Skor {{$avg}}</span>
+                                @elseif ($status == 'merah')
+                                    <font class="text-danger">
+                                        {{ $avgResult }}
+                                    </font>
+                                @else
+                                    <font class="text-secondary">
+                                        {{ $avgResult }}
+                                    </font>
+                                @endif
+                            @endif
                         </div>
                     </div>
                 </div>
