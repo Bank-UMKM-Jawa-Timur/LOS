@@ -937,23 +937,23 @@ class PengajuanKreditController extends Controller
         $arr = [];
         $arrK = [];
         $arrPath = [];
-        foreach ($request->upload_file as $key => $value) {
-            if (is_array($value)) {
-                for ($i=0; $i < count($value); $i++) { 
-                    array_push($arr, $value[$i]->getClientOriginalName());
-                    array_push($arrK, $key);
-                    array_push($arrPath, $value[$i]->getPathName());
-                }
-            }
-            else {
-                array_push($arr, $value->getClientOriginalName());
-                array_push($arrK, $key);
-                array_push($arrPath, $value->getPathName());
-            }
-        }
-        dd($arr, $arrK, $arrPath, $request->upload_file);
+        // foreach ($request->upload_file as $key => $value) {
+        //     if (is_array($value)) {
+        //         for ($i=0; $i < count($value); $i++) {
+        //             array_push($arr, $value[$i]->getClientOriginalName());
+        //             array_push($arrK, $key);
+        //             array_push($arrPath, $value[$i]->getPathName());
+        //         }
+        //     }
+        //     else {
+        //         array_push($arr, $value->getClientOriginalName());
+        //         array_push($arrK, $key);
+        //         array_push($arrPath, $value->getPathName());
+        //     }
+        // }
+        // dd($arr, $arrK, $arrPath, $request->upload_file);
         // // dd($request->all(), $request->id_item_file, $request->upload_file, $request->upload_file);
-        return $request;
+        // return $request;
         // return $_POST;
         // return 'jumlah id level = ' . count($request->get('id_level')) . '; jumlah input = ' . count($request->get('informasi'));
         // $checkLevelDua = $request->dataLevelDua != null ? 'required' : '';
@@ -1068,21 +1068,42 @@ class PengajuanKreditController extends Controller
 
             // untuk upload file baru
             foreach ($request->upload_file as $key => $value) {
-                $filename = auth()->user()->id.'-'.time().'-'.$value->getClientOriginalName();
-                $relPath = "upload/{$id_pengajuan}/{$key}";
-                $path = public_path("upload/{$id_pengajuan}/{$key}/");
+                if(is_array($value)){
+                    for ($i=0; $i < count($value); $i++) {
+                        $filename = auth()->user()->id.'-'.time().'-'.$value[$i]->getClientOriginalName();
+                        $relPath = "upload/{$id_pengajuan}/{$key}";
+                        $path = public_path("upload/{$id_pengajuan}/{$key}/");
 
-                File::isDirectory(public_path($relPath)) or File::makeDirectory(public_path($relPath), recursive: true);
-                $value->move($path, $filename);
+                        File::isDirectory(public_path($relPath)) or File::makeDirectory(public_path($relPath), recursive: true);
+                        $value[$i]->move($path, $filename);
 
-                JawabanTextModel::create([
-                    'id_pengajuan' => $id_pengajuan,
-                    'id_jawaban' => $key,
-                    'opsi_text' => $filename,
-                    'skor_penyelia' => null,
-                    'skor_pbp' => null,
-                    'skor' => null,
-                ]);
+                        JawabanTextModel::create([
+                            'id_pengajuan' => $id_pengajuan,
+                            'id_jawaban' => $key,
+                            'opsi_text' => $filename,
+                            'skor_penyelia' => null,
+                            'skor_pbp' => null,
+                            'skor' => null,
+                        ]);
+                    }
+                }
+                else {
+                    $filename = auth()->user()->id.'-'.time().'-'.$value->getClientOriginalName();
+                    $relPath = "upload/{$id_pengajuan}/{$key}";
+                    $path = public_path("upload/{$id_pengajuan}/{$key}/");
+
+                    File::isDirectory(public_path($relPath)) or File::makeDirectory(public_path($relPath), recursive: true);
+                    $value->move($path, $filename);
+
+                    JawabanTextModel::create([
+                        'id_pengajuan' => $id_pengajuan,
+                        'id_jawaban' => $key,
+                        'opsi_text' => $filename,
+                        'skor_penyelia' => null,
+                        'skor_pbp' => null,
+                        'skor' => null,
+                    ]);
+                }
             }
             //untuk upload file
             $tempFiles = JawabanTemp::where('type', 'file')->where('id_temporary_calon_nasabah', $request->id_nasabah)->get();
@@ -2289,7 +2310,7 @@ class PengajuanKreditController extends Controller
             $nasabah = CalonNasabah::select('id', 'nama')->where('id_pengajuan', $id)->first();
             if ($nasabah)
                 $namaNasabah = $nasabah->nama;
-                
+
             if (auth()->user()->role == 'Penyelia Kredit') {
                 if (auth()->user()->id_cabang == '1') {
                     $dataPenyelia = PengajuanModel::find($id);
@@ -2301,14 +2322,14 @@ class PengajuanKreditController extends Controller
                             ->whereNotNull('nip')
                             ->where('role', 'PBO')
                             ->first();
-    
+
                         if ($userPBO) {
                             if ($status != null) {
                                 $dataPenyelia->id_pbo = $userPBO->id;
                                 $dataPenyelia->tanggal_review_pbo = date(now());
                                 $dataPenyelia->posisi = "PBO";
                                 $dataPenyelia->update();
-        
+
                                 // Log Pengajuan melanjutkan pbo dan mendapatkan
                                 $this->logPengajuan->store('Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan atas nama '.$namaNasabah.' ke PBO dengan NIP ' . $userPBO->nip . ' atas nama ' . $this->getNameKaryawan($userPBO->nip) . ' .', $id, Auth::user()->id, Auth::user()->nip);
                                 $this->logPengajuan->store('PBO dengan NIP ' . $userPBO->nip . ' atas nama ' . $this->getNameKaryawan($userPBO->nip) . ' menerima data pengajuan atas nama '.$namaNasabah.' dari Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $userPBO->id, $userPBO->nip);
@@ -2332,7 +2353,7 @@ class PengajuanKreditController extends Controller
                                 $dataPenyelia->tanggal_review_pbp = date(now());
                                 $dataPenyelia->posisi = "PBP";
                                 $dataPenyelia->update();
-    
+
                                 // Log Pengajuan melanjutkan PBP dan mendapatkan
                                 $this->logPengajuan->store('Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan atas nama '.$namaNasabah.' ke PBP dengan NIP ' . $userPBP->nip . ' atas nama ' . $this->getNameKaryawan($userPBP->nip) . ' .', $id, Auth::user()->id, Auth::user()->nip);
                                 $this->logPengajuan->store('PBP dengan NIP ' . $userPBP->nip . ' atas nama ' . $this->getNameKaryawan($userPBP->nip) . ' menerima data pengajuan atas nama '.$namaNasabah.' dari Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $userPBP->id, $userPBP->nip);
@@ -2355,10 +2376,10 @@ class PengajuanKreditController extends Controller
                                 $dataPenyelia->tanggal_review_pbp = date(now());
                                 $dataPenyelia->posisi = "Pincab";
                                 $dataPenyelia->update();
-    
+
                                 // Log Pengajuan melanjutkan PBP dan mendapatkan
                                 $this->logPengajuan->store('Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan atas nama '.$namaNasabah.' ke Pincab dengan NIP ' . $userPincab->nip . ' atas nama ' . $this->getNameKaryawan($userPincab->nip) . ' .', $id, Auth::user()->id, Auth::user()->nip);
-    
+
                                 $this->logPengajuan->store('Pincab dengan NIP ' . $userPincab->nip . ' atas nama ' . $this->getNameKaryawan($userPincab->nip) . ' menerima data pengajuan atas nama '.$namaNasabah.' dari Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $userPincab->id, $userPincab->nip);
                             } else {
                                 return back()->withError('User pincab tidak ditemukan pada cabang ini.');
@@ -2371,7 +2392,7 @@ class PengajuanKreditController extends Controller
                     $dataPenyelia = PengajuanModel::find($id);
                     $status = $dataPenyelia->status;
                     $to = $request->to;
-    
+
                     if ($to == 'pbo') {
                         $userPBO = User::select('id', 'nip')
                             ->where('id_cabang', $dataPenyelia->id_cabang)
@@ -2384,7 +2405,7 @@ class PengajuanKreditController extends Controller
                                 $dataPenyelia->tanggal_review_pbo = date(now());
                                 $dataPenyelia->posisi = "PBO";
                                 $dataPenyelia->update();
-    
+
                                 // Log Pengajuan melanjutkan pbo dan mendapatkan
                                 $this->logPengajuan->store('Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan atas nama '.$namaNasabah.' ke PBO dengan NIP ' . $userPBO->nip . ' atas nama ' . $this->getNameKaryawan($userPBO->nip) . ' .', $id, Auth::user()->id, Auth::user()->nip);
                                 $this->logPengajuan->store('PBO dengan NIP ' . $userPBO->nip . ' atas nama ' . $this->getNameKaryawan($userPBO->nip) . ' menerima data pengajuan atas nama '.$namaNasabah.' dari Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $userPBO->id, $userPBO->nip);
@@ -2405,7 +2426,7 @@ class PengajuanKreditController extends Controller
                                 $dataPenyelia->tanggal_review_pincab = date(now());
                                 $dataPenyelia->posisi = "Pincab";
                                 $dataPenyelia->update();
-    
+
                                 // Log Pengajuan melanjutkan PINCAB dan mendapatkan
                                 $pincab = User::find($userPincab->id);
                                 $this->logPengajuan->store('Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan atas nama '.$namaNasabah.' ke Pincab dengan NIP ' . $pincab->nip . ' atas nama ' . $this->getNameKaryawan($pincab->nip) . ' .', $id, Auth::user()->id, Auth::user()->nip);
@@ -2421,7 +2442,7 @@ class PengajuanKreditController extends Controller
             } elseif (auth()->user()->role == 'PBO') {
                 $dataPenyelia = PengajuanModel::find($id);
                 $status = $dataPenyelia->average_by_pbo;
-    
+
                 if (auth()->user()->id_cabang == 1) {
                     if ($status != null) {
                         $userPBP = User::select('id', 'nip')
@@ -2434,7 +2455,7 @@ class PengajuanKreditController extends Controller
                             $dataPenyelia->tanggal_review_pbp = date(now());
                             $dataPenyelia->posisi = "PBP";
                             $dataPenyelia->update();
-    
+
                             // Log Pengajuan melanjutkan PBP dan mendapatkan
                             $this->logPengajuan->store('PBO dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan atas nama '.$namaNasabah.' ke PBP dengan NIP ' . $userPBP->nip . ' atas nama ' . $this->getNameKaryawan($userPBP->nip) . ' .', $id, Auth::user()->id, Auth::user()->nip);
                             $this->logPengajuan->store('PBP dengan NIP ' . $userPBP->nip . ' atas nama ' . $this->getNameKaryawan($userPBP->nip) . ' menerima data pengajuan atas nama '.$namaNasabah.' dari PBO dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $userPBP->id, $userPBP->nip);
@@ -2456,7 +2477,7 @@ class PengajuanKreditController extends Controller
                             $dataPenyelia->tanggal_review_pincab = date(now());
                             $dataPenyelia->posisi = "Pincab";
                             $dataPenyelia->update();
-    
+
                             // Log Pengajuan melanjutkan PBP dan mendapatkan
                             $this->logPengajuan->store('PBO dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan atas nama '.$namaNasabah.' ke Pincab dengan NIP ' . $userPincab->nip . ' atas nama ' . $this->getNameKaryawan($userPincab->nip) . ' .', $id, Auth::user()->id, Auth::user()->nip);
                             $this->logPengajuan->store('Pincab dengan NIP ' . $userPincab->nip . ' atas nama ' . $this->getNameKaryawan($userPincab->nip) . ' menerima data pengajuan atas nama '.$namaNasabah.' dari PBO dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $userPincab->id, $userPincab->nip);
@@ -2869,7 +2890,7 @@ class PengajuanKreditController extends Controller
             'data' => $nasabah,
         ]);
     }
-    
+
     public function saveDataPOTemp(Request $request) {
         try {
             $find = array('Rp ', '.');
