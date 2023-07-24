@@ -946,9 +946,9 @@ class PengajuanKreditController extends Controller
             'alamat_rumah' => 'required',
             'alamat_usaha' => 'required',
             'no_ktp' => 'required',
-            'kabupaten' => 'required',
-            'kec' => 'required',
-            'desa' => 'required',
+            'kabupaten' => 'required|not_in:0',
+            'kec' => 'required|not_in:0',
+            'desa' => 'required|not_in:0',
             'tempat_lahir' => 'required',
             'tanggal_lahir' => 'required',
             'status' => 'required',
@@ -961,7 +961,8 @@ class PengajuanKreditController extends Controller
             'hubungan_bank' => 'required',
             'hasil_verifikasi' => 'required',
         ], [
-            'required' => 'Data :attribute harus terisi.'
+            'required' => 'Data :attribute harus terisi.',
+            'not_in' => 'kolom harus dipilih.',
         ]);
 
         DB::beginTransaction();
@@ -1362,10 +1363,9 @@ class PengajuanKreditController extends Controller
             'alamat_rumah' => 'required',
             'alamat_usaha' => 'required',
             'no_ktp' => 'required|max:16',
-            'kabupaten' => 'required',
-            'kec' => 'required',
-            'desa' => 'required',
-            'kabupaten' => 'required',
+            'kabupaten' => 'required|not_in:0',
+            'kec' => 'required|not_in:0',
+            'desa' => 'required|not_in:0',
             'tempat_lahir' => 'required',
             'tanggal_lahir' => 'required',
             'status' => 'required',
@@ -1380,7 +1380,8 @@ class PengajuanKreditController extends Controller
             // 'dataLevelTiga.*' => $checkLevelTiga,
             // 'dataLevelEmpat.*' => $checkLevelEmpat,
         ], [
-            'required' => 'data harus terisi.'
+            'required' => 'data harus terisi.',
+            'not_in' => 'kolom harus dipilih.',
         ]);
         DB::beginTransaction();
         try {

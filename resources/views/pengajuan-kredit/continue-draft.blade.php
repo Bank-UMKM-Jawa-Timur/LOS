@@ -111,9 +111,9 @@ null => 1,
             </div>
             <div class="form-group col-md-4">
                 <label for="">Kabupaten</label>
-                <select name="kabupaten" class="form-control @error('name') is-invalid @enderror select2"
+                <select name="kabupaten" class="form-control @error('kabupaten') is-invalid @enderror select2"
                     id="kabupaten">
-                    <option value="">---Pilih Kabupaten----</option>
+                    <option value="0">---Pilih Kabupaten----</option>
                     @foreach ($dataKabupaten as $item)
                     <option {{ $item->id == $duTemp?->id_kabupaten ?? '' ? 'selected' : '' }}
                         value="{{ $item->id }}">{{ $item->kabupaten }}</option>
@@ -128,7 +128,7 @@ null => 1,
             <div class="form-group col-md-4">
                 <label for="">Kecamatan</label>
                 <select name="kec" id="kecamatan" class="form-control @error('kec') is-invalid @enderror  select2">
-                    <option value="">---Pilih Kecamatan----</option>
+                    <option value="0">---Pilih Kecamatan----</option>
                 </select>
                 @error('kec')
                 <div class="invalid-feedback">
@@ -139,7 +139,7 @@ null => 1,
             <div class="form-group col-md-4">
                 <label for="">Desa</label>
                 <select name="desa" id="desa" class="form-control @error('desa') is-invalid @enderror select2">
-                    <option value="">---Pilih Desa----</option>
+                    <option value="0">---Pilih Desa----</option>
                 </select>
                 @error('desa')
                 <div class="invalid-feedback">
@@ -1607,8 +1607,8 @@ is-invalid
                         if (res) {
                             $("#kecamatan").empty();
                             $("#desa").empty();
-                            $("#kecamatan").append('<option>---Pilih Kecamatan---</option>');
-                            $("#desa").append('<option>---Pilih Desa---</option>');
+                            $("#kecamatan").append('<option value="0">---Pilih Kecamatan---</option>');
+                            $("#desa").append('<option value="0">---Pilih Desa---</option>');
                             $.each(res, function(nama, kode) {
                                 $('#kecamatan').append(`
                                 <option value="${kode}" ${kode == {{ $duTemp?->id_kecamatan ?? 'null' }} ? 'selected' : '' }>${nama}</option>
@@ -1640,7 +1640,7 @@ is-invalid
                         //    //console.log(res);
                         if (res) {
                             $("#desa").empty();
-                            $("#desa").append('<option>---Pilih Desa---</option>');
+                            $("#desa").append('<option value="0">---Pilih Desa---</option>');
                             $.each(res, function(nama, kode) {
                                 $('#desa').append(`
                                 <option value="${kode}" ${kode == {{ $duTemp?->id_desa ?? 'null' }} ? 'selected' : '' }>${nama}</option>
