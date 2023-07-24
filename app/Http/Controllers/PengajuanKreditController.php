@@ -933,6 +933,16 @@ class PengajuanKreditController extends Controller
      */
     public function store(Request $request)
     {
+        $arr = [];
+        $arrK = [];
+        $arrPath = [];
+        // foreach ($request->upload_file as $key => $value) {
+        //     array_push($arr, $value->getClientOriginalName());
+        //     array_push($arrK, $key);
+        //     array_push($arrPath, $value->getPathName());
+        // }
+        // dd($arr, $arrK, $arrPath, $request->upload_file);
+        // // dd($request->all(), $request->id_item_file, $request->upload_file, $request->upload_file);
         // return $request;
         // return $_POST;
         // return 'jumlah id level = ' . count($request->get('id_level')) . '; jumlah input = ' . count($request->get('informasi'));
@@ -1046,6 +1056,24 @@ class PengajuanKreditController extends Controller
                     ]);
             }
 
+            // untuk upload file baru
+            foreach ($request->upload_file as $key => $value) {
+                $filename = auth()->user()->id.'-'.time().'-'.$value->getClientOriginalName();
+                $relPath = "upload/{$id_pengajuan}/{$key}";
+                $path = public_path("upload/{$id_pengajuan}/{$key}/");
+
+                File::isDirectory(public_path($relPath)) or File::makeDirectory(public_path($relPath), recursive: true);
+                $value->move($path, $filename);
+
+                JawabanTextModel::create([
+                    'id_pengajuan' => $id_pengajuan,
+                    'id_jawaban' => $key,
+                    'opsi_text' => $filename,
+                    'skor_penyelia' => null,
+                    'skor_pbp' => null,
+                    'skor' => null,
+                ]);
+            }
             //untuk upload file
             $tempFiles = JawabanTemp::where('type', 'file')->where('id_temporary_calon_nasabah', $request->id_nasabah)->get();
             foreach ($tempFiles as $tempFile) {

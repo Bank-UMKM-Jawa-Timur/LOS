@@ -839,10 +839,6 @@
                                         <span class="invalid-tooltip" style="display: none">Besaran file tidak
                                             boleh lebih dari 5 MB</span>
                                     @endif
-                                    <input type="file" name="id_update_file[]" id="id_update_npwp"
-                                        value="{{ $jawabanDokNPWP->id ?? '' }}">
-                                    <span class="invalid-tooltip">Besaran file tidak
-                                        boleh lebih dari 5 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('dataLevelTiga.' . $key) }}
