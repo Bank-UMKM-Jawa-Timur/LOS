@@ -198,9 +198,8 @@ null => 1,
                 <label for="">No. KTP</label>
                 <input type="number" maxlength="16"
                     oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
-                    onkeydown="return event.keyCode !== 69" name="no_ktp" class="form-control @error('no_ktp')
-is-invalid
-@enderror" id="no_ktp" placeholder="Masukkan 16 digit No. KTP" value="">
+                    onkeydown="return event.keyCode !== 69" name="no_ktp" class="form-control @error('no_ktp') is-invalid @enderror"
+                    id="no_ktp" placeholder="Masukkan 16 digit No. KTP" value="">
                 @error('no_ktp')
                 <div class="invalid-feedback">
                     {{ $message }}
@@ -251,8 +250,8 @@ is-invalid
                 <label for="">{{ $itemP->nama }}</label>
                 <input type="hidden" name="id_item_file[{{ $itemP->id }}]" value="{{ $itemP->id }}" id="">
                 <input type="file" name="upload_file[{{ $itemP->id }}]" id="file_slik" data-id=""
-                    placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-control limit-size">
-                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                    placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-control limit-size-slik">
+                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
                 @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                 <div class="invalid-feedback">
                     {{ $errors->first('dataLevelDua.' . $key) }}
@@ -2027,6 +2026,20 @@ is-invalid
                 });
             }
         })
+        // Limit Upload Slik
+        $('.limit-size-slik').on('change', function() {
+            var size = (this.files[0].size / 1024 / 1024).toFixed(2)
+            if (size > 10) {
+                $(this).next().css({
+                    "display": "block"
+                });
+                this.value = ''
+            } else {
+                $(this).next().css({
+                    "display": "none"
+                });
+            }
+        })
 
         $('body').on('click', '.file-wrapper .btn-add-file', function(e) {
             const wrapper = $(this).parent().parent().parent();
@@ -2039,6 +2052,20 @@ is-invalid
             $('.limit-size').on('change', function() {
                 var size = (this.files[0].size / 1024 / 1024).toFixed(2)
                 if (size > 5) {
+                    $(this).next().css({
+                        "display": "block"
+                    });
+                    this.value = ''
+                } else {
+                    $(this).next().css({
+                        "display": "none"
+                    });
+                }
+            })
+
+            $('.limit-size-slik').on('change', function() {
+                var size = (this.files[0].size / 1024 / 1024).toFixed(2)
+                if (size > 10) {
                     $(this).next().css({
                         "display": "block"
                     });
