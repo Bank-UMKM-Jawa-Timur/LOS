@@ -2232,8 +2232,11 @@ null => 1,
                     $.each(nullValue, (i, v) => {
                         console.log('validasi')
                         console.log(v)
+                        var item = v;
+                        if (v == 'itemByKategori')
+                            item = 'Jaminan tambahan';
                         console.log('end validasi')
-                        message += v != '' ? v + ", " : ''
+                        message += item != '' ? item + ", " : ''
                     })
                     Swal.fire({
                         icon: 'error',
