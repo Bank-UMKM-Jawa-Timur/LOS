@@ -391,12 +391,19 @@
                             value="{{ isset($komentarSlik->komentar) ? $komentarSlik->komentar : '' }}">
                         <div class="input-skor">
                             @php
+                                $skorSlik = 1;
                                 if ($itemSlik) {
-                                    if ($itemSlik->skor_penyelia <= 0) {
-                                        $itemSlik->skor_penyelia = 1;
+                                    if ($itemSlik->skor_penyelia && !$itemSlik->skor) {
+                                        if ($itemSlik->skor_penyelia <= 0)
+                                            $skorSlik = 1;
+                                        else
+                                            $skorSlik = $itemSlik->skor_penyelia;
                                     }
-                                    if ($itemSlik->skor <= 0) {
-                                        $itemSlik->skor = 1;
+                                    else if (!$itemSlik->skor_penyelia && $itemSlik->skor) {
+                                        if ($itemSlik->skor <= 0)
+                                            $skorSlik = 1;
+                                        else
+                                            $skorSlik = $itemSlik->skor;
                                     }
                                 }
                             @endphp
@@ -405,7 +412,7 @@
                                 min="1"
                                 max="4"
                                 {{ $itemSlik?->status_skor == 0 ? 'readonly' : '' }}
-                                value="{{ $itemSlik?->skor_penyelia != null ? $itemSlik?->skor_penyelia : $itemSlik?->skor }}">
+                                value="{{ $skorSlik }}">
                         </div>
                     </div>
                 </div>
