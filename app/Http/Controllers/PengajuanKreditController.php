@@ -472,7 +472,7 @@ class PengajuanKreditController extends Controller
             // dump($param['itemSP']);
             // dump($param['dataPertanyaanSatu']);
             // dd($param['itemP']);
-            return view('pengajuan-kredit.add-pengajuan-kredit-old', $param);
+            return view('pengajuan-kredit.add-pengajuan-kredit', $param);
         }
     }
 
@@ -933,26 +933,6 @@ class PengajuanKreditController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request;
-        $arr = [];
-        $arrK = [];
-        $arrPath = [];
-        // foreach ($request->upload_file as $key => $value) {
-        //     if (is_array($value)) {
-        //         for ($i=0; $i < count($value); $i++) {
-        //             array_push($arr, $value[$i]->getClientOriginalName());
-        //             array_push($arrK, $key);
-        //             array_push($arrPath, $value[$i]->getPathName());
-        //         }
-        //     }
-        //     else {
-        //         array_push($arr, $value->getClientOriginalName());
-        //         array_push($arrK, $key);
-        //         array_push($arrPath, $value->getPathName());
-        //     }
-        // }
-        // dd($arr, $arrK, $arrPath, $request->upload_file);
-        // // dd($request->all(), $request->id_item_file, $request->upload_file, $request->upload_file);
         // return $request;
         // return $_POST;
         // return 'jumlah id level = ' . count($request->get('id_level')) . '; jumlah input = ' . count($request->get('informasi'));
