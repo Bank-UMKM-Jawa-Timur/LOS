@@ -164,7 +164,14 @@
                         </td>
                         <td>
                             @php
-                                $avgResult = $item->average_by_penyelia != null ? $item->average_by_penyelia : $item->average_by_sistem;
+                                $avgResult = $item->average_by_sistem;
+                                if ($item->posisi == 'Review Penyelia')
+                                    $avgResult = $item->average_by_penyelia ? $item->average_by_penyelia : $item->average_by_sistem;
+                                else if ($item->posisi == 'PBO')
+                                    $avgResult = $item->average_by_pbo ? $item->average_by_pbo : $item->average_by_penyelia;
+                                else if ($item->posisi == 'PBP')
+                                    $avgResult = $item->average_by_pbp ? $item->average_by_pbp : $item->average_by_pbo;
+                                
                                 if ($avgResult > 0 && $avgResult <= 2) {
                                     $status = "merah";
                                 } elseif ($avgResult > 2 && $avgResult <= 3) {

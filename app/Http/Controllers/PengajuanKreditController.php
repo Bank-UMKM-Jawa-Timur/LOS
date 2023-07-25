@@ -179,6 +179,8 @@ class PengajuanKreditController extends Controller
                 'pengajuan.id_cabang',
                 'pengajuan.average_by_sistem',
                 'pengajuan.average_by_penyelia',
+                'pengajuan.average_by_pbo',
+                'pengajuan.average_by_pbp',
                 'pengajuan.skema_kredit',
                 'pengajuan.sppk',
                 'pengajuan.po',
@@ -236,6 +238,8 @@ class PengajuanKreditController extends Controller
                 'pengajuan.id_cabang',
                 'pengajuan.average_by_sistem',
                 'pengajuan.average_by_penyelia',
+                'pengajuan.average_by_pbo',
+                'pengajuan.average_by_pbp',
                 'pengajuan.skema_kredit',
                 'calon_nasabah.nama',
                 'calon_nasabah.jenis_usaha',
@@ -289,6 +293,8 @@ class PengajuanKreditController extends Controller
                 'pengajuan.id_cabang',
                 'pengajuan.average_by_sistem',
                 'pengajuan.average_by_penyelia',
+                'pengajuan.average_by_pbo',
+                'pengajuan.average_by_pbp',
                 'pengajuan.skema_kredit',
                 'calon_nasabah.nama',
                 'calon_nasabah.jenis_usaha',
@@ -341,6 +347,8 @@ class PengajuanKreditController extends Controller
                 'pengajuan.id_cabang',
                 'pengajuan.average_by_sistem',
                 'pengajuan.average_by_penyelia',
+                'pengajuan.average_by_pbo',
+                'pengajuan.average_by_pbp',
                 'pengajuan.skema_kredit',
                 'calon_nasabah.nama',
                 'calon_nasabah.jenis_usaha',
@@ -1160,13 +1168,15 @@ class PengajuanKreditController extends Controller
                                 $statusSlik = true;
                             }
                         }
-                        $totalScore += $data[0];
+                        if ($data[0] <= 0)
+                            $totalScore += 1;
+                        else
+                            $totalScore += $data[0];
                     }
                     else
-                        $totalDataNull++;
-                } else {
+                        $totalScore += 1;
+                } else
                     $totalDataNull++;
-                }
             }
 
             // find avg
@@ -1188,15 +1198,23 @@ class PengajuanKreditController extends Controller
                 if ($mergedDataLevel[$i] != null) {
                     $data = $this->getDataLevel($mergedDataLevel[$i]);
                     if (is_numeric($data[0])) {
-                        JawabanPengajuanModel::insert([
-                            'id_pengajuan' => $id_pengajuan,
-                            'id_jawaban' => $this->getDataLevel($mergedDataLevel[$i])[1],
-                            'skor' => $this->getDataLevel($mergedDataLevel[$i])[0],
-                        ]);
+                        if ($data[0] <= 0)
+                            JawabanPengajuanModel::insert([
+                                'id_pengajuan' => $id_pengajuan,
+                                'id_jawaban' => $this->getDataLevel($mergedDataLevel[$i])[1],
+                                'skor' => 1,
+                            ]);
+                        else
+                            JawabanPengajuanModel::insert([
+                                'id_pengajuan' => $id_pengajuan,
+                                'id_jawaban' => $this->getDataLevel($mergedDataLevel[$i])[1],
+                                'skor' => $this->getDataLevel($mergedDataLevel[$i])[0],
+                            ]);
                     } else {
                         JawabanPengajuanModel::insert([
                             'id_pengajuan' => $id_pengajuan,
                             'id_jawaban' => $this->getDataLevel($mergedDataLevel[$i])[1],
+                            'skor' => 1,
                         ]);
                     }
                 }
@@ -1671,11 +1689,13 @@ class PengajuanKreditController extends Controller
                     $data_level_empat = $this->getDataLevel($value);
                     $skor[$key] = $data_level_empat[0];
                     $id_jawaban[$key] = $data_level_empat[1];
-                    if ($skor[$key] != 'kosong') {
+                    if ($skor[$key] != 'kosong')
                         array_push($rata_rata, $skor[$key]);
-                    } else {
+                    else if ($skor[$key] == 'kosong')
+                        array_push($rata_rata, 1);
+                    else
                         $skor[$key] = null;
-                    }
+                    
                     array_push(
                         $finalArray,
                         array(
@@ -2052,28 +2072,35 @@ class PengajuanKreditController extends Controller
     // insert komentar
     public function getInsertKomentar(Request $request)
     {
-        // return $request;
         $role = Auth::user()->role;
         if ($role == 'Penyelia Kredit' || $role == 'PBO' || $role == 'PBP') {
             try {
                 $finalArray = array();
                 $finalArray_text = array();
                 $totalDataNull = 0;
+                $sum_select = 0;
                 foreach ($request->skor_penyelia as $key => $value) {
-                    if ($value != '' || $value != null) {
+                    if ($value != '') {
                         array_push($finalArray, [
                             'skor_penyelia' => $value
                         ]);
-                    } else {
-                        $totalDataNull++;
+                        $sum_select += $value;
                     }
-                };
-                $sum_select = array_sum($request->skor_penyelia);
+                    else if ($value == null) {
+                        array_push($finalArray, [
+                            'skor_penyelia' => 1
+                        ]);
+                        $sum_select += 1;
+                    }
+                    else
+                        $totalDataNull++;
+                }
                 $average = ($sum_select) / (count($request->skor_penyelia) - $totalDataNull);
                 $result = round($average, 2);
                 $status = "";
                 $updateData = PengajuanModel::find($request->id_pengajuan);
-                if ($result > 0 && $result <= 1) {
+                
+                if ($result > 0 && $result <= 2) {
                     $status = "merah";
                 } elseif ($result >= 2 && $result <= 3) {
                     $status = "kuning";
@@ -2087,7 +2114,7 @@ class PengajuanKreditController extends Controller
                     foreach ($request->get('id_option') as $key => $value) {
                         JawabanPengajuanModel::where('id_jawaban', $value)->where('id_pengajuan', $request->get('id_pengajuan'))
                             ->update([
-                                'skor_penyelia' => $request->get('skor_penyelia')[$key]
+                                'skor_penyelia' => $request->get('skor_penyelia')[$key] ? $request->get('skor_penyelia')[$key] : 1
                             ]);
                     }
                 }
@@ -2095,14 +2122,14 @@ class PengajuanKreditController extends Controller
                     foreach ($request->get('id_option') as $key => $value) {
                         JawabanPengajuanModel::where('id_jawaban', $value)->where('id_pengajuan', $request->get('id_pengajuan'))
                             ->update([
-                                'skor_pbo' => $request->get('skor_penyelia')[$key]
+                                'skor_pbo' => $request->get('skor_penyelia')[$key] ? $request->get('skor_penyelia')[$key] : 1
                             ]);
                     }
                 } else {
                     foreach ($request->get('id_option') as $key => $value) {
                         JawabanPengajuanModel::where('id_jawaban', $value)->where('id_pengajuan', $request->get('id_pengajuan'))
                             ->update([
-                                'skor_pbp' => $request->get('skor_penyelia')[$key]
+                                'skor_pbp' => $request->get('skor_penyelia')[$key] ? $request->get('skor_penyelia')[$key] : 1
                             ]);
                     }
                 }

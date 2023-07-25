@@ -1479,7 +1479,7 @@ null => 1,
                                         <label for="">${valItem.nama}</label>
                                         <div class="row file-input">
                                             <div class="col-md-9">
-                                                <input type="hidden" name="id_item_file[${valItem.id}]" value="${valItem.id}" id="">
+                                                <input type="hidden" name="id_item_file[${valItem.id}][]" value="${valItem.id}" id="">
                                                 <input type="file" id="${valItem.nama.toString().replaceAll(" ", "_")}" name="upload_file[${valItem.id}][]" data-id=""
                                                     placeholder="Masukkan informasi ${valItem.nama}"
                                                     class="form-control limit-size">

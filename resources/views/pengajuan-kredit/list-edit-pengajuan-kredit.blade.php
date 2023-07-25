@@ -197,42 +197,41 @@
                             @endif
                         </td>
                         <td>
-                            @if ($item->average_by_penyelia != null)
-                                @if ($item->status == 'hijau')
-                                    <font class="text-success">
-                                        {{ $item->average_by_penyelia }}
-                                    </font>
-                                @elseif ($item->status == 'kuning')
-                                    <font class="text-warning">
-                                        {{ $item->average_by_penyelia }}
-                                    </font>
-                                @elseif ($item->status == 'merah')
-                                    <font class="text-danger">
-                                        {{ $item->average_by_penyelia }}
-                                    </font>
-                                @else
-                                    <font class="text-secondary">
-                                        {{ $item->average_by_penyelia }}
-                                    </font>
-                                @endif
+                            @php
+                                $avgResult = $item->average_by_sistem;
+                                if ($item->posisi == 'Review Penyelia')
+                                    $avgResult = $item->average_by_penyelia ? $item->average_by_penyelia : $item->average_by_sistem;
+                                else if ($item->posisi == 'PBO')
+                                    $avgResult = $item->average_by_pbo ? $item->average_by_pbo : $item->average_by_penyelia;
+                                else if ($item->posisi == 'PBP')
+                                    $avgResult = $item->average_by_pbp ? $item->average_by_pbp : $item->average_by_pbo;
+                                
+                                if ($avgResult > 0 && $avgResult <= 2) {
+                                    $status = "merah";
+                                } elseif ($avgResult > 2 && $avgResult <= 3) {
+                                    $status = "kuning";
+                                } elseif ($avgResult > 3) {
+                                    $status = "hijau";
+                                } else {
+                                    $status = "merah";
+                                }
+                            @endphp
+                            @if ($status == 'hijau')
+                                <font class="text-success">
+                                    {{ $avgResult }}
+                                </font>
+                            @elseif ($status == 'kuning')
+                                <font class="text-warning">
+                                    {{ $avgResult }}
+                                </font>
+                            @elseif ($status == 'merah')
+                                <font class="text-danger">
+                                    {{ $avgResult }}
+                                </font>
                             @else
-                                @if ($item->status_by_sistem == 'hijau')
-                                    <font class="text-success">
-                                        {{ $item->average_by_sistem }}
-                                    </font>
-                                @elseif ($item->status_by_sistem == 'kuning')
-                                    <font class="text-warning">
-                                        {{ $item->average_by_sistem }}
-                                    </font>
-                                @elseif ($item->status_by_sistem == 'merah')
-                                    <font class="text-danger">
-                                        {{ $item->average_by_sistem }}
-                                    </font>
-                                @else
-                                    <font class="text-secondary">
-                                        {{ $item->average_by_sistem }}
-                                    </font>
-                                @endif
+                                <font class="text-secondary">
+                                    {{ $avgResult }}
+                                </font>
                             @endif
                         </td>
                         <td>
