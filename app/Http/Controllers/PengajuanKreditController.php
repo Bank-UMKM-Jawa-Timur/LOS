@@ -188,8 +188,9 @@ class PengajuanKreditController extends Controller
                 'calon_nasabah.nama',
                 'calon_nasabah.id_user',
                 'calon_nasabah.jenis_usaha',
-                'calon_nasabah.id_pengajuan'
-            )->orderBy('tanggal','desc')
+                'calon_nasabah.id_pengajuan',
+                'pengajuan.created_at',
+            )->orderBy('created_at','desc')
                 ->when($request->search, function ($query, $search) {
                     return $query->where('calon_nasabah.nama', 'like', '%' . $search . '%');
                 })
@@ -243,8 +244,9 @@ class PengajuanKreditController extends Controller
                 'pengajuan.skema_kredit',
                 'calon_nasabah.nama',
                 'calon_nasabah.jenis_usaha',
-                'calon_nasabah.id_pengajuan'
-            )->orderBy('tanggal','desc')
+                'calon_nasabah.id_pengajuan',
+                'pengajuan.created_at',
+            )->orderBy('created_at','desc')
                 ->where('pengajuan.id_penyelia', $id_penyelia)
                 ->when($request->search, function ($query, $search) {
                     return $query->where('calon_nasabah.nama', 'like', '%' . $search . '%');
@@ -298,8 +300,9 @@ class PengajuanKreditController extends Controller
                 'pengajuan.skema_kredit',
                 'calon_nasabah.nama',
                 'calon_nasabah.jenis_usaha',
-                'calon_nasabah.id_pengajuan'
-            )->orderBy('tanggal','desc')
+                'calon_nasabah.id_pengajuan',
+                'pengajuan.created_at',
+            )->orderBy('created_at','desc')
                 ->where('pengajuan.id_pbo', $id_data)
                 ->orWhere('pengajuan.id_pbp', $id_data)
                 ->when($request->search, function ($query, $search) {
@@ -329,7 +332,7 @@ class PengajuanKreditController extends Controller
                 ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
                 ->where('pengajuan.id_cabang', $id_cabang)
                 ->paginate(5)
-                ->withQueryString();;
+                ->withQueryString();
             return view('pengajuan-kredit.list-pbp', $param);
         } elseif ($role == 'Pincab') {
             $id_data = auth()->user()->id;
@@ -350,10 +353,11 @@ class PengajuanKreditController extends Controller
                 'pengajuan.average_by_pbo',
                 'pengajuan.average_by_pbp',
                 'pengajuan.skema_kredit',
+                'pengajuan.created_at',
                 'calon_nasabah.nama',
                 'calon_nasabah.jenis_usaha',
                 'calon_nasabah.id_pengajuan'
-            )->orderBy('tanggal','desc')
+            )->orderBy('created_at','desc')
                 ->where('pengajuan.id_pincab', $id_data)
                 ->when($request->search, function ($query, $search) {
                     return $query->where('calon_nasabah.nama', 'like', '%' . $search . '%');
@@ -401,10 +405,11 @@ class PengajuanKreditController extends Controller
                 'pengajuan.average_by_sistem',
                 'pengajuan.average_by_penyelia',
                 'pengajuan.skema_kredit',
+                'pengajuan.created_at',
                 'calon_nasabah.nama',
                 'calon_nasabah.jenis_usaha',
                 'calon_nasabah.id_pengajuan'
-            )->orderBy('tanggal','desc')
+            )->orderBy('created_at','desc')
                 ->when($request->search, function ($query, $search) {
                     return $query->where('calon_nasabah.nama', 'like', '%' . $search . '%');
                 })
@@ -1695,7 +1700,7 @@ class PengajuanKreditController extends Controller
                         array_push($rata_rata, 1);
                     else
                         $skor[$key] = null;
-                    
+
                     array_push(
                         $finalArray,
                         array(
@@ -2099,7 +2104,7 @@ class PengajuanKreditController extends Controller
                 $result = round($average, 2);
                 $status = "";
                 $updateData = PengajuanModel::find($request->id_pengajuan);
-                
+
                 if ($result > 0 && $result <= 2) {
                     $status = "merah";
                 } elseif ($result >= 2 && $result <= 3) {
