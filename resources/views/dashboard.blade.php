@@ -398,7 +398,7 @@
                     </div>
                 </div>
             </div>
-        @else
+        @elseif(auth()->user()->role == 'Pincab')
             <div class="col-md-12 mb-4">
                 Total Pengajuan :
                 {{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
@@ -562,6 +562,115 @@
                         <hr>
                         <a href="/pengajuan-kredit?pss=Proses+Input+Data"
                             class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
+                    </div>
+                </div>
+            </div>
+        @else
+            <div class="col-md-12 mb-4">
+                <div class=" d-flex justify-content-end">
+                    <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
+                        data-target="#exampleModal">
+                        <i class="fa fa-filter"></i> Filter
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card bg-rgb-primary border border-primary">
+                    <div class="card-body py-4">
+                        <span class="fa fa-calendar-check sticky-fa-card"></span>
+                        <div class="row align-items-center">
+                            <div class="col-md-8 pr-0 font-weight-bold">
+                                Pengajuan Telah Ditinjak Lanjuti
+                            </div>
+                            <div class="col-md-4 pr-0 text-center">
+                                @if (auth()->user()->role == 'Pincab')
+                                    <h1>{{ \App\Models\PengajuanModel::whereIn('posisi', ['Selesai', 'Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                                            return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                                        })->count() }}
+                                    </h1>
+                                @elseif (auth()->user()->role == 'Penyelia Kredit')
+                                    @if (auth()->user()->id_cabang == '1')
+                                        <h1>{{ \App\Models\PengajuanModel::whereIn('posisi', ['PBP', 'Pincab', 'Selesai', 'Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                                                return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                                            })->count() }}
+                                        </h1>
+                                    @else
+                                        <h1>{{ \App\Models\PengajuanModel::whereIn('posisi', ['Pincab', 'Selesai', 'Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                                                return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                                            })->count() }}
+                                        </h1>
+                                    @endif
+                                @elseif (auth()->user()->role == 'PBP')
+                                    <h1>{{ \App\Models\PengajuanModel::whereIn('posisi', ['Pincab', 'Selesai', 'Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                                            return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                                        })->count() }}
+                                    </h1>
+                                @elseif (auth()->user()->role == 'Staf Analis Kredit')
+                                    <h1>{{ \App\Models\PengajuanModel::whereIn('posisi', ['Review Penyelia', 'Pincab', 'Selesai', 'Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                                            return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                                        })->count() }}
+                                    </h1>
+                                @else
+                                    <h1>{{ \App\Models\PengajuanModel::whereIn('posisi', ['Selesai', 'Ditolak'])->where('id_cabang', auth()->user()->id_cabang)->when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                                            return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                                        })->count() }}
+                                    </h1>
+                                @endif
+                            </div>
+                        </div>
+                        <hr>
+                        <a href="{{ route('pengajuan-kredit.index') }}"
+                            class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
+                            Detail</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card bg-rgb-danger border border-danger">
+                    <div class="card-body py-4">
+                        <i class="fa fa-ban sticky-fa-card"></i>
+                        <div class="row font-weight-bold">
+                            <div class="col-md-8 pr-0">
+                                Pengajuan Belum Ditindak Lanjuti
+                            </div>
+                            <div class="col-md-4 pl-0 text-center">
+                                @if (auth()->user()->role == 'Staf Analis Kredit')
+                                    <h1>{{ \App\Models\PengajuanModel::where('posisi', 'Proses Input Data')->where('id_cabang', $user->id_cabang)->count() }}
+                                    </h1>
+                                @elseif (auth()->user()->role == 'Penyelia Kredit')
+                                    <h1>{{ \App\Models\PengajuanModel::where('posisi', 'Review Penyelia')->where('id_cabang', $user->id_cabang)->count() }}
+                                    </h1>
+                                @elseif (auth()->user()->role == 'PBP')
+                                    <h1>{{ \App\Models\PengajuanModel::where('posisi', 'PBP')->where('id_cabang', $user->id_cabang)->count() }}
+                                    </h1>
+                                @elseif (auth()->user()->role == 'Pincab')
+                                    <h1>{{ \App\Models\PengajuanModel::where('posisi', 'Pincab')->where('id_cabang', $user->id_cabang)->count() }}
+                                    </h1>
+                                @else
+                                    <h1>0</h1>
+                                @endif
+                            </div>
+                        </div>
+                        <hr>
+                        @if (auth()->user()->role == 'Staf Analis Kredit')
+                            <a href="/pengajuan-kredit?pss=Proses+Input+Data"
+                                class="btn btn-danger btn-sm b-radius-3 px-3">Lihat
+                                Detail</a>
+                        @elseif (auth()->user()->role == 'Penyelia Kredit')
+                            <a href="/pengajuan-kredit?pss=Review+Penyelia"
+                                class="btn btn-danger btn-sm b-radius-3 px-3">Lihat
+                                Detail</a>
+                        @elseif (auth()->user()->role == 'PBP')
+                            <a href="/pengajuan-kredit?pss=PBP" class="btn btn-danger btn-sm b-radius-3 px-3">Lihat
+                                Detail</a>
+                        @elseif (auth()->user()->role == 'Pincab')
+                            <a href="/pengajuan-kredit?pss=Pincab" class="btn btn-danger btn-sm b-radius-3 px-3">Lihat
+                                Detail</a>
+                        @else
+                            <a href="{{ route('pengajuan-kredit.index') }}"
+                                class="btn btn-danger btn-sm b-radius-3 px-3">Lihat
+                                Detail</a>
+                        @endif
                     </div>
                 </div>
             </div>
