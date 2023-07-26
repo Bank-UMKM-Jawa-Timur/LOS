@@ -20,6 +20,8 @@
                             <label>Tanggal Akhir</label>
                             <input type="date" name="tAkhir" id="tAkhir" class="form-control"
                                 value="{{ Request()->query('tAkhir') }}">
+                            <small id="errorAkhir" class="form-text text-danger">Tanggal akhir tidak boleh kurang
+                                dari tanggal awal</small>
                         </div>
                         @if (auth()->user()->role == 'Administrator')
                             <div class="col-sm-6 mt-2">
@@ -147,6 +149,7 @@
 </div>
 </div>
 
+@push('custom-script')
 <script>
     $("#tAwal").on("change", function() {
         var result = $(this).val();
@@ -154,4 +157,20 @@
             $("#tAkhir").prop("required", true)
         }
     });
+
+    $(document).ready(function() {
+        $("#errorAkhir").hide();
+    })
+
+    $("#tAkhir").on("change", function() {
+        var tAkhir = $(this).val();
+        var tAwal = $("#tAwal").val();
+        if (Date.parse(tAkhir) < Date.parse(tAwal)) {
+            $("#tAkhir").val('');
+            $("#errorAkhir").show();
+        } else {
+            $("#errorAkhir").hide();
+        }
+    })
 </script>
+@endpush
