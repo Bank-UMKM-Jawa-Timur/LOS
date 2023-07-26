@@ -43,15 +43,10 @@
                         return $query->where('id_cabang', $cbg);
                     })->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->count() }}
                 <div class=" d-flex justify-content-end">
-                    @if (auth()->user()->role == 'Pincab' ||
-                            auth()->user()->role == 'Kredit Umum' ||
-                            auth()->user()->role == 'Administrator' ||
-                            auth()->user()->role == 'SPI')
-                        <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
-                            data-target="#data_nominatif" id="#exportExcel">
-                            <i class="fa fa-print"></i> Export
-                        </button>
-                    @endif
+                    <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
+                        data-target="#data_nominatif" id="#exportExcel">
+                        <i class="fa fa-print"></i> Export
+                    </button>
                     <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
                         data-target="#exampleModal">
                         <i class="fa fa-filter"></i> Filter
@@ -235,6 +230,10 @@
                         return $query->where('id_cabang', $cbg);
                     })->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->count() }}
                 <div class=" d-flex justify-content-end">
+                    <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
+                            data-target="#data_nominatif" id="#exportExcel">
+                            <i class="fa fa-print"></i> Export
+                        </button>
                     <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
                         data-target="#exampleModal">
                         <i class="fa fa-filter"></i> Filter
@@ -607,6 +606,10 @@
                         return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
                     })->where('id_cabang', auth()->user()->id_cabang)->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->whereIn('pengajuan.posisi', ['Pincab', 'Selesai', 'Ditolak'])->count() }}
                     <div class=" d-flex justify-content-end">
+                        <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
+                            data-target="#data_nominatif" id="#exportExcel">
+                            <i class="fa fa-print"></i> Export
+                        </button>
                         <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
                             data-target="#exampleModal">
                             <i class="fa fa-filter"></i> Filter
