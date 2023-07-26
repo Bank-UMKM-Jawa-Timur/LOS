@@ -93,6 +93,16 @@
                                     $user = \App\Models\User::select('nip')->where('id', $item->id_staf)->first();
                                     if ($user)
                                         $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
+                                    else {
+                                        $check_log = \DB::table('log_pengajuan')
+                                                        ->select('nip')
+                                                        ->where('id_pengajuan', $item->id)
+                                                        ->where('activity', 'LIKE', 'Staf%')
+                                                        ->orderBy('id', 'DESC')
+                                                        ->first();
+                                        if ($check_log)
+                                            $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
+                                    }
                                 @endphp
                                 <span>Staff</span>
                                 <br>
@@ -103,6 +113,16 @@
                                     $user = \App\Models\User::select('nip')->where('id', $item->id_penyelia)->first();
                                     if ($user)
                                         $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
+                                    else {
+                                        $check_log = \DB::table('log_pengajuan')
+                                                        ->select('nip')
+                                                        ->where('id_pengajuan', $item->id)
+                                                        ->where('activity', 'LIKE', 'Penyelia%')
+                                                        ->orderBy('id', 'DESC')
+                                                        ->first();
+                                        if ($check_log)
+                                            $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
+                                    }
                                 @endphp
                                 <span>Penyelia</span>
                                 <br>
@@ -113,6 +133,16 @@
                                     $user = \App\Models\User::select('nip')->where('id', $item->id_pbo)->first();
                                     if ($user)
                                         $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
+                                    else {
+                                        $check_log = \DB::table('log_pengajuan')
+                                                        ->select('nip')
+                                                        ->where('id_pengajuan', $item->id)
+                                                        ->where('activity', 'LIKE', 'PBO%')
+                                                        ->orderBy('id', 'DESC')
+                                                        ->first();
+                                        if ($check_log)
+                                            $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
+                                    }
                                 @endphp
                                 <span>PBO</span>
                                 <br>
@@ -123,6 +153,16 @@
                                     $user = \App\Models\User::select('nip')->where('id', $item->id_pbp)->first();
                                     if ($user)
                                         $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
+                                    else {
+                                        $check_log = \DB::table('log_pengajuan')
+                                                        ->select('nip')
+                                                        ->where('id_pengajuan', $item->id)
+                                                        ->where('activity', 'LIKE', 'PBP%')
+                                                        ->orderBy('id', 'DESC')
+                                                        ->first();
+                                        if ($check_log)
+                                            $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
+                                    }
                                 @endphp
                                 <span>PBP</span>
                                 <br>
@@ -133,6 +173,16 @@
                                     $user = \App\Models\User::select('nip')->where('id', $item->id_pincab)->first();
                                     if ($user)
                                         $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
+                                    else {
+                                        $check_log = \DB::table('log_pengajuan')
+                                                        ->select('nip')
+                                                        ->where('id_pengajuan', $item->id)
+                                                        ->where('activity', 'LIKE', 'Pincab%')
+                                                        ->orderBy('id', 'DESC')
+                                                        ->first();
+                                        if ($check_log)
+                                            $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
+                                    }
                                 @endphp
                                 <span>Pincab</span>
                                 <br>
