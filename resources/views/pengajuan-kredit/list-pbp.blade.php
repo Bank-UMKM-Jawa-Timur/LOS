@@ -273,7 +273,7 @@
                                 else if ($item->posisi == 'PBO')
                                     $avgResult = $item->average_by_pbo ? $item->average_by_pbo : $item->average_by_penyelia;
                                 else if ($item->posisi == 'PBP')
-                                    $avgResult = $item->average_by_pbp ? $item->average_by_pbp : $item->average_by_pbo;
+                                    $avgResult = $item->average_by_pbp ? $item->average_by_pbp : ($item->average_by_pbo ? $item->average_by_pbo : $item->average_by_penyelia);
                                 
                                 if ($avgResult > 0 && $avgResult <= 2) {
                                     $status = "merah";

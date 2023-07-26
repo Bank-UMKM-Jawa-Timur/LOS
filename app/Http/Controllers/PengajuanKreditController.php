@@ -1277,19 +1277,17 @@ class PengajuanKreditController extends Controller
                                 $statusSlik = true;
                             }
                         }
-                        if ($data[0] <= 0)
-                            $totalScore += 1;
-                        else
-                            $totalScore += $data[0];
+                        $totalScore += $data[0];
                     }
                     else
-                        $totalScore += 1;
+                        $totalDataNull++;
                 } else
                     $totalDataNull++;
             }
-
             // find avg
             $avgResult = round($totalScore / (count($mergedDataLevel) - $totalDataNull), 2);
+            // dd($mergedDataLevel, $totalScore, count($mergedDataLevel), $totalDataNull, count($mergedDataLevel) - $totalDataNull, $avgResult);
+            // return $request;
             $status = "";
             $updateData = PengajuanModel::find($id_pengajuan);
             if ($avgResult > 0 && $avgResult <= 2) {
@@ -1307,23 +1305,15 @@ class PengajuanKreditController extends Controller
                 if ($mergedDataLevel[$i] != null) {
                     $data = $this->getDataLevel($mergedDataLevel[$i]);
                     if (is_numeric($data[0])) {
-                        if ($data[0] <= 0)
-                            JawabanPengajuanModel::insert([
-                                'id_pengajuan' => $id_pengajuan,
-                                'id_jawaban' => $this->getDataLevel($mergedDataLevel[$i])[1],
-                                'skor' => 1,
-                            ]);
-                        else
-                            JawabanPengajuanModel::insert([
-                                'id_pengajuan' => $id_pengajuan,
-                                'id_jawaban' => $this->getDataLevel($mergedDataLevel[$i])[1],
-                                'skor' => $this->getDataLevel($mergedDataLevel[$i])[0],
-                            ]);
-                    } else {
                         JawabanPengajuanModel::insert([
                             'id_pengajuan' => $id_pengajuan,
                             'id_jawaban' => $this->getDataLevel($mergedDataLevel[$i])[1],
-                            'skor' => 1,
+                            'skor' => $this->getDataLevel($mergedDataLevel[$i])[0],
+                        ]);
+                    } else {
+                        JawabanPengajuanModel::insert([
+                            'id_pengajuan' => $id_pengajuan,
+                            'id_jawaban' => $this->getDataLevel($mergedDataLevel[$i])[1]
                         ]);
                     }
                 }
@@ -2117,6 +2107,10 @@ class PengajuanKreditController extends Controller
                 'pengajuan.posisi',
                 'pengajuan.tanggal_review_penyelia',
                 'pengajuan.skema_kredit',
+                'pengajuan.id_staf',
+                'pengajuan.id_penyelia',
+                'pengajuan.id_pbo',
+                'pengajuan.id_pbp',
                 'calon_nasabah.id as id_calon_nasabah',
                 'calon_nasabah.nama',
                 'calon_nasabah.alamat_rumah',
@@ -2181,6 +2175,7 @@ class PengajuanKreditController extends Controller
     // insert komentar
     public function getInsertKomentar(Request $request)
     {
+        // return $request;
         $role = Auth::user()->role;
         if ($role == 'Penyelia Kredit' || $role == 'PBO' || $role == 'PBP') {
             try {
@@ -2189,17 +2184,12 @@ class PengajuanKreditController extends Controller
                 $totalDataNull = 0;
                 $sum_select = 0;
                 foreach ($request->skor_penyelia as $key => $value) {
-                    if ($value != '') {
+                    // if ($value != '' || $value == null) {
+                    if (is_numeric($value)) {
                         array_push($finalArray, [
                             'skor_penyelia' => $value
                         ]);
                         $sum_select += $value;
-                    }
-                    else if ($value == null) {
-                        array_push($finalArray, [
-                            'skor_penyelia' => 1
-                        ]);
-                        $sum_select += 1;
                     }
                     else
                         $totalDataNull++;

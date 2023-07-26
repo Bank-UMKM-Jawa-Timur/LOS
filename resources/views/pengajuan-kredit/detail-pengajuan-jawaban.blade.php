@@ -391,21 +391,7 @@
                             value="{{ isset($komentarSlik->komentar) ? $komentarSlik->komentar : '' }}">
                         <div class="input-skor">
                             @php
-                                $skorSlik = 1;
-                                if ($itemSlik) {
-                                    if (($itemSlik->skor_penyelia && !$itemSlik->skor) || ($itemSlik->skor_penyelia && $itemSlik->skor)) {
-                                        if ($itemSlik->skor_penyelia <= 0)
-                                            $skorSlik = 1;
-                                        else
-                                            $skorSlik = $itemSlik->skor_penyelia;
-                                    }
-                                    else if (!$itemSlik->skor_penyelia && $itemSlik->skor) {
-                                        if ($itemSlik->skor <= 0)
-                                            $skorSlik = 1;
-                                        else
-                                            $skorSlik = $itemSlik->skor;
-                                    }
-                                }
+                                $skorSlik = $itemSlik->skor_penyelia ? $itemSlik->skor_penyelia : $itemSlik->skor;
                             @endphp
                             <input type="number" class="form-control skorPenyeliaInput1" placeholder="" name="skor_penyelia[]"
                                 onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
@@ -845,33 +831,8 @@
                                                             <div class="input-skor">
                                                                 @php
                                                                     //dd($getSkorPenyelia, $itemJawaban);
-                                                                    $skorInput2 = 1;
-                                                                    if ($getSkorPenyelia) {
-                                                                        if (($getSkorPenyelia->skor_penyelia && !$itemJawaban->skor) || ($getSkorPenyelia->skor_penyelia && $itemJawaban->skor)) {
-                                                                            if ($getSkorPenyelia->skor_penyelia <= 0)
-                                                                                $skorInput2 = 1;
-                                                                            else
-                                                                                $skorInput2 = $getSkorPenyelia->skor_penyelia;
-                                                                        }
-                                                                        else if (!$getSkorPenyelia->skor_penyelia && $itemJawaban->skor) {
-                                                                            if ($itemJawaban->skor <= 0)
-                                                                                $skorInput2 = 1;
-                                                                            else
-                                                                                $skorInput2 = $itemJawaban->skor;
-                                                                        }
-                                                                        else
-                                                                            $skorInput2 = 1;
-                                                                    }
-                                                                    else {
-                                                                        if ($itemJawaban->skor) {
-                                                                            if ($itemJawaban->skor <= 0)
-                                                                                $skorInput2 = 1;
-                                                                            else
-                                                                                $skorInput2 = $itemJawaban->skor;
-                                                                        }
-                                                                        else
-                                                                            $skorInput2 = 1;
-                                                                    }
+                                                                    $skorInput2 = null;
+                                                                    $skorInput2 = $getSkorPenyelia->skor_penyelia ? $getSkorPenyelia->skor_penyelia : $itemJawaban->skor;
                                                                 @endphp
                                                                 <input type="number" class="form-control skorPenyeliaInput2" placeholder=""
                                                                     name="skor_penyelia[]"
@@ -884,8 +845,10 @@
                                                         @else
                                                             <input type="hidden" name="komentar_penyelia[]"
                                                                 value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
+                                                            {{--  <input type="hidden" name="skor_penyelia[]"
+                                                                value="{{ $getSkorPenyelia->skor_penyelia != null ? $getSkorPenyelia->skor_penyelia : $itemJawaban->skor }}">  --}}
                                                             <input type="hidden" name="skor_penyelia[]"
-                                                                value="{{ $getSkorPenyelia->skor_penyelia != null ? $getSkorPenyelia->skor_penyelia : $itemJawaban->skor }}">
+                                                                value="null">
                                                         @endif
                                                     </div>
                                                 </div>
@@ -1075,27 +1038,8 @@
                                                                 <input type="hidden" name="id_option[]"
                                                                     value="{{ $itemJawabanLevelTiga->id }}">
                                                                 @php
-                                                                    $skorInput3 = 1;
-                                                                    if ($getSkorPenyelia) {
-                                                                        if (($getSkorPenyelia->skor_penyelia && !$itemJawabanLevelTiga->skor) || $getSkorPenyelia->skor_penyelia && $itemJawabanLevelTiga->skor) {
-                                                                            if ($getSkorPenyelia->skor_penyelia <= 0)
-                                                                                $skorInput3 = 1;
-                                                                            else
-                                                                                $skorInput3 = $getSkorPenyelia->skor_penyelia;
-                                                                        }
-                                                                        else if (!$getSkorPenyelia->skor_penyelia && $itemJawabanLevelTiga->skor) {
-                                                                            if ($itemJawabanLevelTiga->skor <= 0)
-                                                                                $skorInput3 = 1;
-                                                                            else
-                                                                                $skorInput3 = $itemJawabanLevelTiga->skor;
-                                                                        }
-                                                                    }
-                                                                    else {
-                                                                        if ($itemJawabanLevelTiga->skor <= 0)
-                                                                                $skorInput3 = 1;
-                                                                            else
-                                                                                $skorInput3 = $itemJawabanLevelTiga->skor;
-                                                                    }
+                                                                    $skorInput3 = null;
+                                                                    $skorInput3 = $getSkorPenyelia->skor_penyelia ? $getSkorPenyelia->skor_penyelia : $itemJawabanLevelTiga->skor;
                                                                 @endphp
                                                                 @if ($itemTiga->is_commentable == 'Ya')
                                                                     <input type="text" class="form-control komentar"
@@ -1115,7 +1059,10 @@
                                                                     <input type="hidden" name="komentar_penyelia[]"
                                                                         value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                     <input type="hidden" name="skor_penyelia[]"
-                                                                        value="{{ $skorInput3 }}">
+                                                                        value="null">
+                                                                    {{--  <input type="hidden" name="skor_penyelia[]"
+                                                                        value="{{ $getSkorPenyelia->skor_penyelia != null ? $getSkorPenyelia->skor_penyelia : $itemJawabanLevelTiga->skor }}s">
+                                                                        jawabanlev3-{{$itemJawabanLevelTiga->skor}}-{{$getSkorPenyelia->skor_penyelia}}  --}}
                                                                 @endif
                                                             </div>
                                                         </div>
@@ -1304,27 +1251,8 @@
                                                                         value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                     <div class="input-skor">
                                                                         @php
-                                                                            $skorInput4 = 1;
-                                                                            if ($getSkorPenyelia) {
-                                                                                if (($getSkorPenyelia->skor_penyelia && !$itemJawabanLevelEmpat->skor) || $getSkorPenyelia->skor_penyelia && $itemJawabanLevelEmpat->skor) {
-                                                                                    if ($getSkorPenyelia->skor_penyelia <= 0)
-                                                                                        $skorInput4 = 1;
-                                                                                    else
-                                                                                        $skorInput4 = $getSkorPenyelia->skor_penyelia;
-                                                                                }
-                                                                                else if (!$getSkorPenyelia->skor_penyelia && $itemJawabanLevelEmpat->skor) {
-                                                                                    if ($itemJawabanLevelEmpat->skor <= 0)
-                                                                                        $skorInput4 = 1;
-                                                                                    else
-                                                                                        $skorInput4 = $itemJawabanLevelEmpat->skor;
-                                                                                }
-                                                                            }
-                                                                            else {
-                                                                                if ($itemJawabanLevelEmpat->skor <= 0)
-                                                                                        $skorInput4 = 1;
-                                                                                    else
-                                                                                        $skorInput4 = $itemJawabanLevelEmpat->skor;
-                                                                            }
+                                                                            $skorInput4 = null;
+                                                                            $skorInput4 = $getSkorPenyelia->skor_penyelia ? $getSkorPenyelia->skor_penyelia : $itemJawabanLevelEmpat->skor;
                                                                         @endphp
                                                                         <input type="number" class="form-control skorPenyeliaInput4"
                                                                             placeholder="" name="skor_penyelia[]"
@@ -1380,10 +1308,12 @@
                     <label for="">Pendapat dan Usulan Penyelia Kredit</label>
                     <p>{{ $pendapatPenyeliaPerAspek->pendapat_per_aspek }}</p>
                 </div>
-                <div class="form-group col-md-12">
-                    <label for="">Pendapat dan Usulan PBO</label>
-                    <p>{{ $pendapatDanUsulanPBO->komentar_pbo }}</p>
-                </div>
+                @if ($dataUmumNasabah->id_pbo)
+                    <div class="form-group col-md-12">
+                        <label for="">Pendapat dan Usulan PBO</label>
+                        <p>{{ $pendapatDanUsulanPBO->komentar_pbo }}</p>
+                    </div>
+                @endif
             @elseif (Auth::user()->role == 'PBO')
                     @php
                         $getPendapatPerAspek = \App\Models\PendapatPerAspek::where('id_pengajuan', $dataUmum->id)
@@ -1518,6 +1448,7 @@
                         </span>
                         <hr>
                     </div>
+                    @if ($dataUmumNasabah->id_pbo)
                     <div class="form-group col-md-12">
                         <label for="">Pendapat dan Usulan PBO</label>
                         <br>
@@ -1526,6 +1457,7 @@
                         </span>
                         <hr>
                     </div>
+                    @endif
                     <div class="form-group col-md-12">
                         <label for="">Pendapat dan Usulan PBP</label>
                         <textarea name="komentar_pbp_keseluruhan"
