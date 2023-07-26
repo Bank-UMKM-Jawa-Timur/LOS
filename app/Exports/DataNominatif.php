@@ -20,8 +20,8 @@ class DataNominatif implements FromView
         $tAwal = Request()->tAwal;
         $jExport = Request()->export;
 
+        $cabangIds = cabang::get();
         if ($pilCabang == 'semua') {
-            $cabangIds = cabang::get();
             // $param['data'] = [];
             $all_data = [];
             foreach ($cabangIds as $rows) {

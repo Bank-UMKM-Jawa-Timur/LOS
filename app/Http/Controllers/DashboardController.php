@@ -114,8 +114,8 @@ class DashboardController extends Controller
         $tAwal = $request->tAwal;
         $jExport = $request->export;
         if ($jExport == 'pdf') {
+            $cabangIds = cabang::get();
             if ($pilCabang == 'semua') {
-                $cabangIds = cabang::get();
                 // $param['data'] = [];
                 $all_data = [];
                 foreach ($cabangIds as $rows) {
