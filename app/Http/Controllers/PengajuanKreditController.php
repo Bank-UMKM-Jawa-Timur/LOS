@@ -51,6 +51,67 @@ class PengajuanKreditController extends Controller
         ];
     }
 
+    public function fixScore() {
+        $pengajuan = DB::table('pengajuan')->where('tanggal', '>', '2023-07-20')->get();
+        foreach ($pengajuan as $key => $value) {
+            $jawaban = DB::table('jawaban')->where('id_pengajuan', $value->id)->get();
+            $sum = 0;
+            $sumPenyelia = 0;
+            $sumPBO = 0;
+            $sumPBP = 0;
+            $count = 0;
+            $countPenyelia = 0;
+            $countPBO = 0;
+            $countPBP = 0;
+            $avg = 0;
+            $avgPenyelia = 0;
+            $avgPBO = 0;
+            $avgPBP = 0;
+            // return $jawaban;
+            foreach ($jawaban as $key2 => $valJ) {
+                if ($value->posisi == 'Proses Input Data') {
+                    if ($valJ->skor) {
+                        $sum += $valJ->skor;
+                        $count += 1;
+                    }
+                }
+                if ($value->posisi == 'Review Penyelia') {
+                    if ($valJ->skor_penyelia) {
+                        $sumPenyelia += $valJ->skor_penyelia;
+                        $countPenyelia += 1;
+                    }
+                }
+                if ($value->posisi == 'PBO') {
+                    if ($valJ->skor_pbo) {
+                        $sumPBO += $valJ->skor_pbo;
+                        $countPBO += 1;
+                    }
+                }
+                if ($value->posisi == 'PBP') {
+                    if ($valJ->skor_pbp) {
+                        $sumPBP += $valJ->skor_pbp;
+                        $countPBP += 1;
+                    }
+                }
+            }
+            // $avg = $countPenyelia;
+            $avg = round(($sum / $count), 2);
+            $avgPenyelia = round(($sumPenyelia / $countPenyelia), 2);
+            $avgPBO = round(($sumPBO / $countPBO), 2);
+            $avgPBP = round(($sumPBP / $countPBP), 2);
+            
+            $avgs = [
+                'avg_sistem' => $avg,
+                'avg_penyelia' => $avgPenyelia,
+                'avg_pbo' => $avgPBO,
+                'avg_pbp' => $avgPBP,
+            ];
+            $value->average = $avgs;
+        }
+        return $pengajuan;
+        // return compact('pengajuan', 'jawaban');
+    }
+
     public function getUserJson($role)
     {
         $status = '';
@@ -1518,6 +1579,7 @@ class PengajuanKreditController extends Controller
     public function update(Request $request, $id)
     {
         // dd($request->all());
+        // dd($request->dataLevelDua, $request->dataLevelTiga, $request->dataLevelTiga);
         // return $request->all();
         $find = array('Rp.', '.');
         $request->validate([
@@ -1720,7 +1782,8 @@ class PengajuanKreditController extends Controller
                                 $skor = array();
                                 if ($request->skor_penyelia_text[$key] == 'null') {
                                     $skor[$key] = null;
-                                } else {
+                                } 
+                                else {
                                     $skor[$key] = $request->skor_penyelia_text[$key];
                                 }
                                 array_push($finalArray_text, array(
@@ -1744,6 +1807,7 @@ class PengajuanKreditController extends Controller
                     $data_level_dua = $this->getDataLevel($value);
                     $skor[$key] = $data_level_dua[0];
                     $id_jawaban[$key] = $data_level_dua[1];
+                    // if ($skor[$key] != 'kosong') {
                     if ($skor[$key] != 'kosong') {
                         array_push($rata_rata, $skor[$key]);
                     } else {
@@ -1812,6 +1876,8 @@ class PengajuanKreditController extends Controller
                     );
                 }
             }
+            // dd($request->id, $finalArray, $rata_rata);
+            // return $request;
             $average = array_sum($rata_rata) / count($rata_rata);
             $result = round($average, 2);
             $status = "";
@@ -1836,7 +1902,16 @@ class PengajuanKreditController extends Controller
                 $data = DB::table('jawaban');
 
                 if (!empty($request->id[$i])) {
-                    $data->where('id', $request->id[$i])->update($finalArray[$i]);
+                    if (is_numeric($finalArray[$i]['skor']))
+                        $data->where('id', $request->id[$i])->update($finalArray[$i]);
+                    else {
+                        $data->where('id', $request->id[$i])->update([
+                            'id_pengajuan' => $finalArray[$i]['id_pengajuan'],
+                            'id_jawaban' => $finalArray[$i]['id_jawaban'],
+                            'skor' => is_numeric($finalArray[$i]['skor']) ? $finalArray[$i]['skor'] : null,
+                            'updated_at' => $finalArray[$i]['updated_at'],
+                        ]);
+                    }
                 } else {
                     $data->insert($finalArray[$i]);
                 }

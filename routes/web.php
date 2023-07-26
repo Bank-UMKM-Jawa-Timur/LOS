@@ -23,7 +23,7 @@ use \App\Http\Controllers\LogPengajuanController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::get('/fixScore', [PengajuanKreditController::class, 'fixScore']);
 Route::get('/', function () {
     return redirect()->route('login');
 });

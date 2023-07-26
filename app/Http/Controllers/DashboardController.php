@@ -99,8 +99,10 @@ class DashboardController extends Controller
         curl_close($curl);
         $json = json_decode($response);
 
-        if ($json->data)
-            return $json->data->nama_karyawan;
+        if ($json) {
+            if ($json->data)
+                return $json->data->nama_karyawan;
+        }
         return Auth::user()->name;
     }
 
