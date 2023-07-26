@@ -1,5 +1,16 @@
 @extends('layouts.template')
 @section('content')
+    @push('extraStyle')
+        <style>
+            .text-sm span {
+                font-size: 14px;
+                margin: 0;
+            }
+            .text-color-soft {
+                color: rgba(0, 0, 0, 0.3);
+            }
+        </style>
+    @endpush
     @include('components.notification')
     <div class="row d-flex justify-content-end">
         @if (Request()->query() == null)
@@ -48,7 +59,7 @@
                     <th class="text-center">#</th>
                     <th>Tanggal Pengajuan</th>
                     <th>Nama Nasabah</th>
-                    <th>Posisi</th>
+                    <th class="text-center">Posisi</th>
                     <th>Durasi</th>
                     <th>Skor</th>
                     <th>Status</th>
@@ -61,17 +72,109 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $item->tanggal }}</td>
                         <td>{{ $item->nama }}</td>
-                        <td>
+                        <td class="text-center text-sm">
                             @if ($item->posisi == 'Proses Input Data')
-                                Staff
+                                @php
+                                    $nama_pemroses = 'undifined';
+                                    $user = \App\Models\User::select('nip')->where('id', $item->id_staf)->first();
+                                    if ($user)
+                                        $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
+                                    else {
+                                        $check_log = \DB::table('log_pengajuan')
+                                                        ->select('nip')
+                                                        ->where('id_pengajuan', $item->id)
+                                                        ->where('activity', 'LIKE', 'Staf%')
+                                                        ->orderBy('id', 'DESC')
+                                                        ->first();
+                                        if ($check_log)
+                                            $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
+                                    }
+                                @endphp
+                                <span>Staff</span>
+                                <br>
+                                <span class="text-color-soft">({{$nama_pemroses}})</span>
                             @elseif ($item->posisi == 'Review Penyelia')
-                                Penyelia
+                                @php
+                                    $nama_pemroses = 'undifined';
+                                    $user = \App\Models\User::select('nip')->where('id', $item->id_penyelia)->first();
+                                    if ($user)
+                                        $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
+                                    else {
+                                        $check_log = \DB::table('log_pengajuan')
+                                                        ->select('nip')
+                                                        ->where('id_pengajuan', $item->id)
+                                                        ->where('activity', 'LIKE', 'Penyelia%')
+                                                        ->orderBy('id', 'DESC')
+                                                        ->first();
+                                        if ($check_log)
+                                            $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
+                                    }
+                                @endphp
+                                <span>Penyelia</span>
+                                <br>
+                                <span class="text-color-soft">({{$nama_pemroses}})</span>
                             @elseif ($item->posisi == 'PBO')
-                                PBO
+                                @php
+                                    $nama_pemroses = 'undifined';
+                                    $user = \App\Models\User::select('nip')->where('id', $item->id_pbo)->first();
+                                    if ($user)
+                                        $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
+                                    else {
+                                        $check_log = \DB::table('log_pengajuan')
+                                                        ->select('nip')
+                                                        ->where('id_pengajuan', $item->id)
+                                                        ->where('activity', 'LIKE', 'PBO%')
+                                                        ->orderBy('id', 'DESC')
+                                                        ->first();
+                                        if ($check_log)
+                                            $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
+                                    }
+                                @endphp
+                                <span>PBO</span>
+                                <br>
+                                <span class="text-color-soft">({{$nama_pemroses}})</span>
                             @elseif ($item->posisi == 'PBP')
-                                PBP
+                                @php
+                                    $nama_pemroses = 'undifined';
+                                    $user = \App\Models\User::select('nip')->where('id', $item->id_pbp)->first();
+                                    if ($user)
+                                        $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
+                                    else {
+                                        $check_log = \DB::table('log_pengajuan')
+                                                        ->select('nip')
+                                                        ->where('id_pengajuan', $item->id)
+                                                        ->where('activity', 'LIKE', 'PBP%')
+                                                        ->orderBy('id', 'DESC')
+                                                        ->first();
+                                        if ($check_log)
+                                            $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
+                                    }
+                                @endphp
+                                <span>PBP</span>
+                                <br>
+                                <span class="text-color-soft">({{$nama_pemroses}})</span>
+                            @elseif ($item->posisi == 'Pincab')
+                                @php
+                                    $nama_pemroses = 'undifined';
+                                    $user = \App\Models\User::select('nip')->where('id', $item->id_pincab)->first();
+                                    if ($user)
+                                        $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
+                                    else {
+                                        $check_log = \DB::table('log_pengajuan')
+                                                        ->select('nip')
+                                                        ->where('id_pengajuan', $item->id)
+                                                        ->where('activity', 'LIKE', 'Pincab%')
+                                                        ->orderBy('id', 'DESC')
+                                                        ->first();
+                                        if ($check_log)
+                                            $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
+                                    }
+                                @endphp
+                                <span>Pincab</span>
+                                <br>
+                                <span class="text-color-soft">({{$nama_pemroses}})</span>
                             @else
-                                Pincab
+                                <span>Selesai</span>
                             @endif
                         </td>
                         <td>
@@ -164,7 +267,14 @@
                         </td>
                         <td>
                             @php
-                                $avgResult = $item->average_by_penyelia != null ? $item->average_by_penyelia : $item->average_by_sistem;
+                                $avgResult = $item->average_by_sistem;
+                                if ($item->posisi == 'Review Penyelia')
+                                    $avgResult = $item->average_by_penyelia ? $item->average_by_penyelia : $item->average_by_sistem;
+                                else if ($item->posisi == 'PBO')
+                                    $avgResult = $item->average_by_pbo ? $item->average_by_pbo : $item->average_by_penyelia;
+                                else if ($item->posisi == 'PBP')
+                                    $avgResult = $item->average_by_pbp ? $item->average_by_pbp : $item->average_by_pbo;
+
                                 if ($avgResult > 0 && $avgResult <= 2) {
                                     $status = "merah";
                                 } elseif ($avgResult > 2 && $avgResult <= 3) {

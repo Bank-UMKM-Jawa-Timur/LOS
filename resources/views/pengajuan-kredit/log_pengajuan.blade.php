@@ -218,11 +218,11 @@
                                         <span class="text-warning">Skor {{ $avg }}</span>
                                     @elseif ($status == 'merah')
                                         <font class="text-danger">
-                                            {{ $avgResult }}
+                                            {{ $avg }}
                                         </font>
                                     @else
                                         <font class="text-secondary">
-                                            {{ $avgResult }}
+                                            {{ $avg }}
                                         </font>
                                     @endif
                                 @endif

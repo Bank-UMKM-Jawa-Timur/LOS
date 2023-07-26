@@ -23,6 +23,12 @@ class DashboardController extends Controller
         $param['cabangs'] = DB::table('cabang')
             ->get();
         $id_cabang = Auth::user()->id_cabang;
+        $current_cabang = DB::table('cabang')->select('kode_cabang')->where('id', $id_cabang)->first();
+        $kode_cabang = '-';
+        if ($current_cabang)
+            $kode_cabang = $current_cabang->kode_cabang;
+        $param['kode_cabang'] = $kode_cabang;
+        
         if (Auth::user()->role == "Staf Analis Kredit") {
             $id_data = auth()->user()->id;
             $param['data'] = PengajuanModel::select('pengajuan.id', 'pengajuan.id_staf', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.progress_pengajuan_data', 'pengajuan.tanggal_review_penyelia', 'pengajuan.tanggal_review_pincab', 'pengajuan.status', 'pengajuan.status_by_sistem', 'pengajuan.id_cabang', 'pengajuan.average_by_sistem', 'pengajuan.average_by_penyelia', 'calon_nasabah.nama', 'calon_nasabah.jenis_usaha', 'calon_nasabah.sektor_kredit', 'calon_nasabah.jumlah_kredit', 'calon_nasabah.id_pengajuan')
