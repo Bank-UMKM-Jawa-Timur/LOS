@@ -115,6 +115,29 @@ class PengajuanKreditController extends Controller
         }
     }
 
+    public static function getKaryawanFromAPIStatic($nip)
+    {
+        // retrieve from api
+        $host = env('HCS_HOST');
+        $apiURL = $host . '/api/karyawan';
+
+        try {
+            $response = Http::timeout(3)->withOptions(['verify' => false])->get($apiURL, [
+                'nip' => $nip,
+            ]);
+
+            $statusCode = $response->status();
+            $responseBody = json_decode($response->getBody(), true);
+
+            if (array_key_exists('data', $responseBody))
+                return $responseBody['data']['nama'];
+            else
+                return 'undifined';
+        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+            return $e->getMessage();
+        }
+    }
+
     private function getNameKaryawan($nip)
     {
         $host = env('HCS_HOST');
@@ -445,6 +468,11 @@ class PengajuanKreditController extends Controller
                 'pengajuan.tanggal',
                 'pengajuan.posisi',
                 'pengajuan.progress_pengajuan_data',
+                'pengajuan.id_staf',
+                'pengajuan.id_penyelia',
+                'pengajuan.id_pbo',
+                'pengajuan.id_pbp',
+                'pengajuan.id_pincab',
                 'pengajuan.tanggal_review_penyelia',
                 'pengajuan.tanggal_review_pbp',
                 'pengajuan.tanggal_review_pincab',
@@ -485,7 +513,6 @@ class PengajuanKreditController extends Controller
                 ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
                 ->paginate(5)
                 ->withQueryString();
-
 
             return view('pengajuan-kredit.komentar-pincab-pengajuan', $param);
         }

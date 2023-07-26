@@ -1,5 +1,16 @@
 @extends('layouts.template')
 @section('content')
+    @push('extraStyle')
+        <style>
+            .text-sm span {
+                font-size: 14px;
+                margin: 0;
+            }
+            .text-color-soft {
+                color: rgba(0, 0, 0, 0.3);
+            }
+        </style>
+    @endpush
     @include('components.notification')
     <div class="row d-flex justify-content-end">
         @if (Request()->query() == null)
@@ -61,17 +72,59 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $item->tanggal }}</td>
                         <td>{{ $item->nama }}</td>
-                        <td>
+                        <td class="text-center text-sm">
                             @if ($item->posisi == 'Proses Input Data')
-                                Staff
+                                @php
+                                    $nama_pemroses = 'undifined';
+                                    $user = \App\Models\User::select('nip')->where('id', $item->id_staf)->first();
+                                    if ($user)
+                                        $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
+                                @endphp
+                                <span>Staff</span>
+                                <br>
+                                <span class="text-color-soft">({{$nama_pemroses}})</span>
                             @elseif ($item->posisi == 'Review Penyelia')
-                                Penyelia
+                                @php
+                                    $nama_pemroses = 'undifined';
+                                    $user = \App\Models\User::select('nip')->where('id', $item->id_penyelia)->first();
+                                    if ($user)
+                                        $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
+                                @endphp
+                                <span>Penyelia</span>
+                                <br>
+                                <span class="text-color-soft">({{$nama_pemroses}})</span>
                             @elseif ($item->posisi == 'PBO')
-                                PBO
+                                @php
+                                    $nama_pemroses = 'undifined';
+                                    $user = \App\Models\User::select('nip')->where('id', $item->id_pbo)->first();
+                                    if ($user)
+                                        $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
+                                @endphp
+                                <span>PBO</span>
+                                <br>
+                                <span class="text-color-soft">({{$nama_pemroses}})</span>
                             @elseif ($item->posisi == 'PBP')
-                                PBP
+                                @php
+                                    $nama_pemroses = 'undifined';
+                                    $user = \App\Models\User::select('nip')->where('id', $item->id_pbp)->first();
+                                    if ($user)
+                                        $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
+                                @endphp
+                                <span>PBP</span>
+                                <br>
+                                <span class="text-color-soft">({{$nama_pemroses}})</span>
+                            @elseif ($item->posisi == 'Pincab')
+                                @php
+                                    $nama_pemroses = 'undifined';
+                                    $user = \App\Models\User::select('nip')->where('id', $item->id_pincab)->first();
+                                    if ($user)
+                                        $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
+                                @endphp
+                                <span>Pincab</span>
+                                <br>
+                                <span class="text-color-soft">({{$nama_pemroses}})</span>
                             @else
-                                Pincab
+                                <span>Selesai</span>
                             @endif
                         </td>
                         <td>
