@@ -416,15 +416,13 @@
                             <div class="row align-items-center">
                                 <div class="col-md-8 pr-0 font-weight-bold">
                                     Pengajuan Telah Di Tindak Lanjuti
-                                    =======
-                                    >>>>>>> b0a73a6e64295ecff593936385471f692d2b2543
                                 </div>
                                 <div class="col-md-4 pr-0 font-wight-bold">
                                     <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
                                         return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
                                     })->when(Request()->cbg, function ($query, $cbg) {
                                             return $query->where('id_cabang', $cbg);
-                                        })->where('posisi', 'PBO')->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->count() }}
+                                        })->where('posisi', 'PBO')->where('pengajuan.id_cabang', auth()->user()->id_cabang)->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->count() }}
                                     </h1>
                                 </div>
                             </div>
@@ -449,7 +447,7 @@
                                         return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
                                     })->when(Request()->cbg, function ($query, $cbg) {
                                             return $query->where('id_cabang', $cbg);
-                                        })->where('posisi', 'Review Penyelia')->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->count() }}
+                                        })->where('posisi', 'Review Penyelia')->where('pengajuan.id_cabang', auth()->user()->id_cabang)->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->count() }}
                                     </h1>
                                 </div>
                             </div>
@@ -588,7 +586,7 @@
                                         return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
                                     })->when(Request()->cbg, function ($query, $cbg) {
                                             return $query->where('id_cabang', $cbg);
-                                        })->where('posisi', 'Proses Input Data')->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->count() }}
+                                        })->where('id_cabang', auth()->user()->id_cabang)->where('posisi', 'Proses Input Data')->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->count() }}
                                     </h1>
                                 </div>
                             </div>
