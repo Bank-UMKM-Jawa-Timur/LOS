@@ -37,6 +37,8 @@ Route::post('tes-skor', [PengajuanKreditController::class, 'countScore'])->name(
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::post('/print-data-nominatif', [DashboardController::class, 'cetak']);
+    Route::post('//print-data-nominatif-excel', [DashboardController::class, 'cetakExcel']);
     // check Pincab
     Route::post('pengajuan-kredit/pincabStatusDetailPost', [PengajuanKreditController::class, "checkPincabStatusDetailPost"])->name('pengajuan.check.pincab.status.detail.post');
     Route::get('pengajuan-kredit/pincabStatusDetail/{id}', [PengajuanKreditController::class, "checkPincabStatusDetail"])->name('pengajuan.check.pincab.status.detail');
@@ -72,7 +74,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('pengajuan-kredit.temp.file');
 
     Route::delete('pengajuan-kredit/temp/file', [PengajuanKreditController::class, 'delTempFile']);
-    
+
     Route::post('pengajuan-kredit/temp/jawaban', [PengajuanKreditController::class, 'tempJawaban'])
     ->name('pengajuan-kredit.temp.jawaban');
     Route::post('pengajuan-kredit/temp/data-po', [PengajuanKreditController::class, 'saveDataPOTemp'])->name('pengajuan-kredit.save-data-po');
@@ -101,6 +103,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('master-item', MasterItemController::class);
     // Cetak Surat
     Route::get('cetak-surat/{id}', [CetakSuratController::class, 'cetak'])->name('cetak');
+
+    // cetak Data Nominatif
+
 
     // Route::gety('cetak-surat', CetakSuratController::class);
 
