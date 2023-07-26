@@ -409,6 +409,14 @@
                 </div>
             </div>
         @elseif (auth()->user()->role == 'Penyelia Kredit')
+        <div class="col-md-12 mb-4">
+            <div class=" d-flex justify-content-end">
+                <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
+                    data-target="#exampleModal">
+                    <i class="fa fa-filter"></i> Filter
+                </button>
+            </div>
+        </div>
             <div class="col-md-3 mb-4">
                 <div class="card bg-rgb-primary border border-primary">
                     <div class="card-body py-4">
@@ -466,6 +474,14 @@
                 </div>
             </div>
         @elseif (auth()->user()->role == 'PBO')
+        <div class="col-md-12 mb-4">
+            <div class=" d-flex justify-content-end">
+                <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
+                    data-target="#exampleModal">
+                    <i class="fa fa-filter"></i> Filter
+                </button>
+            </div>
+        </div>
             <div class="col-md-3 mb-4">
                 <div class="card bg-rgb-primary border border-primary">
                     <div class="card-body py-4">
@@ -510,6 +526,14 @@
                 </div>
             </div>
         @elseif (auth()->user()->role == 'PBP')
+        <div class="col-md-12 mb-4">
+            <div class=" d-flex justify-content-end">
+                <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
+                    data-target="#exampleModal">
+                    <i class="fa fa-filter"></i> Filter
+                </button>
+            </div>
+        </div>
             <div class="col-md-3 mb-4">
                 <div class="card bg-rgb-primary border border-primary">
                     <div class="card-body py-4">
@@ -564,6 +588,14 @@
                 </div>
             </div>
         @elseif (auth()->user()->role == 'Staf Analis Kredit')
+        <div class="col-md-12 mb-4">
+            <div class=" d-flex justify-content-end">
+                <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
+                    data-target="#exampleModal">
+                    <i class="fa fa-filter"></i> Filter
+                </button>
+            </div>
+        </div>
             <div class="col-md-3 mb-4">
                 <div class="card bg-rgb-primary border border-primary">
                     <div class="card-body py-4">
