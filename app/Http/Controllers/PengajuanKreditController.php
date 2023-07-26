@@ -2183,12 +2183,14 @@ class PengajuanKreditController extends Controller
                     }
                 } else {
                     foreach ($request->id_item as $key => $value) {
-                        $dk = new DetailKomentarModel;
-                        $dk->id_komentar = $idKomentar->id;
-                        $dk->id_user = Auth::user()->id;
-                        $dk->id_item = $value;
-                        $dk->komentar = $_POST['komentar_penyelia'][$key];
-                        $dk->save();
+                        if ($value) {
+                            $dk = new DetailKomentarModel;
+                            $dk->id_komentar = $idKomentar->id;
+                            $dk->id_user = Auth::user()->id;
+                            $dk->id_item = $value;
+                            $dk->komentar = $_POST['komentar_penyelia'][$key];
+                            $dk->save();
+                        }
                     }
                 }
 
@@ -3445,11 +3447,9 @@ class PengajuanKreditController extends Controller
             return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil menambahkan ' . $message);
         } catch (Exception $e) {
             DB::rollBack();
-            dd($e);
             return redirect()->route('pengajuan-kredit.index')->withStatus('Terjadi kesalahan. ' . $e->getMessage());
         } catch (QueryException $e) {
             DB::rollBack();
-            dd($e);
             return redirect()->route('pengajuan-kredit.index')->withStatus('Terjadi kesalahan. ' . $e->getMessage());
         }
     }
