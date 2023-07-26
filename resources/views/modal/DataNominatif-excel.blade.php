@@ -98,120 +98,19 @@
     </tbody>
     <tfoot>
         <tr>
-            <td style="border:1px solid #000;" colspan="2" align="center">Grand Total</td>
-            <td style="border:1px solid #000;">{{ $disetujui }}</td>
-            <td style="border:1px solid #000;">{{ $ditolak }}</td>
-            <td style="border:1px solid #000;">{{ $pincab }}</td>
-            <td style="border:1px solid #000;">{{ $pbb }}</td>
-            <td style="border:1px solid #000;">{{ $pbo }}</td>
-            <td style="border:1px solid #000;">{{ $penyelia }}</td>
-            <td style="border:1px solid #000;">{{ $staff }}</td>
-            <td style="border:1px solid #000;">{{ $total }}</td>
+            <td style="font-weight: bold; border:1px solid #000;" colspan="2" align="center">Grand Total</td>
+            <td style="font-weight: bold; border:1px solid #000;">{{ $disetujui }}</td>
+            <td style="font-weight: bold; border:1px solid #000;">{{ $ditolak }}</td>
+            <td style="font-weight: bold; border:1px solid #000;">{{ $pincab }}</td>
+            <td style="font-weight: bold; border:1px solid #000;">{{ $pbb }}</td>
+            <td style="font-weight: bold; border:1px solid #000;">{{ $pbo }}</td>
+            <td style="font-weight: bold; border:1px solid #000;">{{ $penyelia }}</td>
+            <td style="font-weight: bold; border:1px solid #000;">{{ $staff }}</td>
+            <td style="font-weight: bold; border:1px solid #000;">{{ $total }}</td>
         </tr>
     </tfoot>
 </table>
 
-<br><br><br><br>
-{{-- seluruh data --}}
-<table>
-
-    <thead>
-        <tr>
-            <th rowspan="2" colspan="10" align="center"
-                style="background-color: #dc3545; vertical-align: center; color: white; font-weight: bold;">
-                Suluruh
-                Data Pengajuan</th>
-        </tr>
-        <tr>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-        </tr>
-        <tr>
-            <th style="background-color: rgb(17, 32, 66);border:1px solid #000;">Kode</th>
-            <th style="background-color: rgb(17, 32, 66);width: 300px; border:1px solid #000;">Cabang</th>
-            <th style="background-color: rgb(17, 32, 66);border:1px solid #000;">Disetujui</th>
-            <th style="background-color: rgb(17, 32, 66);border:1px solid #000;">Ditolak</th>
-            <th style="background-color: rgb(17, 32, 66);border:1px solid #000;">Pincab</th>
-            <th style="background-color: rgb(17, 32, 66);border:1px solid #000;">PBP</th>
-            <th style="background-color: rgb(17, 32, 66);border:1px solid #000;">PBO</th>
-            <th style="background-color: rgb(17, 32, 66);border:1px solid #000;">Penyelia</th>
-            <th style="background-color: rgb(17, 32, 66);border:1px solid #000;">Staff</th>
-            <th style="background-color: rgb(17, 32, 66);border:1px solid #000;">Total</th>
-        </tr>
-    </thead>
-    <tbody>
-        @php
-            $disetujui = 0;
-            $ditolak = 0;
-            $pincab = 0;
-            $pbb = 0;
-            $pbo = 0;
-            $penyelia = 0;
-            $staff = 0;
-            $total = 0;
-        @endphp
-        @for ($i = 0; $i < count($dataS); $i++)
-            <tr>
-                <td style="border:1px solid #000;">{{ $dataS[$i]['kodeC'] }}</td>
-                <td style="border:1px solid #000;">{{ $dataS[$i]['cabang'] }}</td>
-                <td style="border:1px solid #000;">{{ $dataS[$i]['disetujui'] }}</td>
-                <td style="border:1px solid #000;">{{ $dataS[$i]['ditolak'] }}</td>
-                <td style="border:1px solid #000;">{{ $dataS[$i]['pincab'] }}</td>
-                <td style="border:1px solid #000;">{{ $dataS[$i]['PBB'] }}</td>
-                <td style="border:1px solid #000;">{{ $dataS[$i]['PBO'] }}</td>
-                <td style="border:1px solid #000;">{{ $dataS[$i]['penyelia'] }}</td>
-                <td style="border:1px solid #000;">{{ $dataS[$i]['staff'] }}</td>
-                <td style="border:1px solid #000;">{{ $dataS[$i]['total'] }}</td>
-            </tr>
-
-            @php
-                $disetujui += $dataS[$i]['disetujui'];
-                $ditolak += $dataS[$i]['ditolak'];
-                $pincab += $dataS[$i]['pincab'];
-                $pbb += $dataS[$i]['PBB'];
-                $pbo += $dataS[$i]['PBO'];
-                $penyelia += $dataS[$i]['penyelia'];
-                $staff += $dataS[$i]['staff'];
-                $total += $dataS[$i]['total'];
-            @endphp
-        @endfor
-        {{-- @foreach ($data as $row)
-                <tr>
-                    <td>{{ $row->kodeC }}</td>
-                    <td>{{ $row->cabang }}</td>
-                    <td>{{ $row->disetujui }}</td>
-                    <td>{{ $row->ditolak }}</td>
-                    <td>{{ $row->pincab }}</td>
-                    <td>{{ $row->PBB }}</td>
-                    <td>{{ $row->PBO }}</td>
-                    <td>{{ $row->penyelia }}</td>
-                    <td>{{ $row->staff }}</td>
-                    <td>{{ $row->total }}</td>
-                </tr>
-                @endforeach --}}
-    </tbody>
-    <tfoot>
-        <tr>
-            <td style="border:1px solid #000;" colspan="2" align="center">Grand Total</td>
-            <td style="border:1px solid #000;">{{ $disetujui }}</td>
-            <td style="border:1px solid #000;">{{ $ditolak }}</td>
-            <td style="border:1px solid #000;">{{ $pincab }}</td>
-            <td style="border:1px solid #000;">{{ $pbb }}</td>
-            <td style="border:1px solid #000;">{{ $pbo }}</td>
-            <td style="border:1px solid #000;">{{ $penyelia }}</td>
-            <td style="border:1px solid #000;">{{ $staff }}</td>
-            <td style="border:1px solid #000;">{{ $total }}</td>
-        </tr>
-    </tfoot>
-</table>
 
 <br><br><br><br>
 {{-- seluruh data Cabang --}}
@@ -277,10 +176,10 @@
     </tbody>
     <tfoot>
         <tr>
-            <td colspan="2" align="center" style="border:1px solid #000;">Grand Total</td>
-            <td style="border:1px solid #000;">{{ $disetujui }}</td>
-            <td style="border:1px solid #000;">{{ $staff }}</td>
-            <td style="border:1px solid #000;">{{ $total }}</td>
+            <td colspan="2" align="center" style="font-weight: bold; border:1px solid #000;">Grand Total</td>
+            <td style="font-weight: bold; border:1px solid #000;">{{ $disetujui }}</td>
+            <td style="font-weight: bold; border:1px solid #000;">{{ $staff }}</td>
+            <td style="font-weight: bold; border:1px solid #000;">{{ $total }}</td>
         </tr>
     </tfoot>
 </table>

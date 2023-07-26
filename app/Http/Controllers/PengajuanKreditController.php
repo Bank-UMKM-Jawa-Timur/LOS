@@ -224,10 +224,11 @@ class PengajuanKreditController extends Controller
         return Auth::user()->name;
     }
 
-    public function formatDate($date) {
+    public function formatDate($date)
+    {
         if ($date) {
             $arr = explode('-', $date);
-            return $arr[2].'-'.$arr[1].'-'.$arr[0]; // yyyy-mm-dd
+            return $arr[2] . '-' . $arr[1] . '-' . $arr[0]; // yyyy-mm-dd
         }
     }
 
@@ -278,7 +279,7 @@ class PengajuanKreditController extends Controller
                 'calon_nasabah.jenis_usaha',
                 'calon_nasabah.id_pengajuan',
                 'pengajuan.created_at',
-            )->orderBy('created_at','desc')
+            )->orderBy('created_at', 'desc')
                 ->when($request->search, function ($query, $search) {
                     return $query->where('calon_nasabah.nama', 'like', '%' . $search . '%');
                 })
@@ -291,8 +292,8 @@ class PengajuanKreditController extends Controller
                 ->when($request->tAwal && $request->tAkhir, function ($query) use ($request) {
                     return $query->whereBetween('pengajuan.tanggal', [$request->tAwal, $request->tAkhir]);
                 })
-                ->when($request->lanjuti,function($query,$lanjuti){
-                    return $query->where('posisi', '!=','Proses Input Data');
+                ->when($request->lanjuti, function ($query, $lanjuti) {
+                    return $query->where('posisi', '!=', 'Proses Input Data');
                 })
                 ->when($request->sts, function ($query, $sts) {
                     if ($sts == 'Selesai' || $sts == 'Ditolak') {
@@ -342,7 +343,8 @@ class PengajuanKreditController extends Controller
                 'calon_nasabah.jenis_usaha',
                 'calon_nasabah.id_pengajuan',
                 'pengajuan.created_at',
-            )->orderBy('created_at','desc')
+            )->orderBy('created_at', 'desc')
+                ->where('pengajuan.id_penyelia', $id_penyelia)
                 ->when($request->search, function ($query, $search) {
                     return $query->where('calon_nasabah.nama', 'like', '%' . $search . '%');
                 })
@@ -367,8 +369,8 @@ class PengajuanKreditController extends Controller
                     return $query->whereRaw('FLOOR(pengajuan.average_by_sistem) = ?', $score)
                         ->orWhereRaw('FLOOR(pengajuan.average_by_penyelia) = ?', $score);
                 })
-                ->when($request->lanjuti,function($query,$lanjuti){
-                    return $query->where('posisi', '!=','Review Penyelia');
+                ->when($request->lanjuti, function ($query, $lanjuti) {
+                    return $query->where('posisi', '!=', 'Review Penyelia');
                 })
                 ->where('pengajuan.id_penyelia', $id_penyelia)
                 ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
@@ -406,7 +408,7 @@ class PengajuanKreditController extends Controller
                 'calon_nasabah.jenis_usaha',
                 'calon_nasabah.id_pengajuan',
                 'pengajuan.created_at',
-            )->orderBy('created_at','desc')
+            )->orderBy('created_at', 'desc')
                 ->where('pengajuan.id_pbo', $id_data)
                 ->orWhere('pengajuan.id_pbp', $id_data)
                 ->when($request->search, function ($query, $search) {
@@ -466,7 +468,7 @@ class PengajuanKreditController extends Controller
                     'calon_nasabah.nama',
                     'calon_nasabah.jenis_usaha',
                     'calon_nasabah.id_pengajuan'
-                )->orderBy('tanggal','desc')
+                )->orderBy('tanggal', 'desc')
                     ->when($request->search, function ($query, $search) {
                         return $query->where('calon_nasabah.nama', 'like', '%' . $search . '%');
                     })
@@ -496,8 +498,7 @@ class PengajuanKreditController extends Controller
                     ->where('pengajuan.posisi', $request->pss)
                     ->paginate(5)
                     ->withQueryString();
-            }
-            else {
+            } else {
                 $param['data_pengajuan'] = PengajuanModel::select(
                     'pengajuan.id',
                     'pengajuan.id_pincab',
@@ -523,7 +524,7 @@ class PengajuanKreditController extends Controller
                     'calon_nasabah.nama',
                     'calon_nasabah.jenis_usaha',
                     'calon_nasabah.id_pengajuan'
-                )->orderBy('tanggal','desc')
+                )->orderBy('tanggal', 'desc')
                     ->where('pengajuan.id_pincab', $id_data)
                     ->when($request->search, function ($query, $search) {
                         return $query->where('calon_nasabah.nama', 'like', '%' . $search . '%');
@@ -581,7 +582,7 @@ class PengajuanKreditController extends Controller
                 'calon_nasabah.nama',
                 'calon_nasabah.jenis_usaha',
                 'calon_nasabah.id_pengajuan'
-            )->orderBy('created_at','desc')
+            )->orderBy('created_at', 'desc')
                 ->when($request->search, function ($query, $search) {
                     return $query->where('calon_nasabah.nama', 'like', '%' . $search . '%');
                 })
@@ -1232,9 +1233,9 @@ class PengajuanKreditController extends Controller
 
             // untuk upload file baru
             foreach ($request->upload_file as $key => $value) {
-                if(is_array($value)){
-                    for ($i=0; $i < count($value); $i++) {
-                        $filename = auth()->user()->id.'-'.time().'-'.$value[$i]->getClientOriginalName();
+                if (is_array($value)) {
+                    for ($i = 0; $i < count($value); $i++) {
+                        $filename = auth()->user()->id . '-' . time() . '-' . $value[$i]->getClientOriginalName();
                         $relPath = "upload/{$id_pengajuan}/{$key}";
                         $path = public_path("upload/{$id_pengajuan}/{$key}/");
 
@@ -1250,9 +1251,8 @@ class PengajuanKreditController extends Controller
                             'skor' => null,
                         ]);
                     }
-                }
-                else {
-                    $filename = auth()->user()->id.'-'.time().'-'.$value->getClientOriginalName();
+                } else {
+                    $filename = auth()->user()->id . '-' . time() . '-' . $value->getClientOriginalName();
                     $relPath = "upload/{$id_pengajuan}/{$key}";
                     $path = public_path("upload/{$id_pengajuan}/{$key}/");
 
@@ -1338,15 +1338,14 @@ class PengajuanKreditController extends Controller
                 if ($mergedDataLevel[$i]) {
                     // jika data tersedia
                     $data = $this->getDataLevel($mergedDataLevel[$i]);
-                    if (is_numeric($data[0])){
-                        if($data[1] == 71 || $data[1] == 186){
-                            if($data[0] == '1'){
+                    if (is_numeric($data[0])) {
+                        if ($data[1] == 71 || $data[1] == 186) {
+                            if ($data[0] == '1') {
                                 $statusSlik = true;
                             }
                         }
                         $totalScore += $data[0];
-                    }
-                    else
+                    } else
                         $totalDataNull++;
                 } else
                     $totalDataNull++;
@@ -1394,6 +1393,7 @@ class PengajuanKreditController extends Controller
                 $updateData->posisi = 'Ditolak';
                 $updateData->status_by_sistem = "merah";
                 $updateData->average_by_sistem = "1.0";
+                return redirect()->back()->with('error', 'Pengajuan Di tolak');
             }
             $updateData->update();
 
@@ -1438,7 +1438,7 @@ class PengajuanKreditController extends Controller
             if ($addData)
                 $namaNasabah = $addData->nama;
 
-            $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan proses pembuatan data pengajuan atas nama '.$namaNasabah.'.', $id_pengajuan, Auth::user()->id, Auth::user()->nip);
+            $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan proses pembuatan data pengajuan atas nama ' . $namaNasabah . '.', $id_pengajuan, Auth::user()->id, Auth::user()->nip);
 
             DB::commit();
             return redirect()->route('pengajuan-kredit.index')->withStatus('Data berhasil disimpan.');
@@ -1977,7 +1977,7 @@ class PengajuanKreditController extends Controller
             if ($updateData->nama)
                 $namaNasabah = $updateData->nama;
 
-            $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan proses perubahan data pengajuan atas nama '.$namaNasabah, $id, Auth::user()->id, Auth::user()->nip);
+            $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan proses perubahan data pengajuan atas nama ' . $namaNasabah, $id, Auth::user()->id, Auth::user()->nip);
             // Session::put('id',$addData->id);
             DB::commit();
             return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil mengupdate data.');
@@ -2271,8 +2271,7 @@ class PengajuanKreditController extends Controller
                             'skor_penyelia' => $value
                         ]);
                         $sum_select += $value;
-                    }
-                    else
+                    } else
                         $totalDataNull++;
                 }
                 $average = ($sum_select) / (count($request->skor_penyelia) - $totalDataNull);
@@ -2297,8 +2296,7 @@ class PengajuanKreditController extends Controller
                                 'skor_penyelia' => $request->get('skor_penyelia')[$key] ? $request->get('skor_penyelia')[$key] : 1
                             ]);
                     }
-                }
-                else if ($role == 'PBO') {
+                } else if ($role == 'PBO') {
                     foreach ($request->get('id_option') as $key => $value) {
                         JawabanPengajuanModel::where('id_jawaban', $value)->where('id_pengajuan', $request->get('id_pengajuan'))
                             ->update([
@@ -2333,8 +2331,7 @@ class PengajuanKreditController extends Controller
                             'updated_at' => date('Y-m-d H:i:s')
                         ]
                     );
-                }
-                else if ($role == 'PBO') {
+                } else if ($role == 'PBO') {
                     KomentarModel::where('id', $idKomentar->id)->update(
                         [
                             'komentar_pbo' => $request->komentar_pbo_keseluruhan,
@@ -2389,8 +2386,7 @@ class PengajuanKreditController extends Controller
                             $pendapatperaspekpenyelia->pendapat_per_aspek = $_POST['pendapat_per_aspek'][$key];
                             $pendapatperaspekpenyelia->save();
                         }
-                    }
-                    else if ($role == 'PBO') {
+                    } else if ($role == 'PBO') {
                         foreach ($request->get('id_aspek') as $key => $value) {
                             $pendapatperaspekpenyelia = PendapatPerAspek::where('id_pengajuan', $request->get('id_pengajuan'))->where('id_aspek', $value)->where('id_pbo', Auth::user()->id)->first();
                             $pendapatperaspekpenyelia->pendapat_per_aspek = $_POST['pendapat_per_aspek'][$key];
@@ -2413,8 +2409,7 @@ class PengajuanKreditController extends Controller
                             $pendapatperaspekpenyelia->pendapat_per_aspek = $request->get('pendapat_per_aspek')[$key];
                             $pendapatperaspekpenyelia->save();
                         }
-                    }
-                    else if ($role == 'PBO') {
+                    } else if ($role == 'PBO') {
                         foreach ($request->get('id_aspek') as $key => $value) {
                             $pendapatperaspekpenyelia = new PendapatPerAspek;
                             $pendapatperaspekpenyelia->id_pengajuan = $request->get('id_pengajuan');
@@ -2442,7 +2437,7 @@ class PengajuanKreditController extends Controller
                 if ($nasabah)
                     $namaNasabah = $nasabah->nama;
 
-                $this->logPengajuan->store($role.' dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan review terhadap pengajuan atas nama '.$namaNasabah, $updateData->id, Auth::user()->id, Auth::user()->nip);
+                $this->logPengajuan->store($role . ' dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan review terhadap pengajuan atas nama ' . $namaNasabah, $updateData->id, Auth::user()->id, Auth::user()->nip);
                 return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil Mereview');
             } catch (Exception $e) {
                 // return $e;
@@ -2478,8 +2473,8 @@ class PengajuanKreditController extends Controller
                     $namaNasabah = $nasabah->nama;
 
                 $penyelia = User::find($request->select_penyelia);
-                $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan atas nama '.$namaNasabah.' ke penyelia dengan NIP ' . $penyelia->nip . ' atas nama ' . $this->getNameKaryawan($penyelia->nip) . ' .', $statusPenyelia->id, Auth::user()->id, Auth::user()->nip);
-                $this->logPengajuan->store('Penyelia dengan NIP ' . $penyelia->nip . ' atas nama ' . $this->getNameKaryawan($penyelia->nip) . ' menerima data pengajuan atas nama '.$namaNasabah.' dari staf dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $statusPenyelia->id, $penyelia->id, $penyelia->nip);
+                $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan atas nama ' . $namaNasabah . ' ke penyelia dengan NIP ' . $penyelia->nip . ' atas nama ' . $this->getNameKaryawan($penyelia->nip) . ' .', $statusPenyelia->id, Auth::user()->id, Auth::user()->nip);
+                $this->logPengajuan->store('Penyelia dengan NIP ' . $penyelia->nip . ' atas nama ' . $this->getNameKaryawan($penyelia->nip) . ' menerima data pengajuan atas nama ' . $namaNasabah . ' dari staf dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $statusPenyelia->id, $penyelia->id, $penyelia->nip);
                 return redirect()->back()->withStatus('Berhasil mengganti posisi.');
             } else {
                 return back()->withError('Data pengajuan tidak ditemukan.');
@@ -2520,17 +2515,15 @@ class PengajuanKreditController extends Controller
                                 $dataPenyelia->update();
 
                                 // Log Pengajuan melanjutkan pbo dan mendapatkan
-                                $this->logPengajuan->store('Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan atas nama '.$namaNasabah.' ke PBO dengan NIP ' . $userPBO->nip . ' atas nama ' . $this->getNameKaryawan($userPBO->nip) . ' .', $id, Auth::user()->id, Auth::user()->nip);
-                                $this->logPengajuan->store('PBO dengan NIP ' . $userPBO->nip . ' atas nama ' . $this->getNameKaryawan($userPBO->nip) . ' menerima data pengajuan atas nama '.$namaNasabah.' dari Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $userPBO->id, $userPBO->nip);
+                                $this->logPengajuan->store('Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan atas nama ' . $namaNasabah . ' ke PBO dengan NIP ' . $userPBO->nip . ' atas nama ' . $this->getNameKaryawan($userPBO->nip) . ' .', $id, Auth::user()->id, Auth::user()->nip);
+                                $this->logPengajuan->store('PBO dengan NIP ' . $userPBO->nip . ' atas nama ' . $this->getNameKaryawan($userPBO->nip) . ' menerima data pengajuan atas nama ' . $namaNasabah . ' dari Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $userPBO->id, $userPBO->nip);
                             } else {
                                 return redirect()->back()->withError('Belum di review Penyelia.');
                             }
-                        }
-                        else {
+                        } else {
                             return back()->withError('User pbo tidak ditemukan pada cabang ini.');
                         }
-                    }
-                    else if ($to == 'pbp') {
+                    } else if ($to == 'pbp') {
                         if ($status != null) {
                             $userPBP = User::select('id', 'nip')
                                 ->where('id_cabang', $dataPenyelia->id_cabang)
@@ -2544,16 +2537,15 @@ class PengajuanKreditController extends Controller
                                 $dataPenyelia->update();
 
                                 // Log Pengajuan melanjutkan PBP dan mendapatkan
-                                $this->logPengajuan->store('Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan atas nama '.$namaNasabah.' ke PBP dengan NIP ' . $userPBP->nip . ' atas nama ' . $this->getNameKaryawan($userPBP->nip) . ' .', $id, Auth::user()->id, Auth::user()->nip);
-                                $this->logPengajuan->store('PBP dengan NIP ' . $userPBP->nip . ' atas nama ' . $this->getNameKaryawan($userPBP->nip) . ' menerima data pengajuan atas nama '.$namaNasabah.' dari Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $userPBP->id, $userPBP->nip);
+                                $this->logPengajuan->store('Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan atas nama ' . $namaNasabah . ' ke PBP dengan NIP ' . $userPBP->nip . ' atas nama ' . $this->getNameKaryawan($userPBP->nip) . ' .', $id, Auth::user()->id, Auth::user()->nip);
+                                $this->logPengajuan->store('PBP dengan NIP ' . $userPBP->nip . ' atas nama ' . $this->getNameKaryawan($userPBP->nip) . ' menerima data pengajuan atas nama ' . $namaNasabah . ' dari Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $userPBP->id, $userPBP->nip);
                             } else {
                                 return back()->withError('User pbp tidak ditemukan pada cabang ini.');
                             }
                         } else {
                             return redirect()->back()->withError('Belum di review Penyelia.');
                         }
-                    }
-                    else if ($to == 'pincab') {
+                    } else if ($to == 'pincab') {
                         if ($status != null) {
                             $userPincab = User::select('id', 'nip')
                                 ->where('id_cabang', $dataPenyelia->id_cabang)
@@ -2567,9 +2559,9 @@ class PengajuanKreditController extends Controller
                                 $dataPenyelia->update();
 
                                 // Log Pengajuan melanjutkan PBP dan mendapatkan
-                                $this->logPengajuan->store('Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan atas nama '.$namaNasabah.' ke Pincab dengan NIP ' . $userPincab->nip . ' atas nama ' . $this->getNameKaryawan($userPincab->nip) . ' .', $id, Auth::user()->id, Auth::user()->nip);
+                                $this->logPengajuan->store('Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan atas nama ' . $namaNasabah . ' ke Pincab dengan NIP ' . $userPincab->nip . ' atas nama ' . $this->getNameKaryawan($userPincab->nip) . ' .', $id, Auth::user()->id, Auth::user()->nip);
 
-                                $this->logPengajuan->store('Pincab dengan NIP ' . $userPincab->nip . ' atas nama ' . $this->getNameKaryawan($userPincab->nip) . ' menerima data pengajuan atas nama '.$namaNasabah.' dari Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $userPincab->id, $userPincab->nip);
+                                $this->logPengajuan->store('Pincab dengan NIP ' . $userPincab->nip . ' atas nama ' . $this->getNameKaryawan($userPincab->nip) . ' menerima data pengajuan atas nama ' . $namaNasabah . ' dari Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $userPincab->id, $userPincab->nip);
                             } else {
                                 return back()->withError('User pincab tidak ditemukan pada cabang ini.');
                             }
@@ -2596,14 +2588,13 @@ class PengajuanKreditController extends Controller
                                 $dataPenyelia->update();
 
                                 // Log Pengajuan melanjutkan pbo dan mendapatkan
-                                $this->logPengajuan->store('Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan atas nama '.$namaNasabah.' ke PBO dengan NIP ' . $userPBO->nip . ' atas nama ' . $this->getNameKaryawan($userPBO->nip) . ' .', $id, Auth::user()->id, Auth::user()->nip);
-                                $this->logPengajuan->store('PBO dengan NIP ' . $userPBO->nip . ' atas nama ' . $this->getNameKaryawan($userPBO->nip) . ' menerima data pengajuan atas nama '.$namaNasabah.' dari Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $userPBO->id, $userPBO->nip);
+                                $this->logPengajuan->store('Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan atas nama ' . $namaNasabah . ' ke PBO dengan NIP ' . $userPBO->nip . ' atas nama ' . $this->getNameKaryawan($userPBO->nip) . ' .', $id, Auth::user()->id, Auth::user()->nip);
+                                $this->logPengajuan->store('PBO dengan NIP ' . $userPBO->nip . ' atas nama ' . $this->getNameKaryawan($userPBO->nip) . ' menerima data pengajuan atas nama ' . $namaNasabah . ' dari Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $userPBO->id, $userPBO->nip);
                             } else {
                                 return redirect()->back()->withError('Belum di review Penyelia.');
                             }
                         }
-                    }
-                    else {
+                    } else {
                         if ($status != null) {
                             $userPincab = User::select('id', 'nip')
                                 ->where('id_cabang', $dataPenyelia->id_cabang)
@@ -2618,8 +2609,8 @@ class PengajuanKreditController extends Controller
 
                                 // Log Pengajuan melanjutkan PINCAB dan mendapatkan
                                 $pincab = User::find($userPincab->id);
-                                $this->logPengajuan->store('Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan atas nama '.$namaNasabah.' ke Pincab dengan NIP ' . $pincab->nip . ' atas nama ' . $this->getNameKaryawan($pincab->nip) . ' .', $id, Auth::user()->id, Auth::user()->nip);
-                                $this->logPengajuan->store('Pincab dengan NIP ' . $pincab->nip . ' atas nama ' . $this->getNameKaryawan($pincab->nip) . ' menerima data pengajuan atas nama '.$namaNasabah.' dari Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $userPincab->id, $userPincab->nip);
+                                $this->logPengajuan->store('Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan atas nama ' . $namaNasabah . ' ke Pincab dengan NIP ' . $pincab->nip . ' atas nama ' . $this->getNameKaryawan($pincab->nip) . ' .', $id, Auth::user()->id, Auth::user()->nip);
+                                $this->logPengajuan->store('Pincab dengan NIP ' . $pincab->nip . ' atas nama ' . $this->getNameKaryawan($pincab->nip) . ' menerima data pengajuan atas nama ' . $namaNasabah . ' dari Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $userPincab->id, $userPincab->nip);
                             } else {
                                 return back()->withError('User pincab tidak ditemukan di cabang ini.');
                             }
@@ -2646,8 +2637,8 @@ class PengajuanKreditController extends Controller
                             $dataPenyelia->update();
 
                             // Log Pengajuan melanjutkan PBP dan mendapatkan
-                            $this->logPengajuan->store('PBO dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan atas nama '.$namaNasabah.' ke PBP dengan NIP ' . $userPBP->nip . ' atas nama ' . $this->getNameKaryawan($userPBP->nip) . ' .', $id, Auth::user()->id, Auth::user()->nip);
-                            $this->logPengajuan->store('PBP dengan NIP ' . $userPBP->nip . ' atas nama ' . $this->getNameKaryawan($userPBP->nip) . ' menerima data pengajuan atas nama '.$namaNasabah.' dari PBO dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $userPBP->id, $userPBP->nip);
+                            $this->logPengajuan->store('PBO dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan atas nama ' . $namaNasabah . ' ke PBP dengan NIP ' . $userPBP->nip . ' atas nama ' . $this->getNameKaryawan($userPBP->nip) . ' .', $id, Auth::user()->id, Auth::user()->nip);
+                            $this->logPengajuan->store('PBP dengan NIP ' . $userPBP->nip . ' atas nama ' . $this->getNameKaryawan($userPBP->nip) . ' menerima data pengajuan atas nama ' . $namaNasabah . ' dari PBO dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $userPBP->id, $userPBP->nip);
                         } else {
                             return back()->withError('User pbp tidak ditemukan pada cabang ini.');
                         }
@@ -2668,8 +2659,8 @@ class PengajuanKreditController extends Controller
                             $dataPenyelia->update();
 
                             // Log Pengajuan melanjutkan PBP dan mendapatkan
-                            $this->logPengajuan->store('PBO dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan atas nama '.$namaNasabah.' ke Pincab dengan NIP ' . $userPincab->nip . ' atas nama ' . $this->getNameKaryawan($userPincab->nip) . ' .', $id, Auth::user()->id, Auth::user()->nip);
-                            $this->logPengajuan->store('Pincab dengan NIP ' . $userPincab->nip . ' atas nama ' . $this->getNameKaryawan($userPincab->nip) . ' menerima data pengajuan atas nama '.$namaNasabah.' dari PBO dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $userPincab->id, $userPincab->nip);
+                            $this->logPengajuan->store('PBO dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan atas nama ' . $namaNasabah . ' ke Pincab dengan NIP ' . $userPincab->nip . ' atas nama ' . $this->getNameKaryawan($userPincab->nip) . ' .', $id, Auth::user()->id, Auth::user()->nip);
+                            $this->logPengajuan->store('Pincab dengan NIP ' . $userPincab->nip . ' atas nama ' . $this->getNameKaryawan($userPincab->nip) . ' menerima data pengajuan atas nama ' . $namaNasabah . ' dari PBO dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $userPincab->id, $userPincab->nip);
                         } else {
                             return back()->withError('User pincab tidak ditemukan pada cabang ini.');
                         }
@@ -2692,8 +2683,8 @@ class PengajuanKreditController extends Controller
                         $dataPenyelia->posisi = "Pincab";
                         $dataPenyelia->update();
                         // Log Pengajuan melanjutkan PINCAB dan mendapatkan
-                        $this->logPengajuan->store('Pengguna ' . Auth::user()->name . ' menindak lanjuti pengajuan atas nama '.$namaNasabah.' ke PINCAB dengan NIP '.$userPincab->nip.' atas nama '.$this->getNameKaryawan($userPincab->nip).'.', $id, Auth::user()->id, Auth::user()->nip);
-                        $this->logPengajuan->store('PINCAB dengan NIP '.$userPincab->nip.' atas nama '.$this->getNameKaryawan($userPincab->nip).' menerima data pengajuan atas nama '.$namaNasabah.' untuk direview.', $id, $userPincab->id, $userPincab->nip);
+                        $this->logPengajuan->store('Pengguna ' . Auth::user()->name . ' menindak lanjuti pengajuan atas nama ' . $namaNasabah . ' ke PINCAB dengan NIP ' . $userPincab->nip . ' atas nama ' . $this->getNameKaryawan($userPincab->nip) . '.', $id, Auth::user()->id, Auth::user()->nip);
+                        $this->logPengajuan->store('PINCAB dengan NIP ' . $userPincab->nip . ' atas nama ' . $this->getNameKaryawan($userPincab->nip) . ' menerima data pengajuan atas nama ' . $namaNasabah . ' untuk direview.', $id, $userPincab->id, $userPincab->nip);
                     } else {
                         return back()->withError('User pincab tidak ditemukan pada cabang ini.');
                     }
@@ -2706,12 +2697,10 @@ class PengajuanKreditController extends Controller
             DB::commit();
 
             return redirect()->back()->withStatus('Berhasil mengganti posisi.');
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             return back()->withError('Terjadi kesalahan');
-        }
-        catch (\Illuminate\Database\QueryException $e) {
+        } catch (\Illuminate\Database\QueryException $e) {
             DB::rollBack();
             return back()->withError('Terjadi kesalahan pada database');
         }
@@ -2817,7 +2806,7 @@ class PengajuanKreditController extends Controller
             if ($nasabah)
                 $namaNasabah = $nasabah->nama;
 
-            $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan review terhadap pengajuan atas nama '.$namaNasabah, $request->id_pengajuan, Auth::user()->id, Auth::user()->nip);
+            $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan review terhadap pengajuan atas nama ' . $namaNasabah, $request->id_pengajuan, Auth::user()->id, Auth::user()->nip);
 
             return redirect('/pengajuan-kredit')->withStatus('Berhasil menambahkan komentar');
         } catch (Exception $e) {
@@ -2841,7 +2830,7 @@ class PengajuanKreditController extends Controller
                 if ($nasabah)
                     $namaNasabah = $nasabah->nama;
 
-                $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menyetujui pengajuan atas nama '.$namaNasabah.'.', $id, Auth::user()->id, Auth::user()->nip);
+                $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menyetujui pengajuan atas nama ' . $namaNasabah . '.', $id, Auth::user()->id, Auth::user()->nip);
 
                 return redirect()->back()->withStatus('Berhasil mengganti posisi.');
             } else {
@@ -2866,7 +2855,7 @@ class PengajuanKreditController extends Controller
                 if ($nasabah)
                     $namaNasabah = $nasabah->nama;
 
-                $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menolak pengajuan atas nama '.$namaNasabah.'.', $id, Auth::user()->id, Auth::user()->nip);
+                $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menolak pengajuan atas nama ' . $namaNasabah . '.', $id, Auth::user()->id, Auth::user()->nip);
                 return redirect()->back()->withStatus('Berhasil mengganti posisi.');
             } else {
                 return redirect()->back()->withError('Belum di review Pincab.');
@@ -3014,9 +3003,9 @@ class PengajuanKreditController extends Controller
                 if ($nasabah)
                     $namaNasabah = $nasabah->nama;
 
-                $this->logPengajuan->store('Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' mengembalikan data pengajuan atas nama '.$namaNasabah.' kepada staf dengan NIP ' . $firstLog->nip . ' atas nama ' . $this->getNameKaryawan($firstLog->nip) . '.', $id, Auth::user()->id, Auth::user()->nip);
+                $this->logPengajuan->store('Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' mengembalikan data pengajuan atas nama ' . $namaNasabah . ' kepada staf dengan NIP ' . $firstLog->nip . ' atas nama ' . $this->getNameKaryawan($firstLog->nip) . '.', $id, Auth::user()->id, Auth::user()->nip);
 
-                $this->logPengajuan->store('Staff dengan NIP ' . $firstLog->nip . ' atas nama ' . $this->getNameKaryawan($firstLog->nip) . ' menerima data pengajuan atas nama '.$namaNasabah.' dari Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $firstLog->user_id, $firstLog->nip);
+                $this->logPengajuan->store('Staff dengan NIP ' . $firstLog->nip . ' atas nama ' . $this->getNameKaryawan($firstLog->nip) . ' menerima data pengajuan atas nama ' . $namaNasabah . ' dari Penyelia dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $id, $firstLog->user_id, $firstLog->nip);
             }
 
             return redirect()->back()->withStatus('Berhasil mengganti posisi.');
@@ -3080,7 +3069,8 @@ class PengajuanKreditController extends Controller
         ]);
     }
 
-    public function saveDataPOTemp(Request $request) {
+    public function saveDataPOTemp(Request $request)
+    {
         try {
             $find = array('Rp ', '.');
 
@@ -3095,8 +3085,7 @@ class PengajuanKreditController extends Controller
                     'jumlah' => $request->sejumlah,
                     'harga' => str_replace($find, '', $request->harga)
                 ]);
-            }
-            else {
+            } else {
                 $po = DB::table('data_po_temp')->insertGetId([
                     'id_calon_nasabah_temp' => $request->id_calon_nasabah,
                     'tahun_kendaraan' => $request->tahun,

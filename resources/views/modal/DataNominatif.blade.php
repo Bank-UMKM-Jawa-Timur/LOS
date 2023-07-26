@@ -106,105 +106,22 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="2">Grand Total</td>
-                <td>{{ $disetujui }}</td>
-                <td>{{ $ditolak }}</td>
-                <td>{{ $pincab }}</td>
-                <td>{{ $pbb }}</td>
-                <td>{{ $pbo }}</td>
-                <td>{{ $penyelia }}</td>
-                <td>{{ $staff }}</td>
-                <td>{{ $total }}</td>
+                <td style="font-weight:bold ;" colspan="2">Grand Total</td>
+                <td style="font-weight:bold ;">{{ $disetujui }}</td>
+                <td style="font-weight:bold ;">{{ $ditolak }}</td>
+                <td style="font-weight:bold ;">{{ $pincab }}</td>
+                <td style="font-weight:bold ;">{{ $pbb }}</td>
+                <td style="font-weight:bold ;">{{ $pbo }}</td>
+                <td style="font-weight:bold ;">{{ $penyelia }}</td>
+                <td style="font-weight:bold ;">{{ $staff }}</td>
+                <td style="font-weight:bold ;">{{ $total }}</td>
             </tr>
         </tfoot>
     </table>
 
     <br><br><br><br>
     {{-- seluruh data --}}
-    <table>
-
-        <thead>
-            <tr>
-                <th colspan="10">Suluruh Data Pengajuan</th>
-            </tr>
-            <tr>
-                <th>Kode</th>
-                <th>Cabang</th>
-                <th>Disetujui</th>
-                <th>Ditolak</th>
-                <th>Pincab</th>
-                <th>PBP</th>
-                <th>PBO</th>
-                <th>Penyelia</th>
-                <th>Staff</th>
-                <th>Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            @php
-                $disetujui = 0;
-                $ditolak = 0;
-                $pincab = 0;
-                $pbb = 0;
-                $pbo = 0;
-                $penyelia = 0;
-                $staff = 0;
-                $total = 0;
-            @endphp
-            @for ($i = 0; $i < count($dataS); $i++)
-                <tr>
-                    <td>{{ $dataS[$i]['kodeC'] }}</td>
-                    <td>{{ $dataS[$i]['cabang'] }}</td>
-                    <td>{{ $dataS[$i]['disetujui'] }}</td>
-                    <td>{{ $dataS[$i]['ditolak'] }}</td>
-                    <td>{{ $dataS[$i]['pincab'] }}</td>
-                    <td>{{ $dataS[$i]['PBB'] }}</td>
-                    <td>{{ $dataS[$i]['PBO'] }}</td>
-                    <td>{{ $dataS[$i]['penyelia'] }}</td>
-                    <td>{{ $dataS[$i]['staff'] }}</td>
-                    <td>{{ $dataS[$i]['total'] }}</td>
-                </tr>
-
-                @php
-                    $disetujui += $dataS[$i]['disetujui'];
-                    $ditolak += $dataS[$i]['ditolak'];
-                    $pincab += $dataS[$i]['pincab'];
-                    $pbb += $dataS[$i]['PBB'];
-                    $pbo += $dataS[$i]['PBO'];
-                    $penyelia += $dataS[$i]['penyelia'];
-                    $staff += $dataS[$i]['staff'];
-                    $total += $dataS[$i]['total'];
-                @endphp
-            @endfor
-            {{-- @foreach ($data as $row)
-                <tr>
-                    <td>{{ $row->kodeC }}</td>
-                    <td>{{ $row->cabang }}</td>
-                    <td>{{ $row->disetujui }}</td>
-                    <td>{{ $row->ditolak }}</td>
-                    <td>{{ $row->pincab }}</td>
-                    <td>{{ $row->PBB }}</td>
-                    <td>{{ $row->PBO }}</td>
-                    <td>{{ $row->penyelia }}</td>
-                    <td>{{ $row->staff }}</td>
-                    <td>{{ $row->total }}</td>
-                </tr>
-            @endforeach --}}
-        </tbody>
-        <tfoot>
-            <tr>
-                <td colspan="2">Grand Total</td>
-                <td>{{ $disetujui }}</td>
-                <td>{{ $ditolak }}</td>
-                <td>{{ $pincab }}</td>
-                <td>{{ $pbb }}</td>
-                <td>{{ $pbo }}</td>
-                <td>{{ $penyelia }}</td>
-                <td>{{ $staff }}</td>
-                <td>{{ $total }}</td>
-            </tr>
-        </tfoot>
-    </table>
+    
 
     <br><br><br><br>
     {{-- seluruh data Cabang --}}
@@ -260,10 +177,10 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="2">Grand Total</td>
-                <td>{{ $disetujui }}</td>
-                <td>{{ $staff }}</td>
-                <td>{{ $total }}</td>
+                <td style="font-weight:bold ;" colspan="2">Grand Total</td>
+                <td style="font-weight:bold ;">{{ $disetujui }}</td>
+                <td style="font-weight:bold ;">{{ $staff }}</td>
+                <td style="font-weight:bold ;">{{ $total }}</td>
             </tr>
         </tfoot>
     </table>

@@ -36,19 +36,24 @@ class AuthenticatedSessionController extends Controller
 
         if ($user) {
             if (isset($user->nip)) {
-                $request->authenticate();
-                if(DB::table('sessions')->where('user_id', auth()->user()->id)->count() > 0){
-                    Auth::guard('web')->logout();
-            
-                    $request->session()->invalidate();
-            
-                    $request->session()->regenerateToken();
-                    return back()->withError("Akun sedang digunakan di perangkat lain.");
+                $pw = User::select('password')->where('nip',$user->nip)->first();
+                if(\Hash::check($request->password, $pw->password)) {
+                    $request->authenticate();
+                    if(DB::table('sessions')->where('user_id', auth()->user()->id)->count() > 0){
+                        Auth::guard('web')->logout();
+
+                        $request->session()->invalidate();
+
+                        $request->session()->regenerateToken();
+                        return back()->withError("Akun sedang digunakan di perangkat lain.");
+                    }
+
+                    $request->session()->regenerate();
+
+                    return redirect()->intended(RouteServiceProvider::HOME);
+                }else{
+                    return back()->withError("Password yang ada masukan salah");
                 }
-        
-                $request->session()->regenerate();
-        
-                return redirect()->intended(RouteServiceProvider::HOME);
             }
             else {
                 return back()->withError("Belum dilakukan Pengkinian Data User untuk $request->email.\nHarap menghubungi Divisi Pemasaran atau TI & AK.");
