@@ -13,14 +13,27 @@
                   <div class="modal-body">
                       <div class="col-12">
                           <div class="row">
-
-                              <div class="col-sm-6">
-                                  <label>Tanggal Awal</label>
-                                  <input type="date" name="tAwal" class="form-control" required>
+                              <div class="col-sm-12">
+                                  <label for="">Kategori</label>
+                                  <select class="custom-select" name="k_tanggal" required>
+                                      <option value="kesuluruhan">Keseluruhan</option>
+                                      <option value="kustom">Tanggal</option>
+                                  </select>
                               </div>
-                              <div class="col-sm-6">
+
+                              <!-- Div untuk Tanggal Awal -->
+                              <div class="col-sm-6" id="tanggalAwalDiv">
+                                  <label>Tanggal Awal</label>
+                                  <input type="date" name="tAwal" id="tAwals" class="form-control">
+                              </div>
+
+                              <!-- Div untuk Tanggal Akhir -->
+                              <div class="col-sm-6" id="tanggalAkhirDiv">
                                   <label>Tanggal Akhir</label>
-                                  <input type="date" name="tAkhir" class="form-control" required>
+                                  <input type="date" name="tAkhir" id="tAkhirs" class="form-control">
+                                  <small id="errorTakhirModal" class="form-text text-danger">Tanggal akhir tidak boleh
+                                      kurang
+                                      dari tanggal awal</small>
                               </div>
                               <div class="col-sm-12 ">
                                   <label>Cabang</label>
@@ -56,37 +69,46 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
       $(document).ready(function() {
-          // Function to generate the PDF with or without filtering
-          function generatePDF() {
-              var tAwal = $("input[name='tAwal']").val();
-              var tAkhir = $("input[name='tAkhir']").val();
-              var pilihCabang = $("select[name='cabang']").val();
+          $("#errorTakhirModal").hide();
+      })
+      $(document).ready(function() {
+          // Sembunyikan input tanggal awal dan tanggal akhir saat halaman pertama kali dimuat
+          $('#tanggalAwalDiv').hide();
+          $('#tanggalAkhirDiv').hide();
 
-              // cek cabang di pilih atau
-              if (pilihCabang) {
-                  //   jika cabang tidak di pilih
-                  window.location.href =
-                      `/generate-pdf?tAwal=${tAwal}&tAkhir=${tAkhir}&cabang=${pilihCabang}`;
+          // Tampilkan/menyembunyikan input tanggal awal dan tanggal akhir berdasarkan pilihan select
+          $('select[name="k_tanggal"]').change(function() {
+              var optionKategori = $(this).val();
+              console.log("s");
+
+              if (optionKategori === 'kustom') {
+                  $('#tanggalAwalDiv').show();
+                  $('#tanggalAkhirDiv').show();
+                  $("#tAwals").prop("required", true);
               } else {
-                  // jika cabang tidak di pilih
-                  window.location.href = `/generate-pdf?tAwal=${tAwal}&tAkhir=${tAkhir}&cabang=`;
+                  $('#tanggalAwalDiv').hide();
+                  $('#tanggalAkhirDiv').hide();
               }
-          }
-
-          // Listen for the button click to generate the PDF
-          $("#generatePDFButton").on('click', function() {
-              generatePDF();
           });
+
+          $("#tAwals").on("change", function() {
+              var result = $(this).val();
+              if (result != null) {
+                  $("#tAkhirs").prop("required", true)
+              }
+          });
+
+
+
+          $("#tAkhirs").on("change", function() {
+              var tAkhir = $(this).val();
+              var tAwal = $("#tAwals").val();
+              if (Date.parse(tAkhir) < Date.parse(tAwal)) {
+                    $("#tAkhirs").val('');
+                    $("#errorTakhirModal").show();
+              }else{
+                $("#errorTakhirModal").hide();
+              }
+          })
       });
   </script>
-
-  @push('extraScript')
-      <script>
-          $('#exportExcel').on('click', function() {
-              $("#data_nominatif").modal('show');
-              $('.SelectModal').select2({
-                  dropdownParent: $("#data_nominatif")
-              });
-          })
-      </script>
-  @endpush
