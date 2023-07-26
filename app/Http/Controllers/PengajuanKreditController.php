@@ -333,57 +333,111 @@ class PengajuanKreditController extends Controller
             return view('pengajuan-kredit.list-pbp', $param);
         } elseif ($role == 'Pincab') {
             $id_data = auth()->user()->id;
-            $param['data_pengajuan'] = PengajuanModel::select(
-                'pengajuan.id',
-                'pengajuan.id_pincab',
-                'pengajuan.tanggal',
-                'pengajuan.posisi',
-                'pengajuan.progress_pengajuan_data',
-                'pengajuan.tanggal_review_penyelia',
-                'pengajuan.tanggal_review_pbp',
-                'pengajuan.tanggal_review_pincab',
-                'pengajuan.status',
-                'pengajuan.status_by_sistem',
-                'pengajuan.id_cabang',
-                'pengajuan.average_by_sistem',
-                'pengajuan.average_by_penyelia',
-                'pengajuan.average_by_pbo',
-                'pengajuan.average_by_pbp',
-                'pengajuan.skema_kredit',
-                'calon_nasabah.nama',
-                'calon_nasabah.jenis_usaha',
-                'calon_nasabah.id_pengajuan'
-            )->orderBy('tanggal','desc')
-                ->where('pengajuan.id_pincab', $id_data)
-                ->when($request->search, function ($query, $search) {
-                    return $query->where('calon_nasabah.nama', 'like', '%' . $search . '%');
-                })
-                ->when($request->pss, function ($query, $pss) {
-                    return $query->where('pengajuan.posisi', $pss);
-                })
-                ->when($request->cbg, function ($query, $cbg) {
-                    return $query->where('id_cabang', $cbg);
-                })
-                ->when($request->tAwal && $request->tAkhir, function ($query) use ($request) {
-                    return $query->whereBetween('pengajuan.tanggal', [$request->tAwal, $request->tAkhir]);
-                })
-                ->when($request->sts, function ($query, $sts) {
-                    if ($sts == 'Selesai' || $sts == 'Ditolak') {
-                        return $query->where('pengajuan.posisi', $sts);
-                    } else {
-                        return $query->where('pengajuan.posisi', '<>', 'Selesai')
-                            ->where('pengajuan.posisi', '<>', 'Ditolak');
-                    }
-                })
-                ->when($request->score, function ($query, $score) {
-                    return $query->whereRaw('FLOOR(pengajuan.average_by_sistem) = ?', $score)
-                        ->orWhereRaw('FLOOR(pengajuan.average_by_penyelia) = ?', $score);
-                })
-                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
-                ->where('pengajuan.id_cabang', Auth::user()->id_cabang)
-                ->whereIn('pengajuan.posisi', ['Pincab', 'Selesai', 'Ditolak'])
-                ->paginate(5)
-                ->withQueryString();
+            if ($request->pss) {
+                $param['data_pengajuan'] = PengajuanModel::select(
+                    'pengajuan.id',
+                    'pengajuan.id_pincab',
+                    'pengajuan.tanggal',
+                    'pengajuan.posisi',
+                    'pengajuan.progress_pengajuan_data',
+                    'pengajuan.tanggal_review_penyelia',
+                    'pengajuan.tanggal_review_pbp',
+                    'pengajuan.tanggal_review_pincab',
+                    'pengajuan.status',
+                    'pengajuan.status_by_sistem',
+                    'pengajuan.id_cabang',
+                    'pengajuan.average_by_sistem',
+                    'pengajuan.average_by_penyelia',
+                    'pengajuan.average_by_pbo',
+                    'pengajuan.average_by_pbp',
+                    'pengajuan.skema_kredit',
+                    'calon_nasabah.nama',
+                    'calon_nasabah.jenis_usaha',
+                    'calon_nasabah.id_pengajuan'
+                )->orderBy('tanggal','desc')
+                    ->when($request->search, function ($query, $search) {
+                        return $query->where('calon_nasabah.nama', 'like', '%' . $search . '%');
+                    })
+                    ->when($request->pss, function ($query, $pss) {
+                        return $query->where('pengajuan.posisi', $pss);
+                    })
+                    ->when($request->cbg, function ($query, $cbg) {
+                        return $query->where('id_cabang', $cbg);
+                    })
+                    ->when($request->tAwal && $request->tAkhir, function ($query) use ($request) {
+                        return $query->whereBetween('pengajuan.tanggal', [$request->tAwal, $request->tAkhir]);
+                    })
+                    ->when($request->sts, function ($query, $sts) {
+                        if ($sts == 'Selesai' || $sts == 'Ditolak') {
+                            return $query->where('pengajuan.posisi', $sts);
+                        } else {
+                            return $query->where('pengajuan.posisi', '<>', 'Selesai')
+                                ->where('pengajuan.posisi', '<>', 'Ditolak');
+                        }
+                    })
+                    ->when($request->score, function ($query, $score) {
+                        return $query->whereRaw('FLOOR(pengajuan.average_by_sistem) = ?', $score)
+                            ->orWhereRaw('FLOOR(pengajuan.average_by_penyelia) = ?', $score);
+                    })
+                    ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                    ->where('pengajuan.id_cabang', Auth::user()->id_cabang)
+                    ->where('pengajuan.posisi', 'PBP')
+                    ->paginate(5)
+                    ->withQueryString();
+            }
+            else {
+                $param['data_pengajuan'] = PengajuanModel::select(
+                    'pengajuan.id',
+                    'pengajuan.id_pincab',
+                    'pengajuan.tanggal',
+                    'pengajuan.posisi',
+                    'pengajuan.progress_pengajuan_data',
+                    'pengajuan.tanggal_review_penyelia',
+                    'pengajuan.tanggal_review_pbp',
+                    'pengajuan.tanggal_review_pincab',
+                    'pengajuan.status',
+                    'pengajuan.status_by_sistem',
+                    'pengajuan.id_cabang',
+                    'pengajuan.average_by_sistem',
+                    'pengajuan.average_by_penyelia',
+                    'pengajuan.average_by_pbo',
+                    'pengajuan.average_by_pbp',
+                    'pengajuan.skema_kredit',
+                    'calon_nasabah.nama',
+                    'calon_nasabah.jenis_usaha',
+                    'calon_nasabah.id_pengajuan'
+                )->orderBy('tanggal','desc')
+                    ->where('pengajuan.id_pincab', $id_data)
+                    ->when($request->search, function ($query, $search) {
+                        return $query->where('calon_nasabah.nama', 'like', '%' . $search . '%');
+                    })
+                    ->when($request->pss, function ($query, $pss) {
+                        return $query->where('pengajuan.posisi', $pss);
+                    })
+                    ->when($request->cbg, function ($query, $cbg) {
+                        return $query->where('id_cabang', $cbg);
+                    })
+                    ->when($request->tAwal && $request->tAkhir, function ($query) use ($request) {
+                        return $query->whereBetween('pengajuan.tanggal', [$request->tAwal, $request->tAkhir]);
+                    })
+                    ->when($request->sts, function ($query, $sts) {
+                        if ($sts == 'Selesai' || $sts == 'Ditolak') {
+                            return $query->where('pengajuan.posisi', $sts);
+                        } else {
+                            return $query->where('pengajuan.posisi', '<>', 'Selesai')
+                                ->where('pengajuan.posisi', '<>', 'Ditolak');
+                        }
+                    })
+                    ->when($request->score, function ($query, $score) {
+                        return $query->whereRaw('FLOOR(pengajuan.average_by_sistem) = ?', $score)
+                            ->orWhereRaw('FLOOR(pengajuan.average_by_penyelia) = ?', $score);
+                    })
+                    ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                    ->where('pengajuan.id_cabang', Auth::user()->id_cabang)
+                    ->whereIn('pengajuan.posisi', ['Pincab', 'Selesai', 'Ditolak'])
+                    ->paginate(5)
+                    ->withQueryString();
+            }
             return view('pengajuan-kredit.komentar-pincab-pengajuan', $param);
         } else {
             $id_cabang = Auth::user()->id_cabang;
