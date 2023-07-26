@@ -230,6 +230,9 @@ class PengajuanKreditController extends Controller
                 ->when($request->tAwal && $request->tAkhir, function ($query) use ($request) {
                     return $query->whereBetween('pengajuan.tanggal', [$request->tAwal, $request->tAkhir]);
                 })
+                ->when($request->lanjuti,function($query,$lanjuti){
+                    return $query->where('posisi', '!=','Proses Input Data');
+                })
                 ->when($request->sts, function ($query, $sts) {
                     if ($sts == 'Selesai' || $sts == 'Ditolak') {
                         return $query->where('pengajuan.posisi', $sts);
@@ -279,7 +282,6 @@ class PengajuanKreditController extends Controller
                 'calon_nasabah.id_pengajuan',
                 'pengajuan.created_at',
             )->orderBy('created_at','desc')
-                ->where('pengajuan.id_penyelia', $id_penyelia)
                 ->when($request->search, function ($query, $search) {
                     return $query->where('calon_nasabah.nama', 'like', '%' . $search . '%');
                 })
@@ -304,6 +306,10 @@ class PengajuanKreditController extends Controller
                     return $query->whereRaw('FLOOR(pengajuan.average_by_sistem) = ?', $score)
                         ->orWhereRaw('FLOOR(pengajuan.average_by_penyelia) = ?', $score);
                 })
+                ->when($request->lanjuti,function($query,$lanjuti){
+                    return $query->where('posisi', '!=','Review Penyelia');
+                })
+                ->where('pengajuan.id_penyelia', $id_penyelia)
                 ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
                 ->where('pengajuan.id_cabang', $id_cabang)
                 ->paginate(5)
