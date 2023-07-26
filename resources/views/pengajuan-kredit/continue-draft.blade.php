@@ -2688,17 +2688,42 @@ is-invalid
         }
 
         $(".btn-simpan").on('click', function(e) {
-            if (nullValue.length > 0) {
-                let message = "";
-                $.each(nullValue, (i, v) => {
-                    message += v != '' ? v + ", " : ''
-                })
+            if ($('#komentar_staff').val() == '') {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: "Field " + message + " harus diisi terlebih dahulu"
+                    text: "Field Pendapat dan usulan harus diisi"
                 })
                 e.preventDefault()
+            }
+            else {
+                if (nullValue.length > 0) {
+                    let message = "";
+                    $.each(nullValue, (i, v) => {
+                        console.log('validasi')
+                        console.log(v)
+                        var item = v;
+                        if (v == 'itemByKategori'){
+                            if($("#kategori_jaminan_tambahan").val() == "Tidak Memiliki Jaminan Tambahan"){
+                                for(var j = 0; j < nullValue.length(); j++){
+                                    while(nullValue[j] == v){
+                                        nullValue.splice(j, 1)
+                                    }
+                                }
+                            } else {
+                                item = "Jaminan Tambahan"
+                            }
+                        }
+                        console.log('end validasi')
+                        message += item != '' ? item + ", " : ''
+                    })
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: "Field " + message + " harus diisi terlebih dahulu"
+                    })
+                    e.preventDefault()
+                }
             }
         })
 

@@ -2232,8 +2232,20 @@ null => 1,
                     $.each(nullValue, (i, v) => {
                         console.log('validasi')
                         console.log(v)
+                        var item = v;
+                        if (v == 'itemByKategori'){
+                            if($("#kategori_jaminan_tambahan").val() == "Tidak Memiliki Jaminan Tambahan"){
+                                for(var j = 0; j < nullValue.length(); j++){
+                                    while(nullValue[j] == v){
+                                        nullValue.splice(j, 1)
+                                    }
+                                }
+                            } else {
+                                item = "Jaminan Tambahan"
+                            }
+                        }
                         console.log('end validasi')
-                        message += v != '' ? v + ", " : ''
+                        message += item != '' ? item + ", " : ''
                     })
                     Swal.fire({
                         icon: 'error',
