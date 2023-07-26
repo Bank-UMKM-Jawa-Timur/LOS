@@ -126,7 +126,7 @@
                         {{-- <span class="fa fa-ban sticky-fa-card"></span> --}}
                         <div class="row align-items-center">
                             <div class="col-md-8 pr-0 font-weight-bold">
-                                Pengajuan Posisi PBP Cabang 001
+                                Pengajuan Posisi PBP{{-- Cabang {{$kode_cabang}} --}}
                             </div>
                             <div class="col-md-4 pr-0 font-wight-bold">
                                 <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
@@ -150,7 +150,7 @@
                         {{-- <span class="fa fa-ban sticky-fa-card"></span> --}}
                         <div class="row align-items-center">
                             <div class="col-md-8 pr-0 font-weight-bold">
-                                Pengajuan Posisi PBO
+                                Pengajuan Posisi PBO {{--  Cabang {{$kode_cabang}}  --}}
                             </div>
                             <div class="col-md-4 pr-0 font-wight-bold">
                                 <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
@@ -400,7 +400,7 @@
             </div>
         @elseif(auth()->user()->role == 'Pincab')
             <div class="col-md-12 mb-4">
-                Total Pengajuan :
+                Total Pengajuan{{-- Cabang {{$kode_cabang}} --}} :
                 {{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
                     return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
                 })->where('id_cabang', auth()->user()->id_cabang)->count() }}
@@ -418,7 +418,7 @@
                         {{-- <span class="fa fa-calendar-check sticky-fa-card"></span> --}}
                         <div class="row align-items-center">
                             <div class="col-md-8 pr-0 font-weight-bold">
-                                Pengajuan Disetujui
+                                Pengajuan Disetujui{{-- Cabang {{$kode_cabang}} --}}
                             </div>
                             <div class="col-md-4 pr-0 font-wight-bold">
                                 <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
@@ -440,7 +440,7 @@
                         {{-- <span class="fa fa-ban sticky-fa-card"></span> --}}
                         <div class="row align-items-center">
                             <div class="col-md-8 pr-0 font-weight-bold">
-                                Pengajuan Ditolak
+                                Pengajuan Ditolak{{-- Cabang {{$kode_cabang}} --}}
                             </div>
                             <div class="col-md-4 pr-0 font-wight-bold">
                                 <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
@@ -462,7 +462,7 @@
                         {{-- <span class="fa fa-ban sticky-fa-card"></span> --}}
                         <div class="row align-items-center">
                             <div class="col-md-8 pr-0 font-weight-bold">
-                                Pengajuan Posisi Pincab
+                                Pengajuan Posisi Pincab{{-- Cabang {{$kode_cabang}} --}}
                             </div>
                             <div class="col-md-4 pr-0 font-wight-bold">
                                 <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
@@ -484,7 +484,7 @@
                         {{-- <span class="fa fa-ban sticky-fa-card"></span> --}}
                         <div class="row align-items-center">
                             <div class="col-md-8 pr-0 font-weight-bold">
-                                Pengajuan Posisi PBP Cabang 001
+                                Pengajuan Posisi PBP{{-- Cabang {{$kode_cabang}} --}}
                             </div>
                             <div class="col-md-4 pr-0 font-wight-bold">
                                 <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
@@ -506,7 +506,7 @@
                         {{-- <span class="fa fa-ban sticky-fa-card"></span> --}}
                         <div class="row align-items-center">
                             <div class="col-md-8 pr-0 font-weight-bold">
-                                Pengajuan Posisi PBO
+                                Pengajuan Posisi PBO{{-- Cabang {{$kode_cabang}} --}}
                             </div>
                             <div class="col-md-4 pr-0 font-wight-bold">
                                 <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
@@ -528,7 +528,7 @@
                         {{-- <span class="fa fa-ban sticky-fa-card"></span> --}}
                         <div class="row align-items-center">
                             <div class="col-md-8 pr-0 font-weight-bold">
-                                Pengajuan Posisi Penyelia
+                                Pengajuan Posisi Penyelia{{-- Cabang {{$kode_cabang}} --}}
                             </div>
                             <div class="col-md-4 pr-0 font-wight-bold">
                                 <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
@@ -550,7 +550,7 @@
                         {{-- <span class="fa fa-ban sticky-fa-card"></span> --}}
                         <div class="row align-items-center">
                             <div class="col-md-8 pr-0 font-weight-bold">
-                                Pengajuan Posisi Staff
+                                Pengajuan Posisi Staff{{-- Cabang {{$kode_cabang}} --}}
                             </div>
                             <div class="col-md-4 pr-0 font-wight-bold">
                                 <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {

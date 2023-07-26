@@ -154,7 +154,6 @@ class PengajuanKreditController extends Controller
      */
     public function index(Request $request)
     {
-        // dd(auth()->user()->id);
         $param['pageTitle'] = "Dashboard";
         $id_cabang = Auth::user()->id_cabang;
         $param['cabang'] = DB::table('cabang')
@@ -381,7 +380,7 @@ class PengajuanKreditController extends Controller
                     })
                     ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
                     ->where('pengajuan.id_cabang', Auth::user()->id_cabang)
-                    ->where('pengajuan.posisi', 'PBP')
+                    ->where('pengajuan.posisi', $request->pss)
                     ->paginate(5)
                     ->withQueryString();
             }
