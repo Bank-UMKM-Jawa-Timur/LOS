@@ -675,3 +675,28 @@ p .loading-content-detail {
 .card-header[data-toggle='collapse'] {
     cursor: pointer;
 }
+
+.jawaban-responsive {
+    display: inline-block;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    border-radius: 7px;
+    font-weight: 500;
+    color: #47A5B8;
+    background-color: #D1ECF1;
+    padding: 10px;
+    /* max-width: 100%; */
+    /* max-width: 80%; */
+}
+.jawaban-responsives {
+    display: inline-block;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    border-radius: 7px;
+    font-weight: 500;
+    color: darkred;
+    background-color: red;
+    padding: 10px;
+    /* max-width: 100%; */
+    /* max-width: 80%; */
+}

@@ -372,10 +372,8 @@
                     <label for="">{{ $itemSlik?->nama }}</label>
                     <br>
                     <b>Jawaban : </b>
-                    <div class="mt-2 pl-2">
-                        <p class="badge badge-info text-lg">
-                            <b>{{ $itemSlik?->option }}</b>
-                        </p>
+                    <div class="jawaban-responsive">
+                        {{ $itemSlik?->option }}
                     </div>
                     @php
                         $komentarSlik = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', '=', 'detail_komentar.id_komentar')
@@ -694,7 +692,6 @@
                                     </div>
                                     <div class="col-md-12 form-group">
                                         <b>Jawaban: </b>
-                                        <div class="mt-2 pl-3">
                                             @if ($item->opsi_jawaban == 'file')
                                                 @php
                                                     $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
@@ -709,9 +706,9 @@
                                                 @endif
                                                 {{-- Rupiah data dua --}}
                                             @elseif ($item->opsi_jawaban == 'number' && $item->id != 143)
-                                                <p class="badge badge-info text-lg"><b>
+                                                    <div class="jawaban-responsive">
                                                         Rp. {{ number_format((int) $itemTextDua->opsi_text, 2, ',', '.') }}
-                                                    </b></p>
+                                                    </div>
                                                 @if ($itemTextDua->is_commentable)
                                                     <input type="hidden" name="id_item[]" value="{{ $item->id }}">
                                                     <div class="input-k-bottom">
@@ -720,8 +717,9 @@
                                                     </div>
                                                 @endif
                                             @else
-                                                <p class="badge badge-info text-lg"><b> {{ $itemTextDua->opsi_text }}
-                                                        {{ $item->opsi_jawaban == 'persen' ? '%' : '' }}</b></p>
+                                                <div class="jawaban-responsive">
+                                                    {{ $itemTextDua->opsi_text }} {{ $item->opsi_jawaban == 'persen' ? '%' : '' }}
+                                                </div>
                                                 @if ($itemTextDua->is_commentable)
                                                     <input type="hidden" name="id_item[]" value="{{ $item->id }}">
                                                     <div class="input-k-bottom">
@@ -730,7 +728,6 @@
                                                     </div>
                                                 @endif
                                             @endif
-                                        </div>
                                     </div>
                                 </div>
 
@@ -769,11 +766,11 @@
                                         <h4>{{ $item->nama }}</h4>
                                     </div>
                                     @if ($item->nama == 'Ijin Usaha' && $countIjin == 0)
-                                        <div class="row col-md-12 mb-0 pl-3">
+                                        <div class="row col-md-12 mb-0 ml-1">
                                             <div class="col-md-12 form-group">
                                                 <b>Jawaban: </b>
-                                                <div class="mt-2 pl-3">
-                                                    <p class="badge badge-info text-lg">Tidak Ada Legalitas Usaha</p>
+                                                <div class="jawaban-responsive">
+                                                    Tidak Ada Legalitas Usaha
                                                 </div>
                                             </div>
                                         </div>
@@ -811,10 +808,8 @@
                                                         <div class="row">
                                                             <div class="col-md-12">
                                                                 <b>Jawaban : </b>
-                                                                <div class="mt-2 pl-2">
-                                                                    <p class="badge badge-info text-lg">
-                                                                        <b>{{ $itemJawaban->option }}</b>
-                                                                    </p>
+                                                                <div class="jawaban-responsive">
+                                                                    {{ $itemJawaban->option }}
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -876,13 +871,12 @@
                                 @endphp
                                 @foreach ($dataDetailJawabanText as $itemTextTiga)
                                     @if ($itemTextTiga->nama != 'Ratio Tenor Asuransi')
-                                        <div class="row col-md-12">
+                                        <div class="row">
                                             <div class="form-group col-md-12 mb-0">
                                                 <label for="">{{ $itemTextTiga->nama }}</label>
                                             </div>
-                                            <div class="col-md-12 form-group">
+                                            <div class="col-md-12">
                                                 <b>Jawaban: </b>
-                                                <div class="mt-2">
                                                     @if ($itemTiga->opsi_jawaban == 'file')
                                                         @php
                                                             $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text);
@@ -897,10 +891,9 @@
                                                         @endif
                                                         {{-- Rupiah data tiga --}}
                                                     @elseif ($itemTiga->opsi_jawaban == 'number')
-                                                        <p class="badge badge-info text-lg"><b>
-                                                                Rp.
-                                                                {{ number_format((int) $itemTextTiga->opsi_text, 2, ',', '.') }}
-                                                            </b></p>
+                                                        <div class="jawaban-responsive">
+                                                            Rp.{{ number_format((int) $itemTextTiga->opsi_text, 2, ',', '.') }}
+                                                        </div>
                                                         @if ($item->is_commentable == 'Ya')
                                                             <div class="input-k-bottom">
                                                                 <input type="hidden" name="id_item[]"
@@ -911,10 +904,9 @@
                                                             </div>
                                                         @endif
                                                     @else
-                                                        <p class="badge badge-info text-lg"><b>
-                                                                {{ $itemTextTiga->opsi_text }}
-                                                                {{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</b>
-                                                        </p>
+                                                        <div class="jawaban-responsive">
+                                                            {{ $itemTextTiga->opsi_text }}{{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}
+                                                        </div>
                                                         @if ($item->is_commentable == 'Ya')
                                                             <div class="input-k-bottom">
                                                                 <input type="hidden" name="id_item[]"
@@ -925,7 +917,6 @@
                                                             </div>
                                                         @endif
                                                     @endif
-                                                </div>
                                             </div>
                                         </div>
 
@@ -1024,10 +1015,8 @@
                                                                 <div class="row">
                                                                     <div class="col-md-12">
                                                                         <b>Jawaban : </b>
-                                                                        <div class="mt-2 pl-2">
-                                                                            <p class="badge badge-info text-lg">
-                                                                                <b>{{ $itemJawabanLevelTiga->option }}</b>
-                                                                            </p>
+                                                                        <div class="jawaban-responsive">
+                                                                            {{ $itemJawabanLevelTiga->option }}
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1095,9 +1084,8 @@
                                             <div class="row">
                                                 <div class="form-group col-md-12 mb-0">
                                                     <label for="">{{ $itemTextEmpat->nama }}</label>
-                                                    <div class="col-md-12 form-group">
-                                                        <b>Jawaban:</b>
-                                                        <div class="mt-2 pl-3">
+                                                    <br>
+                                                    <b>Jawaban:</b>
                                                             @if ($itemEmpat->opsi_jawaban == 'file')
                                                                 @if (intval($itemTextEmpat->opsi_text) > 1)
                                                                     @php
@@ -1128,10 +1116,9 @@
                                                                 @endif
                                                                 {{-- Rupiah data empat --}}
                                                             @elseif ($itemEmpat->opsi_jawaban == 'number')
-                                                                <p class="badge badge-info text-lg"><b>
-                                                                        Rp.
-                                                                        {{ number_format((int) $itemTextEmpat->opsi_text, 2, ',', '.') }}
-                                                                    </b></p>
+                                                                <div class="jawaban-responsive">
+                                                                    Rp.{{ number_format((int) $itemTextEmpat->opsi_text, 2, ',', '.') }}
+                                                                </div>
                                                                 @if ($itemTextEmpat->is_commentable == 'Ya')
                                                                     <div class="input-k-bottom">
                                                                         <input type="hidden" name="id_item[]"
@@ -1143,15 +1130,15 @@
                                                                     </div>
                                                                 @endif
                                                             @else
-                                                                <p class="badge badge-info text-lg"><b>
-                                                                        {{ $itemTextEmpat->opsi_text }}
+                                                                <div class="jawaban-responsive">
+                                                                    {{ $itemTextEmpat->opsi_text }}
                                                                         @if ($itemEmpat->opsi_jawaban == 'persen')
                                                                             %
                                                                         @elseif($itemEmpat->id == 130)
                                                                             Bulan
                                                                         @else
-                                                                        @endif</b>
-                                                                </p>
+                                                                        @endif
+                                                                </div>
                                                                 @if ($itemTextEmpat->is_commentable == 'Ya')
                                                                     <div class="input-k-bottom">
                                                                         <input type="hidden" name="id_item[]"
@@ -1163,8 +1150,7 @@
                                                                     </div>
                                                                 @endif
                                                             @endif
-                                                        </div>
-                                                    </div>
+
                                                 </div>
                                             </div>
 
@@ -1232,10 +1218,8 @@
                                                             <div class="row">
                                                                 <div class="col-md-12">
                                                                     <b>Jawaban : </b>
-                                                                    <div class="mt-2 pl-2">
-                                                                        <p class="badge badge-info text-lg">
-                                                                            <b>{{ $itemJawabanLevelEmpat->option }}</b>
-                                                                        </p>
+                                                                    <div class="jawaban-responsive">
+                                                                        {{ $itemJawabanLevelEmpat->option }}
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1494,7 +1478,7 @@
 
         $(document).ready(function() {
             const nullValue = []
-            
+
             function cekValueKosong(formIndex) {
                 var skema = $("#skema_kredit").val()
                 var form = ".form-wizard[data-index=" + formIndex + "]";
@@ -1503,7 +1487,7 @@
                 var inputNumber = $(form + " input[type=number]")
                 var select = $(form + " select")
                 var textarea = $(form + " textarea")
-    
+
                 $.each(inputFile, function(i, v) {
                     if (v.value == '' && !$(this).prop('disabled') && $(this).closest('.filename') == '') {
                         if (form == ".form-wizard[data-index='2']") {
@@ -1526,7 +1510,7 @@
                         }
                     }
                 })
-    
+
                 $.each(inputText, function(i, v) {
                     if (v.value == '' && !$(this).prop('disabled')) {
                         let val = $(this).attr("id").toString();
@@ -1542,7 +1526,7 @@
                         }
                     }
                 })
-    
+
                 $.each(inputNumber, function(i, v) {
                     if (v.value == '' && !$(this).prop('disabled')) {
                         let val = $(this).attr("id").toString();
@@ -1558,7 +1542,7 @@
                         }
                     }
                 })
-    
+
                 $.each(select, function(i, v) {
                     if (v.value == '' && !$(this).prop('disabled')) {
                         let val = $(this).attr("id").toString();
@@ -1577,7 +1561,7 @@
                         }
                     }
                 })
-    
+
                 $.each(textarea, function(i, v) {
                     if (v.value == '' && !$(this).prop('disabled')) {
                         let val = $(this).attr("id").toString();
@@ -1593,7 +1577,7 @@
                         }
                     }
                 })
-    
+
                 //console.log(nullValue);
             }
 
