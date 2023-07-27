@@ -174,10 +174,21 @@
                                     ->select('id')
                                     ->where('id_pengajuan', $dataUmum->id)
                                     ->first();
-                                $avg = 0;
+                                $avg = $dataUmum->average_by_sistem;
                                 if ($itemRole == 'Staf Analis Kredit') {
                                     $avg = $dataUmum->average_by_sistem;
                                 } elseif ($itemRole == 'Penyelia Kredit') {
+                                    $avg = $dataUmum->average_by_penyelia;
+                                } elseif ($itemRole == 'PBO') {
+                                    $avg = $dataUmum->average_by_pbo ? $dataUmum->average_by_pbo : $dataUmum->average_by_penyelia;
+                                } elseif ($itemRole == 'PBP') {
+                                    if ($dataUmum->average_by_pbp && !$dataUmum->average_by_pbo && !$dataUmum->average_by_penyelia)
+                                        $avg = $dataUmum->average_by_pbp;
+                                    else if (!$dataUmum->average_by_pbp && $dataUmum->average_by_pbo && !$dataUmum->average_by_penyelia)
+                                        $avg = $dataUmum->average_by_pbo;
+                                    else if (!$dataUmum->average_by_pbp && !$dataUmum->average_by_pbo && $dataUmum->average_by_penyelia)
+                                        $avg = $dataUmum->average_by_penyelia;
+                                } elseif ($itemRole == 'Pincab') {
                                     $avg = $dataUmum->average_by_penyelia;
                                 }
                                 
@@ -195,6 +206,7 @@
                                     $user = DB::table('pengajuan')
                                         ->join('users', 'users.id', 'pengajuan.' . $idRoles[$key])
                                         ->select('users.role', 'users.nip', 'users.email', 'users.nip as nip_users')
+                                        ->where('pengajuan.id', $dataUmum->id)
                                         ->first();
                                 } else {
                                     $user = DB::table('log_pengajuan')
