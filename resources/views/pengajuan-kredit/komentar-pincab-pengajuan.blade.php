@@ -307,6 +307,14 @@
                                     $avgResult = $item->average_by_pbo ? $item->average_by_pbo : $item->average_by_penyelia;
                                 else if ($item->posisi == 'PBP')
                                     $avgResult = $item->average_by_pbp ? $item->average_by_pbp : $item->average_by_pbo;
+                                else if ($item->posisi == 'Pincab') {
+                                    if (!$item->average_by_penyelia && !$item->average_by_pbo && $item->average_by_pbp)
+                                        $avgResult = $item->average_by_pbp;
+                                    else if (!$item->average_by_penyelia && $item->average_by_pbo && !$item->average_by_pbp)
+                                        $avgResult = $item->average_by_pbo;
+                                    else if ($item->average_by_penyelia && !$item->average_by_pbo && !$item->average_by_pbp)
+                                        $avgResult = $item->average_by_penyelia;
+                                }
                                 
                                 if ($avgResult > 0 && $avgResult <= 2) {
                                     $status = "merah";
