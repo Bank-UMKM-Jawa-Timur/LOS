@@ -315,6 +315,22 @@
                                     else if ($item->average_by_penyelia && !$item->average_by_pbo && !$item->average_by_pbp)
                                         $avgResult = $item->average_by_penyelia;
                                 }
+                                else if ($item->posisi == 'Ditolak') {
+                                    if (!$item->average_by_penyelia && !$item->average_by_pbo && $item->average_by_pbp)
+                                        $avgResult = $item->average_by_pbp;
+                                    else if (!$item->average_by_penyelia && $item->average_by_pbo && !$item->average_by_pbp)
+                                        $avgResult = $item->average_by_pbo;
+                                    else if ($item->average_by_penyelia && !$item->average_by_pbo && !$item->average_by_pbp)
+                                        $avgResult = $item->average_by_penyelia;
+                                }
+                                else if ($item->posisi == 'Selesai') {
+                                    if (!$item->average_by_penyelia && !$item->average_by_pbo && $item->average_by_pbp)
+                                        $avgResult = $item->average_by_pbp;
+                                    else if (!$item->average_by_penyelia && $item->average_by_pbo && !$item->average_by_pbp)
+                                        $avgResult = $item->average_by_pbo;
+                                    else if ($item->average_by_penyelia && !$item->average_by_pbo && !$item->average_by_pbp)
+                                        $avgResult = $item->average_by_penyelia;
+                                }
                                 
                                 if ($avgResult > 0 && $avgResult <= 2) {
                                     $status = "merah";
