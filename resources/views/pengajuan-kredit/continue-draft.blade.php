@@ -2714,6 +2714,15 @@ is-invalid
                                 item = "Jaminan Tambahan"
                             }
                         }
+                        if (v == 'npwp text') {
+                            if ($("#statusNpwp").val() != "1") {
+                                for(var j = 0; j < nullValue.length(); j++){
+                                    while(nullValue[j] == v){
+                                        nullValue.splice(j, 1)
+                                    }
+                                }
+                            }
+                        }
                         console.log('end validasi')
                         message += item != '' ? item + ", " : ''
                     })

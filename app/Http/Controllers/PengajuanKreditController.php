@@ -1334,10 +1334,12 @@ class PengajuanKreditController extends Controller
             // sum score
             $totalScore = 0;
             $totalDataNull = 0;
+            $arrTes = [];
             for ($i = 0; $i < count($mergedDataLevel); $i++) {
                 if ($mergedDataLevel[$i]) {
                     // jika data tersedia
                     $data = $this->getDataLevel($mergedDataLevel[$i]);
+                    array_push($arrTes, $data);
                     if (is_numeric($data[0])) {
                         if ($data[1] == 71 || $data[1] == 186) {
                             if ($data[0] == '1') {
@@ -1393,7 +1395,6 @@ class PengajuanKreditController extends Controller
                 $updateData->posisi = 'Ditolak';
                 $updateData->status_by_sistem = "merah";
                 $updateData->average_by_sistem = "1.0";
-                return redirect()->back()->with('error', 'Pengajuan Di tolak');
             }
             $updateData->update();
 
@@ -1441,7 +1442,10 @@ class PengajuanKreditController extends Controller
             $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan proses pembuatan data pengajuan atas nama ' . $namaNasabah . '.', $id_pengajuan, Auth::user()->id, Auth::user()->nip);
 
             DB::commit();
-            return redirect()->route('pengajuan-kredit.index')->withStatus('Data berhasil disimpan.');
+            if (!$statusSlik)
+                return redirect()->route('pengajuan-kredit.index')->withStatus('Data berhasil disimpan.');
+            else
+                return redirect()->route('pengajuan-kredit.index')->withError('Pengajuan Di tolak');
         } catch (Exception $e) {
             DB::rollBack();
             // return $e->getMessage();
