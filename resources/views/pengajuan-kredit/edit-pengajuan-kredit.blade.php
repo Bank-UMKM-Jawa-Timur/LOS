@@ -90,7 +90,7 @@
                     <input type="file" name="update_file[]" value="{{ $jawabanFotoSP?->opsi_text }}"
                         id="surat_permohonan" placeholder="Masukkan informasi {{ $itemSP?->nama }}"
                         class="form-control limit-size">
-                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                     <input type="hidden" name="id_update_file[]" value="{{ $jawabanFotoSP?->id }}">
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
@@ -195,7 +195,7 @@
                                 placeholder="Masukkan informasi Foto KTP Suami" class="form-control limit-size"
                                 value="{{ $jawabanFotoKTPSu->opsi_text }}">
                             <span class="invalid-tooltip" style="display: none">Besaran file tidak
-                                boleh lebih dari 5 MB</span>
+                                boleh lebih dari 5 MB</span>
                         @else
                             <label for="update_file" style="display: none" id="nama_file">Belum Upload Foto KTP
                                 Suami</label>
@@ -203,7 +203,7 @@
                                 placeholder="Masukkan informasi Foto KTP Suami" class="form-control limit-size"
                                 value="Belum Upload Foto KTP Suami">
                             <span class="invalid-tooltip" style="display: none">Besaran file tidak
-                                boleh lebih dari 5 MB</span>
+                                boleh lebih dari 5 MB</span>
                         @endif
                         <input type="hidden" name="id_update_file[]" value="{{ $jawabanFotoKTPSu->id ?? '' }}">
                         @if (isset($key) && $errors->has('dataLevelDua.' . $key))
@@ -229,7 +229,7 @@
                                 placeholder="Masukkan informasi Foto KTP Istri" class="form-control limit-size"
                                 value="{{ $jawabanFotoKTPIs->opsi_text }}">
                             <span class="invalid-tooltip" style="display: none">Besaran file tidak
-                                boleh lebih dari 5 MB</span>
+                                boleh lebih dari 5 MB</span>
                         @else
                             <label for="update_file" style="display: none" id="nama_file">Belum Upload Foto KTP
                                 Istri</label>
@@ -237,7 +237,7 @@
                                 placeholder="Masukkan informasi Foto KTP Istri" class="form-control limit-size"
                                 value="Belum Upload Foto KTP Istri">
                             <span class="invalid-tooltip" style="display: none">Besaran file tidak
-                                boleh lebih dari 5 MB</span>
+                                boleh lebih dari 5 MB</span>
                         @endif
                         <input type="hidden" name="id_update_file[]" value="{{ $jawabanFotoKTPIs->id ?? '' }}">
                         @if (isset($key) && $errors->has('dataLevelDua.' . $key))
@@ -264,7 +264,7 @@
                                 placeholder="Masukkan informasi Foto KTP Nasabah" class="form-control limit-size"
                                 value="{{ $jawabanFotoKTPNas->opsi_text }}">
                             <span class="invalid-tooltip" style="display: none">Besaran file tidak
-                                boleh lebih dari 5 MB</span>
+                                boleh lebih dari 5 MB</span>
                         @else
                             <label for="update_file" style="display: none" id="nama_file">Belum Upload Foto KTP
                                 Nasabah</label>
@@ -272,7 +272,7 @@
                                 placeholder="Masukkan informasi Foto KTP Nasabah" class="form-control limit-size"
                                 value="Belum Upload Foto KTP Suami">
                             <span class="invalid-tooltip" style="display: none">Besaran file tidak
-                                boleh lebih dari 5 MB</span>
+                                boleh lebih dari 5 MB</span>
                         @endif
                         <input type="hidden" name="id_update_file[]" value="{{ $jawabanFotoKTPNas->id ?? '' }}">
                         @if (isset($key) && $errors->has('dataLevelDua.' . $key))
@@ -398,7 +398,7 @@
                     <input type="file" name="update_file[]" id="laporan_slik"
                         placeholder="Masukkan informasi Laporan SLIK" class="form-control limit-size"
                         value="{{ $jawabanLaporanSlik?->opsi_text }}">
-                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                     <input type="hidden" name="id_update_file[]" value="{{ $jawabanLaporanSlik?->id }}">
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
@@ -723,7 +723,7 @@
                                             value="{{ $jawabanDokNIB->opsi_text }}">
 
                                         <span class="invalid-tooltip" style="display: none">Besaran file tidak
-                                            boleh lebih dari 5 MB</span>
+                                            boleh lebih dari 5 MB</span>
                                     @else
                                         <label for="update_file" style="display: none" id="docNIBnama_file">Belum Upload
                                             Dokumen NIB</label>
@@ -732,7 +732,7 @@
                                             value="Belum Upload Dokumen NIB">
 
                                         <span class="invalid-tooltip" style="display: none">Besaran file tidak
-                                            boleh lebih dari 5 MB</span>
+                                            boleh lebih dari 5 MB</span>
                                     @endif
                                     <input type="hidden" id="id_update_nib" name="id_update_file[]"
                                         value="{{ $jawabanDokNIB?->id }}">
@@ -778,7 +778,7 @@
                                             value="{{ $jawabanDokSKU->opsi_text }}">
 
                                         <span class="invalid-tooltip" style="display: none">Besaran file tidak
-                                            boleh lebih dari 5 MB</span>
+                                            boleh lebih dari 5 MB</span>
                                     @else
                                         <label for="update_file" style="display: none" id="docSKUnama_file">Belum Upload
                                             Dokumen SKU</label>
@@ -787,12 +787,12 @@
                                             value="Belum Upload Dokumen SKU">
 
                                         <span class="invalid-tooltip" style="display: none">Besaran file tidak
-                                            boleh lebih dari 5 MB</span>
+                                            boleh lebih dari 5 MB</span>
                                     @endif
                                     <input type="hidden" id="id_update_sku" id="id_update_sku" name="id_update_file[]"
                                         value="{{ $jawabanDokSKU->id ?? '' }}">
                                     <span class="invalid-tooltip" style="display: none">Besaran file tidak
-                                        boleh lebih dari 5 MB</span>
+                                        boleh lebih dari 5 MB</span>
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('dataLevelTiga.' . $key) }}
@@ -805,25 +805,27 @@
                             </div>
                         @elseif($item->nama == 'NPWP')
                             <div class="row col-md-12" id="npwp">
-                                <div class="form-group col-md-6">
-                                    <label for="">NPWP</label>
-                                    <input type="hidden" name="id_text[]" value="79" id="npwp_id">
-                                    <input type="hidden" name="opsi_jawaban[]" value="input text"
-                                        id="npwp_opsi_jawaban">
-                                    <input type="text" maxlength="255" name="info_text[]" id="npwp_text"
-                                        placeholder="Masukkan informasi" class="form-control"
-                                        value="{{ $dataDetailJawabanTextnpwp != null ? $dataDetailJawabanTextnpwp?->opsi_text : '' }}">
-                                    <input type="hidden" name="skor_penyelia_text[]" id="npwp_text"
-                                        value="{{ $dataDetailJawabanTextnpwp?->skor_penyelia }}">
-                                    <input type="hidden" name="id_jawaban_text[]" id="id_jawaban_npwp"
-                                        value="{{ $dataDetailJawabanTextnpwp != null ? $dataDetailJawabanTextnpwp->id : null }}"
-                                        @if ($dataDetailJawabanTextnpwp == null) disabled="disabled" @endif>
-                                </div>
+                                @if ($dataDetailJawabanTextnpwp->opsi_text)
+                                    <div class="form-group col-md-6">
+                                        <label for="">NPWP</label>
+                                        <input type="hidden" name="id_text[]" value="79" id="npwp_id">
+                                        <input type="hidden" name="opsi_jawaban[]" value="input text"
+                                            id="npwp_opsi_jawaban">
+                                        <input type="text" maxlength="255" name="info_text[]" id="npwp_text"
+                                            placeholder="Masukkan informasi" class="form-control"
+                                            value="{{ $dataDetailJawabanTextnpwp != null ? $dataDetailJawabanTextnpwp?->opsi_text : '' }}">
+                                        <input type="hidden" name="skor_penyelia_text[]" id="npwp_text"
+                                            value="{{ $dataDetailJawabanTextnpwp?->skor_penyelia }}">
+                                        <input type="hidden" name="id_jawaban_text[]" id="id_jawaban_npwp"
+                                            value="{{ $dataDetailJawabanTextnpwp != null ? $dataDetailJawabanTextnpwp->id : null }}"
+                                            @if ($dataDetailJawabanTextnpwp == null) disabled="disabled" @endif>
+                                    </div>
+                                @endif
 
                                 <div class="form-group col-md-6" id="docNPWP">
+                                    @if (isset($jawabanDokNPWP->opsi_text) != null)
                                     <label for="">Dokumen NPWP</label>
                                     <input type="hidden" name="id_file_text[]" value="153" id="docNPWP_id">
-                                    @if (isset($jawabanDokNPWP->opsi_text) != null)
                                         <label for="update_file" style="display: none"
                                             id="docNPWPnama_file">{{ $jawabanDokNPWP->opsi_text }}</label>
                                         <input type="file" name="update_file[]" id="docNPWP_update_file"
@@ -831,13 +833,13 @@
                                             value="{{ $jawabanDokNPWP->opsi_text }}">
 
                                         <span class="invalid-tooltip" style="display: none">Besaran file tidak
-                                            boleh lebih dari 5 MB</span>
+                                            boleh lebih dari 5 MB</span>
                                     @else
                                         <label for="update_file" style="display: none" id="docNPWPnama_file">Belum Upload
                                             Dokumen NPWP</label>
 
                                         <span class="invalid-tooltip" style="display: none">Besaran file tidak
-                                            boleh lebih dari 5 MB</span>
+                                            boleh lebih dari 5 MB</span>
                                     @endif
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
@@ -1221,7 +1223,6 @@
                                         @forelse ($dataDetailJawabanText as $itemTextTiga)
                                             <div class="form-group col-md-6 file-wrapper">
                                                 <label for="">{{ $itemTiga->nama }}</label>
-
                                                 <div class="row file-input">
                                                     <div class="col-md-9">
                                                         <label for="update_file" style="display: none"
@@ -1666,12 +1667,12 @@
                             <label for="update_file" style="display: none" id="nama_file">{{ $jawabanFotoKTPIs?->opsi_text }}</label>
                             <input type="file" name="update_file[]" id="" placeholder="Masukkan informasi Foto KTP Istri" class="form-control limit-size" value="{{ $jawabanFotoKTPIs?->opsi_text }}">
 
-                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                         @else
                             <label for="update_file" style="display: none" id="nama_file">Belum Upload Foto KTP Istri</label>
                             <input type="file" name="update_file[]" id="" placeholder="Masukkan informasi Foto KTP Istri" class="form-control limit-size" value="Belum Upload Foto KTP Istri">
 
-                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                         @endif
                     <input type="hidden" name="id_update_file[]" value="{{ $jawabanFotoKTPIs?->id ?? '' }}">
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
@@ -1692,12 +1693,12 @@
                             <label for="update_file" style="display: none" id="nama_file">{{ $jawabanFotoKTPSu?->opsi_text }}</label>
                             <input type="file" name="update_file[]" id="" placeholder="Masukkan informasi Foto KTP Suami" class="form-control limit-size" value="{{ $jawabanFotoKTPSu?->opsi_text }}">
 
-                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                         @else
                             <label for="update_file" style="display: none" id="nama_file">Belum Upload Foto KTP Suami</label>
                             <input type="file" name="update_file[]" id="" placeholder="Masukkan informasi Foto KTP Suami" class="form-control limit-size" value="Belum Upload Foto KTP Suami">
 
-                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                         @endif
                     <input type="hidden" name="id_update_file[]" value="{{ $jawabanFotoKTPSu?->id ?? '' }}">
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
@@ -1734,12 +1735,12 @@
                             <label for="update_file" style="display: none" id="nama_file">{{ $jawabanFotoKTPNas?->opsi_text }}</label>
                             <input type="file" name="update_file[]" id="" placeholder="Masukkan informasi Foto KTP Suami" class="form-control limit-size" value="{{ $jawabanFotoKTPNas?->opsi_text }}">
 
-                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                         @else
                             <label for="update_file" style="display: none" id="nama_file">Belum Upload Foto KTP Suami</label>
                             <input type="file" name="update_file[]" id="" placeholder="Masukkan informasi Foto KTP Suami" class="form-control limit-size" value="Belum Upload Foto KTP Suami">
 
-                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                         @endif
                     <input type="hidden" name="id_update_file[]" value="{{ $jawabanFotoKTPNas?->id ?? '' }}">
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))

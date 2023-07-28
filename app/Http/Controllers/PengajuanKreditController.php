@@ -1445,7 +1445,7 @@ class PengajuanKreditController extends Controller
             if (!$statusSlik)
                 return redirect()->route('pengajuan-kredit.index')->withStatus('Data berhasil disimpan.');
             else
-                return redirect()->route('pengajuan-kredit.index')->withError('Pengajuan Di tolak');
+                return redirect()->route('pengajuan-kredit.index')->withError('Pengajuan ditolak');
         } catch (Exception $e) {
             DB::rollBack();
             // return $e->getMessage();
