@@ -805,7 +805,7 @@
                             </div>
                         @elseif($item->nama == 'NPWP')
                             <div class="row col-md-12" id="npwp">
-                                @if ($dataDetailJawabanTextnpwp->opsi_text)
+                                @if ($dataDetailJawabanTextnpwp?->opsi_text)
                                     <div class="form-group col-md-6">
                                         <label for="">NPWP</label>
                                         <input type="hidden" name="id_text[]" value="79" id="npwp_id">
@@ -1769,8 +1769,8 @@
         let x = 1;
         // jaminan tambahan
         getJaminanutama();
-        getJaminanTambahan();
         getIjinUsaha();
+        getJaminanTambahan();
         hitungRatioCoverage();
         hitungRatioTenorAsuransi();
         hitungRepaymentCapacity();
@@ -2156,20 +2156,23 @@
                 url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}&id=${id}`,
                 dataType: "json",
                 success: function(response) {
+                    var fotoArr1 = new Array();
+                    var fotoArr2 = new Array();
+                    var fotoArr3 = new Array();
                     if (kategoriJaminan != "Tidak Memiliki Jaminan Tambahan") {
                         $("#jaminan_tambahan").show()
                         // add item by kategori
                         $('#select_kategori_jaminan_tambahan').append(`
-                        <label for="">${response.item.nama}</label>
-                        <select name="dataLevelEmpat[]" id="itemByKategori" class="form-control cek-sub-column"
-                            data-id_item="${response.item.id}">
-                            <option value=""> --Pilih Opsi -- </option>
-                            </select>
+                            <label for="">${response.item.nama}</label>
+                            <select name="dataLevelEmpat[]" id="itemByKategori" class="form-control cek-sub-column"
+                                data-id_item="${response.item.id}">
+                                <option value=""> --Pilih Opsi -- </option>
+                                </select>
 
-                        <div id="item${response.item.id}">
+                            <div id="item${response.item.id}">
 
-                        </div>
-                    `);
+                            </div>
+                        `);
                         // add opsi dari item
                         $.each(response.item.option, function(i, valOption) {
                             // //console.log(valOption.skor);
@@ -2201,29 +2204,11 @@
                                             <input type="hidden" name="id_jawaban_text[]" class="input" value="" ${isDisabled}>
                                         </div>`);
                                 } else {
-                                    $('#bukti_pemilikan_jaminan_tambahan').append(`
-                                    <div class="form-group col-md-6 aspek_jaminan_kategori">
-                                        <label>${valItem.nama}</label>
-                                        <div class="row">
-                                            <div class="col-md-9">
-                                                <input type="hidden" name="id_update_file[]" value="" id="" class="input">
-                                                <input type="hidden" name="id_file_text[]" value="${valItem.id}" id="" class="input">
-                                                <input type="file" name="update_file[]" value="" id="${valItem.nama}file" class="form-control">
-                                                <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
-                                            </div>
-                                            <div class="col-md-1">
-                                                <button type="button" class="btn btn-success plus" id="btnTambahBukti"><i class="fa fa-plus"></i></button>
-                                            </div>
-                                            <div class="col-md-1 ml-1">
-                                                <button type="button" class="btn btn-danger minus" id="btnHapusBukti"><i class="fa fa-minus"></i></button>
-                                            </div>
-                                        </div>
-                                    </div>`);
+                                    fotoArr1.push(valItem)
                                     x++;
                                 }
                             })
                         }
-
                         if (response.dataDetailJawabanText.length > 0) {
 
                             $.each(response.dataDetailJawabanText, function(i, valItem) {
@@ -2233,7 +2218,7 @@
 
                                 if (valItem.nama == 'Atas Nama') {
                                     $('#bukti_pemilikan_jaminan_tambahan').append(`
-                                        <div class="form-group col-md-6 aspek_jaminan_kategori">
+                                        <div class="form-group col-md-6 aspek_jaminan_kategori atas-nama">
                                             <label>${valItem.nama}</label>
                                             <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input">
                                             <input type="hidden" name="opsi_jawaban[]"
@@ -2248,28 +2233,8 @@
                                     `);
                                 } else {
                                     if (valItem.nama == 'Foto') {
-                                        $('#bukti_pemilikan_jaminan_tambahan').append(`
-                                        <div class="form-group col-md-6 aspek_jaminan_kategori">
-                                            <label>${valItem.nama}</label>
-                                            <div class="row">
-                                                <div class="col-md-9">
-                                                    <input type="hidden" name="id_update_file[]" value="${valItem.id}" id="" class="input">
-                                                    <label for="update_file" style="display: none" id="nama_file">${valItem.opsi_text}</label>
-                                                    <input type="hidden" name="id_file_text[]" value="${valItem.id_item}" id="" class="input">
-                                                    <input type="file" name="update_file[]" value="${valItem.opsi_text}" id="${valItem.nama}file" class="form-control">
-                                                    <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
-                                                    <span class="filenameBukti" style="display: inline;">${valItem.opsi_text}</span>
-                                                </div>
-                                                <div class="col-md-1">
-                                                    <button type="button" class="btn btn-success plus" id="btnTambahBukti"><i class="fa fa-plus"></i></button>
-                                                </div>
-                                                <div class="col-md-1 ml-1">
-                                                    <button type="button" class="btn btn-danger minus" id="btnHapusBukti"><i class="fa fa-minus"></i></button>
-                                                </div>
-                                            </div>
-                                        </div>`);
+                                        fotoArr2.push(valItem)
                                         x++;
-                                        showFile();
                                     } else {
                                         $('#bukti_pemilikan_jaminan_tambahan').append(`
                                             <div class="form-group col-md-6 aspek_jaminan_kategori">
@@ -2321,7 +2286,7 @@
                             $.each(response.itemBuktiPemilikan, function(i, valItem) {
                                 if (valItem.nama == 'Atas Nama') {
                                     $('#bukti_pemilikan_jaminan_tambahan').append(`
-                                    <div class="form-group col-md-6 aspek_jaminan_kategori">
+                                    <div class="form-group col-md-6 aspek_jaminan_kategori atas-nama">
                                         <label>${valItem.nama}</label>
                                             <input type="hidden" name="id_level[]" value="${valItem.id}" id="" class="input">
                                             <input type="hidden" name="opsi_jawaban[]"
@@ -2335,27 +2300,7 @@
                                 `);
                                 } else {
                                     if (valItem.nama == 'Foto') {
-                                        $('#bukti_pemilikan_jaminan_tambahan').append(`
-                                    <div class="form-group col-md-6 aspek_jaminan_kategori">
-                                        <label>${valItem.nama}</label>
-                                        <div class="row">
-                                            <div class="col-md-9">
-                                                <input type="hidden" name="id_update_file[]" value="" id="" class="input">
-                                                <input type="hidden" name="id_file_text[]" value="${valItem.id_item}" id="" class="input">
-                                                <input type="hidden" name="opsi_jawaban[]"
-                                                    value="${valItem.opsi_jawaban}" id="" class="input">
-                                                    <input type="file" name="update_file[]" placeholder="Masukkan informasi"
-                                                    class="form-control input" value="${valItem.opsi_text}">
-                                                <input type="hidden" name="skor_penyelia_text[]" value="${(valItem.skor_penyelia != null) ? valItem.skor_penyelia : null}">
-                                            </div>
-                                            <div class="col-md-1">
-                                                <button type="button" class="btn btn-success plus" id="btnTambahBukti"><i class="fa fa-plus"></i></button>
-                                            </div>
-                                            <div class="col-md-1 ml-1">
-                                                <button type="button" class="btn btn-danger minus" id="btnHapusBukti"><i class="fa fa-minus"></i></button>
-                                            </div>
-                                        </div>
-                                    </div>`);
+                                        fotoArr3.push(valItem)
                                         x++;
                                     } else {
                                         $('#bukti_pemilikan_jaminan_tambahan').append(`
@@ -2400,6 +2345,73 @@
                         } else {
                             $("#select_kategori_jaminan_tambahan").show()
                             $("#jaminan_tambahan").show()
+                        }
+
+                        for (var i = 0; i < fotoArr1.length; i++) {
+                            $('#bukti_pemilikan_jaminan_tambahan').last().append(`
+                            <div class="form-group col-md-6 aspek_jaminan_kategori foto">
+                                <label>${fotoArr1[i].nama}</label>
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <input type="hidden" name="id_update_file[]" value="" id="" class="input">
+                                        <input type="hidden" name="id_file_text[]" value="${fotoArr1[i].id}" id="" class="input">
+                                        <input type="file" name="update_file[]" value="" id="${fotoArr1[i].nama}file" class="form-control">
+                                        <input type="hidden" name="skor_penyelia_text[]" value="${(fotoArr1[i].skor_penyelia != null) ? fotoArr1[i].skor_penyelia : null}">
+                                    </div>
+                                    <div class="col-md-1">
+                                        <button type="button" class="btn btn-success plus" id="btnTambahBukti"><i class="fa fa-plus"></i></button>
+                                    </div>
+                                    <div class="col-md-1 ml-1">
+                                        <button type="button" class="btn btn-danger minus" id="btnHapusBukti"><i class="fa fa-minus"></i></button>
+                                    </div>
+                                </div>
+                            </div>`)
+                        }
+                        for (var i = 0; i < fotoArr2.length; i++) {
+                            $('#bukti_pemilikan_jaminan_tambahan').append(`
+                                <div class="form-group col-md-6 aspek_jaminan_kategori">
+                                    <label>${fotoArr2[i].nama}</label>
+                                    <div class="row">
+                                        <div class="col-md-9">
+                                            <input type="hidden" name="id_update_file[]" value="${fotoArr2[i].id}" id="" class="input">
+                                            <label for="update_file" style="display: none" id="nama_file">${fotoArr2[i].opsi_text}</label>
+                                            <input type="hidden" name="id_file_text[]" value="${fotoArr2[i].id_item}" id="" class="input">
+                                            <input type="file" name="update_file[]" value="${fotoArr2[i].opsi_text}" id="${fotoArr2[i].nama}file" class="form-control">
+                                            <input type="hidden" name="skor_penyelia_text[]" value="${(fotoArr2[i].skor_penyelia != null) ? fotoArr2[i].skor_penyelia : null}">
+                                            <span class="filenameBukti" style="display: inline;">${fotoArr2[i].opsi_text}</span>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <button type="button" class="btn btn-success plus" id="btnTambahBukti"><i class="fa fa-plus"></i></button>
+                                        </div>
+                                        <div class="col-md-1 ml-1">
+                                            <button type="button" class="btn btn-danger minus" id="btnHapusBukti"><i class="fa fa-minus"></i></button>
+                                        </div>
+                                    </div>
+                                </div>`)
+                            showFile();
+                        }
+                        for (var i = 0; i < fotoArr3.length; i++) {
+                            $('#bukti_pemilikan_jaminan_tambahan').append(`
+                            <div class="form-group col-md-6 aspek_jaminan_kategori">
+                                <label>${fotoArr3[i].nama}</label>
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <input type="hidden" name="id_update_file[]" value="" id="" class="input">
+                                        <input type="hidden" name="id_file_text[]" value="${fotoArr3[i].id_item}" id="" class="input">
+                                        <input type="hidden" name="opsi_jawaban[]"
+                                            value="${fotoArr3[i].opsi_jawaban}" id="" class="input">
+                                            <input type="file" name="update_file[]" placeholder="Masukkan informasi"
+                                            class="form-control input" value="${fotoArr3[i].opsi_text}">
+                                        <input type="hidden" name="skor_penyelia_text[]" value="${(fotoArr3[i].skor_penyelia != null) ? fotoArr3[i].skor_penyelia : null}">
+                                    </div>
+                                    <div class="col-md-1">
+                                        <button type="button" class="btn btn-success plus" id="btnTambahBukti"><i class="fa fa-plus"></i></button>
+                                    </div>
+                                    <div class="col-md-1 ml-1">
+                                        <button type="button" class="btn btn-danger minus" id="btnHapusBukti"><i class="fa fa-minus"></i></button>
+                                    </div>
+                                </div>
+                            </div>`);
                         }
                     } else {
                         $("#jaminan_tambahan").hide()
