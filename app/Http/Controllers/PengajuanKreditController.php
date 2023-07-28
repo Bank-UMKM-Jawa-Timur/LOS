@@ -1118,12 +1118,6 @@ class PengajuanKreditController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request;
-        // return $_POST;
-        // return 'jumlah id level = ' . count($request->get('id_level')) . '; jumlah input = ' . count($request->get('informasi'));
-        // $checkLevelDua = $request->dataLevelDua != null ? 'required' : '';
-        // $checkLevelTiga = $request->dataLevelTiga != null ? 'required' : '';
-        // $checkLevelEmpat = $request->dataLevelEmpat != null ? 'required' : '';
         $statusSlik = false;
         $find = array('Rp ', '.');
         $request->validate([
@@ -1269,27 +1263,31 @@ class PengajuanKreditController extends Controller
                     ]);
                 }
             }
-            //untuk upload file
+            //untuk upload file dari temp
             $tempFiles = JawabanTemp::where('type', 'file')->where('id_temporary_calon_nasabah', $request->id_nasabah)->get();
             foreach ($tempFiles as $tempFile) {
-                $tempPath = public_path("upload/temp/{$tempFile->id_jawaban}/{$tempFile->opsi_text}");
-                $newPath = str_replace('temp/', "{$id_pengajuan}/", $tempPath);
-                $relPath = "upload/{$id_pengajuan}/{$tempFile->id_jawaban}";
+                if (!array_key_exists($tempFile->id_jawaban, $request->upload_file)) {
+                    $tempPath = public_path("upload/temp/{$tempFile->id_jawaban}/{$tempFile->opsi_text}");
+                    $newPath = str_replace('temp/', "{$id_pengajuan}/", $tempPath);
+                    $relPath = "upload/{$id_pengajuan}/{$tempFile->id_jawaban}";
 
-                File::isDirectory(public_path($relPath)) or File::makeDirectory(public_path($relPath), recursive: true);
-                File::move($tempPath, $newPath);
-
-                if ($tempFile->id_jawaban != null) {
-                    JawabanTextModel::create([
-                        'id_pengajuan' => $id_pengajuan,
-                        'id_jawaban' => $tempFile->id_jawaban,
-                        'opsi_text' => $tempFile->opsi_text,
-                        'skor_penyelia' => null,
-                        'skor_pbp' => null,
-                        'skor' => null,
-                    ]);
+                    // check file exists
+                    if (file_exists($tempPath)) {
+                        File::isDirectory(public_path($relPath)) or File::makeDirectory(public_path($relPath), recursive: true);
+                        File::move($tempPath, $newPath);
+                        if ($tempFile->id_jawaban != null) {
+                            JawabanTextModel::create([
+                                'id_pengajuan' => $id_pengajuan,
+                                'id_jawaban' => $tempFile->id_jawaban,
+                                'opsi_text' => $tempFile->opsi_text,
+                                'skor_penyelia' => null,
+                                'skor_pbp' => null,
+                                'skor' => null,
+                            ]);
+                        }
+                    }
                 }
-
+                
                 $tempFile->delete();
             }
 
