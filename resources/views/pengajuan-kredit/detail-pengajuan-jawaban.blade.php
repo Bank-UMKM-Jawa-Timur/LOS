@@ -1115,7 +1115,7 @@
                                                                     @endif
                                                                 @endif
                                                                 {{-- Rupiah data empat --}}
-                                                            @elseif ($itemEmpat->opsi_jawaban == 'number')
+                                                            @elseif ($itemEmpat->opsi_jawaban == 'number' && $itemEmpat->id != 130)
                                                                 <div class="jawaban-responsive">
                                                                     Rp.{{ number_format((int) $itemTextEmpat->opsi_text, 2, ',', '.') }}
                                                                 </div>
