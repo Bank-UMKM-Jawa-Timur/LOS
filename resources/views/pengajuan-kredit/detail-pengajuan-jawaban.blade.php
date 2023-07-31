@@ -389,7 +389,7 @@
                             value="{{ isset($komentarSlik->komentar) ? $komentarSlik->komentar : '' }}">
                         <div class="input-skor">
                             @php
-                                $skorSlik = $itemSlik->skor_penyelia ? $itemSlik->skor_penyelia : $itemSlik->skor;
+                                $skorSlik = $itemSlik ? $itemSlik?->skor_penyelia : $itemSlik?->skor;
                             @endphp
                             <input type="number" class="form-control skorPenyeliaInput1" placeholder="" name="skor_penyelia[]"
                                 onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
@@ -457,9 +457,6 @@
                         class="form-control @error('jumlah_kredit') is-invalid @enderror"
                         placeholder="Jumlah Kredit"
                         value="{{ old('jumlah_kredit', 'Rp ' . number_format($dataUmumNasabah->jumlah_kredit, 2, ',', '.')) }}">
-                    {{-- <input type="number" disabled name="jumlah_kredit"
-                        class="form-control @error('jumlah_kredit') is-invalid @enderror" placeholder="Jumlah Kredit"
-                        value="{{old('jumlah_kredit', $dataUmumNasabah->jumlah_kredit) }}"> --}}
                     @error('jumlah_kredit')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -540,21 +537,6 @@
                             {{ $message }}
                         </div>
                     @enderror
-                    {{--  <label>Merk Kendaraan</label>
-                    <select name="id_merk" id="id_merk" class="select2 form-control" style="width: 100%;"
-                        disabled>
-                        <option value="">Pilih Merk Kendaraan</option>
-                        @foreach ($dataMerk as $item)
-                            <option value="{{ $item->id }}"
-                                {{ $dataPOMerk->id_merk == $item->id ? 'selected' : '' }}>{{ $item->merk }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('id_merk')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror  --}}
                 </div>
                 <div class="form-group col-md-12">
                     <label>Tipe Kendaraan</label>
@@ -564,15 +546,6 @@
                             {{ $message }}
                         </div>
                     @enderror
-                    {{--  <select name="id_tipe" id="id_tipe" class="select2 form-control" style="width: 100%;"
-                        disabled>
-                        <option value="">Pilih Tipe</option>
-                    </select>
-                    @error('id_tipe')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror  --}}
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Tahun</label>
@@ -840,8 +813,6 @@
                                                         @else
                                                             <input type="hidden" name="komentar_penyelia[]"
                                                                 value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
-                                                            {{--  <input type="hidden" name="skor_penyelia[]"
-                                                                value="{{ $getSkorPenyelia->skor_penyelia != null ? $getSkorPenyelia->skor_penyelia : $itemJawaban->skor }}">  --}}
                                                             <input type="hidden" name="skor_penyelia[]"
                                                                 value="null">
                                                         @endif
@@ -1028,7 +999,7 @@
                                                                     value="{{ $itemJawabanLevelTiga->id }}">
                                                                 @php
                                                                     $skorInput3 = null;
-                                                                    $skorInput3 = $getSkorPenyelia->skor_penyelia ? $getSkorPenyelia->skor_penyelia : $itemJawabanLevelTiga->skor;
+                                                                    $skorInput3 = $getSkorPenyelia?->skor_penyelia ? $getSkorPenyelia?->skor_penyelia : $itemJawabanLevelTiga->skor;
                                                                 @endphp
                                                                 @if ($itemTiga->is_commentable == 'Ya')
                                                                     <input type="text" class="form-control komentar"
@@ -1049,9 +1020,6 @@
                                                                         value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                     <input type="hidden" name="skor_penyelia[]"
                                                                         value="null">
-                                                                    {{--  <input type="hidden" name="skor_penyelia[]"
-                                                                        value="{{ $getSkorPenyelia->skor_penyelia != null ? $getSkorPenyelia->skor_penyelia : $itemJawabanLevelTiga->skor }}s">
-                                                                        jawabanlev3-{{$itemJawabanLevelTiga->skor}}-{{$getSkorPenyelia->skor_penyelia}}  --}}
                                                                 @endif
                                                             </div>
                                                         </div>
@@ -1236,7 +1204,7 @@
                                                                     <div class="input-skor">
                                                                         @php
                                                                             $skorInput4 = null;
-                                                                            $skorInput4 = $getSkorPenyelia->skor_penyelia ? $getSkorPenyelia->skor_penyelia : $itemJawabanLevelEmpat->skor;
+                                                                            $skorInput4 = $getSkorPenyelia?->skor_penyelia ? $getSkorPenyelia?->skor_penyelia : $itemJawabanLevelEmpat->skor;
                                                                         @endphp
                                                                         <input type="number" class="form-control skorPenyeliaInput4"
                                                                             placeholder="" name="skor_penyelia[]"
