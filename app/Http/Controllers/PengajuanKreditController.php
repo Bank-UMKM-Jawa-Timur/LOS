@@ -190,12 +190,21 @@ class PengajuanKreditController extends Controller
             $statusCode = $response->status();
             $responseBody = json_decode($response->getBody(), true);
 
-            if (array_key_exists('data', $responseBody))
-                return $responseBody['data']['nama'];
+            if ($responseBody != null) {
+                if (is_array($responseBody)) {
+                    if (array_key_exists('data', $responseBody))
+                        return $responseBody['data']['nama'];
+                    else
+                        return 'undifined';
+                }
+                else
+                    return 'undifined';
+            }
             else
                 return 'undifined';
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
-            return $e->getMessage();
+            return 'undifined';
+            // return $e->getMessage();
         }
     }
 
@@ -217,10 +226,13 @@ class PengajuanKreditController extends Controller
         $response = curl_exec($curl);
 
         curl_close($curl);
-        $json = json_decode($response);
+        if ($response != null) {
+            $json = json_decode($response);
+    
+            if (isset($json->data))
+                return $json->data->nama_karyawan;
+        }
 
-        if (isset($json->data))
-            return $json->data->nama_karyawan;
         return Auth::user()->name;
     }
 
