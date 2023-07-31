@@ -52,7 +52,7 @@ class AuthenticatedSessionController extends Controller
 
                     return redirect()->intended(RouteServiceProvider::HOME);
                 }else{
-                    return back()->withError("Password yang ada masukan salah");
+                    return back()->withError("Password yang anda masukan salah");
                 }
             }
             else {
