@@ -534,7 +534,7 @@
                 </div>
                 <div class="form-group col-md-12">
                     <label>Merk Kendaraan</label>
-                    <input type="text" name="merk" id="merk" class="form-control @error('merk') is-invalid @enderror" value="{{ $dataPO->merk }}" placeholder="Merk kendaraan">
+                    <input type="text" name="merk" id="merk" class="form-control @error('merk') is-invalid @enderror" value="{{ $dataPO->merk }}" placeholder="Merk kendaraan" readonly>
                     @error('merk')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -558,7 +558,7 @@
                 </div>
                 <div class="form-group col-md-12">
                     <label>Tipe Kendaraan</label>
-                    <input type="text" name="tipe_kendaraan" id="tipe_kendaraan" class="form-control @error('tipe_kendaraan') is-invalid @enderror" value="{{ $dataPO->tipe }}" placeholder="Tipe kendaraan">
+                    <input type="text" name="tipe_kendaraan" id="tipe_kendaraan" class="form-control @error('tipe_kendaraan') is-invalid @enderror" value="{{ $dataPO->tipe }}" placeholder="Tipe kendaraan" readonly>
                     @error('tipe_kendaraan')
                         <div class="invalid-feedback">
                             {{ $message }}
