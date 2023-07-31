@@ -1066,13 +1066,13 @@ null => 1,
 <script>
     var isPincetar = "{{Request::url()}}".includes('pincetar');
         $(document).ready(function() {
-            let valSkema = $("#skema").val();
+            let valSkema = $("#skema_kredit").val();
             if (valSkema == null || valSkema == '') {
                 $('#exampleModal').modal('show');
             }
 
             $("#exampleModal").on('click', "#btnSkema", function() {
-                let valSkema = $("#skema").val();
+                let valSkema = $("#skema_kredit").val();
                 // //console.log(valSkema);
 
                 $("#skema_kredit").val(valSkema);
@@ -2230,12 +2230,38 @@ null => 1,
             else {
                 if (nullValue.length > 0) {
                     let message = "";
+                    const ijinUsaha = $("#ijin_usaha").val();
                     $.each(nullValue, (i, v) => {
                         console.log('validasi')
                         console.log(v)
                         var item = v;
                         if (v == 'itemByKategori')
                             item = 'Jaminan tambahan';
+
+                        if (v == 'itemByKategori'){
+                            if($("#kategori_jaminan_tambahan").val() == "Tidak Memiliki Jaminan Tambahan"){
+                                for(var j = 0; j < nullValue.length(); j++){
+                                    while(nullValue[j] == v){
+                                        nullValue.splice(j, 1)
+                                    }
+                                }
+                            } else {
+                                item = "Jaminan Tambahan"
+                            }
+                        }
+
+                        if (ijinUsaha == 'nib') {
+                            if (v == 'nib text' || v == 'nib_text') {
+                                var nibText = $("#nib_text").val()
+                                if (nibText == null || nibText == '') {
+                                    for(var j = 0; j < nullValue.length(); j++){
+                                        while(nullValue[j] == v){
+                                            nullValue.splice(j, 1)
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         console.log('end validasi')
                         message += item != '' ? item + ", " : ''
                     })
