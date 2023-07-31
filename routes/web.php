@@ -37,8 +37,8 @@ Route::post('tes-skor', [PengajuanKreditController::class, 'countScore'])->name(
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index']);
-    Route::post('/print-data-nominatif', [DashboardController::class, 'cetak']);
-    Route::post('/print-data-nominatif-excel', [DashboardController::class, 'cetakExcel']);
+    Route::post('/print-data-nominatif', [DashboardController::class, 'cetak'])->name('print_data_nominatif');
+    Route::post('/print-data-nominatif-excel', [DashboardController::class, 'cetakExcel'])->name('print_data_nominatif_excel');
     // check Pincab
     Route::post('pengajuan-kredit/pincabStatusDetailPost', [PengajuanKreditController::class, "checkPincabStatusDetailPost"])->name('pengajuan.check.pincab.status.detail.post');
     Route::get('pengajuan-kredit/pincabStatusDetail/{id}', [PengajuanKreditController::class, "checkPincabStatusDetail"])->name('pengajuan.check.pincab.status.detail');

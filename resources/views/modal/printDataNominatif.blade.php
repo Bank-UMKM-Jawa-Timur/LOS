@@ -8,7 +8,7 @@
                       <span aria-hidden="true">&times;</span>
                   </button>
               </div>
-              <form action="/print-data-nominatif" id="formhapus" method="POST">
+              <form action="{{ route('print_data_nominatif') }}" id="formhapus" method="POST">
                   @csrf
                   <div class="modal-body">
                       <div class="col-12">
