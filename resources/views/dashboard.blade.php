@@ -16,212 +16,7 @@
     </div>
     {{-- @if ($user->level == 'Administrator' || $user->level == 'Admin' || $user->level == 'Kasat') --}}
     <div class="row">
-        @if (auth()->user()->role == 'Administrator')
-            {{-- Total Pengajuan --}}
-            {{-- <div class="col-md-12 mb-4">
-                <div class="card bg-rgb-success border border-success">
-                    <div class="card-body py-4">
-                        <span class="fa fa-calendar-check sticky-fa-card"></span>
-                        <div class="row align-items-center">
-                            <div class="col-md-8 pr-0 font-weight-bold">
-                                Total Pengajuan
-                            </div>
-                            <div class="col-md-4 pr-0 font-wight-bold">
-                                <h1>{{ \App\models\PengajuanModel::count() }}</h1>
-                            </div>
-                        </div>
-                        <hr>
-                        <a href="{{ route('pengajuan-kredit.index') }}" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
-                    </div>
-                </div>
-            </div> --}}
-            <div class="col-md-12 mb-4">
-                Total Pengajuan :
-                {{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
-                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
-                })->when(Request()->cbg, function ($query, $cbg) {
-                        return $query->where('id_cabang', $cbg);
-                    })->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->count() }}
-                <div class=" d-flex justify-content-end">
-                    <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal" data-target="#data_nominatif"
-                        id="#exportExcel">
-                        <i class="fa fa-print"></i> Export
-                    </button>
-                    <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
-                        data-target="#exampleModal">
-                        <i class="fa fa-filter"></i> Filter
-                    </button>
-                </div>
-            </div>
-            {{-- Pengajuan Approve --}}
-            <div class="col-md-4 mb-4">
-                <div class="card bg-rgb-success border border-success">
-                    <div class="card-body py-4">
-                        {{-- <span class="fa fa-calendar-check sticky-fa-card"></span> --}}
-                        <div class="row align-items-center">
-                            <div class="col-md-8 pr-0 font-weight-bold">
-                                Pengajuan Disetujui
-                            </div>
-                            <div class="col-md-4 pr-0 font-wight-bold">
-                                <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
-                                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
-                                })->when(Request()->cbg, function ($query, $cbg) {
-                                        return $query->where('id_cabang', $cbg);
-                                    })->where('posisi', 'Selesai')->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->count() }}
-                                </h1>
-                            </div>
-                        </div>
-                        <hr>
-                        <a href="/pengajuan-kredit?sts=Selesai" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
-                            Detail</a>
-                    </div>
-                </div>
-            </div>
-            {{-- Pengajuan Ditolak --}}
-            <div class="col-md-4 mb-4">
-                <div class="card bg-rgb-danger border border-danger">
-                    <div class="card-body py-4">
-                        {{-- <span class="fa fa-ban sticky-fa-card"></span> --}}
-                        <div class="row align-items-center">
-                            <div class="col-md-8 pr-0 font-weight-bold">
-                                Pengajuan Ditolak
-                            </div>
-                            <div class="col-md-4 pr-0 font-wight-bold">
-                                <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
-                                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
-                                })->when(Request()->cbg, function ($query, $cbg) {
-                                        return $query->where('id_cabang', $cbg);
-                                    })->where('posisi', 'Ditolak')->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->count() }}
-                                </h1>
-                            </div>
-                        </div>
-                        <hr>
-                        <a href="/pengajuan-kredit?sts=Ditolak" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
-                            Detail</a>
-                    </div>
-                </div>
-            </div>
-            {{-- Pengajuan Posisi Pincab --}}
-            <div class="col-md-4 mb-4">
-                <div class="card bg-rgb-primary border border-primary">
-                    <div class="card-body py-4">
-                        {{-- <span class="fa fa-ban sticky-fa-card"></span> --}}
-                        <div class="row align-items-center">
-                            <div class="col-md-8 pr-0 font-weight-bold">
-                                Pengajuan Posisi Pincab
-                            </div>
-                            <div class="col-md-4 pr-0 font-wight-bold">
-                                <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
-                                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
-                                })->when(Request()->cbg, function ($query, $cbg) {
-                                        return $query->where('id_cabang', $cbg);
-                                    })->where('posisi', 'Pincab')->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->count() }}
-                                </h1>
-                            </div>
-                        </div>
-                        <hr>
-                        <a href="/pengajuan-kredit?pss=Pincab" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
-                            Detail</a>
-                    </div>
-                </div>
-            </div>
-            {{-- Pengajuan Posisi PBP --}}
-            <div class="col-md-4 mb-4">
-                <div class="card bg-rgb-primary border border-primary">
-                    <div class="card-body py-4">
-                        {{-- <span class="fa fa-ban sticky-fa-card"></span> --}}
-                        <div class="row align-items-center">
-                            <div class="col-md-8 pr-0 font-weight-bold">
-                                Pengajuan Posisi PBP{{-- Cabang {{$kode_cabang}} --}}
-                            </div>
-                            <div class="col-md-4 pr-0 font-wight-bold">
-                                <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
-                                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
-                                })->when(Request()->cbg, function ($query, $cbg) {
-                                        return $query->where('id_cabang', $cbg);
-                                    })->where('posisi', 'PBP')->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->count() }}
-                                </h1>
-                            </div>
-                        </div>
-                        <hr>
-                        <a href="/pengajuan-kredit?pss=PBP" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
-                            Detail</a>
-                    </div>
-                </div>
-            </div>
-            {{-- Pengajuan Posisi PBO --}}
-            <div class="col-md-4 mb-4">
-                <div class="card bg-rgb-primary border border-primary">
-                    <div class="card-body py-4">
-                        {{-- <span class="fa fa-ban sticky-fa-card"></span> --}}
-                        <div class="row align-items-center">
-                            <div class="col-md-8 pr-0 font-weight-bold">
-                                Pengajuan Posisi PBO {{--  Cabang {{$kode_cabang}}  --}}
-                            </div>
-                            <div class="col-md-4 pr-0 font-wight-bold">
-                                <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
-                                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
-                                })->when(Request()->cbg, function ($query, $cbg) {
-                                        return $query->where('id_cabang', $cbg);
-                                    })->where('posisi', 'PBO')->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->count() }}
-                                </h1>
-                            </div>
-                        </div>
-                        <hr>
-                        <a href="/pengajuan-kredit?pss=PBO" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
-                            Detail</a>
-                    </div>
-                </div>
-            </div>
-            {{-- Pengajuan Posisi Penyelia --}}
-            <div class="col-md-4 mb-4">
-                <div class="card bg-rgb-primary border border-primary">
-                    <div class="card-body py-4">
-                        {{-- <span class="fa fa-ban sticky-fa-card"></span> --}}
-                        <div class="row align-items-center">
-                            <div class="col-md-8 pr-0 font-weight-bold">
-                                Pengajuan Posisi Penyelia
-                            </div>
-                            <div class="col-md-4 pr-0 font-wight-bold">
-                                <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
-                                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
-                                })->when(Request()->cbg, function ($query, $cbg) {
-                                        return $query->where('id_cabang', $cbg);
-                                    })->where('posisi', 'Review Penyelia')->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->count() }}
-                                </h1>
-                            </div>
-                        </div>
-                        <hr>
-                        <a href="/pengajuan-kredit?pss=Review+Penyelia"
-                            class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
-                    </div>
-                </div>
-            </div>
-            {{-- Pengajuan Posisi Staff --}}
-            <div class="col-md-4 mb-4">
-                <div class="card bg-rgb-primary border border-primary">
-                    <div class="card-body py-4">
-                        {{-- <span class="fa fa-ban sticky-fa-card"></span> --}}
-                        <div class="row align-items-center">
-                            <div class="col-md-8 pr-0 font-weight-bold">
-                                Pengajuan Posisi Staff
-                            </div>
-                            <div class="col-md-4 pr-0 font-wight-bold">
-                                <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
-                                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
-                                })->when(Request()->cbg, function ($query, $cbg) {
-                                        return $query->where('id_cabang', $cbg);
-                                    })->where('posisi', 'Proses Input Data')->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->count() }}
-                                </h1>
-                            </div>
-                        </div>
-                        <hr>
-                        <a href="/pengajuan-kredit?pss=Proses+Input+Data"
-                            class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
-                    </div>
-                </div>
-            </div>
-        @elseif (auth()->user()->role == 'SPI' || auth()->user()->role == 'Kredit Umum')
+        @if (auth()->user()->role == 'Administrator' || auth()->user()->role == 'SPI' || auth()->user()->role == 'Kredit Umum')
             <div class="col-md-12 mb-4">
                 Total Pengajuan :
                 {{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
@@ -259,7 +54,7 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="/pengajuan-kredit?sts=Selesai" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
+                        <a href="{{ route('pengajuan-kredit.index') }}?tAwal={{Request::get('tAwal')}}&tAkhir={{Request::get('tAkhir')}}&sts=Selesai&cbg={{Request::get('cbg')}}" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
                             Detail</a>
                     </div>
                 </div>
@@ -283,8 +78,7 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="/pengajuan-kredit?sts=Ditolak"
-                            class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
+                        <a href="{{ route('pengajuan-kredit.index') }}?tAwal={{Request::get('tAwal')}}&tAkhir={{Request::get('tAkhir')}}&sts=Ditolak&cbg={{Request::get('cbg')}}" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
                             Detail</a>
                     </div>
                 </div>
@@ -308,7 +102,7 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="/pengajuan-kredit?pss=Pincab" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
+                        <a href="{{ route('pengajuan-kredit.index') }}?tAwal={{Request::get('tAwal')}}&tAkhir={{Request::get('tAkhir')}}&pss=Pincab&cbg={{Request::get('cbg')}}" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
                             Detail</a>
                     </div>
                 </div>
@@ -320,7 +114,7 @@
                         {{-- <span class="fa fa-ban sticky-fa-card"></span> --}}
                         <div class="row align-items-center">
                             <div class="col-md-8 pr-0 font-weight-bold">
-                                Pengajuan Posisi PBP Cabang 001
+                                Pengajuan Posisi PBP
                             </div>
                             <div class="col-md-4 pr-0 font-wight-bold">
                                 <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
@@ -332,7 +126,7 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="/pengajuan-kredit?pss=PBP" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
+                        <a href="{{ route('pengajuan-kredit.index') }}?tAwal={{Request::get('tAwal')}}&tAkhir={{Request::get('tAkhir')}}&pss=PBP&cbg={{Request::get('cbg')}}" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
                             Detail</a>
                     </div>
                 </div>
@@ -344,7 +138,8 @@
                         {{-- <span class="fa fa-ban sticky-fa-card"></span> --}}
                         <div class="row align-items-center">
                             <div class="col-md-8 pr-0 font-weight-bold">
-                                Pengajuan Posisi PBO</div>
+                                Pengajuan Posisi PBO
+                            </div>
                             <div class="col-md-4 pr-0 font-wight-bold">
                                 <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
                                     return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
@@ -355,8 +150,8 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="{{ route('pengajuan-kredit.index') }}"
-                            class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
+                        <a href="{{ route('pengajuan-kredit.index') }}?tAwal={{Request::get('tAwal')}}&tAkhir={{Request::get('tAkhir')}}&pss=PBO&cbg={{Request::get('cbg')}}" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
+                            Detail</a>
                     </div>
                 </div>
             </div>
@@ -379,8 +174,8 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="{{ route('pengajuan-kredit.index') }}"
-                            class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
+                        <a href="{{ route('pengajuan-kredit.index') }}?tAwal={{Request::get('tAwal')}}&tAkhir={{Request::get('tAkhir')}}&pss=Review Penyelia&cbg={{Request::get('cbg')}}" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
+                            Detail</a>
                     </div>
                 </div>
             </div>
@@ -403,20 +198,20 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="{{ route('pengajuan-kredit.index') }}"
-                            class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
+                        <a href="{{ route('pengajuan-kredit.index') }}?tAwal={{Request::get('tAwal')}}&tAkhir={{Request::get('tAkhir')}}&pss=Proses Input Data&cbg={{Request::get('cbg')}}" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
+                            Detail</a>
                     </div>
                 </div>
             </div>
         @elseif (auth()->user()->role == 'Penyelia Kredit')
-        <div class="col-md-12 mb-4">
-            <div class=" d-flex justify-content-end">
-                <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
-                    data-target="#exampleModal">
-                    <i class="fa fa-filter"></i> Filter
-                </button>
+            <div class="col-md-12 mb-4">
+                <div class=" d-flex justify-content-end">
+                    <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
+                        data-target="#exampleModal">
+                        <i class="fa fa-filter"></i> Filter
+                    </button>
+                </div>
             </div>
-        </div>
             <div class="col-md-3 mb-4">
                 <div class="card bg-rgb-primary border border-primary">
                     <div class="card-body py-4">
@@ -474,14 +269,14 @@
                 </div>
             </div>
         @elseif (auth()->user()->role == 'PBO')
-        <div class="col-md-12 mb-4">
-            <div class=" d-flex justify-content-end">
-                <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
-                    data-target="#exampleModal">
-                    <i class="fa fa-filter"></i> Filter
-                </button>
+            <div class="col-md-12 mb-4">
+                <div class=" d-flex justify-content-end">
+                    <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
+                        data-target="#exampleModal">
+                        <i class="fa fa-filter"></i> Filter
+                    </button>
+                </div>
             </div>
-        </div>
             <div class="col-md-3 mb-4">
                 <div class="card bg-rgb-primary border border-primary">
                     <div class="card-body py-4">
@@ -526,14 +321,14 @@
                 </div>
             </div>
         @elseif (auth()->user()->role == 'PBP')
-        <div class="col-md-12 mb-4">
-            <div class=" d-flex justify-content-end">
-                <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
-                    data-target="#exampleModal">
-                    <i class="fa fa-filter"></i> Filter
-                </button>
+            <div class="col-md-12 mb-4">
+                <div class=" d-flex justify-content-end">
+                    <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
+                        data-target="#exampleModal">
+                        <i class="fa fa-filter"></i> Filter
+                    </button>
+                </div>
             </div>
-        </div>
             <div class="col-md-3 mb-4">
                 <div class="card bg-rgb-primary border border-primary">
                     <div class="card-body py-4">
@@ -588,14 +383,14 @@
                 </div>
             </div>
         @elseif (auth()->user()->role == 'Staf Analis Kredit')
-        <div class="col-md-12 mb-4">
-            <div class=" d-flex justify-content-end">
-                <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
-                    data-target="#exampleModal">
-                    <i class="fa fa-filter"></i> Filter
-                </button>
+            <div class="col-md-12 mb-4">
+                <div class=" d-flex justify-content-end">
+                    <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
+                        data-target="#exampleModal">
+                        <i class="fa fa-filter"></i> Filter
+                    </button>
+                </div>
             </div>
-        </div>
             <div class="col-md-3 mb-4">
                 <div class="card bg-rgb-primary border border-primary">
                     <div class="card-body py-4">
@@ -653,11 +448,49 @@
                 </div>
             </div>
         @elseif(auth()->user()->role == 'Pincab')
+
+            @php
+                $total_PBP = \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                })
+                ->where('id_cabang', auth()->user()->id_cabang)
+                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                ->whereIn('pengajuan.posisi', ['PBP'])
+                ->count();
+                $total_PBO = \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                })
+                ->where('id_cabang', auth()->user()->id_cabang)
+                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                ->whereIn('pengajuan.posisi', ['PBO'])
+                ->count();
+                $total_Penyelia = \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                })
+                ->where('id_cabang', auth()->user()->id_cabang)
+                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                ->whereIn('pengajuan.posisi', ['Review Penyelia'])
+                ->count();
+                $total_staf = \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                })
+                ->where('id_cabang', auth()->user()->id_cabang)
+                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                ->whereIn('pengajuan.posisi', ['Proses Input Data'])
+                ->count();
+            @endphp
+
             <div class="col-md-12 mb-4">
                 Total Pengajuan{{-- Cabang {{$kode_cabang}} --}} :
                 {{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
                     return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
-                })->where('id_cabang', auth()->user()->id_cabang)->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->whereIn('pengajuan.posisi', ['Pincab', 'Selesai', 'Ditolak'])->count() }}
+                })
+                ->where('pengajuan.id_pincab', Auth::user()->id)
+                ->where('id_cabang', auth()->user()->id_cabang)
+                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                // ->whereIn('pengajuan.posisi', ['Pincab', 'Selesai', 'Ditolak'])
+                ->whereIn('pengajuan.posisi', ['Selesai','Ditolak','Pincab','PBP'])
+                ->count()+$total_PBP+$total_PBO+$total_Penyelia+$total_staf }}
                 <div class=" d-flex justify-content-end">
                     <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
                         data-target="#data_nominatif" id="#exportExcel">
@@ -681,7 +514,12 @@
                             <div class="col-md-4 pr-0 font-wight-bold">
                                 <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
                                     return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
-                                })->where('id_cabang', auth()->user()->id_cabang)->where('posisi', 'Selesai')->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->whereIn('pengajuan.posisi', ['Pincab', 'Selesai', 'Ditolak'])->count() }}
+                                })
+                                ->where('id_cabang', auth()->user()->id_cabang)
+                                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                                // ->whereIn('pengajuan.posisi', ['Pincab', 'Selesai', 'Ditolak'])
+                                ->where('pengajuan.posisi', 'Selesai')
+                                ->count() }}
                                 </h1>
                             </div>
                         </div>
@@ -703,7 +541,13 @@
                             <div class="col-md-4 pr-0 font-wight-bold">
                                 <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
                                     return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
-                                })->where('id_cabang', auth()->user()->id_cabang)->where('posisi', 'Ditolak')->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->whereIn('pengajuan.posisi', ['Pincab', 'Selesai', 'Ditolak'])->count() }}
+                                })->where('pengajuan.id_pincab', Auth::user()->id)
+                                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                                ->where('pengajuan.id_cabang', Auth::user()->id_cabang)
+                                // ->whereIn('pengajuan.posisi', ['Pincab', 'Selesai', 'Ditolak'])
+                                ->where('pengajuan.posisi', 'Ditolak')
+                                ->count()
+                                }}
                                 </h1>
                             </div>
                         </div>
@@ -725,7 +569,11 @@
                             <div class="col-md-4 pr-0 font-wight-bold">
                                 <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
                                     return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
-                                })->where('id_cabang', auth()->user()->id_cabang)->where('posisi', 'Pincab')->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->whereIn('pengajuan.posisi', ['Pincab', 'Selesai', 'Ditolak'])->count() }}
+                                })->where('id_cabang', auth()->user()->id_cabang)
+                                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                                // ->whereIn('pengajuan.posisi', ['Pincab', 'Selesai', 'Ditolak'])
+                                ->where('pengajuan.posisi', 'Pincab')
+                                ->count() }}
                                 </h1>
                             </div>
                         </div>
@@ -747,7 +595,10 @@
                             <div class="col-md-4 pr-0 font-wight-bold">
                                 <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
                                     return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
-                                })->where('id_cabang', auth()->user()->id_cabang)->where('posisi', 'PBP')->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->whereIn('pengajuan.posisi', ['Pincab', 'Selesai', 'Ditolak'])->count() }}
+                                })->where('id_cabang', auth()->user()->id_cabang)
+                                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                                ->where('pengajuan.posisi', 'PBP')
+                                ->count() }}
                                 </h1>
                             </div>
                         </div>
@@ -769,7 +620,10 @@
                             <div class="col-md-4 pr-0 font-wight-bold">
                                 <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
                                     return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
-                                })->where('id_cabang', auth()->user()->id_cabang)->where('posisi', 'PBO')->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->whereIn('pengajuan.posisi', ['Pincab', 'Selesai', 'Ditolak'])->count() }}
+                                })->where('id_cabang', auth()->user()->id_cabang)
+                                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                                ->where('pengajuan.posisi', 'PBO')
+                                ->count() }}
                                 </h1>
                             </div>
                         </div>
@@ -791,7 +645,10 @@
                             <div class="col-md-4 pr-0 font-wight-bold">
                                 <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
                                     return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
-                                })->where('id_cabang', auth()->user()->id_cabang)->where('posisi', 'Review Penyelia')->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->whereIn('pengajuan.posisi', ['Pincab', 'Selesai', 'Ditolak'])->count() }}
+                                })->where('id_cabang', auth()->user()->id_cabang)
+                                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                                ->where('pengajuan.posisi', 'Review Penyelia')
+                                ->count() }}
                                 </h1>
                             </div>
                         </div>
@@ -813,7 +670,11 @@
                             <div class="col-md-4 pr-0 font-wight-bold">
                                 <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
                                     return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
-                                })->where('id_cabang', auth()->user()->id_cabang)->where('posisi', 'Proses Input Data')->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->whereIn('pengajuan.posisi', ['Pincab', 'Selesai', 'Ditolak'])->count() }}
+                                })
+                                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                                ->where('pengajuan.id_cabang', Auth::user()->id_cabang)
+                                ->where('pengajuan.posisi', 'Proses Input Data')
+                                ->count() }}
                                 </h1>
                             </div>
                         </div>
@@ -1012,7 +873,7 @@
                                 <small id="errorTakhir" class="form-text text-danger">Tanggal akhir tidak boleh kurang
                                     dari tanggal awal</small>
                             </div>
-                            @if (auth()->user()->role == 'Administrator')
+                            @if (auth()->user()->role == 'Administrator' || auth()->user()->role == 'SPI' || auth()->user()->role == 'Kredit Umum')
                                 <div class="col-sm-6 mt-2">
                                     <label>Cabang</label>
                                     <select class="custom-select" id="inputGroupSelect01" name="cbg">

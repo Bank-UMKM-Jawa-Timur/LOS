@@ -128,7 +128,7 @@ class DashboardController extends Controller
                                  sum(posisi = "selesai") as disetujui,
                                  sum(posisi = "Ditolak") as ditolak,
                                  sum(posisi = "pincab") as pincab,
-                                 sum(posisi = "PBB") as PBB,
+                                 sum(posisi = "PBP") as PBP,
                                  sum(posisi = "PBO") as PBO,
                                  sum(posisi = "Review Penyelia") as penyelia,
                                  sum(posisi = "Proses Input Data") as staff,
@@ -146,7 +146,7 @@ class DashboardController extends Controller
                     'disetujui' => 0,
                     'ditolak' => 0,
                     'pincab' => 0,
-                    'PBB' => 0,
+                    'PBP' => 0,
                     'PBO' => 0,
                     'penyelia' => 0,
                     'staff' => 0,
@@ -159,7 +159,7 @@ class DashboardController extends Controller
                     'disetujui' => $dat[0]->disetujui,
                     'ditolak' => $dat[0]->ditolak,
                     'pincab' => $dat[0]->pincab,
-                    'PBB' => $dat[0]->PBB,
+                    'PBP' => $dat[0]->PBP,
                     'PBO' => $dat[0]->PBO,
                     'penyelia' => $dat[0]->penyelia,
                     'staff' => $dat[0]->staff,
@@ -177,7 +177,7 @@ class DashboardController extends Controller
                                  sum(posisi = "selesai") as disetujui,
                                  sum(posisi = "Ditolak") as ditolak,
                                  sum(posisi = "pincab") as pincab,
-                                 sum(posisi = "PBB") as PBB,
+                                 sum(posisi = "PBP") as PBP,
                                  sum(posisi = "PBO") as PBO,
                                  sum(posisi = "Review Penyelia") as penyelia,
                                  sum(posisi = "Proses Input Data") as staff,
@@ -205,7 +205,7 @@ class DashboardController extends Controller
                                     sum(posisi = "selesai") as disetujui,
                                     sum(posisi = "Ditolak") as ditolak,
                                     sum(posisi = "pincab") as pincab,
-                                    sum(posisi = "PBB") as PBB,
+                                    sum(posisi = "PBP") as PBP,
                                     sum(posisi = "PBO") as PBO,
                                     sum(posisi = "Review Penyelia") as penyelia,
                                     sum(posisi = "Proses Input Data") as staff,
@@ -221,7 +221,7 @@ class DashboardController extends Controller
                 'disetujui' => $dataS[0]->disetujui | 0,
                 'ditolak' => $dataS[0]->ditolak | 0,
                 'pincab' => $dataS[0]->pincab | 0,
-                'PBB' => $dataS[0]->PBB | 0,
+                'PBP' => $dataS[0]->PBP | 0,
                 'PBO' => $dataS[0]->PBO | 0,
                 'penyelia' => $dataS[0]->penyelia | 0,
                 'staff' => $dataS[0]->staff | 0,
@@ -240,7 +240,7 @@ class DashboardController extends Controller
                                  sum(posisi = "selesai") as disetujui,
                                  sum(posisi = "Ditolak") as ditolak,
                                  sum(posisi = "pincab") as pincab,
-                                 sum(posisi = "PBB") as PBB,
+                                 sum(posisi = "PBP") as PBP,
                                  sum(posisi = "PBO") as PBO,
                                  sum(posisi = "Review Penyelia") as penyelia,
                                  sum(posisi = "Proses Input Data") as staff,
@@ -324,8 +324,8 @@ class DashboardController extends Controller
 
             $pdf = PDF::loadView('modal.DataNominatif', $param);
             // Return hasil PDF untuk diunduh atau ditampilkan
-
-            if ($request->tAwal != null) {
+            if ($type != "kesuluruhan") {
+                // return "Tanggal";
                 if ($pilCabang == 'semua') {
                     return $pdf->download('Kategori berdasarkan tanggal ' . $request->tAwal . ' sampai dengan ' . $request->tAkhir . ' Semua Cabang' . '.pdf');
                 } else {
@@ -333,15 +333,16 @@ class DashboardController extends Controller
                     return $pdf->download('Kategori berdasarkan tanggal ' . $request->tAwal . ' sampai dengan ' . $request->tAkhir . ' cabang ' . $name_cabang->cabang . '.pdf');
                 }
             } else {
+                // return "Keseluruhan";
                 if ($pilCabang == 'semua') {
                     return $pdf->download('Kategori keseluruhan Semua Cabang' . '.pdf');
                 } else {
                     $name_cabang = cabang::select('cabang')->where('id', $pilCabang)->first();
                     return $pdf->download('Kategori keseluruhan cabang ' . $name_cabang->cabang . '.pdf');
                 }
-            }
+            }           
         } else {
-            if ($request->tAwal != null) {
+            if ($type != "kesuluruhan") {
                 if ($pilCabang == 'semua') {
                     return Excel::download(new DataNominatif, 'Kategori berdasarkan tanggal ' . $request->tAwal . ' sampai dengan ' . $request->tAkhir . ' Semua Cabang' . '.xlsx');
                 } else {

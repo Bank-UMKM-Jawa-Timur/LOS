@@ -2,7 +2,11 @@
 <html>
 
 <head>
-    <title>Laporan PDF</title>
+    <title>
+        {{-- @if (request()->k_tanggal == "Keseluruhan")
+            Laporan Data Pengajuan Cabang {{ request()->get('cabang') }}, Keseluruhan
+        @endif --}}
+    </title>
     <style>
         table {
             border-collapse: collapse;
@@ -38,7 +42,21 @@
 
         <thead>
             <tr>
-                <th colspan="10">Data Pengajuan, Tanggal: {{ date($tAwal) }} sampai {{ date($tAkhir) }}</th>
+                <th colspan="10">
+                    @if (request()->k_tanggal != "kesuluruhan")
+                        @if (Request()->cabang == "semua")
+                            Data Pengajuan, Tanggal: {{ date($tAwal) }} sampai {{ date($tAkhir) }} Semua Cabang
+                            @else
+                            Data Pengajuan, Tanggal: {{ date($tAwal) }} sampai {{ date($tAkhir) }} Cabang {{ \App\Models\cabang::select('cabang')->where('id', Request()->cabang)->first()->cabang }}
+                        @endif
+                    @else
+                        @if (Request()->cabang == "semua")
+                            Kategori keseluruhan Semua Cabang
+                        @else
+                            Kategori keseluruhan Cabang {{ \App\Models\cabang::select('cabang')->where('id', Request()->cabang)->first()->cabang }}
+                        @endif
+                    @endif
+                </th>
             </tr>
             <tr>
                 <th>Kode</th>
@@ -58,7 +76,7 @@
                 $disetujui = 0;
                 $ditolak = 0;
                 $pincab = 0;
-                $pbb = 0;
+                $pbp = 0;
                 $pbo = 0;
                 $penyelia = 0;
                 $staff = 0;
@@ -71,7 +89,7 @@
                     <td>{{ $data[$i]['disetujui'] }}</td>
                     <td>{{ $data[$i]['ditolak'] }}</td>
                     <td>{{ $data[$i]['pincab'] }}</td>
-                    <td>{{ $data[$i]['PBB'] }}</td>
+                    <td>{{ $data[$i]['PBP'] }}</td>
                     <td>{{ $data[$i]['PBO'] }}</td>
                     <td>{{ $data[$i]['penyelia'] }}</td>
                     <td>{{ $data[$i]['staff'] }}</td>
@@ -82,7 +100,7 @@
                     $disetujui += $data[$i]['disetujui'];
                     $ditolak += $data[$i]['ditolak'];
                     $pincab += $data[$i]['pincab'];
-                    $pbb += $data[$i]['PBB'];
+                    $pbp += $data[$i]['PBP'];
                     $pbo += $data[$i]['PBO'];
                     $penyelia += $data[$i]['penyelia'];
                     $staff += $data[$i]['staff'];
@@ -96,7 +114,7 @@
                     <td>{{ $row->disetujui }}</td>
                     <td>{{ $row->ditolak }}</td>
                     <td>{{ $row->pincab }}</td>
-                    <td>{{ $row->PBB }}</td>
+                    <td>{{ $row->PBP }}</td>
                     <td>{{ $row->PBO }}</td>
                     <td>{{ $row->penyelia }}</td>
                     <td>{{ $row->staff }}</td>
@@ -110,7 +128,7 @@
                 <td style="font-weight:bold ;">{{ $disetujui }}</td>
                 <td style="font-weight:bold ;">{{ $ditolak }}</td>
                 <td style="font-weight:bold ;">{{ $pincab }}</td>
-                <td style="font-weight:bold ;">{{ $pbb }}</td>
+                <td style="font-weight:bold ;">{{ $pbp }}</td>
                 <td style="font-weight:bold ;">{{ $pbo }}</td>
                 <td style="font-weight:bold ;">{{ $penyelia }}</td>
                 <td style="font-weight:bold ;">{{ $staff }}</td>
@@ -167,7 +185,7 @@
                     <td>{{ $row->disetujui }}</td>
                     <td>{{ $row->proses }}</td>
                     <td>{{ $row->pincab }}</td>
-                    <td>{{ $row->PBB }}</td>
+                    <td>{{ $row->PBP }}</td>
                     <td>{{ $row->PBO }}</td>
                     <td>{{ $row->penyelia }}</td>
                     <td>{{ $row->staff }}</td>
