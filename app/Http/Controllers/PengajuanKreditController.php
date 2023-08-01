@@ -51,7 +51,8 @@ class PengajuanKreditController extends Controller
         ];
     }
 
-    public function fixScore() {
+    public function fixScore()
+    {
         $pengajuan = DB::table('pengajuan')->where('tanggal', '>', '2023-07-20')->get();
         foreach ($pengajuan as $key => $value) {
             $jawaban = DB::table('jawaban')->where('id_pengajuan', $value->id)->get();
@@ -99,7 +100,7 @@ class PengajuanKreditController extends Controller
             $avgPenyelia = round(($sumPenyelia / $countPenyelia), 2);
             $avgPBO = round(($sumPBO / $countPBO), 2);
             $avgPBP = round(($sumPBP / $countPBP), 2);
-            
+
             $avgs = [
                 'avg_sistem' => $avg,
                 'avg_penyelia' => $avgPenyelia,
@@ -196,11 +197,9 @@ class PengajuanKreditController extends Controller
                         return $responseBody['data']['nama'];
                     else
                         return 'undifined';
-                }
-                else
+                } else
                     return 'undifined';
-            }
-            else
+            } else
                 return 'undifined';
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
             return 'undifined';
@@ -228,7 +227,7 @@ class PengajuanKreditController extends Controller
         curl_close($curl);
         if ($response != null) {
             $json = json_decode($response);
-    
+
             if (isset($json->data))
                 return $json->data->nama_karyawan;
         }
@@ -571,7 +570,7 @@ class PengajuanKreditController extends Controller
             return view('pengajuan-kredit.komentar-pincab-pengajuan', $param);
         } else {
             $id_cabang = Auth::user()->id_cabang;
-            $param['data_pengajuan'] = PengajuanModel::select(
+            $dataPengajuan = PengajuanModel::select(
                 'pengajuan.id',
                 'pengajuan.tanggal',
                 'pengajuan.posisi',
@@ -619,9 +618,15 @@ class PengajuanKreditController extends Controller
                     return $query->whereRaw('FLOOR(pengajuan.average_by_sistem) = ?', $score)
                         ->orWhereRaw('FLOOR(pengajuan.average_by_penyelia) = ?', $score);
                 })
-                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
-                ->paginate(5)
-                ->withQueryString();
+                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id');
+
+            if ($request->tAwal && $request->tAkhir)
+                $dataPengajuan->whereBetween('pengajuan.tanggal', [$request->tAwal, $request->tAkhir]);
+
+            if ($request->cbg)
+                $dataPengajuan->where('pengajuan.id_cabang', $request->cbg);
+
+            $param['data_pengajuan'] = $dataPengajuan->paginate(5)->withQueryString();
 
             return view('pengajuan-kredit.komentar-pincab-pengajuan', $param);
         }
@@ -1299,7 +1304,7 @@ class PengajuanKreditController extends Controller
                         }
                     }
                 }
-                
+
                 $tempFile->delete();
             }
 
@@ -1796,8 +1801,7 @@ class PengajuanKreditController extends Controller
                                 $skor = array();
                                 if ($request->skor_penyelia_text[$key] == 'null') {
                                     $skor[$key] = null;
-                                } 
-                                else {
+                                } else {
                                     $skor[$key] = $request->skor_penyelia_text[$key];
                                 }
                                 array_push($finalArray_text, array(
