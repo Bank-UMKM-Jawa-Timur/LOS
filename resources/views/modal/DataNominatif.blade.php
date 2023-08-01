@@ -2,7 +2,11 @@
 <html>
 
 <head>
-    <title>Laporan PDF</title>
+    <title>
+        {{-- @if (request()->k_tanggal == "Keseluruhan")
+            Laporan Data Pengajuan Cabang {{ request()->get('cabang') }}, Keseluruhan
+        @endif --}}
+    </title>
     <style>
         table {
             border-collapse: collapse;
@@ -38,7 +42,21 @@
 
         <thead>
             <tr>
-                <th colspan="10">Data Pengajuan, Tanggal: {{ date($tAwal) }} sampai {{ date($tAkhir) }}</th>
+                <th colspan="10">
+                    @if (request()->k_tanggal != "kesuluruhan")
+                        @if (Request()->cabang == "semua")
+                            Data Pengajuan, Tanggal: {{ date($tAwal) }} sampai {{ date($tAkhir) }} Semua Cabang
+                            @else
+                            Data Pengajuan, Tanggal: {{ date($tAwal) }} sampai {{ date($tAkhir) }} Cabang {{ \App\Models\cabang::select('cabang')->where('id', Request()->cabang)->first()->cabang }}
+                        @endif
+                    @else
+                        @if (Request()->cabang == "semua")
+                            Kategori keseluruhan Semua Cabang
+                        @else
+                            Kategori keseluruhan Cabang {{ \App\Models\cabang::select('cabang')->where('id', Request()->cabang)->first()->cabang }}
+                        @endif
+                    @endif
+                </th>
             </tr>
             <tr>
                 <th>Kode</th>

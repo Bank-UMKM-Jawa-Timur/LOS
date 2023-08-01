@@ -15,7 +15,7 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <label for="">Kategori</label>
-                                <select class="custom-select" name="k_tanggal" required>
+                                <select class="custom-select" name="k_tanggal" id="selectCategory" required>
                                     <option value="kesuluruhan">Keseluruhan</option>
                                     <option value="kustom">Tanggal</option>
                                 </select>
@@ -88,7 +88,14 @@
             } else {
                 $('#tanggalAwalDiv').hide();
                 $('#tanggalAkhirDiv').hide();
+                $('#tAwals').droppable();
+                $('#tAkhirs').droppable();
             }
+        });
+
+        $('#selectCategory').on("change", function(){
+            $('#tAwals').val(null)
+            $('#tAkhirs').val(null)
         });
 
         $("#tAwals").on("change", function() {
