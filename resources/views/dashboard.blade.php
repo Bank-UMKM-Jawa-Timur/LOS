@@ -204,14 +204,14 @@
                 </div>
             </div>
         @elseif (auth()->user()->role == 'Penyelia Kredit')
-        <div class="col-md-12 mb-4">
-            <div class=" d-flex justify-content-end">
-                <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
-                    data-target="#exampleModal">
-                    <i class="fa fa-filter"></i> Filter
-                </button>
+            <div class="col-md-12 mb-4">
+                <div class=" d-flex justify-content-end">
+                    <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
+                        data-target="#exampleModal">
+                        <i class="fa fa-filter"></i> Filter
+                    </button>
+                </div>
             </div>
-        </div>
             <div class="col-md-3 mb-4">
                 <div class="card bg-rgb-primary border border-primary">
                     <div class="card-body py-4">
@@ -269,14 +269,14 @@
                 </div>
             </div>
         @elseif (auth()->user()->role == 'PBO')
-        <div class="col-md-12 mb-4">
-            <div class=" d-flex justify-content-end">
-                <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
-                    data-target="#exampleModal">
-                    <i class="fa fa-filter"></i> Filter
-                </button>
+            <div class="col-md-12 mb-4">
+                <div class=" d-flex justify-content-end">
+                    <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
+                        data-target="#exampleModal">
+                        <i class="fa fa-filter"></i> Filter
+                    </button>
+                </div>
             </div>
-        </div>
             <div class="col-md-3 mb-4">
                 <div class="card bg-rgb-primary border border-primary">
                     <div class="card-body py-4">
@@ -321,14 +321,14 @@
                 </div>
             </div>
         @elseif (auth()->user()->role == 'PBP')
-        <div class="col-md-12 mb-4">
-            <div class=" d-flex justify-content-end">
-                <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
-                    data-target="#exampleModal">
-                    <i class="fa fa-filter"></i> Filter
-                </button>
+            <div class="col-md-12 mb-4">
+                <div class=" d-flex justify-content-end">
+                    <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
+                        data-target="#exampleModal">
+                        <i class="fa fa-filter"></i> Filter
+                    </button>
+                </div>
             </div>
-        </div>
             <div class="col-md-3 mb-4">
                 <div class="card bg-rgb-primary border border-primary">
                     <div class="card-body py-4">
@@ -383,14 +383,14 @@
                 </div>
             </div>
         @elseif (auth()->user()->role == 'Staf Analis Kredit')
-        <div class="col-md-12 mb-4">
-            <div class=" d-flex justify-content-end">
-                <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
-                    data-target="#exampleModal">
-                    <i class="fa fa-filter"></i> Filter
-                </button>
+            <div class="col-md-12 mb-4">
+                <div class=" d-flex justify-content-end">
+                    <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
+                        data-target="#exampleModal">
+                        <i class="fa fa-filter"></i> Filter
+                    </button>
+                </div>
             </div>
-        </div>
             <div class="col-md-3 mb-4">
                 <div class="card bg-rgb-primary border border-primary">
                     <div class="card-body py-4">
@@ -448,13 +448,49 @@
                 </div>
             </div>
         @elseif(auth()->user()->role == 'Pincab')
+
+            @php
+                $total_PBP = \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                })
+                ->where('id_cabang', auth()->user()->id_cabang)
+                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                ->whereIn('pengajuan.posisi', ['PBP'])
+                ->count();
+                $total_PBO = \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                })
+                ->where('id_cabang', auth()->user()->id_cabang)
+                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                ->whereIn('pengajuan.posisi', ['PBO'])
+                ->count();
+                $total_Penyelia = \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                })
+                ->where('id_cabang', auth()->user()->id_cabang)
+                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                ->whereIn('pengajuan.posisi', ['Review Penyelia'])
+                ->count();
+                $total_staf = \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                })
+                ->where('id_cabang', auth()->user()->id_cabang)
+                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                ->whereIn('pengajuan.posisi', ['Proses Input Data'])
+                ->count();
+            @endphp
+
             <div class="col-md-12 mb-4">
                 Total Pengajuan{{-- Cabang {{$kode_cabang}} --}} :
                 {{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
                     return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
-                })->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
-                                ->where('pengajuan.id_cabang', Auth::user()->id_cabang)
-                                ->count() }}
+                })
+                ->where('pengajuan.id_pincab', Auth::user()->id)
+                ->where('id_cabang', auth()->user()->id_cabang)
+                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                // ->whereIn('pengajuan.posisi', ['Pincab', 'Selesai', 'Ditolak'])
+                ->whereIn('pengajuan.posisi', ['Selesai','Ditolak','Pincab','PBP'])
+                ->count()+$total_PBP+$total_PBO+$total_Penyelia+$total_staf }}
                 <div class=" d-flex justify-content-end">
                     <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
                         data-target="#data_nominatif" id="#exportExcel">
@@ -478,7 +514,12 @@
                             <div class="col-md-4 pr-0 font-wight-bold">
                                 <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
                                     return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
-                                })->where('id_cabang', auth()->user()->id_cabang)->where('posisi', 'Selesai')->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->whereIn('pengajuan.posisi', ['Pincab', 'Selesai', 'Ditolak'])->count() }}
+                                })
+                                ->where('id_cabang', auth()->user()->id_cabang)
+                                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                                // ->whereIn('pengajuan.posisi', ['Pincab', 'Selesai', 'Ditolak'])
+                                ->where('pengajuan.posisi', 'Selesai')
+                                ->count() }}
                                 </h1>
                             </div>
                         </div>
@@ -500,7 +541,13 @@
                             <div class="col-md-4 pr-0 font-wight-bold">
                                 <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
                                     return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
-                                })->where('id_cabang', auth()->user()->id_cabang)->where('posisi', 'Ditolak')->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->whereIn('pengajuan.posisi', ['Pincab', 'Selesai', 'Ditolak'])->count() }}
+                                })->where('pengajuan.id_pincab', Auth::user()->id)
+                                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                                ->where('pengajuan.id_cabang', Auth::user()->id_cabang)
+                                // ->whereIn('pengajuan.posisi', ['Pincab', 'Selesai', 'Ditolak'])
+                                ->where('pengajuan.posisi', 'Ditolak')
+                                ->count()
+                                }}
                                 </h1>
                             </div>
                         </div>
@@ -522,7 +569,11 @@
                             <div class="col-md-4 pr-0 font-wight-bold">
                                 <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
                                     return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
-                                })->where('id_cabang', auth()->user()->id_cabang)->where('posisi', 'Pincab')->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->whereIn('pengajuan.posisi', ['Pincab', 'Selesai', 'Ditolak'])->count() }}
+                                })->where('id_cabang', auth()->user()->id_cabang)
+                                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                                // ->whereIn('pengajuan.posisi', ['Pincab', 'Selesai', 'Ditolak'])
+                                ->where('pengajuan.posisi', 'Pincab')
+                                ->count() }}
                                 </h1>
                             </div>
                         </div>
@@ -544,8 +595,8 @@
                             <div class="col-md-4 pr-0 font-wight-bold">
                                 <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
                                     return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
-                                })->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
-                                ->where('pengajuan.id_cabang', Auth::user()->id_cabang)
+                                })->where('id_cabang', auth()->user()->id_cabang)
+                                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
                                 ->where('pengajuan.posisi', 'PBP')
                                 ->count() }}
                                 </h1>
@@ -569,8 +620,8 @@
                             <div class="col-md-4 pr-0 font-wight-bold">
                                 <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
                                     return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
-                                })->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
-                                ->where('pengajuan.id_cabang', Auth::user()->id_cabang)
+                                })->where('id_cabang', auth()->user()->id_cabang)
+                                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
                                 ->where('pengajuan.posisi', 'PBO')
                                 ->count() }}
                                 </h1>
@@ -594,8 +645,8 @@
                             <div class="col-md-4 pr-0 font-wight-bold">
                                 <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
                                     return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
-                                })->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
-                                ->where('pengajuan.id_cabang', Auth::user()->id_cabang)
+                                })->where('id_cabang', auth()->user()->id_cabang)
+                                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
                                 ->where('pengajuan.posisi', 'Review Penyelia')
                                 ->count() }}
                                 </h1>
