@@ -131,7 +131,7 @@
             <th></th>
         </tr>
         <tr>
-            <th>Kode</th>
+            <th style="background-color: rgb(17, 32, 66);width: 300px; border:1px solid #000;">Kode Cabang</th>
             <th style="background-color: rgb(17, 32, 66);width: 300px; border:1px solid #000;">Cabang</th>
             <th style="background-color: rgb(17, 32, 66);border:1px solid #000;">Disetujui</th>
             <th style="background-color: rgb(17, 32, 66);border:1px solid #000;">Proses</th>
@@ -140,24 +140,28 @@
     </thead>
     <tbody>
         @php
-            $disetujui = 0;
-            $ditolak = 0;
-            $total = 0;
-        @endphp
-        @for ($i = 0; $i < count($dataC); $i++)
-            <tr>
-                <td style="border:1px solid #000;">{{ $dataC[$i]['kodeC'] }}</td>
-                <td style="border:1px solid #000;">{{ $dataC[$i]['cabang'] }}</td>
-                <td style="border:1px solid #000;">{{ $dataC[$i]['disetujui'] }}</td>
-                <td style="border:1px solid #000;">{{ $dataC[$i]['staff'] }}</td>
-                <td style="border:1px solid #000;">{{ $dataC[$i]['total'] }}</td>
-            </tr>
 
-            @php
-                $disetujui += $dataC[$i]['disetujui'];
-                $staff += $dataC[$i]['staff'];
-                $total += $dataC[$i]['total'];
+                $totalC = 0;
+                $disetujui = 0;
+                $proses = 0;
+
             @endphp
+        @for ($i = 0; $i < count($dataC); $i++)
+
+        @if ($dataC[$i]['kodeC'] != 000)
+        <tr>
+            <td style="border:1px solid #000;">{{ $dataC[$i]['kodeC'] }}</td>
+            <td style="border:1px solid #000;">{{ $dataC[$i]['cabang'] }}</td>
+            <td style="border:1px solid #000;">{{ $dataC[$i]['disetujui'] }}</td>
+            <td style="border:1px solid #000;">{{ $dataC[$i]['proses'] }}</td>
+            <td style="border:1px solid #000;">{{$dataC[$i]['disetujui']+$dataC[$i]['proses']   }}</td>
+            @php
+                    $totalC += $dataC[$i]['disetujui']+$dataC[$i]['proses']  ;
+                    $disetujui +=  $dataC[$i]['disetujui'];
+                    $proses +=  $dataC[$i]['proses'];
+            @endphp
+        </tr>
+        @endif
         @endfor
         {{-- @foreach ($data as $row)
                 <tr>
@@ -178,8 +182,8 @@
         <tr>
             <td colspan="2" align="center" style="font-weight: bold; border:1px solid #000;">Grand Total</td>
             <td style="font-weight: bold; border:1px solid #000;">{{ $disetujui }}</td>
-            <td style="font-weight: bold; border:1px solid #000;">{{ $staff }}</td>
-            <td style="font-weight: bold; border:1px solid #000;">{{ $total }}</td>
+            <td style="font-weight: bold; border:1px solid #000;">{{ $proses }}</td>
+            <td style="font-weight: bold; border:1px solid #000;">{{ $totalC }}</td>
         </tr>
     </tfoot>
 </table>
