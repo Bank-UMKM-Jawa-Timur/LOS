@@ -84,6 +84,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('pengajuan-kredit/continue-draft', [PengajuanKreditController::class, 'continueDraft'])->name('pengajuan-kredit.continue');
     Route::get('lanjutkan-draft', [PengajuanKreditController::class, 'showContinueDraft'])->name('pengajuan-kredit.continue-draft');
     Route::get('user-json/{role}', [PengajuanKreditController::class, 'getUserJson'])->name('get_user_json');
+    Route::post('post-skema-kredit/{tempId}', [PengajuanKreditController::class, 'saveSkemaKreditDraft'])->name('save-skema-kredit-draft');
 
     Route::resource('kabupaten', KabupatenController::class);
     Route::resource('kecamatan', KecamatanController::class);

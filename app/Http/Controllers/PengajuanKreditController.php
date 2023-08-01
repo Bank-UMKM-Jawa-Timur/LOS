@@ -3655,4 +3655,22 @@ class PengajuanKreditController extends Controller
             'tipe' => $data
         ]);
     }
+
+    public function saveSkemaKreditDraft(Request $request, $tempId) {
+        try{
+            DB::beginTransaction();
+
+            DB::table('temporary_calon_nasabah')
+                ->where('id', $tempId)
+                ->update([
+                    'skema_kredit' => $request->skema
+                ]);
+            DB::commit();
+            return $this->continueDraft($tempId);
+        } catch(Exception $e){
+            return redirect()->back();
+        } catch(QueryException $e){
+            return redirect()->back();
+        }
+    }
 }
