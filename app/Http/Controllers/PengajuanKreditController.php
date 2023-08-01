@@ -2311,21 +2311,21 @@ class PengajuanKreditController extends Controller
                     foreach ($request->get('id_option') as $key => $value) {
                         JawabanPengajuanModel::where('id_jawaban', $value)->where('id_pengajuan', $request->get('id_pengajuan'))
                             ->update([
-                                'skor_penyelia' => $request->get('skor_penyelia')[$key] ? $request->get('skor_penyelia')[$key] : 1
+                                'skor_penyelia' => $request->get('skor_penyelia')[$key] ? $request->get('skor_penyelia')[$key] : null
                             ]);
                     }
                 } else if ($role == 'PBO') {
                     foreach ($request->get('id_option') as $key => $value) {
                         JawabanPengajuanModel::where('id_jawaban', $value)->where('id_pengajuan', $request->get('id_pengajuan'))
                             ->update([
-                                'skor_pbo' => $request->get('skor_penyelia')[$key] ? $request->get('skor_penyelia')[$key] : 1
+                                'skor_pbo' => $request->get('skor_penyelia')[$key] ? $request->get('skor_penyelia')[$key] : null
                             ]);
                     }
                 } else {
                     foreach ($request->get('id_option') as $key => $value) {
                         JawabanPengajuanModel::where('id_jawaban', $value)->where('id_pengajuan', $request->get('id_pengajuan'))
                             ->update([
-                                'skor_pbp' => $request->get('skor_penyelia')[$key] ? $request->get('skor_penyelia')[$key] : 1
+                                'skor_pbp' => $request->get('skor_penyelia')[$key] ? $request->get('skor_penyelia')[$key] : null
                             ]);
                     }
                 }
