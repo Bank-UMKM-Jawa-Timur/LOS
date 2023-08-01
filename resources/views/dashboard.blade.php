@@ -448,15 +448,49 @@
                 </div>
             </div>
         @elseif(auth()->user()->role == 'Pincab')
+
+            @php
+                $total_PBP = \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                })
+                ->where('id_cabang', auth()->user()->id_cabang)
+                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                ->whereIn('pengajuan.posisi', ['PBP'])
+                ->count();
+                $total_PBO = \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                })
+                ->where('id_cabang', auth()->user()->id_cabang)
+                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                ->whereIn('pengajuan.posisi', ['PBO'])
+                ->count();
+                $total_Penyelia = \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                })
+                ->where('id_cabang', auth()->user()->id_cabang)
+                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                ->whereIn('pengajuan.posisi', ['Review Penyelia'])
+                ->count();
+                $total_staf = \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
+                    return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
+                })
+                ->where('id_cabang', auth()->user()->id_cabang)
+                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                ->whereIn('pengajuan.posisi', ['Proses Input Data'])
+                ->count();
+            @endphp
+
             <div class="col-md-12 mb-4">
                 Total Pengajuan{{-- Cabang {{$kode_cabang}} --}} :
                 {{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
                     return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
                 })
-                    ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
-                    ->where('pengajuan.id_cabang', Auth::user()->id_cabang)
-                    // ->whereIn('pengajuan.posisi', ['Pincab', 'Selesai', 'Ditolak'])
-                ->count() }}
+                ->where('pengajuan.id_pincab', Auth::user()->id)
+                ->where('id_cabang', auth()->user()->id_cabang)
+                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+                // ->whereIn('pengajuan.posisi', ['Pincab', 'Selesai', 'Ditolak'])
+                ->whereIn('pengajuan.posisi', ['Selesai','Ditolak','Pincab','PBP'])
+                ->count()+$total_PBP+$total_PBO+$total_Penyelia+$total_staf }}
                 <div class=" d-flex justify-content-end">
                     <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
                         data-target="#data_nominatif" id="#exportExcel">
