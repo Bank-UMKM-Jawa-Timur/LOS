@@ -324,8 +324,8 @@ class DashboardController extends Controller
 
             $pdf = PDF::loadView('modal.DataNominatif', $param);
             // Return hasil PDF untuk diunduh atau ditampilkan
-
-            if ($request->tAwal != null) {
+            if ($type != "kesuluruhan") {
+                // return "Tanggal";
                 if ($pilCabang == 'semua') {
                     return $pdf->download('Kategori berdasarkan tanggal ' . $request->tAwal . ' sampai dengan ' . $request->tAkhir . ' Semua Cabang' . '.pdf');
                 } else {
@@ -333,15 +333,16 @@ class DashboardController extends Controller
                     return $pdf->download('Kategori berdasarkan tanggal ' . $request->tAwal . ' sampai dengan ' . $request->tAkhir . ' cabang ' . $name_cabang->cabang . '.pdf');
                 }
             } else {
+                // return "Keseluruhan";
                 if ($pilCabang == 'semua') {
                     return $pdf->download('Kategori keseluruhan Semua Cabang' . '.pdf');
                 } else {
                     $name_cabang = cabang::select('cabang')->where('id', $pilCabang)->first();
                     return $pdf->download('Kategori keseluruhan cabang ' . $name_cabang->cabang . '.pdf');
                 }
-            }
+            }           
         } else {
-            if ($request->tAwal != null) {
+            if ($type != "kesuluruhan") {
                 if ($pilCabang == 'semua') {
                     return Excel::download(new DataNominatif, 'Kategori berdasarkan tanggal ' . $request->tAwal . ' sampai dengan ' . $request->tAkhir . ' Semua Cabang' . '.xlsx');
                 } else {
