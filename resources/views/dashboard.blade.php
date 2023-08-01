@@ -452,7 +452,7 @@
                 Total Pengajuan{{-- Cabang {{$kode_cabang}} --}} :
                 {{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
                     return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
-                })->where('pengajuan.id_pincab', Auth::user()->id)
+                })
                     ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
                     ->where('pengajuan.id_cabang', Auth::user()->id_cabang)
                     // ->whereIn('pengajuan.posisi', ['Pincab', 'Selesai', 'Ditolak'])
