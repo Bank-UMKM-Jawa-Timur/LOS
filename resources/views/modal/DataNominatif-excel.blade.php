@@ -50,7 +50,7 @@
             $disetujui = 0;
             $ditolak = 0;
             $pincab = 0;
-            $pbb = 0;
+            $pbp = 0;
             $pbo = 0;
             $penyelia = 0;
             $staff = 0;
@@ -63,7 +63,7 @@
                 <td style="border:1px solid #000;">{{ $data[$i]['disetujui'] }}</td>
                 <td style="border:1px solid #000;">{{ $data[$i]['ditolak'] }}</td>
                 <td style="border:1px solid #000;">{{ $data[$i]['pincab'] }}</td>
-                <td style="border:1px solid #000;">{{ $data[$i]['PBB'] }}</td>
+                <td style="border:1px solid #000;">{{ $data[$i]['PBP'] }}</td>
                 <td style="border:1px solid #000;">{{ $data[$i]['PBO'] }}</td>
                 <td style="border:1px solid #000;">{{ $data[$i]['penyelia'] }}</td>
                 <td style="border:1px solid #000;">{{ $data[$i]['staff'] }}</td>
@@ -74,7 +74,7 @@
                 $disetujui += $data[$i]['disetujui'];
                 $ditolak += $data[$i]['ditolak'];
                 $pincab += $data[$i]['pincab'];
-                $pbb += $data[$i]['PBB'];
+                $pbp += $data[$i]['PBP'];
                 $pbo += $data[$i]['PBO'];
                 $penyelia += $data[$i]['penyelia'];
                 $staff += $data[$i]['staff'];
@@ -88,7 +88,7 @@
                     <td>{{ $row->disetujui }}</td>
                     <td>{{ $row->ditolak }}</td>
                     <td>{{ $row->pincab }}</td>
-                    <td>{{ $row->PBB }}</td>
+                    <td>{{ $row->PBP }}</td>
                     <td>{{ $row->PBO }}</td>
                     <td>{{ $row->penyelia }}</td>
                     <td>{{ $row->staff }}</td>
@@ -102,7 +102,7 @@
             <td style="font-weight: bold; border:1px solid #000;">{{ $disetujui }}</td>
             <td style="font-weight: bold; border:1px solid #000;">{{ $ditolak }}</td>
             <td style="font-weight: bold; border:1px solid #000;">{{ $pincab }}</td>
-            <td style="font-weight: bold; border:1px solid #000;">{{ $pbb }}</td>
+            <td style="font-weight: bold; border:1px solid #000;">{{ $pbp }}</td>
             <td style="font-weight: bold; border:1px solid #000;">{{ $pbo }}</td>
             <td style="font-weight: bold; border:1px solid #000;">{{ $penyelia }}</td>
             <td style="font-weight: bold; border:1px solid #000;">{{ $staff }}</td>
@@ -166,7 +166,7 @@
                     <td>{{ $row->disetujui }}</td>
                     <td>{{ $row->proses }}</td>
                     <td>{{ $row->pincab }}</td>
-                    <td>{{ $row->PBB }}</td>
+                    <td>{{ $row->PBP }}</td>
                     <td>{{ $row->PBO }}</td>
                     <td>{{ $row->penyelia }}</td>
                     <td>{{ $row->staff }}</td>
