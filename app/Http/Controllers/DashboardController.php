@@ -279,20 +279,37 @@ class DashboardController extends Controller
                     ->selectRaw('kode_cabang as kodeC,
                                     cabang,
                                     sum(posisi = "selesai") as disetujui,
+                                    sum(posisi = "Ditolak") as ditolak,
+                                    sum(posisi = "pincab") as pincab,
+                                    sum(posisi = "PBP") as PBP,
+                                    sum(posisi = "PBO") as PBO,
+                                    sum(posisi = "Review Penyelia") as penyelia,
                                     sum(posisi = "Proses Input Data") as staff,
                                     count(*) as total')
                     ->join('cabang', 'pengajuan.id_cabang', '=', 'cabang.id')
                     ->where('cabang.id', $c->id)
+                    ->groupBy('id_cabang')
                     ->orderBy('KodeC')
                     ->get();
+                    $dataC->map(function ($item)  {
+                        $item->proces = $item->disetujui+ $item->pincab+ $item->PBP+ $item->PBO+ $item->penyelia+ $item->staff;
+
+                    return  $item;
+                    });
+
+
+                    // $setuju = $dataC->posisi == 'disetujui'-> count();
+
+                //     $proses = ($dataC[0]->posisi == 'selesai') + ($dataC[0]->posisi == 'pincab') + ($dataC[0]->posisi == 'PBP') + ($dataC[0]->posisi == 'PBO') + ($dataC[0]->posisi == 'Review Penyelia') + ($dataC[0]->posisi == 'Proses Input Data');
                 $c = [
-                    'kodeC' => $dataC[0]->kodeC,
-                    'cabang' => $dataC[0]->cabang,
-                    'disetujui' => $dataC[0]->disetujui | 0,
-                    'staff' => $dataC[0]->staff | 0,
-                    'total' => $dataC[0]->total | 0,
+                    'kodeC' => $c->kode_cabang,
+                    'cabang' => $c->cabang ,
+                    'disetujui' => $dataC[0]->disetujui ?? 0,
+                    'proses' => $dataC[0]->proces ?? 0,
+                    'total' => $dataC[0]->total ?? 0,
                 ];
-                // }
+                // // }
+                // dd($dataC[0]);
                 array_push($semua_cabang, $c);
             }
 
@@ -301,17 +318,30 @@ class DashboardController extends Controller
                 ->selectRaw('kode_cabang as kodeC,
                                     cabang,
                                     sum(posisi = "selesai") as disetujui,
+                                    sum(posisi = "Ditolak") as ditolak,
+                                    sum(posisi = "pincab") as pincab,
+                                    sum(posisi = "PBP") as PBP,
+                                    sum(posisi = "PBO") as PBO,
+                                    sum(posisi = "Review Penyelia") as penyelia,
                                     sum(posisi = "Proses Input Data") as staff,
                                     count(*) as total')
                 ->join('cabang', 'pengajuan.id_cabang', '=', 'cabang.id')
                 ->where('cabang.id', $pilCabang)
+                ->groupBy('id_cabang')
                 ->orderBy('KodeC')
                 ->get();
-
-            $jarr2 = $dataC->map(function ($d) {
-                return get_object_vars($d);
+            $dataC->map(function ($item) {
+                $item->proces = $item->disetujui + $item->pincab + $item->PBP + $item->PBO + $item->penyelia + $item->staff;
+                return  $item;
             });
 
+
+            $jarr2 = $dataC->map(function ($d) {
+                $d->proses
+                = $d->disetujui + $d->pincab + $d->PBP + $d->PBO + $d->penyelia + $d->staff;
+
+                return get_object_vars($d);
+            });
 
 
 

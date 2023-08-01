@@ -84,29 +84,36 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('pengajuan-kredit/continue-draft', [PengajuanKreditController::class, 'continueDraft'])->name('pengajuan-kredit.continue');
     Route::get('lanjutkan-draft', [PengajuanKreditController::class, 'showContinueDraft'])->name('pengajuan-kredit.continue-draft');
     Route::get('user-json/{role}', [PengajuanKreditController::class, 'getUserJson'])->name('get_user_json');
+    Route::post('post-skema-kredit/{tempId}', [PengajuanKreditController::class, 'saveSkemaKreditDraft'])->name('save-skema-kredit-draft');
 
-    Route::resource('kabupaten', KabupatenController::class);
-    Route::resource('kecamatan', KecamatanController::class);
-    Route::resource('desa', DesaController::class);
-    Route::resource('cabang', CabangController::class);
-    Route::resource('user', UserController::class);
-    Route::resource('merk', MerkController::class);
-    Route::resource('tipe', TipeController::class);
-    Route::get('change-password', [UserController::class, 'changePassword'])->name('change_password');
-    Route::put('change-password/{id}', [UserController::class, 'updatePassword'])->name('update_password');
-    Route::post('reset-password/{id}', [UserController::class, 'resetPassword'])->name('reset-password');
     // master item
     Route::get('/master-item/addEditItem', [MasterItemController::class, 'addEditItem']);
     Route::get('data-item-satu', [MasterItemController::class, 'dataItemSatu'])->name('getItemSatu');
     Route::get('data-item-tiga', [MasterItemController::class, 'dataItemtiga'])->name('getItemTiga');
     Route::get('data-item-empat', [MasterItemController::class, 'dataItemEmpat'])->name('getItemEmpat');
-    Route::resource('master-item', MasterItemController::class);
+    
+    Route::group(['middleware' => 'Admin'], function () {
+        Route::resource('kabupaten', KabupatenController::class);
+        Route::resource('kecamatan', KecamatanController::class);
+        Route::resource('desa', DesaController::class);
+        Route::resource('cabang', CabangController::class);
+        Route::resource('user', UserController::class);
+        Route::resource('merk', MerkController::class);
+        Route::resource('tipe', TipeController::class);
+        Route::resource('master-item', MasterItemController::class);
+        Route::get('/reset-sessions', [UserController::class, 'indexSession'])->name('index-session');
+        Route::post('/reset-session/{id}', [UserController::class, 'resetSession'])->name('reset-session');
+    });
+
+
+    Route::get('change-password', [UserController::class, 'changePassword'])->name('change_password');
+    Route::put('change-password/{id}', [UserController::class, 'updatePassword'])->name('update_password');
+    Route::post('reset-password/{id}', [UserController::class, 'resetPassword'])->name('reset-password');
+
     // Cetak Surat
     Route::get('cetak-surat/{id}', [CetakSuratController::class, 'cetak'])->name('cetak');
 
     // cetak Data Nominatif
-
-
     // Route::gety('cetak-surat', CetakSuratController::class);
 
     Route::get('/pengajuan-kredit/get-item-jaminan-by-kategori-jaminan-utama-edit', [PengajuanKreditController::class, 'getEditJaminanKategori'])->name('get-item-jaminan-by-kategori-jaminan-utama-edit');
@@ -124,9 +131,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/get-merk-kendaraan', [PengajuanKreditController::class, 'getMerkKendaraan'])->name('get-merk-kendaraan');
     Route::get('/get-tipe-kendaraan', [PengajuanKreditController::class, 'getTipeByMerk'])->name('get-tipe-kendaraan');
-
-    Route::get('/reset-sessions', [UserController::class, 'indexSession'])->name('index-session');
-    Route::post('/reset-session/{id}', [UserController::class, 'resetSession'])->name('reset-session');
 });
 
 require __DIR__ . '/auth.php';
