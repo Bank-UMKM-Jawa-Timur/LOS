@@ -30,14 +30,13 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request)
     {
-        $user = User::select('nip')
+        $user = User::select('nip', 'password')
                     ->where('email', $request->email)
                     ->first();
 
         if ($user) {
             if (isset($user->nip)) {
-                $pw = User::select('password')->where('nip',$user->nip)->first();
-                if(\Hash::check($request->password, $pw->password)) {
+                if(\Hash::check($request->password, $user->password)) {
                     $request->authenticate();
                     if(DB::table('sessions')->where('user_id', auth()->user()->id)->count() > 0){
                         Auth::guard('web')->logout();
