@@ -235,7 +235,7 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="/pengajuan-kredit?lanjuti=penyelia" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
+                        <a href="{{ route('pengajuan-kredit.index') }}?lanjuti=penyelia" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
                             Detail</a>
                     </div>
                 </div>
@@ -263,7 +263,7 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="/pengajuan-kredit?pss=Review Penyelia"
+                        <a href="{{ route('pengajuan-kredit.index') }}?pss=Review Penyelia"
                             class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
                     </div>
                 </div>
@@ -293,7 +293,7 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="/pengajuan-kredit?sts=PBP" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
+                        <a href="{{ route('pengajuan-kredit.index') }}?sts=PBP" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
                             Detail</a>
                     </div>
                 </div>
@@ -315,7 +315,7 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="/pengajuan-kredit?sts=PBO" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
+                        <a href="{{ route('pengajuan-kredit.index') }}?sts=PBO" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
                             Detail</a>
                     </div>
                 </div>
@@ -350,7 +350,7 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="/pengajuan-kredit?sts=Pincab" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
+                        <a href="{{ route('pengajuan-kredit.index') }}?sts=Pincab" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
                             Detail</a>
                     </div>
                 </div>
@@ -377,7 +377,7 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="/pengajuan-kredit?sts=PBP" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
+                        <a href="{{ route('pengajuan-kredit.index') }}?sts=PBP" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
                             Detail</a>
                     </div>
                 </div>
@@ -412,7 +412,7 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="/pengajuan-kredit?lanjuti=staf"
+                        <a href="{{ route('pengajuan-kredit.index') }}?lanjuti=staf"
                             class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
                             Detail</a>
                     </div>
@@ -441,7 +441,7 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="/pengajuan-kredit?pss=Proses Input Data"
+                        <a href="{{ route('pengajuan-kredit.index') }}?pss=Proses Input Data"
                             class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
                             Detail</a>
                     </div>
@@ -524,7 +524,7 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="/pengajuan-kredit?sts=Selesai"
+                        <a href="{{ route('pengajuan-kredit.index') }}?sts=Selesai"
                             class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
                     </div>
                 </div>
@@ -552,7 +552,7 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="/pengajuan-kredit?sts=Ditolak"
+                        <a href="{{ route('pengajuan-kredit.index') }}?sts=Ditolak"
                             class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
                     </div>
                 </div>
@@ -578,7 +578,7 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="/pengajuan-kredit?pss=Pincab" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
+                        <a href="{{ route('pengajuan-kredit.index') }}?pss=Pincab" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
                             Detail</a>
                     </div>
                 </div>
@@ -603,7 +603,7 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="/pengajuan-kredit?pss=PBP" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
+                        <a href="{{ route('pengajuan-kredit.index') }}?pss=PBP" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
                             Detail</a>
                     </div>
                 </div>
@@ -628,7 +628,7 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="/pengajuan-kredit?pss=PBO" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
+                        <a href="{{ route('pengajuan-kredit.index') }}?pss=PBO" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
                             Detail</a>
                     </div>
                 </div>
@@ -653,7 +653,7 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="/pengajuan-kredit?pss=Review+Penyelia"
+                        <a href="{{ route('pengajuan-kredit.index') }}?pss=Review+Penyelia"
                             class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
                     </div>
                 </div>
@@ -679,7 +679,7 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="/pengajuan-kredit?pss=Proses+Input+Data"
+                        <a href="{{ route('pengajuan-kredit.index') }}?pss=Proses+Input+Data"
                             class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
                     </div>
                 </div>
@@ -776,18 +776,18 @@
                         </div>
                         <hr>
                         @if (auth()->user()->role == 'Staf Analis Kredit')
-                            <a href="/pengajuan-kredit?pss=Proses+Input+Data"
+                            <a href="{{ route('pengajuan-kredit.index') }}?pss=Proses+Input+Data"
                                 class="btn btn-danger btn-sm b-radius-3 px-3">Lihat
                                 Detail</a>
                         @elseif (auth()->user()->role == 'Penyelia Kredit')
-                            <a href="/pengajuan-kredit?pss=Review+Penyelia"
+                            <a href="{{ route('pengajuan-kredit.index') }}?pss=Review+Penyelia"
                                 class="btn btn-danger btn-sm b-radius-3 px-3">Lihat
                                 Detail</a>
                         @elseif (auth()->user()->role == 'PBP')
-                            <a href="/pengajuan-kredit?pss=PBP" class="btn btn-danger btn-sm b-radius-3 px-3">Lihat
+                            <a href="{{ route('pengajuan-kredit.index') }}?pss=PBP" class="btn btn-danger btn-sm b-radius-3 px-3">Lihat
                                 Detail</a>
                         @elseif (auth()->user()->role == 'Pincab')
-                            <a href="/pengajuan-kredit?pss=Pincab" class="btn btn-danger btn-sm b-radius-3 px-3">Lihat
+                            <a href="{{ route('pengajuan-kredit.index') }}?pss=Pincab" class="btn btn-danger btn-sm b-radius-3 px-3">Lihat
                                 Detail</a>
                         @else
                             <a href="{{ route('pengajuan-kredit.index') }}"
