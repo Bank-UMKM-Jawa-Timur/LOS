@@ -26,7 +26,7 @@ class UserRequest extends FormRequest
         return [
             'nip' => 'sometimes|nullable|unique:users',
             'name' => 'required',
-            'email' => 'required',
+            'email' => 'required|unique:users',
             'role' => 'required',
             // 'id_cabang' => 'required',
         ];
@@ -36,6 +36,7 @@ class UserRequest extends FormRequest
     {
         return [
             'nip.unique' => 'NIP telah digunakan.',
+            'email.unique' => 'Email sudah di gunsakan',
             'name.required' => 'Name harus diisi.',
             'email.required' => 'Email harus diisi.',
             'role.required' => 'Role harus diisi.',

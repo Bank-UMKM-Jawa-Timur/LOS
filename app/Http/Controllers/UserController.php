@@ -10,6 +10,8 @@ use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
+
 
 class UserController extends Controller
 {
@@ -143,10 +145,16 @@ class UserController extends Controller
             [
                 'nip' => 'sometimes|nullable|unique:users,nip,' . $user->id,
                 'name' => 'required',
-                'email' => 'required',
+                'email' => [
+                    'required',
+                    Rule::unique('users')->ignore($user->id),
+                ],
                 'role' => 'required',
                 'id_cabang' => 'required',
             ],
+            [
+                'email.unique' => 'Email sudah di gunakan'
+            ]
         );
 
         try {
