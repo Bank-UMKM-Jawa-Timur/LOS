@@ -448,7 +448,6 @@
                 </div>
             </div>
         @elseif(auth()->user()->role == 'Pincab')
-
             @php
                 $total_PBP = \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
                     return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
@@ -484,13 +483,9 @@
                 Total Pengajuan{{-- Cabang {{$kode_cabang}} --}} :
                 {{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
                     return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
-                })
-                ->where('pengajuan.id_pincab', Auth::user()->id)
-                ->where('id_cabang', auth()->user()->id_cabang)
-                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
-                // ->whereIn('pengajuan.posisi', ['Pincab', 'Selesai', 'Ditolak'])
-                ->whereIn('pengajuan.posisi', ['Selesai','Ditolak','Pincab','PBP'])
-                ->count()+$total_PBP+$total_PBO+$total_Penyelia+$total_staf }}
+                })->when(Request()->cbg, function ($query, $cbg) {
+                        return $query->where('id_cabang', $cbg);
+                    })->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')->where('id_cabang', auth()->user()->id_cabang)->count() }}
                 <div class=" d-flex justify-content-end">
                     <button type="button" class="btn btn-sm btn-primary ml-2" data-toggle="modal"
                         data-target="#data_nominatif" id="#exportExcel">
@@ -517,14 +512,13 @@
                                 })
                                 ->where('id_cabang', auth()->user()->id_cabang)
                                 ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
-                                // ->whereIn('pengajuan.posisi', ['Pincab', 'Selesai', 'Ditolak'])
                                 ->where('pengajuan.posisi', 'Selesai')
                                 ->count() }}
                                 </h1>
                             </div>
                         </div>
                         <hr>
-                        <a href="{{ route('pengajuan-kredit.index') }}?sts=Selesai"
+                        <a href="{{ route('pengajuan-kredit.index') }}?sts=Selesai&tAwal={{Request::get('tAwal')}}&tAkhir={{Request::get('tAkhir')}}"
                             class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
                     </div>
                 </div>
@@ -541,10 +535,9 @@
                             <div class="col-md-4 pr-0 font-wight-bold">
                                 <h1>{{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
                                     return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
-                                })->where('pengajuan.id_pincab', Auth::user()->id)
+                                })
                                 ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
-                                ->where('pengajuan.id_cabang', Auth::user()->id_cabang)
-                                // ->whereIn('pengajuan.posisi', ['Pincab', 'Selesai', 'Ditolak'])
+                                ->where('pengajuan.id_cabang', auth()->user()->id_cabang)
                                 ->where('pengajuan.posisi', 'Ditolak')
                                 ->count()
                                 }}
@@ -552,7 +545,7 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="{{ route('pengajuan-kredit.index') }}?sts=Ditolak"
+                        <a href="{{ route('pengajuan-kredit.index') }}?sts=Ditolak&tAwal={{Request::get('tAwal')}}&tAkhir={{Request::get('tAkhir')}}"
                             class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
                     </div>
                 </div>
@@ -571,14 +564,13 @@
                                     return $query->whereBetween('pengajuan.tanggal', [Request()->tAwal, Request()->tAkhir]);
                                 })->where('id_cabang', auth()->user()->id_cabang)
                                 ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
-                                // ->whereIn('pengajuan.posisi', ['Pincab', 'Selesai', 'Ditolak'])
                                 ->where('pengajuan.posisi', 'Pincab')
                                 ->count() }}
                                 </h1>
                             </div>
                         </div>
                         <hr>
-                        <a href="{{ route('pengajuan-kredit.index') }}?pss=Pincab" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
+                        <a href="{{ route('pengajuan-kredit.index') }}?pss=Pincab&tAwal={{Request::get('tAwal')}}&tAkhir={{Request::get('tAkhir')}}" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
                             Detail</a>
                     </div>
                 </div>
@@ -603,7 +595,7 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="{{ route('pengajuan-kredit.index') }}?pss=PBP" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
+                        <a href="{{ route('pengajuan-kredit.index') }}?pss=PBP&tAwal={{Request::get('tAwal')}}&tAkhir={{Request::get('tAkhir')}}" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
                             Detail</a>
                     </div>
                 </div>
@@ -628,7 +620,7 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="{{ route('pengajuan-kredit.index') }}?pss=PBO" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
+                        <a href="{{ route('pengajuan-kredit.index') }}?pss=PBO&tAwal={{Request::get('tAwal')}}&tAkhir={{Request::get('tAkhir')}}" class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
                             Detail</a>
                     </div>
                 </div>
@@ -653,7 +645,7 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="{{ route('pengajuan-kredit.index') }}?pss=Review+Penyelia"
+                        <a href="{{ route('pengajuan-kredit.index') }}?pss=Review+Penyelia&tAwal={{Request::get('tAwal')}}&tAkhir={{Request::get('tAkhir')}}"
                             class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
                     </div>
                 </div>
@@ -679,7 +671,7 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="{{ route('pengajuan-kredit.index') }}?pss=Proses+Input+Data"
+                        <a href="{{ route('pengajuan-kredit.index') }}?pss=Proses+Input+Data&tAwal={{Request::get('tAwal')}}&tAkhir={{Request::get('tAkhir')}}"
                             class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat Detail</a>
                     </div>
                 </div>
@@ -739,7 +731,7 @@
                             </div>
                         </div>
                         <hr>
-                        <a href="{{ route('pengajuan-kredit.index') }}"
+                        <a href="{{ route('pengajuan-kredit.index') }}?tAwal={{Request::get('tAwal')}}&tAkhir={{Request::get('tAkhir')}}"
                             class="btn btn-primary-detail btn-sm b-radius-3 px-3">Lihat
                             Detail</a>
                     </div>
@@ -776,21 +768,21 @@
                         </div>
                         <hr>
                         @if (auth()->user()->role == 'Staf Analis Kredit')
-                            <a href="{{ route('pengajuan-kredit.index') }}?pss=Proses+Input+Data"
+                            <a href="{{ route('pengajuan-kredit.index') }}?pss=Proses+Input+Data&tAwal={{Request::get('tAwal')}}&tAkhir={{Request::get('tAkhir')}}"
                                 class="btn btn-danger btn-sm b-radius-3 px-3">Lihat
                                 Detail</a>
                         @elseif (auth()->user()->role == 'Penyelia Kredit')
-                            <a href="{{ route('pengajuan-kredit.index') }}?pss=Review+Penyelia"
+                            <a href="{{ route('pengajuan-kredit.index') }}?pss=Review+Penyelia&tAwal={{Request::get('tAwal')}}&tAkhir={{Request::get('tAkhir')}}"
                                 class="btn btn-danger btn-sm b-radius-3 px-3">Lihat
                                 Detail</a>
                         @elseif (auth()->user()->role == 'PBP')
-                            <a href="{{ route('pengajuan-kredit.index') }}?pss=PBP" class="btn btn-danger btn-sm b-radius-3 px-3">Lihat
+                            <a href="{{ route('pengajuan-kredit.index') }}?pss=PBP&tAwal={{Request::get('tAwal')}}&tAkhir={{Request::get('tAkhir')}}" class="btn btn-danger btn-sm b-radius-3 px-3">Lihat
                                 Detail</a>
                         @elseif (auth()->user()->role == 'Pincab')
-                            <a href="{{ route('pengajuan-kredit.index') }}?pss=Pincab" class="btn btn-danger btn-sm b-radius-3 px-3">Lihat
+                            <a href="{{ route('pengajuan-kredit.index') }}?pss=Pincab&tAwal={{Request::get('tAwal')}}&tAkhir={{Request::get('tAkhir')}}" class="btn btn-danger btn-sm b-radius-3 px-3">Lihat
                                 Detail</a>
                         @else
-                            <a href="{{ route('pengajuan-kredit.index') }}"
+                            <a href="{{ route('pengajuan-kredit.index') }}?tAwal={{Request::get('tAwal')}}&tAkhir={{Request::get('tAkhir')}}"
                                 class="btn btn-danger btn-sm b-radius-3 px-3">Lihat
                                 Detail</a>
                         @endif

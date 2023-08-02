@@ -536,12 +536,9 @@ class PengajuanKreditController extends Controller
                     'calon_nasabah.jenis_usaha',
                     'calon_nasabah.id_pengajuan'
                 )->orderBy('tanggal', 'desc')
-                    ->where('pengajuan.id_pincab', $id_data)
+                    ->where('pengajuan.id_cabang', auth()->user()->id_cabang)
                     ->when($request->search, function ($query, $search) {
                         return $query->where('calon_nasabah.nama', 'like', '%' . $search . '%');
-                    })
-                    ->when($request->pss, function ($query, $pss) {
-                        return $query->where('pengajuan.posisi', $pss);
                     })
                     ->when($request->cbg, function ($query, $cbg) {
                         return $query->where('id_cabang', $cbg);
