@@ -396,7 +396,7 @@
                                 min="1"
                                 max="4"
                                 {{ $itemSlik?->status_skor == 0 ? 'readonly' : '' }}
-                                value="{{ $skorSlik }}">
+                                value="{{ $skorSlik || $skorSlik > 0 ? $skorSlik : null }}">
                         </div>
                     </div>
                 </div>
@@ -808,7 +808,7 @@
                                                                     max="4"
                                                                     onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
                                                                     {{ $item->status_skor == 0 ? 'readonly' : '' }}
-                                                                    value="{{ $skorInput2 }}">
+                                                                    value="{{ $skorInput2 || $skorInput2 > 0 ? $skorInput2 : null }}">
                                                             </div>
                                                         @else
                                                             <input type="hidden" name="komentar_penyelia[]"
@@ -1013,7 +1013,7 @@
                                                                             placeholder="" name="skor_penyelia[]"
                                                                             onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
                                                                             {{ $itemTiga->status_skor == 0 ? 'readonly' : '' }}
-                                                                            value="{{ $skorInput3 }}">
+                                                                            value="{{ $skorInput3 || $skorInput3 > 0 ? $skorInput3 : null }}">
                                                                     </div>
                                                                 @else
                                                                     <input type="hidden" name="komentar_penyelia[]"
@@ -1212,7 +1212,7 @@
                                                                             max="4"
                                                                             onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
                                                                             {{ $itemEmpat->status_skor == 0 ? 'readonly' : '' }}
-                                                                            value="{{ $skorInput4 }}">
+                                                                            value="{{ $skorInput4 || $skorInput4 > 0 ? $skorInput4 : null }}">
                                                                     </div>
                                                                 @endif
                                                             </div>
