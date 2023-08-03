@@ -34,6 +34,7 @@ null => 1,
 
 @section('content')
 @include('components.notification')
+@include('components.loadingPost')
 <style>
     .form-wizard .sub label:not(.info) {
         font-weight: 400;
@@ -2785,6 +2786,12 @@ is-invalid
                 nullValue = [];
                 fileEmpty = [];
                 e.preventDefault()
+            }
+            else {
+                $("#loadingModal").modal({
+                    keyboard: false
+                });
+                $("#loadingModal").modal("show");
             }
         }
     })
