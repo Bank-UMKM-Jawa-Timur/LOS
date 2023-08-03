@@ -396,7 +396,7 @@
                                 min="1"
                                 max="4"
                                 {{ $itemSlik?->status_skor == 0 ? 'readonly' : '' }}
-                                value="{{ $skorSlik }}">
+                                value="{{ $skorSlik || $skorSlik > 0 ? $skorSlik : null }}">
                         </div>
                     </div>
                 </div>
@@ -808,7 +808,7 @@
                                                                     max="4"
                                                                     onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
                                                                     {{ $item->status_skor == 0 ? 'readonly' : '' }}
-                                                                    value="{{ $skorInput2 }}">
+                                                                    value="{{ $skorInput2 || $skorInput2 > 0 ? $skorInput2 : null }}">
                                                             </div>
                                                         @else
                                                             <input type="hidden" name="komentar_penyelia[]"
@@ -1013,7 +1013,7 @@
                                                                             placeholder="" name="skor_penyelia[]"
                                                                             onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
                                                                             {{ $itemTiga->status_skor == 0 ? 'readonly' : '' }}
-                                                                            value="{{ $skorInput3 }}">
+                                                                            value="{{ $skorInput3 || $skorInput3 > 0 ? $skorInput3 : null }}">
                                                                     </div>
                                                                 @else
                                                                     <input type="hidden" name="komentar_penyelia[]"
@@ -1212,7 +1212,7 @@
                                                                             max="4"
                                                                             onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
                                                                             {{ $itemEmpat->status_skor == 0 ? 'readonly' : '' }}
-                                                                            value="{{ $skorInput4 }}">
+                                                                            value="{{ $skorInput4 || $skorInput4 > 0 ? $skorInput4 : null }}">
                                                                     </div>
                                                                 @endif
                                                             </div>
@@ -1242,7 +1242,7 @@
                             <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
                             <input type="hidden" name="id_aspek[]" value="{{ $value->id }}">
                             <textarea name="pendapat_per_aspek[]" class="form-control @error('pendapat_per_aspek') is-invalid @enderror"
-                                id="" cols="30" rows="4" placeholder="Pendapat Per Aspek">{{ isset($getPendapatPerAspek->pendapat_per_aspek) ? $getPendapatPerAspek->pendapat_per_aspek : '' }}</textarea>
+                                id="pendapat_per_aspek[]" cols="30" rows="4" placeholder="Pendapat Per Aspek">{{ isset($getPendapatPerAspek->pendapat_per_aspek) ? $getPendapatPerAspek->pendapat_per_aspek : '' }}</textarea>
                             @error('pendapat_per_aspek')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -1277,7 +1277,7 @@
                         <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
                         <input type="hidden" name="id_aspek[]" value="{{ $value->id }}">
                         <textarea name="pendapat_per_aspek[]" class="form-control @error('pendapat_per_aspek') is-invalid @enderror"
-                            id="" cols="30" rows="4" placeholder="Pendapat Per Aspek">{{ isset($getPendapatPerAspek->pendapat_per_aspek) ? $getPendapatPerAspek->pendapat_per_aspek : '' }}</textarea>
+                            id="pendapat_per_aspek[]" cols="30" rows="4" placeholder="Pendapat Per Aspek">{{ isset($getPendapatPerAspek->pendapat_per_aspek) ? $getPendapatPerAspek->pendapat_per_aspek : '' }}</textarea>
                         @error('pendapat_per_aspek')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -1306,7 +1306,7 @@
                     <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
                     <input type="hidden" name="id_aspek[]" value="{{ $value->id }}">
                     <textarea name="pendapat_per_aspek[]" class="form-control @error('pendapat_per_aspek') is-invalid @enderror"
-                        id="" cols="30" rows="4" placeholder="Pendapat Per Aspek">{{ isset($getPendapatPerAspek->pendapat_per_aspek) ? $getPendapatPerAspek->pendapat_per_aspek : '' }}</textarea>
+                        id="pendapat_per_aspek[]" cols="30" rows="4" placeholder="Pendapat Per Aspek">{{ isset($getPendapatPerAspek->pendapat_per_aspek) ? $getPendapatPerAspek->pendapat_per_aspek : '' }}</textarea>
                     @error('pendapat_per_aspek')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -1338,7 +1338,7 @@
                         <label for="">Pendapat dan Usulan Penyelia</label>
                         <textarea name="komentar_penyelia_keseluruhan"
                             class="form-control @error('komentar_penyelia_keseluruhan') is-invalid @enderror" id="komentar_penyelia_keseluruhan" cols="30"
-                            rows="4" placeholder="Pendapat dan Usulan Penyelia" >{{ isset($pendapatDanUsulanPenyelia->komentar_penyelia) ? $pendapatDanUsulanPenyelia->komentar_penyelia : '' }}</textarea>
+                            rows="4" placeholder="Pendapat dan Usulan Penyelia">{{ isset($pendapatDanUsulanPenyelia->komentar_penyelia) ? $pendapatDanUsulanPenyelia->komentar_penyelia : '' }}</textarea>
                         @error('komentar_penyelia_keseluruhan')
                             <div class="invalid-feedback">
                                 {{ $message }}
@@ -1440,8 +1440,10 @@
 
 @push('custom-script')
     <script>
+        let aspekArr;
         $(window).on('load', function() {
             $("#id_merk").trigger("change");
+            aspekArr = <?php echo json_encode($dataAspek); ?>;
         });
 
         $(document).ready(function() {
@@ -1552,29 +1554,47 @@
             $(".btn-simpan").on('click', function(e) {
                 const role = "{{Auth::user()->role}}"
                 if (role == 'Penyelia Kredit') {
-                    if ($('#komentar_penyelia_keseluruhan').val() == '') {
+                    const pendapatPerAspek = $("textarea[id^=pendapat_per_aspek]");
+                    var msgPendapat = '';
+                    for (var i = 0; i < pendapatPerAspek.length; i++) {
+                        const value = pendapatPerAspek[i].value;
+                        if (!value) {
+                            const aspek = aspekArr[i].nama
+                            msgPendapat += '<li class="text-left">Pendapat pada '+aspek+' harus diisi.</li>'; 
+                        }
+                    }
+                    
+                    if (msgPendapat != '') {
+                        console.log(msgPendapat)
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
-                            text: "Field Pendapat dan usulan harus diisi"
+                            html: '<ul>'+msgPendapat+'</ul>'
                         })
                         e.preventDefault()
                     }
                     else {
-                        if (nullValue.length > 0) {
-                            let message = "";
-                            $.each(nullValue, (i, v) => {
-                                console.log('validasi')
-                                console.log(v)
-                                console.log('end validasi')
-                                message += v != '' ? v + ", " : ''
-                            })
+                        if ($('#komentar_penyelia_keseluruhan').val() == '') {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Oops...',
-                                text: "Field " + message + " harus diisi terlebih dahulu"
+                                text: "Field Pendapat dan usulan harus diisi"
                             })
                             e.preventDefault()
+                        }
+                        else {
+                            if (nullValue.length > 0) {
+                                let message = "";
+                                $.each(nullValue, (i, v) => {
+                                    message += v != '' ? v + ", " : ''
+                                })
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: "Field " + message + " harus diisi terlebih dahulu"
+                                })
+                                e.preventDefault()
+                            }
                         }
                     }
                 }
