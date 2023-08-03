@@ -1955,7 +1955,7 @@ function getKaryawan($nip){
                             <div class="col">
                                 @if (Auth::user()->role == 'Pincab')
                                     <input type="hidden" name="id_pengajuan" id="" value="{{ $dataUmum->id }}">
-                                    <textarea name="komentar_pincab" class="form-control" id="" cols="5" rows="3"
+                                    <textarea name="komentar_pincab" class="form-control" id="komentar_pincab" cols="5" rows="3"
                                         placeholder="Masukkan Pendapat Pemimpin Cabang">{{ $pendapatDanUsulan->komentar_pincab }}</textarea>
                                 @endif
                                 @if (Auth::user()->role == 'SPI' || Auth::user()->role == 'Kredit Umum')
@@ -1972,9 +1972,27 @@ function getKaryawan($nip){
             </div>
 
             @if (Auth::user()->role == 'Pincab')
-                <button type="submit" class="btn btn-primary mr-2"><i class="fa fa-save"></i> Simpan</button>
+                <button type="submit" class="btn btn-primary btn-simpan mr-2"><i class="fa fa-save"></i> Simpan</button>
                 <button type="reset" class="btn btn-default"><i class="fa fa-times"></i> Reset</button>
             @endif
         </form>
     </div>
 @endsection
+@push('custom-script')
+    <script>
+        $(".btn-simpan").on('click', function(e) {
+            const role = "{{auth()->user()->role}}"
+            if (role == 'Pincab') {
+                const komentarPincabVal = $("#komentar_pincab").val()
+                if (!komentarPincabVal) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: "Field Pendapat dan usulan harus diisi"
+                    })
+                    e.preventDefault()
+                }
+            }
+        })
+    </script>
+@endpush
