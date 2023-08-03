@@ -104,7 +104,7 @@ null => 1,
     </div>
 </div>
 
-<form id="pengajuan_kredit" action="#" /*action="{{ route('pengajuan-kredit.store') }}"*/ method="post" enctype="multipart/form-data">
+<form id="pengajuan_kredit" action="{{ route('pengajuan-kredit.store') }}" method="post" enctype="multipart/form-data">
     @csrf
     <input type="hidden" name="id_nasabah" id="idCalonNasabah" value="{{ $duTemp?->id }}">
     <input type="hidden" name="progress" class="progress">

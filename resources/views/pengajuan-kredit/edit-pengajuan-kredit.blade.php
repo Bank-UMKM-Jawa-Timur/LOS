@@ -1583,8 +1583,8 @@
             <div class="row">
                 <div class="form-group col-md-12">
                     <label for="">Pendapat dan Usulan</label>
-                    <textarea name="komentar_staff" class="form-control @error('komentar_staff') is-invalid @enderror"
-                        maxlength="255" id="" cols="30" rows="4"
+                    <textarea name="komentar_staff" id="komentar_staff" class="form-control @error('komentar_staff') is-invalid @enderror"
+                        maxlength="255" cols="30" rows="4"
                         placeholder="Pendapat dan Usulan Staf/Analis Kredit" required>{{ $detailKomentar?->komentar_staff }}</textarea>
                     <input type="hidden" name="id_komentar_staff_text" value="{{ $detailKomentar?->id }}">
                     @error('komentar_staff')
@@ -2719,8 +2719,12 @@
         //end Repayment Capacity
     </script>
     <script>
+        let dataAspekArr;
+        $(document).ready(function() {
+            dataAspekArr = <?php echo json_encode($dataAspek); ?>;
+        })
+        var nullValue = []
         var firstLoad = true;
-
         $('.rupiah').each(function() {
             var inp = $(this).val()
             $(this).val(formatrupiah(inp))
@@ -3121,6 +3125,263 @@
                 });
             }
         })
+
+        function cekValueKosong(formIndex) {
+            var skema = $("#skema_kredit").val()
+            var form = ".form-wizard[data-index=" + formIndex + "]";
+            var inputFile = $(form + " input[type=file]")
+            var inputText = $(form + " input[type=text]")
+            var inputNumber = $(form + " input[type=number]")
+            var select = $(form + " select")
+            var textarea = $(form + " textarea")
+    
+            /*$.each(inputFile, function(i, v) {
+                if (v.value == '' && !$(this).prop('disabled') && $(this).closest('.filename') == '') {
+                    if (form == ".form-wizard[data-index='2']") {
+                        var ijin = $(form + " select[name=ijin_usaha]")
+                        if (ijin != "tidak_ada_legalitas_usaha") {
+                            let val = $(this).attr("id");
+                            if (val)
+                                val = $(this).attr("id").toString()
+                            nullValue.push(val.replaceAll("_", " "))
+                        }
+                    } else {
+                        let val = $(this).attr("id");
+                        if (val)
+                            val = $(this).attr("id").toString();
+                        nullValue.push(val.replaceAll("_", " "))
+                    }
+                } else if (v.value != '') {
+                    let val = $(this).attr("id");
+                    if (val)
+                        val = $(this).attr("id").toString().replaceAll("_", " ");
+                    for (var i = 0; i < nullValue.length; i++) {
+                        while (nullValue[i] == val) {
+                            nullValue.splice(i, 1)
+                        }
+                    }
+                }
+            })*/
+    
+            $.each(inputText, function(i, v) {
+                if (v.value == '' && !$(this).prop('disabled')) {
+                    let val = $(this).attr("id");
+                    if (val)
+                        val = $(this).attr("id").toString();
+                    //console.log(val)
+                    nullValue.push(val.replaceAll("_", " "))
+                } else if (v.value != '') {
+                    let val = $(this).attr("id");
+                    if (val)
+                        val = $(this).attr("id").toString().replaceAll("_", " ");
+                    for (var i = 0; i < nullValue.length; i++) {
+                        while (nullValue[i] == val) {
+                            nullValue.splice(i, 1)
+                        }
+                    }
+                }
+            })
+    
+            $.each(inputNumber, function(i, v) {
+                if (v.value == '' && !$(this).prop('disabled')) {
+                    let val = $(this).attr("id");
+                    if (val)
+                        val = $(this).attr("id").toString();
+                    //console.log(val)
+                    nullValue.push(val.replaceAll("_", " "))
+                } else if (v.value != '') {
+                    let val = $(this).attr("id").toString().replaceAll("_", " ");
+                    for (var i = 0; i < nullValue.length; i++) {
+                        while (nullValue[i] == val) {
+                            nullValue.splice(i, 1)
+                        }
+                    }
+                }
+            })
+    
+            $.each(select, function(i, v) {
+                if (v.value == '' && !$(this).prop('disabled')) {
+                    let val = $(this).attr("id");
+                    if (val)
+                        val = $(this).attr("id").toString();
+                    if (val != "persentase_kebutuhan_kredit_opsi" && val != "ratio_tenor_asuransi_opsi" && val !=
+                        "ratio_coverage_opsi") {
+                        //console.log(val)
+                        nullValue.push(val.replaceAll("_", " "))
+                    }
+                } else if (v.value != '') {
+                    let val = $(this).attr("id");
+                    if (val)
+                        val = $(this).attr("id").toString().replaceAll("_", " ");
+                    for (var i = 0; i < nullValue.length; i++) {
+                        while (nullValue[i] == val) {
+                            nullValue.splice(i, 1)
+                        }
+                    }
+                }
+            })
+    
+            $.each(textarea, function(i, v) {
+                if (v.value == '' && !$(this).prop('disabled')) {
+                    let val = $(this).attr("id");
+                    if (val)
+                        val = $(this).attr("id").toString();
+                    //console.log(val)
+                    nullValue.push(val.replaceAll("_", " "))
+                } else if (v.value != '') {
+                    let val = $(this).attr("id");
+                    if (val)
+                        val = $(this).attr("id").toString().replaceAll("_", " ");
+                    for (var i = 0; i < nullValue.length; i++) {
+                        while (nullValue[i] == val) {
+                            nullValue.splice(i, 1)
+                        }
+                    }
+                }
+            })
+    
+            //console.log(nullValue);
+        }
+    
+        $(".btn-simpan").on('click', function(e) {
+            if ($('#komentar_staff').val() == '') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: "Field Pendapat dan usulan harus diisi"
+                })
+                e.preventDefault()
+            }
+            else {
+                nullValue = []
+                for (var i = 0; i < dataAspekArr.length; i++) {
+                    cekValueKosong(i)
+                }
+                const ijinUsaha = $("#ijin_usaha").val();
+    
+                // cek input files
+                var inputFiles = $('input[type=file]')
+                var fileEmpty = [];
+                $.each(inputFiles, function(i, v) {
+                    console.log(v.value)
+                    var ids = $(this).attr("id");
+                    var inputId = ids ? ids.toString() : ''
+                    inputId = inputId.replaceAll('_', ' ').toLowerCase();
+                    if (inputId == "docnib update file" || inputId == "docsku update file" || inputId == "docnpwpnama file") {
+                        if (ijinUsaha == "nib") {
+                            if (inputId != "docsku update file") {
+                                if (v.value == '' || v.value == null || v.value.includes('Belum Upload')) {
+                                    if (!fileEmpty.includes(inputId))
+                                        fileEmpty.push(inputId)
+                                }
+                            }
+                        }
+                        else if (ijinUsaha == "surat_keterangan_usaha") {
+                            if (inputId == "docnpwpnama file") {
+                                const isCheckNpwp = $('#isNpwp').is(':checked')
+                                if (isCheckNpwp) {
+                                    if (v.value == '' || v.value == null || v.value.includes('Belum Upload')) {
+                                        if (!fileEmpty.includes(inputId))
+                                            fileEmpty.push(inputId)
+                                    }
+                                }
+                            }
+    
+                            if (inputId == "docsku update file") {
+                                if (v.value == '' || v.value == null || v.value.includes('Belum Upload')) {
+                                    if (!fileEmpty.includes(inputId))
+                                        fileEmpty.push(inputId)
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        if (v.value == '' || v.value == null || v.value.includes('Belum Upload')) {
+                            if (inputId == 'foto sp')
+                                inputId = 'surat permohonan';
+                            if (inputId == 'docnpwp upload file')
+                                inputId = 'npwp'
+                            if (inputId == 'docnib update file')
+                                inputId = 'nib'
+                            if (inputId == 'docsku update file')
+                                inputId = 'surat keterangan usaha'
+                            if (inputId == 'foto usahafile' && !v.value.includes('NPWP'))
+                                inputId = 'foto usaha'
+                            
+                            if (inputId == 'foto usaha' && !v.value.includes('NPWP')) {
+                                if (!fileEmpty.includes(inputId, i))
+                                    fileEmpty.push(inputId)
+                            }
+                            if (inputId != 'foto usaha' && !v.value.includes('NPWP')) {
+                                if (!fileEmpty.includes(inputId, i))
+                                    fileEmpty.push(inputId)
+                            }
+                            
+                        }
+                    }
+                })
+                // end cek input file
+    
+                if (nullValue.length > 0 || fileEmpty.length > 0) {
+                    let message = "";
+                    $.each(nullValue, (i, v) => {
+                        var item = v;
+                        if (v == 'itemByKategori'){
+                            if($("#kategori_jaminan_tambahan").val() == "Tidak Memiliki Jaminan Tambahan"){
+                                for(var j = 0; j < nullValue.length; j++){
+                                    while(nullValue[j] == v){
+                                        nullValue.splice(j, 1)
+                                    }
+                                }
+                            } else {
+                                item = "Jaminan Tambahan"
+                            }
+                        }
+                        if (v == 'npwp text') {
+                            if ($("#statusNpwp").val() != "1") {
+                                for(var j = 0; j < nullValue.length; j++){
+                                    while(nullValue[j] == v){
+                                        nullValue.splice(j, 1)
+                                    }
+                                }
+                            }
+                        }
+    
+                        if (v == 'undifined') {
+                            for(var j = 0; j < nullValue.length; j++){
+                                while(nullValue[j] == v){
+                                    nullValue.splice(j, 1)
+                                }
+                            }
+                        }
+    
+                        message += item != '' ? `<li class="text-left">Field `+item +` harus diisi.</li>` : ''
+                    })
+                    console.log(fileEmpty)
+                    for (var i = 0; i < fileEmpty.length; i++) {
+                        message += `<li class="text-left">File `+fileEmpty[i]+` harus diisi.</li>`;
+                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        html: '<ul>'+message+'</ul>'
+                    })
+                    nullValue = [];
+                    fileEmpty = [];
+                    e.preventDefault()
+                }
+                else {
+                    $("#loadingModal").modal({
+                        keyboard: false
+                    });
+                    $("#loadingModal").modal("show");
+                }
+            }
+        })
+    
+        for (let i = 0; i <= parseInt(jumlahData); i++) {
+            cekValueKosong(i);
+        }
     </script>
     <script>
         $(document).ready(function() {
