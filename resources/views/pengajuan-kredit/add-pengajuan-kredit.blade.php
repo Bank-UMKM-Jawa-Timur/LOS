@@ -66,7 +66,7 @@ null => 1,
     }
 </style>
 
-<form id="pengajuan_kredit" action="{{ route('pengajuan-kredit.store') }}" method="post" enctype="multipart/form-data">
+<form id="pengajuan_kredit" action="#" /*action="{{ route('pengajuan-kredit.store') }}"*/ method="post" enctype="multipart/form-data">
     @csrf
     <input type="hidden" name="id_nasabah" value="" id="id_nasabah">
     <input type="hidden" name="progress" class="progress">
@@ -751,9 +751,6 @@ null => 1,
                     <option value="Kendaraan Bermotor">Kendaraan Bermotor</option>
                     <option value="Tanah dan Bangunan">Tanah dan Bangunan</option>
                 </select>
-                {{-- <input type="hidden" name="id_level[]" value="{{ $itemTiga->id }}" id="">
-                <input type="hidden" name="opsi_jawaban[]" value="{{ $itemTiga->opsi_jawaban }}" id="">
-                <input type="text" name="informasi[]" id="" placeholder="Masukkan informasi" class="form-control"> --}}
             </div>
             <div class="form-group col-md-6" id="select_kategori_jaminan_tambahan"></div>
             @elseif ($itemTiga->nama == 'Bukti Pemilikan Jaminan Utama')
@@ -1065,11 +1062,13 @@ null => 1,
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     var isPincetar = "{{Request::url()}}".includes('pincetar');
+    let dataAspekArr;
         $(document).ready(function() {
             let valSkema = $("#skema_kredit").val();
             if (valSkema == null || valSkema == '') {
                 $('#exampleModal').modal('show');
             }
+            dataAspekArr = <?php echo json_encode($dataAspek); ?>;
 
             $("#exampleModal").on('click', "#btnSkema", function() {
                 let valSkema = $("#skema_kredit").val();
@@ -1078,28 +1077,6 @@ null => 1,
                 $("#skema_kredit").val(valSkema);
             });
         });
-
-        /*$("#id_merk").change(function() {
-            let val = $(this).val();
-
-            $.ajax({
-                type: "get",
-                url: "{{ route('get-tipe-kendaraan') }}?id_merk=" + val,
-                dataType: "json",
-                success: (res) => {
-                    if (res) {
-                        $("#id_tipe").empty();
-                        $("#id_tipe").append(`<option>Pilih Tipe</option>`)
-
-                        $.each(res.tipe, function(i, value) {
-                            $("#id_tipe").append(`
-                                <option value="${value.id}">${value.tipe}</option>
-                            `);
-                        })
-                    }
-                }
-            })
-        })*/
 
         $('#docSKU').hide();
         $('#surat_keterangan_usaha').hide();
@@ -1126,7 +1103,7 @@ null => 1,
         let urlGetItemByKategoriJaminanUtama =
             "{{ route('get-item-jaminan-by-kategori-jaminan-utama') }}"; // jaminan tambahan
         let urlGetItemByKategori = "{{ route('get-item-jaminan-by-kategori') }}"; // jaminan tambahan
-        const nullValue = []
+        var nullValue = []
 
         var x = 1;
 
@@ -1875,56 +1852,6 @@ null => 1,
         }
         //end hitung ratio covarege
 
-        // //triger hitung Persentase Kebutuhan Kredit
-        // $('#kebutuhan_kredit').change(function(e) {
-        //     hitungPersentaseKebutuhanKredit();
-        // });
-        // //end triger hitung Persentase Kebutuhan Kredit
-
-        // //triger hitung Persentase Kebutuhan Kredit
-        // $('#jumlah_kredit').change(function(e) {
-        //     hitungPersentaseKebutuhanKredit();
-        // });
-        //end triger hitung Persentase Kebutuhan Kredit
-
-        // hitung Persentase Kebutuhan Kredit
-        // function hitungPersentaseKebutuhanKredit() {
-        //     let kebutuhanKredit = parseInt($('#kebutuhan_kredit').val());
-        //     let jumlahKredit = parseInt($('#jumlah_kredit').val());
-
-        //     let persentaseKebutuhanKredit = parseInt(jumlahKredit / kebutuhanKredit * 100); //cek rumusnya lagi
-
-        //     $('#persentase_kebutuhan_kredit').val(persentaseKebutuhanKredit);
-
-        //     if (persentaseKebutuhanKredit <= 80 && !isNaN(persentaseKebutuhanKredit)) {
-        //         $('#persentase_kebutuhan_kredit_opsi_0').attr('selected', true);
-        //         $('#persentase_kebutuhan_kredit_opsi_1').removeAttr('selected');
-        //         $('#persentase_kebutuhan_kredit_opsi_2').removeAttr('selected');
-        //         $('#persentase_kebutuhan_kredit_opsi_3').removeAttr('selected');
-        //     } else if (persentaseKebutuhanKredit >= 81 && persentaseKebutuhanKredit <= 89) {
-        //         $('#persentase_kebutuhan_kredit_opsi_0').removeAttr('selected');
-        //         $('#persentase_kebutuhan_kredit_opsi_1').attr('selected', true);
-        //         $('#persentase_kebutuhan_kredit_opsi_2').removeAttr('selected');
-        //         $('#persentase_kebutuhan_kredit_opsi_3').removeAttr('selected');
-        //     } else if (persentaseKebutuhanKredit >= 90 && persentaseKebutuhanKredit <= 100) {
-        //         $('#persentase_kebutuhan_kredit_opsi_0').removeAttr('selected');
-        //         $('#persentase_kebutuhan_kredit_opsi_1').removeAttr('selected');
-        //         $('#persentase_kebutuhan_kredit_opsi_2').attr('selected', true);
-        //         $('#persentase_kebutuhan_kredit_opsi_3').removeAttr('selected');
-        //     } else if (persentaseKebutuhanKredit > 100 && !isNaN(persentaseKebutuhanKredit)) {
-        //         $('#persentase_kebutuhan_kredit_opsi_0').removeAttr('selected');
-        //         $('#persentase_kebutuhan_kredit_opsi_1').removeAttr('selected');
-        //         $('#persentase_kebutuhan_kredit_opsi_2').removeAttr('selected');
-        //         $('#persentase_kebutuhan_kredit_opsi_3').attr('selected', true);
-        //     } else {
-        //         $('#persentase_kebutuhan_kredit_opsi_0').removeAttr('selected');
-        //         $('#persentase_kebutuhan_kredit_opsi_1').removeAttr('selected');
-        //         $('#persentase_kebutuhan_kredit_opsi_2').removeAttr('selected');
-        //         $('#persentase_kebutuhan_kredit_opsi_3').removeAttr('selected');
-        //     }
-        // }
-        //end Persentase Kebutuhan Kredit
-
         //triger hitung Repayment Capacity
         $('#persentase_net_income').change(function(e) {
             hitungRepaymentCapacity();
@@ -2124,8 +2051,8 @@ null => 1,
             var inputNumber = $(form + " input[type=number]")
             var select = $(form + " select")
             var textarea = $(form + " textarea")
-
-            $.each(inputFile, function(i, v) {
+            /*$.each(inputFile, function(i, v) {
+                console.log(v.value)
                 if (v.value == '' && !$(this).prop('disabled') && $(this).closest('.filename') == '') {
                     if (form == ".form-wizard[data-index='2']") {
                         var ijin = $(form + " select[name=ijin_usaha]")
@@ -2146,7 +2073,7 @@ null => 1,
                         }
                     }
                 }
-            })
+            })*/
 
             $.each(inputText, function(i, v) {
                 if (v.value == '' && !$(this).prop('disabled')) {
@@ -2214,8 +2141,6 @@ null => 1,
                     }
                 }
             })
-
-            //console.log(nullValue);
         }
 
         $(".btn-simpan").on('click', function(e) {
@@ -2228,9 +2153,74 @@ null => 1,
                 e.preventDefault()
             }
             else {
-                if (nullValue.length > 0) {
+                nullValue = []
+                for (var i = 0; i < dataAspekArr.length; i++) {
+                    cekValueKosong(i)
+                }
+                const ijinUsaha = $("#ijin_usaha").val();
+
+                // cek input files
+                var inputFiles = $('input[type=file]')
+                var totalInputFile = inputFiles.length;
+                
+                if (ijinUsaha == "" || ijinUsaha == "tidak_ada_legalitas_usaha")
+                    totalInputFile -= 3;
+                else if (ijinUsaha == "surat_keterangan_usaha") {
+                    const isCheckNpwp = $('#isNpwp').is(':checked')
+                    if (isCheckNpwp)
+                        totalInputFile -= 1;
+                    else
+                        totalInputFile -= 2;
+                }
+                console.log('total input file : '+totalInputFile)
+                var fileEmpty = [];
+                $.each(inputFiles, function(i, v) {
+                    var inputId = $(this).attr("id").toString()
+                    inputId = inputId.replaceAll('_', ' ').toLowerCase();
+                    if (inputId == "file_nib" || inputId == "surat_keterangan_usaha_file" || inputId == "npwp_file") {
+                        if (ijinUsaha == "nib") {
+                            if (inputId != "surat_keterangan_usaha_file") {
+                                if (v.value == '' || v.value == null) {
+                                    if (!fileEmpty.includes(inputId))
+                                        fileEmpty.push(inputId)
+                                }
+                            }
+                        }
+                        else if (ijinUsaha == "surat_keterangan_usaha") {
+                            if (inputId == "npwp_file") {
+                                const isCheckNpwp = $('#isNpwp').is(':checked')
+                                if (isCheckNpwp) {
+                                    if (v.value == '' || v.value == null) {
+                                        if (!fileEmpty.includes(inputId))
+                                            fileEmpty.push(inputId)
+                                    }
+                                }
+                            }
+
+                            if (inputId == "surat_keterangan_usaha_file") {
+                                if (v.value == '' || v.value == null) {
+                                    if (!fileEmpty.includes(inputId))
+                                        fileEmpty.push(inputId)
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        if (v.value == '' || v.value == null) {
+                            if (inputId == 'foto sp') {
+                                inputId = 'surat permohonan';
+                            }
+                            if (!fileEmpty.includes(inputId))
+                                fileEmpty.push(inputId)
+                        }
+                    }
+                })
+                
+                console.log('null files')
+                console.log(fileEmpty)
+                // end cek input file
+                if (nullValue.length > 0 || fileEmpty.length > 0) {
                     let message = "";
-                    const ijinUsaha = $("#ijin_usaha").val();
                     $.each(nullValue, (i, v) => {
                         console.log('validasi')
                         console.log(v)
@@ -2262,14 +2252,19 @@ null => 1,
                                 }
                             }
                         }
-                        console.log('end validasi')
-                        message += item != '' ? item + ", " : ''
+                        message += item != '' ? `<li class="text-left">Field `+item +` harus diisi.</li>` : ''
                     })
+                    for (var i = 0; i < fileEmpty.length; i++) {
+                        message += `<li class="text-left">File `+fileEmpty[i]+` harus diisi.</li>`;
+                    }
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
-                        text: "Field " + message + " harus diisi terlebih dahulu"
+                        //text: "Field " + message + " harus diisi terlebih dahulu"
+                        html: '<ul>'+message+'</ul>'
                     })
+                    nullValue = [];
+                    fileEmpty = [];
                     e.preventDefault()
                 }
             }
