@@ -66,7 +66,7 @@ null => 1,
     }
 </style>
 
-<form id="pengajuan_kredit" action="#" /*action="{{ route('pengajuan-kredit.store') }}"*/ method="post" enctype="multipart/form-data">
+<form id="pengajuan_kredit" action="{{ route('pengajuan-kredit.store') }}" method="post" enctype="multipart/form-data">
     @csrf
     <input type="hidden" name="id_nasabah" value="" id="id_nasabah">
     <input type="hidden" name="progress" class="progress">
@@ -2161,21 +2161,9 @@ null => 1,
 
                 // cek input files
                 var inputFiles = $('input[type=file]')
-                var totalInputFile = inputFiles.length;
-                
-                if (ijinUsaha == "" || ijinUsaha == "tidak_ada_legalitas_usaha")
-                    totalInputFile -= 3;
-                else if (ijinUsaha == "surat_keterangan_usaha") {
-                    const isCheckNpwp = $('#isNpwp').is(':checked')
-                    if (isCheckNpwp)
-                        totalInputFile -= 1;
-                    else
-                        totalInputFile -= 2;
-                }
-                console.log('total input file : '+totalInputFile)
                 var fileEmpty = [];
                 $.each(inputFiles, function(i, v) {
-                    var inputId = $(this).attr("id").toString()
+                    var inputId = $(this).attr("id") != '' || $(this).attr("id") != null || $(this).attr("id") != 'undefined' ? $(this).attr("id").toString() : ''
                     inputId = inputId.replaceAll('_', ' ').toLowerCase();
                     if (inputId == "file_nib" || inputId == "surat_keterangan_usaha_file" || inputId == "npwp_file") {
                         if (ijinUsaha == "nib") {
@@ -2215,15 +2203,10 @@ null => 1,
                         }
                     }
                 })
-                
-                console.log('null files')
-                console.log(fileEmpty)
                 // end cek input file
                 if (nullValue.length > 0 || fileEmpty.length > 0) {
                     let message = "";
                     $.each(nullValue, (i, v) => {
-                        console.log('validasi')
-                        console.log(v)
                         var item = v;
                         if (v == 'itemByKategori')
                             item = 'Jaminan tambahan';
@@ -2260,7 +2243,6 @@ null => 1,
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
-                        //text: "Field " + message + " harus diisi terlebih dahulu"
                         html: '<ul>'+message+'</ul>'
                     })
                     nullValue = [];
