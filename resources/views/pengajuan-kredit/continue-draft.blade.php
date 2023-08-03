@@ -34,6 +34,7 @@ null => 1,
 
 @section('content')
 @include('components.notification')
+@include('components.loadingPost')
 <style>
     .form-wizard .sub label:not(.info) {
         font-weight: 400;
@@ -1284,7 +1285,7 @@ is-invalid
                         }
                     }
                 }
-        
+
                 if (formIndex == 4) {
                     var jaminanTambSel = $("#kategori_jaminan_tambahan").val();
                     if (jaminanTambSel == "Tanah dan Bangunan") {
@@ -1295,7 +1296,7 @@ is-invalid
                         subtotalInput -= 2;
                     }
                 }
-        
+
                 if (formIndex == 7) {
                     subtotalInput -= 1;
                 }
@@ -1325,7 +1326,7 @@ is-invalid
                         }
                     }
                 }
-        
+
                 if (formIndex == 3) {
                     var jaminanTambSel = $("#kategori_jaminan_tambahan").val();
                     if (jaminanTambSel == "Tanah dan Bangunan") {
@@ -1336,7 +1337,7 @@ is-invalid
                         subtotalInput -= 2;
                     }
                 }
-        
+
                 if (formIndex == 6) {
                     subtotalInput -= 1;
                 }
@@ -2767,6 +2768,11 @@ is-invalid
                         text: "Field " + message + " harus diisi terlebih dahulu"
                     })
                     e.preventDefault()
+                } else {
+                    $("#loadingModal").modal({
+                    keyboard: false
+                    });
+                    $("#loadingModal").modal("show");
                 }
             }
         })

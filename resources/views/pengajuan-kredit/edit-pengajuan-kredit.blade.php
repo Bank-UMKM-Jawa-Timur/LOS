@@ -10,7 +10,9 @@
     };
 @endphp
 @section('content')
-    @include('components.notification')
+@include('components.notification')
+@include('components.loadingPost')
+
     <style>
         .form-wizard .sub label:not(.info) {
             font-weight: 400;

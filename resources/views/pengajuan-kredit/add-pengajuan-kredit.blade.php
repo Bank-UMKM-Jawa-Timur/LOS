@@ -28,6 +28,9 @@ null => 1,
 @include('components.notification')
 @include('layouts.popup')
 @include('pengajuan-kredit.modal.notifPengajuanTolak')
+@include('components.loadingPost')
+
+
 <style>
     .form-wizard .sub label:not(.info) {
         font-weight: 400;
@@ -1053,7 +1056,7 @@ null => 1,
                 Sebelumnya</button>
             <button class="btn btn-danger btn-next" type="button">Selanjutnya <span
                     class="fa fa-chevron-right"></span></button>
-            <button type="submit" class="btn btn-info btn-simpan" id="submit">Simpan <span
+            <button type="submit" class="btn btn-info btn-simpan" data-redirect="{{ route('pengajuan-kredit.index') }}" id="submit">Simpan <span
                     class="fa fa-save"></span></button>
             {{-- <button class="btn btn-info ">Simpan <span class="fa fa-chevron-right"></span></button> --}}
         </div>
@@ -1064,6 +1067,9 @@ null => 1,
 @push('custom-script')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+
+
+
     var isPincetar = "{{Request::url()}}".includes('pincetar');
         $(document).ready(function() {
             let valSkema = $("#skema_kredit").val();
@@ -2271,6 +2277,11 @@ null => 1,
                         text: "Field " + message + " harus diisi terlebih dahulu"
                     })
                     e.preventDefault()
+                } else {
+                    $("#loadingModal").modal({
+                        keyboard: false
+                        });
+                        $("#loadingModal").modal("show");
                 }
             }
         })
