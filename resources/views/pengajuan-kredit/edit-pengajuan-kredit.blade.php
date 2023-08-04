@@ -3267,56 +3267,60 @@
                     var ids = $(this).attr("id");
                     var inputId = ids ? ids.toString() : ''
                     inputId = inputId.replaceAll('_', ' ').toLowerCase();
-                    if (inputId == "docnib update file" || inputId == "docsku update file" || inputId == "docnpwpnama file") {
-                        if (ijinUsaha == "nib") {
-                            if (inputId != "docsku update file") {
-                                if (v.value == '' || v.value == null || v.value.includes('Belum Upload')) {
-                                    if (!fileEmpty.includes(inputId))
-                                        fileEmpty.push(inputId)
+                    if (inputId != '') {
+                        if (ijinUsaha && ijinUsaha != 'tidak_ada_legalitas_usaha') {
+                            if (inputId == "docnib update file" || inputId == "docsku update file" || inputId == "docnpwpnama file") {
+                                if (ijinUsaha == "nib") {
+                                    if (inputId != "docsku update file") {
+                                        if (v.value == '' || v.value == null || v.value.includes('Belum Upload')) {
+                                            if (!fileEmpty.includes(inputId))
+                                                fileEmpty.push(inputId)
+                                        }
+                                    }
                                 }
-                            }
-                        }
-                        else if (ijinUsaha == "surat_keterangan_usaha") {
-                            if (inputId == "docnpwpnama file") {
-                                const isCheckNpwp = $('#isNpwp').is(':checked')
-                                if (isCheckNpwp) {
-                                    if (v.value == '' || v.value == null || v.value.includes('Belum Upload')) {
-                                        if (!fileEmpty.includes(inputId))
-                                            fileEmpty.push(inputId)
+                                else if (ijinUsaha == "surat_keterangan_usaha") {
+                                    if (inputId == "docnpwpnama file") {
+                                        const isCheckNpwp = $('#isNpwp').is(':checked')
+                                        if (isCheckNpwp) {
+                                            if (v.value == '' || v.value == null || v.value.includes('Belum Upload')) {
+                                                if (!fileEmpty.includes(inputId))
+                                                    fileEmpty.push(inputId)
+                                            }
+                                        }
+                                    }
+            
+                                    if (inputId == "docsku update file") {
+                                        if (v.value == '' || v.value == null || v.value.includes('Belum Upload')) {
+                                            if (!fileEmpty.includes(inputId))
+                                                fileEmpty.push(inputId)
+                                        }
                                     }
                                 }
                             }
-    
-                            if (inputId == "docsku update file") {
+                            else {
                                 if (v.value == '' || v.value == null || v.value.includes('Belum Upload')) {
-                                    if (!fileEmpty.includes(inputId))
-                                        fileEmpty.push(inputId)
+                                    if (inputId == 'foto sp')
+                                        inputId = 'surat permohonan';
+                                    if (inputId == 'docnpwp upload file')
+                                        inputId = 'npwp'
+                                    if (inputId == 'docnib update file')
+                                        inputId = 'nib'
+                                    if (inputId == 'docsku update file')
+                                        inputId = 'surat keterangan usaha'
+                                    if (inputId == 'foto usahafile' && !v.value.includes('NPWP'))
+                                        inputId = 'foto usaha'
+                                    
+                                    if (inputId == 'foto usaha' && !v.value.includes('NPWP')) {
+                                        if (!fileEmpty.includes(inputId, i))
+                                            fileEmpty.push(inputId)
+                                    }
+                                    if (inputId != 'foto usaha' && !v.value.includes('NPWP')) {
+                                        if (!fileEmpty.includes(inputId, i))
+                                            fileEmpty.push(inputId)
+                                    }
+                                    
                                 }
                             }
-                        }
-                    }
-                    else {
-                        if (v.value == '' || v.value == null || v.value.includes('Belum Upload')) {
-                            if (inputId == 'foto sp')
-                                inputId = 'surat permohonan';
-                            if (inputId == 'docnpwp upload file')
-                                inputId = 'npwp'
-                            if (inputId == 'docnib update file')
-                                inputId = 'nib'
-                            if (inputId == 'docsku update file')
-                                inputId = 'surat keterangan usaha'
-                            if (inputId == 'foto usahafile' && !v.value.includes('NPWP'))
-                                inputId = 'foto usaha'
-                            
-                            if (inputId == 'foto usaha' && !v.value.includes('NPWP')) {
-                                if (!fileEmpty.includes(inputId, i))
-                                    fileEmpty.push(inputId)
-                            }
-                            if (inputId != 'foto usaha' && !v.value.includes('NPWP')) {
-                                if (!fileEmpty.includes(inputId, i))
-                                    fileEmpty.push(inputId)
-                            }
-                            
                         }
                     }
                 })
@@ -3357,7 +3361,6 @@
     
                         message += item != '' ? `<li class="text-left">Field `+item +` harus diisi.</li>` : ''
                     })
-                    console.log(fileEmpty)
                     for (var i = 0; i < fileEmpty.length; i++) {
                         message += `<li class="text-left">File `+fileEmpty[i]+` harus diisi.</li>`;
                     }

@@ -2171,35 +2171,38 @@ null => 1,
                 $.each(inputFiles, function(i, v) {
                     var inputId = $(this).attr("id") != '' || $(this).attr("id") != null || $(this).attr("id") != 'undefined' ? $(this).attr("id").toString() : ''
                     inputId = inputId.replaceAll('_', ' ').toLowerCase();
-                    if (inputId == "file_nib" || inputId == "surat_keterangan_usaha_file" || inputId == "npwp_file") {
-                        if (ijinUsaha == "nib") {
-                            if (inputId != "surat_keterangan_usaha_file") {
-                                if (v.value == '' || v.value == null) {
-                                    if (!fileEmpty.includes(inputId))
-                                        fileEmpty.push(inputId)
+                    if (inputId != '') {
+                        if (ijinUsaha && ijinUsaha != 'tidak_ada_legalitas_usaha') {
+                            if (inputId == "file_nib" || inputId == "surat_keterangan_usaha_file" || inputId == "npwp_file") {
+                                if (ijinUsaha == "nib") {
+                                    if (inputId != "surat_keterangan_usaha_file") {
+                                        if (v.value == '' || v.value == null) {
+                                            if (!fileEmpty.includes(inputId))
+                                                fileEmpty.push(inputId)
+                                        }
+                                    }
                                 }
-                            }
-                        }
-                        else if (ijinUsaha == "surat_keterangan_usaha") {
-                            if (inputId == "npwp_file") {
-                                const isCheckNpwp = $('#isNpwp').is(':checked')
-                                if (isCheckNpwp) {
-                                    if (v.value == '' || v.value == null) {
-                                        if (!fileEmpty.includes(inputId))
-                                            fileEmpty.push(inputId)
+                                else if (ijinUsaha == "surat_keterangan_usaha") {
+                                    if (inputId == "npwp_file") {
+                                        const isCheckNpwp = $('#isNpwp').is(':checked')
+                                        if (isCheckNpwp) {
+                                            if (v.value == '' || v.value == null) {
+                                                if (!fileEmpty.includes(inputId))
+                                                    fileEmpty.push(inputId)
+                                            }
+                                        }
+                                    }
+        
+                                    if (inputId == "surat_keterangan_usaha_file") {
+                                        if (v.value == '' || v.value == null) {
+                                            if (!fileEmpty.includes(inputId))
+                                                fileEmpty.push(inputId)
+                                        }
                                     }
                                 }
                             }
-
-                            if (inputId == "surat_keterangan_usaha_file") {
-                                if (v.value == '' || v.value == null) {
-                                    if (!fileEmpty.includes(inputId))
-                                        fileEmpty.push(inputId)
-                                }
-                            }
                         }
-                    }
-                    else {
+
                         if (v.value == '' || v.value == null) {
                             if (inputId == 'foto sp') {
                                 inputId = 'surat permohonan';

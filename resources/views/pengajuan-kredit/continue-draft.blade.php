@@ -586,7 +586,7 @@ is-invalid
                         id="docNIB_id">
                     <input type="file" name="upload_file[{{ $itemNIB->id }}]"
                         data-id="{{ temporary($duTemp->id, $itemNIB->id)?->id }}"
-                        placeholder="Masukkan informasi {{ $itemNIB->nama }}" class="form-control limit-size">
+                        placeholder="Masukkan informasi {{ $itemNIB->nama }}" id="file_nib" class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none" id="docNIB_text">Besaran file
                         tidak boleh lebih dari 5 MB</span>
                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
@@ -613,7 +613,7 @@ is-invalid
                         id="docSKU_id">
                     <input type="file" name="upload_file[{{ $itemSKU->id }}]"
                         data-id="{{ temporary($duTemp->id, $itemSKU->id)?->id }}"
-                        placeholder="Masukkan informasi {{ $itemSKU->nama }}" class="form-control limit-size">
+                        placeholder="Masukkan informasi {{ $itemSKU->nama }}" id="file_sku" class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none" id="docSKU_text">Besaran file
                         tidak boleh lebih dari 5 MB</span>
                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
@@ -2699,42 +2699,50 @@ is-invalid
                 var ids = $(this).attr("id");
                 var inputId = ids ? ids.toString() : ''
                 inputId = inputId.replaceAll('_', ' ').toLowerCase();
-                if (inputId == "file_nib" || inputId == "surat_keterangan_usaha_file" || inputId == "npwp_file") {
-                    if (ijinUsaha == "nib") {
-                        if (inputId != "surat_keterangan_usaha_file") {
-                            if (v.value == '' || v.value == null) {
-                                if (!fileEmpty.includes(inputId))
-                                    fileEmpty.push(inputId)
+                if (inputId != '') {
+                    if (ijinUsaha && ijinUsaha != 'tidak_ada_legalitas_usaha') {
+                        if (inputId == "file nib" || inputId == "file sku" || inputId == "docnpwp upload file") {
+                            if (ijinUsaha == "nib") {
+                                if (inputId != "file sku") {
+                                    if (v.value == '' || v.value == null) {
+                                        if (!fileEmpty.includes(inputId))
+                                            fileEmpty.push(inputId)
+                                    }
+                                }
                             }
-                        }
-                    }
-                    else if (ijinUsaha == "surat_keterangan_usaha") {
-                        if (inputId == "npwp_file") {
-                            const isCheckNpwp = $('#isNpwp').is(':checked')
-                            if (isCheckNpwp) {
-                                if (v.value == '' || v.value == null) {
-                                    if (!fileEmpty.includes(inputId))
-                                        fileEmpty.push(inputId)
+                            else if (ijinUsaha == "surat_keterangan_usaha") {
+                                if (inputId == "docnpwp upload file") {
+                                    const isCheckNpwp = $('#isNpwp').is(':checked')
+                                    if (isCheckNpwp) {
+                                        if (v.value == '' || v.value == null) {
+                                            if (!fileEmpty.includes(inputId))
+                                                fileEmpty.push(inputId)
+                                        }
+                                    }
+                                }
+        
+                                if (inputId == "file sku") {
+                                    if (v.value == '' || v.value == null) {
+                                        if (!fileEmpty.includes(inputId))
+                                            fileEmpty.push(inputId)
+                                    }
                                 }
                             }
                         }
-
-                        if (inputId == "surat_keterangan_usaha_file") {
-                            if (v.value == '' || v.value == null) {
-                                if (!fileEmpty.includes(inputId))
-                                    fileEmpty.push(inputId)
-                            }
-                        }
                     }
-                }
-                else {
+
                     if (v.value == '' || v.value == null) {
-                        if (inputId == 'foto sp')
-                            inputId = 'surat permohonan';
-                        if (inputId == 'docnpwp upload file')
-                            inputId = 'npwp'
-                        if (!fileEmpty.includes(inputId))
-                            fileEmpty.push(inputId)
+                        // check span filename
+                        var spanFile = $('#'+ids).parent().find('.filename');
+                        const filename = spanFile.html();
+                        if (filename == "") {
+                            if (inputId == 'foto sp')
+                                inputId = 'surat permohonan';
+                            if (inputId == 'docnpwp upload file')
+                                inputId = 'npwp'
+                            if (!fileEmpty.includes(inputId))
+                                fileEmpty.push(inputId)
+                        }
                     }
                 }
             })
