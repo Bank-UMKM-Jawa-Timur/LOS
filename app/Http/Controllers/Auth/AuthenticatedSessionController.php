@@ -32,6 +32,7 @@ class AuthenticatedSessionController extends Controller
     {
         $user = User::select('nip', 'password')
                     ->where('email', $request->email)
+                    ->orWhere('nip', $request->email)
                     ->first();
 
         if ($user) {
