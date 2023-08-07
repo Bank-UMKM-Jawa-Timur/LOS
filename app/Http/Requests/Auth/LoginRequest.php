@@ -44,10 +44,10 @@ class LoginRequest extends FormRequest
     public function authenticate()
     {
         $this->ensureIsNotRateLimited();
-        $login_type = filter_var($this->only('email'), FILTER_VALIDATE_EMAIL) ? 'email' : 'nip';
-        $this->merge([$login_type => $this->only('email')]);
+        // $login_type = filter_var($this->only('email'), FILTER_VALIDATE_EMAIL) ? 'email' : 'nip';
+        // $this->merge([$login_type => $this->only('email')]);
 
-        if (! Auth::attempt($this->only($login_type, 'password'), $this->boolean('remember'))) {
+        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([

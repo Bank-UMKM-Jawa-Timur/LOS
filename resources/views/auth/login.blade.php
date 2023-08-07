@@ -50,7 +50,7 @@
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <i class="icofont icofont-close-line-circled text-white"></i>
                             </button>
-                            <strong><span class="fa fa-exclamation-triangle"></span> Gagal login.</strong> {{session('error')}}
+                            <strong><span class="fa fa-exclamation-triangle"></span> Gagal login.</strong> {{$errors}}
                         </div>
                         @endif
                         <label for=""> Email / NIP</label>

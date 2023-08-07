@@ -2702,7 +2702,7 @@ is-invalid
                     if (inputId == "file nib" || inputId == "file sku" || inputId == "docnpwp upload file") {
                         if (ijinUsaha && ijinUsaha != 'tidak_ada_legalitas_usaha') {
                             if (ijinUsaha == "nib") {
-                                if (inputId != "file sku") {
+                                if (inputId == "file nib") {
                                     if (v.value == '' || v.value == null) {
                                         if (!fileEmpty.includes(inputId))
                                             fileEmpty.push(inputId)

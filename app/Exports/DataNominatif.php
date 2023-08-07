@@ -54,6 +54,7 @@ class DataNominatif implements FromView
                     'PBO' => 0,
                     'penyelia' => 0,
                     'staff' => 0,
+                    'proses' => 0,
                     'total' => 0,
                 ];
             } else {
@@ -67,6 +68,7 @@ class DataNominatif implements FromView
                     'PBO' => $dat[0]->PBO,
                     'penyelia' => $dat[0]->penyelia,
                     'staff' => $dat[0]->staff,
+                    'proses' => $dat[0]->disetujui + $dat[0]->pincab + $dat[0]->PBP + $dat[0]->PBO + $dat[0]->penyelia + $dat[0]->staff,
                     'total' => $dat[0]->total,
                 ];
             }
@@ -129,6 +131,7 @@ class DataNominatif implements FromView
                 'PBO' => $dataS[0]->PBO | 0,
                 'penyelia' => $dataS[0]->penyelia | 0,
                 'staff' => $dataS[0]->staff | 0,
+                'proses' => ($dataS[0]->disetujui + $dataS[0]->pincab + $dataS[0]->PBP + $dataS[0]->PBO + $dataS[0]->penyelia + $dataS[0]->staff) | 0,
                 'total' => $dataS[0]->total | 0,
             ];
             // dd($dataS);
@@ -193,6 +196,7 @@ class DataNominatif implements FromView
                 'cabang' => $dataC[0]->cabang,
                 'disetujui' => $dataC[0]->disetujui | 0,
                 'staff' => $dataC[0]->staff | 0,
+                'proses' => ($dataC[0]->disetujui + $dataC[0]->staff) | 0,
                 'total' => $dataC[0]->total | 0,
             ];
             // }

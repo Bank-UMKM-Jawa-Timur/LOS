@@ -2175,7 +2175,7 @@ null => 1,
                         if (inputId == "file nib" || inputId == "surat keterangan usaha file" || inputId == "npwp file") {
                             if (ijinUsaha && ijinUsaha != 'tidak_ada_legalitas_usaha') {
                                 if (ijinUsaha == "nib") {
-                                    if (inputId != "surat_keterangan_usaha_file") {
+                                    if (inputId == "file nib") {
                                         if (v.value == '' || v.value == null) {
                                             if (!fileEmpty.includes(inputId))
                                                 fileEmpty.push(inputId)
@@ -2249,7 +2249,7 @@ null => 1,
                                 }
                             }
                         }
-                        
+
                         if (item.includes('text'))
                             item = item.replaceAll('text', '');
 

@@ -1201,6 +1201,16 @@ class PengajuanKreditController extends Controller
             $addData->save();
             $id_calon_nasabah = $addData->id;
 
+            // jawaban ijin usaha
+            JawabanTextModel::create([
+                'id_pengajuan' => $id_pengajuan,
+                'id_jawaban' => 76,
+                'opsi_text' => $request->ijin_usaha,
+                'skor_penyelia' => null,
+                'skor_pbp' => null,
+                'skor' => null,
+            ]);
+
             //untuk jawaban yg teks, number, persen, long text
             foreach ($request->id_level as $key => $value) {
                 if ($value != null) {
@@ -1596,7 +1606,6 @@ class PengajuanKreditController extends Controller
     {
         // dd($request->all());
         // dd($request->dataLevelDua, $request->dataLevelTiga, $request->dataLevelTiga);
-        // return $request->all();
         $find = array('Rp.', '.');
         $request->validate([
             'name' => 'required',
@@ -1696,6 +1705,22 @@ class PengajuanKreditController extends Controller
                         ->where('id_jawaban', $idDoc->id)
                         ->delete();
                 }
+            }
+
+            // ijin usaha
+            $jawabanIjinUsaha = JawabanTextModel::where('id_pengajuan', $id_pengajuan)->where('id_jawaban', 76)->first();
+            if ($jawabanIjinUsaha) {
+                $jawabanIjinUsaha->id_pengajuan = $id_pengajuan;
+                $jawabanIjinUsaha->id_jawaban =  76;
+                $jawabanIjinUsaha->opsi_text = $request->ijin_usaha;
+                $jawabanIjinUsaha->save();
+            }
+            else {
+                $dataJawabanText = new JawabanTextModel;
+                $dataJawabanText->id_pengajuan = $id_pengajuan;
+                $dataJawabanText->id_jawaban =  76;
+                $dataJawabanText->opsi_text = $request->ijin_usaha;
+                $dataJawabanText->save();
             }
 
             if (count($request->file()) > 0) {

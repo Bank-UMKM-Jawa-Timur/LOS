@@ -1635,8 +1635,10 @@
 
 @push('custom-script')
     <script>
+        let dataAspekArr;
         $(window).on('load', function() {
             // $("#id_merk").trigger("change");
+            dataAspekArr = <?php echo json_encode($dataAspek); ?>;
         })
         $('#nib').hide();
         $('#docNIB').hide();
@@ -3289,19 +3291,26 @@
                     var inputId = ids ? ids.toString() : ''
                     inputId = inputId.replaceAll('_', ' ').toLowerCase();
                     if (inputId != '') {
-                        if (inputId == "docnib update file" || inputId == "docsku update file" || inputId == "docnpwpnama file") {
+                        if (inputId == "docnib update file" || inputId == "docsku update file" || inputId == "docnpwp update file") {
                             if (ijinUsaha && ijinUsaha != 'tidak_ada_legalitas_usaha') {
                                 if (ijinUsaha == "nib") {
-                                    if (inputId != "docsku update file") {
+                                    if (inputId == "docnib update file") {
                                         if (v.value == '' || v.value == null || v.value.includes('Belum Upload')) {
                                             inputId = 'nib';
                                             if (!fileEmpty.includes(inputId))
                                                 fileEmpty.push(inputId)
                                         }
                                     }
+                                    if (inputId == 'docnpwp update file') {
+                                        if (v.value == '' || v.value == null || v.value.includes('Belum Upload')) {
+                                            inputId = 'npwp';
+                                            if (!fileEmpty.includes(inputId))
+                                                fileEmpty.push(inputId)
+                                        }
+                                    }
                                 }
                                 else if (ijinUsaha == "surat_keterangan_usaha") {
-                                    if (inputId == "docnpwpnama file") {
+                                    if (inputId == "docnpwp update file") {
                                         const isCheckNpwp = $('#isNpwp').is(':checked')
                                         if (isCheckNpwp) {
                                             if (v.value == '' || v.value == null || v.value.includes('Belum Upload')) {
