@@ -2750,7 +2750,7 @@ class PengajuanKreditController extends Controller
     public function checkPincabStatusDetail($id)
     {
         $param['pageTitle'] = "Dashboard";
-        
+
         $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->where('nama', '!=', 'Data Umum')->get();
         $param['itemSlik'] = ItemModel::join('option as o', 'o.id_item', 'item.id')
             ->join('jawaban as j', 'j.id_jawaban', 'o.id')
@@ -2759,7 +2759,7 @@ class PengajuanKreditController extends Controller
             ->where('nama', 'SLIK')
             ->first();
         $param['itemSP'] = ItemModel::where('level', 1)->where('nama', '=', 'Data Umum')->first();
-        
+
         $param['dataNasabah'] = CalonNasabah::select('calon_nasabah.*', 'kabupaten.id as kabupaten_id', 'kabupaten.kabupaten', 'kecamatan.id as kecamatan_id', 'kecamatan.id_kabupaten', 'kecamatan.kecamatan', 'desa.id as desa_id', 'desa.id_kabupaten', 'desa.id_kecamatan', 'desa.desa')
             ->join('kabupaten', 'kabupaten.id', 'calon_nasabah.id_kabupaten')
             ->join('kecamatan', 'kecamatan.id', 'calon_nasabah.id_kecamatan')
@@ -2769,7 +2769,7 @@ class PengajuanKreditController extends Controller
         $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit', 'pengajuan.average_by_sistem', 'pengajuan.average_by_penyelia', 'pengajuan.average_by_pbo', 'pengajuan.average_by_pbp')
             ->find($id);
         $param['comment'] = KomentarModel::where('id_pengajuan', $id)->first();
-        
+
         $param['pendapatDanUsulan'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff', 'komentar_penyelia', 'komentar_pincab', 'komentar_pbo', 'komentar_pbp')->first();
         if ($param['dataUmum']->skema_kredit == 'KKB') {
             $param['dataPO'] = DB::table('data_po')

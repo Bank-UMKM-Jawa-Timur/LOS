@@ -674,7 +674,7 @@
                                         <option value="surat_keterangan_usaha"
                                             {{ $dataIjin?->nama == 'Surat Keterangan Usaha' ? 'selected' : '' }}>Surat
                                             Keterangan Usaha</option>
-                                        <option value="tidak_ada_legalitas_usaha" {{ !$dataIjin ? 'selected' : '' }}>
+                                         <option value="tidak_ada_legalitas_usaha" {{ !$dataIjin ? 'selected' : '' }}>
                                             Tidak Ada Legalitas Usaha</option>
                                     </select>
                                 </div>
@@ -822,12 +822,29 @@
                                             value="{{ $dataDetailJawabanTextnpwp != null ? $dataDetailJawabanTextnpwp->id : null }}"
                                             @if ($dataDetailJawabanTextnpwp == null) disabled="disabled" @endif>
                                     </div>
-                                @endif
+                                @else
+                                    <div class="form-group col-md-6">
+                                        <label for="">NPWP</label>
+                                        <input type="hidden" name="id_text[]" value="79" id="npwp_id">
+                                        <input type="hidden" name="opsi_jawaban[]" value="input text"
+                                            id="npwp_opsi_jawaban">
+                                        <input type="text" maxlength="255" name="info_text[]" id="npwp_text"
+                                            placeholder="Masukkan informasi" class="form-control"
+                                            value="{{ $dataDetailJawabanTextnpwp != null ? $dataDetailJawabanTextnpwp?->opsi_text : '' }}">
+                                        <input type="hidden" name="skor_penyelia_text[]" id="npwp_text"
+                                            value="{{ $dataDetailJawabanTextnpwp?->skor_penyelia }}">
+                                        <input type="hidden" name="id_jawaban_text[]" id="id_jawaban_npwp"
+                                            value="{{ $dataDetailJawabanTextnpwp != null ? $dataDetailJawabanTextnpwp->id : null }}"
+                                            @if ($dataDetailJawabanTextnpwp == null) disabled="disabled" @endif>
+                                    </div>
 
-                                <div class="form-group col-md-6" id="docNPWP">
-                                    @if (isset($jawabanDokNPWP->opsi_text) != null)
-                                    <label for="">Dokumen NPWP</label>
-                                    <input type="hidden" name="id_file_text[]" value="153" id="docNPWP_id">
+                                    {{-- file dokumen npwp --}}
+                                    <div class="form-group col-md-6" id="docNPWP">
+                                        <label for="">Dokumen NPWP</label>
+                                        @if (isset($jawabanDokNPWP->opsi_text) != null)
+                                        <input type="hidden" name="id_file_text[]" value="153" id="docNPWP_id">
+                                        <input type="hidden" name="id_update_file[]" value="{{$jawabanDokNPWP->id ?? ''}}"
+                                            id="npwp_opsi_jawaban">
                                         <label for="update_file" style="display: none"
                                             id="docNPWPnama_file">{{ $jawabanDokNPWP->opsi_text }}</label>
                                         <input type="file" name="update_file[]" id="docNPWP_update_file"
@@ -836,13 +853,18 @@
 
                                         <span class="invalid-tooltip" style="display: none">Besaran file tidak
                                             boleh lebih dari 5 MB</span>
-                                    @else
+                                        @else
+                                        <input type="hidden" name="id_file_text[]" value="153" id="docNPWP_id">
+                                        <input type="hidden" name="id_update_file[]" value="{{$jawabanDokNPWP->id ?? ''}}"
+                                            id="npwp_opsi_jawaban">
                                         <label for="update_file" style="display: none" id="docNPWPnama_file">Belum Upload
                                             Dokumen NPWP</label>
+                                        <input type="file" name="update_file[]" id="docNPWP_update_file"
+                                            placeholder="Masukkan informasi Dokumen NPWP" class="form-control limit-size">
 
                                         <span class="invalid-tooltip" style="display: none">Besaran file tidak
                                             boleh lebih dari 5 MB</span>
-                                    @endif
+                                        @endif
                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                         <div class="invalid-feedback">
                                             {{ $errors->first('dataLevelTiga.' . $key) }}
@@ -852,6 +874,8 @@
                                         style="display: inline;">{{ $jawabanDokNPWP?->opsi_text }}</span>
                                     {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
                                 </div>
+                                @endif
+
                             </div>
                         @else
                             @php
@@ -1583,8 +1607,8 @@
             <div class="row">
                 <div class="form-group col-md-12">
                     <label for="">Pendapat dan Usulan</label>
-                    <textarea name="komentar_staff" id="komentar_staff" class="form-control @error('komentar_staff') is-invalid @enderror"
-                        maxlength="255" cols="30" rows="4"
+                    <textarea name="komentar_staff" class="form-control @error('komentar_staff') is-invalid @enderror"
+                        maxlength="255" id="" cols="30" rows="4"
                         placeholder="Pendapat dan Usulan Staf/Analis Kredit" required>{{ $detailKomentar?->komentar_staff }}</textarea>
                     <input type="hidden" name="id_komentar_staff_text" value="{{ $detailKomentar?->id }}">
                     @error('komentar_staff')
@@ -1922,6 +1946,7 @@
                 $('#npwp').show();
                 $('#npwp_id').removeAttr('disabled', true);
                 $('#npwp_text').removeAttr('disabled', true);
+                $('#npwp_text').show();
                 $('#id_jawaban_npwp').removeAttr('disabled', true);
                 $('#npwp_opsi_jawaban').removeAttr('disabled', true);
 
@@ -2067,16 +2092,16 @@
             if ($(this).is(':checked')) {
                 $("#statusNpwp").val('1')
                 $('#npwp').show();
-                $('#npwp_id').removeAttr('disabled', true);
-                $('#npwp_text').removeAttr('disabled', true);
-                $('#npwp_opsi_jawaban').removeAttr('disabled', true);
+                $('#npwp_id').removeAttr('disabled');
+                $('#npwp_text').removeAttr('disabled');
+                $('#npwp_opsi_jawaban').removeAttr('disabled');
 
                 $('#docNPWP').show();
-                $('#docNPWP_id').removeAttr('disabled', true);
-                $('#docNPWPnama_file').removeAttr('disabled', true);
-                $('#docNPWP_update_file').removeAttr('disabled', true);
-                $('#id_jawaban_npwp').removeAttr('disabled', true);
-                $('#id_update_npwp').removeAttr('disabled', true);
+                $('#docNPWP_id').removeAttr('disabled');
+                $('#docNPWPnama_file').removeAttr('disabled');
+                $('#docNPWP_update_file').removeAttr('disabled');
+                $('#id_jawaban_npwp').removeAttr('disabled');
+                $('#id_update_npwp').removeAttr('disabled');
             } else {
                 $("#statusNpwp").val('0')
                 $('#npwp').hide();
@@ -2719,12 +2744,8 @@
         //end Repayment Capacity
     </script>
     <script>
-        let dataAspekArr;
-        $(document).ready(function() {
-            dataAspekArr = <?php echo json_encode($dataAspek); ?>;
-        })
-        var nullValue = []
         var firstLoad = true;
+
         $('.rupiah').each(function() {
             var inp = $(this).val()
             $(this).val(formatrupiah(inp))

@@ -53,10 +53,10 @@
                             <strong><span class="fa fa-exclamation-triangle"></span> Gagal login.</strong> {{session('error')}}
                         </div>
                         @endif
-                        <label for=""> Email</label>
+                        <label for=""> Email / NIP</label>
                         <div class="input">
                             <span class="fa fa-envelope mr-2"></span>
-                            <input type="email" name="email" value="{{ old('email') }}" class="form-control" placeholder="Masukkan Email">
+                            <input type="text" name="email" value="{{ old('email') }}" class="form-control" placeholder="Masukkan Email / NIP">
                         </div>
                         <br>
                         <label for=""> Password</label>
