@@ -3268,11 +3268,12 @@
                     var inputId = ids ? ids.toString() : ''
                     inputId = inputId.replaceAll('_', ' ').toLowerCase();
                     if (inputId != '') {
-                        if (ijinUsaha && ijinUsaha != 'tidak_ada_legalitas_usaha') {
-                            if (inputId == "docnib update file" || inputId == "docsku update file" || inputId == "docnpwpnama file") {
+                        if (inputId == "docnib update file" || inputId == "docsku update file" || inputId == "docnpwpnama file") {
+                            if (ijinUsaha && ijinUsaha != 'tidak_ada_legalitas_usaha') {
                                 if (ijinUsaha == "nib") {
                                     if (inputId != "docsku update file") {
                                         if (v.value == '' || v.value == null || v.value.includes('Belum Upload')) {
+                                            inputId = 'nib';
                                             if (!fileEmpty.includes(inputId))
                                                 fileEmpty.push(inputId)
                                         }
@@ -3283,43 +3284,28 @@
                                         const isCheckNpwp = $('#isNpwp').is(':checked')
                                         if (isCheckNpwp) {
                                             if (v.value == '' || v.value == null || v.value.includes('Belum Upload')) {
+                                                inputId = 'npwp';
                                                 if (!fileEmpty.includes(inputId))
                                                     fileEmpty.push(inputId)
                                             }
                                         }
                                     }
-            
                                     if (inputId == "docsku update file") {
                                         if (v.value == '' || v.value == null || v.value.includes('Belum Upload')) {
+                                            inputId = 'surat keterangan usaha';
                                             if (!fileEmpty.includes(inputId))
                                                 fileEmpty.push(inputId)
                                         }
                                     }
                                 }
                             }
-                            else {
-                                if (v.value == '' || v.value == null || v.value.includes('Belum Upload')) {
-                                    if (inputId == 'foto sp')
-                                        inputId = 'surat permohonan';
-                                    if (inputId == 'docnpwp upload file')
-                                        inputId = 'npwp'
-                                    if (inputId == 'docnib update file')
-                                        inputId = 'nib'
-                                    if (inputId == 'docsku update file')
-                                        inputId = 'surat keterangan usaha'
-                                    if (inputId == 'foto usahafile' && !v.value.includes('NPWP'))
-                                        inputId = 'foto usaha'
-                                    
-                                    if (inputId == 'foto usaha' && !v.value.includes('NPWP')) {
-                                        if (!fileEmpty.includes(inputId, i))
-                                            fileEmpty.push(inputId)
-                                    }
-                                    if (inputId != 'foto usaha' && !v.value.includes('NPWP')) {
-                                        if (!fileEmpty.includes(inputId, i))
-                                            fileEmpty.push(inputId)
-                                    }
-                                    
-                                }
+                        }
+                        else {
+                            if (v.value == '' || v.value == null) {
+                                if (inputId == 'foto sp')
+                                    inputId = 'surat permohonan';
+                                if (!fileEmpty.includes(inputId))
+                                    fileEmpty.push(inputId)
                             }
                         }
                     }
@@ -3330,6 +3316,12 @@
                     let message = "";
                     $.each(nullValue, (i, v) => {
                         var item = v;
+                        if (v == 'dataLevelDua')
+                            item = 'slik';
+    
+                        if (v == 'itemByKategori')
+                            item = 'jaminan tambahan';
+
                         if (v == 'itemByKategori'){
                             if($("#kategori_jaminan_tambahan").val() == "Tidak Memiliki Jaminan Tambahan"){
                                 for(var j = 0; j < nullValue.length; j++){
@@ -3358,11 +3350,15 @@
                                 }
                             }
                         }
+
+                        if (item.includes('text'))
+                            item = item.replaceAll('text', '');
     
                         message += item != '' ? `<li class="text-left">Field `+item +` harus diisi.</li>` : ''
                     })
                     for (var i = 0; i < fileEmpty.length; i++) {
-                        message += `<li class="text-left">File `+fileEmpty[i]+` harus diisi.</li>`;
+                        var msgItem = fileEmpty[i].includes('file') ? fileEmpty[i].replaceAll('file', '') : fileEmpty[i];
+                        message += `<li class="text-left">File `+msgItem+` harus diisi.</li>`;
                     }
                     Swal.fire({
                         icon: 'error',
