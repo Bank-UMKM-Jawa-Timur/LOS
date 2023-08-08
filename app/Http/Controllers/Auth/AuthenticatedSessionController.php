@@ -35,8 +35,26 @@ class AuthenticatedSessionController extends Controller
                     ->orWhere('nip', $request->email)
                     ->first();
         if ($user) {
-            if (Auth::attempt(['email' => $request->email, 'password' => $request->password]) || Auth::attempt(['nip' => $request->email, 'password' => $request->password])) {
-                if ($user->role == 'Administrator') {
+            if ($user->role == 'Administrator') {
+                if (\Hash::check($request->password, $user->password)) {
+                    $request->authenticate();
+                    if (DB::table('sessions')->where('user_id', auth()->user()->id)->count() > 0) {
+                        Auth::guard('web')->logout();
+
+                        $request->session()->invalidate();
+
+                        $request->session()->regenerateToken();
+                        return back()->withError("Akun sedang digunakan di perangkat lain.");
+                    }
+
+                    $request->session()->regenerate();
+
+                    return redirect()->intended(RouteServiceProvider::HOME);
+                } else {
+                    return back()->withError("Password yang anda masukan salah");
+                }
+            } else {
+                if (isset($user->nip)) {
                     if (\Hash::check($request->password, $user->password)) {
                         $request->authenticate();
                         if (DB::table('sessions')->where('user_id', auth()->user()->id)->count() > 0) {
@@ -55,31 +73,8 @@ class AuthenticatedSessionController extends Controller
                         return back()->withError("Password yang anda masukan salah");
                     }
                 } else {
-                    if (isset($user->nip)) {
-                        if (\Hash::check($request->password, $user->password)) {
-                            $request->authenticate();
-                            if (DB::table('sessions')->where('user_id', auth()->user()->id)->count() > 0) {
-                                Auth::guard('web')->logout();
-
-                                $request->session()->invalidate();
-
-                                $request->session()->regenerateToken();
-                                return back()->withError("Akun sedang digunakan di perangkat lain.");
-                            }
-
-                            $request->session()->regenerate();
-
-                            return redirect()->intended(RouteServiceProvider::HOME);
-                        } else {
-                            return back()->withError("Password yang anda masukan salah");
-                        }
-                    } else {
-                        return back()->withError("Belum dilakukan Pengkinian Data User untuk $request->email.\nHarap menghubungi Divisi Pemasaran atau TI & AK.");
-                    }
+                    return back()->withError("Belum dilakukan Pengkinian Data User untuk $request->email.\nHarap menghubungi Divisi Pemasaran atau TI & AK.");
                 }
-            }
-            else {
-                return back()->withError("Email atau Nip Tidak ditemukan");
             }
         }
         else {

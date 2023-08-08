@@ -83,51 +83,33 @@
                 $staff = 0;
                 $total = 0;
             @endphp
-            @for ($i = 0; $i < count($data); $i++)
+            @foreach ($data as $key => $item)
+                @if ($item->kodeC != 000)
+                    <tr>
+                        <td>{{ $item->kodeC }}</td>
+                        <td>{{ $item->cabang }}</td>
+                        <td>{{ $item->disetujui }}</td>
+                        <td>{{ $item->ditolak }}</td>
+                        <td>{{ $item->pincab }}</td>
+                        <td>{{ $item->PBP }}</td>
+                        <td>{{ $item->PBO }}</td>
+                        <td>{{ $item->penyelia }}</td>
+                        <td>{{ $item->staff }}</td>
+                        <td>{{ $item->total }}</td>
+                    </tr>
 
-            @if ($dataC[$i]['kodeC'] != 000)
-
-                <tr>
-                    <td>{{ $data[$i]['kodeC'] }}</td>
-                    <td>{{ $data[$i]['cabang'] }}</td>
-                    <td>{{ $data[$i]['disetujui'] }}</td>
-                    <td>{{ $data[$i]['ditolak'] }}</td>
-                    <td>{{ $data[$i]['pincab'] }}</td>
-                    <td>{{ $data[$i]['PBP'] }}</td>
-                    <td>{{ $data[$i]['PBO'] }}</td>
-                    <td>{{ $data[$i]['penyelia'] }}</td>
-                    <td>{{ $data[$i]['staff'] }}</td>
-                    <td>{{ $data[$i]['total'] }}</td>
-                </tr>
-
-                @php
-                    $disetujui += $data[$i]['disetujui'];
-                    $ditolak += $data[$i]['ditolak'];
-                    $pincab += $data[$i]['pincab'];
-                    $pbp += $data[$i]['PBP'];
-                    $pbo += $data[$i]['PBO'];
-                    $penyelia += $data[$i]['penyelia'];
-                    $staff += $data[$i]['staff'];
-                    $total += $data[$i]['total'];
-                @endphp
-
-            @endif
-
-            @endfor
-            {{-- @foreach ($data as $row)
-                <tr>
-                    <td>{{ $row->kodeC }}</td>
-                    <td>{{ $row->cabang }}</td>
-                    <td>{{ $row->disetujui }}</td>
-                    <td>{{ $row->ditolak }}</td>
-                    <td>{{ $row->pincab }}</td>
-                    <td>{{ $row->PBP }}</td>
-                    <td>{{ $row->PBO }}</td>
-                    <td>{{ $row->penyelia }}</td>
-                    <td>{{ $row->staff }}</td>
-                    <td>{{ $row->total }}</td>
-                </tr>
-            @endforeach --}}
+                    @php
+                        $disetujui += $item->disetujui;
+                        $ditolak += $item->ditolak;
+                        $pincab += $item->pincab;
+                        $pbp += $item->PBP;
+                        $pbo += $item->PBO;
+                        $penyelia += $item->penyelia;
+                        $staff += $item->staff;
+                        $total += $item->total;
+                    @endphp
+                @endif
+            @endforeach
         </tbody>
         <tfoot>
             <tr>
@@ -154,58 +136,48 @@
 
         <thead>
             <tr>
-                <th colspan="5">Total Pengajuan Selesai Dan Proses</th>
+                <th colspan="6">Total Pengajuan Selesai Dan Proses</th>
             </tr>
             <tr>
                 <th>Kode</th>
                 <th>Cabang</th>
                 <th>Disetujui</th>
+                <th>Ditolak</th>
                 <th>Proses</th>
                 <th>Total</th>
             </tr>
         </thead>
         <tbody>
-            {{-- @php
-                $disetujui = 0;
-                $proses = 0;
-                $GtotalC = 0;
-                @endphp --}}
             @php
-
                 $totalC = 0;
                 $disetujui = 0;
+                $ditolak = 0;
                 $proses = 0;
-
             @endphp
-            @for ($i = 0; $i < count($dataC); $i++)
-
-            @if ($dataC[$i]['kodeC'] != 000)
-
-
-            <tr>
-
-                <td>{{ $dataC[$i]['kodeC'] }}</td>
-                <td>{{ $dataC[$i]['cabang'] }}</td>
-                <td>{{ $dataC[$i]['disetujui'] }}</td>
-                <td>{{ $dataC[$i]['proses'] }}</td>
-                <td>{{$dataC[$i]['disetujui']+$dataC[$i]['proses']   }}</td>
-                @php
-                    $totalC += $dataC[$i]['disetujui']+$dataC[$i]['proses']  ;
-                    $disetujui +=  $dataC[$i]['disetujui'];
-                    $proses +=  $dataC[$i]['proses'];
+            @foreach ($data2 as $key => $item)
+                @if ($item->kodeC != 000)
+                <tr>
+                    <td>{{ $item->kodeC }}</td>
+                    <td>{{ $item->cabang }}</td>
+                    <td>{{ $item->disetujui }}</td>
+                    <td>{{ $item->ditolak }}</td>
+                    <td>{{ $item->diproses }}</td>
+                    <td>{{ $item->total }}</td>
+                    @php
+                        $totalC += $item->total;
+                        $disetujui +=  $item->disetujui;
+                        $ditolak +=  $item->ditolak;
+                        $proses +=  $item->diproses;
                     @endphp
-            </tr>
-
-
-            @endif
-
-
-                @endfor
+                </tr>
+                @endif
+            @endforeach
         </tbody>
         <tfoot>
             <tr>
                 <td style="font-weight:bold ;" colspan="2">Grand Total</td>
                 <td style="font-weight:bold ;">{{ $disetujui }}</td>
+                <td style="font-weight:bold ;">{{ $ditolak }}</td>
                 <td style="font-weight:bold ;">{{ $proses }}</td>
                 <td style="font-weight:bold ;">{{ $totalC }}</td>
             </tr>
