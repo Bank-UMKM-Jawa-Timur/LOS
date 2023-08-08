@@ -36,7 +36,7 @@
 
 <body>
 
-    <h2><b>DATA NOMINATIF</b></h2>\
+    <h2><b>DATA NOMINATIF</b></h2>
     @if (request()->k_tanggal != "kesuluruhan")
         @if (Request()->cabang == "semua")
             <p>Data Pengajuan, Tanggal: {{ date($tAwal) }} sampai {{ date($tAkhir) }} Semua Cabang</p>
