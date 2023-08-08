@@ -34,3 +34,9 @@ Route::prefix('kkb')->group(function(){
         Route::get('/get-cabang', [PengajuanAPIController::class, 'getAllCabang']);
     });
 });
+
+Route::prefix('v1')->group(function(){
+    Route::middleware([APIToken::class])->group(function(){
+        Route::get('get-sum-cabang', [PengajuanAPIController::class, 'getSumPengajuan']);
+    });
+});
