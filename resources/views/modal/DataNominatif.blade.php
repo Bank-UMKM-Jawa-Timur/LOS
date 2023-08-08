@@ -47,7 +47,7 @@
         @if (Request()->cabang == "semua")
             <p>Data Pengajuan Kesuluruhan Data Semua Cabang</p>
         @else
-            <p>Data Pengajuan Kesuluruhan Data Cabang {{ \App\Models\cabang::select('cabang')->where('id', Request()->cabang)->first()->cabang }}</p>
+            <p>Data Pengajuan Kesuluruhan Data Cabang {{ \App\Models\Cabang::select('cabang')->where('id', Request()->cabang)->first()->cabang }}</p>
         @endif
     @endif
 
