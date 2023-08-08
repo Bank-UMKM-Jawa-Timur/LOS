@@ -2,6 +2,19 @@
     <tr>
         <td align="center" style="font-weight:bold;vertical-align: center;text-align:center;" colspan="10" rowspan="3">
             <h2>DATA NOMINATIF</h2>
+            @if (request()->k_tanggal != "kesuluruhan")
+                @if (Request()->cabang == "semua")
+                    <p>Data Pengajuan, Tanggal: {{ date($tAwal) }} sampai {{ date($tAkhir) }} Semua Cabang</p>
+                @else
+                    <p>Data Pengajuan, Tanggal: {{ date($tAwal) }} sampai {{ date($tAkhir) }} Cabang {{ \App\Models\cabang::select('cabang')->where('id', Request()->cabang)->first()->cabang }}</p>
+                @endif
+            @else
+                @if (Request()->cabang == "semua")
+                    <p>Data Pengajuan Kesuluruhan Data Semua Cabang</p>
+                @else
+                    <p>Data Pengajuan Kesuluruhan Data Cabang {{ \App\Models\Cabang::select('cabang')->where('id', Request()->cabang)->first()->cabang }}</p>
+                @endif
+            @endif
         </td>
     </tr>
     <tr>
@@ -16,9 +29,9 @@
 
     <thead>
         <tr>
-            <th rowspan="2" colspan="10" align="center"
-                style="background-color: #dc3545; color: white; font-weight: bold; vertical-align: center;">Data
-                Pengajuan, Tanggal: {{ date($tAwal) }} sampai {{ date($tAkhir) }}</th>
+            <th colspan="10" rowspan="2" align="center" style="font-weight: bold; vertical-align: center; background-color: #dc3545; color: white;">
+                Posisi Pengajuan
+            </th>
         </tr>
         <tr>
             <th></th>
@@ -35,14 +48,14 @@
         <tr>
             <th style="background-color: rgb(17, 32, 66); border:1px solid #000;">Kode</th>
             <th style="background-color: rgb(17, 32, 66);width: 300px; border:1px solid #000;">Cabang</th>
-            <th style="background-color: rgb(17, 32, 66);border:1px solid #000;">Disetujui</th>
-            <th style="background-color: rgb(17, 32, 66);border:1px solid #000;">Ditolak</th>
-            <th style="background-color: rgb(17, 32, 66);border:1px solid #000;">Pincab</th>
-            <th style="background-color: rgb(17, 32, 66);border:1px solid #000;">PBP</th>
-            <th style="background-color: rgb(17, 32, 66);border:1px solid #000;">PBO</th>
-            <th style="background-color: rgb(17, 32, 66);border:1px solid #000;">Penyelia</th>
-            <th style="background-color: rgb(17, 32, 66);border:1px solid #000;">Staff</th>
-            <th style="background-color: rgb(17, 32, 66);border:1px solid #000;">Total</th>
+            <th style="background-color: rgb(17, 32, 66); border:1px solid #000;">Disetujui</th>
+            <th style="background-color: rgb(17, 32, 66); border:1px solid #000;">Ditolak</th>
+            <th style="background-color: rgb(17, 32, 66); border:1px solid #000;">Pincab</th>
+            <th style="background-color: rgb(17, 32, 66); border:1px solid #000;">PBP</th>
+            <th style="background-color: rgb(17, 32, 66); border:1px solid #000;">PBO</th>
+            <th style="background-color: rgb(17, 32, 66); border:1px solid #000;">Penyelia</th>
+            <th style="background-color: rgb(17, 32, 66); border:1px solid #000;">Staff</th>
+            <th style="background-color: rgb(17, 32, 66); border:1px solid #000;">Total</th>
         </tr>
     </thead>
     <tbody>
@@ -56,45 +69,33 @@
             $staff = 0;
             $total = 0;
         @endphp
-        @for ($i = 0; $i < count($data); $i++)
-            <tr>
-                <td style="border:1px solid #000;">{{ $data[$i]['kodeC'] }}</td>
-                <td style="border:1px solid #000;">{{ $data[$i]['cabang'] }}</td>
-                <td style="border:1px solid #000;">{{ $data[$i]['disetujui'] }}</td>
-                <td style="border:1px solid #000;">{{ $data[$i]['ditolak'] }}</td>
-                <td style="border:1px solid #000;">{{ $data[$i]['pincab'] }}</td>
-                <td style="border:1px solid #000;">{{ $data[$i]['PBP'] }}</td>
-                <td style="border:1px solid #000;">{{ $data[$i]['PBO'] }}</td>
-                <td style="border:1px solid #000;">{{ $data[$i]['penyelia'] }}</td>
-                <td style="border:1px solid #000;">{{ $data[$i]['staff'] }}</td>
-                <td style="border:1px solid #000;">{{ $data[$i]['total'] }}</td>
-            </tr>
-
-            @php
-                $disetujui += $data[$i]['disetujui'];
-                $ditolak += $data[$i]['ditolak'];
-                $pincab += $data[$i]['pincab'];
-                $pbp += $data[$i]['PBP'];
-                $pbo += $data[$i]['PBO'];
-                $penyelia += $data[$i]['penyelia'];
-                $staff += $data[$i]['staff'];
-                $total += $data[$i]['total'];
-            @endphp
-        @endfor
-        {{-- @foreach ($data as $row)
+        @foreach ($data as $key => $item)
+            @if ($item->kodeC != 000)
                 <tr>
-                    <td>{{ $row->kodeC }}</td>
-                    <td>{{ $row->cabang }}</td>
-                    <td>{{ $row->disetujui }}</td>
-                    <td>{{ $row->ditolak }}</td>
-                    <td>{{ $row->pincab }}</td>
-                    <td>{{ $row->PBP }}</td>
-                    <td>{{ $row->PBO }}</td>
-                    <td>{{ $row->penyelia }}</td>
-                    <td>{{ $row->staff }}</td>
-                    <td>{{ $row->total }}</td>
+                    <td style="border:1px solid #000;">{{ $item->kodeC }}</td>
+                    <td style="border:1px solid #000;">{{ $item->cabang }}</td>
+                    <td style="border:1px solid #000;">{{ $item->disetujui }}</td>
+                    <td style="border:1px solid #000;">{{ $item->ditolak }}</td>
+                    <td style="border:1px solid #000;">{{ $item->pincab }}</td>
+                    <td style="border:1px solid #000;">{{ $item->PBP }}</td>
+                    <td style="border:1px solid #000;">{{ $item->PBO }}</td>
+                    <td style="border:1px solid #000;">{{ $item->penyelia }}</td>
+                    <td style="border:1px solid #000;">{{ $item->staff }}</td>
+                    <td style="border:1px solid #000;">{{ $item->total }}</td>
                 </tr>
-                @endforeach --}}
+
+                @php
+                    $disetujui += $item->disetujui;
+                    $ditolak += $item->ditolak;
+                    $pincab += $item->pincab;
+                    $pbp += $item->PBP;
+                    $pbo += $item->PBO;
+                    $penyelia += $item->penyelia;
+                    $staff += $item->staff;
+                    $total += $item->total;
+                @endphp
+            @endif
+        @endforeach
     </tbody>
     <tfoot>
         <tr>
@@ -118,9 +119,9 @@
 
     <thead>
         <tr>
-            <th rowspan="2" colspan="5" align="center"
-                style="vertical-align: center; background-color: #dc3545; color: white; font-weight: bold;">Total
-                Pengajuan Selesai Dan Proses</th>
+            <th rowspan="2" colspan="6" align="center" style="vertical-align: center; background-color: #dc3545; color: white; font-weight: bold;">
+                Total Pengajuan Selesai Dan Proses
+            </th>
         </tr>
         <tr>
             <th></th>
@@ -131,57 +132,45 @@
             <th></th>
         </tr>
         <tr>
-            <th style="background-color: rgb(17, 32, 66);width: 300px; border:1px solid #000;">Kode Cabang</th>
+            <th style="background-color: rgb(17, 32, 66);width: 300px; border:1px solid #000;">Kode</th>
             <th style="background-color: rgb(17, 32, 66);width: 300px; border:1px solid #000;">Cabang</th>
             <th style="background-color: rgb(17, 32, 66);border:1px solid #000;">Disetujui</th>
+            <th style="background-color: rgb(17, 32, 66);border:1px solid #000;">Ditolak</th>
             <th style="background-color: rgb(17, 32, 66);border:1px solid #000;">Proses</th>
             <th style="background-color: rgb(17, 32, 66);border:1px solid #000;">Total</th>
         </tr>
     </thead>
     <tbody>
         @php
-
-                $totalC = 0;
-                $disetujui = 0;
-                $proses = 0;
-
-            @endphp
-        @for ($i = 0; $i < count($dataC); $i++)
-
-        @if ($dataC[$i]['kodeC'] != 000)
-        <tr>
-            <td style="border:1px solid #000;">{{ $dataC[$i]['kodeC'] }}</td>
-            <td style="border:1px solid #000;">{{ $dataC[$i]['cabang'] }}</td>
-            <td style="border:1px solid #000;">{{ $dataC[$i]['disetujui'] }}</td>
-            <td style="border:1px solid #000;">{{ $dataC[$i]['proses'] }}</td>
-            <td style="border:1px solid #000;">{{$dataC[$i]['disetujui']+$dataC[$i]['proses']   }}</td>
-            @php
-                    $totalC += $dataC[$i]['disetujui']+$dataC[$i]['proses']  ;
-                    $disetujui +=  $dataC[$i]['disetujui'];
-                    $proses +=  $dataC[$i]['proses'];
-            @endphp
-        </tr>
-        @endif
-        @endfor
-        {{-- @foreach ($data as $row)
-                <tr>
-                    <td>{{ $row->kodeC }}</td>
-                    <td>{{ $row->cabang }}</td>
-                    <td>{{ $row->disetujui }}</td>
-                    <td>{{ $row->proses }}</td>
-                    <td>{{ $row->pincab }}</td>
-                    <td>{{ $row->PBP }}</td>
-                    <td>{{ $row->PBO }}</td>
-                    <td>{{ $row->penyelia }}</td>
-                    <td>{{ $row->staff }}</td>
-                    <td>{{ $row->total }}</td>
-                </tr>
-                @endforeach --}}
+            $totalC = 0;
+            $disetujui = 0;
+            $ditolak = 0;
+            $proses = 0;
+        @endphp
+        @foreach ($data2 as $key => $item)
+            @if ($item->kodeC != 000)
+            <tr>
+                <td style="border:1px solid #000;">{{ $item->kodeC }}</td>
+                <td style="border:1px solid #000;">{{ $item->cabang }}</td>
+                <td style="border:1px solid #000;">{{ $item->disetujui }}</td>
+                <td style="border:1px solid #000;">{{ $item->ditolak }}</td>
+                <td style="border:1px solid #000;">{{ $item->diproses }}</td>
+                <td style="border:1px solid #000;">{{ $item->total }}</td>
+                @php
+                    $totalC += $item->total;
+                    $disetujui +=  $item->disetujui;
+                    $ditolak +=  $item->ditolak;
+                    $proses +=  $item->diproses;
+                @endphp
+            </tr>
+            @endif
+        @endforeach
     </tbody>
     <tfoot>
         <tr>
             <td colspan="2" align="center" style="font-weight: bold; border:1px solid #000;">Grand Total</td>
             <td style="font-weight: bold; border:1px solid #000;">{{ $disetujui }}</td>
+            <td style="font-weight: bold; border:1px solid #000;">{{ $ditolak }}</td>
             <td style="font-weight: bold; border:1px solid #000;">{{ $proses }}</td>
             <td style="font-weight: bold; border:1px solid #000;">{{ $totalC }}</td>
         </tr>

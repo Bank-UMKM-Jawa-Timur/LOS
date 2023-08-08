@@ -20,213 +20,75 @@ class DataNominatif implements FromView
         $tAwal = Request()->tAwal;
         $jExport = Request()->export;
         $type = Request()->k_tanggal;
-        $cabangIds = cabang::get();
 
-        // kategori custom
-        // Jenis cabang di pilih semua
-        $all_data = [];
-        foreach ($cabangIds as $rows) {
-            $dat = DB::table('pengajuan')
-            ->selectRaw('kode_cabang as kodeC,
-                                 cabang,
-                                 sum(posisi = "selesai") as disetujui,
-                                 sum(posisi = "Ditolak") as ditolak,
-                                 sum(posisi = "pincab") as pincab,
-                                 sum(posisi = "PBP") as PBP,
-                                 sum(posisi = "PBO") as PBO,
-                                 sum(posisi = "Review Penyelia") as penyelia,
-                                 sum(posisi = "Proses Input Data") as staff,
-                                 count(*) as total')
-            ->join('cabang', 'pengajuan.id_cabang', '=', 'cabang.id')
-            ->where('cabang.id', $rows->id)
-                ->whereBetween('tanggal', [$tAwal, ($tAkhir ?? date('Y-m-d'))])
-                ->groupBy('id_cabang')
-                ->orderBy('total', 'DESC')
-                ->get();
-            if (count($dat) == 0) {
-                $cbgs = [
-                    'kodeC' => $rows->kode_cabang,
-                    'cabang' => $rows->cabang,
-                    'disetujui' => 0,
-                    'ditolak' => 0,
-                    'pincab' => 0,
-                    'PBP' => 0,
-                    'PBO' => 0,
-                    'penyelia' => 0,
-                    'staff' => 0,
-                    'proses' => 0,
-                    'total' => 0,
-                ];
-            } else {
-                $cbgs = [
-                    'kodeC' => $dat[0]->kodeC,
-                    'cabang' => $dat[0]->cabang,
-                    'disetujui' => $dat[0]->disetujui,
-                    'ditolak' => $dat[0]->ditolak,
-                    'pincab' => $dat[0]->pincab,
-                    'PBP' => $dat[0]->PBP,
-                    'PBO' => $dat[0]->PBO,
-                    'penyelia' => $dat[0]->penyelia,
-                    'staff' => $dat[0]->staff,
-                    'proses' => $dat[0]->disetujui + $dat[0]->pincab + $dat[0]->PBP + $dat[0]->PBO + $dat[0]->penyelia + $dat[0]->staff,
-                    'total' => $dat[0]->total,
-                ];
-            }
-            array_push($all_data, $cbgs);
+        // New code
+        $seluruh_data = DB::table('pengajuan AS p')
+                            ->select(
+                                'c.kode_cabang AS kodeC',
+                                'c.cabang',
+                                \DB::raw("SUM(IF(p.posisi = 'Selesai', 1,0)) AS disetujui"),
+                                \DB::raw("SUM(IF(p.posisi = 'Ditolak', 1,0)) AS ditolak"),
+                                \DB::raw("SUM(IF(p.posisi = 'Pincab', 1,0)) AS pincab"),
+                                \DB::raw("SUM(IF(p.posisi = 'PBP', 1,0)) AS PBP"),
+                                \DB::raw("SUM(IF(p.posisi = 'PBO', 1,0)) AS PBO"),
+                                \DB::raw("SUM(IF(p.posisi = 'Review Penyelia', 1,0)) AS penyelia"),
+                                \DB::raw("SUM(IF(p.posisi = 'Proses Input Data', 1,0)) AS staff"),
+                                \DB::raw("(SUM(IF(p.posisi = 'Proses Input Data', 1,0))+
+                                        SUM(IF(p.posisi = 'Review Penyelia', 1,0))+
+                                        SUM(IF(p.posisi = 'PBO', 1,0))+
+                                        SUM(IF(p.posisi = 'PBP', 1,0))+
+                                        SUM(IF(p.posisi = 'Pincab', 1,0))+
+                                        SUM(IF(p.posisi = 'Selesai', 1,0))) AS diproses"),
+                                \DB::raw("SUM(1) AS total"),
+                            )
+                            ->join('cabang AS c', 'c.id', 'p.id_cabang')
+                            ->groupBy('kodeC')
+                            ->orderBy('total', 'desc');
+
+        $seluruh_data_proses = DB::table('pengajuan AS p')
+                            ->select(
+                                'c.kode_cabang AS kodeC',
+                                'c.cabang',
+                                \DB::raw("SUM(IF(p.posisi = 'Selesai', 1,0)) AS disetujui"),
+                                \DB::raw("SUM(IF(p.posisi = 'Ditolak', 1,0)) AS ditolak"),
+                                \DB::raw("(SUM(IF(p.posisi = 'Proses Input Data', 1,0))+
+                                        SUM(IF(p.posisi = 'Review Penyelia', 1,0))+
+                                        SUM(IF(p.posisi = 'PBO', 1,0))+
+                                        SUM(IF(p.posisi = 'PBP', 1,0))+
+                                        SUM(IF(p.posisi = 'Pincab', 1,0))) AS diproses"),
+                                \DB::raw("(SUM(IF(p.posisi = 'Selesai', 1,0))+
+                                        SUM(IF(p.posisi = 'Ditolak', 1,0))+
+                                        (
+                                            SUM(IF(p.posisi = 'Proses Input Data', 1,0))+
+                                            SUM(IF(p.posisi = 'Review Penyelia', 1,0))+
+                                            SUM(IF(p.posisi = 'PBO', 1,0))+
+                                            SUM(IF(p.posisi = 'PBP', 1,0))+
+                                            SUM(IF(p.posisi = 'Pincab', 1,0))
+                                        )) AS total"),
+                            )
+                            ->join('cabang AS c', 'c.id', 'p.id_cabang')
+                            ->groupBy('kodeC')
+                            ->orderBy('total', 'desc');
+        if ($pilCabang != 'semua') {
+            $seluruh_data = $seluruh_data->where('c.id', $pilCabang);
+            $seluruh_data_proses = $seluruh_data_proses->where('c.id', $pilCabang);
         }
-
-        // kategori custom
-        // jenis cabang pilih 1
-        $data = DB::table('pengajuan')
-        ->selectRaw('kode_cabang as kodeC,
-                                 cabang,
-                                 sum(posisi = "selesai") as disetujui,
-                                 sum(posisi = "Ditolak") as ditolak,
-                                 sum(posisi = "pincab") as pincab,
-                                 sum(posisi = "PBP") as PBP,
-                                 sum(posisi = "PBO") as PBO,
-                                 sum(posisi = "Review Penyelia") as penyelia,
-                                 sum(posisi = "Proses Input Data") as staff,
-                                 count(*) as total')
-        ->join('cabang', 'pengajuan.id_cabang', '=', 'cabang.id')
-        ->where('cabang.id', $pilCabang)
-            ->whereBetween('tanggal', [$tAwal, ($tAkhir ?? date('Y-m-d'))])
-            ->groupBy('id_cabang')
-            ->orderBy('total')
-            ->get();
-
-        $arr = $data->map(function ($d) {
-            return get_object_vars($d);
-        });
-
-
-
-        // kategori seluruh
-        // jenis semua
-        $seluruh_data = [];
-        foreach ($cabangIds as $row) {
-            $dataS = DB::table('pengajuan')
-            ->selectRaw('kode_cabang as kodeC,
-                                    cabang,
-                                    sum(posisi = "selesai") as disetujui,
-                                    sum(posisi = "Ditolak") as ditolak,
-                                    sum(posisi = "pincab") as pincab,
-                                    sum(posisi = "PBP") as PBP,
-                                    sum(posisi = "PBO") as PBO,
-                                    sum(posisi = "Review Penyelia") as penyelia,
-                                    sum(posisi = "Proses Input Data") as staff,
-                                    count(*) as total')
-            ->join('cabang', 'pengajuan.id_cabang', '=', 'cabang.id')
-            ->where('cabang.id', $row->id)
-                ->orderBy('KodeC')
-                ->get();
-
-            $c = [
-                'kodeC' => $dataS[0]->kodeC,
-                'cabang' => $dataS[0]->cabang,
-                'disetujui' => $dataS[0]->disetujui | 0,
-                'ditolak' => $dataS[0]->ditolak | 0,
-                'pincab' => $dataS[0]->pincab | 0,
-                'PBP' => $dataS[0]->PBP | 0,
-                'PBO' => $dataS[0]->PBO | 0,
-                'penyelia' => $dataS[0]->penyelia | 0,
-                'staff' => $dataS[0]->staff | 0,
-                'proses' => ($dataS[0]->disetujui + $dataS[0]->pincab + $dataS[0]->PBP + $dataS[0]->PBO + $dataS[0]->penyelia + $dataS[0]->staff) | 0,
-                'total' => $dataS[0]->total | 0,
-            ];
-            // dd($dataS);
-
-            array_push($seluruh_data, $c);
+        
+        if ($tAwal && $tAkhir) {
+            $seluruh_data = $seluruh_data->whereBetween('p.tanggal', [$tAwal, $tAkhir]);
+            $seluruh_data_proses = $seluruh_data_proses->whereBetween('p.tanggal', [$tAwal, $tAkhir]);
         }
-
-        // kategori seluruh
-        // jenis pilih 1
-        $data = DB::table('pengajuan')
-        ->selectRaw('kode_cabang as kodeC,
-                                 cabang,
-                                 sum(posisi = "selesai") as disetujui,
-                                 sum(posisi = "Ditolak") as ditolak,
-                                 sum(posisi = "pincab") as pincab,
-                                 sum(posisi = "PBP") as PBP,
-                                 sum(posisi = "PBO") as PBO,
-                                 sum(posisi = "Review Penyelia") as penyelia,
-                                 sum(posisi = "Proses Input Data") as staff,
-                                 count(*) as total')
-        ->join('cabang', 'pengajuan.id_cabang', '=', 'cabang.id')
-        ->where('cabang.id', $pilCabang)
-            ->orderBy('total')
-            ->get();
-
-        $arr2 = $data->map(function ($d) {
-            return get_object_vars($d);
-        });
-
 
         if ($type == 'kustom') {
-            if ($pilCabang == 'semua') {
-                $param['data'] =  $all_data;
-            } else {
-                $param['data'] = $arr->toArray();
-            }
-        } else {
-            if ($pilCabang == 'semua') {
-                $param['data'] = $seluruh_data;
-            } else {
-                $param['data'] = $arr2->toArray();
-            }
+            $seluruh_data = $seluruh_data->whereBetween('p.tanggal', [$tAwal, $tAkhir]);
+            $seluruh_data_proses = $seluruh_data_proses->whereBetween('p.tanggal', [$tAwal, $tAkhir]);
         }
 
+        $seluruh_data = $seluruh_data->get();
+        $seluruh_data_proses = $seluruh_data_proses->get();
 
-
-
-        $semua_cabang = [];
-        foreach ($cabangIds as $c) {
-            $dataC = DB::table('pengajuan')
-            ->selectRaw('kode_cabang as kodeC,
-                                    cabang,
-                                    sum(posisi = "selesai") as disetujui,
-                                    sum(posisi = "Proses Input Data") as staff,
-                                    count(*) as total')
-            ->join('cabang', 'pengajuan.id_cabang', '=', 'cabang.id')
-            ->where('cabang.id', $c->id)
-                ->orderBy('KodeC')
-                ->get();
-            $c = [
-                'kodeC' => $dataC[0]->kodeC,
-                'cabang' => $dataC[0]->cabang,
-                'disetujui' => $dataC[0]->disetujui | 0,
-                'staff' => $dataC[0]->staff | 0,
-                'proses' => ($dataC[0]->disetujui + $dataC[0]->staff) | 0,
-                'total' => $dataC[0]->total | 0,
-            ];
-            // }
-            array_push($semua_cabang, $c);
-        }
-
-        // cabang di pilih 1
-        $dataC = DB::table('pengajuan')
-        ->selectRaw('kode_cabang as kodeC,
-                                    cabang,
-                                    sum(posisi = "selesai") as disetujui,
-                                    sum(posisi = "Proses Input Data") as staff,
-                                    count(*) as total')
-        ->join('cabang', 'pengajuan.id_cabang', '=', 'cabang.id')
-        ->where('cabang.id', $pilCabang)
-            ->orderBy('KodeC')
-            ->get();
-
-        $jarr2 = $dataC->map(function ($d) {
-            return get_object_vars($d);
-        });
-
-
-
-
-        if ($pilCabang == 'semua') {
-            $param['dataC'] =  $semua_cabang;
-        } else {
-            $param['dataC'] = $jarr2->toArray();
-        }
+        $param['data'] = $seluruh_data;
+        $param['data2'] = $seluruh_data_proses;
 
         return view('modal.DataNominatif-excel', $param);
     }
