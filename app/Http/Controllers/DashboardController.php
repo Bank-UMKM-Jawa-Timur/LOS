@@ -272,7 +272,7 @@ class DashboardController extends Controller
             }
 
             // cabang di pilih semua
-
+            // type semua
             $semua_cabang = [];
             foreach ($cabangIds as $c) {
                 $dataC = DB::table('pengajuan')
@@ -314,7 +314,8 @@ class DashboardController extends Controller
             }
 
             // cabang di pilih 1
-            $dataC = DB::table('pengajuan')
+            // type semua
+            $dataC2 = DB::table('pengajuan')
                 ->selectRaw('kode_cabang as kodeC,
                                     cabang,
                                     sum(posisi = "selesai") as disetujui,
@@ -330,13 +331,16 @@ class DashboardController extends Controller
                 ->groupBy('id_cabang')
                 ->orderBy('KodeC')
                 ->get();
+
+
+
             $dataC->map(function ($item) {
                 $item->proces = $item->disetujui + $item->pincab + $item->PBP + $item->PBO + $item->penyelia + $item->staff;
                 return  $item;
             });
 
 
-            $jarr2 = $dataC->map(function ($d) {
+            $jarr2 = $dataC2->map(function ($d) {
                 $d->proses
                 = $d->disetujui + $d->pincab + $d->PBP + $d->PBO + $d->penyelia + $d->staff;
 
@@ -344,11 +348,84 @@ class DashboardController extends Controller
             });
 
 
+            $all_cabang = [];
+            foreach ($cabangIds as $c) {
+                $dataCk2 = DB::table('pengajuan')
+                    ->selectRaw('kode_cabang as kodeC,
+                                    cabang,
+                                    sum(posisi = "selesai") as disetujui,
+                                    sum(posisi = "Ditolak") as ditolak,
+                                    sum(posisi = "pincab") as pincab,
+                                    sum(posisi = "PBP") as PBP,
+                                    sum(posisi = "PBO") as PBO,
+                                    sum(posisi = "Review Penyelia") as penyelia,
+                                    sum(posisi = "Proses Input Data") as staff,
+                                    count(*) as total')
+                    ->join('cabang', 'pengajuan.id_cabang', '=', 'cabang.id')
+                    ->where('cabang.id', $c->id)
+                    ->groupBy('id_cabang')
+                    ->whereBetween('tanggal', [$tAwal, ($tAkhir ?? date('Y-m-d'))])
+                    ->orderBy('KodeC')
+                    ->get();
 
-            if ($pilCabang == 'semua') {
-                $param['dataC'] =  $semua_cabang;
-            } else {
-                $param['dataC'] = $jarr2->toArray();
+                $dataCk2->map(function ($item) {
+                    $item->proces = $item->disetujui + $item->pincab + $item->PBP + $item->PBO + $item->penyelia + $item->staff;
+                    return  $item;
+                });
+
+                $c2 = [
+                    'kodeC' => $c->kode_cabang,
+                    'cabang' => $c->cabang,
+                    'disetujui' => $dataCk2[0]->disetujui ?? 0,
+                    'proses' => $dataCk2[0]->proces ?? 0,
+                    'total' => $dataCk2[0]->total ?? 0,
+                ];
+                // // }
+                // dd($dataC[0]);
+                array_push($all_cabang, $c2);
+            }
+
+            // cabang di pilih
+            // type custom
+            $dataCs = DB::table('pengajuan')
+                ->selectRaw('kode_cabang as kodeC,
+                                    cabang,
+                                    sum(posisi = "selesai") as disetujui,
+                                    sum(posisi = "Ditolak") as ditolak,
+                                    sum(posisi = "pincab") as pincab,
+                                    sum(posisi = "PBP") as PBP,
+                                    sum(posisi = "PBO") as PBO,
+                                    sum(posisi = "Review Penyelia") as penyelia,
+                                    sum(posisi = "Proses Input Data") as staff,
+                                    count(*) as total')
+                ->join('cabang', 'pengajuan.id_cabang', '=', 'cabang.id')
+                ->where('cabang.id', $pilCabang)
+                ->whereBetween('tanggal', [$tAwal, ($tAkhir ?? date('Y-m-d'))])
+                ->groupBy('id_cabang')
+                ->orderBy('KodeC')
+                ->get();
+
+            $jarrCs = $dataCs->map(function ($d) {
+                $d->proses
+                    = $d->disetujui + $d->pincab + $d->PBP + $d->PBO + $d->penyelia + $d->staff;
+
+                return get_object_vars($d);
+            });
+
+
+
+            if ($type == 'kustom') {
+                if ($pilCabang == 'semua') {
+                    $param['dataC'] =  $all_cabang;
+                } else {
+                    $param['dataC'] = $jarrCs->toArray();
+                }
+            }else{
+                if ($pilCabang == 'semua') {
+                    $param['dataC'] =  $semua_cabang;
+                } else {
+                    $param['dataC'] = $jarr2->toArray();
+                }
             }
 
 
@@ -370,7 +447,7 @@ class DashboardController extends Controller
                     $name_cabang = cabang::select('cabang')->where('id', $pilCabang)->first();
                     return $pdf->download('Kategori keseluruhan cabang ' . $name_cabang->cabang . '.pdf');
                 }
-            }           
+            }
         } else {
             if ($type != "kesuluruhan") {
                 if ($pilCabang == 'semua') {
@@ -388,19 +465,5 @@ class DashboardController extends Controller
                 }
             }
         }
-    }
-
-    public function cetakExcel(Request $request)
-    {
-        $request->validate(
-            [
-                'tAwal' => 'required',
-                'tAkhir' => 'required'
-            ],
-            [
-                'tAwal.required' => "tanggal Awal Belum Di isi",
-                'tAkhir.required' => "tanggal Akhir Belum Di isi",
-            ]
-        );
     }
 }

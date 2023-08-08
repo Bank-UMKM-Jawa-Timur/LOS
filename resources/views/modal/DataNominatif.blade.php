@@ -15,7 +15,7 @@
             margin: auto;
         }
 
-        h2 {
+        h2, p {
             text-align: center;
         }
 
@@ -36,26 +36,27 @@
 
 <body>
 
-    <h2><b>DATA NOMINATIF</b></h2>
+    <h2><b>DATA NOMINATIF</b></h2>\
+    @if (request()->k_tanggal != "kesuluruhan")
+        @if (Request()->cabang == "semua")
+            <p>Data Pengajuan, Tanggal: {{ date($tAwal) }} sampai {{ date($tAkhir) }} Semua Cabang</p>
+        @else
+            <p>Data Pengajuan, Tanggal: {{ date($tAwal) }} sampai {{ date($tAkhir) }} Cabang {{ \App\Models\cabang::select('cabang')->where('id', Request()->cabang)->first()->cabang }}</p>
+        @endif
+    @else
+        @if (Request()->cabang == "semua")
+            <p>Data Pengajuan Kesuluruhan Data Semua Cabang</p>
+        @else
+            <p>Data Pengajuan Kesuluruhan Data Cabang {{ \App\Models\cabang::select('cabang')->where('id', Request()->cabang)->first()->cabang }}</p>
+        @endif
+    @endif
 
     <table>
 
         <thead>
             <tr>
                 <th colspan="10">
-                    @if (request()->k_tanggal != "kesuluruhan")
-                        @if (Request()->cabang == "semua")
-                            Data Pengajuan, Tanggal: {{ date($tAwal) }} sampai {{ date($tAkhir) }} Semua Cabang
-                            @else
-                            Data Pengajuan, Tanggal: {{ date($tAwal) }} sampai {{ date($tAkhir) }} Cabang {{ \App\Models\cabang::select('cabang')->where('id', Request()->cabang)->first()->cabang }}
-                        @endif
-                    @else
-                        @if (Request()->cabang == "semua")
-                            Kategori keseluruhan Semua Cabang
-                        @else
-                            Kategori keseluruhan Cabang {{ \App\Models\cabang::select('cabang')->where('id', Request()->cabang)->first()->cabang }}
-                        @endif
-                    @endif
+                    Posisi Pengajuan
                 </th>
             </tr>
             <tr>
@@ -83,6 +84,9 @@
                 $total = 0;
             @endphp
             @for ($i = 0; $i < count($data); $i++)
+
+            @if ($dataC[$i]['kodeC'] != 000)
+
                 <tr>
                     <td>{{ $data[$i]['kodeC'] }}</td>
                     <td>{{ $data[$i]['cabang'] }}</td>
@@ -106,6 +110,9 @@
                     $staff += $data[$i]['staff'];
                     $total += $data[$i]['total'];
                 @endphp
+
+            @endif
+
             @endfor
             {{-- @foreach ($data as $row)
                 <tr>
@@ -139,7 +146,7 @@
 
     <br><br><br><br>
     {{-- seluruh data --}}
-    
+
 
     <br><br><br><br>
     {{-- seluruh data Cabang --}}
@@ -176,7 +183,7 @@
 
 
             <tr>
-                
+
                 <td>{{ $dataC[$i]['kodeC'] }}</td>
                 <td>{{ $dataC[$i]['cabang'] }}</td>
                 <td>{{ $dataC[$i]['disetujui'] }}</td>
