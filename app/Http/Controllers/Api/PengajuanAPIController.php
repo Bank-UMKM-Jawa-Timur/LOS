@@ -194,8 +194,8 @@ class PengajuanAPIController extends Controller
 
     public function getCountPengajuan(Request $request){
         $cabangIds = DB::table('cabang')->get();
-        $tAwal = $request->tanggal_awal;
-        $tAkhir = $request->tanggal_akhir;
+        $tAwal = $request->tAwal;
+        $tAkhir = $request->tAkhir;
         $pilCabang = $request->cabang;
 
         // semua cabang
@@ -262,9 +262,5 @@ class PengajuanAPIController extends Controller
             'message' => 'berhasil menampilkan data',
             'data' => $pilCabang == 'semua' ? $semua_cabang : $cabang_pilih
         ]);
-    }
-
-    public function getPosisiPengajuan(Request $request){
-        
     }
 }
