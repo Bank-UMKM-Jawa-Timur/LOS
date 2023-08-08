@@ -251,14 +251,11 @@ class PengajuanAPIController extends Controller
                 $cbgs = [
                     'kode_cabang' => $dat[0]->kode_cabang ,
                     'cabang' => $dat[0]->cabang ,
-                    'disetujui' => $dat[0]->disetujui | 0,
-                    'ditolak' => $dat[0]->ditolak | 0,
                     'pincab' => $dat[0]->pincab | 0,
                     'PBP' => $dat[0]->PBP | 0,
                     'PBO' => $dat[0]->PBO | 0,
                     'penyelia' => $dat[0]->penyelia | 0,
                     'staff' => $dat[0]->staff | 0,
-                    'total' => $dat[0]->total,
                 ];
             array_push($all_data, $cbgs);
         }
@@ -280,9 +277,19 @@ class PengajuanAPIController extends Controller
             ->whereBetween('tanggal', [$tAwal, ($tAkhir ?? date('Y-m-d'))])
             ->get();
 
-        $pilih_cabang = $data->map(function ($d) {
-            return get_object_vars($d);
+        $jarr = $data->map(function ($d) {
+            return [
+                'kode_cabang' => $d->kode_cabang,
+                'cabang' => $d->cabang,
+                'pincab' => $d->pincab | 0,
+                'PBP' => $d->PBP | 0,
+                'PBO' => $d->PBO | 0,
+                'penyelia' => $d->penyelia | 0,
+                'staff' => $d->staff | 0,
+            ];
         });
+
+        $pilih_cabang = $jarr->toArray();
 
 
         return response()->json([
