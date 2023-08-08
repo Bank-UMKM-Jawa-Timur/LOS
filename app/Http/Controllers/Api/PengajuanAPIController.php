@@ -217,15 +217,15 @@ class PengajuanAPIController extends Controller
             ->whereBetween('tanggal', [$tAwal, ($tAkhir ?? date('Y-m-d'))])
             ->get();
             $dataCS->map(function ($item) {
-                $item->proces = $item->disetujui + $item->pincab + $item->PBP + $item->PBO + $item->penyelia + $item->staff;
+                $item->proces = $item->pincab + $item->PBP + $item->PBO + $item->penyelia + $item->staff;
                 return  $item;
             });
 
             $c = [
                 'kode_cabang' => $c->kode_cabang,
                 'cabang' => $c->cabang,
-                'disetujui' => $dataCS[0]->disetujui ?? 0,
-                'ditolak' => $dataCS[0]->ditolak ?? 0,
+                'disetujui' => $dataCS[0]->disetujui != null ? $dataCS[0]->disetujui : 0,
+                'ditolak' => $dataCS[0]->ditolak != null ? $dataCS[0]->ditolak : 0,
                 'proses' => $dataCS[0]->proces ?? 0,
             ];
 
@@ -250,8 +250,16 @@ class PengajuanAPIController extends Controller
             ->get();
 
         $jarr = $dataC->map(function ($item) {
-            $item->proces = $item->disetujui + $item->pincab + $item->PBP + $item->PBO + $item->penyelia + $item->staff;
-            return $item;
+            // Menghitung nilai dari semua posisi kecuali "disetujui" dan "ditolak"
+            $item->proses = $item->pincab + $item->PBP + $item->PBO + $item->penyelia + $item->staff;
+
+            return [
+                'kode_cabang' => $item->kode_cabang,
+                'cabang' => $item->cabang,
+                'disetujui' => $item->disetujui | 0,
+                'ditolak' => $item->ditolak | 0,
+                'proses' => $item->proses,
+            ];
         });
 
         $cabang_pilih = $jarr->toArray();
