@@ -50,8 +50,9 @@
                             <div class="col-sm-7">
                                 @php
                                     $log = DB::table('log_pengajuan')
-                                        ->select('id')
                                         ->where('id_pengajuan', $dataUmum->id)
+                                        ->where('role', $itemRole)
+                                        ->join('users', 'users.id', 'log_pengajuan.user_id')
                                         ->first();
                                     if (!$log) {
                                         $user = DB::table('pengajuan')
@@ -111,8 +112,9 @@
                             <div class="col-sm-7">
                                 @php
                                     $log = DB::table('log_pengajuan')
-                                        ->select('id')
                                         ->where('id_pengajuan', $dataUmum->id)
+                                        ->where('role', $itemRole)
+                                        ->join('users', 'users.id', 'log_pengajuan.user_id')
                                         ->first();
                                     if (!$log) {
                                         $user = DB::table('pengajuan')
@@ -171,8 +173,9 @@
                         <div class="col-sm-7">
                             @php
                                 $log = DB::table('log_pengajuan')
-                                    ->select('id')
                                     ->where('id_pengajuan', $dataUmum->id)
+                                    ->where('role', $itemRole)
+                                    ->join('users', 'users.id', 'log_pengajuan.user_id')
                                     ->first();
                                 $avg = $dataUmum->average_by_sistem;
                                 if ($itemRole == 'Staf Analis Kredit') {
