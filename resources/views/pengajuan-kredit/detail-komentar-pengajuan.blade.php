@@ -135,7 +135,7 @@ function getKaryawan($nip){
                                         </div>
                                     </div>
                                 </label>
-                                <div class="col-sm-7">
+                                <div class="col">
                                     @php
                                         $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
                                     @endphp
@@ -157,7 +157,7 @@ function getKaryawan($nip){
                                 </div>
                             </div>
                         </label>
-                        <div class="col-sm-7">
+                        <div class="col">
                             <input type="text" readonly class="form-control-plaintext" id="staticEmail"
                                 value="{{ $dataNasabah->nama }}">
                         </div>
@@ -173,9 +173,10 @@ function getKaryawan($nip){
                                 </div>
                             </div>
                         </label>
-                        <div class="col-sm-7">
-                            <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                        <div class="col">
+                            <input type="hidden" readonly class="form-control-plaintext" id="staticEmail"
                                 value="{{ $dataNasabah->alamat_rumah }}">
+                            <p class="form-control-plaintext text-justify">{{ $dataNasabah->alamat_rumah }}</p>
                         </div>
                     </div>
                     <hr>
@@ -189,9 +190,10 @@ function getKaryawan($nip){
                                 </div>
                             </div>
                         </label>
-                        <div class="col-sm-7">
-                            <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                        <div class="col">
+                            <input type="hidden" readonly class="form-control-plaintext" id="staticEmail"
                                 value="{{ $dataNasabah->alamat_usaha }}">
+                            <p class="form-control-plaintext text-justify">{{ $dataNasabah->alamat_usaha }}</p>
                         </div>
                     </div>
                     <hr>
@@ -205,7 +207,7 @@ function getKaryawan($nip){
                                 </div>
                             </div>
                         </label>
-                        <div class="col-sm-7">
+                        <div class="col">
                             <input type="text" readonly class="form-control-plaintext" id="staticEmail"
                                 value="{{ $dataNasabah->no_ktp }}">
                         </div>
@@ -238,7 +240,7 @@ function getKaryawan($nip){
                                 </div>
                             </div>
                         </label>
-                        <div class="col-sm-7">
+                        <div class="col">
                             @php
                                 if ($ktpSuami) {
                                     $path = "../upload/$dataUmum->id/$ktpSuami->id_jawaban/$ktpSuami->opsi_text";
@@ -261,7 +263,7 @@ function getKaryawan($nip){
                                 </div>
                             </div>
                         </label>
-                        <div class="col-sm-7">
+                        <div class="col">
                             @php
 
                                 if ($ktpIstri) {
@@ -286,7 +288,7 @@ function getKaryawan($nip){
                                 </div>
                             </div>
                         </label>
-                        <div class="col-sm-7">
+                        <div class="col">
                             @php
                                 if ($ktpNasabah) {
                                     $path = "../upload/$dataUmum->id/$ktpNasabah->id_jawaban/$ktpNasabah->opsi_text";
@@ -311,7 +313,7 @@ function getKaryawan($nip){
                                 </div>
                             </div>
                         </label>
-                        <div class="col-sm-7 ">
+                        <div class="col ">
                             <div class="d-flex justify-content-start ">
                                 <div class="m-0" style="width: 100%">
                                     <input type="text" readonly class="form-control-plaintext" id="staticEmail"
@@ -331,7 +333,7 @@ function getKaryawan($nip){
                                 </div>
                             </div>
                         </label>
-                        <div class="col-sm-7">
+                        <div class="col">
                             <input type="text" readonly class="form-control-plaintext" id="staticEmail"
                                 value="{{ $dataNasabah->sektor_kredit }}">
                         </div>
@@ -346,7 +348,7 @@ function getKaryawan($nip){
                                 </div>
                             </div>
                         </label>
-                        <div class="col-sm-7">
+                        <div class="col">
                             <input type="text" readonly class="form-control-plaintext" id="staticEmail"
                                 @if ($itemSlik != null)
                                     value="{{ $itemSlik?->option }}"
@@ -386,7 +388,7 @@ function getKaryawan($nip){
                                     </div>
                                 </div>
                             </label>
-                            <div class="col-sm-7">
+                            <div class="col">
                                 <div class="d-flex">
                                     <div class="">
                                         <p><strong>Skor : </strong></p>
@@ -411,7 +413,7 @@ function getKaryawan($nip){
                                     </div>
                                 </div>
                             </label>
-                            <div class="col-sm-7">
+                            <div class="col">
                                 <div class="d-flex">
                                     <div style="width: 30%">
                                         <p class="p-0 m-0"><strong>Komentar Penyelia : </strong></p>
@@ -432,7 +434,7 @@ function getKaryawan($nip){
                                     </div>
                                 </div>
                             </label>
-                            <div class="col-sm-7">
+                            <div class="col">
                                 <div class="d-flex">
                                     <div style="width: 30%">
                                         <p class="p-0 m-0"><strong>Komentar PBO : </strong></p>
@@ -454,7 +456,7 @@ function getKaryawan($nip){
                                         </div>
                                     </div>
                                 </label>
-                                <div class="col-sm-7">
+                                <div class="col">
                                     <div class="d-flex">
                                         <div style="width: 30%">
                                             <p class="p-0 m-0"><strong>Komentar PBP : </strong></p>
@@ -492,7 +494,7 @@ function getKaryawan($nip){
                                         </div>
                                     </div>
                                 </label>
-                                <div class="col-sm-7">
+                                <div class="col">
                                     @php
                                         $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
                                     @endphp
@@ -517,7 +519,7 @@ function getKaryawan($nip){
                                 </div>
                             </div>
                         </label>
-                        <div class="col-sm-7">
+                        <div class="col">
                             <input type="text" readonly class="form-control-plaintext" id="staticEmail"
                                 value="{{ $dataNasabah->jenis_usaha }}">
                         </div>
@@ -532,7 +534,7 @@ function getKaryawan($nip){
                                 </div>
                             </div>
                         </label>
-                        <div class="col-sm-7">
+                        <div class="col">
                             <input type="text" readonly class="form-control-plaintext" id="staticEmail"
                                 value="Rp.{{ number_format($dataNasabah->jumlah_kredit, 2, '.', ',') }}">
                         </div>
@@ -547,7 +549,7 @@ function getKaryawan($nip){
                                 </div>
                             </div>
                         </label>
-                        <div class="col-sm-7">
+                        <div class="col">
                             <input type="text" readonly class="form-control-plaintext" id="staticEmail"
                                 value="{{$dataNasabah->tenor_yang_diminta}} Bulan">
                         </div>
@@ -562,9 +564,10 @@ function getKaryawan($nip){
                                 </div>
                             </div>
                         </label>
-                        <div class="col-sm-7">
-                            <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                        <div class="col">
+                            <input type="hidden" readonly class="form-control-plaintext" id="staticEmail"
                                 value="{{ $dataNasabah->tujuan_kredit }}">
+                            <p class="form-control-plaintext text-justify">{{ $dataNasabah->tujuan_kredit }}</p>
                         </div>
                     </div>
                     <hr>
@@ -577,9 +580,10 @@ function getKaryawan($nip){
                                 </div>
                             </div>
                         </label>
-                        <div class="col-sm-7">
-                            <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                        <div class="col">
+                            <input type="hidden" readonly class="form-control-plaintext" id="staticEmail"
                                 value="{{ $dataNasabah->jaminan_kredit }}">
+                            <p class="form-control-plaintext text-justify">{{ $dataNasabah->jaminan_kredit }}</p>
                         </div>
                     </div>
                     <hr>
@@ -592,9 +596,10 @@ function getKaryawan($nip){
                                 </div>
                             </div>
                         </label>
-                        <div class="col-sm-7">
-                            <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                        <div class="col">
+                            <input type="hidden" readonly class="form-control-plaintext" id="staticEmail"
                                 value="{{ $dataNasabah->hubungan_bank }}">
+                            <p class="form-control-plaintext text-justify">{{ $dataNasabah->hubungan_bank }}</p>
                         </div>
                     </div>
                     <hr>
@@ -607,9 +612,10 @@ function getKaryawan($nip){
                                 </div>
                             </div>
                         </label>
-                        <div class="col-sm-7">
-                            <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                        <div class="col">
+                            <input type="hidden" readonly class="form-control-plaintext" id="staticEmail"
                                 value="{{ $dataNasabah->verifikasi_umum }}">
+                            <p class="form-control-plaintext text-justify">{{ $dataNasabah->verifikasi_umum }}</p>
                         </div>
                     </div>
                 </div>
@@ -630,7 +636,7 @@ function getKaryawan($nip){
                                     </div>
                                 </div>
                             </label>
-                            <div class="col-sm-7">
+                            <div class="col">
                                 <input type="text" readonly class="form-control-plaintext" id="staticEmail"
                                     value="{{ $dataPO?->merk }} {{ $dataPO?->tipe }}">
                             </div>
@@ -645,7 +651,7 @@ function getKaryawan($nip){
                                     </div>
                                 </div>
                             </label>
-                            <div class="col-sm-7">
+                            <div class="col">
                                 <input type="text" readonly class="form-control-plaintext" id="staticEmail"
                                     value="{{ $dataPO?->tahun_kendaraan }}">
                             </div>
@@ -660,7 +666,7 @@ function getKaryawan($nip){
                                     </div>
                                 </div>
                             </label>
-                            <div class="col-sm-7">
+                            <div class="col">
                                 <input type="text" readonly class="form-control-plaintext" id="staticEmail"
                                     value="{{ $dataPO?->warna }}">
                             </div>
@@ -679,7 +685,7 @@ function getKaryawan($nip){
                                     </div>
                                 </div>
                             </label>
-                            <div class="col-sm-7">
+                            <div class="col">
                                 <input type="text" readonly class="form-control-plaintext" id="staticEmail"
                                     value="{{ $pemesanan }}">
                             </div>
@@ -694,7 +700,7 @@ function getKaryawan($nip){
                                     </div>
                                 </div>
                             </label>
-                            <div class="col-sm-7">
+                            <div class="col">
                                 <input type="text" readonly class="form-control-plaintext" id="staticEmail"
                                     value="{{ $dataPO?->jumlah }}">
                             </div>
@@ -709,7 +715,7 @@ function getKaryawan($nip){
                                     </div>
                                 </div>
                             </label>
-                            <div class="col-sm-7">
+                            <div class="col">
                                 <input type="text" readonly class="form-control-plaintext" id="staticEmail"
                                     value="Rp.{{ number_format($dataPO?->harga, 2, '.', ',') }}">
                             </div>
@@ -763,7 +769,7 @@ function getKaryawan($nip){
                                                 </div>
                                             </div>
                                         </label>
-                                        <div class="col-sm-7">
+                                        <div class="col">
                                             @if ($item->opsi_jawaban == 'file')
                                             <br>
                                                 @php
@@ -780,14 +786,18 @@ function getKaryawan($nip){
                                                     </b></p>
                                             @else
                                                 @if (is_numeric($itemJawaban->option) && strlen($itemJawaban->option) > 3)
-                                                    <input type="text" readonly
+                                                    {{--  <input type="text" readonly
                                                         class="form-control-plaintext font-weight-bold" id="staticEmail"
-                                                        value="{{ $itemTextDua->opsi_text }}">
+                                                        value="{{ $itemTextDua->opsi_text }}">  --}}
                                                     <input type="hidden" name="id[]" value="{{ $itemAspek->id }} {{$itemTiga->opsi_jawaban == 'persen' ? '%' : ''}} {{$item->opsi_jawaban == 'persen' ? '%' : ''}}">
+                                                    <input type="hidden" class="form-control-plaintext" id="staticEmail"
+                                                    value="{{ $itemTextDua->opsi_text }}">
+                                                    <p class="form-control-plaintext text-justify">{{ $itemTextDua->opsi_text }}</p>
                                                 @else
                                                     <input type="text" readonly class="form-control-plaintext font-weight-bold"
                                                         id="staticEmail" value="{{ $itemTextDua->opsi_text }} {{$itemTiga->opsi_jawaban == 'persen' ? '%' : ''}} {{$item->opsi_jawaban == 'persen' ? '%' : ''}}">
                                                     <input type="hidden" name="id[]" value="{{ $itemAspek->id }}">
+                                                    <p class="form-control-plaintext text-justify">{{ $itemTextDua->opsi_text }} {{$itemTiga->opsi_jawaban == 'persen' ? '%' : ''}} {{$item->opsi_jawaban == 'persen' ? '%' : ''}}</p>
                                                 @endif
                                             @endif
                                         </div>
@@ -803,7 +813,7 @@ function getKaryawan($nip){
                                                         </div>
                                                     </div>
                                                 </label>
-                                                <div class="col-sm-7">
+                                                <div class="col">
                                                     <div class="d-flex">
                                                         <div class="">
                                                             <p><strong>Skor : </strong></p>
@@ -830,7 +840,7 @@ function getKaryawan($nip){
                                                                 </div>
                                                             </div>
                                                         </label>
-                                                        <div class="col-sm-7">
+                                                        <div class="col">
                                                             <div class="d-flex">
                                                                 <div style="width: 15%">
                                                                     <p class="p-0 m-0"><strong>Komentar : </strong>
@@ -863,7 +873,7 @@ function getKaryawan($nip){
                                                     </div>
                                                 </div>
                                             </label>
-                                            <div class="col-sm-7">
+                                            <div class="col">
                                                 <input type="text" readonly
                                                     class="form-control-plaintext font-weight-bold" id="staticEmail"
                                                     value="Tidak ada legalitas usaha">
@@ -905,7 +915,7 @@ function getKaryawan($nip){
                                                 </div>
                                             </div>
                                         </label>
-                                        <div class="col-sm-7">
+                                        <div class="col">
                                             @foreach ($dataJawaban as $key => $itemJawaban)
                                                 @php
                                                     $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
@@ -947,7 +957,7 @@ function getKaryawan($nip){
                                                 </div>
                                             </div>
                                         </label>
-                                        <div class="col-sm-7">
+                                        <div class="col">
                                             @foreach ($dataJawaban as $key => $itemJawaban)
                                                 @php
                                                     $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
@@ -1011,7 +1021,7 @@ function getKaryawan($nip){
                                                         </div>
                                                     </div>
                                                 </label>
-                                                <div class="col-sm-7">
+                                                <div class="col">
                                                     <div class="d-flex">
                                                         <div style="width: 30%">
                                                             <p class="p-0 m-0"><strong>Komentar Penyelia : </strong></p>
@@ -1033,7 +1043,7 @@ function getKaryawan($nip){
                                                         </div>
                                                     </div>
                                                 </label>
-                                                <div class="col-sm-7">
+                                                <div class="col">
                                                     <div class="d-flex">
                                                         <div style="width: 30%">
                                                             <p class="p-0 m-0"><strong>Komentar PBP : </strong></p>
@@ -1089,9 +1099,9 @@ function getKaryawan($nip){
                                                 </div>
                                             </label>
                                             @if ($itemTextTiga->nama == 'NIB' || $itemTextTiga->nama == 'Surat Keterangan Usaha')
-                                                <div class="col-sm-7">
+                                                <div class="col">
                                             @else
-                                                <div class="col-sm-7" style="padding: 0px">
+                                                <div class="col" style="padding: 0px">
                                             @endif
                                                 @if ($itemTextTiga->opsi_jawaban == 'file')
                                                 <br>
@@ -1126,7 +1136,7 @@ function getKaryawan($nip){
                                                         </div>
                                                     </div>
                                                 </label>
-                                                <div class="col-sm-7">
+                                                <div class="col">
                                                     <div class="d-flex">
                                                         <div class="">
                                                             <p><strong>Skor : </strong></p>
@@ -1150,7 +1160,7 @@ function getKaryawan($nip){
                                                         </div>
                                                     </div>
                                                 </label>
-                                                <div class="col-sm-7">
+                                                <div class="col">
                                                     <div class="d-flex">
                                                         <div style="width: 15%">
                                                             <p class="p-0 m-0"><strong>Komentar : </strong></p>
@@ -1200,7 +1210,7 @@ function getKaryawan($nip){
                                                             </div>
                                                         </div>
                                                     </label>
-                                                    <div class="col-sm-7" style="padding: 0px">
+                                                    <div class="col" style="padding: 0px">
                                                         @foreach ($dataJawabanLevelTiga as $key => $itemJawabanLevelTiga)
                                                             @php
                                                                 $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor')
@@ -1232,7 +1242,7 @@ function getKaryawan($nip){
                                                         </div>
                                                     </div>
                                                 </label>
-                                                <div class="col-sm-7">
+                                                <div class="col">
                                                     @foreach ($dataJawabanLevelTiga as $key => $itemJawabanTiga)
                                                         @php
                                                             $dataDetailJawabanTiga;
@@ -1301,7 +1311,7 @@ function getKaryawan($nip){
                                                                 </div>
                                                             </div>
                                                         </label>
-                                                        <div class="col-sm-7">
+                                                        <div class="col">
                                                             <div class="d-flex">
                                                                 <div style="width: 30%">
                                                                     <p class="p-0 m-0"><strong>Komentar Penyelia: </strong></p>
@@ -1325,7 +1335,7 @@ function getKaryawan($nip){
                                                             </div>
                                                         </div>
                                                     </label>
-                                                    <div class="col-sm-7">
+                                                    <div class="col">
                                                         <div class="d-flex">
                                                             <div style="width: 30%">
                                                                 <p class="p-0 m-0"><strong>Komentar PBO: </strong></p>
@@ -1349,7 +1359,7 @@ function getKaryawan($nip){
                                                                 </div>
                                                             </div>
                                                         </label>
-                                                        <div class="col-sm-7">
+                                                        <div class="col">
                                                             <div class="d-flex">
                                                                 <div style="width: 30%">
                                                                     <p class="p-0 m-0"><strong>Komentar PBP: </strong></p>
@@ -1401,9 +1411,9 @@ function getKaryawan($nip){
                                                         </div>
                                                     </label>
                                                     @if ($itemEmpat->id_parent == '95')
-                                                        <div class="col-sm-7">
+                                                        <div class="col">
                                                     @else
-                                                        <div class="col-sm-7" style="padding: 0px">
+                                                        <div class="col" style="padding: 0px">
                                                     @endif
                                                         @if ($itemTextEmpat->opsi_jawaban == 'file')
                                                         <br>
@@ -1453,7 +1463,7 @@ function getKaryawan($nip){
                                                                 </div>
                                                             </div>
                                                         </label>
-                                                        <div class="col-sm-7">
+                                                        <div class="col">
                                                             <div class="d-flex">
                                                                 <div class="">
                                                                     <p><strong>Skor : </strong></p>
@@ -1477,7 +1487,7 @@ function getKaryawan($nip){
                                                                 </div>
                                                             </div>
                                                         </label>
-                                                        <div class="col-sm-7">
+                                                        <div class="col">
                                                             <div class="d-flex">
                                                                 <div style="width: 15%">
                                                                     <p class="p-0 m-0"><strong>Komentar : </strong></p>
@@ -1530,7 +1540,7 @@ function getKaryawan($nip){
                                                             </div>
                                                         </div>
                                                     </label>
-                                                    <div class="col-sm-7" style="padding: 0px">
+                                                    <div class="col" style="padding: 0px">
                                                         <label for="staticEmail" class="col-sm-4 col-form-label font-weight-bold">{{ $itemEmpat->nama }}</label>
                                                     </div>
                                                 </div>
@@ -1543,7 +1553,7 @@ function getKaryawan($nip){
                                                             </div>
                                                         </div>
                                                     </label>
-                                                    <div class="col-sm-7">
+                                                    <div class="col">
                                                         @foreach ($dataJawabanLevelEmpat as $key => $itemJawabanLevelEmpat)
                                                             @php
                                                                 $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor')
@@ -1576,7 +1586,7 @@ function getKaryawan($nip){
                                                             </div>
                                                         </div>
                                                     </label>
-                                                    <div class="col-sm-7">
+                                                    <div class="col">
                                                         @php
                                                             $getKomentar5 = '';
                                                         @endphp
@@ -1645,7 +1655,7 @@ function getKaryawan($nip){
                                                                 </div>
                                                             </div>
                                                         </label>
-                                                        <div class="col-sm-7">
+                                                        <div class="col">
                                                             <div class="d-flex">
                                                                 <div style="width: 30%">
                                                                     <p class="p-0 m-0"><strong>Komentar Penyelia : </strong>
@@ -1670,7 +1680,7 @@ function getKaryawan($nip){
                                                                     </div>
                                                                 </div>
                                                             </label>
-                                                            <div class="col-sm-7">
+                                                            <div class="col">
                                                                 <div class="d-flex">
                                                                     <div style="width: 30%">
                                                                         <p class="p-0 m-0"><strong>Komentar PBO : </strong>
@@ -1695,7 +1705,7 @@ function getKaryawan($nip){
                                                                 </div>
                                                             </div>
                                                         </label>
-                                                        <div class="col-sm-7">
+                                                        <div class="col">
                                                             <div class="d-flex">
                                                                 <div style="width: 30%">
                                                                     <p class="p-0 m-0"><strong>Komentar PBP : </strong>
@@ -1761,9 +1771,10 @@ function getKaryawan($nip){
                                                 </div>
                                             </div>
                                         </label>
-                                        <div class="col-sm-7">
-                                            <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                                        <div class="col">
+                                            <input type="hidden" readonly class="form-control-plaintext" id="staticEmail"
                                                 value="{{ $item->pendapat_per_aspek }}">
+                                            <p class="form-control-plaintext text-justify">{{ $item->pendapat_per_aspek }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -1782,9 +1793,10 @@ function getKaryawan($nip){
                                                 </div>
                                             </div>
                                         </label>
-                                        <div class="col-sm-7">
-                                            <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                                        <div class="col">
+                                            <input type="hidden" readonly class="form-control-plaintext" id="staticEmail"
                                                 value="{{ $item->pendapat_per_aspek }}">
+                                            <p class="form-control-plaintext text-justify">{{ $item->pendapat_per_aspek }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -1804,9 +1816,10 @@ function getKaryawan($nip){
                                                     </div>
                                                 </div>
                                             </label>
-                                            <div class="col-sm-7">
-                                                <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                                            <div class="col">
+                                                <input type="hidden" readonly class="form-control-plaintext" id="staticEmail"
                                                     value="{{ $item->pendapat_per_aspek }}">
+                                                <p class="form-control-plaintext text-justify">{{ $item->pendapat_per_aspek }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -1827,9 +1840,10 @@ function getKaryawan($nip){
                                                     </div>
                                                 </div>
                                             </label>
-                                            <div class="col-sm-7">
-                                                <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                                            <div class="col">
+                                                <input type="hidden" readonly class="form-control-plaintext" id="staticEmail"
                                                     value="{{ $item->pendapat_per_aspek }}">
+                                                <p class="form-control-plaintext text-justify">{{ $item->pendapat_per_aspek }}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -1872,7 +1886,7 @@ function getKaryawan($nip){
                                     value="{{ $pendapatDanUsulan->komentar_staff }}">  --}}
                                 <input type="hidden" class="form-control-plaintext" id="staticEmail"
                                     value="{{ $pendapatDanUsulan->komentar_staff }}">
-                                    <p class="form-control-plaintext text-justify">{{ $pendapatDanUsulan->komentar_staff }}</p>
+                                <p class="form-control-plaintext text-justify">{{ $pendapatDanUsulan->komentar_staff }}</p>
                             </div>
                         </div>
                     </div>
