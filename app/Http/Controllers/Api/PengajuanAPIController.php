@@ -193,20 +193,42 @@ class PengajuanAPIController extends Controller
     }
 
     public function getSumPengajuan(Request $request) {
-        $dataTertinggi = DB::table('pengajuan')
+        if ($request->all() != null){
+            // return $request->all();
+            $dataTertinggi = DB::table('pengajuan')
+                ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir') != null ? $request->get('tanggal_akhir') : now()])
+                ->selectRaw('count(pengajuan.id) as total, cabang.kode_cabang, cabang.cabang')
+                ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
+                ->groupBy('cabang.kode_cabang')
+                ->orderBy('total', 'desc')
+                ->limit('5')
+                ->get();
+            $dataTerendah = DB::table('pengajuan')
+                ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir') != null ? $request->get('tanggal_akhir') : now()])
+                ->selectRaw('count(pengajuan.id) as total, cabang.kode_cabang, cabang.cabang')
+                ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
+                ->groupBy('cabang.kode_cabang')
+                ->orderBy('total', 'asc')
+                ->limit('5')
+                ->get();
+            $message = 'berhasil menampilkan data pengajuan berdasarkan tanggal.';
+        } else {
+            $dataTertinggi = DB::table('pengajuan')
             ->selectRaw('count(pengajuan.id) as total, cabang.kode_cabang, cabang.cabang')
             ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
             ->groupBy('cabang.kode_cabang')
             ->orderBy('total', 'desc')
             ->limit('5')
             ->get();
-        $dataTerendah = DB::table('pengajuan')
-            ->selectRaw('count(pengajuan.id) as total, cabang.kode_cabang, cabang.cabang')
-            ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
-            ->groupBy('cabang.kode_cabang')
-            ->orderBy('total', 'asc')
-            ->limit('5')
-            ->get();
+            $dataTerendah = DB::table('pengajuan')
+                ->selectRaw('count(pengajuan.id) as total, cabang.kode_cabang, cabang.cabang')
+                ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
+                ->groupBy('cabang.kode_cabang')
+                ->orderBy('total', 'asc')
+                ->limit('5')
+                ->get();
+            $message = 'berhasil menampilkan data pengajuan.';
+        }
         // $dataKeseluruhan = DB::table('pengajuan')
         //     ->selectRaw('count(pengajuan.id) as total, cabang.kode_cabang, cabang.cabang')
         //     ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
@@ -214,7 +236,7 @@ class PengajuanAPIController extends Controller
         //     ->get();
         return response()->json([
             'status' => 'berhasil',
-            'message' => 'berhasil menampilkan data pengajuan.',
+            'message' => $message,
             'data' => [
                 'tertinggi' => $dataTertinggi,
                 'terendah' => $dataTerendah,
