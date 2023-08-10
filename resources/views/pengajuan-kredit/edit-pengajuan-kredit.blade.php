@@ -3286,23 +3286,25 @@
                 var inputFiles = $('input[type=file]')
                 var fileEmpty = [];
                 $.each(inputFiles, function(i, v) {
-                    console.log(v.value)
                     var ids = $(this).attr("id");
                     var inputId = ids ? ids.toString() : ''
                     inputId = inputId.replaceAll('_', ' ').toLowerCase();
                     if (inputId != '') {
+                        // check span filename
+                        var spanFile = $('#'+ids).parent().find('.filename');
+                        const filename = spanFile.html();
                         if (inputId == "docnib update file" || inputId == "docsku update file" || inputId == "docnpwp update file") {
                             if (ijinUsaha && ijinUsaha != 'tidak_ada_legalitas_usaha') {
                                 if (ijinUsaha == "nib") {
                                     if (inputId == "docnib update file") {
-                                        if (v.value == '' || v.value == null || v.value.includes('Belum Upload')) {
+                                        if ((v.value == '' || v.value == null || v.value.includes('Belum Upload')) && (filename == '' || filename == null || filename.includes('Belum Upload'))) {
                                             inputId = 'nib';
                                             if (!fileEmpty.includes(inputId))
                                                 fileEmpty.push(inputId)
                                         }
                                     }
                                     if (inputId == 'docnpwp update file') {
-                                        if (v.value == '' || v.value == null || v.value.includes('Belum Upload')) {
+                                        if ((v.value == '' || v.value == null || v.value.includes('Belum Upload')) && (filename == '' || filename == null || filename.includes('Belum Upload'))) {
                                             inputId = 'npwp';
                                             if (!fileEmpty.includes(inputId))
                                                 fileEmpty.push(inputId)
@@ -3313,7 +3315,7 @@
                                     if (inputId == "docnpwp update file") {
                                         const isCheckNpwp = $('#isNpwp').is(':checked')
                                         if (isCheckNpwp) {
-                                            if (v.value == '' || v.value == null || v.value.includes('Belum Upload')) {
+                                            if ((v.value == '' || v.value == null || v.value.includes('Belum Upload')) && (filename == '' || filename == null || filename.includes('Belum Upload'))) {
                                                 inputId = 'npwp';
                                                 if (!fileEmpty.includes(inputId))
                                                     fileEmpty.push(inputId)
@@ -3321,7 +3323,7 @@
                                         }
                                     }
                                     if (inputId == "docsku update file") {
-                                        if (v.value == '' || v.value == null || v.value.includes('Belum Upload')) {
+                                        if ((v.value == '' || v.value == null || v.value.includes('Belum Upload')) && (filename == '' || filename == null || filename.includes('Belum Upload'))) {
                                             inputId = 'surat keterangan usaha';
                                             if (!fileEmpty.includes(inputId))
                                                 fileEmpty.push(inputId)
@@ -3331,7 +3333,7 @@
                             }
                         }
                         else {
-                            if (v.value == '' || v.value == null) {
+                            if ((v.value == '' || v.value == null || v.value.includes('Belum Upload')) && (filename == '' || filename == null || filename.includes('Belum Upload'))) {
                                 if (inputId == 'foto sp')
                                     inputId = 'surat permohonan';
                                 if (!fileEmpty.includes(inputId))

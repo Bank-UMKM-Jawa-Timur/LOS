@@ -2699,11 +2699,14 @@ is-invalid
                 var inputId = ids ? ids.toString() : ''
                 inputId = inputId.replaceAll('_', ' ').toLowerCase();
                 if (inputId != '') {
+                    // check span filename
+                    var spanFile = $('#'+ids).parent().find('.filename');
+                    const filename = spanFile.html();
                     if (inputId == "file nib" || inputId == "file sku" || inputId == "docnpwp upload file") {
                         if (ijinUsaha && ijinUsaha != 'tidak_ada_legalitas_usaha') {
                             if (ijinUsaha == "nib") {
                                 if (inputId == "file nib") {
-                                    if (v.value == '' || v.value == null) {
+                                    if ((v.value == '' || v.value == null) && (filename == '' || filename == null)) {
                                         if (!fileEmpty.includes(inputId))
                                             fileEmpty.push(inputId)
                                     }
@@ -2713,7 +2716,7 @@ is-invalid
                                 if (inputId == "docnpwp upload file") {
                                     const isCheckNpwp = $('#isNpwp').is(':checked')
                                     if (isCheckNpwp) {
-                                        if (v.value == '' || v.value == null) {
+                                        if ((v.value == '' || v.value == null) && (filename == '' || filename == null)) {
                                             if (!fileEmpty.includes(inputId))
                                                 fileEmpty.push(inputId)
                                         }
@@ -2721,7 +2724,7 @@ is-invalid
                                 }
         
                                 if (inputId == "file sku") {
-                                    if (v.value == '' || v.value == null) {
+                                    if ((v.value == '' || v.value == null) && (filename == '' || filename == null)) {
                                         if (!fileEmpty.includes(inputId))
                                             fileEmpty.push(inputId)
                                     }
@@ -2730,18 +2733,13 @@ is-invalid
                         }
                     }
                     else {
-                        if (v.value == '' || v.value == null) {
-                            // check span filename
-                            var spanFile = $('#'+ids).parent().find('.filename');
-                            const filename = spanFile.html();
-                            if (filename == "") {
-                                if (inputId == 'foto sp')
-                                    inputId = 'surat permohonan';
-                                if (inputId == 'docnpwp upload file')
-                                    inputId = 'npwp'
-                                if (!fileEmpty.includes(inputId))
-                                    fileEmpty.push(inputId)
-                            }
+                        if ((v.value == '' || v.value == null) && (filename == '' || filename == null)) {
+                            if (inputId == 'foto sp')
+                                inputId = 'surat permohonan';
+                            if (inputId == 'docnpwp upload file')
+                                inputId = 'npwp'
+                            if (!fileEmpty.includes(inputId))
+                                fileEmpty.push(inputId)
                         }
                     }
                 }
