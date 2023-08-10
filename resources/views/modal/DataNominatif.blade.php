@@ -41,7 +41,7 @@
         @if (Request()->cabang == "semua")
             <p>Data Pengajuan, Tanggal: {{ date($tAwal) }} sampai {{ date($tAkhir) }} Semua Cabang</p>
         @else
-            <p>Data Pengajuan, Tanggal: {{ date($tAwal) }} sampai {{ date($tAkhir) }} Cabang {{ \App\Models\cabang::select('cabang')->where('id', Request()->cabang)->first()->cabang }}</p>
+            <p>Data Pengajuan, Tanggal: {{ date($tAwal) }} sampai {{ date($tAkhir) }} Cabang {{ \App\Models\Cabang::select('cabang')->where('id', Request()->cabang)->first()->cabang }}</p>
         @endif
     @else
         @if (Request()->cabang == "semua")
@@ -91,8 +91,8 @@
                         <td>{{ $item->disetujui }}</td>
                         <td>{{ $item->ditolak }}</td>
                         <td>{{ $item->pincab }}</td>
-                        <td>{{ $item->PBP }}</td>
-                        <td>{{ $item->PBO }}</td>
+                        <td>{{ $item->pbp }}</td>
+                        <td>{{ $item->pbo }}</td>
                         <td>{{ $item->penyelia }}</td>
                         <td>{{ $item->staff }}</td>
                         <td>{{ $item->total }}</td>
@@ -102,8 +102,8 @@
                         $disetujui += $item->disetujui;
                         $ditolak += $item->ditolak;
                         $pincab += $item->pincab;
-                        $pbp += $item->PBP;
-                        $pbo += $item->PBO;
+                        $pbp += $item->pbp;
+                        $pbo += $item->pbo;
                         $penyelia += $item->penyelia;
                         $staff += $item->staff;
                         $total += $item->total;
