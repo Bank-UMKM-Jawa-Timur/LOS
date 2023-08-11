@@ -274,6 +274,8 @@ class PengajuanAPIController extends Controller
                 ->where('c.kode_cabang', '!=', 000)
                 ->groupBy('kodeC')
                 ->get();
+
+
         }
         // tanggal dipilih cabang juga
         elseif ($tAwal != null && $tAkhir != null && $pilCabang != null) {
@@ -362,6 +364,7 @@ class PengajuanAPIController extends Controller
                 ->where('c.kode_cabang', '!=', 000)
                 ->groupBy('kodeC')
                 ->get();
+
         }
         // tanggal dipilih cabang juga
         elseif ($tAwal != null && $tAkhir != null && $pilCabang != null) {
@@ -412,10 +415,22 @@ class PengajuanAPIController extends Controller
                 ->get();
         }
 
+        $total_setuju = 0;
+        $total_ditolak = 0;
+        $total_proses = 0;
+
+        foreach ($seluruh_data_proses as $data) {
+            $total_setuju += $data->disetujui;
+            $total_ditolak += $data->ditolak;
+            $total_proses += $data->diproses;
+        }
 
         return response()->json([
             'status' => 'berhasil',
             'message' => 'berhasil menampilkan data pengajuan.',
+            'total_disetujui' => $total_setuju,
+            'total_ditolak' => $total_ditolak,
+            'total_diproses' => $total_proses,
             'data' => $seluruh_data_proses
         ]);
     }
