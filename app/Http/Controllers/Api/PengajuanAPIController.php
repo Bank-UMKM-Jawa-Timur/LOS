@@ -67,8 +67,8 @@ class PengajuanAPIController extends Controller
         $user = User::where('email', $request['email'])
             ->orWhere('nip', $request['email'])
             ->firstOrFail();
-        
-        // Cek Role user jika tersedia 
+
+        // Cek Role user jika tersedia
         if($user->role == 'Administrator'){
             if(DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->count() > 0){
                 return response()->json([
@@ -76,9 +76,9 @@ class PengajuanAPIController extends Controller
                     'message' => 'Akun sedang digunakan di perangkat lain.'
                 ], 401);
             }
-    
+
             $token = $user->createToken('auth_token')->plainTextToken;
-    
+
             return response()->json([
                 'status' => 'berhasil',
                 'message' => 'berhasil login',
@@ -95,9 +95,9 @@ class PengajuanAPIController extends Controller
                         'message' => 'Akun seadang digunakan di perangkat lain.'
                     ], 401);
                 }
-        
+
                 $token = $user->createToken('auth_token')->plainTextToken;
-        
+
                 return response()->json([
                     'status' => 'berhasil',
                     'message' => 'berhasil login',
@@ -244,5 +244,82 @@ class PengajuanAPIController extends Controller
             ]
         ], 200);
 
+    }
+
+    public function getPosisiPengajuan(Request $request){
+        $pilCabang = $request->cabang;
+        $tAkhir = $request->tAkhir;
+        $tAwal = $request->tAwal;
+        $cabangIds = DB::table('cabang')->get();
+
+        // cabang semua
+        $all_data = [];
+        foreach ($cabangIds as $rows) {
+            $dat = DB::table('pengajuan')
+            ->selectRaw('kode_cabang as kode_cabang,
+                                 cabang,
+                                 sum(posisi = "selesai") as disetujui,
+                                 sum(posisi = "Ditolak") as ditolak,
+                                 sum(posisi = "pincab") as pincab,
+                                 sum(posisi = "PBP") as PBP,
+                                 sum(posisi = "PBO") as PBO,
+                                 sum(posisi = "Review Penyelia") as penyelia,
+                                 sum(posisi = "Proses Input Data") as staff,
+                                 count(*) as total')
+            ->join('cabang', 'pengajuan.id_cabang', '=', 'cabang.id')
+            ->where('cabang.id', $rows->id)
+                ->whereBetween('tanggal', [$tAwal, ($tAkhir ?? date('Y-m-d'))])
+                ->get();
+                $cbgs = [
+                    'kode_cabang' => $dat[0]->kode_cabang ,
+                    'cabang' => $dat[0]->cabang ,
+                    'pincab' => $dat[0]->pincab | 0,
+                    'PBP' => $dat[0]->PBP | 0,
+                    'PBO' => $dat[0]->PBO | 0,
+                    'penyelia' => $dat[0]->penyelia | 0,
+                    'staff' => $dat[0]->staff | 0,
+                ];
+            array_push($all_data, $cbgs);
+        }
+
+        // cabang dipilih
+        $data = DB::table('pengajuan')
+        ->selectRaw('kode_cabang as kode_cabang,
+                                 cabang,
+                                 sum(posisi = "selesai") as disetujui,
+                                 sum(posisi = "Ditolak") as ditolak,
+                                 sum(posisi = "pincab") as pincab,
+                                 sum(posisi = "PBP") as PBP,
+                                 sum(posisi = "PBO") as PBO,
+                                 sum(posisi = "Review Penyelia") as penyelia,
+                                 sum(posisi = "Proses Input Data") as staff,
+                                 count(*) as total')
+        ->join('cabang', 'pengajuan.id_cabang', '=', 'cabang.id')
+        ->where('cabang.id', $pilCabang)
+            ->whereBetween('tanggal', [$tAwal, ($tAkhir ?? date('Y-m-d'))])
+            ->get();
+
+        $jarr = $data->map(function ($d) {
+            return [
+                'kode_cabang' => $d->kode_cabang,
+                'cabang' => $d->cabang,
+                'pincab' => $d->pincab | 0,
+                'PBP' => $d->PBP | 0,
+                'PBO' => $d->PBO | 0,
+                'penyelia' => $d->penyelia | 0,
+                'staff' => $d->staff | 0,
+            ];
+        });
+
+        $pilih_cabang = $jarr->toArray();
+
+
+        return response()->json([
+            'status' => 'berhasil',
+            'message' => 'berhasil menampilkan data pengajuan.',
+            'data' => [
+                'data_cabang' => $pilCabang == 'semua'? $all_data : $pilih_cabang
+            ]
+        ]);
     }
 }

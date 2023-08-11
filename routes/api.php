@@ -32,6 +32,7 @@ Route::prefix('kkb')->group(function(){
         Route::get('/get-data-users/{nip}', [PengajuanAPIController::class, 'getDataUsers']);
         Route::get('/get-cabang/{kode}', [PengajuanAPIController::class, 'getCabang']);
         Route::get('/get-cabang', [PengajuanAPIController::class, 'getAllCabang']);
+        Route::get('/get-posisi-pengajuan', [PengajuanAPIController::class, 'getPosisiPengajuan']);
     });
 });
 
@@ -40,3 +41,4 @@ Route::prefix('v1')->group(function(){
         Route::get('get-sum-cabang', [PengajuanAPIController::class, 'getSumPengajuan']);
     });
 });
+
