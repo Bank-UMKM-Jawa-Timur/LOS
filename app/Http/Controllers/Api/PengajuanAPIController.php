@@ -83,6 +83,7 @@ class PengajuanAPIController extends Controller
                 'status' => 'berhasil',
                 'message' => 'berhasil login',
                 'email' => $user->email,
+                'role' => $user->role,
                 'access_token' => $token,
                 'token_type' => 'Bearer',
                 'data' => $user->nip ? $this->getKaryawan($user->nip) : $user
@@ -102,6 +103,7 @@ class PengajuanAPIController extends Controller
                     'status' => 'berhasil',
                     'message' => 'berhasil login',
                     'email' => $user->email,
+                    'role' => $user->role,
                     'access_token' => $token,
                     'token_type' => 'Bearer',
                     'data' => $user->nip ? $this->getKaryawan($user->nip) : $user
