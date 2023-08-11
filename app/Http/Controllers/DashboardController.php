@@ -297,10 +297,6 @@ class DashboardController extends Controller
                     return  $item;
                     });
 
-
-                    // $setuju = $dataC->posisi == 'disetujui'-> count();
-
-                //     $proses = ($dataC[0]->posisi == 'selesai') + ($dataC[0]->posisi == 'pincab') + ($dataC[0]->posisi == 'PBP') + ($dataC[0]->posisi == 'PBO') + ($dataC[0]->posisi == 'Review Penyelia') + ($dataC[0]->posisi == 'Proses Input Data');
                 $c = [
                     'kodeC' => $c->kode_cabang,
                     'cabang' => $c->cabang ,
@@ -308,8 +304,7 @@ class DashboardController extends Controller
                     'proses' => $dataC[0]->proces ?? 0,
                     'total' => $dataC[0]->total ?? 0,
                 ];
-                // // }
-                // dd($dataC[0]);
+
                 array_push($semua_cabang, $c);
             }
 
@@ -330,6 +325,7 @@ class DashboardController extends Controller
                 ->groupBy('id_cabang')
                 ->orderBy('KodeC')
                 ->get();
+
             $dataC->map(function ($item) {
                 $item->proces = $item->disetujui + $item->pincab + $item->PBP + $item->PBO + $item->penyelia + $item->staff;
                 return  $item;
@@ -370,7 +366,7 @@ class DashboardController extends Controller
                     $name_cabang = cabang::select('cabang')->where('id', $pilCabang)->first();
                     return $pdf->download('Kategori keseluruhan cabang ' . $name_cabang->cabang . '.pdf');
                 }
-            }           
+            }
         } else {
             if ($type != "kesuluruhan") {
                 if ($pilCabang == 'semua') {
@@ -388,19 +384,5 @@ class DashboardController extends Controller
                 }
             }
         }
-    }
-
-    public function cetakExcel(Request $request)
-    {
-        $request->validate(
-            [
-                'tAwal' => 'required',
-                'tAkhir' => 'required'
-            ],
-            [
-                'tAwal.required' => "tanggal Awal Belum Di isi",
-                'tAkhir.required' => "tanggal Akhir Belum Di isi",
-            ]
-        );
     }
 }
