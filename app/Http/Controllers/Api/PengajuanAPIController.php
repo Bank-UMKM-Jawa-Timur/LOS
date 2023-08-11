@@ -194,7 +194,6 @@ class PengajuanAPIController extends Controller
         return response()->json($data);
     }
 
-<<<<<<< HEAD
     public function getSumPengajuan(Request $request) {
         if ($request->all() != null){
             // return $request->all();
@@ -260,15 +259,15 @@ class PengajuanAPIController extends Controller
         foreach ($cabangIds as $rows) {
             $dat = DB::table('pengajuan')
             ->selectRaw('kode_cabang as kode_cabang,
-                                 cabang,
-                                 sum(posisi = "selesai") as disetujui,
-                                 sum(posisi = "Ditolak") as ditolak,
-                                 sum(posisi = "pincab") as pincab,
-                                 sum(posisi = "PBP") as PBP,
-                                 sum(posisi = "PBO") as PBO,
-                                 sum(posisi = "Review Penyelia") as penyelia,
-                                 sum(posisi = "Proses Input Data") as staff,
-                                 count(*) as total')
+                        cabang,
+                        sum(posisi = "selesai") as disetujui,
+                        sum(posisi = "Ditolak") as ditolak,
+                        sum(posisi = "pincab") as pincab,
+                        sum(posisi = "PBP") as PBP,
+                        sum(posisi = "PBO") as PBO,
+                        sum(posisi = "Review Penyelia") as penyelia,
+                        sum(posisi = "Proses Input Data") as staff,
+                        count(*) as total')
             ->join('cabang', 'pengajuan.id_cabang', '=', 'cabang.id')
             ->where('cabang.id', $rows->id)
                 ->whereBetween('tanggal', [$tAwal, ($tAkhir ?? date('Y-m-d'))])
@@ -288,16 +287,44 @@ class PengajuanAPIController extends Controller
         // cabang dipilih
         $data = DB::table('pengajuan')
         ->selectRaw('kode_cabang as kode_cabang,
-                                 cabang,
-                                 sum(posisi = "selesai") as disetujui,
-                                 sum(posisi = "Ditolak") as ditolak,
-                                 sum(posisi = "pincab") as pincab,
-                                 sum(posisi = "PBP") as PBP,
-                                 sum(posisi = "PBO") as PBO,
-                                 sum(posisi = "Review Penyelia") as penyelia,
-                                 sum(posisi = "Proses Input Data") as staff,
-                                 count(*) as total')
-=======
+                    cabang,
+                    sum(posisi = "selesai") as disetujui,
+                    sum(posisi = "Ditolak") as ditolak,
+                    sum(posisi = "pincab") as pincab,
+                    sum(posisi = "PBP") as PBP,
+                    sum(posisi = "PBO") as PBO,
+                    sum(posisi = "Review Penyelia") as penyelia,
+                    sum(posisi = "Proses Input Data") as staff,
+                    count(*) as total')
+        ->join('cabang', 'pengajuan.id_cabang', '=', 'cabang.id')
+        ->where('cabang.id', $pilCabang)
+            ->whereBetween('tanggal', [$tAwal, ($tAkhir ?? date('Y-m-d'))])
+            ->get();
+
+        $jarr = $data->map(function ($d) {
+            return [
+                'kode_cabang' => $d->kode_cabang,
+                'cabang' => $d->cabang,
+                'pincab' => $d->pincab | 0,
+                'PBP' => $d->PBP | 0,
+                'PBO' => $d->PBO | 0,
+                'penyelia' => $d->penyelia | 0,
+                'staff' => $d->staff | 0,
+            ];
+        });
+
+        $pilih_cabang = $jarr->toArray();
+
+
+        return response()->json([
+            'status' => 'berhasil',
+            'message' => 'berhasil menampilkan data pengajuan.',
+            'data' => [
+                'data_cabang' => $pilCabang == 'semua'? $all_data : $pilih_cabang
+            ]
+        ]);
+    }
+
     public function getCountPengajuan(Request $request){
         $cabangIds = DB::table('cabang')->get();
         $tAwal = $request->tAwal;
@@ -309,15 +336,15 @@ class PengajuanAPIController extends Controller
         foreach ($cabangIds as $c) {
             $dataCS = DB::table('pengajuan')
             ->selectRaw('kode_cabang as kodeC,
-                                    cabang,
-                                    sum(posisi = "selesai") as disetujui,
-                                    sum(posisi = "Ditolak") as ditolak,
-                                    sum(posisi = "pincab") as pincab,
-                                    sum(posisi = "PBP") as PBP,
-                                    sum(posisi = "PBO") as PBO,
-                                    sum(posisi = "Review Penyelia") as penyelia,
-                                    sum(posisi = "Proses Input Data") as staff,
-                                    count(*) as total')
+                        cabang,
+                        sum(posisi = "selesai") as disetujui,
+                        sum(posisi = "Ditolak") as ditolak,
+                        sum(posisi = "pincab") as pincab,
+                        sum(posisi = "PBP") as PBP,
+                        sum(posisi = "PBO") as PBO,
+                        sum(posisi = "Review Penyelia") as penyelia,
+                        sum(posisi = "Proses Input Data") as staff,
+                        count(*) as total')
             ->join('cabang', 'pengajuan.id_cabang', '=', 'cabang.id')
             ->where('cabang.id', $c->id)
             ->whereBetween('tanggal', [$tAwal, ($tAkhir ?? date('Y-m-d'))])
@@ -350,27 +377,11 @@ class PengajuanAPIController extends Controller
                                 sum(posisi = "Review Penyelia") as penyelia,
                                 sum(posisi = "Proses Input Data") as staff,
                                 count(*) as total')
->>>>>>> feat/count-pengajuan
         ->join('cabang', 'pengajuan.id_cabang', '=', 'cabang.id')
         ->where('cabang.id', $pilCabang)
             ->whereBetween('tanggal', [$tAwal, ($tAkhir ?? date('Y-m-d'))])
             ->get();
 
-<<<<<<< HEAD
-        $jarr = $data->map(function ($d) {
-            return [
-                'kode_cabang' => $d->kode_cabang,
-                'cabang' => $d->cabang,
-                'pincab' => $d->pincab | 0,
-                'PBP' => $d->PBP | 0,
-                'PBO' => $d->PBO | 0,
-                'penyelia' => $d->penyelia | 0,
-                'staff' => $d->staff | 0,
-            ];
-        });
-
-        $pilih_cabang = $jarr->toArray();
-=======
         $jarr = $dataC->map(function ($item) {
             // Menghitung nilai dari semua posisi kecuali "disetujui" dan "ditolak"
             $item->proses = $item->pincab + $item->PBP + $item->PBO + $item->penyelia + $item->staff;
@@ -385,20 +396,12 @@ class PengajuanAPIController extends Controller
         });
 
         $cabang_pilih = $jarr->toArray();
->>>>>>> feat/count-pengajuan
 
 
         return response()->json([
             'status' => 'berhasil',
-<<<<<<< HEAD
-            'message' => 'berhasil menampilkan data pengajuan.',
-            'data' => [
-                'data_cabang' => $pilCabang == 'semua'? $all_data : $pilih_cabang
-            ]
-=======
             'message' => 'berhasil menampilkan data',
             'data' => $pilCabang == 'semua' ? $semua_cabang : $cabang_pilih
->>>>>>> feat/count-pengajuan
         ]);
     }
 }
