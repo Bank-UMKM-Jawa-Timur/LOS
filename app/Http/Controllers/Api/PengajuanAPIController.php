@@ -194,6 +194,18 @@ class PengajuanAPIController extends Controller
         return response()->json($data);
     }
 
+    public function getAllCabangMobile(){
+        $data = DB::table('cabang')
+            ->select('kode_cabang', 'cabang')
+            ->get();
+
+        return response()->json([
+            'status' => 'berhasil',
+            'message' => 'berhasil menampilkan data cabang.',
+            'data' => $data
+        ]);
+    }
+
     public function getSumPengajuan(Request $request) {
         if ($request->all() != null){
             // return $request->all();
