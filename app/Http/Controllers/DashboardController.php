@@ -134,7 +134,7 @@ class DashboardController extends Controller
                                 $type == 'kustom' ? \DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'PBO' GROUP BY id_cabang), 0) AS pbo") : \DB::raw("SUM(IF(p.posisi = 'PBO', 1,0)) AS pbo"),
                                 $type == 'kustom' ? \DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Review Penyelia' GROUP BY id_cabang), 0) AS penyelia") : \DB::raw("SUM(IF(p.posisi = 'Review Penyelia', 1,0)) AS penyelia"),
                                 $type == 'kustom' ? \DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Proses Input Data' GROUP BY id_cabang), 0) AS staff") : \DB::raw("SUM(IF(p.posisi = 'Proses Input Data', 1,0)) AS staff"),
-                                $type == 'kustom' ? \DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi != 'Ditolak' GROUP BY id_cabang), 0) AS diproses") : \DB::raw("(SUM(IF(p.posisi = 'Proses Input Data', 1,0))+
+                                $type == 'kustom' ? \DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi != 'Ditolak' AND posisi != 'Selesai' GROUP BY id_cabang), 0) AS diproses") : \DB::raw("(SUM(IF(p.posisi = 'Proses Input Data', 1,0))+
                                         SUM(IF(p.posisi = 'Review Penyelia', 1,0))+
                                         SUM(IF(p.posisi = 'PBO', 1,0))+
                                         SUM(IF(p.posisi = 'PBP', 1,0))+
@@ -153,7 +153,7 @@ class DashboardController extends Controller
                                 'c.cabang',
                                 $type == 'kustom' ? \DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Selesai' GROUP BY id_cabang), 0) AS disetujui") : \DB::raw("SUM(IF(p.posisi = 'Selesai', 1,0)) AS disetujui"),
                                 $type == 'kustom' ? \DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Ditolak' GROUP BY id_cabang), 0) AS ditolak") : \DB::raw("SUM(IF(p.posisi = 'Ditolak', 1,0)) AS ditolak"),
-                                $type == 'kustom' ? \DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi != 'Ditolak' GROUP BY id_cabang), 0) AS diproses") : \DB::raw("(SUM(IF(p.posisi = 'Proses Input Data', 1,0))+
+                                $type == 'kustom' ? \DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi != 'Ditolak' AND posisi != 'Selesai' GROUP BY id_cabang), 0) AS diproses") : \DB::raw("(SUM(IF(p.posisi = 'Proses Input Data', 1,0))+
                                         SUM(IF(p.posisi = 'Review Penyelia', 1,0))+
                                         SUM(IF(p.posisi = 'PBO', 1,0))+
                                         SUM(IF(p.posisi = 'PBP', 1,0))+
@@ -185,7 +185,7 @@ class DashboardController extends Controller
         if ($jExport == 'pdf') {
             $param['data'] = $seluruh_data;
             $param['data2'] = $seluruh_data_proses;
-            
+
             $pdf = PDF::loadView('modal.DataNominatif', $param);
             // return view('modal.DataNominatif', $param);
             // Return hasil PDF untuk diunduh atau ditampilkan
