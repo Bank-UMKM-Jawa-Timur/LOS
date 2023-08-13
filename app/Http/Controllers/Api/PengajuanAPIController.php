@@ -215,6 +215,18 @@ class PengajuanAPIController extends Controller
     public function getSumPengajuan(Request $request) {
         if ($request->all() != null){
             // return $request->all();
+            $total_disetujui = DB::table('pengajuan')
+                ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir') != null ? $request->get('tanggal_akhir') : now()])
+                ->where('posisi', 'Selesai')
+                ->count();
+            $total_ditolak = DB::table('pengajuan')
+                ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir') != null ? $request->get('tanggal_akhir') : now()])
+                ->where('posisi', 'Ditolak')
+                ->count();
+            $total_diproses = DB::table('pengajuan')
+                ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir') != null ? $request->get('tanggal_akhir') : now()])
+                ->whereIn('posisi', ['Pincab','PBP','PBO','Review Penyelia','Proses Input Data'])
+                ->count();
             $dataTertinggi = DB::table('pengajuan')
                 ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir') != null ? $request->get('tanggal_akhir') : now()])
                 ->selectRaw('count(pengajuan.id) as total, cabang.kode_cabang, cabang.cabang')
@@ -257,6 +269,9 @@ class PengajuanAPIController extends Controller
         return response()->json([
             'status' => 'berhasil',
             'message' => $message,
+            'total_disetujui' => $total_disetujui,
+            'total_ditolak' => $total_ditolak,
+            'total_diproses' => $total_diproses,
             'data' => [
                 'tertinggi' => $dataTertinggi,
                 'terendah' => $dataTerendah,
