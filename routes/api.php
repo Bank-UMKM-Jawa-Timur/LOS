@@ -38,10 +38,11 @@ Route::prefix('kkb')->group(function(){
 Route::prefix('v1')->group(function(){
     Route::middleware([APIToken::class])->group(function(){
         Route::get('get-sum-cabang', [PengajuanAPIController::class, 'getSumPengajuan']);
-        Route::get('/get-posisi-pengajuan', [PengajuanAPIController::class, 'getPosisiPengajuan']);
-        Route::get('/get-posisi-pengajuan', [PengajuanAPIController::class, 'getPosisiPengajuan']);
-        Route::get('/get-count-pengajuan', [PengajuanAPIController::class, 'getCountPengajuan']);
+        // Route::get('/get-posisi-pengajuan', [PengajuanAPIController::class, 'getPosisiPengajuan']);
+        Route::get('get-posisi-pengajuan', [PengajuanAPIController::class, 'getPosisiPengajuan']);
+        Route::get('get-count-pengajuan', [PengajuanAPIController::class, 'getCountPengajuan']);
         Route::get('get-cabang', [PengajuanAPIController::class, 'getAllCabangMobile']);
+        Route::get('get-sum-skema', [PengajuanAPIController::class, 'getSumSkema']);
     });
 });
 
