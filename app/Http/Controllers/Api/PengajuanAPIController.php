@@ -275,6 +275,10 @@ class PengajuanAPIController extends Controller
 
     }
 
+    public function getSumSkema(Request $request){
+        
+    }
+
     public function getPosisiPengajuan(Request $request)
     {
         $pilCabang = $request->cabang;
@@ -379,18 +383,30 @@ class PengajuanAPIController extends Controller
 
         // tanggal di pilih cabang tidak
         if ($tAwal != null && $tAkhir != null && $pilCabang == null) {
-            $seluruh_data_proses = DB::table('cabang AS c')
-            ->select(
-                'c.kode_cabang AS kodeC',
-                'c.cabang',
-                DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Selesai' GROUP BY id_cabang), 0) AS disetujui"),
-                DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Ditolak' GROUP BY id_cabang), 0) AS ditolak"),
-                DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi != 'Ditolak' AND posisi != 'Selesai' GROUP BY id_cabang), 0) AS diproses")
-            )
-                ->leftJoin('pengajuan AS p', 'c.id', 'p.id_cabang')
-                ->where('c.kode_cabang', '!=', 000)
-                ->groupBy('kodeC')
-                ->get();
+            // $seluruh_data_proses = DB::table('cabang AS c')
+            // ->select(
+            //     'c.kode_cabang AS kodeC',
+            //     'c.cabang',
+            //     DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Selesai' GROUP BY id_cabang), 0) AS disetujui"),
+            //     DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Ditolak' GROUP BY id_cabang), 0) AS ditolak"),
+            //     DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi != 'Ditolak' AND posisi != 'Selesai' GROUP BY id_cabang), 0) AS diproses")
+            // )
+            //     ->leftJoin('pengajuan AS p', 'c.id', 'p.id_cabang')
+            //     ->where('c.kode_cabang', '!=', 000)
+            //     ->groupBy('kodeC')
+            //     ->get();
+            $total_setuju = DB::table('pengajuan')
+                ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir') != null ? $request->get('tanggal_akhir') : now()])
+                ->where('posisi', 'Selesai')
+                ->count();
+            $total_ditolak = DB::table('pengajuan')
+                ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir') != null ? $request->get('tanggal_akhir') : now()])
+                ->where('posisi', 'Ditolak')
+                ->count();
+            $total_diproses = DB::table('pengajuan')
+                ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir') != null ? $request->get('tanggal_akhir') : now()])
+                ->whereIn('posisi', ['Pincab','PBP','PBO','Review Penyelia','Proses Input Data'])
+                ->count();
 
         }
         // tanggal dipilih cabang juga
@@ -451,14 +467,25 @@ class PengajuanAPIController extends Controller
             $total_ditolak += $data->ditolak;
             $total_proses += $data->diproses;
         }
-
-        return response()->json([
-            'status' => 'berhasil',
-            'message' => 'berhasil menampilkan data pengajuan.',
-            'total_disetujui' => $total_setuju,
-            'total_ditolak' => $total_ditolak,
-            'total_diproses' => $total_proses,
-            'data' => $seluruh_data_proses
-        ]);
+        if ($pilCabang != null) {
+            return response()->json([
+                'status' => 'berhasil',
+                'message' => 'berhasil menampilkan data pengajuan.',
+                'total_disetujui' => $total_setuju,
+                'total_ditolak' => $total_ditolak,
+                'total_diproses' => $total_proses,
+                'data' => $seluruh_data_proses
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'berhasil',
+                'message' => 'berhasil menampilkan data pengajuan.',
+                'total_disetujui' => $total_setuju,
+                'total_ditolak' => $total_ditolak,
+                'total_diproses' => $total_proses,
+                // 'data' => $seluruh_data_proses
+            ]);
+        }
+        
     }
 }
