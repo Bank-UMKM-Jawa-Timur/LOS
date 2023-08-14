@@ -98,6 +98,7 @@
                                     <a class="dropdown-item" href="{{ route('merk.index') }}">Master Merk</a>
                                     <a class="dropdown-item" href="{{ route('tipe.index') }}">Master Tipe</a>
                                     <a class="dropdown-item" href="{{ route('index-session') }}">Master Session</a>
+                                    <a class="dropdown-item" href="{{ route('index-api-session') }}">Master API Session</a>
                                 </div>
                             </li>
                         @endif

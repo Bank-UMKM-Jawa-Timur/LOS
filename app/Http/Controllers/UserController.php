@@ -300,4 +300,38 @@ class UserController extends Controller
             return redirect()->back()->withError('Terjadi Kesalahan.' . $e);
         }
     }
+
+    public function indexAPISession(Request $request) {
+        $this->param['pageTitle'] = 'Master Session Mobile';
+
+        try {
+            $this->param['data'] = DB::table('personal_access_tokens')
+                ->join('users', 'users.id', 'personal_access_tokens.tokenable_id')
+                ->select('users.email', 'users.role', 'personal_access_tokens.id', 'users.id_cabang', 'personal_access_tokens.tokenable_id')
+                ->when($request->keyword, function ($query, $search) {
+                    return $query->where('users.email', 'like', '%' . $search . '%');
+                })
+                ->paginate(10);
+        } catch (\Illuminate\Database\QueryException $e) {
+            return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
+        } catch (Exception $e) {
+            return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
+        }
+
+        return view('user.api-sessions.index', $this->param);
+    }
+
+    public function resetAPISession($id) {
+        try {
+            DB::table('personal_access_tokens')
+                ->where('id', $id)
+                ->delete();
+
+            return back()->withStatus('Berhasil menghapus API session.');
+        } catch (Exception $e) {
+            return redirect()->back()->withError('Terjadi Kesalahan.' . $e);
+        } catch (Exception $e) {
+            return redirect()->back()->withError('Terjadi Kesalahan.' . $e);
+        }
+    }
 }

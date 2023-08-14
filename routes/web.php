@@ -103,6 +103,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('master-item', MasterItemController::class);
         Route::get('/reset-sessions', [UserController::class, 'indexSession'])->name('index-session');
         Route::post('/reset-session/{id}', [UserController::class, 'resetSession'])->name('reset-session');
+        Route::get('/reset-api-sessions', [UserController::class, 'indexAPISession'])->name('index-api-session');
+        Route::post('/reset-api-session/{id}', [UserController::class, 'resetAPISession'])->name('reset-api-session');
     });
 
 
