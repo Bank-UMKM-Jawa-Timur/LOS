@@ -107,6 +107,7 @@ class PengajuanAPIController extends Controller
                 return response()->json([
                     'status' => 'berhasil',
                     'message' => 'berhasil login',
+                    'id' => $user->id,
                     'email' => $user->email,
                     'role' => $user->role,
                     'access_token' => $token,
