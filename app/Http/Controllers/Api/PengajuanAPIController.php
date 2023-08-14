@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\Http;
 
 class PengajuanAPIController extends Controller
 {
+    private $currentMonth;
+    public function __construct() {
+        $this->currentMonth = date('m');
+    }
     static function getKaryawan($nip){
         // retrieve from api
         $host = env('HCS_HOST');
@@ -276,14 +280,28 @@ class PengajuanAPIController extends Controller
     }
 
     public function getSumSkema(Request $request){
-        $currentMonth = date('m');
         if ($request->all() == null) {
             //Filter all skema without request in currentMonth
-            $data = DB::table('pengajuan')
+            $total = DB::table('pengajuan')
                 ->selectRaw("sum(skema_kredit='PKPJ') as PKPJ,sum(skema_kredit='KKB') as KKB,sum(skema_kredit='Talangan Umroh') as Umroh,sum(skema_kredit='Prokesra') as Prokesra,sum(skema_kredit='Kusuma') as Kusuma")
-                ->whereRaw('MONTH(tanggal) = ?', $currentMonth)
+                ->whereRaw('MONTH(tanggal) = ?', $this->currentMonth)
+                ->get();
+            $data = DB::table('pengajuan')
+                ->selectRaw("skema_kredit,sum(posisi='Selesai') as total_disetujui,sum(posisi='ditolak') as total_ditolak,sum(posisi='pincab') as posisi_pincab,sum(posisi='PBP') as posisi_pbp,sum(posisi='PBO') as posisi_pbo,sum(posisi='Review Penyelia') as posisi_penyelia,sum(posisi='Proses Input Data') as posisi_staf")
+                ->whereRaw('MONTH(tanggal) = ?', $this->currentMonth)
+                ->groupBy('skema_kredit')
                 ->get();
             $message = 'Berhasil Menampilkan Total Keseluruhan Skema Data Pengajuan Bulan '. date('F Y') .'.';
+
+            return response()->json([
+                'status' => 'berhasil',
+                'message' => $message,
+                // 'total' => $total,
+                'data' => [
+                    'total' => $total,
+                    'posisi' => $data,
+                ]
+            ], 200);
         } else {
             if ($request->get('skema') != null) {
                 //Skema not null
@@ -291,7 +309,7 @@ class PengajuanAPIController extends Controller
                     if ($request->get('tanggal_awal') != null && $request->get('tanggal_akhir') != null) {
                         //With date filter
                         $data = DB::table('pengajuan')
-                            ->selectRaw('cabang.kode_cabang,cabang.cabang,count(pengajuan.id) as total')
+                            ->selectRaw("cabang.kode_cabang,cabang.cabang,count(pengajuan.id) as total,sum(posisi='Selesai') as total_disetujui,sum(posisi='ditolak') as total_ditolak,sum(posisi='pincab') as posisi_pincab,sum(posisi='PBP') as posisi_pbp,sum(posisi='PBO') as posisi_pbo,sum(posisi='Review Penyelia') as posisi_penyelia,sum(posisi='Proses Input Data') as posisi_staf")
                             ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir')])
                             ->where('skema_kredit', $request->get('skema'))
                             ->where('cabang.kode_cabang', $request->get('cabang'))
@@ -302,8 +320,8 @@ class PengajuanAPIController extends Controller
                     } else {
                         //without date filter
                         $data = DB::table('pengajuan')
-                            ->selectRaw('cabang.kode_cabang,cabang.cabang,count(pengajuan.id) as total')
-                            ->whereRaw('MONTH(tanggal) = ?', $currentMonth)
+                            ->selectRaw("cabang.kode_cabang,cabang.cabang,count(pengajuan.id) as total,sum(posisi='Selesai') as total_disetujui,sum(posisi='ditolak') as total_ditolak,sum(posisi='pincab') as posisi_pincab,sum(posisi='PBP') as posisi_pbp,sum(posisi='PBO') as posisi_pbo,sum(posisi='Review Penyelia') as posisi_penyelia,sum(posisi='Proses Input Data') as posisi_staf")
+                            ->whereRaw('MONTH(tanggal) = ?', $this->currentMonth)
                             ->where('skema_kredit', $request->get('skema'))
                             ->where('cabang.kode_cabang', $request->get('cabang'))
                             ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
@@ -315,7 +333,7 @@ class PengajuanAPIController extends Controller
                     if ($request->get('tanggal_awal') != null && $request->get('tanggal_akhir') != null) {
                         //Only date filter
                         $data = DB::table('pengajuan')
-                            ->selectRaw('cabang.kode_cabang,cabang.cabang,count(pengajuan.id) as total')
+                            ->selectRaw("cabang.kode_cabang,cabang.cabang,count(pengajuan.id) as total,sum(posisi='Selesai') as total_disetujui,sum(posisi='ditolak') as total_ditolak,sum(posisi='pincab') as posisi_pincab,sum(posisi='PBP') as posisi_pbp,sum(posisi='PBO') as posisi_pbo,sum(posisi='Review Penyelia') as posisi_penyelia,sum(posisi='Proses Input Data') as posisi_staf")
                             ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
                             ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir')])
                             ->where('skema_kredit', $request->get('skema'))
@@ -325,9 +343,9 @@ class PengajuanAPIController extends Controller
                     } else {
                         //Without date filter
                         $data = DB::table('pengajuan')
-                            ->selectRaw('cabang.kode_cabang,cabang.cabang,count(pengajuan.id) as total')
+                            ->selectRaw("cabang.kode_cabang,cabang.cabang,count(pengajuan.id) as total,sum(posisi='Selesai') as total_disetujui,sum(posisi='ditolak') as total_ditolak,sum(posisi='pincab') as posisi_pincab,sum(posisi='PBP') as posisi_pbp,sum(posisi='PBO') as posisi_pbo,sum(posisi='Review Penyelia') as posisi_penyelia,sum(posisi='Proses Input Data') as posisi_staf")
                             ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
-                            ->whereRaw('MONTH(tanggal) = ?', $currentMonth)
+                            ->whereRaw('MONTH(tanggal) = ?', $this->currentMonth)
                             ->where('skema_kredit', $request->get('skema'))
                             ->groupBy('cabang.kode_cabang')
                             ->get();
@@ -351,7 +369,7 @@ class PengajuanAPIController extends Controller
                         //without date filter
                         $data = DB::table('pengajuan')
                             ->selectRaw("cabang.kode_cabang,cabang.cabang,sum(skema_kredit='PKPJ') as PKPJ,sum(skema_kredit='KKB') as KKB,sum(skema_kredit='Talangan Umroh') as Umroh,sum(skema_kredit='Prokesra') as Prokesra,sum(skema_kredit='Kusuma') as Kusuma")
-                            ->whereRaw('MONTH(tanggal) = ?', $currentMonth)
+                            ->whereRaw('MONTH(tanggal) = ?', $this->currentMonth)
                             // ->where('skema_kredit', $request->get('skema'))
                             ->where('cabang.kode_cabang', $request->get('cabang'))
                             ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
@@ -373,12 +391,12 @@ class PengajuanAPIController extends Controller
                 
             }
             
+            return response()->json([
+                'status' => 'berhasil',
+                'message' => $message,
+                'data' => $data
+            ], 200);
         }
-        return response()->json([
-            'status' => 'berhasil',
-            'message' => $message,
-            'data' => $data
-        ], 200);
         
     }
 
