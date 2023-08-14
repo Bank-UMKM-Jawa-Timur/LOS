@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/login', [PengajuanAPIController::class, 'login']);
-Route::post('/get-session-check', [PengajuanAPIController::class, 'getSessionCheck']);
+Route::get('/get-session-check/{id}', [PengajuanAPIController::class, 'getSessionCheck']);
 
 Route::group(['middleware' => ['auth:sanctum']], function(){
     Route::get('/profile', function(Request $request){

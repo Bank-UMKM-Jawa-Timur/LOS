@@ -121,12 +121,9 @@ class PengajuanAPIController extends Controller
         }
     }
 
-    public function getSessionCheck(Request $request){
-        $user = User::where('email', $request['email'])
-            ->orWhere('nip', $request['email'])
-            ->firstOrFail();
-
-        if (DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->count() > 0) {
+    public function getSessionCheck($id){
+        $session = DB::table('personal_access_tokens')->where('tokenable_id', $id)->first();
+        if ($session) {
             return response()->json([
                 'status' => 'sukses',
                 'message' => 'Berhasil mengambil sesi'
