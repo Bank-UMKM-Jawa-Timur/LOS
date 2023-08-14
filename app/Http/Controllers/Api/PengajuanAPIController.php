@@ -121,6 +121,25 @@ class PengajuanAPIController extends Controller
         }
     }
 
+    public function getSessionCheck(Request $request){
+        $user = User::where('email', $request['email'])
+            ->orWhere('nip', $request['email'])
+            ->firstOrFail();
+
+        if (DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->count() > 0) {
+            return response()->json([
+                'status' => 'sukses',
+                'message' => 'Berhasil mengambil sesi'
+            ]);
+        }
+        else {
+            return response()->json([
+                'status' => 'gagal',
+                'message' => 'Sesi anda sudah berakhir'
+            ]);
+        }
+    }
+
     public function logout()
     {
         auth()->user()->tokens()->delete();
@@ -334,7 +353,7 @@ class PengajuanAPIController extends Controller
                             ->groupBy('cabang.kode_cabang')
                             ->get();
                         $message = 'Berhasil Menampilkan Total Skema Data Pengajuan Cabang '. $request->get('cabang') .' Bulan '. date('F Y') .'.';
-                    }        
+                    }
                 } else {
                     if ($request->get('tanggal_awal') != null && $request->get('tanggal_akhir') != null) {
                         //Only date filter
@@ -394,16 +413,16 @@ class PengajuanAPIController extends Controller
                         ->get();
                     $message = 'Berhasil Menampilkan Total Keseluruhan Skema Data Pengajuan.';
                 }
-                
+
             }
-            
+
             return response()->json([
                 'status' => 'berhasil',
                 'message' => $message,
                 'data' => $data
             ], 200);
         }
-        
+
     }
 
     public function getPosisiPengajuan(Request $request)
@@ -532,7 +551,7 @@ class PengajuanAPIController extends Controller
                 ->whereBetween('tanggal', [$tAwal, $tAkhir])
                 ->groupBy('cabang.kode_cabang')
                 ->get();
-            
+
             return response()->json([
                 'status' => 'berhasil',
                 'message' => 'Berhasil Menampilkan Total Data Pengajuan.',
@@ -551,7 +570,7 @@ class PengajuanAPIController extends Controller
                 ->where('cabang.kode_cabang', $pilCabang)
                 ->groupBy('cabang.kode_cabang')
                 ->get();
-            
+
             return response()->json([
                 'status' => 'berhasil',
                 'message' => 'Berhasil Menampilkan Total Data Pengajuan Cabang '. $pilCabang .'.',
@@ -567,7 +586,7 @@ class PengajuanAPIController extends Controller
                 ->where('cabang.kode_cabang', $pilCabang)
                 ->groupBy('cabang.kode_cabang')
                 ->get();
-            
+
             return response()->json([
                 'status' => 'berhasil',
                 'message' => 'Berhasil Menampilkan Total Data Pengajuan Cabang '. $pilCabang .'.',
@@ -587,6 +606,6 @@ class PengajuanAPIController extends Controller
             //     ->where('c.kode_cabang', '!=', '000')
             //     ->groupBy('kodeC',)
             //     ->get();
-        }     
+        }
     }
 }
