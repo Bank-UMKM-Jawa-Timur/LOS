@@ -366,27 +366,15 @@ class PengajuanAPIController extends Controller
                         $message = 'Berhasil Menampilkan Total Skema Data Pengajuan Cabang '. $request->get('cabang') .' Bulan '. date('F Y') .'.';
                     }
                 } else {
-                    if ($request->get('tanggal_awal') != null && $request->get('tanggal_akhir') != null) {
-                        //Only date filter
-                        $data = DB::table('pengajuan')
-                            ->selectRaw("cabang.kode_cabang,cabang.cabang,sum(skema_kredit='PKPJ') as PKPJ,sum(skema_kredit='KKB') as KKB,sum(skema_kredit='Talangan Umroh') as Umroh,sum(skema_kredit='Prokesra') as Prokesra,sum(skema_kredit='Kusuma') as Kusuma")
-                            ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
-                            ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir')])
-                            // ->where('skema_kredit', $request->get('skema'))
-                            ->groupBy('cabang.kode_cabang')
-                            ->get();
-                        $message = 'Berhasil Menampilkan Total Keseluruhan Skema Data Pengajuan.';
-                    } else {
-                        //Without date filter
-                        // $data = DB::table('pengajuan')
-                        //     ->selectRaw("cabang.kode_cabang,cabang.cabang,sum(skema_kredit='PKPJ') as PKPJ,sum(skema_kredit='KKB') as KKB,sum(skema_kredit='Talangan Umroh') as Umroh,sum(skema_kredit='Prokesra') as Prokesra,sum(skema_kredit='Kusuma') as Kusuma")
-                        //     ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
-                        //     ->whereRaw('MONTH(tanggal) = ?', $currentMonth)
-                        //     // ->where('skema_kredit', $request->get('skema'))
-                        //     ->groupBy('cabang.kode_cabang')
-                        //     ->get();
-                        // $message = 'Berhasil Menampilkan Total Keseluruhan Skema Data Pengajuan Bulan '. date('F Y') .'.';
-                    }
+                    //Only date filter
+                    $data = DB::table('pengajuan')
+                        ->selectRaw("cabang.kode_cabang,cabang.cabang,sum(skema_kredit='PKPJ') as PKPJ,sum(skema_kredit='KKB') as KKB,sum(skema_kredit='Talangan Umroh') as Umroh,sum(skema_kredit='Prokesra') as Prokesra,sum(skema_kredit='Kusuma') as Kusuma")
+                        ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
+                        ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir')])
+                        // ->where('skema_kredit', $request->get('skema'))
+                        ->groupBy('cabang.kode_cabang')
+                        ->get();
+                    $message = 'Berhasil Menampilkan Total Keseluruhan Skema Data Pengajuan.';
                 }
                 
             }
