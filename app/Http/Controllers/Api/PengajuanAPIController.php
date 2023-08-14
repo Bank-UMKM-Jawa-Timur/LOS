@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\Http;
 
 class PengajuanAPIController extends Controller
 {
+    private $currentMonth;
+    public function __construct() {
+        $this->currentMonth = date('m');
+    }
     static function getKaryawan($nip){
         // retrieve from api
         $host = env('HCS_HOST');
@@ -215,6 +219,18 @@ class PengajuanAPIController extends Controller
     public function getSumPengajuan(Request $request) {
         if ($request->all() != null){
             // return $request->all();
+            $total_disetujui = DB::table('pengajuan')
+                ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir') != null ? $request->get('tanggal_akhir') : now()])
+                ->where('posisi', 'Selesai')
+                ->count();
+            $total_ditolak = DB::table('pengajuan')
+                ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir') != null ? $request->get('tanggal_akhir') : now()])
+                ->where('posisi', 'Ditolak')
+                ->count();
+            $total_diproses = DB::table('pengajuan')
+                ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir') != null ? $request->get('tanggal_akhir') : now()])
+                ->whereIn('posisi', ['Pincab','PBP','PBO','Review Penyelia','Proses Input Data'])
+                ->count();
             $dataTertinggi = DB::table('pengajuan')
                 ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir') != null ? $request->get('tanggal_akhir') : now()])
                 ->selectRaw('count(pengajuan.id) as total, cabang.kode_cabang, cabang.cabang')
@@ -257,6 +273,9 @@ class PengajuanAPIController extends Controller
         return response()->json([
             'status' => 'berhasil',
             'message' => $message,
+            'total_disetujui' => $total_disetujui,
+            'total_ditolak' => $total_ditolak,
+            'total_diproses' => $total_diproses,
             'data' => [
                 'tertinggi' => $dataTertinggi,
                 'terendah' => $dataTerendah,
@@ -264,6 +283,127 @@ class PengajuanAPIController extends Controller
             ]
         ], 200);
 
+    }
+
+    public function getSumSkema(Request $request){
+        if ($request->all() == null) {
+            //Filter all skema without request in currentMonth
+            $total = DB::table('pengajuan')
+                ->selectRaw("sum(skema_kredit='PKPJ') as PKPJ,sum(skema_kredit='KKB') as KKB,sum(skema_kredit='Talangan Umroh') as Umroh,sum(skema_kredit='Prokesra') as Prokesra,sum(skema_kredit='Kusuma') as Kusuma")
+                ->whereRaw('MONTH(tanggal) = ?', $this->currentMonth)
+                ->get();
+            $data = DB::table('pengajuan')
+                ->selectRaw("skema_kredit,sum(posisi='Selesai') as total_disetujui,sum(posisi='ditolak') as total_ditolak,sum(posisi='pincab') as posisi_pincab,sum(posisi='PBP') as posisi_pbp,sum(posisi='PBO') as posisi_pbo,sum(posisi='Review Penyelia') as posisi_penyelia,sum(posisi='Proses Input Data') as posisi_staf")
+                ->whereRaw('MONTH(tanggal) = ?', $this->currentMonth)
+                ->groupBy('skema_kredit')
+                ->get();
+            $message = 'Berhasil Menampilkan Total Keseluruhan Skema Data Pengajuan Bulan '. date('F Y') .'.';
+
+            return response()->json([
+                'status' => 'berhasil',
+                'message' => $message,
+                // 'total' => $total,
+                'data' => [
+                    'total' => $total,
+                    'posisi' => $data,
+                ]
+            ], 200);
+        } else {
+            if ($request->get('skema') != null) {
+                //Skema not null
+                if ($request->get('cabang') != null) {
+                    if ($request->get('tanggal_awal') != null && $request->get('tanggal_akhir') != null) {
+                        //With date filter
+                        $data = DB::table('pengajuan')
+                            ->selectRaw("cabang.kode_cabang,cabang.cabang,count(pengajuan.id) as total,sum(posisi='Selesai') as total_disetujui,sum(posisi='ditolak') as total_ditolak,sum(posisi='pincab') as posisi_pincab,sum(posisi='PBP') as posisi_pbp,sum(posisi='PBO') as posisi_pbo,sum(posisi='Review Penyelia') as posisi_penyelia,sum(posisi='Proses Input Data') as posisi_staf")
+                            ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir')])
+                            ->where('skema_kredit', $request->get('skema'))
+                            ->where('cabang.kode_cabang', $request->get('cabang'))
+                            ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
+                            ->groupBy('cabang.kode_cabang')
+                            ->get();
+                        $message = 'Berhasil Menampilkan Total Skema Data Pengajuan Cabang '. $request->get('cabang') .'.';
+                    } else {
+                        //without date filter
+                        $data = DB::table('pengajuan')
+                            ->selectRaw("cabang.kode_cabang,cabang.cabang,count(pengajuan.id) as total,sum(posisi='Selesai') as total_disetujui,sum(posisi='ditolak') as total_ditolak,sum(posisi='pincab') as posisi_pincab,sum(posisi='PBP') as posisi_pbp,sum(posisi='PBO') as posisi_pbo,sum(posisi='Review Penyelia') as posisi_penyelia,sum(posisi='Proses Input Data') as posisi_staf")
+                            ->whereRaw('MONTH(tanggal) = ?', $this->currentMonth)
+                            ->where('skema_kredit', $request->get('skema'))
+                            ->where('cabang.kode_cabang', $request->get('cabang'))
+                            ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
+                            ->groupBy('cabang.kode_cabang')
+                            ->get();
+                        $message = 'Berhasil Menampilkan Total Skema Data Pengajuan Cabang '. $request->get('cabang') .' Bulan '. date('F Y') .'.';
+                    }        
+                } else {
+                    if ($request->get('tanggal_awal') != null && $request->get('tanggal_akhir') != null) {
+                        //Only date filter
+                        $data = DB::table('pengajuan')
+                            ->selectRaw("cabang.kode_cabang,cabang.cabang,count(pengajuan.id) as total,sum(posisi='Selesai') as total_disetujui,sum(posisi='ditolak') as total_ditolak,sum(posisi='pincab') as posisi_pincab,sum(posisi='PBP') as posisi_pbp,sum(posisi='PBO') as posisi_pbo,sum(posisi='Review Penyelia') as posisi_penyelia,sum(posisi='Proses Input Data') as posisi_staf")
+                            ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
+                            ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir')])
+                            ->where('skema_kredit', $request->get('skema'))
+                            ->groupBy('cabang.kode_cabang')
+                            ->get();
+                        $message = 'Berhasil Menampilkan Total Keseluruhan Skema Data Pengajuan';
+                    } else {
+                        //Without date filter
+                        $data = DB::table('pengajuan')
+                            ->selectRaw("cabang.kode_cabang,cabang.cabang,count(pengajuan.id) as total,sum(posisi='Selesai') as total_disetujui,sum(posisi='ditolak') as total_ditolak,sum(posisi='pincab') as posisi_pincab,sum(posisi='PBP') as posisi_pbp,sum(posisi='PBO') as posisi_pbo,sum(posisi='Review Penyelia') as posisi_penyelia,sum(posisi='Proses Input Data') as posisi_staf")
+                            ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
+                            ->whereRaw('MONTH(tanggal) = ?', $this->currentMonth)
+                            ->where('skema_kredit', $request->get('skema'))
+                            ->groupBy('cabang.kode_cabang')
+                            ->get();
+                        $message = 'Berhasil Menampilkan Total Keseluruhan Skema Data Pengajuan Bulan '. date('F Y') .'.';
+                    }
+                }
+            } else {
+                if ($request->get('cabang') != null) {
+                    if ($request->get('tanggal_awal') != null && $request->get('tanggal_akhir') != null) {
+                        //With date filter
+                        $data = DB::table('pengajuan')
+                            ->selectRaw("cabang.kode_cabang,cabang.cabang,sum(skema_kredit='PKPJ') as PKPJ,sum(skema_kredit='KKB') as KKB,sum(skema_kredit='Talangan Umroh') as Umroh,sum(skema_kredit='Prokesra') as Prokesra,sum(skema_kredit='Kusuma') as Kusuma")
+                            ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir')])
+                            // ->where('skema_kredit', $request->get('skema'))
+                            ->where('cabang.kode_cabang', $request->get('cabang'))
+                            ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
+                            ->groupBy('cabang.kode_cabang')
+                            ->get();
+                        $message = 'Berhasil Menampilkan Total Skema Data Pengajuan Cabang '. $request->get('cabang') .'.';
+                    } else {
+                        //without date filter
+                        $data = DB::table('pengajuan')
+                            ->selectRaw("cabang.kode_cabang,cabang.cabang,sum(skema_kredit='PKPJ') as PKPJ,sum(skema_kredit='KKB') as KKB,sum(skema_kredit='Talangan Umroh') as Umroh,sum(skema_kredit='Prokesra') as Prokesra,sum(skema_kredit='Kusuma') as Kusuma")
+                            ->whereRaw('MONTH(tanggal) = ?', $this->currentMonth)
+                            // ->where('skema_kredit', $request->get('skema'))
+                            ->where('cabang.kode_cabang', $request->get('cabang'))
+                            ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
+                            ->groupBy('cabang.kode_cabang')
+                            ->get();
+                        $message = 'Berhasil Menampilkan Total Skema Data Pengajuan Cabang '. $request->get('cabang') .' Bulan '. date('F Y') .'.';
+                    }
+                } else {
+                    //Only date filter
+                    $data = DB::table('pengajuan')
+                        ->selectRaw("cabang.kode_cabang,cabang.cabang,sum(skema_kredit='PKPJ') as PKPJ,sum(skema_kredit='KKB') as KKB,sum(skema_kredit='Talangan Umroh') as Umroh,sum(skema_kredit='Prokesra') as Prokesra,sum(skema_kredit='Kusuma') as Kusuma")
+                        ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
+                        ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir')])
+                        // ->where('skema_kredit', $request->get('skema'))
+                        ->groupBy('cabang.kode_cabang')
+                        ->get();
+                    $message = 'Berhasil Menampilkan Total Keseluruhan Skema Data Pengajuan.';
+                }
+                
+            }
+            
+            return response()->json([
+                'status' => 'berhasil',
+                'message' => $message,
+                'data' => $data
+            ], 200);
+        }
+        
     }
 
     public function getPosisiPengajuan(Request $request)
@@ -367,89 +507,86 @@ class PengajuanAPIController extends Controller
         $tanggalAwal = date('Y') . '-' . date('m') . '-01';
         $hari_ini = now();
 
-
-        // tanggal di pilih cabang tidak
-        if ($tAwal != null && $tAkhir != null && $pilCabang == null) {
-            $seluruh_data_proses = DB::table('cabang AS c')
-            ->select(
-                'c.kode_cabang AS kodeC',
-                'c.cabang',
-                DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Selesai' GROUP BY id_cabang), 0) AS disetujui"),
-                DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Ditolak' GROUP BY id_cabang), 0) AS ditolak"),
-                DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi != 'Ditolak' AND posisi != 'Selesai' GROUP BY id_cabang), 0) AS diproses")
-            )
-                ->leftJoin('pengajuan AS p', 'c.id', 'p.id_cabang')
-                ->where('c.kode_cabang', '!=', 000)
-                ->groupBy('kodeC')
-                ->get();
-
-        }
-        // tanggal dipilih cabang juga
-        elseif ($tAwal != null && $tAkhir != null && $pilCabang != null) {
-            $seluruh_data_proses = DB::table('cabang AS c')
-            ->select(
-                'c.kode_cabang AS kodeC',
-                'c.cabang',
-                DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Selesai' GROUP BY id_cabang), 0) AS disetujui"),
-                DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Ditolak' GROUP BY id_cabang), 0) AS ditolak"),
-                DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi != 'Ditolak' AND posisi != 'Selesai' GROUP BY id_cabang), 0) AS diproses")
-            )
-                ->leftJoin('pengajuan AS p', 'c.id', 'p.id_cabang')
-                ->where('c.kode_cabang', '!=', 000)
-                ->groupBy('kodeC')
-                ->where('c.id', $pilCabang)
-                ->get();
-        }
-        // tanggal kosong cabang dipilih
-        elseif ($tAwal == null && $tAkhir == null && $pilCabang != null) {
-
-            $seluruh_data_proses = DB::table('cabang AS c')
-            ->select(
-                'c.kode_cabang AS kodeC',
-                'c.cabang',
-                DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tanggalAwal' AND tanggal <= '$hari_ini' AND posisi = 'Selesai' GROUP BY id_cabang), 0) AS disetujui"),
-                DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tanggalAwal' AND tanggal <= '$hari_ini' AND posisi = 'Ditolak' GROUP BY id_cabang), 0) AS ditolak"),
-                DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tanggalAwal' AND tanggal <= '$hari_ini' AND posisi != 'Ditolak' AND posisi != 'Selesai' GROUP BY id_cabang), 0) AS diproses")
-            )
-                ->leftJoin('pengajuan AS p', 'c.id', '=', 'p.id_cabang')
-                ->where('c.kode_cabang', '!=', '000')
-                ->groupBy('kodeC',)
-                ->where('c.id', $pilCabang)
-                ->get();
-        }
-        // tidak milih request
-        else {
-            $seluruh_data_proses = DB::table('cabang AS c')
-            ->select(
-                'c.kode_cabang AS kodeC',
-                'c.cabang',
-                DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tanggalAwal' AND tanggal <= '$hari_ini' AND posisi = 'Selesai' GROUP BY id_cabang), 0) AS disetujui"),
-                DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tanggalAwal' AND tanggal <= '$hari_ini' AND posisi = 'Ditolak' GROUP BY id_cabang), 0) AS ditolak"),
-                DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tanggalAwal' AND tanggal <= '$hari_ini' AND posisi != 'Ditolak' AND posisi != 'Selesai' GROUP BY id_cabang), 0) AS diproses")
-            )
-                ->leftJoin('pengajuan AS p', 'c.id', '=', 'p.id_cabang')
-                ->where('c.kode_cabang', '!=', '000')
-                ->groupBy('kodeC',)
-                ->get();
-        }
-
         $total_setuju = 0;
         $total_ditolak = 0;
         $total_proses = 0;
 
-        foreach ($seluruh_data_proses as $data) {
-            $total_setuju += $data->disetujui;
-            $total_ditolak += $data->ditolak;
-            $total_proses += $data->diproses;
-        }
 
-        return response()->json([
-            'status' => 'berhasil',
-            'message' => 'berhasil menampilkan data pengajuan.',
-            'total_disetujui' => $total_setuju,
-            'total_ditolak' => $total_ditolak,
-            'total_diproses' => $total_proses,
-            'data' => $seluruh_data_proses
-        ]);
+        // tanggal di pilih cabang tidak
+        if ( $tAwal != null && $tAkhir != null && $pilCabang == null) {
+            $total_disetujui = DB::table('pengajuan')
+                ->whereBetween('tanggal', [$tAwal, $tAkhir != null ? $tAkhir : now()])
+                ->where('posisi', 'Selesai')
+                ->count();
+            $total_ditolak = DB::table('pengajuan')
+                ->whereBetween('tanggal', [$tAwal, $tAkhir != null ? $tAkhir : now()])
+                ->where('posisi', 'Ditolak')
+                ->count();
+            $total_diproses = DB::table('pengajuan')
+                ->whereBetween('tanggal', [$tAwal, $tAkhir != null ? $tAkhir : now()])
+                ->whereIn('posisi', ['Pincab','PBP','PBO','Review Penyelia','Proses Input Data'])
+                ->count();
+            $data = DB::table('pengajuan')
+                ->selectRaw("cabang.kode_cabang as kodeC,cabang.cabang,sum(posisi='Selesai') as total_disetujui,sum(posisi='Ditolak') as total_ditolak,sum(posisi IN ('Pincab','PBP','PBO','Review Penyelia','Proses Input Data')) as total_diproses")
+                ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
+                ->whereBetween('tanggal', [$tAwal, $tAkhir])
+                ->groupBy('cabang.kode_cabang')
+                ->get();
+            
+            return response()->json([
+                'status' => 'berhasil',
+                'message' => 'Berhasil Menampilkan Total Data Pengajuan.',
+                'total_disetujui' => $total_disetujui,
+                'total_ditolak' => $total_ditolak,
+                'total_diproses' => $total_diproses,
+                'data' => $data,
+            ], 200);
+        }
+        // tanggal dipilih cabang juga
+        elseif ($tAwal != null && $tAkhir != null && $pilCabang != null) {
+            $data = DB::table('pengajuan')
+                ->selectRaw("cabang.kode_cabang as kodeC,cabang.cabang,sum(posisi='Selesai') as total_disetujui,sum(posisi='Ditolak') as total_ditolak,sum(posisi IN ('Pincab','PBP','PBO','Review Penyelia','Proses Input Data')) as total_diproses")
+                ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
+                ->whereBetween('tanggal', [$tAwal, $tAkhir])
+                ->where('cabang.kode_cabang', $pilCabang)
+                ->groupBy('cabang.kode_cabang')
+                ->get();
+            
+            return response()->json([
+                'status' => 'berhasil',
+                'message' => 'Berhasil Menampilkan Total Data Pengajuan Cabang '. $pilCabang .'.',
+                'data' => $data,
+            ], 200);
+        }
+        // tanggal kosong cabang dipilih
+        elseif ($tAwal == null && $tAkhir == null && $pilCabang != null) {
+            $data = DB::table('pengajuan')
+                ->selectRaw("cabang.kode_cabang as kodeC,cabang.cabang,sum(posisi='Selesai') as total_disetujui,sum(posisi='Ditolak') as total_ditolak,sum(posisi IN ('Pincab','PBP','PBO','Review Penyelia','Proses Input Data')) as total_diproses")
+                ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
+                ->whereBetween('tanggal', [$tanggalAwal, $hari_ini])
+                ->where('cabang.kode_cabang', $pilCabang)
+                ->groupBy('cabang.kode_cabang')
+                ->get();
+            
+            return response()->json([
+                'status' => 'berhasil',
+                'message' => 'Berhasil Menampilkan Total Data Pengajuan Cabang '. $pilCabang .'.',
+                'data' => $data,
+            ], 200);
+        }
+        else {
+            // $seluruh_data_proses = DB::table('cabang AS c')
+            // ->select(
+            //     'c.kode_cabang AS kodeC',
+            //     'c.cabang',
+            //     DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tanggalAwal' AND tanggal <= '$hari_ini' AND posisi = 'Selesai' GROUP BY id_cabang), 0) AS disetujui"),
+            //     DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tanggalAwal' AND tanggal <= '$hari_ini' AND posisi = 'Ditolak' GROUP BY id_cabang), 0) AS ditolak"),
+            //     DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tanggalAwal' AND tanggal <= '$hari_ini' AND posisi != 'Ditolak' AND posisi != 'Selesai' GROUP BY id_cabang), 0) AS diproses")
+            // )
+            //     ->leftJoin('pengajuan AS p', 'c.id', '=', 'p.id_cabang')
+            //     ->where('c.kode_cabang', '!=', '000')
+            //     ->groupBy('kodeC',)
+            //     ->get();
+        }     
     }
 }
