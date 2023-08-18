@@ -456,7 +456,7 @@
                     <input type="text" disabled name="jumlah_kredit"
                         class="form-control @error('jumlah_kredit') is-invalid @enderror"
                         placeholder="Jumlah Kredit"
-                        value="{{ $dataUmumNasabah->jumlah_kredit ? old('jumlah_kredit', 'Rp ' . number_format($dataUmumNasabah->jumlah_kredit, 2, ',', '.')) : 'Rp 0' }}">
+                        value="{{ $dataUmumNasabah->jumlah_kredit ? old('jumlah_kredit', 'Rp ' . number_format(is_numeric($dataUmumNasabah->jumlah_kredit) ? $dataUmumNasabah->jumlah_kredit : 0, 2, ',', '.')) : 'Rp 0' }}">
                     @error('jumlah_kredit')
                         <div class="invalid-feedback">
                             {{ $message }}
