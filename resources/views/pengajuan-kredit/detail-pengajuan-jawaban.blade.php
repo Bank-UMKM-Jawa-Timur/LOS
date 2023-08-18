@@ -598,7 +598,7 @@
                     <label for="">Harga</label>
                     <input type="text" name="harga" id="harga"
                         class="form-control rupiah @error('harga') is-invalid @enderror"
-                        placeholder="Harga Kendaraan" value="{{ 'Rp ' . number_format($dataPO?->harga ?? '', 2, ',', '.') }}" disabled>
+                        placeholder="Harga Kendaraan" value="{{ 'Rp ' . number_format($dataPO?->harga ?? 0, 2, ',', '.') }}" disabled>
                     @error('harga')
                         <div class="invalid-feedback">
                             {{ $message }}
