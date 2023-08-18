@@ -369,6 +369,11 @@ class PengajuanAPIController extends Controller
                             ->get();
                         $message = 'Berhasil Menampilkan Total Skema Data Pengajuan Cabang '. $request->get('cabang') .' Bulan '. date('F Y') .'.';
                     }
+                    return response()->json([
+                        'status' => 'berhasil',
+                        'message' => $message,
+                        'data' => $data
+                    ], 200);
                 } else {
                     if ($request->get('tanggal_awal') != null && $request->get('tanggal_akhir') != null) {
                         //Only date filter
@@ -378,6 +383,26 @@ class PengajuanAPIController extends Controller
                             ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir')])
                             ->where('skema_kredit', $request->get('skema'))
                             ->groupBy('cabang.kode_cabang')
+                            ->get();
+                        $dataTertinggi = DB::table('pengajuan')
+                            ->selectRaw('IF(COUNT(pengajuan.id) > 0, COUNT(pengajuan.id), 0) as total, cabang.kode_cabang, cabang.cabang')
+                            ->rightJoin('cabang', 'cabang.id', 'pengajuan.id_cabang')
+                            ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir')])
+                            ->where('skema_kredit', $request->get('skema'))
+                            ->where('cabang.kode_cabang', '!=', '000')
+                            ->groupBy('cabang.kode_cabang')
+                            ->orderBy('total', 'desc')
+                            ->limit('5')
+                            ->get();
+                        $dataTerendah = DB::table('pengajuan')
+                            ->selectRaw('IF(COUNT(pengajuan.id) > 0, COUNT(pengajuan.id), 0) as total, cabang.kode_cabang, cabang.cabang')
+                            ->rightJoin('cabang', 'cabang.id', 'pengajuan.id_cabang')
+                            ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir')])
+                            ->where('skema_kredit', $request->get('skema'))
+                            ->where('cabang.kode_cabang', '!=', '000')
+                            ->groupBy('cabang.kode_cabang')
+                            ->orderBy('total', 'asc')
+                            ->limit('5')
                             ->get();
                         $message = 'Berhasil Menampilkan Total Keseluruhan Skema Data Pengajuan';
                     } else {
@@ -389,8 +414,37 @@ class PengajuanAPIController extends Controller
                             ->where('skema_kredit', $request->get('skema'))
                             ->groupBy('cabang.kode_cabang')
                             ->get();
+                            $dataTertinggi = DB::table('pengajuan')
+                            ->selectRaw('IF(COUNT(pengajuan.id) > 0, COUNT(pengajuan.id), 0) as total, cabang.kode_cabang, cabang.cabang')
+                            ->rightJoin('cabang', 'cabang.id', 'pengajuan.id_cabang')
+                            ->whereRaw('MONTH(tanggal) = ?', $this->currentMonth)
+                            ->where('skema_kredit', $request->get('skema'))
+                            ->where('cabang.kode_cabang', '!=', '000')
+                            ->groupBy('cabang.kode_cabang')
+                            ->orderBy('total', 'desc')
+                            ->limit('5')
+                            ->get();
+                        $dataTerendah = DB::table('pengajuan')
+                            ->selectRaw('IF(COUNT(pengajuan.id) > 0, COUNT(pengajuan.id), 0) as total, cabang.kode_cabang, cabang.cabang')
+                            ->rightJoin('cabang', 'cabang.id', 'pengajuan.id_cabang')
+                            ->whereRaw('MONTH(tanggal) = ?', $this->currentMonth)
+                            ->where('skema_kredit', $request->get('skema'))
+                            ->where('cabang.kode_cabang', '!=', '000')
+                            ->groupBy('cabang.kode_cabang')
+                            ->orderBy('total', 'asc')
+                            ->limit('5')
+                            ->get();
                         $message = 'Berhasil Menampilkan Total Keseluruhan Skema Data Pengajuan Bulan '. date('F Y') .'.';
                     }
+                    return response()->json([
+                        'status' => 'berhasil',
+                        'message' => $message,
+                        'data' => $data,
+                        'ranking' => [
+                            'tertinggi' => $dataTertinggi,
+                            'terendah' => $dataTerendah
+                        ]
+                    ], 200);
                 }
             } else {
                 if ($request->get('cabang') != null) {
@@ -428,14 +482,14 @@ class PengajuanAPIController extends Controller
                         ->get();
                     $message = 'Berhasil Menampilkan Total Keseluruhan Skema Data Pengajuan.';
                 }
-
-            }
-
+                
             return response()->json([
                 'status' => 'berhasil',
                 'message' => $message,
                 'data' => $data
             ], 200);
+            }
+
         }
 
     }
