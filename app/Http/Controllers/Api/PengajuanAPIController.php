@@ -249,25 +249,56 @@ class PengajuanAPIController extends Controller
                 ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir') != null ? $request->get('tanggal_akhir') : now()])
                 ->whereIn('posisi', ['Pincab','PBP','PBO','Review Penyelia','Proses Input Data'])
                 ->count();
-            $dataTertinggi = DB::table('pengajuan')
-                // ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir') != null ? $request->get('tanggal_akhir') : now()])
-                ->selectRaw('IF((SELECT COUNT(pengajuan.id) FROM pengajuan WHERE pengajuan.tanggal BETWEEN '.$request->get('tanggal_awal').' AND '.$request->get('tanggal_akhir').'), COUNT(pengajuan.id), 0) as total, cabang.kode_cabang, cabang.cabang')
-                ->rightJoin('cabang', 'cabang.id', 'pengajuan.id_cabang')
+            // $dataTertinggi = DB::table('pengajuan')
+            //     // ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir') != null ? $request->get('tanggal_akhir') : now()])
+            //     ->selectRaw('IF((SELECT COUNT(pengajuan.id) FROM pengajuan WHERE pengajuan.tanggal BETWEEN ' . $request->get('tanggal_awal') . ' AND ' . $request->get('tanggal_akhir') . '), COUNT(pengajuan.id), 0) as total, cabang.kode_cabang, cabang.cabang')
+            //     ->rightJoin('cabang', 'cabang.id', 'pengajuan.id_cabang')
+            //     ->where('cabang.kode_cabang', '!=', '000')
+            //     ->groupBy('cabang.kode_cabang');
+            $dataTertinggi = DB::table('cabang')
+                ->select(
+                    'cabang.kode_cabang',
+                    'cabang.cabang',
+                )
+                ->selectRaw('IF(COUNT(pengajuan.id) > 0, COUNT(pengajuan.id), 0) as total, cabang.kode_cabang, cabang.cabang')
+                ->when($request->tanggal_awal && $request->tanggal_akhir, function ($query) use ($request) {
+                    return $query->whereBetween('tanggal', [$request->tanggal_awal, $request->tanggal_akhir]);
+                })
+                ->leftJoin('pengajuan', 'cabang.id', 'pengajuan.id_cabang')
                 ->where('cabang.kode_cabang', '!=', '000')
                 ->groupBy('cabang.kode_cabang')
                 ->orderBy('total', 'desc')
-                ->limit('5')
+                ->limit(5)
                 ->get();
-            $dataTerendah = DB::table('pengajuan')
-                // ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir') != null ? $request->get('tanggal_akhir') : now()])
-                ->selectRaw('IF((SELECT COUNT(pengajuan.id) FROM pengajuan WHERE pengajuan.tanggal BETWEEN '.$request->get('tanggal_awal').' AND '.$request->get('tanggal_akhir').'), COUNT(pengajuan.id), 0) as total, cabang.kode_cabang, cabang.cabang')
-                ->rightJoin('cabang', 'cabang.id', 'pengajuan.id_cabang')
-                ->where('cabang.kode_cabang', '!=', '000')
-                ->groupBy('cabang.kode_cabang')
+            $dataTerendah = DB::table('cabang')
+                ->select(
+                    'cabang.kode_cabang',
+                    'cabang.cabang',
+                    DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = cabang.id AND tanggal >= '$request->tanggal_awal' AND tanggal <= '$request->tanggal_akhir'), 0) AS total")
+                )->selectRaw('IF(COUNT(pengajuan.id) > 0, COUNT(pengajuan.id), 0) as total, cabang.kode_cabang, cabang.cabang')
+                // ->when($request->tanggal_awal && $request->tanggal_akhir, function ($query) use ($request) {
+                //     return $query->WhereBetween('tanggal', [$request->tanggal_awal, $request->tanggal_akhir]);
+                // })
+                ->leftJoin('pengajuan', 'cabang.id', 'pengajuan.id_cabang')
+                ->where('cabang.kode_cabang', '!=',
+                    000
+                )->groupBy('cabang.kode_cabang')
                 ->orderBy('total', 'asc')
                 ->limit('5')
                 ->get();
             $message = 'berhasil menampilkan data pengajuan berdasarkan tanggal.';
+            return response()->json([
+                'status' => 'berhasil',
+                'message' => $message,
+                'total_disetujui' => $total_disetujui,
+                'total_ditolak' => $total_ditolak,
+                'total_diproses' => $total_diproses,
+                'data' => [
+                    'tertinggi' => $dataTertinggi,
+                    'terendah' => $dataTerendah,
+                    // 'keseluruhan' => $dataKeseluruhan
+                ]
+            ], 200);
         } else {
             $total_disetujui = DB::table('pengajuan')
                 // ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir') != null ? $request->get('tanggal_akhir') : now()])
@@ -482,7 +513,7 @@ class PengajuanAPIController extends Controller
                         ->get();
                     $message = 'Berhasil Menampilkan Total Keseluruhan Skema Data Pengajuan.';
                 }
-                
+
             return response()->json([
                 'status' => 'berhasil',
                 'message' => $message,
