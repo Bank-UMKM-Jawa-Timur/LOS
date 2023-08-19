@@ -456,7 +456,7 @@
                     <input type="text" disabled name="jumlah_kredit"
                         class="form-control @error('jumlah_kredit') is-invalid @enderror"
                         placeholder="Jumlah Kredit"
-                        value="{{ old('jumlah_kredit', 'Rp ' . number_format($dataUmumNasabah->jumlah_kredit ? $dataUmumNasabah->jumlah_kredit : 0, 2, ',', '.')) }}">
+                        value="{{ $dataUmumNasabah->jumlah_kredit ? old('jumlah_kredit', 'Rp ' . number_format(is_numeric($dataUmumNasabah->jumlah_kredit) ? $dataUmumNasabah->jumlah_kredit : 0, 2, ',', '.')) : 'Rp 0' }}">
                     @error('jumlah_kredit')
                         <div class="invalid-feedback">
                             {{ $message }}
@@ -598,7 +598,7 @@
                     <label for="">Harga</label>
                     <input type="text" name="harga" id="harga"
                         class="form-control rupiah @error('harga') is-invalid @enderror"
-                        placeholder="Harga Kendaraan" value="{{ 'Rp ' . number_format($dataPO?->harga ?? '', 2, ',', '.') }}" disabled>
+                        placeholder="Harga Kendaraan" value="{{ 'Rp ' . number_format($dataPO?->harga ?? 0, 2, ',', '.') }}" disabled>
                     @error('harga')
                         <div class="invalid-feedback">
                             {{ $message }}
