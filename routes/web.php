@@ -80,6 +80,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('pengajuan-kredit/temp/data-po', [PengajuanKreditController::class, 'saveDataPOTemp'])->name('pengajuan-kredit.save-data-po');
 
     Route::resource('pengajuan-kredit', PengajuanKreditController::class);
+
+    Route::delete('/delete-pengajuan-kredit/{id}', [PengajuanKreditController::class, 'delete'])->name('delete-pengajuan-kredit');
+    Route::put('/restore-pengajuan-kredit', [PengajuanKreditController::class, 'restore'])->name('restore-pengajuan-kredit');
+
     // Route::post('pengajuan-kredit/create', PengajuanKreditController::class);
     Route::get('pengajuan-kredit/continue-draft', [PengajuanKreditController::class, 'continueDraft'])->name('pengajuan-kredit.continue');
     Route::get('lanjutkan-draft', [PengajuanKreditController::class, 'showContinueDraft'])->name('pengajuan-kredit.continue-draft');
@@ -91,7 +95,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('data-item-satu', [MasterItemController::class, 'dataItemSatu'])->name('getItemSatu');
     Route::get('data-item-tiga', [MasterItemController::class, 'dataItemtiga'])->name('getItemTiga');
     Route::get('data-item-empat', [MasterItemController::class, 'dataItemEmpat'])->name('getItemEmpat');
-    
+
     Route::group(['middleware' => 'Admin'], function () {
         Route::resource('kabupaten', KabupatenController::class);
         Route::resource('kecamatan', KecamatanController::class);
