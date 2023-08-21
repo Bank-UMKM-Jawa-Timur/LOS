@@ -1067,7 +1067,7 @@ null => 1,
 
 
 
-    var isPincetar = "{{Request::url()}}".includes('pincetar');
+    //var isPincetar = "{{Request::url()}}".includes('pincetar');
     let dataAspekArr;
         $(document).ready(function() {
             let valSkema = $("#skema_kredit").val();
@@ -2392,7 +2392,7 @@ null => 1,
             }
 
         }
-        $('#skema').change(function() {
+        /*$('#skema').change(function() {
         if ($(this).val() == 'KKB' && isPincetar) {
                 Swal.fire({
                     icon: 'error',
@@ -2402,7 +2402,7 @@ null => 1,
                     $("#skema").val('').trigger("change");
                 })
             }
-        });
+        });*/
 </script>
 @include('pengajuan-kredit.partials.create-save-script')
 <script src="{{ asset('') }}js/custom.js"></script>
