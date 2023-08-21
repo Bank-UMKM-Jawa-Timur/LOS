@@ -54,7 +54,7 @@ class AuthenticatedSessionController extends Controller
                     return back()->withError("Password yang anda masukan salah");
                 }
             } else {
-                if (isset($user->nip) || $user->role == 'Direksi') {
+                if (isset($user->nip)) {
                     if (\Hash::check($request->password, $user->password)) {
                         $request->authenticate();
                         if (DB::table('sessions')->where('user_id', auth()->user()->id)->count() > 0) {
