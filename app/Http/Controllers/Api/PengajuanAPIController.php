@@ -107,11 +107,11 @@ class PengajuanAPIController extends Controller
                 'data' => $user->nip ? $this->getKaryawan($user->nip) : $user
             ]);
         } else {
-            if($user->nip != null){
+            if($user->nip != null || $user->role == 'Direksi'){
                 if(DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->count() > 0){
                     return response()->json([
                         'status' => 'gagal',
-                        'message' => 'Akun seadang digunakan di perangkat lain.'
+                        'message' => 'Akun sedang digunakan di perangkat lain.'
                     ], 401);
                 }
             } else {
