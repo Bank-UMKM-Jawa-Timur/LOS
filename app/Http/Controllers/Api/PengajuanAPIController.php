@@ -266,14 +266,17 @@ class PengajuanAPIController extends Controller
             $total_disetujui = DB::table('pengajuan')
                 ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir') != null ? $request->get('tanggal_akhir') : now()])
                 ->where('posisi', 'Selesai')
+                ->whereNull('pengajuan.deleted_at')
                 ->count();
             $total_ditolak = DB::table('pengajuan')
                 ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir') != null ? $request->get('tanggal_akhir') : now()])
                 ->where('posisi', 'Ditolak')
+                ->whereNull('pengajuan.deleted_at')
                 ->count();
             $total_diproses = DB::table('pengajuan')
                 ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir') != null ? $request->get('tanggal_akhir') : now()])
                 ->whereIn('posisi', ['Pincab','PBP','PBO','Review Penyelia','Proses Input Data'])
+                ->whereNull('pengajuan.deleted_at')
                 ->count();
             // $dataTertinggi = DB::table('pengajuan')
             //     // ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir') != null ? $request->get('tanggal_akhir') : now()])
@@ -288,6 +291,7 @@ class PengajuanAPIController extends Controller
                 })
                 ->selectRaw('IFNULL(COUNT(pengajuan.id), 0) AS total, cabang.kode_cabang, cabang.cabang')
                 ->where('cabang.kode_cabang', '!=', '000')
+                ->whereNull('pengajuan.deleted_at')
                 ->groupBy('cabang.kode_cabang', 'cabang.cabang')
                 ->orderByRaw('total DESC')
                 ->limit(5)
@@ -299,6 +303,7 @@ class PengajuanAPIController extends Controller
                 })
                 ->selectRaw('IFNULL(COUNT(pengajuan.id), 0) AS total, cabang.kode_cabang, cabang.cabang')
                 ->where('cabang.kode_cabang', '!=', '000')
+                ->whereNull('pengajuan.deleted_at')
                 ->groupBy('cabang.kode_cabang', 'cabang.cabang')
                 ->orderByRaw('total asc')
                 ->limit(5)
@@ -308,18 +313,22 @@ class PengajuanAPIController extends Controller
             $total_disetujui = DB::table('pengajuan')
                 // ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir') != null ? $request->get('tanggal_akhir') : now()])
                 ->where('posisi', 'Selesai')
+                ->whereNull('pengajuan.deleted_at')
                 ->count();
             $total_ditolak = DB::table('pengajuan')
                 // ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir') != null ? $request->get('tanggal_akhir') : now()])
                 ->where('posisi', 'Ditolak')
+                ->whereNull('pengajuan.deleted_at')
                 ->count();
             $total_diproses = DB::table('pengajuan')
                 // ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir') != null ? $request->get('tanggal_akhir') : now()])
                 ->whereIn('posisi', ['Pincab','PBP','PBO','Review Penyelia','Proses Input Data'])
+                ->whereNull('pengajuan.deleted_at')
                 ->count();
             $dataTertinggi = DB::table('pengajuan')
                 ->selectRaw('IF(COUNT(pengajuan.id) > 0, COUNT(pengajuan.id), 0) as total, cabang.kode_cabang, cabang.cabang')
                 ->rightJoin('cabang', 'cabang.id', 'pengajuan.id_cabang')
+                ->whereNull('pengajuan.deleted_at')
                 ->where('cabang.kode_cabang', '!=', '000')
                 ->groupBy('cabang.kode_cabang')
                 ->orderBy('total', 'desc')
@@ -328,6 +337,7 @@ class PengajuanAPIController extends Controller
             $dataTerendah = DB::table('pengajuan')
                 ->selectRaw('IF(COUNT(pengajuan.id) > 0, COUNT(pengajuan.id), 0) as total, cabang.kode_cabang, cabang.cabang')
                 ->rightJoin('cabang', 'cabang.id', 'pengajuan.id_cabang')
+                ->whereNull('pengajuan.deleted_at')
                 ->where('cabang.kode_cabang', '!=', '000')
                 ->groupBy('cabang.kode_cabang')
                 ->orderBy('total', 'asc')
@@ -362,10 +372,12 @@ class PengajuanAPIController extends Controller
             $total = DB::table('pengajuan')
                 ->selectRaw("sum(skema_kredit='PKPJ') as PKPJ,sum(skema_kredit='KKB') as KKB,sum(skema_kredit='Talangan Umroh') as Umroh,sum(skema_kredit='Prokesra') as Prokesra,sum(skema_kredit='Kusuma') as Kusuma")
                 ->whereRaw('MONTH(tanggal) = ?', $this->currentMonth)
+                ->whereNull('pengajuan.deleted_at')
                 ->get();
             $data = DB::table('pengajuan')
                 ->selectRaw("skema_kredit,sum(posisi='Selesai') as total_disetujui,sum(posisi='ditolak') as total_ditolak,sum(posisi='pincab') as posisi_pincab,sum(posisi='PBP') as posisi_pbp,sum(posisi='PBO') as posisi_pbo,sum(posisi='Review Penyelia') as posisi_penyelia,sum(posisi='Proses Input Data') as posisi_staf")
                 ->whereRaw('MONTH(tanggal) = ?', $this->currentMonth)
+                ->whereNull('pengajuan.deleted_at')
                 ->groupBy('skema_kredit')
                 ->get();
             $message = 'Berhasil Menampilkan Total Keseluruhan Skema Data Pengajuan Bulan '. date('F Y') .'.';
@@ -388,6 +400,7 @@ class PengajuanAPIController extends Controller
                         $data = DB::table('pengajuan')
                             ->selectRaw("cabang.kode_cabang,cabang.cabang,count(pengajuan.id) as total,sum(posisi='Selesai') as total_disetujui,sum(posisi='ditolak') as total_ditolak,sum(posisi='pincab') as posisi_pincab,sum(posisi='PBP') as posisi_pbp,sum(posisi='PBO') as posisi_pbo,sum(posisi='Review Penyelia') as posisi_penyelia,sum(posisi='Proses Input Data') as posisi_staf")
                             ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir')])
+                            ->whereNull('pengajuan.deleted_at')
                             ->where('skema_kredit', $request->get('skema'))
                             ->where('cabang.kode_cabang', $request->get('cabang'))
                             ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
@@ -399,6 +412,7 @@ class PengajuanAPIController extends Controller
                         $data = DB::table('pengajuan')
                             ->selectRaw("cabang.kode_cabang,cabang.cabang,count(pengajuan.id) as total,sum(posisi='Selesai') as total_disetujui,sum(posisi='ditolak') as total_ditolak,sum(posisi='pincab') as posisi_pincab,sum(posisi='PBP') as posisi_pbp,sum(posisi='PBO') as posisi_pbo,sum(posisi='Review Penyelia') as posisi_penyelia,sum(posisi='Proses Input Data') as posisi_staf")
                             ->whereRaw('MONTH(tanggal) = ?', $this->currentMonth)
+                            ->whereNull('pengajuan.deleted_at')
                             ->where('skema_kredit', $request->get('skema'))
                             ->where('cabang.kode_cabang', $request->get('cabang'))
                             ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
@@ -418,6 +432,7 @@ class PengajuanAPIController extends Controller
                             ->selectRaw("cabang.kode_cabang,cabang.cabang,count(pengajuan.id) as total,sum(posisi='Selesai') as total_disetujui,sum(posisi='ditolak') as total_ditolak,sum(posisi='pincab') as posisi_pincab,sum(posisi='PBP') as posisi_pbp,sum(posisi='PBO') as posisi_pbo,sum(posisi='Review Penyelia') as posisi_penyelia,sum(posisi='Proses Input Data') as posisi_staf")
                             ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
                             ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir')])
+                            ->whereNull('pengajuan.deleted_at')
                             ->where('skema_kredit', $request->get('skema'))
                             ->groupBy('cabang.kode_cabang')
                             ->get();
@@ -432,6 +447,7 @@ class PengajuanAPIController extends Controller
                             // ->rightJoin('cabang as c', 'c.id', 'p.id_cabang')
                             // ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir')])
                             // ->where('skema_kredit', $request->get('skema'))
+                            ->whereNull('p.deleted_at')
                             ->where('cabang.kode_cabang', '!=', '000')
                             ->groupBy('cabang.kode_cabang')
                             ->orderBy('total', 'desc')
@@ -448,6 +464,7 @@ class PengajuanAPIController extends Controller
                             // ->rightJoin('cabang as c', 'c.id', 'p.id_cabang')
                             // ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir')])
                             // ->where('skema_kredit', $request->get('skema'))
+                            ->whereNull('p.deleted_at')
                             ->where('cabang.kode_cabang', '!=', '000')
                             ->groupBy('cabang.kode_cabang')
                             ->orderBy('total', 'asc')
@@ -460,6 +477,7 @@ class PengajuanAPIController extends Controller
                             ->selectRaw("cabang.kode_cabang,cabang.cabang,count(pengajuan.id) as total,sum(posisi='Selesai') as total_disetujui,sum(posisi='ditolak') as total_ditolak,sum(posisi='pincab') as posisi_pincab,sum(posisi='PBP') as posisi_pbp,sum(posisi='PBO') as posisi_pbo,sum(posisi='Review Penyelia') as posisi_penyelia,sum(posisi='Proses Input Data') as posisi_staf")
                             ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
                             ->whereRaw('MONTH(tanggal) = ?', $this->currentMonth)
+                            ->whereNull('pengajuan.deleted_at')
                             ->where('skema_kredit', $request->get('skema'))
                             ->groupBy('cabang.kode_cabang')
                             ->get();
@@ -473,6 +491,7 @@ class PengajuanAPIController extends Controller
                             // ->whereRaw('MONTH(tanggal) = ?', $this->currentMonth)
                             // ->where('skema_kredit', $request->get('skema'))
                             ->where('cabang.kode_cabang', '!=', '000')
+                            ->whereNull('p.deleted_at')
                             ->groupBy('cabang.kode_cabang')
                             ->orderBy('total', 'desc')
                             ->limit('5')
@@ -487,6 +506,7 @@ class PengajuanAPIController extends Controller
                             // ->whereRaw('MONTH(tanggal) = ?', $this->currentMonth)
                             // ->where('skema_kredit', $request->get('skema'))
                             ->where('cabang.kode_cabang', '!=', '000')
+                            ->whereNull('p.deleted_at')
                             ->groupBy('cabang.kode_cabang')
                             ->orderBy('total', 'asc')
                             ->limit('5')
@@ -510,6 +530,7 @@ class PengajuanAPIController extends Controller
                         $data = DB::table('pengajuan')
                             ->selectRaw("cabang.kode_cabang,cabang.cabang,sum(skema_kredit='PKPJ') as PKPJ,sum(skema_kredit='KKB') as KKB,sum(skema_kredit='Talangan Umroh') as Umroh,sum(skema_kredit='Prokesra') as Prokesra,sum(skema_kredit='Kusuma') as Kusuma")
                             ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir')])
+                            ->whereNull('pengajuan.deleted_at')
                             // ->where('skema_kredit', $request->get('skema'))
                             ->where('cabang.kode_cabang', $request->get('cabang'))
                             ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
@@ -521,6 +542,7 @@ class PengajuanAPIController extends Controller
                         $data = DB::table('pengajuan')
                             ->selectRaw("cabang.kode_cabang,cabang.cabang,sum(skema_kredit='PKPJ') as PKPJ,sum(skema_kredit='KKB') as KKB,sum(skema_kredit='Talangan Umroh') as Umroh,sum(skema_kredit='Prokesra') as Prokesra,sum(skema_kredit='Kusuma') as Kusuma")
                             ->whereRaw('MONTH(tanggal) = ?', $this->currentMonth)
+                            ->whereNull('pengajuan.deleted_at')
                             // ->where('skema_kredit', $request->get('skema'))
                             ->where('cabang.kode_cabang', $request->get('cabang'))
                             ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
@@ -534,6 +556,7 @@ class PengajuanAPIController extends Controller
                         ->selectRaw("cabang.kode_cabang,cabang.cabang,sum(skema_kredit='PKPJ') as PKPJ,sum(skema_kredit='KKB') as KKB,sum(skema_kredit='Talangan Umroh') as Umroh,sum(skema_kredit='Prokesra') as Prokesra,sum(skema_kredit='Kusuma') as Kusuma")
                         ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
                         ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir')])
+                        ->whereNull('pengajuan.deleted_at')
                         // ->where('skema_kredit', $request->get('skema'))
                         ->groupBy('cabang.kode_cabang')
                         ->get();
@@ -575,6 +598,7 @@ class PengajuanAPIController extends Controller
             )
                 ->leftJoin('pengajuan AS p', 'c.id', 'p.id_cabang')
                 ->where('c.kode_cabang', '!=', 000)
+                ->whereNull('p.deleted_at')
                 ->groupBy('kodeC')
                 ->get();
 
@@ -594,6 +618,7 @@ class PengajuanAPIController extends Controller
             )
                 ->leftJoin('pengajuan AS p', 'c.id', 'p.id_cabang')
                 ->where('c.kode_cabang', '!=', 000)
+                ->whereNull('p.deleted_at')
                 ->groupBy('kodeC')
                 ->where('c.id', $pilCabang)
                 ->get();
@@ -613,6 +638,7 @@ class PengajuanAPIController extends Controller
             )
                 ->leftJoin('pengajuan AS p', 'c.id', '=', 'p.id_cabang')
                 ->where('c.kode_cabang', '!=', '000')
+                ->whereNull('p.deleted_at')
                 ->groupBy('kodeC',)
                 ->where('c.id', $pilCabang)
                 ->get();
@@ -631,6 +657,7 @@ class PengajuanAPIController extends Controller
                 )
                 ->leftJoin('pengajuan AS p', 'c.id', '=', 'p.id_cabang')
                 ->where('c.kode_cabang', '!=', '000')
+                ->whereNull('p.deleted_at')
                 ->groupBy('kodeC',)
                 ->get();
         }
@@ -662,19 +689,23 @@ class PengajuanAPIController extends Controller
             $total_disetujui = DB::table('pengajuan')
                 ->whereBetween('tanggal', [$tAwal, $tAkhir != null ? $tAkhir : now()])
                 ->where('posisi', 'Selesai')
+                ->whereNull('pengajuan.deleted_at')
                 ->count();
             $total_ditolak = DB::table('pengajuan')
                 ->whereBetween('tanggal', [$tAwal, $tAkhir != null ? $tAkhir : now()])
                 ->where('posisi', 'Ditolak')
+                ->whereNull('pengajuan.deleted_at')
                 ->count();
             $total_diproses = DB::table('pengajuan')
                 ->whereBetween('tanggal', [$tAwal, $tAkhir != null ? $tAkhir : now()])
                 ->whereIn('posisi', ['Pincab','PBP','PBO','Review Penyelia','Proses Input Data'])
+                ->whereNull('pengajuan.deleted_at')
                 ->count();
             $data = DB::table('pengajuan')
                 ->selectRaw("cabang.kode_cabang as kodeC,cabang.cabang,sum(posisi='Selesai') as total_disetujui,sum(posisi='Ditolak') as total_ditolak,sum(posisi IN ('Pincab','PBP','PBO','Review Penyelia','Proses Input Data')) as total_diproses")
                 ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
                 ->whereBetween('tanggal', [$tAwal, $tAkhir])
+                ->whereNull('pengajuan.deleted_at')
                 ->groupBy('cabang.kode_cabang')
                 ->get();
 
@@ -693,6 +724,7 @@ class PengajuanAPIController extends Controller
                 ->selectRaw("cabang.kode_cabang as kodeC,cabang.cabang,sum(posisi='Selesai') as total_disetujui,sum(posisi='Ditolak') as total_ditolak,sum(posisi IN ('Pincab','PBP','PBO','Review Penyelia','Proses Input Data')) as total_diproses")
                 ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
                 ->whereBetween('tanggal', [$tAwal, $tAkhir])
+                ->whereNull('pengajuan.deleted_at')
                 ->where('cabang.kode_cabang', $pilCabang)
                 ->groupBy('cabang.kode_cabang')
                 ->get();
@@ -709,6 +741,7 @@ class PengajuanAPIController extends Controller
                 ->selectRaw("cabang.kode_cabang as kodeC,cabang.cabang,sum(posisi='Selesai') as total_disetujui,sum(posisi='Ditolak') as total_ditolak,sum(posisi IN ('Pincab','PBP','PBO','Review Penyelia','Proses Input Data')) as total_diproses")
                 ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
                 ->whereBetween('tanggal', [$tanggalAwal, $hari_ini])
+                ->whereNull('pengajuan.deleted_at')
                 ->where('cabang.kode_cabang', $pilCabang)
                 ->groupBy('cabang.kode_cabang')
                 ->get();
