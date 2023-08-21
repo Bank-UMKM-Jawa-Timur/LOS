@@ -19,8 +19,7 @@ class AddDireksiUserSeeder extends Seeder
                 'name' => 'Direksi',
                 'email' => 'direksi@mail.com',
                 'password' => \Hash::make('12345678'),
-                'role' => 'SPI',
-                'nip' => '123',
+                'role' => 'Direksi',
                 'created_at' => now(),
             ]
         );

@@ -47,30 +47,34 @@ class PengajuanAPIController extends Controller
 
     public function login(Request $request)
     {
-        // Cek User ditemukan atau tidak
-        $cekNIPUser = User::where('nip', $request['email'])
-            ->first();
-        if($cekNIPUser) {
-            if(!Auth::attempt(['email' => $cekNIPUser->email, 'password' => $request['password']])) {
-                return response()->json([
-                    'status' => 'gagal',
-                    'message' => 'Email atau NIP tidak ditemukan.',
-                    'req' => $request->all()
-                ], 401);
-            }
-        } else {
-            if(!Auth::attempt(['email' => $request['email'], 'password' => $request['password']])) {
-                return response()->json([
-                    'status' => 'gagal',
-                    'message' => 'Email atau NIP tidak ditemukan.',
-                    'req' => $request->all()
-                ], 401);
+        $user = User::where('email', $request['email'])
+                ->orWhere('nip', $request['email'])
+                ->firstOrFail();
+
+        if ($user->role != 'Direksi') {
+            // Cek User ditemukan atau tidak
+            if (is_numeric($request['email'])) {
+                $cekNIPUser = User::where('nip', $request['email'])
+                    ->first();
+                if ($cekNIPUser) {
+                    if (!Auth::attempt(['email' => $cekNIPUser->email, 'password' => $request['password']])) {
+                        return response()->json([
+                            'status' => 'gagal',
+                            'message' => 'Email atau NIP tidak ditemukan.',
+                            'req' => $request->all()
+                        ], 401);
+                    }
+                } else {
+                    if (!Auth::attempt(['email' => $request['email'], 'password' => $request['password']])) {
+                        return response()->json([
+                            'status' => 'gagal',
+                            'message' => 'Email atau NIP tidak ditemukan.',
+                            'req' => $request->all()
+                        ], 401);
+                    }
+                }
             }
         }
-
-        $user = User::where('email', $request['email'])
-            ->orWhere('nip', $request['email'])
-            ->firstOrFail();
 
         // Cek Role user jika tersedia
         if($user->role == 'Administrator'){
@@ -94,8 +98,9 @@ class PengajuanAPIController extends Controller
                 'data' => $user->nip ? $this->getKaryawan($user->nip) : $user
             ]);
         } else {
-            if($user->nip != null){
-                if(DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->count() > 0){
+            if($user->role == 'Direksi')
+            {
+                if (DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->count() > 0) {
                     return response()->json([
                         'status' => 'gagal',
                         'message' => 'Akun seadang digunakan di perangkat lain.'
@@ -112,13 +117,38 @@ class PengajuanAPIController extends Controller
                     'role' => $user->role,
                     'access_token' => $token,
                     'token_type' => 'Bearer',
-                    'data' => $user->nip ? $this->getKaryawan($user->nip) : $user
+                    'data' => [
+                        'nama' => $user->name
+                    ]
                 ]);
-            } else {
-                return response()->json([
-                    'status' => 401,
-                    'message' => 'Belum dilakukan Pengkinian Data User untuk $request->email.\nHarap menghubungi Divisi Pemasaran atau TI & AK.',
-                ]);
+            }
+            else{
+                if($user->nip != null){
+                    if(DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->count() > 0){
+                        return response()->json([
+                            'status' => 'gagal',
+                            'message' => 'Akun seadang digunakan di perangkat lain.'
+                        ], 401);
+                    }
+
+                    $token = $user->createToken('auth_token')->plainTextToken;
+
+                    return response()->json([
+                        'status' => 'berhasil',
+                        'message' => 'berhasil login',
+                        'id' => $user->id,
+                        'email' => $user->email,
+                        'role' => $user->role,
+                        'access_token' => $token,
+                        'token_type' => 'Bearer',
+                        'data' => $user->nip ? $this->getKaryawan($user->nip) : $user
+                    ]);
+                } else {
+                    return response()->json([
+                        'status' => 401,
+                        'message' => 'Belum dilakukan Pengkinian Data User untuk $request->email.\nHarap menghubungi Divisi Pemasaran atau TI & AK.',
+                    ]);
+                }
             }
         }
     }

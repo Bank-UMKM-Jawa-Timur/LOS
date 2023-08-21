@@ -543,14 +543,16 @@
                                                 @endif
                                                 <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
                                                     class="dropdown-item">Cetak</a>
-                                                @if ($item->deleted_at === null)
-                                                <button type="button" class="btn text-danger" style="margin-left: 20px; background: none; border:none;" data-toggle="modal" data-target="#confirmHapusModal{{$item->id}}">
+                                                @if (Auth::user()->role == 'Administrator')
+                                                    @if ($item->deleted_at === null)
+                                                    <button type="button" class="btn text-danger" style="margin-left: 20px; background: none; border:none;" data-toggle="modal" data-target="#confirmHapusModal{{$item->id}}">
                                                     Hapus
-                                                </button>
-                                                @else
-                                                <button type="button" class="btn text-danger" style="margin-left: 20px; background: none; border:none;" data-toggle="modal" data-target="#confirmModal{{$item->id}}">
-                                                    Restore
-                                                </button>
+                                                    </button>
+                                                    @else
+                                                    <button type="button" class="btn text-danger" style="margin-left: 20px; background: none; border:none;" data-toggle="modal" data-target="#confirmModal{{$item->id}}">
+                                                        Restore
+                                                    </button>
+                                                    @endif
                                                 @endif
                                             </div>
                                     @endif
