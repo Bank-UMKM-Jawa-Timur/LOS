@@ -619,50 +619,16 @@ class PengajuanKreditController extends Controller
                 })
                 ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id');
 
-            $dataPengajuanDelete = DB::table('pengajuan')->select(
-                'pengajuan.id',
-                'pengajuan.tanggal',
-                'pengajuan.posisi',
-                'pengajuan.progress_pengajuan_data',
-                'pengajuan.id_staf',
-                'pengajuan.id_penyelia',
-                'pengajuan.id_pbo',
-                'pengajuan.id_pbp',
-                'pengajuan.id_pincab',
-                'pengajuan.tanggal_review_penyelia',
-                'pengajuan.tanggal_review_pbp',
-                'pengajuan.tanggal_review_pincab',
-                'pengajuan.status',
-                'pengajuan.status_by_sistem',
-                'pengajuan.id_cabang',
-                'pengajuan.average_by_sistem',
-                'pengajuan.average_by_penyelia',
-                'pengajuan.skema_kredit',
-                'pengajuan.created_at',
-                'pengajuan.deleted_at',
-                'calon_nasabah.nama',
-                'calon_nasabah.jenis_usaha',
-                'calon_nasabah.id_pengajuan'
-            )
-            ->when($request->search, function ($query, $search) {
-                return $query->where('calon_nasabah.nama', 'like', '%' . $search . '%');
-            })
-                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
-                ->whereNotNull('pengajuan.deleted_at');
-
 
             if ($request->tAwal && $request->tAkhir) {
                 $dataPengajuan->whereBetween('pengajuan.tanggal', [$request->tAwal, $request->tAkhir]);
-                $dataPengajuanDelete->whereBetween('pengajuan.tanggal', [$request->tAwal, $request->tAkhir]);
             }
 
             if ($request->cbg) {
                 $dataPengajuan->where('pengajuan.id_cabang', $request->cbg);
-                $dataPengajuanDelete->where('pengajuan.id_cabang', $request->cbg);
             }
 
             $param['data_pengajuan'] = $dataPengajuan->paginate(5)->withQueryString();
-            $param['data_pengajuan_delete'] = $dataPengajuanDelete->paginate(5);
 
             return view('pengajuan-kredit.komentar-pincab-pengajuan', $param);
         }

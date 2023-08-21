@@ -16,7 +16,7 @@
     </div>
     {{-- @if ($user->level == 'Administrator' || $user->level == 'Admin' || $user->level == 'Kasat') --}}
     <div class="row">
-        @if (auth()->user()->role == 'Administrator' || auth()->user()->role == 'SPI' || auth()->user()->role == 'Kredit Umum')
+        @if (auth()->user()->role == 'Administrator' || auth()->user()->role == 'SPI' || auth()->user()->role == 'Kredit Umum' || auth()->user()->role == 'Direksi')
             <div class="col-md-12 mb-4">
                 Total Pengajuan :
                 {{ \App\models\PengajuanModel::when(Request()->tAwal && Request()->tAkhir, function ($query) {
@@ -794,7 +794,7 @@
 
     {{-- table  --}}
     @if (auth()->user()->role == 'Administrator')
-    @elseif(auth()->user()->role == 'SPI' || auth()->user()->role == 'Kredit Umum')
+    @elseif(auth()->user()->role == 'SPI' || auth()->user()->role == 'Kredit Umum' || auth()->user()->role == 'Direksi')
 
     @elseif(auth()->user()->role == 'Pincab')
     @else
@@ -865,7 +865,7 @@
                                 <small id="errorTakhir" class="form-text text-danger">Tanggal akhir tidak boleh kurang
                                     dari tanggal awal</small>
                             </div>
-                            @if (auth()->user()->role == 'Administrator' || auth()->user()->role == 'SPI' || auth()->user()->role == 'Kredit Umum')
+                            @if (auth()->user()->role == 'Administrator' || auth()->user()->role == 'SPI' || auth()->user()->role == 'Kredit Umum' || auth()->user()->role == 'Direksi')
                                 <div class="col-sm-6 mt-2">
                                     <label>Cabang</label>
                                     <select class="custom-select" id="inputGroupSelect01" name="cbg">

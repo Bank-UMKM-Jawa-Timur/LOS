@@ -43,6 +43,7 @@
                 <option value="Staf Analis Kredit" {{ old('role') == 'Staf Analis Kredit' ? ' selected' : '' }}>Staf Analis Kredit</option>
                 <option value="SPI" {{ old('role') == 'SPI' ? ' selected' : '' }}>SPI</option>
                 <option value="Kredit Umum" {{ old('role') == 'Kredit Umum' ? ' selected' : '' }}>Kredit Umum</option>
+                <option value="Direksi" {{ old('role') == 'Direksi' ? ' selected' : '' }}>Direksi</option>
             </select>
             @error('role')
                 <div class="invalid-feedback">
