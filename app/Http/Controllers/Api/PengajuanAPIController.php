@@ -406,8 +406,8 @@ class PengajuanAPIController extends Controller
                             // ->rightJoin('cabang as c', 'c.id', 'p.id_cabang')
                             // ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir')])
                             // ->where('skema_kredit', $request->get('skema'))
-                            ->where('c.kode_cabang', '!=', '000')
-                            ->groupBy('c.kode_cabang')
+                            ->where('cabang.kode_cabang', '!=', '000')
+                            ->groupBy('cabang.kode_cabang')
                             ->orderBy('total', 'desc')
                             ->limit('5')
                             ->get();
@@ -422,8 +422,8 @@ class PengajuanAPIController extends Controller
                             // ->rightJoin('cabang as c', 'c.id', 'p.id_cabang')
                             // ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir')])
                             // ->where('skema_kredit', $request->get('skema'))
-                            ->where('c.kode_cabang', '!=', '000')
-                            ->groupBy('c.kode_cabang')
+                            ->where('cabang.kode_cabang', '!=', '000')
+                            ->groupBy('cabang.kode_cabang')
                             ->orderBy('total', 'asc')
                             ->limit('5')
                             ->get();
