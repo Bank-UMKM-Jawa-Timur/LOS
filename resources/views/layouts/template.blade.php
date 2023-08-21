@@ -116,7 +116,11 @@
                                 @php
                                     $name_karyawan = App\Http\Controllers\DashboardController::getKaryawan();
                                 @endphp
-                                {{ $name_karyawan }}
+                                @if (auth()->user()->nip)
+                                {{ $name_karyawan ? $name_karyawan : auth()->user()->name }}
+                                @else
+                                {{auth()->user()->name}}
+                                @endif
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                 <a class="dropdown-item" href="{{ route('change_password') }}">Ganti Password</a>
