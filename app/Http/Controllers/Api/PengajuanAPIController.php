@@ -108,6 +108,13 @@ class PengajuanAPIController extends Controller
                 }
 
                 $token = $user->createToken('auth_token')->plainTextToken;
+                
+                $data = $user->nip ? $this->getKaryawan($user->nip) : $user;
+                if (is_array($data)) {
+                    if (array_key_exists('nama', $data)) {
+                        $data['nama'] = $user->name;
+                    }
+                }
 
                 return response()->json([
                     'status' => 'berhasil',
@@ -117,9 +124,7 @@ class PengajuanAPIController extends Controller
                     'role' => $user->role,
                     'access_token' => $token,
                     'token_type' => 'Bearer',
-                    'data' => [
-                        'nama' => $user->name
-                    ]
+                    'data' => $data
                 ]);
             }
             else{
