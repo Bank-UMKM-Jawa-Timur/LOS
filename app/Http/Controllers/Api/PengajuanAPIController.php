@@ -51,6 +51,15 @@ class PengajuanAPIController extends Controller
                 ->orWhere('nip', $request['email'])
                 ->firstOrFail();
 
+        $detail = [
+            'nip' => null,
+            'nama' => null,
+            'jabatan' => null,
+            'nama_jabatan' => null,
+            'entitas' => null,
+            'bagian' => null,
+        ];
+
         if ($user->role != 'Direksi') {
             // Cek User ditemukan atau tidak
             if (is_numeric($request['email'])) {
@@ -98,63 +107,45 @@ class PengajuanAPIController extends Controller
                 'data' => $user->nip ? $this->getKaryawan($user->nip) : $user
             ]);
         } else {
-            if($user->role == 'Direksi')
-            {
-                if (DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->count() > 0) {
+            if($user->nip != null){
+                if(DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->count() > 0){
                     return response()->json([
                         'status' => 'gagal',
                         'message' => 'Akun seadang digunakan di perangkat lain.'
                     ], 401);
                 }
-
-                $token = $user->createToken('auth_token')->plainTextToken;
-                
-                $data = $user->nip ? $this->getKaryawan($user->nip) : $user;
-                if (is_array($data)) {
-                    if (array_key_exists('nama', $data)) {
-                        $data['nama'] = $user->name;
-                    }
-                }
-
-                return response()->json([
-                    'status' => 'berhasil',
-                    'message' => 'berhasil login',
-                    'id' => $user->id,
-                    'email' => $user->email,
-                    'role' => $user->role,
-                    'access_token' => $token,
-                    'token_type' => 'Bearer',
-                    'data' => $data
-                ]);
-            }
-            else{
-                if($user->nip != null){
-                    if(DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->count() > 0){
-                        return response()->json([
-                            'status' => 'gagal',
-                            'message' => 'Akun seadang digunakan di perangkat lain.'
-                        ], 401);
-                    }
-
-                    $token = $user->createToken('auth_token')->plainTextToken;
-
-                    return response()->json([
-                        'status' => 'berhasil',
-                        'message' => 'berhasil login',
-                        'id' => $user->id,
-                        'email' => $user->email,
-                        'role' => $user->role,
-                        'access_token' => $token,
-                        'token_type' => 'Bearer',
-                        'data' => $user->nip ? $this->getKaryawan($user->nip) : $user
-                    ]);
-                } else {
+            } else {
+                if ($user->role != 'Direksi') {
                     return response()->json([
                         'status' => 401,
                         'message' => 'Belum dilakukan Pengkinian Data User untuk $request->email.\nHarap menghubungi Divisi Pemasaran atau TI & AK.',
                     ]);
                 }
             }
+
+            $token = $user->createToken('auth_token')->plainTextToken;
+            if ($user->role == 'Direksi') {
+                $detail['nama'] = $user->name;
+            }
+            else {
+                if ($user->nip) {
+                    $detail = $this->getKaryawan($user->nip);
+                }
+                else {
+                    $detail['nama'] = $user->name;
+                }
+            }
+
+            return response()->json([
+                'status' => 'berhasil',
+                'message' => 'berhasil login',
+                'id' => $user->id,
+                'email' => $user->email,
+                'role' => $user->role,
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+                'data' => $detail,
+            ]);
         }
     }
 
