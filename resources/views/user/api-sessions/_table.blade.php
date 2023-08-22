@@ -32,12 +32,10 @@
                     <td>{{ $cabang }}</td>
                     <td><h5 class="badge badge-info">Aktif</h5></td>
                     <td>
-                        @if (auth()->user()->id != $item->tokenable_id)
-                            <form action="{{ route('reset-api-session', $item->id) }}" method="post">
-                                @csrf
-                                <button class="btn btn-danger" onclick="confirm('{{ __('Apakah anda yakin ingin menghapus?') }}') ? this.parentElement.submit() : ''">Reset</button>
-                            </form>
-                        @endif
+                        <form action="{{ route('reset-api-session', $item->id) }}" method="post">
+                            @csrf
+                            <button class="btn btn-danger" onclick="confirm('{{ __('Apakah anda yakin ingin menghapus?') }}') ? this.parentElement.submit() : ''">Reset</button>
+                        </form>
                     </td>
                 </tr>
                 @php
