@@ -34,7 +34,10 @@
                     <td>
                         <form action="{{ route('reset-api-session', $item->id) }}" method="post">
                             @csrf
-                            <button class="btn btn-danger" onclick="confirm('{{ __('Apakah anda yakin ingin menghapus?') }}') ? this.parentElement.submit() : ''">Reset</button>
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmResetApiSession">
+                                Reset
+                            </button>
+                            @include('user.api-sessions.confirm-modal')
                         </form>
                     </td>
                 </tr>
