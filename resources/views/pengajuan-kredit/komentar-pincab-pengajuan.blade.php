@@ -423,9 +423,9 @@
                                                         class="dropdown-item">Cetak
                                                     </a>
                                                     @if (Auth::user()->role == 'Administrator')
-                                                        <button type="button" class="btn text-danger" style="margin-left: 20px; background: none; border:none;" data-toggle="modal" data-target="#confirmHapusModal{{$item->id}}">
-                                                            Hapus
-                                                        </button>
+                                                        <a href="javascript:void(0)" class="dropdown-item text-danger" data-toggle="modal" data-target="#confirmHapusModal{{$item->id}}">
+                                                        Hapus
+                                                        </a>
                                                     @endif
                                                     @if (Auth::user()->role == 'SPI' || Auth::user()->role == 'Kredit Umum' || auth()->user()->role == 'Direksi')
                                                         <a href="{{ route('pengajuan.check.pincab.status.detail', $item->id_pengajuan) }}"
@@ -504,9 +504,9 @@
                                                     @endif
 
                                                     @if (Auth::user()->role == 'Administrator')
-                                                        <button type="button" class="btn text-danger" style="margin-left: 20px; background: none; border:none;" data-toggle="modal" data-target="#confirmHapusModal{{$item->id}}">
-                                                            Hapus
-                                                        </button>
+                                                        <a href="javascript:void(0)" class="dropdown-item text-danger" data-toggle="modal" data-target="#confirmHapusModal{{$item->id}}">
+                                                        Hapus
+                                                        </a>
                                                     @endif
                                                 </div>
                                                 </div>
@@ -529,9 +529,9 @@
                                                     <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
                                                         class="dropdown-item">Cetak</a>
                                                     @if (Auth::user()->role == 'Administrator')
-                                                        <button type="button" class="btn text-danger" style="margin-left: 20px; background: none; border:none;" data-toggle="modal" data-target="#confirmHapusModal{{$item->id}}">
+                                                        <a href="javascript:void(0)" class="dropdown-item text-danger" data-toggle="modal" data-target="#confirmHapusModal{{$item->id}}">
                                                         Hapus
-                                                        </button>
+                                                        </a>
                                                     @endif
                                                 </div>
                                         @endif
@@ -730,9 +730,9 @@
                                 </td>
                                 <td>
                                     <div class="d-flex">
-                                       <button type="button" class="btn text-danger" style="margin-left: 20px; background: none; border:none;" data-toggle="modal" data-target="#confirmModal{{$item->id}}">
+                                       <a href="javascript:void(0)" class="text-danger" style="text-decoration: none;" data-toggle="modal" data-target="#confirmModal{{$item->id}}">
                                             Restore
-                                        </button>
+                                       </a>
                                     </div>
                                 </td>
                             </tr>
