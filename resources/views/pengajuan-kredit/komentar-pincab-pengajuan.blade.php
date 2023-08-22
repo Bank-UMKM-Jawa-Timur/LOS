@@ -71,6 +71,714 @@
     </div>
     </div>
 
+
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="home-tab" data-toggle="tab" data-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true"><i class="fas fa-database"></i> Data Pengajuan</button>
+    </li>
+    @if (auth()->user()->role == 'Administrator')
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="profile-tab" data-toggle="tab" data-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false"><i class="fas fa-trash"></i> Sampah Pengajuan</button>
+    </li>
+    @endif
+    </ul>
+    <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+        <br>
+        <div class="row">
+            <div class="table-responsive">
+                <table class="table table-hover table-custom">
+                    <thead>
+                        <tr class="table-primary">
+                            <th class="text-center">#</th>
+                            <th>Tanggal Pengajuan</th>
+                            <th>Nama Nasabah</th>
+                            @if (auth()->user()->role == 'Administrator')
+                                <th>Cabang</th>
+                            @endif
+                            <th class="text-center">Posisi</th>
+                            <th>Durasi</th>
+                            <th>Skor</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($data_pengajuan as $item)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $item->tanggal }}</td>
+                                <td>{{ $item->nama }}</td>
+                                @if (auth()->user()->role == 'Administrator')
+                                    @php
+                                        $c = \App\Models\Cabang::where('id', $item->id_cabang)->first();
+                                    @endphp
+                                    <td>{{ $c->cabang }}</td>
+                                @endif
+                                <td class="text-center text-sm">
+                                    @if ($item->posisi == 'Proses Input Data')
+                                        @php
+                                            $nama_pemroses = 'undifined';
+                                            $user = \App\Models\User::select('nip')->where('id', $item->id_staf)->first();
+                                            if ($user)
+                                                $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
+                                            else {
+                                                $check_log = \DB::table('log_pengajuan')
+                                                                ->select('nip')
+                                                                ->where('id_pengajuan', $item->id)
+                                                                ->where('activity', 'LIKE', 'Staf%')
+                                                                ->orderBy('id', 'DESC')
+                                                                ->first();
+                                                if ($check_log)
+                                                    $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
+                                            }
+                                        @endphp
+                                        <span>Staff</span>
+                                        <br>
+                                        <span class="text-color-soft">({{$nama_pemroses}})</span>
+                                    @elseif ($item->posisi == 'Review Penyelia')
+                                        @php
+                                            $nama_pemroses = 'undifined';
+                                            $user = \App\Models\User::select('nip')->where('id', $item->id_penyelia)->first();
+                                            if ($user)
+                                                $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
+                                            else {
+                                                $check_log = \DB::table('log_pengajuan')
+                                                                ->select('nip')
+                                                                ->where('id_pengajuan', $item->id)
+                                                                ->where('activity', 'LIKE', 'Penyelia%')
+                                                                ->orderBy('id', 'DESC')
+                                                                ->first();
+                                                if ($check_log)
+                                                    $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
+                                            }
+                                        @endphp
+                                        <span>Penyelia</span>
+                                        <br>
+                                        <span class="text-color-soft">({{$nama_pemroses}})</span>
+                                    @elseif ($item->posisi == 'PBO')
+                                        @php
+                                            $nama_pemroses = 'undifined';
+                                            $user = \App\Models\User::select('nip')->where('id', $item->id_pbo)->first();
+                                            if ($user)
+                                                $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
+                                            else {
+                                                $check_log = \DB::table('log_pengajuan')
+                                                                ->select('nip')
+                                                                ->where('id_pengajuan', $item->id)
+                                                                ->where('activity', 'LIKE', 'PBO%')
+                                                                ->orderBy('id', 'DESC')
+                                                                ->first();
+                                                if ($check_log)
+                                                    $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
+                                            }
+                                        @endphp
+                                        <span>PBO</span>
+                                        <br>
+                                        <span class="text-color-soft">({{$nama_pemroses}})</span>
+                                    @elseif ($item->posisi == 'PBP')
+                                        @php
+                                            $nama_pemroses = 'undifined';
+                                            $user = \App\Models\User::select('nip')->where('id', $item->id_pbp)->first();
+                                            if ($user)
+                                                $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
+                                            else {
+                                                $check_log = \DB::table('log_pengajuan')
+                                                                ->select('nip')
+                                                                ->where('id_pengajuan', $item->id)
+                                                                ->where('activity', 'LIKE', 'PBP%')
+                                                                ->orderBy('id', 'DESC')
+                                                                ->first();
+                                                if ($check_log)
+                                                    $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
+                                            }
+                                        @endphp
+                                        <span>PBP</span>
+                                        <br>
+                                        <span class="text-color-soft">({{$nama_pemroses}})</span>
+                                    @elseif ($item->posisi == 'Pincab')
+                                        @php
+                                            $nama_pemroses = 'undifined';
+                                            $user = \App\Models\User::select('nip')->where('id', $item->id_pincab)->first();
+                                            if ($user)
+                                                $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
+                                            else {
+                                                $check_log = \DB::table('log_pengajuan')
+                                                                ->select('nip')
+                                                                ->where('id_pengajuan', $item->id)
+                                                                ->where('activity', 'LIKE', 'Pincab%')
+                                                                ->orderBy('id', 'DESC')
+                                                                ->first();
+                                                if ($check_log)
+                                                    $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
+                                            }
+                                        @endphp
+                                        <span>Pincab</span>
+                                        <br>
+                                        <span class="text-color-soft">({{$nama_pemroses}})</span>
+                                    @else
+                                        <span>Selesai</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($item->posisi == 'Proses Input Data')
+                                        @php
+                                            $rentangStaff = \App\Models\PengajuanModel::find($item->id);
+                                            $awal = date_create(date(now()));
+                                            $akhir = isset($rentangStaff->tanggal) ? date_create($rentangStaff->tanggal) : date_create(now());
+                                            $interval = $awal->diff($akhir);
+                                            $result_rentang = $interval->format('%a');
+                                        @endphp
+                                        {{-- {{ $rentangPenyelia }} --}}
+                                        @if ($result_rentang != 0)
+                                            @if ($result_rentang == 1 || $result_rentang == 2 || $result_rentang == 3)
+                                                <font class="text-success">{{ $result_rentang . ' hari' }}</font>
+                                            @elseif ($result_rentang == 4 || $result_rentang == 5 || $result_rentang == 6)
+                                                <font class="text-warning">{{ $result_rentang . ' hari' }}</font>
+                                            @else
+                                                <font class="text-danger">{{ $result_rentang . ' hari' }}</font>
+                                            @endif
+                                        @else
+                                            {{ '-' }}
+                                        @endif
+                                    @elseif ($item->posisi == 'Review Penyelia')
+                                        @php
+                                            $rentangPenyelia = \App\Models\PengajuanModel::find($item->id);
+                                            $awal = date_create(date(now()));
+                                            $akhir = isset($rentangPenyelia->tanggal_review_penyelia) ? date_create($rentangPenyelia->tanggal_review_penyelia) : date_create(now());
+                                            $interval = $awal->diff($akhir);
+                                            $result_rentang = $interval->format('%a');
+                                        @endphp
+                                        @if ($item->tanggal_review_penyelia != null)
+                                            @if ($result_rentang != 0)
+                                                @if ($result_rentang == 1 || $result_rentang == 2 || $result_rentang == 3)
+                                                    <font class="text-success">{{ $result_rentang . ' hari' }}</font>
+                                                @elseif ($result_rentang == 4 || $result_rentang == 5 || $result_rentang == 6)
+                                                    <font class="text-warning">{{ $result_rentang . ' hari' }}</font>
+                                                @else
+                                                    <font class="text-danger">{{ $result_rentang . ' hari' }}</font>
+                                                @endif
+                                            @else
+                                                {{ '-' }}
+                                            @endif
+                                        @endif
+                                    @elseif ($item->posisi == 'PBP')
+                                        @php
+                                            $rentangpbp = \App\Models\PengajuanModel::find($item->id);
+                                            $awal = date_create(date(now()));
+                                            $akhir = date_create($rentangpbp->tanggal_review_pbp);
+                                            $interval = $awal->diff($akhir);
+                                            $result_rentang = $interval->format('%a');
+                                        @endphp
+                                        @if ($item->tanggal_review_pbp != null)
+                                            @if ($result_rentang != 0)
+                                                @if ($result_rentang == 1 || $result_rentang == 2 || $result_rentang == 3)
+                                                    <font class="text-success">{{ $result_rentang . ' hari' }}</font>
+                                                @elseif ($result_rentang == 4 || $result_rentang == 5 || $result_rentang == 6)
+                                                    <font class="text-warning">{{ $result_rentang . ' hari' }}</font>
+                                                @else
+                                                    <font class="text-danger">{{ $result_rentang . ' hari' }}</font>
+                                                @endif
+                                            @else
+                                                {{ '-' }}
+                                            @endif
+                                        @endif
+                                    @elseif ($item->posisi == 'PBP')
+                                        @php
+                                            $rentangpbp = \App\Models\PengajuanModel::find($item->id);
+                                            $awal = date_create(date(now()));
+                                            $akhir = date_create($rentangpbp->tanggal_review_pbp);
+                                            $interval = $awal->diff($akhir);
+                                            $result_rentang = $interval->format('%a');
+                                        @endphp
+                                        @if ($item->tanggal_review_pbp != null)
+                                            @if ($result_rentang != 0)
+                                                @if ($result_rentang == 1 || $result_rentang == 2 || $result_rentang == 3)
+                                                    <font class="text-success">{{ $result_rentang . ' hari' }}</font>
+                                                @elseif ($result_rentang == 4 || $result_rentang == 5 || $result_rentang == 6)
+                                                    <font class="text-warning">{{ $result_rentang . ' hari' }}</font>
+                                                @else
+                                                    <font class="text-danger">{{ $result_rentang . ' hari' }}</font>
+                                                @endif
+                                            @else
+                                                {{ '-' }}
+                                            @endif
+                                        @endif
+                                    @else
+                                        @php
+                                            $rentangPincab = \App\Models\PengajuanModel::find($item->id);
+                                            $awal = date_create(date(now()));
+                                            $akhir = isset($rentangPincab->tanggal_review_pincab) ? date_create($rentangPincab->tanggal_review_pincab) : date_create(now());
+                                            $interval = $awal->diff($akhir);
+                                            $result_rentang_pincab = $interval->format('%a');
+                                        @endphp
+                                        @if ($item->tanggal_review_pincab != null)
+                                            @if ($result_rentang_pincab != 0)
+                                                @if ($result_rentang_pincab == 1 || $result_rentang_pincab == 2 || $result_rentang_pincab == 3)
+                                                    <font class="text-success">{{ $result_rentang_pincab . ' hari' }}</font>
+                                                @elseif ($result_rentang_pincab == 4 || $result_rentang_pincab == 5 || $result_rentang_pincab == 6)
+                                                    <font class="text-warning">{{ $result_rentang_pincab . ' hari' }}</font>
+                                                @else
+                                                    <font class="text-danger">{{ $result_rentang_pincab . ' hari' }}</font>
+                                                @endif
+                                            @else
+                                                {{ '-' }}
+                                            @endif
+                                        @endif
+                                    @endif
+                                </td>
+                                <td>
+                                    @php
+                                        $avgResult = $item->average_by_sistem;
+                                        if ($item->posisi == 'Review Penyelia')
+                                            $avgResult = $item->average_by_penyelia ? $item->average_by_penyelia : $item->average_by_sistem;
+                                        else if ($item->posisi == 'PBO')
+                                            $avgResult = $item->average_by_pbo ? $item->average_by_pbo : $item->average_by_penyelia;
+                                        else if ($item->posisi == 'PBP')
+                                            $avgResult = $item->average_by_pbp ? $item->average_by_pbp : $item->average_by_pbo;
+                                        else if ($item->posisi == 'Pincab') {
+                                            if (!$item->average_by_penyelia && !$item->average_by_pbo && $item->average_by_pbp)
+                                                $avgResult = $item->average_by_pbp;
+                                            else if (!$item->average_by_penyelia && $item->average_by_pbo && !$item->average_by_pbp)
+                                                $avgResult = $item->average_by_pbo;
+                                            else if ($item->average_by_penyelia && !$item->average_by_pbo && !$item->average_by_pbp)
+                                                $avgResult = $item->average_by_penyelia;
+                                        }
+                                        else if ($item->posisi == 'Ditolak') {
+                                            if (!$item->average_by_penyelia && !$item->average_by_pbo && $item->average_by_pbp)
+                                                $avgResult = $item->average_by_pbp;
+                                            else if (!$item->average_by_penyelia && $item->average_by_pbo && !$item->average_by_pbp)
+                                                $avgResult = $item->average_by_pbo;
+                                            else if ($item->average_by_penyelia && !$item->average_by_pbo && !$item->average_by_pbp)
+                                                $avgResult = $item->average_by_penyelia;
+                                        }
+                                        else if ($item->posisi == 'Selesai') {
+                                            if (!$item->average_by_penyelia && !$item->average_by_pbo && $item->average_by_pbp)
+                                                $avgResult = $item->average_by_pbp;
+                                            else if (!$item->average_by_penyelia && $item->average_by_pbo && !$item->average_by_pbp)
+                                                $avgResult = $item->average_by_pbo;
+                                            else if ($item->average_by_penyelia && !$item->average_by_pbo && !$item->average_by_pbp)
+                                                $avgResult = $item->average_by_penyelia;
+                                        }
+
+                                        if ($avgResult > 0 && $avgResult <= 2) {
+                                            $status = "merah";
+                                        } elseif ($avgResult > 2 && $avgResult <= 3) {
+                                            $status = "kuning";
+                                        } elseif ($avgResult > 3) {
+                                            $status = "hijau";
+                                        } else {
+                                            $status = "merah";
+                                        }
+                                    @endphp
+                                    @if ($status == 'hijau')
+                                        <font class="text-success">
+                                            {{ $avgResult }}
+                                        </font>
+                                    @elseif ($status == 'kuning')
+                                        <font class="text-warning">
+                                            {{ $avgResult }}
+                                        </font>
+                                    @elseif ($status == 'merah')
+                                        <font class="text-danger">
+                                            {{ $avgResult }}
+                                        </font>
+                                    @else
+                                        <font class="text-secondary">
+                                            {{ $avgResult }}
+                                        </font>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($item->posisi == 'Selesai')
+                                        <font class="text-success">Disetujui</font>
+                                    @elseif ($item->posisi == 'Ditolak')
+                                        <font class="text-danger">Ditolak</font>
+                                    @else
+                                        <font class="text-warning">On Progress</font>
+                                    @endif
+                                </td>
+                                <td>
+                                    <div class="d-flex">
+                                        @if ($item->posisi == 'Pincab')
+                                            <div class="btn-gtoup">
+                                                <button type="button" data-toggle="dropdown" class="btn btn-link">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                        fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16"
+                                                        style="color: black">
+                                                        <path
+                                                            d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
+                                                    </svg>
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    @if (Auth::user()->role == 'Pincab')
+                                                        <a href="{{ route('pengajuan.check.pincab.status.detail', $item->id_pengajuan) }}"
+                                                            class="dropdown-item">Review</a>
+                                                        <a href="#" class="dropdown-item" data-toggle="modal"
+                                                            data-id="{{ $item->id_pengajuan }}"
+                                                            data-target="#exampleModal-{{ $item->id_pengajuan }}">Disetujui /
+                                                            Ditolak</a>
+                                                    @endif
+                                                    <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
+                                                        class="dropdown-item">Cetak
+                                                    </a>
+                                                    @if (Auth::user()->role == 'Administrator')
+                                                        <button type="button" class="btn text-danger" style="margin-left: 20px; background: none; border:none;" data-toggle="modal" data-target="#confirmHapusModal{{$item->id}}">
+                                                            Hapus
+                                                        </button>
+                                                    @endif
+                                                    @if (Auth::user()->role == 'SPI' || Auth::user()->role == 'Kredit Umum' || auth()->user()->role == 'Direksi')
+                                                        <a href="{{ route('pengajuan.check.pincab.status.detail', $item->id_pengajuan) }}"
+                                                            class="dropdown-item">Log Pengajuan</a>
+                                                    @endif
+                                                    @if ($item->skema_kredit == 'KKB')
+                                                        <a target="_blank" href="{{ route('cetak-sppk', $item->id_pengajuan) }}"
+                                                            class="dropdown-item">Cetak SPPK</a>
+                                                        <a target="_blank" href="{{ route('cetak-pk', $item->id_pengajuan) }}"
+                                                            class="dropdown-item">Cetak PK</a>
+                                                        <a target="_blank" href="{{ route('cetak-po', $item->id_pengajuan) }}"
+                                                            class="dropdown-item">Cetak PO</a>
+                                                    @endif
+                                                </div>
+                                                </div>
+                                            </div>
+                                        @elseif ($item->posisi == 'Selesai')
+                                            <div class="btn-gtoup">
+                                                <button type="button" data-toggle="dropdown" class="btn btn-link">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                        fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16"
+                                                        style="color: black">
+                                                        <path
+                                                            d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
+                                                    </svg>
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    @if ($item->skema_kredit == 'KKB' && $item->posisi == 'Selesai')
+                                                        @php
+                                                            $tglCetak = DB::table('log_cetak_kkb')
+                                                                ->where('id_pengajuan', $item->id_pengajuan)
+                                                                ->first();
+                                                        @endphp
+                                                        @if ($tglCetak?->tgl_cetak_sppk == null || $tglCetak == null)
+                                                            <a target="_blank"
+                                                                href="{{ route('cetak-sppk', $item->id_pengajuan) }}"
+                                                                class="dropdown-item">Cetak SPPK</a>
+                                                        @elseif($tglCetak?->tgl_cetak_sppk != null && $item->sppk == null)
+                                                            <a href="#" class="dropdown-item" data-toggle="modal"
+                                                                data-id="{{ $item->id_pengajuan }}"
+                                                                data-target="#uploadSPPKModal-{{ $item->id_pengajuan }}">Upload
+                                                                File SPPK</a>
+                                                        @endif
+
+                                                        @if ($item->sppk != null && $tglCetak?->tgl_cetak_sppk != null && $tglCetak?->tgl_cetak_po == null)
+                                                            <a target="_blank"
+                                                                href="{{ route('cetak-po', $item->id_pengajuan) }}"
+                                                                class="dropdown-item">Cetak PO</a>
+                                                        @elseif($item->sppk != null && $tglCetak->tgl_cetak_po != null && $item->po == null)
+                                                            <a href="#" class="dropdown-item" data-toggle="modal"
+                                                                data-id="{{ $item->id_pengajuan }}"
+                                                                data-target="#uploadPOModal-{{ $item->id_pengajuan }}">Upload
+                                                                File
+                                                                PO</a>
+                                                        @endif
+
+                                                        @if ($item->po != null && $tglCetak?->tgl_cetak_po != null && $tglCetak?->tgl_cetak_pk == null)
+                                                            <a target="_blank"
+                                                                href="{{ route('cetak-pk', $item->id_pengajuan) }}"
+                                                                class="dropdown-item">Cetak PK</a>
+                                                        @elseif($item->po != null && $tglCetak?->tgl_cetak_pk != null && $item->pk == null)
+                                                            <a href="#" class="dropdown-item" data-toggle="modal"
+                                                                data-id="{{ $item->id_pengajuan }}"
+                                                                data-target="#uploadPKModal-{{ $item->id_pengajuan }}">Upload
+                                                                File
+                                                                PK</a>
+                                                        @endif
+                                                    @endif
+                                                    @if (Auth::user()->role == 'Pincab')
+                                                        <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
+                                                            class="dropdown-item">Cetak</a>
+                                                    @endif
+                                                    @if (Auth::user()->role == 'SPI' || Auth::user()->role == 'Kredit Umum' || auth()->user()->role == 'Direksi')
+                                                        <a href="{{ route('pengajuan.check.pincab.status.detail', $item->id_pengajuan) }}"
+                                                            class="dropdown-item">Log Pengajuan</a>
+                                                    @endif
+
+                                                    @if (Auth::user()->role == 'Administrator')
+                                                        <button type="button" class="btn text-danger" style="margin-left: 20px; background: none; border:none;" data-toggle="modal" data-target="#confirmHapusModal{{$item->id}}">
+                                                            Hapus
+                                                        </button>
+                                                    @endif
+                                                </div>
+                                                </div>
+                                            </div>
+                                        @else
+                                            <div class="btn-group">
+                                                <button type="button" data-toggle="dropdown" class="btn btn-link">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                        fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16"
+                                                        style="color: black">
+                                                        <path
+                                                            d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
+                                                    </svg>
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    @if (Auth::user()->role == 'SPI' || Auth::user()->role == 'Kredit Umum' || auth()->user()->role == 'Direksi')
+                                                        <a href="{{ route('pengajuan.check.pincab.status.detail', $item->id_pengajuan) }}"
+                                                            class="dropdown-item">Log Pengajuan</a>
+                                                    @endif
+                                                    <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
+                                                        class="dropdown-item">Cetak</a>
+                                                    @if (Auth::user()->role == 'Administrator')
+                                                        <button type="button" class="btn text-danger" style="margin-left: 20px; background: none; border:none;" data-toggle="modal" data-target="#confirmHapusModal{{$item->id}}">
+                                                        Hapus
+                                                        </button>
+                                                    @endif
+                                                </div>
+                                        @endif
+                                    </div>
+                                </td>
+                            </tr>
+
+
+                            {{-- modal hapus --}}
+                            <div class="modal fade" id="confirmHapusModal{{$item->id}}" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="confirmModalLabel">Konfirmasi Hapus Data</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Apakah Anda Yakin Ingin Menghapus Pengajuan Kredits, Atas Nama <b>{{$item->nama}}</b>?</p>
+                                            <p>Note! Data Yang Dihapus Akan Di Pindah Ke Sampah.</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                            <form action="{{ route('delete-pengajuan-kredit', $item->id) }}" id="deleteForm" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                                <input type="hidden" name="idPengajuan" value="{{$item->id}}">
+                                                <button type="submit" id="btn-hapus" class="btn btn-danger hapus">Hapus</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </tbody>
+                </table>
+                    {{ $data_pengajuan->links() }}
+                    Menampilkan
+                    {{ $data_pengajuan->firstItem() }}
+                    -
+                    {{ $data_pengajuan->lastItem() }}
+                    dari
+                    {{ $data_pengajuan->total() }} Data
+                    <div class="pull-right">
+                    </div>
+            </div>
+        </div>
+    </div>
+    @if (auth()->user()->role == 'Administrator')
+    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+        <br>
+        <div class="row">
+            <div class="table-responsive">
+                <table class="table table-hover table-custom">
+                    <thead>
+                        <tr class="table-primary">
+                            <th class="text-center">#</th>
+                            <th>Tanggal Pengajuan</th>
+                            <th>Nama Nasabah</th>
+                            <th>Cabang</th>
+                            <th class="text-center">Posisi</th>
+                            <th>Status</th>
+                            <th>Tanggal Hapus</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($sampah_pengajuan as $item)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $item->tanggal }}</td>
+                                <td>{{ $item->nama }}</td>
+                                @if (auth()->user()->role == 'Administrator')
+                                    @php
+                                        $c = \App\Models\Cabang::where('id', $item->id_cabang)->first();
+                                    @endphp
+                                    <td>{{ $c->cabang }}</td>
+                                @endif
+                                <td class="text-center text-sm">
+                                    @if ($item->posisi == 'Proses Input Data')
+                                        @php
+                                            $nama_pemroses = 'undifined';
+                                            $user = \App\Models\User::select('nip')->where('id', $item->id_staf)->first();
+                                            if ($user)
+                                                $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
+                                            else {
+                                                $check_log = \DB::table('log_pengajuan')
+                                                                ->select('nip')
+                                                                ->where('id_pengajuan', $item->id)
+                                                                ->where('activity', 'LIKE', 'Staf%')
+                                                                ->orderBy('id', 'DESC')
+                                                                ->first();
+                                                if ($check_log)
+                                                    $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
+                                            }
+                                        @endphp
+                                        <span>Staff</span>
+                                        <br>
+                                        <span class="text-color-soft">({{$nama_pemroses}})</span>
+                                    @elseif ($item->posisi == 'Review Penyelia')
+                                        @php
+                                            $nama_pemroses = 'undifined';
+                                            $user = \App\Models\User::select('nip')->where('id', $item->id_penyelia)->first();
+                                            if ($user)
+                                                $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
+                                            else {
+                                                $check_log = \DB::table('log_pengajuan')
+                                                                ->select('nip')
+                                                                ->where('id_pengajuan', $item->id)
+                                                                ->where('activity', 'LIKE', 'Penyelia%')
+                                                                ->orderBy('id', 'DESC')
+                                                                ->first();
+                                                if ($check_log)
+                                                    $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
+                                            }
+                                        @endphp
+                                        <span>Penyelia</span>
+                                        <br>
+                                        <span class="text-color-soft">({{$nama_pemroses}})</span>
+                                    @elseif ($item->posisi == 'PBO')
+                                        @php
+                                            $nama_pemroses = 'undifined';
+                                            $user = \App\Models\User::select('nip')->where('id', $item->id_pbo)->first();
+                                            if ($user)
+                                                $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
+                                            else {
+                                                $check_log = \DB::table('log_pengajuan')
+                                                                ->select('nip')
+                                                                ->where('id_pengajuan', $item->id)
+                                                                ->where('activity', 'LIKE', 'PBO%')
+                                                                ->orderBy('id', 'DESC')
+                                                                ->first();
+                                                if ($check_log)
+                                                    $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
+                                            }
+                                        @endphp
+                                        <span>PBO</span>
+                                        <br>
+                                        <span class="text-color-soft">({{$nama_pemroses}})</span>
+                                    @elseif ($item->posisi == 'PBP')
+                                        @php
+                                            $nama_pemroses = 'undifined';
+                                            $user = \App\Models\User::select('nip')->where('id', $item->id_pbp)->first();
+                                            if ($user)
+                                                $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
+                                            else {
+                                                $check_log = \DB::table('log_pengajuan')
+                                                                ->select('nip')
+                                                                ->where('id_pengajuan', $item->id)
+                                                                ->where('activity', 'LIKE', 'PBP%')
+                                                                ->orderBy('id', 'DESC')
+                                                                ->first();
+                                                if ($check_log)
+                                                    $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
+                                            }
+                                        @endphp
+                                        <span>PBP</span>
+                                        <br>
+                                        <span class="text-color-soft">({{$nama_pemroses}})</span>
+                                    @elseif ($item->posisi == 'Pincab')
+                                        @php
+                                            $nama_pemroses = 'undifined';
+                                            $user = \App\Models\User::select('nip')->where('id', $item->id_pincab)->first();
+                                            if ($user)
+                                                $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
+                                            else {
+                                                $check_log = \DB::table('log_pengajuan')
+                                                                ->select('nip')
+                                                                ->where('id_pengajuan', $item->id)
+                                                                ->where('activity', 'LIKE', 'Pincab%')
+                                                                ->orderBy('id', 'DESC')
+                                                                ->first();
+                                                if ($check_log)
+                                                    $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
+                                            }
+                                        @endphp
+                                        <span>Pincab</span>
+                                        <br>
+                                        <span class="text-color-soft">({{$nama_pemroses}})</span>
+                                    @else
+                                        <span>Selesai</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($item->posisi == 'Selesai')
+                                        <font class="text-success">Disetujui</font>
+                                    @elseif ($item->posisi == 'Ditolak')
+                                        <font class="text-danger">Ditolak</font>
+                                    @else
+                                        <font class="text-warning">On Progress</font>
+                                    @endif
+                                </td>
+                                <td>
+                                    {{$item->deleted_at}}
+                                </td>
+                                <td>
+                                    <div class="d-flex">
+                                       <button type="button" class="btn text-danger" style="margin-left: 20px; background: none; border:none;" data-toggle="modal" data-target="#confirmModal{{$item->id}}">
+                                            Restore
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            {{-- modal restore --}}
+                            <div class="modal fade" id="confirmModal{{$item->id}}" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="confirmModalLabel">Konfirmasi Restore Data</h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                               <p> Apakah Anda Yakin Ingin Mengembalikan Pengajuan Kredit <b>{{$item->nama}}</b>?</p>                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                                                <form action="{{ route('restore-pengajuan-kredit') }}" id="restoreForm" method="POST">
+                                                                    @csrf
+                                                                    @method('PUT')
+                                                                    <input type="hidden" name="idPengajuan" value="{{$item->id}}">
+                                                                    <button type="submit" id="btn-restore" class="btn btn-danger restore">Restore</button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                        @endforeach
+                    </tbody>
+                </table>
+                    {{ $sampah_pengajuan->links() }}
+                    Menampilkan
+                    {{ $sampah_pengajuan->firstItem() }}
+                    -
+                    {{ $sampah_pengajuan->lastItem() }}
+                    dari
+                    {{ $sampah_pengajuan->total() }} Data
+                    <div class="pull-right">
+                    </div>
+            </div>
+        </div>
+    </div>
+    @endif
+    </div>
+
     <style>
     .delete-link {
         cursor: pointer;
@@ -78,553 +786,7 @@
     }
     </style>
 
-    <div class="row">
-        <div class="table-responsive">
-            <table class="table table-hover table-custom">
-                <thead>
-                    <tr class="table-primary">
-                        <th class="text-center">#</th>
-                        <th>Tanggal Pengajuan</th>
-                        <th>Nama Nasabah</th>
-                        @if (auth()->user()->role == 'Administrator')
-                            <th>Cabang</th>
-                        @endif
-                        <th class="text-center">Posisi</th>
-                        <th>Durasi</th>
-                        <th>Skor</th>
-                        <th>Status</th>
-                        <th>Tanggal Hapus</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($data_pengajuan as $item)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $item->tanggal }}</td>
-                            <td>{{ $item->nama }}</td>
-                            @if (auth()->user()->role == 'Administrator')
-                                @php
-                                    $c = \App\Models\Cabang::where('id', $item->id_cabang)->first();
-                                @endphp
-                                <td>{{ $c->cabang }}</td>
-                            @endif
-                            <td class="text-center text-sm">
-                                @if ($item->posisi == 'Proses Input Data')
-                                    @php
-                                        $nama_pemroses = 'undifined';
-                                        $user = \App\Models\User::select('nip')->where('id', $item->id_staf)->first();
-                                        if ($user)
-                                            $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
-                                        else {
-                                            $check_log = \DB::table('log_pengajuan')
-                                                            ->select('nip')
-                                                            ->where('id_pengajuan', $item->id)
-                                                            ->where('activity', 'LIKE', 'Staf%')
-                                                            ->orderBy('id', 'DESC')
-                                                            ->first();
-                                            if ($check_log)
-                                                $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
-                                        }
-                                    @endphp
-                                    <span>Staff</span>
-                                    <br>
-                                    <span class="text-color-soft">({{$nama_pemroses}})</span>
-                                @elseif ($item->posisi == 'Review Penyelia')
-                                    @php
-                                        $nama_pemroses = 'undifined';
-                                        $user = \App\Models\User::select('nip')->where('id', $item->id_penyelia)->first();
-                                        if ($user)
-                                            $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
-                                        else {
-                                            $check_log = \DB::table('log_pengajuan')
-                                                            ->select('nip')
-                                                            ->where('id_pengajuan', $item->id)
-                                                            ->where('activity', 'LIKE', 'Penyelia%')
-                                                            ->orderBy('id', 'DESC')
-                                                            ->first();
-                                            if ($check_log)
-                                                $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
-                                        }
-                                    @endphp
-                                    <span>Penyelia</span>
-                                    <br>
-                                    <span class="text-color-soft">({{$nama_pemroses}})</span>
-                                @elseif ($item->posisi == 'PBO')
-                                    @php
-                                        $nama_pemroses = 'undifined';
-                                        $user = \App\Models\User::select('nip')->where('id', $item->id_pbo)->first();
-                                        if ($user)
-                                            $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
-                                        else {
-                                            $check_log = \DB::table('log_pengajuan')
-                                                            ->select('nip')
-                                                            ->where('id_pengajuan', $item->id)
-                                                            ->where('activity', 'LIKE', 'PBO%')
-                                                            ->orderBy('id', 'DESC')
-                                                            ->first();
-                                            if ($check_log)
-                                                $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
-                                        }
-                                    @endphp
-                                    <span>PBO</span>
-                                    <br>
-                                    <span class="text-color-soft">({{$nama_pemroses}})</span>
-                                @elseif ($item->posisi == 'PBP')
-                                    @php
-                                        $nama_pemroses = 'undifined';
-                                        $user = \App\Models\User::select('nip')->where('id', $item->id_pbp)->first();
-                                        if ($user)
-                                            $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
-                                        else {
-                                            $check_log = \DB::table('log_pengajuan')
-                                                            ->select('nip')
-                                                            ->where('id_pengajuan', $item->id)
-                                                            ->where('activity', 'LIKE', 'PBP%')
-                                                            ->orderBy('id', 'DESC')
-                                                            ->first();
-                                            if ($check_log)
-                                                $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
-                                        }
-                                    @endphp
-                                    <span>PBP</span>
-                                    <br>
-                                    <span class="text-color-soft">({{$nama_pemroses}})</span>
-                                @elseif ($item->posisi == 'Pincab')
-                                    @php
-                                        $nama_pemroses = 'undifined';
-                                        $user = \App\Models\User::select('nip')->where('id', $item->id_pincab)->first();
-                                        if ($user)
-                                            $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
-                                        else {
-                                            $check_log = \DB::table('log_pengajuan')
-                                                            ->select('nip')
-                                                            ->where('id_pengajuan', $item->id)
-                                                            ->where('activity', 'LIKE', 'Pincab%')
-                                                            ->orderBy('id', 'DESC')
-                                                            ->first();
-                                            if ($check_log)
-                                                $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
-                                        }
-                                    @endphp
-                                    <span>Pincab</span>
-                                    <br>
-                                    <span class="text-color-soft">({{$nama_pemroses}})</span>
-                                @else
-                                    <span>Selesai</span>
-                                @endif
-                            </td>
-                            <td>
-                                @if ($item->posisi == 'Proses Input Data')
-                                    @php
-                                        $rentangStaff = \App\Models\PengajuanModel::find($item->id);
-                                        $awal = date_create(date(now()));
-                                        $akhir = isset($rentangStaff->tanggal) ? date_create($rentangStaff->tanggal) : date_create(now());
-                                        $interval = $awal->diff($akhir);
-                                        $result_rentang = $interval->format('%a');
-                                    @endphp
-                                    {{-- {{ $rentangPenyelia }} --}}
-                                    @if ($result_rentang != 0)
-                                        @if ($result_rentang == 1 || $result_rentang == 2 || $result_rentang == 3)
-                                            <font class="text-success">{{ $result_rentang . ' hari' }}</font>
-                                        @elseif ($result_rentang == 4 || $result_rentang == 5 || $result_rentang == 6)
-                                            <font class="text-warning">{{ $result_rentang . ' hari' }}</font>
-                                        @else
-                                            <font class="text-danger">{{ $result_rentang . ' hari' }}</font>
-                                        @endif
-                                    @else
-                                        {{ '-' }}
-                                    @endif
-                                @elseif ($item->posisi == 'Review Penyelia')
-                                    @php
-                                        $rentangPenyelia = \App\Models\PengajuanModel::find($item->id);
-                                        $awal = date_create(date(now()));
-                                        $akhir = isset($rentangPenyelia->tanggal_review_penyelia) ? date_create($rentangPenyelia->tanggal_review_penyelia) : date_create(now());
-                                        $interval = $awal->diff($akhir);
-                                        $result_rentang = $interval->format('%a');
-                                    @endphp
-                                    @if ($item->tanggal_review_penyelia != null)
-                                        @if ($result_rentang != 0)
-                                            @if ($result_rentang == 1 || $result_rentang == 2 || $result_rentang == 3)
-                                                <font class="text-success">{{ $result_rentang . ' hari' }}</font>
-                                            @elseif ($result_rentang == 4 || $result_rentang == 5 || $result_rentang == 6)
-                                                <font class="text-warning">{{ $result_rentang . ' hari' }}</font>
-                                            @else
-                                                <font class="text-danger">{{ $result_rentang . ' hari' }}</font>
-                                            @endif
-                                        @else
-                                            {{ '-' }}
-                                        @endif
-                                    @endif
-                                @elseif ($item->posisi == 'PBP')
-                                    @php
-                                        $rentangpbp = \App\Models\PengajuanModel::find($item->id);
-                                        $awal = date_create(date(now()));
-                                        $akhir = date_create($rentangpbp->tanggal_review_pbp);
-                                        $interval = $awal->diff($akhir);
-                                        $result_rentang = $interval->format('%a');
-                                    @endphp
-                                    @if ($item->tanggal_review_pbp != null)
-                                        @if ($result_rentang != 0)
-                                            @if ($result_rentang == 1 || $result_rentang == 2 || $result_rentang == 3)
-                                                <font class="text-success">{{ $result_rentang . ' hari' }}</font>
-                                            @elseif ($result_rentang == 4 || $result_rentang == 5 || $result_rentang == 6)
-                                                <font class="text-warning">{{ $result_rentang . ' hari' }}</font>
-                                            @else
-                                                <font class="text-danger">{{ $result_rentang . ' hari' }}</font>
-                                            @endif
-                                        @else
-                                            {{ '-' }}
-                                        @endif
-                                    @endif
-                                @elseif ($item->posisi == 'PBP')
-                                    @php
-                                        $rentangpbp = \App\Models\PengajuanModel::find($item->id);
-                                        $awal = date_create(date(now()));
-                                        $akhir = date_create($rentangpbp->tanggal_review_pbp);
-                                        $interval = $awal->diff($akhir);
-                                        $result_rentang = $interval->format('%a');
-                                    @endphp
-                                    @if ($item->tanggal_review_pbp != null)
-                                        @if ($result_rentang != 0)
-                                            @if ($result_rentang == 1 || $result_rentang == 2 || $result_rentang == 3)
-                                                <font class="text-success">{{ $result_rentang . ' hari' }}</font>
-                                            @elseif ($result_rentang == 4 || $result_rentang == 5 || $result_rentang == 6)
-                                                <font class="text-warning">{{ $result_rentang . ' hari' }}</font>
-                                            @else
-                                                <font class="text-danger">{{ $result_rentang . ' hari' }}</font>
-                                            @endif
-                                        @else
-                                            {{ '-' }}
-                                        @endif
-                                    @endif
-                                @else
-                                    @php
-                                        $rentangPincab = \App\Models\PengajuanModel::find($item->id);
-                                        $awal = date_create(date(now()));
-                                        $akhir = isset($rentangPincab->tanggal_review_pincab) ? date_create($rentangPincab->tanggal_review_pincab) : date_create(now());
-                                        $interval = $awal->diff($akhir);
-                                        $result_rentang_pincab = $interval->format('%a');
-                                    @endphp
-                                    @if ($item->tanggal_review_pincab != null)
-                                        @if ($result_rentang_pincab != 0)
-                                            @if ($result_rentang_pincab == 1 || $result_rentang_pincab == 2 || $result_rentang_pincab == 3)
-                                                <font class="text-success">{{ $result_rentang_pincab . ' hari' }}</font>
-                                            @elseif ($result_rentang_pincab == 4 || $result_rentang_pincab == 5 || $result_rentang_pincab == 6)
-                                                <font class="text-warning">{{ $result_rentang_pincab . ' hari' }}</font>
-                                            @else
-                                                <font class="text-danger">{{ $result_rentang_pincab . ' hari' }}</font>
-                                            @endif
-                                        @else
-                                            {{ '-' }}
-                                        @endif
-                                    @endif
-                                @endif
-                            </td>
-                            <td>
-                                @php
-                                    $avgResult = $item->average_by_sistem;
-                                    if ($item->posisi == 'Review Penyelia')
-                                        $avgResult = $item->average_by_penyelia ? $item->average_by_penyelia : $item->average_by_sistem;
-                                    else if ($item->posisi == 'PBO')
-                                        $avgResult = $item->average_by_pbo ? $item->average_by_pbo : $item->average_by_penyelia;
-                                    else if ($item->posisi == 'PBP')
-                                        $avgResult = $item->average_by_pbp ? $item->average_by_pbp : $item->average_by_pbo;
-                                    else if ($item->posisi == 'Pincab') {
-                                        if (!$item->average_by_penyelia && !$item->average_by_pbo && $item->average_by_pbp)
-                                            $avgResult = $item->average_by_pbp;
-                                        else if (!$item->average_by_penyelia && $item->average_by_pbo && !$item->average_by_pbp)
-                                            $avgResult = $item->average_by_pbo;
-                                        else if ($item->average_by_penyelia && !$item->average_by_pbo && !$item->average_by_pbp)
-                                            $avgResult = $item->average_by_penyelia;
-                                    }
-                                    else if ($item->posisi == 'Ditolak') {
-                                        if (!$item->average_by_penyelia && !$item->average_by_pbo && $item->average_by_pbp)
-                                            $avgResult = $item->average_by_pbp;
-                                        else if (!$item->average_by_penyelia && $item->average_by_pbo && !$item->average_by_pbp)
-                                            $avgResult = $item->average_by_pbo;
-                                        else if ($item->average_by_penyelia && !$item->average_by_pbo && !$item->average_by_pbp)
-                                            $avgResult = $item->average_by_penyelia;
-                                    }
-                                    else if ($item->posisi == 'Selesai') {
-                                        if (!$item->average_by_penyelia && !$item->average_by_pbo && $item->average_by_pbp)
-                                            $avgResult = $item->average_by_pbp;
-                                        else if (!$item->average_by_penyelia && $item->average_by_pbo && !$item->average_by_pbp)
-                                            $avgResult = $item->average_by_pbo;
-                                        else if ($item->average_by_penyelia && !$item->average_by_pbo && !$item->average_by_pbp)
-                                            $avgResult = $item->average_by_penyelia;
-                                    }
 
-                                    if ($avgResult > 0 && $avgResult <= 2) {
-                                        $status = "merah";
-                                    } elseif ($avgResult > 2 && $avgResult <= 3) {
-                                        $status = "kuning";
-                                    } elseif ($avgResult > 3) {
-                                        $status = "hijau";
-                                    } else {
-                                        $status = "merah";
-                                    }
-                                @endphp
-                                @if ($status == 'hijau')
-                                    <font class="text-success">
-                                        {{ $avgResult }}
-                                    </font>
-                                @elseif ($status == 'kuning')
-                                    <font class="text-warning">
-                                        {{ $avgResult }}
-                                    </font>
-                                @elseif ($status == 'merah')
-                                    <font class="text-danger">
-                                        {{ $avgResult }}
-                                    </font>
-                                @else
-                                    <font class="text-secondary">
-                                        {{ $avgResult }}
-                                    </font>
-                                @endif
-                            </td>
-                            <td>
-                                @if ($item->posisi == 'Selesai')
-                                    <font class="text-success">Disetujui</font>
-                                @elseif ($item->posisi == 'Ditolak')
-                                    <font class="text-danger">Ditolak</font>
-                                @else
-                                    <font class="text-warning">On Progress</font>
-                                @endif
-                            </td>
-                            <td>
-                                @if (auth()->user()->role == 'Administrator')
-                                    @if ($item->deleted_at == null)
-                                    <p class="text-center">-</p>
-                                    @else
-                                    {{$item->deleted_at}}
-                                    @endif
-                                @endif
-                            </td>
-                            <td>
-                                <div class="d-flex">
-                                    @if ($item->posisi == 'Pincab')
-                                        <div class="btn-gtoup">
-                                            <button type="button" data-toggle="dropdown" class="btn btn-link">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                    fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16"
-                                                    style="color: black">
-                                                    <path
-                                                        d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
-                                                </svg>
-                                            </button>
-                                            <div class="dropdown-menu">
-                                                @if (Auth::user()->role == 'Pincab')
-                                                    <a href="{{ route('pengajuan.check.pincab.status.detail', $item->id_pengajuan) }}"
-                                                        class="dropdown-item">Review</a>
-                                                    <a href="#" class="dropdown-item" data-toggle="modal"
-                                                        data-id="{{ $item->id_pengajuan }}"
-                                                        data-target="#exampleModal-{{ $item->id_pengajuan }}">Disetujui /
-                                                        Ditolak</a>
-                                                @endif
-                                                <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
-                                                    class="dropdown-item">Cetak
-                                                </a>
-                                                @if (Auth::user()->role == 'Administrator')
-                                                   @if ($item->deleted_at === null)
-                                                    <button type="button" class="btn text-danger" style="margin-left: 20px; background: none; border:none;" data-toggle="modal" data-target="#confirmHapusModal{{$item->id}}">
-                                                        Hapus
-                                                    </button>
-                                                    @else
-                                                    <button type="button" class="btn text-danger" style="margin-left: 20px; background: none; border:none;" data-toggle="modal" data-target="#confirmModal{{$item->id}}">
-                                                        Restore
-                                                    </button>
-                                                    @endif
-                                                @endif
-                                                @if (Auth::user()->role == 'SPI' || Auth::user()->role == 'Kredit Umum' || auth()->user()->role == 'Direksi')
-                                                    <a href="{{ route('pengajuan.check.pincab.status.detail', $item->id_pengajuan) }}"
-                                                        class="dropdown-item">Log Pengajuan</a>
-                                                @endif
-                                                @if ($item->skema_kredit == 'KKB')
-                                                    <a target="_blank" href="{{ route('cetak-sppk', $item->id_pengajuan) }}"
-                                                        class="dropdown-item">Cetak SPPK</a>
-                                                    <a target="_blank" href="{{ route('cetak-pk', $item->id_pengajuan) }}"
-                                                        class="dropdown-item">Cetak PK</a>
-                                                    <a target="_blank" href="{{ route('cetak-po', $item->id_pengajuan) }}"
-                                                        class="dropdown-item">Cetak PO</a>
-                                                @endif
-                                            </div>
-                                            </div>
-                                        </div>
-                                    @elseif ($item->posisi == 'Selesai')
-                                        <div class="btn-gtoup">
-                                            <button type="button" data-toggle="dropdown" class="btn btn-link">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                    fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16"
-                                                    style="color: black">
-                                                    <path
-                                                        d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
-                                                </svg>
-                                            </button>
-                                            <div class="dropdown-menu">
-                                                @if ($item->skema_kredit == 'KKB' && $item->posisi == 'Selesai')
-                                                    @php
-                                                        $tglCetak = DB::table('log_cetak_kkb')
-                                                            ->where('id_pengajuan', $item->id_pengajuan)
-                                                            ->first();
-                                                    @endphp
-                                                    @if ($tglCetak?->tgl_cetak_sppk == null || $tglCetak == null)
-                                                        <a target="_blank"
-                                                            href="{{ route('cetak-sppk', $item->id_pengajuan) }}"
-                                                            class="dropdown-item">Cetak SPPK</a>
-                                                    @elseif($tglCetak?->tgl_cetak_sppk != null && $item->sppk == null)
-                                                        <a href="#" class="dropdown-item" data-toggle="modal"
-                                                            data-id="{{ $item->id_pengajuan }}"
-                                                            data-target="#uploadSPPKModal-{{ $item->id_pengajuan }}">Upload
-                                                            File SPPK</a>
-                                                    @endif
-
-                                                    @if ($item->sppk != null && $tglCetak?->tgl_cetak_sppk != null && $tglCetak?->tgl_cetak_po == null)
-                                                        <a target="_blank"
-                                                            href="{{ route('cetak-po', $item->id_pengajuan) }}"
-                                                            class="dropdown-item">Cetak PO</a>
-                                                    @elseif($item->sppk != null && $tglCetak->tgl_cetak_po != null && $item->po == null)
-                                                        <a href="#" class="dropdown-item" data-toggle="modal"
-                                                            data-id="{{ $item->id_pengajuan }}"
-                                                            data-target="#uploadPOModal-{{ $item->id_pengajuan }}">Upload
-                                                            File
-                                                            PO</a>
-                                                    @endif
-
-                                                    @if ($item->po != null && $tglCetak?->tgl_cetak_po != null && $tglCetak?->tgl_cetak_pk == null)
-                                                        <a target="_blank"
-                                                            href="{{ route('cetak-pk', $item->id_pengajuan) }}"
-                                                            class="dropdown-item">Cetak PK</a>
-                                                    @elseif($item->po != null && $tglCetak?->tgl_cetak_pk != null && $item->pk == null)
-                                                        <a href="#" class="dropdown-item" data-toggle="modal"
-                                                            data-id="{{ $item->id_pengajuan }}"
-                                                            data-target="#uploadPKModal-{{ $item->id_pengajuan }}">Upload
-                                                            File
-                                                            PK</a>
-                                                    @endif
-                                                @endif
-                                                @if (Auth::user()->role == 'Pincab')
-                                                    <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
-                                                        class="dropdown-item">Cetak</a>
-                                                @endif
-                                                @if (Auth::user()->role == 'SPI' || Auth::user()->role == 'Kredit Umum' || auth()->user()->role == 'Direksi')
-                                                    <a href="{{ route('pengajuan.check.pincab.status.detail', $item->id_pengajuan) }}"
-                                                        class="dropdown-item">Log Pengajuan</a>
-                                                @endif
-
-                                                @if (Auth::user()->role == 'Administrator')
-                                                    @if ($item->deleted_at === null)
-                                                    <button type="button" class="btn text-danger" style="margin-left: 20px; background: none; border:none;" data-toggle="modal" data-target="#confirmHapusModal{{$item->id}}">
-                                                        Hapus
-                                                    </button>
-                                                    @else
-                                                    <button type="button" class="btn text-danger" style="margin-left: 20px; background: none; border:none;" data-toggle="modal" data-target="#confirmModal{{$item->id}}">
-                                                        Restore
-                                                    </button>
-                                                    @endif
-                                                @endif
-                                            </div>
-                                            </div>
-                                        </div>
-                                    @else
-                                        <div class="btn-group">
-                                            <button type="button" data-toggle="dropdown" class="btn btn-link">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                    fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16"
-                                                    style="color: black">
-                                                    <path
-                                                        d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
-                                                </svg>
-                                            </button>
-                                            <div class="dropdown-menu">
-                                                @if (Auth::user()->role == 'SPI' || Auth::user()->role == 'Kredit Umum' || auth()->user()->role == 'Direksi')
-                                                    <a href="{{ route('pengajuan.check.pincab.status.detail', $item->id_pengajuan) }}"
-                                                        class="dropdown-item">Log Pengajuan</a>
-                                                @endif
-                                                <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
-                                                    class="dropdown-item">Cetak</a>
-                                                @if (Auth::user()->role == 'Administrator')
-                                                    @if ($item->deleted_at === null)
-                                                    <button type="button" class="btn text-danger" style="margin-left: 20px; background: none; border:none;" data-toggle="modal" data-target="#confirmHapusModal{{$item->id}}">
-                                                    Hapus
-                                                    </button>
-                                                    @else
-                                                    <button type="button" class="btn text-danger" style="margin-left: 20px; background: none; border:none;" data-toggle="modal" data-target="#confirmModal{{$item->id}}">
-                                                        Restore
-                                                    </button>
-                                                    @endif
-                                                @endif
-                                            </div>
-                                    @endif
-                                </div>
-                            </td>
-                        </tr>
-
-                        {{-- modal restore --}}
-                        <div class="modal fade" id="confirmModal{{$item->id}}" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="confirmModalLabel">Konfirmasi Restore Data</h5>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            Apakah Anda yakin ingin mengembalikan pengajuan kredit {{$item->nama}}?
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                                                            <form action="{{ route('restore-pengajuan-kredit') }}" id="restoreForm" method="POST">
-                                                                @csrf
-                                                                @method('PUT')
-                                                                <input type="hidden" name="idPengajuan" value="{{$item->id}}">
-                                                                <button type="submit" id="btn-restore" class="btn btn-danger restore">Restore</button>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                        {{-- modal hapus --}}
-                        <div class="modal fade" id="confirmHapusModal{{$item->id}}" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="confirmModalLabel">Konfirmasi Hapus Data</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        Apakah Anda yakin ingin menghapus pengajuan kredit {{$item->nama}}?
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                                        <form action="{{ route('delete-pengajuan-kredit', $item->id) }}" id="deleteForm" method="POST">
-                                        @csrf
-                                        @method('DELETE')
-                                            <input type="hidden" name="idPengajuan" value="{{$item->id}}">
-                                            <button type="submit" id="btn-hapus" class="btn btn-danger hapus">Hapus</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </tbody>
-            </table>
-                {{ $data_pengajuan->links() }}
-                Menampilkan
-                {{ $data_pengajuan->firstItem() }}
-                -
-                {{ $data_pengajuan->lastItem() }}
-                dari
-                {{ $data_pengajuan->total() }} Data
-                <div class="pull-right">
-                </div>
-        </div>
-    </div>
 
     {{-- modal loading post --}}
     <div class="modal fade" id="loadingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
