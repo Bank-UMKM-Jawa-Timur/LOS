@@ -591,7 +591,60 @@ class PengajuanKreditController extends Controller
                 'calon_nasabah.nama',
                 'calon_nasabah.jenis_usaha',
                 'calon_nasabah.id_pengajuan'
-            )->withTrashed()
+            )
+            ->orderByRaw('CASE WHEN deleted_at IS NOT NULL THEN 0 ELSE 1 END, created_at DESC')
+                ->when($request->search, function ($query, $search) {
+                    return $query->where('calon_nasabah.nama', 'like', '%' . $search . '%');
+                })
+                ->when($request->pss, function ($query, $pss) {
+                    return $query->where('pengajuan.posisi', $pss);
+                })
+                ->when($request->cbg, function ($query, $cbg) {
+                    return $query->where('id_cabang', $cbg);
+                })
+                ->when($request->tAwal && $request->tAkhir, function ($query) use ($request) {
+                    return $query->whereBetween('pengajuan.tanggal', [$request->tAwal, $request->tAkhir]);
+                })
+                ->when($request->sts, function ($query, $sts) {
+                    if ($sts == 'Selesai' || $sts == 'Ditolak') {
+                        return $query->where('pengajuan.posisi', $sts);
+                    } else {
+                        return $query->where('pengajuan.posisi', '<>', 'Selesai')
+                        ->where('pengajuan.posisi', '<>', 'Ditolak');
+                    }
+                })
+                ->when($request->score, function ($query, $score) {
+                    return $query->whereRaw('FLOOR(pengajuan.average_by_sistem) = ?', $score)
+                    ->orWhereRaw('FLOOR(pengajuan.average_by_penyelia) = ?', $score);
+                })
+                ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id');
+
+
+            $dataPengajuanSampah = PengajuanModel::select(
+                'pengajuan.id',
+                'pengajuan.tanggal',
+                'pengajuan.posisi',
+                'pengajuan.progress_pengajuan_data',
+                'pengajuan.id_staf',
+                'pengajuan.id_penyelia',
+                'pengajuan.id_pbo',
+                'pengajuan.id_pbp',
+                'pengajuan.id_pincab',
+                'pengajuan.tanggal_review_penyelia',
+                'pengajuan.tanggal_review_pbp',
+                'pengajuan.tanggal_review_pincab',
+                'pengajuan.status',
+                'pengajuan.status_by_sistem',
+                'pengajuan.id_cabang',
+                'pengajuan.average_by_sistem',
+                'pengajuan.average_by_penyelia',
+                'pengajuan.skema_kredit',
+                'pengajuan.created_at',
+                'pengajuan.deleted_at',
+                'calon_nasabah.nama',
+                'calon_nasabah.jenis_usaha',
+                'calon_nasabah.id_pengajuan'
+            )->onlyTrashed()
             ->orderByRaw('CASE WHEN deleted_at IS NOT NULL THEN 0 ELSE 1 END, created_at DESC')
                 ->when($request->search, function ($query, $search) {
                     return $query->where('calon_nasabah.nama', 'like', '%' . $search . '%');
@@ -622,13 +675,16 @@ class PengajuanKreditController extends Controller
 
             if ($request->tAwal && $request->tAkhir) {
                 $dataPengajuan->whereBetween('pengajuan.tanggal', [$request->tAwal, $request->tAkhir]);
+                $dataPengajuanSampah->whereBetween('pengajuan.tanggal', [$request->tAwal, $request->tAkhir]);
             }
 
             if ($request->cbg) {
                 $dataPengajuan->where('pengajuan.id_cabang', $request->cbg);
+                $dataPengajuanSampah->where('pengajuan.id_cabang', $request->cbg);
             }
 
             $param['data_pengajuan'] = $dataPengajuan->paginate(5)->withQueryString();
+            $param['sampah_pengajuan'] = $dataPengajuanSampah->paginate(5)->withQueryString();
 
             return view('pengajuan-kredit.komentar-pincab-pengajuan', $param);
         }
@@ -3703,7 +3759,7 @@ class PengajuanKreditController extends Controller
 
         if ($data) {
             $data->delete();
-            return redirect()->route('pengajuan-kredit.index')->withStatus('Data berhasil dihapus.');
+            return redirect()->route('pengajuan-kredit.index')->withStatus('Data '.$data->nama .' berhasil dihapus.');
         } else {
             return redirect()->route('pengajuan-kredit.index')->withErrors('Data dengan ID tersebut tidak ditemukan.');
         }
@@ -3717,7 +3773,7 @@ class PengajuanKreditController extends Controller
 
         if ($data) {
             $data->restore();
-            return redirect()->route('pengajuan-kredit.index')->withStatus('Data berhasil direstore.');
+            return redirect()->route('pengajuan-kredit.index')->withStatus('Data '.$data->nama.' berhasil direstore.');
         } else {
             return redirect()->route('pengajuan-kredit.index')->withErrors('Data dengan ID tersebut tidak ditemukan.');
         }
