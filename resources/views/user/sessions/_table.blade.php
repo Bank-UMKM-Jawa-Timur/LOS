@@ -35,7 +35,10 @@
                         @if (auth()->user()->id != $item->user_id)
                             <form action="{{ route('reset-session', $item->id) }}" method="post">
                                 @csrf
-                                <button class="btn btn-danger" onclick="confirm('{{ __('Apakah anda yakin ingin menghapus?') }}') ? this.parentElement.submit() : ''">Reset</button>
+                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmResetSession">
+                                    Reset
+                                </button>
+                                @include('user.sessions.confirm-modal')
                             </form>
                         @endif
                     </td>
