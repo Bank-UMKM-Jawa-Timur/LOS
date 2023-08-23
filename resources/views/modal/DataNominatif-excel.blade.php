@@ -1,3 +1,5 @@
+
+
 <table>
     <tr>
         <td align="center" style="font-weight:bold;vertical-align: center;text-align:center;" colspan="10" rowspan="3">
@@ -69,7 +71,7 @@
             $staff = 0;
             $total = 0;
         @endphp
-        @foreach ($data as $key => $item)
+        @foreach ($data as $item)
             @if ($item->kodeC != 000)
                 <tr>
                     <td style="border:1px solid #000;">{{ $item->kodeC }}</td>
@@ -147,7 +149,7 @@
             $ditolak = 0;
             $proses = 0;
         @endphp
-        @foreach ($data2 as $key => $item)
+        @foreach ($data2 as $item)
             @if ($item->kodeC != 000)
             <tr>
                 <td style="border:1px solid #000;">{{ $item->kodeC }}</td>
