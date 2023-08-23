@@ -126,8 +126,7 @@ class DashboardController extends Controller
                             ->select(
                                 'c.kode_cabang AS kodeC',
                                 'c.cabang',
-                                $type == 'kustom' ?
-                                \DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Selesai' GROUP BY id_cabang), 0) AS disetujui") : \DB::raw("SUM(IF(p.posisi = 'Selesai', 1,0)) AS disetujui"),
+                                $type == 'kustom' ? \DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Selesai' GROUP BY id_cabang), 0) AS disetujui") : \DB::raw("SUM(IF(p.posisi = 'Selesai', 1,0)) AS disetujui"),
                                 $type == 'kustom' ? \DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Ditolak' GROUP BY id_cabang), 0) AS ditolak") : \DB::raw("SUM(IF(p.posisi = 'Ditolak', 1,0)) AS ditolak"),
                                 $type == 'kustom' ? \DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Pincab' GROUP BY id_cabang), 0) AS pincab") : \DB::raw("SUM(IF(p.posisi = 'Pincab', 1,0)) AS pincab"),
                                 $type == 'kustom' ? \DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'PBP' GROUP BY id_cabang), 0) AS pbp") : \DB::raw("SUM(IF(p.posisi = 'PBP', 1,0)) AS pbp"),
@@ -206,22 +205,22 @@ class DashboardController extends Controller
                     return $pdf->download('Kategori keseluruhan cabang ' . $name_cabang->cabang . '.pdf');
                 }
             }
-        } else {
+        } else
             if ($type != "kesuluruhan") {
                 if ($pilCabang == 'semua') {
-                    return Excel::download(new DataNominatif, 'Kategori berdasarkan tanggal ' . $request->tAwal . ' sampai dengan ' . $request->tAkhir . ' Semua Cabang' . '.xlsx');
+                    return Excel::download(new DataNominatif($seluruh_data, $seluruh_data_proses), 'Kategori berdasarkan tanggal ' . $request->tAwal . ' sampai dengan ' . $request->tAkhir . ' Semua Cabang' . '.xlsx');
                 } else {
                     $name_cabang = cabang::select('cabang')->where('id', $pilCabang)->first();
-                    return Excel::download(new DataNominatif, 'Kategori berdasarkan tanggal ' . $request->tAwal . ' sampai dengan ' . $request->tAkhir . ' cabang ' . $name_cabang->cabang .'.xlsx');
+                    return Excel::download(new DataNominatif($seluruh_data, $seluruh_data_proses), 'Kategori berdasarkan tanggal ' . $request->tAwal . ' sampai dengan ' . $request->tAkhir . ' cabang ' . $name_cabang->cabang .'.xlsx');
                 }
             } else {
                 if ($pilCabang == 'semua') {
-                    return Excel::download(new DataNominatif, 'Kategori keseluruhan Semua Cabang' . '.xlsx');
+                    return Excel::download(new DataNominatif($seluruh_data, $seluruh_data_proses), 'Kategori keseluruhan Semua Cabang' . '.xlsx');
                 } else {
                     $name_cabang = cabang::select('cabang')->where('id', $pilCabang)->first();
-                    return Excel::download(new DataNominatif, 'Kategori keseluruhan cabang ' . $name_cabang->cabang . '.xlsx');
+                    return Excel::download(new DataNominatif($seluruh_data, $seluruh_data_proses), 'Kategori keseluruhan cabang ' . $name_cabang->cabang . '.xlsx');
                 }
             }
         }
     }
-}
+
