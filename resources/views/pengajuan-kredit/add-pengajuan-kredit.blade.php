@@ -476,8 +476,10 @@ null => 1,
     @endphp
     {{-- level level 2 --}}
     <div class="form-wizard" data-index='{{ $key }}' data-done='true'>
-
         <div class="row">
+            @if ($value->nama == 'Aspek Keuangan')
+                <button>Perhitungan</button>
+            @endif
             @foreach ($dataLevelDua as $item)
             @php
             $idLevelDua = str_replace(' ', '_', strtolower($item->nama));
@@ -636,17 +638,19 @@ null => 1,
                 </div>
             </div>
             @elseif ($item->opsi_jawaban == 'file')
-            <div class="form-group col-md-6">
-                <label for="">{{ $item->nama }}</label>
-                {{-- <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" --}} {{--
-                    id="{{ $idLevelDua }}"> --}}
-                <input type="hidden" name="id_item_file[{{ $item->id }}]" value="{{ $item->id }}" id="">
-                <input type="file" name="upload_file[{{ $item->id }}]" id="{{ $idLevelDua }}" data-id=""
-                    placeholder="Masukkan informasi {{ $item->nama }}" class="form-control limit-size">
-                <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15
-                    MB</span>
-                <span class="filename" style="display: inline;"></span>
-            </div>
+                @if ($value->nama != 'Aspek Keuangan')
+                <div class="form-group col-md-6">
+                    <label for="">{{ $item->nama }}</label>
+                    {{-- <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" --}} {{--
+                        id="{{ $idLevelDua }}"> --}}
+                    <input type="hidden" name="id_item_file[{{ $item->id }}]" value="{{ $item->id }}" id="">
+                    <input type="file" name="upload_file[{{ $item->id }}]" id="{{ $idLevelDua }}" data-id=""
+                        placeholder="Masukkan informasi {{ $item->nama }}" class="form-control limit-size">
+                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15
+                        MB</span>
+                    <span class="filename" style="display: inline;"></span>
+                </div>
+                @endif
             @elseif ($item->opsi_jawaban == 'long text')
             <div class="form-group col-md-6">
                 <label for="">{{ $item->nama }}</label>
@@ -2405,5 +2409,6 @@ null => 1,
         });*/
 </script>
 @include('pengajuan-kredit.partials.create-save-script')
+@include('pengajuan-kredit.modal.perhitungan-modal')
 <script src="{{ asset('') }}js/custom.js"></script>
 @endpush
