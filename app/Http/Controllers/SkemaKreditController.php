@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\SkemaKreditModel;
+use App\Models\MstSkemaKredit;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -30,7 +30,7 @@ class SkemaKreditController extends Controller
         $this->param['pageTitle'] = 'List Skema Kredit';
         $this->param['btnText'] = 'Tambah Skema';
         $this->param['btnLink'] = route('skema-kredit.create');
-        $this->param['dataSkemaKredit'] = SkemaKreditModel::paginate(10);
+        $this->param['dataSkemaKredit'] = MstSkemaKredit::paginate(10);
 
         return \view('skema-kredit.index', $this->param);
     }
@@ -45,7 +45,7 @@ class SkemaKreditController extends Controller
         $this->param['pageTitle'] = 'Tambah Skema';
         $this->param['btnText'] = 'List Skema Kredit';
         $this->param['btnLink'] = route('skema-kredit.index');
-        $this->param['dataSkemaKredit'] = SkemaKreditModel::all();
+        $this->param['dataSkemaKredit'] = MstSkemaKredit::all();
 
         return \view('skema-kredit.create', $this->param);
     }
@@ -59,15 +59,15 @@ class SkemaKreditController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
+            'name' => 'required|unique:mst_skema_kredit,name',
         ], [
             'name.required' => 'Nama produk kredit harus diisi.',
+            'name.unique' => 'Nama produk kredit telah digunakan.'
         ]);
 
         try{
-            SkemaKreditModel::insert([
-                'name' => $request->name,
-                'created_at' => now()
+            MstSkemaKredit::create([
+                'name' => $request->name
             ]);
 
             return redirect()->route('skema-kredit.index')->withStatus('Data berhasil ditambahkan.');
@@ -100,7 +100,7 @@ class SkemaKreditController extends Controller
     public function edit($id)
     {
         $this->param['pageTitle'] = 'Edit Skema Kredit';
-        $this->param['name'] = SkemaKreditModel::find($id);
+        $this->param['name'] = MstSkemaKredit::find($id);
         $this->param['btnText'] = 'List Produk Kredit';
         $this->param['btnLink'] = route('skema-kredit.index');
 
@@ -116,19 +116,22 @@ class SkemaKreditController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $name = SkemaKreditModel::findOrFail($id);
+        $name = MstSkemaKredit::findOrFail($id);
+        $uniqueName = $request->name != '' && $request->name != $name->name ? '|unique:mst_skema_kredit,name' : '';
 
         $validatedData = $request->validate(
             [
-                'name' => 'required',
+                'name' => 'required'.$uniqueName,
             ],
+            [
+                'name.required' => 'Nama produk kredit harus diisi.',
+                'name.unique' => 'Nama produk kredit telah digunakan.'
+            ]
         );
 
         try {
             $name->name = $request->get('name');
             $name->save();
-
-            
         } catch (\Exception $e) {
             return redirect()->back()->withError('Terjadi kesalahan.');
         } catch (\Illuminate\Database\QueryException $e) {
@@ -146,8 +149,9 @@ class SkemaKreditController extends Controller
      */
     public function destroy($id)
     {
+        return $id;
         try {
-            $name = SkemaKreditModel::findOrFail($id);
+            $name = MstSkemaKredit::findOrFail($id);
             $name->delete();
         } catch (Exception $e) {
             return back()->withError('Terjadi kesalahan.');

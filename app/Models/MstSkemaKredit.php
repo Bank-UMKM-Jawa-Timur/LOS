@@ -9,4 +9,8 @@ class MstSkemaKredit extends Model
 {
     use HasFactory;
     protected $table = 'mst_skema_kredit';
+
+    protected $fillable = [
+        'name',
+    ];
 }

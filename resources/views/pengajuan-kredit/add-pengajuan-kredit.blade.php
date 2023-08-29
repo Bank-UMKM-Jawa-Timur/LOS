@@ -476,10 +476,13 @@ null => 1,
     @endphp
     {{-- level level 2 --}}
     <div class="form-wizard" data-index='{{ $key }}' data-done='true'>
+        @if ($value->nama == 'Aspek Keuangan')
+       <div class="mb-3">
+        <button data-target="#perhitunganModal" data-toggle="modal" class="btn btn-danger " type="button">Perhitungan</button>
+       </div>
+        @endif
         <div class="row">
-            @if ($value->nama == 'Aspek Keuangan')
-                <button>Perhitungan</button>
-            @endif
+           
             @foreach ($dataLevelDua as $item)
             @php
             $idLevelDua = str_replace(' ', '_', strtolower($item->nama));
@@ -1068,6 +1071,7 @@ null => 1,
 @push('custom-script')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+
 
 
 
@@ -2285,6 +2289,7 @@ null => 1,
                 }
             }
         })
+        
 
         /*var fotoSp = document.getElementById("foto_sp");
         var selectedFile;
@@ -2354,48 +2359,49 @@ null => 1,
             }
 
         }
+        
+      
+        // var docKebKre = document.getElementById("perhitungan_kebutuhan_kredit");
+        // var selectedFile;
 
-        var docKebKre = document.getElementById("perhitungan_kebutuhan_kredit");
-        var selectedFile;
+        // docKebKre.addEventListener('change', updateImageDisplaydocKebKre);
 
-        docKebKre.addEventListener('change', updateImageDisplaydocKebKre);
+        // function updateImageDisplaydocKebKre() {
+        //     if (docKebKre.files.length == 0) {
+        //         docKebKre.files = selectedFile;
+        //     } else {
+        //         selectedFile = docKebKre.files;
+        //     }
 
-        function updateImageDisplaydocKebKre() {
-            if (docKebKre.files.length == 0) {
-                docKebKre.files = selectedFile;
-            } else {
-                selectedFile = docKebKre.files;
-            }
+        // }
 
-        }
+        // var docKebNet = document.getElementById("perhitungan_net_income");
+        // var selectedFile;
 
-        var docKebNet = document.getElementById("perhitungan_net_income");
-        var selectedFile;
+        // docKebNet.addEventListener('change', updateImageDisplaydocKebNet);
 
-        docKebNet.addEventListener('change', updateImageDisplaydocKebNet);
+        // function updateImageDisplaydocKebNet() {
+        //     if (docKebNet.files.length == 0) {
+        //         docKebNet.files = selectedFile;
+        //     } else {
+        //         selectedFile = docKebNet.files;
+        //     }
 
-        function updateImageDisplaydocKebNet() {
-            if (docKebNet.files.length == 0) {
-                docKebNet.files = selectedFile;
-            } else {
-                selectedFile = docKebNet.files;
-            }
+        // }
 
-        }
+        // var docKebInstll = document.getElementById("perhitungan_installment");
+        // var selectedFile;
 
-        var docKebInstll = document.getElementById("perhitungan_installment");
-        var selectedFile;
+        // docKebInstll.addEventListener('change', updateImageDisplaydocKebInstll);
 
-        docKebInstll.addEventListener('change', updateImageDisplaydocKebInstll);
+        // function updateImageDisplaydocKebInstll() {
+        //     if (docKebInstll.files.length == 0) {
+        //         docKebInstll.files = selectedFile;
+        //     } else {
+        //         selectedFile = docKebInstll.files;
+        //     }
 
-        function updateImageDisplaydocKebInstll() {
-            if (docKebInstll.files.length == 0) {
-                docKebInstll.files = selectedFile;
-            } else {
-                selectedFile = docKebInstll.files;
-            }
-
-        }
+        // }
         /*$('#skema').change(function() {
         if ($(this).val() == 'KKB' && isPincetar) {
                 Swal.fire({
@@ -2407,6 +2413,8 @@ null => 1,
                 })
             }
         });*/
+
+        
 </script>
 @include('pengajuan-kredit.partials.create-save-script')
 @include('pengajuan-kredit.modal.perhitungan-modal')
