@@ -26,6 +26,15 @@
                         @endforeach
                     </select>
                 </div>
+                <div class="form-group">
+                    <label for="limit">Pilih Limit</label>
+                    <select class="form-control" id="limit" name="limit">
+                        <option value="">- Pilih Limit -</option>
+                        @foreach ($limitKredit as $item)
+                            <option value="{{$item->id}}">{{number_format($item->from,0,',','.')}} {{$item->operator}} {{number_format($item->to,0,',','.')}}</option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary" id="btnSkema" onclick="$('#exampleModal').modal('hide')">Simpan</button>

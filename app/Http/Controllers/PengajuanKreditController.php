@@ -23,6 +23,7 @@ use App\Models\LogPengajuan;
 use App\Models\MerkModel;
 use App\Models\MstProdukKredit;
 use App\Models\MstSkemaKredit;
+use App\Models\MstSkemaLimit;
 use App\Models\TipeModel;
 use App\Models\User;
 use App\Services\TemporaryService;
@@ -729,6 +730,7 @@ class PengajuanKreditController extends Controller
             $param['skema'] = $request->skema;
             $param['produkKredit'] = MstProdukKredit::select('id', 'name')->get();
             $param['skemaKredit'] = MstSkemaKredit::select('id', 'name')->get();
+            $param['limitKredit'] = MstSkemaLimit::select('id', 'from', 'to', 'operator')->get();
 
             // dump($param['dataAspek']);
             // dump($param['itemSlik']);
