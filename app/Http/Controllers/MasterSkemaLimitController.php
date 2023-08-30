@@ -80,6 +80,7 @@ class MasterSkemaLimitController extends Controller
             $skemaLimit->skema_kredit_id = $request->skema_kredit;
             $skemaLimit->from = str_replace($replace, '', $request->nominal_awal);
             $skemaLimit->to = str_replace($replace, '', $request->nominal_akhir) ?? 0;
+            $skemaLimit->operator = $request->operator;
             $skemaLimit->save();
             $idSkemaLimit = $skemaLimit->id;
 
@@ -178,6 +179,7 @@ class MasterSkemaLimitController extends Controller
             $skemaLimit->skema_kredit_id = $request->skema_kredit;
             $skemaLimit->from = str_replace($replace, '', $request->nominal_awal);
             $skemaLimit->to = str_replace($replace, '', $request->nominal_akhir) ?? 0;
+            $skemaLimit->operator = $request->operator;
             $skemaLimit->save();
 
             foreach($request->field as $key => $item){

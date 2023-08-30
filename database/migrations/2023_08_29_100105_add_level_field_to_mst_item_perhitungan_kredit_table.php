@@ -14,7 +14,7 @@ class AddLevelFieldToMstItemPerhitunganKreditTable extends Migration
     public function up()
     {
         Schema::table('mst_item_perhitungan_kredit', function (Blueprint $table) {
-            $table->smallInteger('level', false, true)->after('skema_limit_id');
+            $table->smallInteger('level', false, true)->after('skema_kredit_limit_id');
             $table->bigInteger('parent_id', false, true)->after('level');
         });
     }

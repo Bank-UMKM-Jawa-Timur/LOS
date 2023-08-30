@@ -5,6 +5,7 @@
             <th class="text-center">Skema Kredit</th>
             <th class="text-center">Nominal Dari</th>
             <th class="text-center">Nominal Sampai</th>
+            <th class="text-center">Operator</th>
             <th>Aksi</th>
         </thead>
         <tbody>
@@ -18,6 +19,7 @@
                     <td class="text-center">{{ $item->name }}</td>
                     <td class="text-center">{{ number_format($item->from, 0, '.', '.') }}</td>
                     <td class="text-center">{{ number_format($item->to, 0, '.', '.') ?? '0' }}</td>
+                    <td class="text-center">{{ $item->operator }}</td>
                     <td class="text-center">
                         <div class="form-inline btn-action text-center">
                             <a href="{{ route('skema-limit.show', $item->id) }}" class="mr-2">
