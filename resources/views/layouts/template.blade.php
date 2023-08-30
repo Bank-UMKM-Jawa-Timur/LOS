@@ -99,8 +99,8 @@
                                     <a class="dropdown-item" href="{{ route('tipe.index') }}">Master Tipe</a>
                                     <a class="dropdown-item" href="{{ route('index-session') }}">Master Session</a>
                                     <a class="dropdown-item" href="{{ route('index-api-session') }}">Master API Session</a>
-                                    <a class="dropdown-item" href="{{ route('produk-kredit.index') }}">Master Produk Kredit</a>
                                     <a class="dropdown-item" href="{{ route('skema-kredit.index') }}">Master Skema Kredit</a>
+                                    <a class="dropdown-item" href="{{ route('produk-kredit.index') }}">Master Produk Kredit</a>
                                     <a class="dropdown-item" href="{{ route('skema-limit.index') }}">Master Skema Limit</a>
                                 </div>
                             </li>

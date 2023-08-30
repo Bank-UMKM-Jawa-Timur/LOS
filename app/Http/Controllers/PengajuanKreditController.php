@@ -21,6 +21,8 @@ use App\Models\JawabanTemp;
 use App\Models\JawabanTempModel;
 use App\Models\LogPengajuan;
 use App\Models\MerkModel;
+use App\Models\MstProdukKredit;
+use App\Models\MstSkemaKredit;
 use App\Models\TipeModel;
 use App\Models\User;
 use App\Services\TemporaryService;
@@ -723,7 +725,10 @@ class PengajuanKreditController extends Controller
             $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
             $param['dataMerk'] = MerkModel::all();
 
+            $param['produk'] = $request->produk;
             $param['skema'] = $request->skema;
+            $param['produkKredit'] = MstProdukKredit::select('id', 'name')->get();
+            $param['skemaKredit'] = MstSkemaKredit::select('id', 'name')->get();
 
             // dump($param['dataAspek']);
             // dump($param['itemSlik']);

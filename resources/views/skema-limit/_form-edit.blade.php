@@ -27,6 +27,19 @@
     <p>Detail Item</p>
 
     <div id="row-field">
+        <div id="parent-row" class="row">
+            <div class="col-md-12">
+                <label for="">Field</label>
+            </div>
+            <div class="form-group col-md-6">
+                <input type="hidden" name="id_item[]" id="id-item" value="">
+                <input type="text" maxlength="50" name="field[]" class="form-control" placeholder="Masukkan nama field" value="" required>
+            </div>
+            <div class="form-group col-md-6">
+                <button type="button" class="btn btn-success plus"> <i class="fa fa-plus"></i> </button>
+                <button type="button" class="btn btn-danger minus"> <i class="fa fa-minus"></i> </button>
+            </div>
+        </div>
         @foreach ($itemPerhitunganKredit as $item)
             <div id="parent-row" class="row">
                 <div class="col-md-12">
