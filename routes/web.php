@@ -13,6 +13,7 @@ use \App\Http\Controllers\MerkController;
 use \App\Http\Controllers\TipeController;
 use \App\Http\Controllers\CetakSuratController;
 use \App\Http\Controllers\LogPengajuanController;
+use App\Http\Controllers\MasterSkemaLimitController;
 use App\Http\Controllers\ProdukKreditController;
 use App\Http\Controllers\SkemaKreditController;
 
@@ -109,6 +110,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('master-item', MasterItemController::class);
         Route::resource('produk-kredit', ProdukKreditController::class);
         Route::resource('skema-kredit', SkemaKreditController::class);
+        Route::resource('skema-limit', MasterSkemaLimitController::class);
         Route::get('/reset-sessions', [UserController::class, 'indexSession'])->name('index-session');
         Route::post('/reset-session/{id}', [UserController::class, 'resetSession'])->name('reset-session');
         Route::get('/reset-api-sessions', [UserController::class, 'indexAPISession'])->name('index-api-session');
