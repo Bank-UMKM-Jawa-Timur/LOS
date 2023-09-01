@@ -110,6 +110,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('master-item', MasterItemController::class);
         Route::resource('produk-kredit', ProdukKreditController::class);
         Route::resource('skema-kredit', SkemaKreditController::class);
+        //Route::get('')
         Route::resource('skema-limit', MasterSkemaLimitController::class);
         Route::get('/reset-sessions', [UserController::class, 'indexSession'])->name('index-session');
         Route::post('/reset-session/{id}', [UserController::class, 'resetSession'])->name('reset-session');

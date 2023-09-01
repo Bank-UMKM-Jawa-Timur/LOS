@@ -478,7 +478,7 @@ null => 1,
     <div class="form-wizard" data-index='{{ $key }}' data-done='true'>
         @if ($value->nama == 'Aspek Keuangan')
        <div class="mb-3">
-        <button data-target="#perhitunganModal" data-toggle="modal" class="btn btn-danger " type="button">Perhitungan</button>
+        <button class="btn btn-danger " type="button" id="btn-perhitungan">Perhitungan</button>
        </div>
         @endif
         <div class="row">
@@ -2419,4 +2419,72 @@ null => 1,
 @include('pengajuan-kredit.partials.create-save-script')
 @include('pengajuan-kredit.modal.perhitungan-modal')
 <script src="{{ asset('') }}js/custom.js"></script>
+<script>
+    function calcForm() {
+        var allFormData = [];
+        var allIdInput = [];
+        $('#form-perhitungan input').each(function() {
+            var id = $(this).attr('id')
+            var formula = $(this).data('formula'); // If your forms have IDs, otherwise you can skip this
+            var detail = $(this).data('detail')
+            allIdInput.push(id)
+            if (formula) {
+                // calculate by formula
+                formula = formula.replace()
+            }
+            var formData = $(this).serializeArray();
+            allFormData.push({
+                id: id,
+                formula: formula,
+                data: formData,
+                detail: detail,
+            });
+        });
+        console.log(allFormData)
+        $.each(allFormData, function(i, item) {
+            var formula = item.formula
+            var detail = item.detail
+            var id_formula = item.id
+            if (formula) {
+                // check if have detail
+                if (formula.includes('sum')) {
+                    var child_id = formula.replaceAll('sum(', '')
+                    child_id = child_id.replaceAll(')', '')
+                    if (detail) {
+                        var parent_content = $(`#${id_formula}`).parent()
+                        var table = parent_content.find('table')
+                        var input = table.find(`[id^="${child_id}"]`)
+                        var result = 0
+                        input.each(function() {
+                            var val = parseInt($(this).val())
+                            val = isNaN(val) ? 0 : val
+                            result += val
+                        })
+                        $(`#${id_formula}`).val(isNaN(result) ? '' : result)
+                    }
+                }
+                else {
+                    $.each(allIdInput, function(j, id) {
+                        if (formula.includes(id)) {
+                            var input_val = parseInt($('#'+id).val())
+                            input_val = isNaN(input_val) ? 0 : input_val
+                            console.log(input_val)
+                            formula = formula.replaceAll(id, input_val)
+                            console.log(id)
+                        }
+                    })
+                    console.log('hasil formula')
+                    console.log(formula)
+                    var result = calculateFormula(formula)
+                    $(`#${id_formula}`).val(result)
+                }
+            }
+        })
+    }
+
+    $("#btn-perhitungan").on('click', function() {
+        $("#perhitunganModal").modal('show')
+        calcForm()
+    })
+</script>
 @endpush

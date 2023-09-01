@@ -21,6 +21,7 @@ use App\Models\JawabanTemp;
 use App\Models\JawabanTempModel;
 use App\Models\LogPengajuan;
 use App\Models\MerkModel;
+use App\Models\MstItemPerhitunganKredit;
 use App\Models\MstProdukKredit;
 use App\Models\MstSkemaKredit;
 use App\Models\MstSkemaLimit;
