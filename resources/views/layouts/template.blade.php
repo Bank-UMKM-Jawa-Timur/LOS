@@ -262,6 +262,17 @@
             );
             console.log('bisa');
         });
+        
+        function calculateFormula(formula) {
+            console.log('calculate with formula')
+            console.log(formula)
+            if (formula.includes('inp_'))
+                return ''
+            else {
+                var result = formula.replace(/[^-()\d/*+.]/g, '');
+                return eval(result);
+            }
+        }
     </script>
 
     @stack('custom-script')
