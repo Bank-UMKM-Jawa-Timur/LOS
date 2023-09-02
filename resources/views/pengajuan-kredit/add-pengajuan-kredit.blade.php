@@ -1034,191 +1034,7 @@ null => 1,
                     $read_lev1 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)->where('level', 1)->get();
                 @endphp
                 <div class="row m-2 result-aspek-keuangan">
-                    <div class="col">
-                    <!-- content -->
-                        <!-- pilih bulan -->
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group mb-4">
-                                    <label for="inputHarta" class="font-weight-semibold">Pilih Periode :</label>
-                                    <select name="" style="width: 100%; height: 40px" class="select-date" disabled>
-                                        <option selected>--Pilih Bulan--</option>
-                                        <option value="1">Januari</option>
-                                        <option value="2">Februari</option>
-                                        <option value="3">Maret</option>
-                                        <option value="4">April</option>
-                                        <option value="5">Mei</option>
-                                        <option value="6">Juni</option>
-                                        <option value="7">Juli</option>
-                                        <option value="8">Agustus</option>
-                                        <option value="9">September</option>
-                                        <option value="10">Oktober</option>
-                                        <option value="11">November</option>
-                                        <option value="12">Desember</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- end pilih bulan -->
-                        <!-- form bagian level 1 -->
-                        @foreach ($read_lev1 as $read_item)
-                            <div class="head">
-                                <h4 class="mb-4 font-weight-bold" style="letter-spacing: -1px">
-                                    {{$read_item->field}}
-                                </h4>
-                            </div>
-                            <!-- form bagian level 2 -->
-                            @php
-                            $read_lev2 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
-                                                                        ->where('level', 2)
-                                                                        ->where('parent_id', $read_item->id)
-                                                                        ->get();
-                            @endphp
-                            @foreach ($read_lev2 as $read_item2)
-                                @php
-                                $lev3 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
-                                                                            ->where('level', 3)
-                                                                            ->where('parent_id', $read_item2->id)
-                                                                            ->get();
-                                @endphp
-                                <div class="card mb-4">
-                                    <h5 class="card-header">{{$read_item2->field}}</h5>
-                                    <div class="card-body">
-                                        <!-- form bagian level 3 -->
-                                        @foreach ($lev3 as $read_item3)
-                                        <div class="form-group">
-                                            <label for="inp_{{$read_item3->id}}" class="font-weight-semibold">{{$read_item3->field}}</label>
-                                            <div class="input-group">
-                                                <input type="text" class="form-control inp_{{$read_item3->id}}" name="inp_{{$read_item3->id}}"
-                                                id="inp_{{$read_item3->id}}" data-formula="{{$read_item3->formula}}" data-detail="{{$read_item3->have_detail}}"
-                                                readonly />
-                                                @if ($read_item3->have_detail)
-                                                    @php
-                                                        $lev4 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
-                                                                                                    ->where('level', 4)
-                                                                                                    ->where('parent_id', $read_item3->id)
-                                                                                                    ->get();
-                                                    @endphp
-                                                    <div class="table-responsive">
-                                                        <table class="table" id="table_item" style="box-sizing: border-box">
-                                                            <thead>
-                                                                <tr>
-                                                                    @foreach ($lev4 as $item4)
-                                                                        <th scope="col">{{$item4->field}}</th>
-                                                                    @endforeach
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr>
-                                                                    @foreach ($lev4 as $item4)
-                                                                        <td id="detail-item">
-                                                                            <input class="form-control" type="text" name="inp_{{$item4->id}}[]"
-                                                                            id="inp_{{$item4->id}}[]" data-formula="{{$item4->formula}}" readonly/>
-                                                                        </td>
-                                                                    @endforeach
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                @endif
-                                                @if ($read_item3->add_on)
-                                                <div class="input-group-append">
-                                                    <span class="input-group-text" id="basic-addon2">{{$read_item3->add_on}}</span>
-                                                </div>
-                                                @endif
-                                            </div>
-                                        </div>
-                                        @endforeach
-                                        <!-- end form bagian level 3 -->
-                                    </div>
-                                </div>
-                            @endforeach
-                            <!-- end form bagian level 2 -->
-                        @endforeach
-                        <!-- end form bagian level 1 -->
-                        <!-- form bagian level 3 no parent -->
-                        @php
-                            $read_lev3NoParent = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
-                                                                                ->where('level', 3)
-                                                                                ->whereNull('parent_id')
-                                                                                ->get();
-                        @endphp
-                        <div class="form-row">
-                            @foreach ($read_lev3NoParent as $read_item3NoParent)
-                                <div class="col-6">
-                                    <div class="form-group form-field">
-                                        <label for="inp_{{$read_item3NoParent->id}}" class="font-weight-semibold">{{$read_item3NoParent->field}}</label>
-                                        <div class="input-group">
-                                        <input type="text" class="form-control inp_{{$read_item3NoParent->id}}" name="inp_{{$read_item3NoParent->id}}"
-                                            id="inp_{{$read_item3NoParent->id}}" data-formula="{{$read_item3NoParent->formula}}" readonly />
-                                            @if ($read_item3NoParent->add_on)
-                                            <div class="input-group-append">
-                                                <span class="input-group-text" id="basic-addon2">{{$read_item3NoParent->add_on}}</span>
-                                            </div>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                        <!-- end form bagian level 3 no parent -->
-                        <!-- form bagian level 2 no parent -->
-                            @php
-                            $read_lev2NoParent = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
-                                                                        ->where('level', 2)
-                                                                        ->whereNull('parent_id')
-                                                                        ->get();
-                            @endphp
-                            @foreach ($read_lev2NoParent as $read_item2NoParent)
-                            @php
-                                $read_lev3NoParent = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
-                                                                            ->where('level', 3)
-                                                                            ->where('parent_id', $read_item2NoParent->id)
-                                                                            ->get();
-                            @endphp
-                            <div class="card mb-4">
-                                <h5 class="card-header">{{$read_item2NoParent->field}}</h5>
-                                <div class="card-body">
-                                    <!-- form bagian level 3 -->
-                                    @foreach ($read_lev3NoParent as $read_item3NoParent)
-                                    <div class="form-group form-field">
-                                        <label for="inp_{{$read_item3NoParent->id}}" class="font-weight-semibold">{{$read_item3NoParent->field}}</label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control inp_{{$read_item3NoParent->id}}" name="inp_{{$read_item3NoParent->id}}"
-                                            id="inp_{{$read_item3NoParent->id}}" data-formula="{{$read_item3NoParent->formula}}" readonly />
-                                            @if ($read_item3NoParent->add_on)
-                                            <div class="input-group-append">
-                                                <span class="input-group-text" id="basic-addon2">{{$read_item3NoParent->add_on}}</span>
-                                            </div>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    @endforeach
-                                    <!-- end form bagian level 3 -->
-                                </div>
-                            </div>
-                            @endforeach
-                            <!-- end form bagian level 2 no parent -->
-                        <!-- form bagian level 3 no parent -->
-                        @php
-                            $read_lev3NoParent = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
-                                                                                ->where('level', 3)
-                                                                                ->where('parent_id', 0)
-                                                                                ->get();
-                        @endphp
-                        <div class="form-row">
-                            @foreach ($read_lev3NoParent as $read_item3NoParent)
-                                <div class="col-6">
-                                    <div class="form-group form-field">
-                                        <label for="inp_{{$read_item3NoParent->id}}" class="font-weight-semibold">{{$read_item3NoParent->field}}</label>
-                                        <input type="text" class="form-control inp_{{$read_item3NoParent->id}}" name="inp_{{$read_item3NoParent->id}}"
-                                            id="inp_{{$read_item3NoParent->id}}" data-formula="{{$read_item3NoParent->formula}}" readonly />
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                        <!-- end form bagian level 3 no parent -->
-                    </div>
+                    <div class="col"></div>
                 </div>
             @endif
 
@@ -2711,18 +2527,25 @@ null => 1,
                     }
                 }
                 else {
-                    $.each(allIdInput, function(j, id) {
-                        if (formula.includes(id)) {
-                            var input_val = parseInt($('#'+id).val())
-                            input_val = isNaN(input_val) ? 0 : input_val
-                            console.log(input_val)
-                            formula = formula.replaceAll(id, input_val)
-                            console.log(id)
-                        }
-                    })
+                    if (formula.includes('inp')) {
+                        $.each(allIdInput, function(j, id) {
+                            if (formula.includes(id)) {
+                                var input_val = $(`#${id}`).val().replaceAll('.', '')
+                                input_val = isNaN(input_val) ? 0 : input_val
+                                formula = formula.replaceAll(id, input_val)
+                            }
+                        })
+                    }
+                    // check if formula contain id from other input
+                    var other_id = alphaOnly(formula)
+                    if (other_id) {
+                        var input_val = $(`#${other_id}`).val().replaceAll('.', '')
+                        formula = formula.replaceAll(other_id, input_val)
+                    }
                     console.log('hasil formula')
                     console.log(formula)
                     var result = calculateFormula(formula)
+                    result = formatrupiah(result.toString())
                     $(`#${id_formula}`).val(result)
                 }
             }

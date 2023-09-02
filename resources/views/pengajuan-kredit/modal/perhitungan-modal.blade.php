@@ -17,8 +17,8 @@
               <form id="form-perhitungan" method="" action="">
                 {{--  <div class="row">  --}}
                   <!-- content -->
-                    <!-- pilih bulan -->
                     <div class="row">
+                      <!-- pilih bulan -->
                       <div class="col-md-6">
                         <div class="form-group mb-4">
                           <label for="inputHarta" class="font-weight-semibold">Pilih Periode :</label>
@@ -39,8 +39,28 @@
                             </select>
                         </div>
                       </div>
+                      <!-- end pilih bulan -->
+                      <!-- pilih tahun -->
+                      <div class="col-md-6">
+                          <div class="form-group mb-4">
+                              @php
+                                  $start_year = 2010;
+                                  $end_year = date('Y');
+                              @endphp
+                              <label for="periode_tahun" class="font-weight-semibold">Pilih Periode Tahun :</label>
+                              <select name="periode_tahun" id="periode_tahun" style="width: 100%; height: 40px" class="select-date">
+                                  <option selected>--Pilih Tahun--</option>
+                                  @for ($i=0;$start_year <= $end_year;$i--)
+                                    @php
+                                      $year = $end_year--;
+                                    @endphp
+                                  <option value="{{$year}}">{{$year}}</option>
+                                  @endfor
+                              </select>
+                          </div>
+                      </div>
+                      <!-- end pilih tahun -->
                     </div>
-                    <!-- end pilih bulan -->
                     <!-- form bagian level 1 -->
                     @foreach ($lev1 as $item)
                       <div class="head">
@@ -72,7 +92,7 @@
                                     <div class="form-group">
                                         <label for="inp_{{$item3->id}}" class="font-weight-semibold">{{$item3->field}}</label>
                                         <div class="input-group">
-                                          <input type="text" class="form-control inp_{{$item3->id}}" name="inp_{{$item3->id}}"
+                                          <input type="text" class="form-control rupiah inp_{{$item3->id}}" name="inp_{{$item3->id}}"
                                             id="inp_{{$item3->id}}" data-formula="{{$item3->formula}}" data-detail="{{$item3->have_detail}}"
                                             @if ($item3->readonly) readonly @endif />
                                           @if ($item3->have_detail)
@@ -104,7 +124,7 @@
                                                             <tr>
                                                                 @foreach ($lev4 as $item4)
                                                                   <td id="detail-item">
-                                                                      <input class="form-control" type="text" name="inp_{{$item4->id}}[]"
+                                                                      <input class="form-control rupiah" type="text" name="inp_{{$item4->id}}[]"
                                                                         id="inp_{{$item4->id}}[]" data-formula="{{$item4->formula}}" onkeyup="calcForm()"/>
                                                                   </td>
                                                                 @endforeach
@@ -180,20 +200,44 @@
                             <h5 class="card-header">{{$item2NoParent->field}}</h5>
                             <div class="card-body">
                               <!-- form bagian level 3 -->
-                              @foreach ($lev3NoParent as $item3NoParent)
-                                <div class="form-group form-field">
-                                    <label for="inp_{{$item3NoParent->id}}" class="font-weight-semibold">{{$item3NoParent->field}}</label>
-                                    <div class="input-group">
-                                      <input type="text" class="form-control inp_{{$item3NoParent->id}}" name="inp_{{$item3NoParent->id}}"
-                                        id="inp_{{$item3NoParent->id}}" data-formula="{{$item3NoParent->formula}}" @if ($item3NoParent->readonly) readonly @endif />
-                                      @if ($item3NoParent->add_on)
-                                        <div class="input-group-append">
-                                            <span class="input-group-text" id="basic-addon2">{{$item3NoParent->add_on}}</span>
-                                        </div>
-                                      @endif
-                                    </div>
-                                </div>
-                              @endforeach
+                              @if ($item2NoParent->is_form)
+                                @foreach ($lev3NoParent as $item3NoParent)
+                                  <div class="form-group form-field">
+                                      <label for="inp_{{$item3NoParent->id}}" class="font-weight-semibold">{{$item3NoParent->field}}</label>
+                                      <div class="input-group">
+                                        <input type="text" class="form-control inp_{{$item3NoParent->id}}" name="inp_{{$item3NoParent->id}}"
+                                          id="inp_{{$item3NoParent->id}}" data-formula="{{$item3NoParent->formula}}" @if ($item3NoParent->readonly) readonly @endif />
+                                        @if ($item3NoParent->add_on)
+                                          <div class="input-group-append">
+                                              <span class="input-group-text" id="basic-addon2">{{$item3NoParent->add_on}}</span>
+                                          </div>
+                                        @endif
+                                      </div>
+                                  </div>
+                                @endforeach
+                              @else
+                                <table>
+                                  @foreach ($lev3NoParent as $item3NoParent)
+                                    <tr>
+                                      <td class="pr-4">
+                                        <label for="inp_{{$item3NoParent->id}}" class="font-weight-semibold">{{$item3NoParent->field}}</label>
+                                      </td>
+                                      <td width="20">
+                                        <label class="font-weight-semibold">:</label>
+                                      </td>
+                                      <td>
+                                        <input type="hidden" name="inpLevelTiga[{{$item3NoParent->id}}]" id="inp_{{$item3NoParent->id}}">
+                                        <label class="font-weight-normal" id="inp_{{$item3NoParent->id}}">0</label>
+                                      </td>
+                                      {{--  <div class="form-group form-field">
+                                          <label for="inp_{{$item3NoParent->id}}" class="font-weight-semibold">{{$item3NoParent->field}}</label>
+                                          <label id="inp_{{$item3NoParent->id}}"></label>
+                                          <input type="hidden" name="inp_{{$item3NoParent->id}}" id="inp_{{$item3NoParent->id}}">
+                                      </div>  --}}
+                                    </tr>
+                                  @endforeach
+                              </table>
+                              @endif
                               <!-- end form bagian level 3 -->
                             </div>
                         </div>
@@ -280,6 +324,27 @@
       var id = $(this).attr('id');
       calcForm()
   })
+  $('.rupiah').keyup(function(e) {
+      var input = $(this).val()
+      $(this).val(formatrupiah(input))
+  });
+
+  function formatrupiah(angka, prefix) {
+      var number_string = angka.replace(/[^,\d]/g, '').toString(),
+          split = number_string.split(','),
+          sisa = split[0].length % 3,
+          rupiah = split[0].substr(0, sisa),
+          ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+      // tambahkan titik jika yang di input sudah menjadi angka ribuan
+      if (ribuan) {
+          separator = sisa ? '.' : '';
+          rupiah += separator + ribuan.join('.');
+      }
+
+      rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+      return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
+  }
 </script>
 <style>
   .modal-lg {
