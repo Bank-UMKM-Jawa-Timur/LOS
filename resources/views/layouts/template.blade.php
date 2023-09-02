@@ -264,14 +264,26 @@
         });
         
         function calculateFormula(formula) {
-            console.log('calculate with formula')
-            console.log(formula)
-            if (formula.includes('inp_'))
-                return ''
-            else {
-                var result = formula.replace(/[^-()\d/*+.]/g, '');
-                return eval(result);
+            try {
+                console.log('calculate with formula')
+                console.log(formula)
+                if (formula.includes('inp_'))
+                    return ''
+                else {
+                    var result = formula.replace(/[^-()\d/*+.]/g, '');
+                    return eval(result);
+                }
             }
+            catch (e) {
+                console.log(e)
+                return 0
+            }
+        }
+
+        function alphaOnly(string) {
+            string = string.replace(/[^A-Za-z_]/g, '');
+
+            return string;
         }
     </script>
 
