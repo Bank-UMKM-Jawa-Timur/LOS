@@ -1235,6 +1235,9 @@ class PengajuanKreditController extends Controller
             $addPengajuan->id_cabang = auth()->user()->id_cabang;
             $addPengajuan->progress_pengajuan_data = $request->progress;
             $addPengajuan->skema_kredit = $request->skema_kredit;
+            $addPengajuan->produk_kredit_id = $request->produk_kredit_id;
+            $addPengajuan->skema_kredit_id = $request->skema_kredit_id;
+            $addPengajuan->skema_limit_id = $request->skema_limit_id ?? null;
             $addPengajuan->save();
             $id_pengajuan = $addPengajuan->id;
 
@@ -3562,12 +3565,18 @@ class PengajuanKreditController extends Controller
         // return $param['dataPO'];
 
         $param['skema'] = $request->skema ?? $param['duTemp']?->skema_kredit;
+        $param['produk'] = $request->produk;
+        $param['skemaId'] = $request->skema;
+        $param['limit'] = $request->limit;
+        $param['produkKredit'] = MstProdukKredit::select('id', 'name')->get();
+        $param['skemaKredit'] = MstSkemaKredit::select('id', 'name')->get();
+        $param['limitKredit'] = MstSkemaLimit::select('id', 'from', 'to', 'operator')->get();
 
         // dump($param['dataAspek']);
         // dump($param['itemSlik']);
         // dump($param['itemSP']);
         // dump($param['dataPertanyaanSatu']);
-        // dd($param['itemP']);
+        // dd($param['duTemp']);
         return view('pengajuan-kredit.continue-draft', $param);
     }
 
