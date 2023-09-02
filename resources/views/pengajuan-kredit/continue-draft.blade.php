@@ -114,6 +114,10 @@ null => 1,
             {{-- Input hidden for Skema Kredit --}}
             <input type="hidden" name="skema_kredit" id="skema_kredit" @if ($skema !=null) value="{{ $skema ?? '' }}"
                 @elseif($duTemp->skema_kredit != null) value="{{ $duTemp->skema_kredit ?? '' }}" @endif>
+            <input type="hidden" name="produk_kredit_id" id="produk_kredit" @if ($produk !=null) value="{{ $produk ?? '' }}" @elseif($duTemp->produk_kredit_id != null) value="{{ $duTemp->produk_kredit_id ?? '' }}" @endif>
+            <input type="hidden" name="skema_kredit_id" @if($duTemp->skema_kredit_id != null) value="{{ $duTemp->skema_kredit_id ?? '' }}" @endif>
+            <input type="hidden" name="skema_limit_id" @if ($limit != null) value="{{ $limit }}" @elseif($duTemp->skema_limit_id != null) value="{{ $duTemp->skema_limit_id ?? '' }}" @endif>
+            
 
             <div class="form-group col-md-6">
                 <label for="">Nama Lengkap</label>

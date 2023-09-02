@@ -81,7 +81,7 @@ null => 1,
     <div class="form-wizard active" data-index='0' data-done='true' id="wizard-data-umum">
         <div class="row">
             {{-- Input hidden for Produk Kredit --}}
-            <input type="hidden" name="nama_produk" id="skema_kredit" @if($skema != null) value="{{ $skema }}" @endif>
+            <input type="hidden" name="skema_kredit" id="skema_kredit" @if($skema != null) value="{{ $skema }}" @endif>
             <input type="hidden" name="produk_kredit_id" id="produk_kredit" @if ($produk !=null) value="{{ $produk ?? '' }}" @endif>
             <input type="hidden" name="skema_kredit_id" @if ($skema != null) value="{{ $skemaId }}" @endif>
             <input type="hidden" name="skema_limit_id" @if ($limit != null) value="{{ $limit }}" @endif>
