@@ -143,6 +143,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/get-merk-kendaraan', [PengajuanKreditController::class, 'getMerkKendaraan'])->name('get-merk-kendaraan');
     Route::get('/get-tipe-kendaraan', [PengajuanKreditController::class, 'getTipeByMerk'])->name('get-tipe-kendaraan');
+
+    Route::get('/get-skema-kredit', [PengajuanKreditController::class, 'getSkemaKredit'])->name('get-skema-kredit');
+    Route::get('/get-skema-limit', [PengajuanKreditController::class, 'getSkemaLimit'])->name('get-skema-limit');
 });
 
 require __DIR__ . '/auth.php';

@@ -76,9 +76,11 @@ null => 1,
 
     <div class="form-wizard active" data-index='0' data-done='true' id="wizard-data-umum">
         <div class="row">
-            {{-- Input hidden for Skema Kredit --}}
-            <input type="hidden" name="skema_kredit" id="skema_kredit" @if ($skema !=null) value="{{ $skema ?? '' }}"
-                @endif>
+            {{-- Input hidden for Produk Kredit --}}
+            <input type="hidden" name="nama_produk" id="skema_kredit" @if($skema != null) value="{{ $skema }}" @endif>
+            <input type="hidden" name="produk_kredit_id" id="produk_kredit" @if ($produk !=null) value="{{ $produk ?? '' }}" @endif>
+            <input type="hidden" name="skema_kredit_id" @if ($skema != null) value="{{ $skemaId }}" @endif>
+            <input type="hidden" name="skema_limit_id" @if ($limit != null) value="{{ $limit }}" @endif>
 
             <div class="form-group col-md-6">
                 <label for="">Nama Lengkap</label>
@@ -2414,7 +2416,47 @@ null => 1,
             }
         });*/
 
-        
+        $("#produk").on("change", function(e){
+            var value = $(this).val();
+
+            $.ajax({
+                type: "GET",
+                url: "{{ route('get-skema-kredit') }}?produkId="+value,
+                dataType: "json",
+                success: function(res){
+                    $("#skema").empty();
+                    $("#skema").append(`<option value="">- Pilih Skema Kredit -</option>`)
+                    $("#limit").empty();
+                    $("#limit").append(`<option value="">- Pilih Limit -</option>`)
+                    
+                    if(res){
+                        $.each(res, function(i, v){
+                            $("#skema").append(`<option value="${v.id}">${v.name}</option>`)
+                        })
+                    }
+                }
+            })
+        });
+
+        $("#skema").change(function(e){
+            var value = $(this).val()
+
+            $.ajax({
+                type: "GET",
+                url: "{{ route('get-skema-limit') }}?skemaId="+value,
+                dataType: "JSON",
+                success: function(res){
+                    if(res != null){
+                        $("#limit").empty();
+                        $("#limit").append(`<option value="">- Pilih Limit -</option>`)
+
+                        $.each(res, function(i, v){
+                            $("#limit").append(`<option value="${v.id}">${formatrupiah(v.from.toString())} - ${formatrupiah(v.to.toString())}</option>`)
+                        })
+                    }
+                }
+            })
+        })
 </script>
 @include('pengajuan-kredit.partials.create-save-script')
 @include('pengajuan-kredit.modal.perhitungan-modal')

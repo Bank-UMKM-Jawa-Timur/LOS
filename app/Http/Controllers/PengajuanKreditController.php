@@ -727,10 +727,12 @@ class PengajuanKreditController extends Controller
             $param['dataMerk'] = MerkModel::all();
 
             $param['produk'] = $request->produk;
-            $param['skema'] = $request->skema;
+            $param['skemaId'] = $request->skema;
+            $param['limit'] = $request->limit;
             $param['produkKredit'] = MstProdukKredit::select('id', 'name')->get();
             $param['skemaKredit'] = MstSkemaKredit::select('id', 'name')->get();
             $param['limitKredit'] = MstSkemaLimit::select('id', 'from', 'to', 'operator')->get();
+            $param['skema'] = MstProdukKredit::find($param['produk'])->name ?? null;
 
             // dump($param['dataAspek']);
             // dump($param['itemSlik']);
@@ -3784,5 +3786,36 @@ class PengajuanKreditController extends Controller
         } else {
             return redirect()->route('pengajuan-kredit.index')->withErrors('Data dengan ID tersebut tidak ditemukan.');
         }
+    }
+
+    public function getSkemaKredit(Request $request){
+        $produkId = $request->get('produkId');
+        $produk = MstProdukKredit::find($produkId);
+        
+        if($produk->name == 'KKB' || $produk->name == 'Talangan Umroh'){
+            // return $produk; 
+            $data = MstSkemaKredit::where('name', "like", '%konsumtif%')
+                ->get();
+        } else {
+            $data = MstSkemaKredit::where('name', "like", '%modal kerja%')
+                ->orWhere('name', "like", '%investasi%')
+                ->get();
+        }
+
+        return response()->json($data);
+    }
+
+    public function getSkemaLimit(Request $request){
+        $skemaId = $request->get('skemaId');
+        $skema = MstSkemaKredit::find($skemaId);
+
+        if($skema->name != 'Konsumtif'){
+            $data = MstSkemaLimit::where('skema_kredit_id', $skemaId)
+                ->get();
+        } else {
+            $data = null;
+        }
+
+        return response()->json($data);
     }
 }
