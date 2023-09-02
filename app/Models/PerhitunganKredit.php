@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class PerhitunganKredit extends Model
 {
     use HasFactory;
+
+    protected $table = 'perhitungan_kredit';
+    protected $guarded = 'id';
+    protected $fillable = [];
 }

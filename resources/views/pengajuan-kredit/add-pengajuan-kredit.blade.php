@@ -2528,5 +2528,26 @@ null => 1,
         $("#perhitunganModal").modal('show')
         calcForm()
     })
+
+    $("#btnSimpanPerhitungan").on('click',function(e){
+        console.log('test');
+        let data = {
+            idCalonNasabah: $("id_nasabah").val()
+        }
+        $("#perhitunganModal input").each(function(){
+            let input = $(this);
+
+            data[input.attr("name")] = input.val();
+            data['idCalonNasabah'] = $("#id_nasabah").val();
+        })
+        $.ajax({
+            url: "{{ route('pengajuan-kredit.save-data-perhitungan-temp') }}",
+            type: "POST",
+            data: data,
+            success: function(res){
+                console.log(res);
+            }
+        });
+    })
 </script>
 @endpush

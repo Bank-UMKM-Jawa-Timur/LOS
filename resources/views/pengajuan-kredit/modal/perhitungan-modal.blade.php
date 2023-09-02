@@ -61,9 +61,9 @@
                             <!-- form bagian level 3 -->
                             @foreach ($lev3 as $item3)
                               <div class="form-group">
-                                  <label for="inp_{{$item3->id}}" class="font-weight-semibold">{{$item3->field}}</label>
+                                  <label for="inpLevelTiga[{{$item3->id}}]" class="font-weight-semibold">{{$item3->field}}</label>
                                   <div class="input-group">
-                                    <input type="text" class="form-control inp_{{$item3->id}}" name="inp_{{$item3->id}}"
+                                    <input type="text" class="form-control inp_{{$item3->id}}" name="inpLevelTiga[{{$item3->id}}]"
                                       id="inp_{{$item3->id}}" data-formula="{{$item3->formula}}" data-detail="{{$item3->have_detail}}"
                                       @if ($item3->readonly) readonly @endif />
                                     @if ($item3->have_detail)
@@ -93,9 +93,14 @@
                                                   </thead>
                                                   <tbody>
                                                       <tr>
+                                                        @php
+                                                            $indexInpLevelEmpatId = 0;
+                                                            $indexInpLevelEmpat = 0;
+                                                        @endphp
                                                           @foreach ($lev4 as $item4)
                                                             <td id="detail-item">
-                                                                <input class="form-control" type="text" name="inp_{{$item4->id}}[]"
+                                                                <input type="hidden" name="inpLevelEmpatId[{{ $indexInpLevelEmpatId++ }}]" value="{{ $item4->id }}">
+                                                                <input class="form-control" type="text" name="inpLevelEmpat[{{ $indexInpLevelEmpat++ }}]"
                                                                   id="inp_{{$item4->id}}[]" data-formula="{{$item4->formula}}" onkeyup="calcForm()"/>
                                                             </td>
                                                           @endforeach
@@ -136,9 +141,9 @@
                       @foreach ($lev3NoParent as $item3NoParent)
                         <div class="col-6">
                             <div class="form-group form-field">
-                                <label for="inp_{{$item3NoParent->id}}" class="font-weight-semibold">{{$item3NoParent->field}}</label>
+                                <label for="inpLevelTigaParent[{{$item3NoParent->id}}]" class="font-weight-semibold">{{$item3NoParent->field}}</label>
                                 <div class="input-group">
-                                  <input type="text" class="form-control inp_{{$item3NoParent->id}}" name="inp_{{$item3NoParent->id}}"
+                                  <input type="text" class="form-control inp_{{$item3NoParent->id}}" name="inpLevelTiga[{{$item3NoParent->id}}]"
                                       id="inp_{{$item3NoParent->id}}" data-formula="{{$item3NoParent->formula}}" @if ($item3NoParent->readonly) readonly @endif />
                                     @if ($item3NoParent->add_on)
                                       <div class="input-group-append">
@@ -171,9 +176,9 @@
                             <!-- form bagian level 3 -->
                             @foreach ($lev3NoParent as $item3NoParent)
                               <div class="form-group form-field">
-                                  <label for="inp_{{$item3NoParent->id}}" class="font-weight-semibold">{{$item3NoParent->field}}</label>
+                                  <label for="inpLevelTigaParent[{{$item3NoParent->id}}]" class="font-weight-semibold">{{$item3NoParent->field}}</label>
                                   <div class="input-group">
-                                    <input type="text" class="form-control inp_{{$item3NoParent->id}}" name="inp_{{$item3NoParent->id}}"
+                                    <input type="text" class="form-control inp_{{$item3NoParent->id}}" name="inpLevelTigaParent[{{$item3NoParent->id}}]"
                                       id="inp_{{$item3NoParent->id}}" data-formula="{{$item3NoParent->formula}}" @if ($item3NoParent->readonly) readonly @endif />
                                     @if ($item3NoParent->add_on)
                                       <div class="input-group-append">
@@ -199,8 +204,8 @@
                       @foreach ($lev3NoParent as $item3NoParent)
                         <div class="col-6">
                             <div class="form-group form-field">
-                                <label for="inp_{{$item3NoParent->id}}" class="font-weight-semibold">{{$item3NoParent->field}}</label>
-                                <input type="text" class="form-control inp_{{$item3NoParent->id}}" name="inp_{{$item3NoParent->id}}"
+                                <label for="inpLevelTigaParent[{{$item3NoParent->id}}]" class="font-weight-semibold">{{$item3NoParent->field}}</label>
+                                <input type="text" class="form-control inp_{{$item3NoParent->id}}" name="inpLevelTigaParent[{{$item3NoParent->id}}]"
                                     id="inp_{{$item3NoParent->id}}" data-formula="{{$item3NoParent->formula}}"
                                     @if ($item3NoParent->readonly) readonly @endif />
                             </div>
@@ -216,7 +221,7 @@
               <button type="button" class="btn btn-secondary" data-dismiss="modal">
                   Batal
               </button>
-              <button type="button" class="btn btn-danger">
+              <button type="button" class="btn btn-danger" id="btnSimpanPerhitungan">
                   Simpan
               </button>
           </div>
@@ -228,18 +233,29 @@
   var selectDate = $(".select-date");
   selectDate.select2();
   $(".btn-add-2").on("click", function(e) {
+      var indexInpLevelEmpatId = {{ $indexInpLevelEmpatId }};
+      var indexInpLevelEmpat = {{ $indexInpLevelEmpat }};
       var allId = [];
-      $('#detail-item input').each(function() {
+      var name = [];
+      var allIdHidden = [];
+
+      $('#detail-item input[type=text]').each(function() {
         var id = $(this).attr('id')
         allId.push(id)
+        name.push($(this).attr("name"))
+      })
+      $('#detail-item input[type=hidden]').each(function() {
+        var value = $(this).val()
+        allIdHidden.push(value)
       })
       var content = `<tr>`
       $.each(allId, function(i, item) {
         content += `<td>
+          <input type="hidden" name="inpLevelEmpatId[${indexInpLevelEmpatId++}]" value="${allIdHidden[i]}"/>
           <input
                   class="form-control"
                   type="text"
-                  name="${item}"
+                  name="inpLevelEmpat[${indexInpLevelEmpat++}]"
                   id="${item}"
                   data-formula=""
                   onkeyup="calcForm()"

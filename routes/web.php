@@ -147,6 +147,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/get-skema-kredit', [PengajuanKreditController::class, 'getSkemaKredit'])->name('get-skema-kredit');
     Route::get('/get-skema-limit', [PengajuanKreditController::class, 'getSkemaLimit'])->name('get-skema-limit');
+
+    Route::post('/save-data-perhitungan-temp', [PengajuanKreditController::class, 'saveDataPerhitunganTemp'])->name('pengajuan-kredit.save-data-perhitungan-temp');
 });
 
 require __DIR__ . '/auth.php';

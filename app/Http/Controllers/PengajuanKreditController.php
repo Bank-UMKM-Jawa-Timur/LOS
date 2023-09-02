@@ -25,6 +25,7 @@ use App\Models\MstItemPerhitunganKredit;
 use App\Models\MstProdukKredit;
 use App\Models\MstSkemaKredit;
 use App\Models\MstSkemaLimit;
+use App\Models\PerhitunganKredit;
 use App\Models\TipeModel;
 use App\Models\User;
 use App\Services\TemporaryService;
@@ -1535,6 +1536,11 @@ class PengajuanKreditController extends Controller
 
             $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan proses pembuatan data pengajuan atas nama ' . $namaNasabah . '.', $id_pengajuan, Auth::user()->id, Auth::user()->nip);
 
+            PerhitunganKredit::where('temp_calon_nasabah_id', $tempNasabah->id)
+                ->update([
+                    'pengajuan_id' => $id_pengajuan,
+                    'temp_calon_nasabah_id' => null
+                ]);
             DB::commit();
             if (!$statusSlik)
                 return redirect()->route('pengajuan-kredit.index')->withStatus('Data berhasil disimpan.');
@@ -3827,5 +3833,234 @@ class PengajuanKreditController extends Controller
         }
 
         return response()->json($data);
+    }
+
+    public function saveDataPerhitunganTemp(Request $request){
+        $idCalonNasabah = $request->idCalonNasabah;
+        $levelTiga = [];
+        $levelEmpat = [];
+        
+        DB::beginTransaction();
+        try{
+            if(!PerhitunganKredit::where('temp_calon_nasabah_id', $idCalonNasabah)){
+                // Data Level Tiga
+                foreach($request->inpLevelTiga as $key => $item){
+                    array_push($levelTiga, [
+                        'nominal' => $item,
+                        'item_perhitungan_kredit_id' => $key,
+                        'temp_calon_nasabah_id' => $idCalonNasabah,
+                        'created_at' => now()
+                    ]);
+                }
+                
+                // Data Level Empat
+                $bakiDebetId = $request->inpLevelEmpatId[0];
+                $plafonId =  $request->inpLevelEmpatId[1];
+                $tenorId =  $request->inpLevelEmpatId[2];
+                $bakiDebet = [];
+                $plafon = [];
+                $tenor = [];
+                $bakiDebet_ = '';
+                $plafon_ = '';
+                $tenor_ = '';
+                
+                foreach($request->inpLevelEmpat as $key => $item){
+                    if($request->inpLevelEmpatId[$key] == $bakiDebetId){
+                        array_push($bakiDebet, strval($item));
+                    }
+                    if($request->inpLevelEmpatId[$key] == $plafonId){
+                        array_push($plafon, strval($item));
+                    }
+                    if($request->inpLevelEmpatId[$key] == $tenorId){
+                        array_push($tenor, strval($item));
+                    }
+                }
+                
+                for($i = 0; $i < count($bakiDebet); $i++){
+                    if($i == 0){
+                        if(count($bakiDebet) > 1){
+                            $_bakiDebet = '[' . $bakiDebet[$i] . ',';
+                        } else{
+                            $_bakiDebet = '[' . $bakiDebet[$i] . ']';
+                        }
+                    } else if($i == count($bakiDebet) -1){
+                        $_bakiDebet = $bakiDebet[$i] . ']';
+                    } else{
+                        $_bakiDebet = $bakiDebet[$i] . ',';
+                    }
+                    $bakiDebet_ .= $_bakiDebet;
+                }
+                for($i = 0; $i < count($plafon); $i++){
+                    if($i == 0){
+                        if(count($plafon) > 1){
+                            $_plafon = '[' . $plafon[$i] . ',';
+                        } else{
+                            $_plafon = '[' . $plafon[$i] . ']';
+                        }
+                    } else if($i == count($plafon) -1){
+                        $_plafon = $plafon[$i] . ']';
+                    } else{
+                        $_plafon = $plafon[$i] . ',';
+                    }
+                    $plafon_ .= $_plafon;
+                }
+                for($i = 0; $i < count($tenor); $i++){
+                    if($i == 0){
+                        if(count($tenor) > 1){
+                            $_tenor = '[' . $tenor[$i] . ',';
+                        } else{
+                            $_tenor = '[' . $tenor[$i] . ']';
+                        }
+                    } else if($i == count($tenor) -1){
+                        $_tenor = $tenor[$i] . ']';
+                    } else{
+                        $_tenor = $tenor[$i] . ',';
+                    }
+                    $tenor_ .= $_tenor;
+                }
+
+                array_push($levelEmpat, [
+                    'array_value' => $bakiDebet_,
+                    'item_perhitungan_kredit_id' => $bakiDebetId,
+                    'temp_calon_nasabah_id' => $idCalonNasabah,
+                    'created_at' => now()
+                ]);
+                array_push($levelEmpat, [
+                    'array_value' => $plafon_,
+                    'item_perhitungan_kredit_id' => $plafonId,
+                    'temp_calon_nasabah_id' => $idCalonNasabah,
+                    'created_at' => now()
+                ]);
+                array_push($levelEmpat, [
+                    'array_value' => $tenor_,
+                    'item_perhitungan_kredit_id' => $tenorId,
+                    'temp_calon_nasabah_id' => $idCalonNasabah,
+                    'created_at' => now()
+                ]);
+                    
+                PerhitunganKredit::insert($levelEmpat);
+                PerhitunganKredit::insert($levelTiga);
+                DB::commit();
+    
+                return response()->json([
+                    'message' => 'Berhasil menambahkan perhitungan kredit.',
+                    'request' => $request->all()
+                ]);
+            } else{
+                // Data Level Tiga
+                foreach($request->inpLevelTiga as $key => $item){
+                    PerhitunganKredit::where('temp_calon_nasabah_id', $idCalonNasabah)
+                        ->where('item_perhitungan_kredit_id', $key)
+                        ->update([
+                            'nominal' => $item,
+                            'updated_at' => now()
+                        ]);
+                }
+
+                // Data Level Empat
+                $bakiDebetId = $request->inpLevelEmpatId[0];
+                $plafonId =  $request->inpLevelEmpatId[1];
+                $tenorId =  $request->inpLevelEmpatId[2];
+                $bakiDebet = [];
+                $plafon = [];
+                $tenor = [];
+                $bakiDebet_ = '';
+                $plafon_ = '';
+                $tenor_ = '';
+                
+                foreach($request->inpLevelEmpat as $key => $item){
+                    if($request->inpLevelEmpatId[$key] == $bakiDebetId){
+                        array_push($bakiDebet, strval($item));
+                    }
+                    if($request->inpLevelEmpatId[$key] == $plafonId){
+                        array_push($plafon, strval($item));
+                    }
+                    if($request->inpLevelEmpatId[$key] == $tenorId){
+                        array_push($tenor, strval($item));
+                    }
+                }
+                
+                for($i = 0; $i < count($bakiDebet); $i++){
+                    if($i == 0){
+                        if(count($bakiDebet) > 1){
+                            $_bakiDebet = '[' . $bakiDebet[$i] . ',';
+                        } else{
+                            $_bakiDebet = '[' . $bakiDebet[$i] . ']';
+                        }
+                    } else if($i == count($bakiDebet) -1){
+                        $_bakiDebet = $bakiDebet[$i] . ']';
+                    } else{
+                        $_bakiDebet = $bakiDebet[$i] . ',';
+                    }
+                    $bakiDebet_ .= $_bakiDebet;
+                }
+                for($i = 0; $i < count($plafon); $i++){
+                    if($i == 0){
+                        if(count($plafon) > 1){
+                            $_plafon = '[' . $plafon[$i] . ',';
+                        } else{
+                            $_plafon = '[' . $plafon[$i] . ']';
+                        }
+                    } else if($i == count($plafon) -1){
+                        $_plafon = $plafon[$i] . ']';
+                    } else{
+                        $_plafon = $plafon[$i] . ',';
+                    }
+                    $plafon_ .= $_plafon;
+                }
+                for($i = 0; $i < count($tenor); $i++){
+                    if($i == 0){
+                        if(count($tenor) > 1){
+                            $_tenor = '[' . $tenor[$i] . ',';
+                        } else{
+                            $_tenor = '[' . $tenor[$i] . ']';
+                        }
+                    } else if($i == count($tenor) -1){
+                        $_tenor = $tenor[$i] . ']';
+                    } else{
+                        $_tenor = $tenor[$i] . ',';
+                    }
+                    $tenor_ .= $_tenor;
+                }
+
+                PerhitunganKredit::where('temp_calon_nasabah_id', $idCalonNasabah)
+                    ->where('item_perhitungan_kredit_id', $bakiDebetId)
+                    ->update([
+                        'array_value' => $bakiDebet_,
+                        'nominal' => null,
+                        'updated_at' => now()
+                    ]);
+                PerhitunganKredit::where('temp_calon_nasabah_id', $idCalonNasabah)
+                    ->where('item_perhitungan_kredit_id', $plafonId)
+                    ->update([
+                        'array_value' => $plafon_,
+                        'nominal' => null,
+                        'updated_at' => now()
+                    ]);
+                PerhitunganKredit::where('temp_calon_nasabah_id', $idCalonNasabah)
+                    ->where('item_perhitungan_kredit_id', $tenorId)
+                    ->update([
+                        'array_value' => $tenor_,
+                        'nominal' => null,
+                        'updated_at' => now()
+                    ]);
+                
+                DB::commit();
+                return response()->json([
+                    'message' => 'Berhasil mengubah data.',
+                    'request' => $request->all()
+                ]);
+            }
+        } catch(Exception $e){
+            DB::rollBack();
+            return response()->json([
+                'message' => 'Terjadi kesalahan. ' . $e
+            ]);
+        } catch(QueryException $e){
+            DB::rollBack();
+            return response()->json([
+                'message' => 'Terjadi kesalahan. ' . $e
+            ]);
+        }
     }
 }
