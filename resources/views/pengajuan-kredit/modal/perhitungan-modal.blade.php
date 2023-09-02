@@ -169,7 +169,7 @@
                               <div class="form-group form-field">
                                   <label for="inp_{{$item3NoParent->id}}" class="font-weight-semibold">{{$item3NoParent->field}}</label>
                                   <div class="input-group">
-                                    <input type="text" class="form-control inp_{{$item3NoParent->id}}" name="inp_{{$item3NoParent->id}}"
+                                    <input type="text" class="form-control rupiah inp_{{$item3NoParent->id}}" name="inp_{{$item3NoParent->id}}"
                                         id="inp_{{$item3NoParent->id}}" data-formula="{{$item3NoParent->formula}}" @if ($item3NoParent->readonly) readonly @endif />
                                       @if ($item3NoParent->add_on)
                                         <div class="input-group-append">
@@ -205,7 +205,7 @@
                                   <div class="form-group form-field">
                                       <label for="inp_{{$item3NoParent->id}}" class="font-weight-semibold">{{$item3NoParent->field}}</label>
                                       <div class="input-group">
-                                        <input type="text" class="form-control inp_{{$item3NoParent->id}}" name="inp_{{$item3NoParent->id}}"
+                                        <input type="text" class="form-control rupiah inp_{{$item3NoParent->id}}" name="inp_{{$item3NoParent->id}}"
                                           id="inp_{{$item3NoParent->id}}" data-formula="{{$item3NoParent->formula}}" @if ($item3NoParent->readonly) readonly @endif />
                                         @if ($item3NoParent->add_on)
                                           <div class="input-group-append">
@@ -255,7 +255,7 @@
                           <div class="col-6">
                               <div class="form-group form-field">
                                   <label for="inp_{{$item3NoParent->id}}" class="font-weight-semibold">{{$item3NoParent->field}}</label>
-                                  <input type="text" class="form-control inp_{{$item3NoParent->id}}" name="inp_{{$item3NoParent->id}}"
+                                  <input type="text" class="form-control rupiah inp_{{$item3NoParent->id}}" name="inp_{{$item3NoParent->id}}"
                                       id="inp_{{$item3NoParent->id}}" data-formula="{{$item3NoParent->formula}}"
                                       @if ($item3NoParent->readonly) readonly @endif />
                               </div>
