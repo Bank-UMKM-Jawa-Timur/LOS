@@ -67,6 +67,10 @@ null => 1,
     .file-wrapper span.filename {
         top: 10px;
     }
+
+    .result-aspek-keuangan {
+        display: none;
+    }
 </style>
 
 <form id="pengajuan_kredit" action="{{ route('pengajuan-kredit.store') }}" method="post" enctype="multipart/form-data">
@@ -97,7 +101,7 @@ null => 1,
                 <input type="hidden" name="id_item_file[{{ $itemSP->id }}]" value="{{ $itemSP->id }}" id="">
                 <input type="file" name="upload_file[{{ $itemSP->id }}]" data-id=""
                     placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-control limit-size" id="foto_sp">
-                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                 @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                 <div class="invalid-feedback">
                     {{ $errors->first('dataLevelDua.' . $key) }}
@@ -257,7 +261,7 @@ null => 1,
                 <input type="hidden" name="id_item_file[{{ $itemP->id }}]" value="{{ $itemP->id }}" id="">
                 <input type="file" name="upload_file[{{ $itemP->id }}]" id="file_slik" data-id=""
                     placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-control limit-size-slik">
-                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
+                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
                 @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                 <div class="invalid-feedback">
                     {{ $errors->first('dataLevelDua.' . $key) }}
@@ -529,7 +533,7 @@ null => 1,
                         placeholder="Masukkan informasi {{ $itemNIB->nama }}" class="form-control limit-size"
                         id="file_nib">
                     <span class="invalid-tooltip" style="display: none" id="docNIB_text">Besaran file
-                        tidak boleh lebih dari 5 MB</span>
+                        tidak boleh lebih dari 5 MB</span>
                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                     <div class="invalid-feedback">
                         {{ $errors->first('dataLevelTiga.' . $key) }}
@@ -555,7 +559,7 @@ null => 1,
                         data-id="" placeholder="Masukkan informasi {{ $itemSKU->nama }}"
                         class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none" id="docSKU_text">Besaran file
-                        tidak boleh lebih dari 5 MB</span>
+                        tidak boleh lebih dari 5 MB</span>
                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                     <div class="invalid-feedback">
                         {{ $errors->first('dataLevelTiga.' . $key) }}
@@ -581,7 +585,7 @@ null => 1,
                     <input type="file" name="upload_file[{{ $itemNPWP->id }}]" id="npwp_file" data-id=""
                         placeholder="Masukkan informasi {{ $itemNPWP->nama }}" class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none" id="docNPWP_text">Besaran file
-                        tidak boleh lebih dari 5 MB</span>
+                        tidak boleh lebih dari 5 MB</span>
                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                     <div class="invalid-feedback">
                         {{ $errors->first('dataLevelTiga.' . $key) }}
@@ -592,13 +596,15 @@ null => 1,
             </div>
             @else
             @if ($item->opsi_jawaban == 'input text')
-            <div class="form-group col-md-6">
-                <label for="">{{ $item->nama }}</label>
-                <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
-                <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
-                <input type="text" maxlength="255" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
-                    placeholder="Masukkan informasi {{ $item->nama }}" class="form-control" value="">
-            </div>
+            @if ($value->nama != 'Aspek Keuangan')
+                <div class="form-group col-md-6">
+                    <label for="">{{ $item->nama }}</label>
+                    <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
+                    <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
+                    <input type="text" maxlength="255" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
+                        placeholder="Masukkan informasi {{ $item->nama }}" class="form-control" value="">
+                </div>
+            @endif
             @elseif ($item->opsi_jawaban == 'number')
             @if ($item->nama == 'Repayment Capacity')
             <div class="form-group col-md-6">
@@ -610,51 +616,57 @@ null => 1,
             </div>
             @else
             @if ($item->nama == 'Omzet Penjualan' || $item->nama == 'Installment')
-            <div class="form-group col-md-6">
-                <label for="">{{ $item->nama }}(Perbulan)</label>
-                <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
-                <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
-                <input type="text" maxlength="255" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
+                @if ($value->nama != 'Aspek Keuangan')
+                <div class="form-group col-md-6">
+                    <label for="">{{ $item->nama }}(Perbulan)</label>
+                    <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
+                    <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
+                    <input type="text" maxlength="255" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
                     placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah" value="">
-            </div>
+                </div>
+            @endif
             @else
-            <div class="form-group col-md-6">
-                <label for="">{{ $item->nama }}</label>
-                <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
-                <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
-                <input type="text" maxlength="255" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
-                    placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah" value="">
-            </div>
+            @if ($value->nama != 'Aspek Keuangan')
+                <div class="form-group col-md-6">
+                    <label for="">{{ $item->nama }}</label>
+                    <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
+                    <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
+                    <input type="text" maxlength="255" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
+                        placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah" value="">
+                </div>
+            @endif
             @endif
             @endif
             @elseif ($item->opsi_jawaban == 'persen')
-            <div class="form-group col-md-6">
-                <label for="">{{ $item->nama }}</label>
-                <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
-                <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
-                <div class="input-group mb-3">
-                    <input type="number" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
-                        placeholder="Masukkan informasi {{ $item->nama }}" class="form-control"
-                        aria-label="Recipient's username" aria-describedby="basic-addon2" value=""
-                        onkeydown="return event.keyCode !== 69">
-                    <div class="input-group-append">
-                        <span class="input-group-text" id="basic-addon2">%</span>
-                    </div>
-                </div>
-            </div>
-            @elseif ($item->opsi_jawaban == 'file')
-                @if ($value->nama != 'Aspek Keuangan')
+            @if ($value->nama != 'Aspek Keuangan')
                 <div class="form-group col-md-6">
                     <label for="">{{ $item->nama }}</label>
-                    {{-- <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" --}} {{--
-                        id="{{ $idLevelDua }}"> --}}
-                    <input type="hidden" name="id_item_file[{{ $item->id }}]" value="{{ $item->id }}" id="">
-                    <input type="file" name="upload_file[{{ $item->id }}]" id="{{ $idLevelDua }}" data-id=""
-                        placeholder="Masukkan informasi {{ $item->nama }}" class="form-control limit-size">
-                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15
-                        MB</span>
-                    <span class="filename" style="display: inline;"></span>
+                    <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
+                    <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
+                    <div class="input-group mb-3">
+                        <input type="number" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
+                            placeholder="Masukkan informasi {{ $item->nama }}" class="form-control"
+                            aria-label="Recipient's username" aria-describedby="basic-addon2" value=""
+                            onkeydown="return event.keyCode !== 69">
+                        <div class="input-group-append">
+                            <span class="input-group-text" id="basic-addon2">%</span>
+                        </div>
+                    </div>
                 </div>
+            @endif
+            @elseif ($item->opsi_jawaban == 'file')
+                @if ($value->nama != 'Aspek Keuangan')
+                    <div class="form-group col-md-6">
+                        <label for="">{{ $item->nama }}</label>
+                        {{-- <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" --}} {{--
+                            id="{{ $idLevelDua }}"> --}}
+                        <input type="hidden" name="id_item_file[{{ $item->id }}]" value="{{ $item->id }}" id="">
+                        <input type="file" name="upload_file[{{ $item->id }}]" id="{{ $idLevelDua }}" data-id=""
+                            placeholder="Masukkan informasi {{ $item->nama }}" class="form-control limit-size">
+                        <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15
+                            MB</span>
+                        <span class="filename" style="display: inline;"></span>
+                    </div>
                 @endif
             @elseif ($item->opsi_jawaban == 'long text')
             <div class="form-group col-md-6">
@@ -1017,6 +1029,199 @@ null => 1,
             @endif
             @endforeach
 
+            @if ($value->nama == 'Aspek Keuangan')
+                @php
+                    $read_lev1 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)->where('level', 1)->get();
+                @endphp
+                <div class="row m-2 result-aspek-keuangan">
+                    <div class="col">
+                    <!-- content -->
+                        <!-- pilih bulan -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-4">
+                                    <label for="inputHarta" class="font-weight-semibold">Pilih Periode :</label>
+                                    <select name="" style="width: 100%; height: 40px" class="select-date" disabled>
+                                        <option selected>--Pilih Bulan--</option>
+                                        <option value="1">Januari</option>
+                                        <option value="2">Februari</option>
+                                        <option value="3">Maret</option>
+                                        <option value="4">April</option>
+                                        <option value="5">Mei</option>
+                                        <option value="6">Juni</option>
+                                        <option value="7">Juli</option>
+                                        <option value="8">Agustus</option>
+                                        <option value="9">September</option>
+                                        <option value="10">Oktober</option>
+                                        <option value="11">November</option>
+                                        <option value="12">Desember</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end pilih bulan -->
+                        <!-- form bagian level 1 -->
+                        @foreach ($read_lev1 as $read_item)
+                            <div class="head">
+                                <h4 class="mb-4 font-weight-bold" style="letter-spacing: -1px">
+                                    {{$read_item->field}}
+                                </h4>
+                            </div>
+                            <!-- form bagian level 2 -->
+                            @php
+                            $read_lev2 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
+                                                                        ->where('level', 2)
+                                                                        ->where('parent_id', $read_item->id)
+                                                                        ->get();
+                            @endphp
+                            @foreach ($read_lev2 as $read_item2)
+                                @php
+                                $lev3 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
+                                                                            ->where('level', 3)
+                                                                            ->where('parent_id', $read_item2->id)
+                                                                            ->get();
+                                @endphp
+                                <div class="card mb-4">
+                                    <h5 class="card-header">{{$read_item2->field}}</h5>
+                                    <div class="card-body">
+                                        <!-- form bagian level 3 -->
+                                        @foreach ($lev3 as $read_item3)
+                                        <div class="form-group">
+                                            <label for="inp_{{$read_item3->id}}" class="font-weight-semibold">{{$read_item3->field}}</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control inp_{{$read_item3->id}}" name="inp_{{$read_item3->id}}"
+                                                id="inp_{{$read_item3->id}}" data-formula="{{$read_item3->formula}}" data-detail="{{$read_item3->have_detail}}"
+                                                readonly />
+                                                @if ($read_item3->have_detail)
+                                                    @php
+                                                        $lev4 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
+                                                                                                    ->where('level', 4)
+                                                                                                    ->where('parent_id', $read_item3->id)
+                                                                                                    ->get();
+                                                    @endphp
+                                                    <div class="table-responsive">
+                                                        <table class="table" id="table_item" style="box-sizing: border-box">
+                                                            <thead>
+                                                                <tr>
+                                                                    @foreach ($lev4 as $item4)
+                                                                        <th scope="col">{{$item4->field}}</th>
+                                                                    @endforeach
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    @foreach ($lev4 as $item4)
+                                                                        <td id="detail-item">
+                                                                            <input class="form-control" type="text" name="inp_{{$item4->id}}[]"
+                                                                            id="inp_{{$item4->id}}[]" data-formula="{{$item4->formula}}" readonly/>
+                                                                        </td>
+                                                                    @endforeach
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                @endif
+                                                @if ($read_item3->add_on)
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" id="basic-addon2">{{$read_item3->add_on}}</span>
+                                                </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        @endforeach
+                                        <!-- end form bagian level 3 -->
+                                    </div>
+                                </div>
+                            @endforeach
+                            <!-- end form bagian level 2 -->
+                        @endforeach
+                        <!-- end form bagian level 1 -->
+                        <!-- form bagian level 3 no parent -->
+                        @php
+                            $read_lev3NoParent = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
+                                                                                ->where('level', 3)
+                                                                                ->whereNull('parent_id')
+                                                                                ->get();
+                        @endphp
+                        <div class="form-row">
+                            @foreach ($read_lev3NoParent as $read_item3NoParent)
+                                <div class="col-6">
+                                    <div class="form-group form-field">
+                                        <label for="inp_{{$read_item3NoParent->id}}" class="font-weight-semibold">{{$read_item3NoParent->field}}</label>
+                                        <div class="input-group">
+                                        <input type="text" class="form-control inp_{{$read_item3NoParent->id}}" name="inp_{{$read_item3NoParent->id}}"
+                                            id="inp_{{$read_item3NoParent->id}}" data-formula="{{$read_item3NoParent->formula}}" readonly />
+                                            @if ($read_item3NoParent->add_on)
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" id="basic-addon2">{{$read_item3NoParent->add_on}}</span>
+                                            </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        <!-- end form bagian level 3 no parent -->
+                        <!-- form bagian level 2 no parent -->
+                            @php
+                            $read_lev2NoParent = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
+                                                                        ->where('level', 2)
+                                                                        ->whereNull('parent_id')
+                                                                        ->get();
+                            @endphp
+                            @foreach ($read_lev2NoParent as $read_item2NoParent)
+                            @php
+                                $read_lev3NoParent = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
+                                                                            ->where('level', 3)
+                                                                            ->where('parent_id', $read_item2NoParent->id)
+                                                                            ->get();
+                            @endphp
+                            <div class="card mb-4">
+                                <h5 class="card-header">{{$read_item2NoParent->field}}</h5>
+                                <div class="card-body">
+                                    <!-- form bagian level 3 -->
+                                    @foreach ($read_lev3NoParent as $read_item3NoParent)
+                                    <div class="form-group form-field">
+                                        <label for="inp_{{$read_item3NoParent->id}}" class="font-weight-semibold">{{$read_item3NoParent->field}}</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control inp_{{$read_item3NoParent->id}}" name="inp_{{$read_item3NoParent->id}}"
+                                            id="inp_{{$read_item3NoParent->id}}" data-formula="{{$read_item3NoParent->formula}}" readonly />
+                                            @if ($read_item3NoParent->add_on)
+                                            <div class="input-group-append">
+                                                <span class="input-group-text" id="basic-addon2">{{$read_item3NoParent->add_on}}</span>
+                                            </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                    <!-- end form bagian level 3 -->
+                                </div>
+                            </div>
+                            @endforeach
+                            <!-- end form bagian level 2 no parent -->
+                        <!-- form bagian level 3 no parent -->
+                        @php
+                            $read_lev3NoParent = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
+                                                                                ->where('level', 3)
+                                                                                ->where('parent_id', 0)
+                                                                                ->get();
+                        @endphp
+                        <div class="form-row">
+                            @foreach ($read_lev3NoParent as $read_item3NoParent)
+                                <div class="col-6">
+                                    <div class="form-group form-field">
+                                        <label for="inp_{{$read_item3NoParent->id}}" class="font-weight-semibold">{{$read_item3NoParent->field}}</label>
+                                        <input type="text" class="form-control inp_{{$read_item3NoParent->id}}" name="inp_{{$read_item3NoParent->id}}"
+                                            id="inp_{{$read_item3NoParent->id}}" data-formula="{{$read_item3NoParent->formula}}" readonly />
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        <!-- end form bagian level 3 no parent -->
+                    </div>
+                </div>
+            @endif
+
             <div class="form-group col-md-12">
                 <hr style="border: 0.2px solid #E3E6EA;">
                 <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
@@ -1139,7 +1344,7 @@ null => 1,
                     <label for="">{{ $itemKTPIs->nama }}</label>
                     <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
                     <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size" id="foto_ktp_istri">
-                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
                             {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1151,7 +1356,7 @@ null => 1,
                         <label for="">{{ $itemKTPSu->nama }}</label>
                         <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
                         <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size" id="foto_ktp_suami">
-                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                         @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                             <div class="invalid-feedback">
                                 {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1166,7 +1371,7 @@ null => 1,
                     <label for="">{{ $itemKTPNas->nama }}</label>
                     <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
                     <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-control limit-size" id="foto_ktp_nasabah">
-                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
                             {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1344,7 +1549,7 @@ null => 1,
                                         <label>${valItem.nama}</label>
                                         <input type="hidden" name="id_item_file[${valItem.id}]" value="${valItem.id}" id="" class="input">
                                         <input type="file" name="upload_file[${valItem.id}]" data-id="" class="form-control limit-size">
-                                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                                         <span class="filename" style="display: inline;"></span>
                                     </div>`);
                                 } else {
@@ -1477,7 +1682,7 @@ null => 1,
                                                 <input type="file" id="${valItem.nama.toString().replaceAll(" ", "_")}" name="upload_file[${valItem.id}][]" data-id=""
                                                     placeholder="Masukkan informasi ${valItem.nama}"
                                                     class="form-control limit-size">
-                                                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                                                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                                                 <span class="filename" style="display: inline;"></span>
                                             </div>
                                             <div class="col-1">
