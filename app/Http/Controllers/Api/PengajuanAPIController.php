@@ -53,8 +53,8 @@ class PengajuanAPIController extends Controller
                 )
                 ->where('email', $request['email'])
                 ->orWhere('nip', $request['email'])
-                ->join('cabang', 'cabang.id', 'users.id_cabang')
-                ->firstOrFail();
+                ->leftJoin('cabang', 'cabang.id', 'users.id_cabang')
+                ->first();
 
         $detail = [
             'nip' => null,
@@ -107,7 +107,7 @@ class PengajuanAPIController extends Controller
                 'id' => $user->id,
                 'email' => $user->email,
                 'role' => $user->role,
-                'kode_cabang' => $user->kode_cabang,
+                'kode_cabang' => $user->role == 'Administrator' ? $user->kode_cabang : '001',
                 'access_token' => $token,
                 'token_type' => 'Bearer',
                 'data' => $user->nip ? $this->getKaryawan($user->nip) : $user
@@ -148,7 +148,7 @@ class PengajuanAPIController extends Controller
                 'id' => $user->id,
                 'email' => $user->email,
                 'role' => $user->role,
-                'kode_cabang' => $user->kode_cabang,
+                'kode_cabang' => $user->role == 'Administrator' ? $user->kode_cabang : '001',
                 'access_token' => $token,
                 'token_type' => 'Bearer',
                 'data' => $detail,
@@ -181,8 +181,9 @@ class PengajuanAPIController extends Controller
         ]);
     }
 
-    public function getDataPengajuan($id)
+    public function getDataPengajuan($id, $user_id)
     {
+        $user = User::select('id', 'role')->find($user_id);
         $data = DB::table('pengajuan')
             ->where('skema_kredit', 'KKB')
             ->where('posisi', 'Selesai')
@@ -194,8 +195,24 @@ class PengajuanAPIController extends Controller
             // ->join('mst_tipe', 'mst_tipe.id', 'data_po.id_type')
             // ->join('mst_merk', 'mst_merk.id', 'mst_tipe.id_merk')
             // ->select('pengajuan.id', 'calon_nasabah.nama', 'calon_nasabah.jumlah_kredit', 'data_po.no_po', 'calon_nasabah.tenor_yang_diminta', 'pengajuan.sppk', 'pengajuan.po', 'pengajuan.tanggal', 'pengajuan.pk', 'mst_merk.merk', 'mst_tipe.tipe', 'data_po.tahun_kendaraan', 'data_po.harga', 'data_po.jumlah AS jumlah_kendaraan')
-            ->select('pengajuan.id', 'calon_nasabah.nama', 'calon_nasabah.jumlah_kredit', 'data_po.no_po', 'data_po.tipe', 'data_po.merk', 'calon_nasabah.tenor_yang_diminta', 'calon_nasabah.alamat_rumah', 'calon_nasabah.alamat_usaha', 'pengajuan.sppk', 'pengajuan.po', 'pengajuan.tanggal', 'pengajuan.pk', 'data_po.tahun_kendaraan', 'data_po.harga', 'data_po.jumlah AS jumlah_kendaraan', 'cabang.kode_cabang', 'cabang.cabang', 'cabang.alamat AS alamat_cabang')
-            ->first();
+            ->select('pengajuan.id', 'calon_nasabah.nama', 'calon_nasabah.jumlah_kredit', 'data_po.no_po', 'data_po.tipe', 'data_po.merk', 'calon_nasabah.tenor_yang_diminta', 'calon_nasabah.alamat_rumah', 'calon_nasabah.alamat_usaha', 'pengajuan.sppk', 'pengajuan.po', 'pengajuan.tanggal', 'pengajuan.pk', 'data_po.tahun_kendaraan', 'data_po.harga', 'data_po.jumlah AS jumlah_kendaraan', 'cabang.kode_cabang', 'cabang.cabang', 'cabang.alamat AS alamat_cabang');
+        if ($user->role == 'Staf Analis Kredit') {
+            $data->where('id_staf', $user_id);
+        }
+        if ($user->role == 'Penyelia Kredit') {
+            $data->where('id_penyelia', $user_id);
+        }
+        if ($user->role == 'PBO') {
+            $data->where('id_pbo', $user_id);
+        }
+        if ($user->role == 'PBP') {
+            $data->where('id_pbp', $user_id);
+        }
+        if ($user->role == 'Pincab') {
+            $data->where('id_pincab', $user_id);
+        }
+        
+        $data = $data->first();
         if ($data) {
             return response()->json([
                 'id_pengajuan' => $data->id,
