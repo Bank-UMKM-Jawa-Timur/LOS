@@ -290,7 +290,7 @@ class UserController extends Controller
     {
         try {
             DB::table('sessions')
-                ->where('id', $id)
+                ->where('user_id', $id)
                 ->delete();
 
             return back()->withStatus('Berhasil menghapus session.');
