@@ -109,6 +109,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('skema-kredit', SkemaKreditController::class);
         //Route::get('')
         Route::resource('skema-limit', MasterSkemaLimitController::class);
+        Route::get('/skema-limit/formula/{id}', [MasterSkemaLimitController::class, 'formula'])->name('get-formula');
         Route::get('/reset-sessions', [UserController::class, 'indexSession'])->name('index-session');
         Route::post('/reset-session/{id}', [UserController::class, 'resetSession'])->name('reset-session');
         Route::get('/reset-api-sessions', [UserController::class, 'indexAPISession'])->name('index-api-session');

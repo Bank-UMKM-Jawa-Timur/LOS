@@ -48,6 +48,7 @@
             <div id="parent-row" class="row">
                 <div class="col-md-12">
                     <label for="">Field</label>
+                    <label for=""><a href="/skema-limit/formula/{{ $item->id }}">Formula</a></label>
                 </div>
                 <div class="form-group col-md-6">
                     <input type="hidden" name="id_item[]" id="id-item" value="{{ $item->id }}">

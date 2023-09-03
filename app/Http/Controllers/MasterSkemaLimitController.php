@@ -63,6 +63,22 @@ class MasterSkemaLimitController extends Controller
         return view('skema-limit.create', $this->param);
     }
 
+     /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+
+    public function formula()
+    {
+        $this->param['pageTitle'] = 'Formula Skema Limit';
+        $this->param['btnText'] = 'Tambah';
+        $this->param['btnLink'] = route('skema-limit.index');
+
+        return view('skema-limit.formula', $this->param);
+    }
+
+
     /**
      * Store a newly created resource in storage.
      *
