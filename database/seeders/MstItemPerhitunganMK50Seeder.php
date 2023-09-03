@@ -193,7 +193,7 @@ class MstItemPerhitunganMK50Seeder extends Seeder
 
                 $pengeluaranSesudahKredit = MstItemPerhitunganKredit::create([
                     'skema_kredit_limit_id' => $skemaLimit->id,
-                    'field' => 'Pengeluaran Sebelum Kredit',
+                    'field' => 'Pengeluaran Sesudah Kredit',
                     'inputable' => false,
                     'level' => 2,
                     'parent_id' => $labaRugiId,

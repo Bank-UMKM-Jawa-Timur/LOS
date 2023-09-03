@@ -67,6 +67,10 @@ null => 1,
     .file-wrapper span.filename {
         top: 10px;
     }
+
+    .result-aspek-keuangan {
+        display: none;
+    }
 </style>
 
 <form id="pengajuan_kredit" action="{{ route('pengajuan-kredit.store') }}" method="post" enctype="multipart/form-data">
@@ -97,7 +101,7 @@ null => 1,
                 <input type="hidden" name="id_item_file[{{ $itemSP->id }}]" value="{{ $itemSP->id }}" id="">
                 <input type="file" name="upload_file[{{ $itemSP->id }}]" data-id=""
                     placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-control limit-size" id="foto_sp">
-                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                 @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                 <div class="invalid-feedback">
                     {{ $errors->first('dataLevelDua.' . $key) }}
@@ -257,7 +261,7 @@ null => 1,
                 <input type="hidden" name="id_item_file[{{ $itemP->id }}]" value="{{ $itemP->id }}" id="">
                 <input type="file" name="upload_file[{{ $itemP->id }}]" id="file_slik" data-id=""
                     placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-control limit-size-slik">
-                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
+                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
                 @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                 <div class="invalid-feedback">
                     {{ $errors->first('dataLevelDua.' . $key) }}
@@ -529,7 +533,7 @@ null => 1,
                         placeholder="Masukkan informasi {{ $itemNIB->nama }}" class="form-control limit-size"
                         id="file_nib">
                     <span class="invalid-tooltip" style="display: none" id="docNIB_text">Besaran file
-                        tidak boleh lebih dari 5 MB</span>
+                        tidak boleh lebih dari 5 MB</span>
                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                     <div class="invalid-feedback">
                         {{ $errors->first('dataLevelTiga.' . $key) }}
@@ -555,7 +559,7 @@ null => 1,
                         data-id="" placeholder="Masukkan informasi {{ $itemSKU->nama }}"
                         class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none" id="docSKU_text">Besaran file
-                        tidak boleh lebih dari 5 MB</span>
+                        tidak boleh lebih dari 5 MB</span>
                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                     <div class="invalid-feedback">
                         {{ $errors->first('dataLevelTiga.' . $key) }}
@@ -581,7 +585,7 @@ null => 1,
                     <input type="file" name="upload_file[{{ $itemNPWP->id }}]" id="npwp_file" data-id=""
                         placeholder="Masukkan informasi {{ $itemNPWP->nama }}" class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none" id="docNPWP_text">Besaran file
-                        tidak boleh lebih dari 5 MB</span>
+                        tidak boleh lebih dari 5 MB</span>
                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                     <div class="invalid-feedback">
                         {{ $errors->first('dataLevelTiga.' . $key) }}
@@ -592,13 +596,15 @@ null => 1,
             </div>
             @else
             @if ($item->opsi_jawaban == 'input text')
-            <div class="form-group col-md-6">
-                <label for="">{{ $item->nama }}</label>
-                <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
-                <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
-                <input type="text" maxlength="255" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
-                    placeholder="Masukkan informasi {{ $item->nama }}" class="form-control" value="">
-            </div>
+            @if ($value->nama != 'Aspek Keuangan')
+                <div class="form-group col-md-6">
+                    <label for="">{{ $item->nama }}</label>
+                    <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
+                    <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
+                    <input type="text" maxlength="255" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
+                        placeholder="Masukkan informasi {{ $item->nama }}" class="form-control" value="">
+                </div>
+            @endif
             @elseif ($item->opsi_jawaban == 'number')
             @if ($item->nama == 'Repayment Capacity')
             <div class="form-group col-md-6">
@@ -610,51 +616,57 @@ null => 1,
             </div>
             @else
             @if ($item->nama == 'Omzet Penjualan' || $item->nama == 'Installment')
-            <div class="form-group col-md-6">
-                <label for="">{{ $item->nama }}(Perbulan)</label>
-                <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
-                <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
-                <input type="text" maxlength="255" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
+                @if ($value->nama != 'Aspek Keuangan')
+                <div class="form-group col-md-6">
+                    <label for="">{{ $item->nama }}(Perbulan)</label>
+                    <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
+                    <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
+                    <input type="text" maxlength="255" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
                     placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah" value="">
-            </div>
+                </div>
+            @endif
             @else
-            <div class="form-group col-md-6">
-                <label for="">{{ $item->nama }}</label>
-                <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
-                <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
-                <input type="text" maxlength="255" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
-                    placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah" value="">
-            </div>
+            @if ($value->nama != 'Aspek Keuangan')
+                <div class="form-group col-md-6">
+                    <label for="">{{ $item->nama }}</label>
+                    <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
+                    <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
+                    <input type="text" maxlength="255" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
+                        placeholder="Masukkan informasi {{ $item->nama }}" class="form-control rupiah" value="">
+                </div>
+            @endif
             @endif
             @endif
             @elseif ($item->opsi_jawaban == 'persen')
-            <div class="form-group col-md-6">
-                <label for="">{{ $item->nama }}</label>
-                <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
-                <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
-                <div class="input-group mb-3">
-                    <input type="number" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
-                        placeholder="Masukkan informasi {{ $item->nama }}" class="form-control"
-                        aria-label="Recipient's username" aria-describedby="basic-addon2" value=""
-                        onkeydown="return event.keyCode !== 69">
-                    <div class="input-group-append">
-                        <span class="input-group-text" id="basic-addon2">%</span>
-                    </div>
-                </div>
-            </div>
-            @elseif ($item->opsi_jawaban == 'file')
-                @if ($value->nama != 'Aspek Keuangan')
+            @if ($value->nama != 'Aspek Keuangan')
                 <div class="form-group col-md-6">
                     <label for="">{{ $item->nama }}</label>
-                    {{-- <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" --}} {{--
-                        id="{{ $idLevelDua }}"> --}}
-                    <input type="hidden" name="id_item_file[{{ $item->id }}]" value="{{ $item->id }}" id="">
-                    <input type="file" name="upload_file[{{ $item->id }}]" id="{{ $idLevelDua }}" data-id=""
-                        placeholder="Masukkan informasi {{ $item->nama }}" class="form-control limit-size">
-                    <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15
-                        MB</span>
-                    <span class="filename" style="display: inline;"></span>
+                    <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
+                    <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}" id="">
+                    <div class="input-group mb-3">
+                        <input type="number" step="any" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
+                            placeholder="Masukkan informasi {{ $item->nama }}" class="form-control"
+                            aria-label="Recipient's username" aria-describedby="basic-addon2" value=""
+                            onkeydown="return event.keyCode !== 69">
+                        <div class="input-group-append">
+                            <span class="input-group-text" id="basic-addon2">%</span>
+                        </div>
+                    </div>
                 </div>
+            @endif
+            @elseif ($item->opsi_jawaban == 'file')
+                @if ($value->nama != 'Aspek Keuangan')
+                    <div class="form-group col-md-6">
+                        <label for="">{{ $item->nama }}</label>
+                        {{-- <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" --}} {{--
+                            id="{{ $idLevelDua }}"> --}}
+                        <input type="hidden" name="id_item_file[{{ $item->id }}]" value="{{ $item->id }}" id="">
+                        <input type="file" name="upload_file[{{ $item->id }}]" id="{{ $idLevelDua }}" data-id=""
+                            placeholder="Masukkan informasi {{ $item->nama }}" class="form-control limit-size">
+                        <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15
+                            MB</span>
+                        <span class="filename" style="display: inline;"></span>
+                    </div>
                 @endif
             @elseif ($item->opsi_jawaban == 'long text')
             <div class="form-group col-md-6">
@@ -1017,6 +1029,15 @@ null => 1,
             @endif
             @endforeach
 
+            @if ($value->nama == 'Aspek Keuangan')
+                @php
+                    $read_lev1 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)->where('level', 1)->get();
+                @endphp
+                <div class="row m-2 result-aspek-keuangan">
+                    <div class="col"></div>
+                </div>
+            @endif
+
             <div class="form-group col-md-12">
                 <hr style="border: 0.2px solid #E3E6EA;">
                 <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
@@ -1139,7 +1160,7 @@ null => 1,
                     <label for="">{{ $itemKTPIs->nama }}</label>
                     <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
                     <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size" id="foto_ktp_istri">
-                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
                             {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1151,7 +1172,7 @@ null => 1,
                         <label for="">{{ $itemKTPSu->nama }}</label>
                         <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
                         <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size" id="foto_ktp_suami">
-                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                         @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                             <div class="invalid-feedback">
                                 {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1166,7 +1187,7 @@ null => 1,
                     <label for="">{{ $itemKTPNas->nama }}</label>
                     <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
                     <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-control limit-size" id="foto_ktp_nasabah">
-                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
                             {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1344,7 +1365,7 @@ null => 1,
                                         <label>${valItem.nama}</label>
                                         <input type="hidden" name="id_item_file[${valItem.id}]" value="${valItem.id}" id="" class="input">
                                         <input type="file" name="upload_file[${valItem.id}]" data-id="" class="form-control limit-size">
-                                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                                         <span class="filename" style="display: inline;"></span>
                                     </div>`);
                                 } else {
@@ -1477,7 +1498,7 @@ null => 1,
                                                 <input type="file" id="${valItem.nama.toString().replaceAll(" ", "_")}" name="upload_file[${valItem.id}][]" data-id=""
                                                     placeholder="Masukkan informasi ${valItem.nama}"
                                                     class="form-control limit-size">
-                                                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                                                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                                                 <span class="filename" style="display: inline;"></span>
                                             </div>
                                             <div class="col-1">
@@ -2506,18 +2527,25 @@ null => 1,
                     }
                 }
                 else {
-                    $.each(allIdInput, function(j, id) {
-                        if (formula.includes(id)) {
-                            var input_val = parseInt($('#'+id).val())
-                            input_val = isNaN(input_val) ? 0 : input_val
-                            console.log(input_val)
-                            formula = formula.replaceAll(id, input_val)
-                            console.log(id)
-                        }
-                    })
+                    if (formula.includes('inp')) {
+                        $.each(allIdInput, function(j, id) {
+                            if (formula.includes(id)) {
+                                var input_val = $(`#${id}`).val().replaceAll('.', '')
+                                input_val = isNaN(input_val) ? 0 : input_val
+                                formula = formula.replaceAll(id, input_val)
+                            }
+                        })
+                    }
+                    // check if formula contain id from other input
+                    var other_id = alphaOnly(formula)
+                    if (other_id) {
+                        var input_val = $(`#${other_id}`).val().replaceAll('.', '')
+                        formula = formula.replaceAll(other_id, input_val)
+                    }
                     console.log('hasil formula')
                     console.log(formula)
                     var result = calculateFormula(formula)
+                    result = formatrupiah(result.toString())
                     $(`#${id_formula}`).val(result)
                 }
             }
