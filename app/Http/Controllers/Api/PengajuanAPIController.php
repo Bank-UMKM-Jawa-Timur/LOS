@@ -47,8 +47,13 @@ class PengajuanAPIController extends Controller
 
     public function login(Request $request)
     {
-        $user = User::where('email', $request['email'])
+        $user = User::select(
+                    'users.*',
+                    'cabang.kode_cabang'
+                )
+                ->where('email', $request['email'])
                 ->orWhere('nip', $request['email'])
+                ->join('cabang', 'cabang.id', 'users.id_cabang')
                 ->firstOrFail();
 
         $detail = [
@@ -102,6 +107,7 @@ class PengajuanAPIController extends Controller
                 'id' => $user->id,
                 'email' => $user->email,
                 'role' => $user->role,
+                'kode_cabang' => $user->kode_cabang,
                 'access_token' => $token,
                 'token_type' => 'Bearer',
                 'data' => $user->nip ? $this->getKaryawan($user->nip) : $user
@@ -142,6 +148,7 @@ class PengajuanAPIController extends Controller
                 'id' => $user->id,
                 'email' => $user->email,
                 'role' => $user->role,
+                'kode_cabang' => $user->kode_cabang,
                 'access_token' => $token,
                 'token_type' => 'Bearer',
                 'data' => $detail,
