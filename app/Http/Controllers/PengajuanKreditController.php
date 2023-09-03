@@ -3670,7 +3670,7 @@ class PengajuanKreditController extends Controller
         
         DB::beginTransaction();
         try{
-            if(!PerhitunganKredit::where('temp_calon_nasabah_id', $idCalonNasabah)){
+            if(PerhitunganKredit::where('temp_calon_nasabah_id', $idCalonNasabah)->count() < 1){
                 // Data Level Tiga
                 foreach($request->inpLevelTiga as $key => $item){
                     array_push($levelTiga, [
