@@ -148,7 +148,7 @@ class PengajuanAPIController extends Controller
                 'id' => $user->id,
                 'email' => $user->email,
                 'role' => $user->role,
-                'kode_cabang' => $user->role == 'Administrator' ? $user->kode_cabang : '001',
+                'kode_cabang' => $user->role == 'Administrator' ? '001' : $user->kode_cabang,
                 'access_token' => $token,
                 'token_type' => 'Bearer',
                 'data' => $detail,
