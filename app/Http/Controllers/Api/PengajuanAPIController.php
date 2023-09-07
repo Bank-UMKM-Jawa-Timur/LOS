@@ -258,6 +258,17 @@ class PengajuanAPIController extends Controller
         return response()->json($data);
     }
 
+    public function getDataUsersByCabang($kode_cabang)
+    {
+        $data = DB::table('users')
+            ->select('users.*', 'c.kode_cabang')
+            ->join('cabang AS c', 'c.id', 'users.id_cabang')
+            ->where('c.kode_cabang', $kode_cabang)
+            ->get();
+
+        return response()->json($data);
+    }
+
     public function getCabang($kode) {
         $data = DB::table('cabang')
             ->select('kode_cabang', 'cabang')
