@@ -15,12 +15,14 @@
           <div class="modal-body">
               <!-- form -->
               <form id="form-perhitungan" method="" action="">
-                  <div class="row">
+                {{--  <div class="row">  --}}
+                  <!-- content -->
+                    <div class="row">
                       <!-- pilih bulan -->
                       <div class="col-md-6">
                         <div class="form-group mb-4">
                           <label for="inputHarta" class="font-weight-semibold">Pilih Periode :</label>
-                          <select name="" style="width: 100%; height: 40px" class="select-date" id="">
+                          <select name="" style="width: 100%; height: 40px" class="select-date" id="periode">
                                 <option selected>--Pilih Bulan--</option>
                                 <option value="1">Januari</option>
                                 <option value="2">Februari</option>
@@ -59,188 +61,14 @@
                       </div>
                       <!-- end pilih tahun -->
                     </div>
-                  <!-- form bagian level 1 -->
-                  @foreach ($lev1 as $item)
-                    <div class="head">
-                        <h4 class="mb-4 font-weight-bold" style="letter-spacing: -1px">
-                            {{$item->field}}
-                        </h4>
-                    </div>
-                    <!-- form bagian level 2 -->
-                    @php
-                      $lev2 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
-                                                                  ->where('level', 2)
-                                                                  ->where('parent_id', $item->id)
-                                                                  ->get();
-                    @endphp
-                    @foreach ($lev2 as $item2)
-                      @php
-                        $lev3 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
-                                                                    ->where('level', 3)
-                                                                    ->where('parent_id', $item2->id)
-                                                                    ->get();
-                      @endphp
-                      <div class="card mb-4">
-                          <h5 class="card-header">{{$item2->field}}</h5>
-                          <div class="card-body">
-                            <!-- form bagian level 3 -->
-                            @foreach ($lev3 as $item3)
-                              <div class="form-group">
-                                <div class="row">
-                                  <div class="col-md-12">
-                                    
-                                  </div>
-                                </div>
-                                  <label for="inpLevelTiga[{{$item3->id}}]" class="font-weight-semibold">{{$item3->field}}</label>
-                                  {{-- <div class="input-group"> --}}
-                                    <div class="row">
-                                      <div class="@if ($item3->have_detail) col-md-10 @else col-md-12 @endif">
-                                        <input type="text" class="form-control inp_{{$item3->id}}" name="inpLevelTiga[{{$item3->id}}]"
-                                          id="inp_{{$item3->id}}" data-formula="{{$item3->formula}}" data-detail="{{$item3->have_detail}}"
-                                          @if ($item3->readonly) readonly @endif />
-                                        @if ($item3->have_detail)
-                                          @php
-                                            $lev4 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
-                                                                                        ->where('level', 4)
-                                                                                        ->where('parent_id', $item3->id)
-                                                                                        ->get();
-                                          @endphp
-                                      </div>
-                                      <div class="col-md-2 text-center">
-                                        <a class="btn btn-danger" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
-                                            aria-controls="collapseExample">
-                                            Tampilkan
-                                            <i class="bi bi-caret-down"></i>
-                                        </a>
-                                      </div>
-                                      <div class="col-md-12">
-                                        <div class="collapse mt-4" id="collapseExample">
-                                            <div class="table-responsive">
-                                                <table class="table" id="table_item" style="box-sizing: border-box">
-                                                    <thead>
-                                                        <tr>
-                                                            @foreach ($lev4 as $item4)
-                                                              <th scope="col">{{$item4->field}}</th>
-                                                            @endforeach
-                                                            <th scope="col">Aksi</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            @php
-                                                                $indexInpLevelEmpatId = 0;
-                                                                $indexInpLevelEmpat = 0;
-                                                            @endphp
-                                                            @foreach ($lev4 as $item4)
-                                                              <td id="detail-item">
-                                                                  <input type="hidden" name="inpLevelEmpatId[{{ $indexInpLevelEmpatId++ }}]" value="{{ $item4->id }}">
-                                                                  <input class="form-control rupiah" type="text" name="inpLevelEmpat[{{ $indexInpLevelEmpat++ }}]"
-                                                                    id="inp_{{$item4->id}}[]" data-formula="{{$item4->formula}}" onkeyup="calcForm()"/>
-                                                              </td>
-                                                            @endforeach
-                                                            <td>
-                                                                <button class="btn-add-2 btn btn-success" type="button">
-                                                                    +
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                          {{-- <div class="input-group-prepend">
-                                              <a class="btn btn-danger" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
-                                                  aria-controls="collapseExample">
-                                                  Tampilkan
-                                                  <i class="bi bi-caret-down"></i>
-                                              </a>
-                                          </div>
-                                          <div class="collapse mt-4" id="collapseExample">
-                                              <div class="table-responsive">
-                                                  <table class="table" id="table_item" style="box-sizing: border-box">
-                                                      <thead>
-                                                          <tr>
-                                                              @foreach ($lev4 as $item4)
-                                                                <th scope="col">{{$item4->field}}</th>
-                                                              @endforeach
-                                                              <th scope="col">Aksi</th>
-                                                          </tr>
-                                                      </thead>
-                                                      <tbody>
-                                                          <tr>
-                                                            @php
-                                                                $indexInpLevelEmpatId = 0;
-                                                                $indexInpLevelEmpat = 0;
-                                                            @endphp
-                                                              @foreach ($lev4 as $item4)
-                                                                <td id="detail-item">
-                                                                    <input type="hidden" name="inpLevelEmpatId[{{ $indexInpLevelEmpatId++ }}]" value="{{ $item4->id }}">
-                                                                    <input class="form-control" type="text" name="inpLevelEmpat[{{ $indexInpLevelEmpat++ }}]"
-                                                                      id="inp_{{$item4->id}}[]" data-formula="{{$item4->formula}}" onkeyup="calcForm()"/>
-                                                                </td>
-                                                              @endforeach
-                                                              <td>
-                                                                  <button class="btn-add-2 btn btn-success" type="button">
-                                                                      +
-                                                                  </button>
-                                                              </td>
-                                                          </tr>
-                                                      </tbody>
-                                                  </table>
-                                              </div>
-                                          </div> --}}
-                                        @endif
-                                        @if ($item3->add_on)
-                                          <div class="input-group-append">
-                                              <span class="input-group-text" id="basic-addon2">{{$item3->add_on}}</span>
-                                          </div>
-                                        @endif
-                                      </div>
-                                    </div>
-                                  {{-- </div> --}}
-                              </div>
-                            @endforeach
-                            <!-- end form bagian level 3 -->
-                          </div>
+                    <!-- form bagian level 1 -->
+                    @foreach ($lev1 as $item)
+                      <div class="head">
+                          <h4 class="mb-4 font-weight-bold" style="letter-spacing: -1px">
+                              {{$item->field}}
+                          </h4>
                       </div>
-                    @endforeach
-                    <!-- end form bagian level 2 -->
-                  @endforeach
-                  <!-- end form bagian level 1 -->
-                  <!-- form bagian level 3 no parent -->
-                  @php
-                    $lev3NoParent = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
-                                                                        ->where('level', 3)
-                                                                        ->whereNull('parent_id')
-                                                                        ->get();
-                  @endphp
-                  <div class="form-row">
-                      @foreach ($lev3NoParent as $item3NoParent)
-                        <div class="col-6">
-                            <div class="form-group form-field">
-                                <label for="inpLevelTigaParent[{{$item3NoParent->id}}]" class="font-weight-semibold">{{$item3NoParent->field}}</label>
-                                <div class="input-group">
-                                  <input type="text" class="form-control inp_{{$item3NoParent->id}}" name="inpLevelTigaParent[{{$item3NoParent->id}}]"
-                                      id="inp_{{$item3NoParent->id}}" data-formula="{{$item3NoParent->formula}}" @if ($item3NoParent->readonly) readonly @endif />
-                                    @if ($item3NoParent->add_on)
-                                      <div class="input-group-append">
-                                          <span class="input-group-text" id="basic-addon2">{{$item3NoParent->add_on}}</span>
-                                      </div>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                      @endforeach
-                  </div>
-                  <!-- end form bagian level 3 no parent -->
-                  <!-- form bagian level 2 no parent -->
-                    @php
-                      $lev2NoParent = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
-                                                                  ->where('level', 2)
-                                                                  ->whereNull('parent_id')
-                                                                  ->get();
-                    @endphp
-                    @foreach ($lev2NoParent as $item2NoParent)
+                      <!-- form bagian level 2 -->
                       @php
                         $lev2 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
                                                                     ->where('level', 2)
@@ -266,7 +94,7 @@
                                         <div class="input-group">
                                           <input type="text" class="form-control rupiah inp_{{$item3->id}}" name="inpLevelTiga[{{$item3->id}}]"
                                             id="inp_{{$item3->id}}" data-formula="{{$item3->formula}}" data-detail="{{$item3->have_detail}}"
-                                            @if ($item3->readonly) readonly @endif />
+                                            @if ($item3->readonly) readonly @endif onkeyup="calcForm()"/>
                                           @if ($item3->have_detail)
                                             @php
                                               $lev4 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
@@ -300,9 +128,9 @@
                                                               @endphp
                                                                 @foreach ($lev4 as $item4)
                                                                   <td id="detail-item">
-                                                                      <input type="hidden" name="inpLevelEmpatId[{{ $indexLevelEmpatId++ }}]" value="{{ $item4->id }}">
-                                                                      <input class="form-control rupiah" type="text" name="inpLevelEmpat[{{ $indexInpLevelEmpat++ }}]"
-                                                                        id="inp_{{$item4->id}}[]" data-formula="{{$item4->formula}}" onkeyup="calcForm()"/>
+                                                                      <input type="hidden" name="inpLevelEmpatId[{{ $indexInpLevelEmpatId++ }}]" value="{{ $item4->id }}">
+                                                                      <input class="form-control rupiah inp_{{$item4->id}}" type="text" name="inpLevelEmpat[{{ $indexInpLevelEmpat++ }}]"
+                                                                        id="inp_{{$item4->id}}" data-formula="{{$item4->formula}}" data-level="{{$item4->level}}" onkeyup="calcForm()" @if ($item4->readonly) readonly @endif/>
                                                                   </td>
                                                                 @endforeach
                                                                 <td>
@@ -344,10 +172,11 @@
                         @foreach ($lev3NoParent as $item3NoParent)
                           <div class="col-6">
                               <div class="form-group form-field">
-                                  <label for="inpLevelTigaParent[{{$item3NoParent->id}}]" class="font-weight-semibold">{{$item3NoParent->field}}</label>
+                                  <label for="inp_{{$item3NoParent->id}}" class="font-weight-semibold">{{$item3NoParent->field}}</label>
                                   <div class="input-group">
                                     <input type="text" class="form-control rupiah inp_{{$item3NoParent->id}}" name="inpLevelTigaParent[{{$item3NoParent->id}}]"
-                                        id="inp_{{$item3NoParent->id}}" data-formula="{{$item3NoParent->formula}}" @if ($item3NoParent->readonly) readonly @endif />
+                                    id="inp_{{$item3NoParent->id}}" data-formula="{{$item3NoParent->formula}}" data-detail="{{$item3NoParent->have_detail}}"
+                                    @if ($item3NoParent->readonly) readonly @endif onkeyup="calcForm()"/>
                                       @if ($item3NoParent->add_on)
                                         <div class="input-group-append">
                                             <span class="input-group-text" id="basic-addon2">{{$item3NoParent->add_on}}</span>
@@ -382,8 +211,9 @@
                                   <div class="form-group form-field">
                                       <label for="inp_{{$item3NoParent->id}}" class="font-weight-semibold">{{$item3NoParent->field}}</label>
                                       <div class="input-group">
-                                        <input type="text" class="form-control rupiah inp_{{$item3NoParent->id}}" name="inpLevelTigaParent[{{$item3NoParent->id}}]"
-                                          id="inp_{{$item3NoParent->id}}" data-formula="{{$item3NoParent->formula}}" @if ($item3NoParent->readonly) readonly @endif />
+                                        <input type="text" class="form-control rupiah inp_{{$item3NoParent->id}}"  name="inpLevelTigaParent[{{$item3NoParent->id}}]"
+                                        id="inp_{{$item3NoParent->id}}" data-formula="{{$item3NoParent->formula}}" data-detail="{{$item3NoParent->have_detail}}"
+                                        @if ($item3NoParent->readonly) readonly @endif onkeyup="calcForm()"/>
                                         @if ($item3NoParent->add_on)
                                           <div class="input-group-append">
                                               <span class="input-group-text" id="basic-addon2">{{$item3NoParent->add_on}}</span>
@@ -403,8 +233,10 @@
                                         <label class="font-weight-semibold">:</label>
                                       </td>
                                       <td>
-                                        <input type="hidden" name="inpLevelTigaParent[{{$item3NoParent->id}}]" id="inp_{{$item3NoParent->id}}">
-                                        <label class="font-weight-normal" id="inp_{{$item3NoParent->id}}">0</label>
+                                        <input type="hidden" name="inpLevelTigaParent[{{$item3NoParent->id}}]"
+                                          id="inp_{{$item3NoParent->id}}" data-formula="{{$item3NoParent->formula}}" data-detail="{{$item3NoParent->have_detail}}"
+                                          @if ($item3NoParent->readonly) readonly @endif onkeyup="calcForm()">
+                                        <label class="font-weight-normal" id="inp_{{$item3NoParent->id}}_label">0</label>
                                       </td>
                                       {{--  <div class="form-group form-field">
                                           <label for="inp_{{$item3NoParent->id}}" class="font-weight-semibold">{{$item3NoParent->field}}</label>
@@ -434,7 +266,7 @@
                                   <label for="inp_{{$item3NoParent->id}}" class="font-weight-semibold">{{$item3NoParent->field}}</label>
                                   <input type="text" class="form-control rupiah inp_{{$item3NoParent->id}}" name="inp_{{$item3NoParent->id}}"
                                       id="inp_{{$item3NoParent->id}}" data-formula="{{$item3NoParent->formula}}"
-                                      @if ($item3NoParent->readonly) readonly @endif />
+                                      @if ($item3NoParent->readonly) readonly @endif onkeyup="calcForm()"/>
                               </div>
                           </div>
                         @endforeach
@@ -466,11 +298,15 @@
       var allId = [];
       var name = [];
       var allIdHidden = [];
+      var allFormula = [];
+      var allLevel = [];
 
       $('#detail-item input[type=text]').each(function() {
         var id = $(this).attr('id')
         allId.push(id)
         name.push($(this).attr("name"))
+        allFormula.push($(this).data('formula'))
+        allLevel.push($(this).data('level'))
       })
       $('#detail-item input[type=hidden]').each(function() {
         var value = $(this).val()
@@ -481,14 +317,26 @@
         content += `<td>
           <input type="hidden" name="inpLevelEmpatId[${indexInpLevelEmpatId++}]" value="${allIdHidden[i]}"/>
           <input
-                  class="form-control"
+                  class="form-control rupiah ${item}"
                   type="text"
                   name="inpLevelEmpat[${indexInpLevelEmpat++}]"
                   id="${item}"
-                  data-formula=""
+                  data-formula="${allFormula[i]}"
+                  data-level="${allLevel[i]}"
                   onkeyup="calcForm()"
-          />
-          </td>`
+          `;
+          if(item == 'inp_58'){
+            content += ` readonly
+              />
+              </td>
+            `
+          } else {
+            content += `
+              />
+              </td>
+            `
+          }
+          
       })
       content += `<td>
                               <button
@@ -506,6 +354,7 @@
 
   $("#table_item").on("click", ".btn-minus", function() {
       $(this).closest("tr").remove();
+      calcForm()
   });
 
   $("#form-perhitungan .form-control").keyup(function() {
@@ -533,6 +382,12 @@
       rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
       return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
   }
+
+  $("#table_item").on("keyup", ".rupiah", function(){
+      var input = $(this).val()
+      $(this).val(formatrupiah(input))
+      calcForm()
+  })
 </script>
 <style>
   .modal-lg {
