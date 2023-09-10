@@ -2516,13 +2516,13 @@ null => 1,
             var level = item.level
             var inp_class = item.inp_class
 
-            if (formula) {
+            if (typeof formula != 'undefined' && formula != '') {
                 // check if have detail
                 if (formula.includes('sum')) {
+                    console.log("formula " + formula);
                     var child_id = formula.replaceAll('sum(', '')
                     child_id = child_id.replaceAll(')', '')
                     if (detail) {
-                        console.log("TABEL"+id_formula);
                         var parent_content = $(`#${id_formula}`).parent()
                         var table = parent_content.find('table')
                         var input = table.find(`[id^="${child_id}"]`)
@@ -2533,57 +2533,86 @@ null => 1,
                             result += val
                         })
                         $(`#${id_formula}`).val(isNaN(result) ? '' : formatrupiah(parseInt(result).toString()))
+                    } else{
+                        var table = $(this).parent().parent().parent()
+                        var input = $("#table_item").find(`[id^="${child_id}"]`)
+                        var result = 0
+                        input.each(function() {
+                            var val = parseInt($(this).val().replaceAll('.',''))
+                            console.log("VAL Angsurang" + val);
+                            val = isNaN(val) ? 0 : val
+                            result += val
+                        })
+                        $(`#${id_formula}`).val(isNaN(result) ? '' : formatrupiah(parseInt(result).toString()))
                     }
                 }
                 else {
                     if (formula.includes('inp')) {
-                        $.each(allIdInput, function(j, id) {
-                            // check input array or not
-                            if (level == 4) {
-                                var inp_arr = $(`.${inp_class}`)
-                                console.log('inp arr')
-                                console.log(inp_arr)
-                                $.each(inp_arr, function(k, val) {
-                                    // console.log('inp arr id')
-                                    var input_arr_id = $(this).attr('id')
-                                    var input_arr_class = $(this).attr('class')
-                                    // $(this).parent().parent().attr('.inp_14').val()
-                                    var item_formula = $(this).data('formula')
-                                    if (item_formula.includes('inp')) {
+                        // check input array or not
+                        if (level == 4) {
+                            // var inp_arr = $(`.${inp_class}`)
+                            // console.log('inp arr')
+                            // console.log(inp_arr)
+                            // $.each(allIdInput, function(j, id) {
+                            //     $.each(inp_arr, function(k, val) {
+                            //         // console.log('inp arr id')
+                            //         var input_arr_id = $(this).attr('id')
+                            //         var input_arr_class = $(this).attr('class')
+                            //         // $(this).parent().parent().attr('.inp_14').val()
+                            //         var item_formula = $(this).data('formula')
+                            //         if (item_formula.includes('inp')) {
 
-                                    }
-                                    // console.log($(this).parent().parent().find('.inp_14').attr('id'))
-                                    var plafon = $(this).parent().parent().find('.inp_13').val()
-                                    var tenor = $(this).parent().parent().find('.inp_14').val()
-                                    // var input_val = $(`#${id}`).val().replaceAll('.', '')
-                                    var input_val = plafon.replaceAll('.', '')
-                                    input_val = isNaN(input_val) ? 0 : input_val
-                                    formula = item_formula.replaceAll(id, input_val)
-                                    var resultAngsuran = parseInt(plafon.replaceAll(".", "")) / parseInt(tenor.replaceAll(".", ""))
-                                    $(this).val(formatrupiah(parseInt(resultAngsuran).toString()))
-                                })
-                            }
-                            else {
-                                if (formula.includes(id)) {
-                                    var input_val = $(`#${id}`).val().replaceAll('.', '')
-                                    input_val = isNaN(input_val) ? 0 : input_val
-                                    formula = formula.replaceAll(id, input_val)
+                            //         }
+                            //         // console.log($(this).parent().parent().find('.inp_14').attr('id'))
+                            //         var plafon = $(this).parent().parent().find('.inp_13').val()
+                            //         var tenor = $(this).parent().parent().find('.inp_14').val()
+                            //         // var input_val = $(`#${id}`).val().replaceAll('.', '')
+                            //         var input_val = plafon.replaceAll('.', '')
+                            //         input_val = isNaN(input_val) ? 0 : input_val
+                            //         formula = item_formula.replaceAll(id, input_val)
+                            //         var resultAngsuran = parseInt(plafon.replaceAll(".", "")) / parseInt(tenor.replaceAll(".", ""))
+                            //         $(this).val(formatrupiah(parseInt(resultAngsuran).toString()))
+                            //     })
+                            // })
+                        }
+                        else {
+                            console.log("all id input");
+                            console.log(allIdInput);
+                            $.each(allIdInput, function(j, id){
+                                if(j == 46){
+                                    console.log(`input val 46 id formula : ${formula}`);
+                                    console.log('input val 46 ' + id + " " + formula);
                                 }
-                            }
-                        })
+                                console.log('input val ' + id + " " + formula);
+                                if (formula.includes(id)) {
+                                    try {
+                                        var input_val = typeof $(`#${id}`).val() != 'undefined' && $(`#${id}`).val() != '' ? $(`#${id}`).val().replaceAll('.', '') : 0
+                                        input_val = isNaN(input_val) ? 0 : input_val
+                                        // if(j == 46){
+                                        //     console.log('input val 46 ' + id + " " + formula);
+                                        //     console.log(input_val);
+                                        // }
+                                        console.log(`formula include : ${input_val}`);
+                                        formula = formula.replaceAll(id, input_val)
+                                    } catch (error) {
+                                        console.log(`formul aerror : ${error}`)
+                                    }
+                                }
+                                // // check if formula contain id from other input
+                                // var other_id = alphaOnly(formula)
+                                // if (other_id && $(`#${other_id}`).val()) {
+                                //     var input_val = $(`#${other_id}`).val().replaceAll('.', '')
+                                //     formula = formula.replaceAll(other_id, input_val)
+                                // }
+                                // console.log('hasil formula')
+                                // console.log(formula)
+                                var result = calculateFormula(formula)
+                                result = formatrupiah(parseInt(result).toString())
+                                $(`#${id_formula}`).val(result)
+                                $(`#${id_formula}_label`).html(result)
+                            })
+                        }
                     }
-                    // check if formula contain id from other input
-                    var other_id = alphaOnly(formula)
-                    if (other_id && $(`#${other_id}`).val() && level != 4) {
-                        var input_val = $(`#${other_id}`).val().replaceAll('.', '')
-                        formula = formula.replaceAll(other_id, input_val)
-                    }
-                    // console.log('hasil formula')
-                    // console.log(formula)
-                    var result = calculateFormula(formula)
-                    result = formatrupiah(parseInt(result).toString())
-                    $(`#${id_formula}`).val(result)
-                    $(`#${id_formula}_label`).html(result)
                 }
             }
         })

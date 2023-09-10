@@ -22,7 +22,7 @@
                       <div class="col-md-6">
                         <div class="form-group mb-4">
                           <label for="inputHarta" class="font-weight-semibold">Pilih Periode :</label>
-                          <select name="" style="width: 100%; height: 40px" class="select-date" id="periode">
+                          <select name="" style="width: 100%; height: 40px" class="select-date" id="periode" onchange="calcForm()">
                                 <option selected>--Pilih Bulan--</option>
                                 <option value="1">Januari</option>
                                 <option value="2">Februari</option>

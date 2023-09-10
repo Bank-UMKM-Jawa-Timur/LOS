@@ -265,8 +265,8 @@
         
         function calculateFormula(formula) {
             try {
-                console.log('calculate with formula')
-                console.log(formula)
+                // console.log('calculate with formula')
+                // console.log(formula)
                 if (formula.includes('inp_'))
                     return ''
                 else {
@@ -275,7 +275,7 @@
                 }
             }
             catch (e) {
-                console.log(e)
+                // console.log(e)
                 return 0
             }
         }
