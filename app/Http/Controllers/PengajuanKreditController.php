@@ -3667,6 +3667,7 @@ class PengajuanKreditController extends Controller
         $idCalonNasabah = $request->idCalonNasabah;
         $levelTiga = [];
         $levelEmpat = [];
+        $parentLevelTiga = [];
         
         DB::beginTransaction();
         try{
@@ -3674,6 +3675,15 @@ class PengajuanKreditController extends Controller
                 // Data Level Tiga
                 foreach($request->inpLevelTiga as $key => $item){
                     array_push($levelTiga, [
+                        'nominal' => $item,
+                        'item_perhitungan_kredit_id' => $key,
+                        'temp_calon_nasabah_id' => $idCalonNasabah,
+                        'created_at' => now()
+                    ]);
+                }
+
+                foreach($request->inpLevelTigaParent as $key => $item){
+                    array_push($parentLevelTiga, [
                         'nominal' => $item,
                         'item_perhitungan_kredit_id' => $key,
                         'temp_calon_nasabah_id' => $idCalonNasabah,
@@ -3768,6 +3778,7 @@ class PengajuanKreditController extends Controller
                     
                 PerhitunganKredit::insert($levelEmpat);
                 PerhitunganKredit::insert($levelTiga);
+                PerhitunganKredit::insert($parentLevelTiga);
                 DB::commit();
     
                 return response()->json([
@@ -3777,6 +3788,14 @@ class PengajuanKreditController extends Controller
             } else{
                 // Data Level Tiga
                 foreach($request->inpLevelTiga as $key => $item){
+                    PerhitunganKredit::where('temp_calon_nasabah_id', $idCalonNasabah)
+                        ->where('item_perhitungan_kredit_id', $key)
+                        ->update([
+                            'nominal' => $item,
+                            'updated_at' => now()
+                        ]);
+                }
+                foreach($request->inpParentLevelTiga as $key => $item){
                     PerhitunganKredit::where('temp_calon_nasabah_id', $idCalonNasabah)
                         ->where('item_perhitungan_kredit_id', $key)
                         ->update([
