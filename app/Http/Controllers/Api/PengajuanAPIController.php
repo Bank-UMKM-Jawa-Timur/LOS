@@ -247,12 +247,12 @@ class PengajuanAPIController extends Controller
         }
     }
 
-    public function getDataUsers($nip)
+    public function getDataUserById($id)
     {
         $data = DB::table('users')
             ->select('users.*', 'c.kode_cabang')
-            ->join('cabang AS c', 'c.id', 'users.id_cabang')
-            ->where('nip', $nip)
+            ->leftJoin('cabang AS c', 'c.id', 'users.id_cabang')
+            ->where('users.id', $id)
             ->first();
 
         return response()->json($data);
