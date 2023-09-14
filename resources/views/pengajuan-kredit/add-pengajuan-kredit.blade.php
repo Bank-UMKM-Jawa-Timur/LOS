@@ -607,6 +607,124 @@ null => 1,
             @endif
             @elseif ($item->opsi_jawaban == 'number')
             @if ($item->nama == 'Repayment Capacity')
+            {{-- Aspek Keuangan --}}
+            {{-- @php
+            $lev1 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)->where('level', 1)->get();
+            @endphp
+            <div class="form-group col-md-12" id="perhitungan_kredit_no_value">
+                <hr>
+                <div class="row">
+                    @foreach ($lev1 as $item)
+                        <div class="form-group col-md-12">
+                            <h5>{{ $item->field }} periode :</h5>
+                        </div>
+                        @php
+                        $lev2 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
+                                                                    ->where('level', 2)
+                                                                    ->where('parent_id', $item->id)
+                                                                    ->get();
+                        @endphp
+                        @foreach ($lev2 as $item2)
+                            @php
+                            $lev3 = \App\Models\MstItemPerhitunganKredit::with('perhitunganKredit')->where('skema_kredit_limit_id', 1)
+                                                                        ->where('level', 3)
+                                                                        ->where('parent_id', $item2->id)
+                                                                        ->get();
+                            $perhitunganKreditLev3 = \App\Models\PerhitunganKredit::rightJoin('mst_item_perhitungan_kredit', 'perhitungan_kredit.item_perhitungan_kredit_id', '=', 'mst_item_perhitungan_kredit.id')
+                                            ->where('mst_item_perhitungan_kredit.skema_kredit_limit_id', 1)
+                                            ->where('mst_item_perhitungan_kredit.level', 3)
+                                            ->where('mst_item_perhitungan_kredit.parent_id', $item2->id)
+                                            ->where('perhitungan_kredit.temp_calon_nasabah_id', 5561)
+                                            ->get();
+                            @endphp
+                            <div class="form-group col-md-6">
+                                <table class="table table-bordered">
+                                    <tr id="itemPerhitunganKreditLev2">
+                                        <th colspan="2">{{ $item2->field }} periode :</th>
+                                    </tr>
+                                    @foreach ($perhitunganKreditLev3 as $item3)
+                                        @php
+                                        $lev4 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
+                                                                                    ->where('level', 4)
+                                                                                    ->where('parent_id', $item3->id)
+                                                                                    ->get(); 
+                                        @endphp
+                                            <tr>
+                                                <td width='57%'>{{ $item3->field }}</td>
+                                                <td>{{ $item3->nominal }}</td>
+                                            </tr>
+                                    @endforeach
+                                </table>
+                            </div>
+                            
+                        @endforeach
+                    @endforeach
+                </div>
+            </div>
+            <div class="form-group col-md-12" id="perhitungan_kredit_no_value2">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        @php
+                      $lev3NoParent = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
+                      ->where('level', 3)
+                      ->whereNull('parent_id')
+                      ->get();
+                      
+                      $results = \App\Models\MstItemPerhitunganKredit::leftJoin('perhitungan_kredit', function($join) {
+                                        $join->on('mst_item_perhitungan_kredit.id', '=', 'perhitungan_kredit.item_perhitungan_kredit_id')
+                                            ->where('perhitungan_kredit.temp_calon_nasabah_id', '=', '5652');
+                                    })
+                                    ->where('mst_item_perhitungan_kredit.skema_kredit_limit_id', '=', '1')
+                                    ->where('mst_item_perhitungan_kredit.level', '=', '3')
+                                    ->whereNull('mst_item_perhitungan_kredit.parent_id')
+                                    ->whereNull('perhitungan_kredit.temp_calon_nasabah_id')
+                                    ->get();   
+                      
+                      @endphp
+                        <table class="table table-bordered">
+                            @foreach ($results as $item3NoParent)
+                            <tr>
+                                <td width='50%'>{{ $item3NoParent->field }}</td>
+                                <td>0</td>
+                            </tr>
+                            @endforeach
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    @php
+                    $lev2NoParent = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
+                                                                ->where('level', 2)
+                                                                ->whereNull('parent_id')
+                                                                ->get();
+                                                                $indexLev2 = 0;
+                    @endphp
+                    @foreach ($lev2NoParent as $item2NoParent)
+                    @php
+                    $lev3NoParent = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
+                                                                ->where('level', 3)
+                                                                ->where('parent_id', $item2NoParent->id)
+                                                                ->get();            
+                    @endphp
+                        <div class="form-group col-md-6">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th colspan="2">{{ $item2NoParent->field }}</th>
+                                </tr>
+                                @foreach ($lev3NoParent as $item3NoParent)
+                                <tr>
+                                    <td width='57%'>{{ $item3NoParent->field }}</td>
+                                    <td>{{ 0 }}</td>
+                                </tr>
+                                @endforeach
+                            </table>
+                        </div>
+                    @endforeach
+                </div>
+            </div> --}}
+            <div id="perhitungan_kredit_with_value">
+            </div>
+            {{-- END --}}
             <div class="form-group col-md-6">
                 <label for="">{{ $item->nama }}</label>
                 <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
@@ -614,6 +732,7 @@ null => 1,
                 <input type="text" maxlength="255" name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
                     placeholder="Masukkan informasi {{ $item->nama }}" class="form-control" value="">
             </div>
+            
             @else
             @if ($item->nama == 'Omzet Penjualan' || $item->nama == 'Installment')
                 @if ($value->nama != 'Aspek Keuangan')
@@ -653,6 +772,7 @@ null => 1,
                         </div>
                     </div>
                 </div>
+                
             @endif
             @elseif ($item->opsi_jawaban == 'file')
                 @if ($value->nama != 'Aspek Keuangan')
@@ -2638,14 +2758,6 @@ null => 1,
 
             data[input.attr("name")] = input.val();
             data['idCalonNasabah'] = $("#id_nasabah").val();
-        })
-        $.ajax({
-            url: "{{ route('pengajuan-kredit.save-data-perhitungan-temp') }}",
-            type: "POST",
-            data: data,
-            success: function(res){
-                console.log(res);
-            }
         });
     })
 
@@ -2657,5 +2769,199 @@ null => 1,
         }
         return false; // Return false if no match is found
     }
+
+        var selectElementBulan = $("#periode").find(":selected").text();
+        var selectElementTahun = $("#periode_tahun").find(":selected").text();
+
+        $('#perhitungan_kredit_with_value').append(`
+            <div class="form-group col-md-12" id="table_perhitungan_kredit">
+                <div class="row" id="row_perhitungan_kredit">
+                </div>
+            </div>
+            <div class="form-group col-md-12">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <table class="table table-bordered" id="table_perhitungan_kredit_lev3_noparent">
+                        </table>
+                    </div>
+                </div>
+                <div class="row" id="row_perhitungan_kredit_lev3_noparent">
+                </div>
+            </div>
+        `);
+        // $('#perhitungan_kredit_no_value').remove();
+        // $('#perhitungan_kredit_no_value2').remove();
+
+        function formatRupiah(angka, prefix) {
+        var number_string = angka.replace(/[^,\d]/g, "").toString(),
+            split = number_string.split(","),
+            sisa = split[0].length % 3,
+            rupiah = split[0].substr(0, sisa),
+            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+        // tambahkan titik jika yang di input sudah menjadi angka ribuan
+        if (ribuan) {
+            separator = sisa ? "." : "";
+            rupiah += separator + ribuan.join(".");
+        }
+
+        rupiah = split[1] != undefined ? rupiah + "," + split[1] : rupiah;
+        return prefix == undefined ? rupiah : rupiah ? "" + rupiah : "";
+        }
+
+        function getDataPerhitunganKreditLev2(element2, idClnNasabah) {
+            return new Promise(function(resolve, reject) {
+                $.ajax({
+                    url: '/get-perhitungan-kredit-lev3',
+                    type: "GET",
+                    data: {
+                        parent_id: element2.id,
+                        id_nasabah: idClnNasabah,
+                    },
+                    success: function(res) {
+                        resolve(res);
+                    },
+                    error: function(err) {
+                        reject(err);
+                    }
+                });
+            });
+        }
+
+        async function getDataPerhitunganKreditLev1() {
+            try {
+                const res1 = await $.ajax({
+                    url: "{{ route('pengajuan-kredit.save-data-perhitungan-temp') }}",
+                    type: "POST",
+                    data: data,
+                });
+                console.log(res1);
+
+                const res2 = await $.ajax({
+                    url: '{{ route('pengajuan-kredit.get-data-perhitungan-kredit-lev1') }}',
+                    type: "GET",
+                });
+                console.log(res2);
+
+                for (const element of res2.result) {
+                    $('#row_perhitungan_kredit').append(`
+                        <div class="form-group col-md-12">
+                            <h5> ${element.field} periode : ${selectElementBulan} - ${selectElementTahun} </h5>
+                        </div>
+                    `);
+
+                    const res3 = await $.ajax({
+                        url: '/get-perhitungan-kredit-lev2/' + element.id,
+                        type: "GET",
+                    });
+                    console.log(res3);
+
+                    for (const element2 of res3.result) {
+                        const uniqueTableId = `itemPerhitunganKreditLev2_${element2.id}`; // Buat id unik untuk setiap tabel
+
+                        $('#row_perhitungan_kredit').append(`
+                            <div class="form-group col-md-6">
+                                <table class="table table-bordered" id="${uniqueTableId}">
+                                    <tr>
+                                        <th colspan="2">${ element2.field}</th>
+                                    </tr>
+                                </table>
+                            </div>
+                        `);
+
+                        const res4 = await getDataPerhitunganKreditLev2(element2, res1.request.idCalonNasabah);
+                        console.log(res4);
+
+                        for (const element3 of res4.result) {
+                            if (element3.field != "Total Angsuran") {
+                                $(`#${uniqueTableId}`).append(`
+                                    <tr>
+                                        <td width='57%'>${element3.field}</td>
+                                        <td>${ formatRupiah(String(element3.nominal), '') }</td>
+                                    </tr>
+                                `);
+                            }
+                        }
+                    }
+                }
+                $.ajax({
+                    url: '/get-perhitungan-kredit-lev3-noparent/' + res1.request.idCalonNasabah,
+                    type: "Get",
+                    success: function(res){
+                        console.log(res);
+                        res.result.forEach(element => {
+                            $('#table_perhitungan_kredit_lev3_noparent').append(`
+                                <tr>
+                                    <td width='50%'>${element.field}</td>
+                                    <td>${ formatRupiah(String(element.nominal == null ? 0 : element.nominal), '') }</td>
+                                </tr>
+                            `);
+                        });
+                    }
+                });
+
+                $.ajax({
+                    url: '{{ route('pengajuan-kredit.get-data-perhitungan-kredit-lev2-noparent') }}',
+                    type: "Get",
+                    success: function(res){
+                        console.log(res);
+                        res.result.forEach(element4 => {
+                            const uniqueTableId2 = `itemPerhitunganKreditLev2_${element4.id}`;
+                            $('#row_perhitungan_kredit_lev3_noparent').append(`
+                                <div class="form-group col-md-6">
+                                    <table class="table table-bordered" id="${uniqueTableId2}">
+                                        <tr>
+                                            <th colspan="2">${element4.field}</th>
+                                        </tr>
+                                    </table>
+                                </div>
+                            `);
+
+                            $.ajax({
+                                url: '{{ route('pengajuan-kredit.get-data-perhitungan-kredit-lev3-noparent2') }}',
+                                type: "Get",
+                                data: {
+                                    parent_id: element4.id,
+                                    id_nasabah: res1.request.idCalonNasabah,
+                                },
+                                success: function(res){
+                                    console.log(res);
+                                    res.result.forEach(element => {
+                                        $(`#${uniqueTableId2}`).append(`
+                                            <tr>
+                                                <td width='57%'>${element.field}</td>
+                                                <td>${formatRupiah(String(element.nominal), '')}</td>
+                                            </tr>
+                                        `);
+                                    });
+                                }
+                            });
+                        });
+                    }
+                });
+
+
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        getDataPerhitunganKreditLev1();
+
+
+        // $.ajax({
+        //     url: "{{ route('pengajuan-kredit.save-data-perhitungan-temp') }}",
+        //     type: "POST",
+        //     data: data,
+        //     success: function(res){
+        //         console.log(res);
+        //         $('#idClnNasabah').attr('value',res.request.idCalonNasabah);
+        //         let lengthLev1 = 0;
+        //         let idClnNasabah = res.request.idCalonNasabah;
+        //     }
+        // });
+    });
+
+    
 </script>
 @endpush
