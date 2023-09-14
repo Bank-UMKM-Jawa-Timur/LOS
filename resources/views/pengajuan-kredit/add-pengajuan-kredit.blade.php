@@ -1157,7 +1157,7 @@ null => 1,
                     <div class="col"></div>
                 </div>
             @endif
-
+            
             <div class="form-group col-md-12">
                 <hr style="border: 0.2px solid #E3E6EA;">
                 <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
