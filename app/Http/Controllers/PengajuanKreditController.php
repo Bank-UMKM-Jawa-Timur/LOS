@@ -3675,7 +3675,7 @@ class PengajuanKreditController extends Controller
                 // Data Level Tiga
                 foreach($request->inpLevelTiga as $key => $item){
                     array_push($levelTiga, [
-                        'nominal' => $item,
+                        'nominal' => str_replace('.', '', $item),
                         'item_perhitungan_kredit_id' => $key,
                         'temp_calon_nasabah_id' => $idCalonNasabah,
                         'created_at' => now()
@@ -3684,7 +3684,7 @@ class PengajuanKreditController extends Controller
 
                 foreach($request->inpLevelTigaParent as $key => $item){
                     array_push($parentLevelTiga, [
-                        'nominal' => $item,
+                        'nominal' => str_replace('.', '', $item),
                         'item_perhitungan_kredit_id' => $key,
                         'temp_calon_nasabah_id' => $idCalonNasabah,
                         'created_at' => now()
@@ -3704,13 +3704,13 @@ class PengajuanKreditController extends Controller
                 
                 foreach($request->inpLevelEmpat as $key => $item){
                     if($request->inpLevelEmpatId[$key] == $bakiDebetId){
-                        array_push($bakiDebet, strval($item));
+                        array_push($bakiDebet, strval(str_replace('.', '', $item)));
                     }
                     if($request->inpLevelEmpatId[$key] == $plafonId){
-                        array_push($plafon, strval($item));
+                        array_push($plafon, strval(str_replace('.', '', $item)));
                     }
                     if($request->inpLevelEmpatId[$key] == $tenorId){
-                        array_push($tenor, strval($item));
+                        array_push($tenor, strval(str_replace('.', '', $item)));
                     }
                 }
                 

@@ -2539,7 +2539,7 @@ null => 1,
                         var result = 0
                         input.each(function() {
                             var val = parseInt($(this).val().replaceAll('.',''))
-                            console.log("VAL Angsurang" + val);
+                            // console.log("VAL Angsurang" + val);
                             val = isNaN(val) ? 0 : val
                             result += val
                         })
@@ -2548,70 +2548,75 @@ null => 1,
                 }
                 else {
                     if (formula.includes('inp')) {
-                        // check input array or not
-                        if (level == 4) {
-                            var inp_arr = $(`.${inp_class}`)
-                            console.log('inp arr')
-                            console.log(inp_arr)
-                            $.each(allIdInput, function(j, id) {
-                                $.each(inp_arr, function(k, val) {
-                                    // console.log('inp arr id')
-                                    var input_arr_id = $(this).attr('id')
-                                    var input_arr_class = $(this).attr('class')
-                                    // $(this).parent().parent().attr('.inp_14').val()
-                                    var item_formula = $(this).data('formula')
-                                    if (item_formula.includes('inp')) {
+                        // $.each(allIdInput,  function(j, id){
+                            // console.log(`index: ${j} id: ${id}`);
+                            if (level == 4) {
+                                $.each(allIdInput,  function(j, id){
+                                    var inp_arr = $(`.${inp_class}`)
+                                    // console.log('inp arr')
+                                    // console.log(inp_arr)
+                                    $.each(inp_arr, function(k, val) {
+                                        // console.log('inp arr id')
+                                        var input_arr_id = $(this).attr('id')
+                                        var input_arr_class = $(this).attr('class')
+                                        // $(this).parent().parent().attr('.inp_14').val()
+                                        var item_formula = $(this).data('formula')
+                                        if (item_formula.includes('inp')) {
 
-                                    }
-                                    // console.log($(this).parent().parent().find('.inp_14').attr('id'))
-                                    var plafon = $(this).parent().parent().find('.inp_13').val()
-                                    var tenor = $(this).parent().parent().find('.inp_14').val()
-                                    // var input_val = $(`#${id}`).val().replaceAll('.', '')
-                                    var input_val = plafon.replaceAll('.', '')
-                                    input_val = isNaN(input_val) ? 0 : input_val
-                                    formula = item_formula.replaceAll(id, input_val)
-                                    var resultAngsuran = parseInt(plafon.replaceAll(".", "")) / parseInt(tenor.replaceAll(".", ""))
-                                    $(this).val(formatrupiah(parseInt(resultAngsuran).toString()))
-                                })
-                            })
-                        }
-                        else {
-                            console.log("all id input");
-                            console.log(allIdInput);
-                            $.each(allIdInput, function(j, id){
-                                if(j == 46){
-                                    console.log(`input val 46 id formula : ${formula}`);
-                                    console.log('input val 46 ' + id + " " + formula);
-                                }
-                                console.log('input val ' + id + " " + formula);
-                                if (formula.includes(id)) {
-                                    try {
-                                        var input_val = typeof $(`#${id}`).val() != 'undefined' && $(`#${id}`).val() != '' ? $(`#${id}`).val().replaceAll('.', '') : 0
+                                        }
+                                        // console.log($(this).parent().parent().find('.inp_14').attr('id'))
+                                        var plafon = $(this).parent().parent().find('.inp_13').val()
+                                        var tenor = $(this).parent().parent().find('.inp_14').val()
+                                        // var input_val = $(`#${id}`).val().replaceAll('.', '')
+                                        var input_val = plafon.replaceAll('.', '')
                                         input_val = isNaN(input_val) ? 0 : input_val
-                                        // if(j == 46){
-                                        //     console.log('input val 46 ' + id + " " + formula);
-                                        //     console.log(input_val);
-                                        // }
-                                        console.log(`formula include : ${input_val}`);
-                                        formula = formula.replaceAll(id, input_val)
-                                    } catch (error) {
-                                        console.log(`formul aerror : ${error}`)
+                                        formula = item_formula.replaceAll(id, input_val)
+                                        var resultAngsuran = parseInt(plafon.replaceAll(".", "")) / parseInt(tenor.replaceAll(".", ""))
+                                        $(this).val(formatrupiah(parseInt(resultAngsuran).toString()))
+                                    })
+                                })
+                            }
+                            else {
+                                let formulaSplitted = formula.split(/[+-\/\*]/);
+                                $.each(allIdInput,  function(j, id){
+                                    // console.log(`formula splitted:`);
+                                    // console.log(formulaSplitted);
+                                    if (stringContainsValueFromArray(formula, formulaSplitted)) {
+                                        try {
+                                            $.each(formulaSplitted, function(k, replaced){
+                                                // console.log(`replaced: ${replaced}`);
+                                                var input_val = typeof $(`#${replaced}`).val() != 'undefined' && $(`#${replaced}`).val() != '' ? $(`#${replaced}`).val().replaceAll('.', '') : 0
+                                                input_val = isNaN(input_val) ? 0 : input_val
+                                                // if(j == 46){
+                                                //     console.log('input val 46 ' + id + " " + formula);
+                                                //     console.log(input_val);
+                                                // }
+                                                // console.log(`formula include : ${input_val} formula:${formula}  id: ${id} index: ${j} id_item: ${id_formula} replaced: ${replaced}`);
+                                                if(replaced != "100"){
+                                                    formula = formula.replace(replaced, input_val)
+                                                }
+                                                console.log(`formula after replaced: ${formula}`);
+                                                // // check if formula contain id from other input
+                                                var other_id = alphaOnly(formula)
+                                                if (other_id && $(`#${other_id}`).val()) {
+                                                    var input_val = $(`#${other_id}`).val().replaceAll('.', '')
+                                                    formula = formula.replaceAll(other_id, input_val)
+                                                }
+                                                // console.log('hasil formula')
+                                                // console.log(formula)
+                                                var result = calculateFormula(formula)
+                                                result = formatrupiah(parseInt(result).toString())
+                                                $(`#${id_formula}`).val(result)
+                                                $(`#${id_formula}_label`).html(result)
+                                            })
+                                        } catch (error) {
+                                            console.log(`formula error : ${error}`)
+                                        }
                                     }
-                                }
-                                // // check if formula contain id from other input
-                                var other_id = alphaOnly(formula)
-                                if (other_id && $(`#${other_id}`).val()) {
-                                    var input_val = $(`#${other_id}`).val().replaceAll('.', '')
-                                    formula = formula.replaceAll(other_id, input_val)
-                                }
-                                // console.log('hasil formula')
-                                // console.log(formula)
-                                var result = calculateFormula(formula)
-                                result = formatrupiah(parseInt(result).toString())
-                                $(`#${id_formula}`).val(result)
-                                $(`#${id_formula}_label`).html(result)
-                            })
-                        }
+                                })
+                            }
+                        // })
+                        // check input array or not
                     }
                 }
             }
@@ -2643,5 +2648,14 @@ null => 1,
             }
         });
     })
+
+    function stringContainsValueFromArray(inputString, searchArray) {
+        for (let i = 0; i < searchArray.length; i++) {
+            if (inputString.includes(searchArray[i])) {
+            return true; // Return true if a match is found
+            }
+        }
+        return false; // Return false if no match is found
+    }
 </script>
 @endpush
