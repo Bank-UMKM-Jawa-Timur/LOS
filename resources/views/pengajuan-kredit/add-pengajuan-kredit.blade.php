@@ -2748,6 +2748,16 @@ null => 1,
         calcForm()
     })
 
+    function stringContainsValueFromArray(inputString, searchArray) {
+            for (let i = 0; i < searchArray.length; i++) {
+                if (inputString.includes(searchArray[i])) {
+                return true; // Return true if a match is found
+                }
+            }
+            return false; // Return false if no match is found
+        }
+
+
     $("#btnSimpanPerhitungan").on('click',function(e){
         console.log('test');
         let data = {
@@ -2759,16 +2769,6 @@ null => 1,
             data[input.attr("name")] = input.val();
             data['idCalonNasabah'] = $("#id_nasabah").val();
         });
-    })
-
-    function stringContainsValueFromArray(inputString, searchArray) {
-        for (let i = 0; i < searchArray.length; i++) {
-            if (inputString.includes(searchArray[i])) {
-            return true; // Return true if a match is found
-            }
-        }
-        return false; // Return false if no match is found
-    }
 
         var selectElementBulan = $("#periode").find(":selected").text();
         var selectElementTahun = $("#periode_tahun").find(":selected").text();
@@ -2793,20 +2793,20 @@ null => 1,
         // $('#perhitungan_kredit_no_value2').remove();
 
         function formatRupiah(angka, prefix) {
-        var number_string = angka.replace(/[^,\d]/g, "").toString(),
-            split = number_string.split(","),
-            sisa = split[0].length % 3,
-            rupiah = split[0].substr(0, sisa),
-            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+            var number_string = angka.replace(/[^,\d]/g, "").toString(),
+                split = number_string.split(","),
+                sisa = split[0].length % 3,
+                rupiah = split[0].substr(0, sisa),
+                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
 
-        // tambahkan titik jika yang di input sudah menjadi angka ribuan
-        if (ribuan) {
-            separator = sisa ? "." : "";
-            rupiah += separator + ribuan.join(".");
-        }
+            // tambahkan titik jika yang di input sudah menjadi angka ribuan
+            if (ribuan) {
+                separator = sisa ? "." : "";
+                rupiah += separator + ribuan.join(".");
+            }
 
-        rupiah = split[1] != undefined ? rupiah + "," + split[1] : rupiah;
-        return prefix == undefined ? rupiah : rupiah ? "" + rupiah : "";
+            rupiah = split[1] != undefined ? rupiah + "," + split[1] : rupiah;
+            return prefix == undefined ? rupiah : rupiah ? "" + rupiah : "";
         }
 
         function getDataPerhitunganKreditLev2(element2, idClnNasabah) {
@@ -2948,18 +2948,6 @@ null => 1,
 
         getDataPerhitunganKreditLev1();
 
-
-        // $.ajax({
-        //     url: "{{ route('pengajuan-kredit.save-data-perhitungan-temp') }}",
-        //     type: "POST",
-        //     data: data,
-        //     success: function(res){
-        //         console.log(res);
-        //         $('#idClnNasabah').attr('value',res.request.idCalonNasabah);
-        //         let lengthLev1 = 0;
-        //         let idClnNasabah = res.request.idCalonNasabah;
-        //     }
-        // });
     });
 
     
