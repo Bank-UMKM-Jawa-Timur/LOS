@@ -3910,4 +3910,60 @@ class PengajuanKreditController extends Controller
             ]);
         }
     }
+
+    public function getPerhitunganKreditLev1(){
+        $data = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)->where('level', 1)->get();
+        return response()->json(['result' => $data]);
+    }
+
+    public function getPerhitunganKreditLev2($parent_id){
+        $data = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
+                                                                    ->where('level', 2)
+                                                                    ->where('parent_id', $parent_id)
+                                                                    ->get();
+        return response()->json(['result' => $data]);
+    }
+
+    public function getDataPerhitunganKreditLev3(Request $request){
+        $perhitunganKreditLev3 = \App\Models\PerhitunganKredit::rightJoin('mst_item_perhitungan_kredit', 'perhitungan_kredit.item_perhitungan_kredit_id', '=', 'mst_item_perhitungan_kredit.id')
+                                            ->where('mst_item_perhitungan_kredit.skema_kredit_limit_id', 1)
+                                            ->where('mst_item_perhitungan_kredit.level', 3)
+                                            ->where('mst_item_perhitungan_kredit.parent_id', $request->parent_id)
+                                            ->where('perhitungan_kredit.temp_calon_nasabah_id', $request->id_nasabah)
+                                            ->get();
+        return response()->json(['result' => $perhitunganKreditLev3]);
+    }
+
+    public function getDataPerhitunganKreditLev3NoParent(Request $request){
+        $data = \App\Models\MstItemPerhitunganKredit::leftJoin('perhitungan_kredit', function($join) use ($request) {
+            $join->on('mst_item_perhitungan_kredit.id', '=', 'perhitungan_kredit.item_perhitungan_kredit_id')
+                ->where('perhitungan_kredit.temp_calon_nasabah_id', '=', $request->input('parent_id'));
+        })
+        ->where('mst_item_perhitungan_kredit.skema_kredit_limit_id', '=', 1)
+        ->where('mst_item_perhitungan_kredit.level', '=', 3)
+        ->whereNull('mst_item_perhitungan_kredit.parent_id')
+        ->whereNull('perhitungan_kredit.temp_calon_nasabah_id')
+        ->get();   
+    
+        return response()->json(['result'=> $data]);
+    }
+
+    public function getDataPerhitunganKreditLev2NoParent(){
+        $data = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
+                                                                ->where('level', 2)
+                                                                ->whereNull('parent_id')
+                                                                ->get();
+        return response()->json(['result'=> $data]);
+    }
+
+    public function getDataPerhitunganKreditLev3NoParent2(Request $request) {
+        $perhitunganKreditLev3 = \App\Models\PerhitunganKredit::rightJoin('mst_item_perhitungan_kredit', 'perhitungan_kredit.item_perhitungan_kredit_id', '=', 'mst_item_perhitungan_kredit.id')
+                                            ->where('mst_item_perhitungan_kredit.skema_kredit_limit_id', 1)
+                                            ->where('mst_item_perhitungan_kredit.level', 3)
+                                            ->where('mst_item_perhitungan_kredit.parent_id', $request->parent_id)
+                                            ->where('perhitungan_kredit.temp_calon_nasabah_id', $request->id_nasabah)
+                                            ->get();
+        return response()->json(['result' => $perhitunganKreditLev3]);
+    }
+    
 }
