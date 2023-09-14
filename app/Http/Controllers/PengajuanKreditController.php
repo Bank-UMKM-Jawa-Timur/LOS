@@ -1349,6 +1349,13 @@ class PengajuanKreditController extends Controller
                 $addKomentar->save();
             }
 
+            // dd($request->id_nasabah);
+            PerhitunganKredit::where('temp_calon_nasabah_id', $request->id_nasabah)
+                ->update([
+                    'pengajuan_id' => $id_pengajuan,
+                    'temp_calon_nasabah_id' => null
+                ]);
+
             JawabanTemp::where('id_temporary_calon_nasabah', $tempNasabah->id)->delete();
             JawabanTempModel::where('id_temporary_calon_nasabah', $tempNasabah->id)->delete();
             $tempNasabah->delete();
@@ -1364,11 +1371,6 @@ class PengajuanKreditController extends Controller
 
             $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan proses pembuatan data pengajuan atas nama ' . $namaNasabah . '.', $id_pengajuan, Auth::user()->id, Auth::user()->nip);
 
-            PerhitunganKredit::where('temp_calon_nasabah_id', $tempNasabah->id)
-                ->update([
-                    'pengajuan_id' => $id_pengajuan,
-                    'temp_calon_nasabah_id' => null
-                ]);
             DB::commit();
             if (!$statusSlik)
                 return redirect()->route('pengajuan-kredit.index')->withStatus('Data berhasil disimpan.');
