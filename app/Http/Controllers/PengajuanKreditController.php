@@ -3797,7 +3797,7 @@ class PengajuanKreditController extends Controller
                             'updated_at' => now()
                         ]);
                 }
-                foreach($request->inpParentLevelTiga as $key => $item){
+                foreach($request->inpLevelTigaParent as $key => $item){
                     PerhitunganKredit::where('temp_calon_nasabah_id', $idCalonNasabah)
                         ->where('item_perhitungan_kredit_id', $key)
                         ->update([
