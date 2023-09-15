@@ -653,7 +653,6 @@
                         @if ($item->nama == 'Repayment Capacity')
                         {{-- table aspek keuangan --}}
                         {{-- <hr> --}}
-                        <p>{{ $dataUmumNasabah->id }}</p>
                         @php
                         $lev1 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)->where('level', 1)->get();
                         function rupiah($angka){
@@ -662,11 +661,42 @@
                             $format_rupiah = str_replace(',', '', $format_rupiah); 
                             echo $format_rupiah;
                         }
+                        $getPeriode = \App\Models\PeriodeAspekKeuangan::join('perhitungan_kredit', 'periode_aspek_keuangan.perhitungan_kredit_id', '=', 'perhitungan_kredit.id')
+                                                            ->where('perhitungan_kredit.pengajuan_id', $dataUmumNasabah->id)
+                                                            ->select('periode_aspek_keuangan.*', 'perhitungan_kredit.*') 
+                                                            ->get();
+                        function bulan($value){
+                            if ($value == 1) {
+                                echo "Januari";
+                            }else if($value == 2){
+                                echo "Februari";
+                            }else if($value == 3){
+                                echo "Maret";
+                            }else if($value == 4){
+                                echo "April";
+                            }else if($value == 5){
+                                echo "Mei";
+                            }else if($value == 6){
+                                echo "Juni";
+                            }else if($value == 7){
+                                echo "Juli";
+                            }else if($value == 8){
+                                echo "Agustus";
+                            }else if($value == 9){
+                                echo "September";
+                            }else if($value == 10){
+                                echo "Oktober";
+                            }else if($value == 11){
+                                echo "November";
+                            }else{
+                                echo "Desember";
+                            }
+                        }
                         @endphp
                             <div class="row">
                                 @foreach ($lev1 as $itemAspek)
                                     <div class="form-group col-md-12">
-                                        <h5>{{ $itemAspek->field }} periode :</h5>
+                                        <h5>{{ $itemAspek->field }} periode : {{ bulan($getPeriode[0]->bulan) }} - {{ $getPeriode[0]->tahun }}</h5>
                                     </div>
                                     @php
                                     $lev2 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
