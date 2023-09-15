@@ -2629,6 +2629,7 @@ null => 1,
         });
         console.log('allFormData')
         console.log(allFormData)
+        // console.log("jumlahkredit: " + $("#jumlah_kredit").val());
         $.each(allFormData, function(i, item) {
             var formula = item.formula
             var detail = item.detail
@@ -2715,7 +2716,7 @@ null => 1,
                                                 if(replaced != "100"){
                                                     formula = formula.replace(replaced, input_val)
                                                 }
-                                                console.log(`formula after replaced: ${formula}`);
+                                                // console.log(`formula after replaced: ${formula}`);
                                                 // // check if formula contain id from other input
                                                 var other_id = alphaOnly(formula)
                                                 if (other_id && $(`#${other_id}`).val()) {
@@ -2725,7 +2726,11 @@ null => 1,
                                                 // console.log('hasil formula')
                                                 // console.log(formula)
                                                 var result = calculateFormula(formula)
-                                                result = formatrupiah(parseInt(result).toString())
+                                                if(id_formula != 'inp_68'){
+                                                    result = formatrupiah(parseInt(result).toString())
+                                                } else{
+                                                    $("#repayment_capacity").val(result)
+                                                }
                                                 $(`#${id_formula}`).val(result)
                                                 $(`#${id_formula}_label`).html(result)
                                             })
@@ -2737,6 +2742,45 @@ null => 1,
                             }
                         // })
                         // check input array or not
+                    } else {
+                        let formulaSplitted = formula.split(/[+-\/\*]/);
+                        $.each(allIdInput,  function(j, id){
+                            // console.log(`formula splitted:`);
+                            // console.log(formulaSplitted);
+                            if (stringContainsValueFromArray(formula, formulaSplitted)) {
+                                try {
+                                    $.each(formulaSplitted, function(k, replaced){
+                                        // console.log(`replaced: ${replaced}`);
+                                        var input_val = typeof $(`#${replaced}`).val() != 'undefined' && $(`#${replaced}`).val() != '' ? $(`#${replaced}`).val().replaceAll('.', '') : 0
+                                        input_val = isNaN(input_val) ? 0 : input_val
+                                        // if(j == 46){
+                                        //     console.log('input val 46 ' + id + " " + formula);
+                                        //     console.log(input_val);
+                                        // }
+                                        // console.log(`formula include : ${input_val} formula:${formula}  id: ${id} index: ${j} id_item: ${id_formula} replaced: ${replaced}`);
+                                        if(replaced != "100"){
+                                            formula = formula.replace(replaced, input_val)
+                                        }
+                                        // check if formula contain id from other input
+                                        var other_id = alphaOnly(formula)
+                                        if (other_id && $(`#${other_id}`).val()) {
+                                            var input_val = $(`#${other_id}`).val().replaceAll('.', '')
+                                            formula = formula.replaceAll(other_id, input_val)
+                                        }
+                                        // console.log('hasil formula')
+                                        // console.log(formula)
+                                        var result = calculateFormula(formula)
+                                        if(id_formula != 'inp_67'){
+                                            result = formatrupiah(parseInt(result).toString())
+                                        }
+                                        $(`#${id_formula}`).val(result)
+                                        $(`#${id_formula}_label`).html(result)
+                                    })
+                                } catch (error) {
+                                    console.log(`formula error : ${error}`)
+                                }
+                            }
+                        })
                     }
                 }
             }
