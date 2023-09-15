@@ -313,12 +313,15 @@
       var allFormula = [];
       var allLevel = [];
 
-      $('#detail-item input[type=text]').each(function() {
-        var id = $(this).attr('id')
-        allId.push(id)
-        name.push($(this).attr("name"))
-        allFormula.push($(this).data('formula'))
-        allLevel.push($(this).data('level'))
+      $('#detail-item input').each(function() {
+        if($(this).attr("type") != "hidden"){
+          // console.log("TEST attr");
+          var id = $(this).attr('id')
+          allId.push(id)
+          name.push($(this).attr("name"))
+          allFormula.push($(this).data('formula'))
+          allLevel.push($(this).data('level'))
+        }
       })
       $('#detail-item input[type=hidden]').each(function() {
         var value = $(this).val()
