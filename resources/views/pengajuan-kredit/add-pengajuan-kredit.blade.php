@@ -1157,7 +1157,7 @@ null => 1,
                     <div class="col"></div>
                 </div>
             @endif
-
+            
             <div class="form-group col-md-12">
                 <hr style="border: 0.2px solid #E3E6EA;">
                 <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
@@ -2801,9 +2801,10 @@ null => 1,
             return false; // Return false if no match is found
         }
 
-
+    var indexBtnSimpan = 0;
     $("#btnSimpanPerhitungan").on('click',function(e){
         console.log('test');
+        indexBtnSimpan += 1;
         let data = {
             idCalonNasabah: $("id_nasabah").val()
         }
@@ -2815,26 +2816,45 @@ null => 1,
         });
 
         var selectElementBulan = $("#periode").find(":selected").text();
+        var selectValueElementBulan = $("#periode").val();
         var selectElementTahun = $("#periode_tahun").find(":selected").text();
-
-        $('#perhitungan_kredit_with_value').append(`
-            <div class="form-group col-md-12" id="table_perhitungan_kredit">
-                <div class="row" id="row_perhitungan_kredit">
-                </div>
-            </div>
-            <div class="form-group col-md-12">
-                <div class="row">
-                    <div class="form-group col-md-12">
-                        <table class="table table-bordered" id="table_perhitungan_kredit_lev3_noparent">
-                        </table>
+        
+        if (indexBtnSimpan == 1) {
+            $('#perhitungan_kredit_with_value').append(`
+                <div class="form-group col-md-12" id="table_perhitungan_kredit">
+                    <div class="row" id="row_perhitungan_kredit">
                     </div>
                 </div>
-                <div class="row" id="row_perhitungan_kredit_lev3_noparent">
+                <div class="form-group col-md-12">
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <table class="table table-bordered" id="table_perhitungan_kredit_lev3_noparent">
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row" id="row_perhitungan_kredit_lev3_noparent">
+                    </div>
                 </div>
-            </div>
-        `);
-        // $('#perhitungan_kredit_no_value').remove();
-        // $('#perhitungan_kredit_no_value2').remove();
+            `);
+        }else{
+            $('#perhitungan_kredit_with_value').empty();
+            $('#perhitungan_kredit_with_value').append(`
+                <div class="form-group col-md-12" id="table_perhitungan_kredit">
+                    <div class="row" id="row_perhitungan_kredit">
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <table class="table table-bordered" id="table_perhitungan_kredit_lev3_noparent">
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row" id="row_perhitungan_kredit_lev3_noparent">
+                    </div>
+                </div>
+            `);
+        }
 
         function formatRupiah(angka, prefix) {
             var number_string = angka.replace(/[^,\d]/g, "").toString(),
@@ -2870,7 +2890,7 @@ null => 1,
                     }
                 });
             });
-        }
+        }    
 
         async function getDataPerhitunganKreditLev1() {
             try {
@@ -2886,6 +2906,24 @@ null => 1,
                     type: "GET",
                 });
                 console.log(res2);
+
+                if (indexBtnSimpan == 1) {
+                    $.ajax({
+                        url: '{{ route('pengajuan-kredit.save-data-periode-aspek-keuangan') }}',
+                        type: 'POST',
+                        data: {
+                            perhitungan_kredit_id: res1.lastId,
+                            bulan: selectValueElementBulan,
+                            tahun: selectElementTahun,
+                        },
+                        success: function (response) {
+                            console.log(response);
+                        },
+                        error: function(error){
+                            console.log(error);
+                        }
+                    });
+                }
 
                 for (const element of res2.result) {
                     $('#row_perhitungan_kredit').append(`
@@ -2989,6 +3027,7 @@ null => 1,
                 console.error(error);
             }
         }
+
 
         getDataPerhitunganKreditLev1();
 

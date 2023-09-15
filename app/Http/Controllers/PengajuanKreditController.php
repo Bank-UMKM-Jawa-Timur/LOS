@@ -26,6 +26,7 @@ use App\Models\MstProdukKredit;
 use App\Models\MstSkemaKredit;
 use App\Models\MstSkemaLimit;
 use App\Models\PerhitunganKredit;
+use App\Models\PeriodeAspekKeuangan;
 use App\Models\TipeModel;
 use App\Models\User;
 use App\Services\TemporaryService;
@@ -40,6 +41,8 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 use Image;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator as FacadesValidator;
+use Illuminate\Validation\Validator;
 use PhpParser\Node\Expr;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 
@@ -3782,10 +3785,13 @@ class PengajuanKreditController extends Controller
                 PerhitunganKredit::insert($levelTiga);
                 PerhitunganKredit::insert($parentLevelTiga);
                 DB::commit();
+
+                $idTerakhir = DB::table('perhitungan_kredit')->latest('id')->first()->id;
     
                 return response()->json([
                     'message' => 'Berhasil menambahkan perhitungan kredit.',
-                    'request' => $request->all()
+                    'request' => $request->all(),
+                    'lastId' => $idTerakhir,
                 ]);
             } else{
                 // Data Level Tiga
@@ -3966,6 +3972,19 @@ class PengajuanKreditController extends Controller
                                             ->where('perhitungan_kredit.temp_calon_nasabah_id', $request->id_nasabah)
                                             ->get();
         return response()->json(['result' => $perhitunganKreditLev3]);
+    }
+
+    public function saveDataPeriodeAspekKeuangan(Request $request) {
+        $data = [
+            'perhitungan_kredit_id' => $request->perhitungan_kredit_id,
+            'bulan' => $request->bulan,
+            'tahun' => $request->tahun,
+        ];
+        PeriodeAspekKeuangan::create($data);
+        return response()->json([
+            'success' => 'Data Berhasil di Simpan',
+            'result' => $data,
+        ]);
     }
     
 }

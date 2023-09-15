@@ -153,6 +153,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/get-perhitungan-kredit-lev3-noparent/{idClnNasabah}', [PengajuanKreditController::class, 'getDataPerhitunganKreditLev3NoParent']);
     Route::get('/get-perhitungan-kredit-lev2-noparent', [PengajuanKreditController::class, 'getDataPerhitunganKreditLev2NoParent'])->name('pengajuan-kredit.get-data-perhitungan-kredit-lev2-noparent');
     Route::get('/get-perhitungan-kredit-lev3-noparent2', [PengajuanKreditController::class, 'getDataPerhitunganKreditLev3NoParent2'])->name('pengajuan-kredit.get-data-perhitungan-kredit-lev3-noparent2');
+    Route::post('/save-data-periode-aspek-keuangan', [PengajuanKreditController::class, 'saveDataPeriodeAspekKeuangan'])->name('pengajuan-kredit.save-data-periode-aspek-keuangan');
 });
 
 require __DIR__ . '/auth.php';
