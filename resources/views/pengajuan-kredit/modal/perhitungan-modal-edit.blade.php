@@ -1,3 +1,17 @@
+<style>
+  #loading-simpan-perhitungan {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+</style>
 @php
   $lev1 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)->where('level', 1)->get();
   $getPeriode = \App\Models\PeriodeAspekKeuangan::join('perhitungan_kredit', 'periode_aspek_keuangan.perhitungan_kredit_id', '=', 'perhitungan_kredit.id')
@@ -6,8 +20,11 @@
                                                             ->get();
 @endphp
 <div class="modal fade" id="perhitunganModalEdit" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+  <div id="loading-simpan-perhitungan" style="display: none;" class="text-center">
+    <img src="{{ asset('img/loading3.gif') }}" alt="Loading..." style="width: 100px; height: 100px;">
+  </div>
   <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
+      <div class="modal-content" id="perhitunganModalAfterLoading">
         <div class="modal-header">
             <h5 class="modal-title">Perhitungan</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">

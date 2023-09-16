@@ -3798,6 +3798,7 @@
         }
 
         $('#btn-perhitungan').on('click', function() { 
+            $('#loading-simpan-perhitungan').hide();
             $("#perhitunganModalEdit").modal('show')
             calcForm()
         });
@@ -3816,6 +3817,7 @@
             });
 
             $('#perhitungan_kredit_with_value_without_update').hide();
+            $('#loading-simpan-perhitungan').show();
 
             if (indexBtnSimpan == 1) {
                 $('#perhitungan_kredit_with_value').append(`
@@ -4027,6 +4029,13 @@
 
 
             getDataPerhitunganKreditLev1();
+            $('#perhitunganModalAfterLoading').hide();
+            setTimeout(function(){
+                $('#loading-simpan-perhitungan').hide();
+            }, 2000);
+            setTimeout(function(){
+                $('#perhitunganModalAfterLoading').show();
+            }, 2000);
 
         });
     </script>

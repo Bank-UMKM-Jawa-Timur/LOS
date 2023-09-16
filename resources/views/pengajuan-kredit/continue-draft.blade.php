@@ -3197,6 +3197,7 @@ is-invalid
         }
 
     $('#btn-perhitungan').on('click', function() { 
+        $('#loading-simpan-perhitungan').hide();
         $("#perhitunganModal").modal("show");
         calcForm();
      });
@@ -3215,6 +3216,7 @@ is-invalid
         });
 
         $('#perhitungan_kredit_with_value_without_update').hide();
+        $('#loading-simpan-perhitungan').show();
 
         var selectElementBulan = $("#periode").find(":selected").text();
         var selectValueElementBulan = $("#periode").val();
@@ -3440,6 +3442,13 @@ is-invalid
 
 
         getDataPerhitunganKreditLev1();
+        $('#perhitunganModalAfterLoading').hide();
+        setTimeout(function(){
+            $('#loading-simpan-perhitungan').hide();
+        }, 2000);
+        setTimeout(function(){
+            $('#perhitunganModalAfterLoading').show();
+        }, 2000);
 
     });
 </script>

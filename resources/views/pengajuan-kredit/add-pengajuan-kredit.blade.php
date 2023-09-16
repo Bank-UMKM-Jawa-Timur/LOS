@@ -73,6 +73,14 @@ null => 1,
     }
 </style>
 
+{{-- <div class="modal fade" id="loading-simpan-perhitungan" aria-labelledby="modelTitleId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="2" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document" style="display: table; position: relative; margin: 0 auto; top: calc(50% - 24px);">
+        <div class="modal-content" style="width: 48px; background-color: transparent; border: none;">
+            <span class="fa fa-spinner fa-spin fa-3x"></span>
+        </div>
+    </div>
+</div> --}}
+
 <form id="pengajuan_kredit" action="{{ route('pengajuan-kredit.store') }}" method="post" enctype="multipart/form-data">
     @csrf
     <input type="hidden" name="id_nasabah" value="" id="id_nasabah">
@@ -485,6 +493,12 @@ null => 1,
         @if ($value->nama == 'Aspek Keuangan')
        <div class="mb-3">
         <button class="btn btn-danger " type="button" id="btn-perhitungan">Perhitungan</button>
+        <div class="" id="peringatan-pengajuan">
+            <br>
+            <div class="alert alert-info" role="alert">
+                Perhitungan kredit masih belum ditambahkan, silahkan klik bottom Perhitungan.
+            </div>
+        </div>
        </div>
         @endif
         <div class="row">
@@ -2788,6 +2802,7 @@ null => 1,
     }
 
     $("#btn-perhitungan").on('click', function() {
+        $('#loading-simpan-perhitungan').hide();
         $("#perhitunganModal").modal('show')
         calcForm()
     })
@@ -2814,6 +2829,9 @@ null => 1,
             data[input.attr("name")] = input.val();
             data['idCalonNasabah'] = $("#id_nasabah").val();
         });
+
+        $('#peringatan-pengajuan').empty();
+        $('#loading-simpan-perhitungan').show();
 
         var selectElementBulan = $("#periode").find(":selected").text();
         var selectValueElementBulan = $("#periode").val();
@@ -3039,6 +3057,13 @@ null => 1,
 
 
         getDataPerhitunganKreditLev1();
+        $('#perhitunganModalAfterLoading').hide();
+        setTimeout(function(){
+            $('#loading-simpan-perhitungan').hide();
+        }, 2000);
+        setTimeout(function(){
+            $('#perhitunganModalAfterLoading').show();
+        }, 2000);
 
     });
 
