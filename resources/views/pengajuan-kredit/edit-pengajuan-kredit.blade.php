@@ -3870,11 +3870,11 @@
             function getDataPerhitunganKreditLev2(element2, idClnNasabah) {
                 return new Promise(function(resolve, reject) {
                     $.ajax({
-                        url: '/get-perhitungan-kredit-lev3',
+                        url: '/get-perhitungan-kredit-lev3-edit',
                         type: "GET",
                         data: {
                             parent_id: element2.id,
-                            id_nasabah: {{ $dataUmum->id }},
+                            id_nasabah: idClnNasabah,
                         },
                         success: function(res) {
                             resolve(res);
@@ -3894,6 +3894,7 @@
                         data: data,
                     });
                     console.log(res1);
+                    console.log(res1.request.idNasabah);
                     const res2 = await $.ajax({
                         url: '{{ route('pengajuan-kredit.get-data-perhitungan-kredit-lev1') }}',
                         type: "GET",
@@ -3930,7 +3931,6 @@
                             type: "GET",
                         });
                         console.log(res3);
-
                         for (const element2 of res3.result) {
                             const uniqueTableId = `itemPerhitunganKreditLev2_${element2.id}`; // Buat id unik untuk setiap tabel
 
@@ -3944,7 +3944,7 @@
                                 </div>
                             `);
 
-                            const res4 = await getDataPerhitunganKreditLev2(element2, {{ $dataUmum->id }});
+                            const res4 = await getDataPerhitunganKreditLev2(element2, res1.request.idNasabah);
                             console.log(res4);
 
                             for (const element3 of res4.result) {
@@ -3960,7 +3960,7 @@
                         }
                     }
                     $.ajax({
-                        url: '/get-perhitungan-kredit-lev3-noparent/' + {{ $dataUmum->id }},
+                        url: '/get-perhitungan-kredit-lev3-noparent-edit/' + res1.request.idNasabah,
                         type: "Get",
                         success: function(res){
                             console.log(res);
@@ -3993,11 +3993,11 @@
                                 `);
 
                                 $.ajax({  
-                                    url: '{{ route('pengajuan-kredit.get-data-perhitungan-kredit-lev3-noparent2') }}',
+                                    url: '{{ route('pengajuan-kredit.get-data-perhitungan-kredit-lev3-noparent2-edit') }}',
                                     type: "Get",
                                     data: {
                                         parent_id: element4.id,
-                                        id_nasabah: {{ $dataUmum->id }},
+                                        id_nasabah: res1.request.idNasabah,
                                     },
                                     success: function(res){
                                         console.log(res);
