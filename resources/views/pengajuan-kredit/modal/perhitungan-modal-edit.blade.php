@@ -1,5 +1,9 @@
 @php
   $lev1 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)->where('level', 1)->get();
+  $getPeriode = \App\Models\PeriodeAspekKeuangan::join('perhitungan_kredit', 'periode_aspek_keuangan.perhitungan_kredit_id', '=', 'perhitungan_kredit.id')
+                                                            ->where('perhitungan_kredit.pengajuan_id', $dataUmum->id)
+                                                            ->select('periode_aspek_keuangan.*', 'perhitungan_kredit.*') 
+                                                            ->get();
 @endphp
 <div class="modal fade" id="perhitunganModalEdit" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
@@ -17,11 +21,42 @@
                 <!-- content -->
                   <div class="row">
                     <!-- pilih bulan -->
+                    @php
+                      function formatBulan($value){
+                        if ($value == 1) {
+                            echo "Januari";
+                        }else if($value == 2){
+                            echo "Februari";
+                        }else if($value == 3){
+                            echo "Maret";
+                        }else if($value == 4){
+                            echo "April";
+                        }else if($value == 5){
+                            echo "Mei";
+                        }else if($value == 6){
+                            echo "Juni";
+                        }else if($value == 7){
+                            echo "Juli";
+                        }else if($value == 8){
+                            echo "Agustus";
+                        }else if($value == 9){
+                            echo "September";
+                        }else if($value == 10){
+                            echo "Oktober";
+                        }else if($value == 11){
+                            echo "November";
+                        }
+                        else{
+                            echo "Desember";
+                        }
+                    }
+                    @endphp 
                     <div class="col-md-6">
                       <div class="form-group mb-4">
                         <label for="inputHarta" class="font-weight-semibold">Pilih Periode :</label>
                         <select name="" style="width: 100%; height: 40px" class="select-date" id="periode" onchange="calcForm()">
-                              <option selected>--Pilih Bulan--</option>
+                              <option value="{{ $getPeriode[0]->bulan }}" selected>{{ formatBulan($getPeriode[0]->bulan) }}</option>
+                              <option >--Pilih Bulan--</option>
                               <option value="1">Januari</option>
                               <option value="2">Februari</option>
                               <option value="3">Maret</option>
