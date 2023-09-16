@@ -147,6 +147,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/get-skema-limit', [PengajuanKreditController::class, 'getSkemaLimit'])->name('get-skema-limit');
 
     Route::post('/save-data-perhitungan-temp', [PengajuanKreditController::class, 'saveDataPerhitunganTemp'])->name('pengajuan-kredit.save-data-perhitungan-temp');
+    Route::post('/edit-perhitungan-kredit', [PengajuanKreditController::class, 'editPerhitunganKredit'])->name('pengajuan-kredit.edit-perhitungan-kredit');
     Route::get('/get-perhitungan-kredit-lev1', [PengajuanKreditController::class, 'getPerhitunganKreditLev1'])->name('pengajuan-kredit.get-data-perhitungan-kredit-lev1');
     Route::get('/get-perhitungan-kredit-lev2/{parent_id}', [PengajuanKreditController::class, 'getPerhitunganKreditLev2'])->name('pengajuan-kredit.get-data-perhitungan-kredit-lev2');
     Route::get('/get-perhitungan-kredit-lev3', [PengajuanKreditController::class, 'getDataPerhitunganKreditLev3'])->name('pengajuan-kredit.get-data-perhitungan-kredit-lev3');

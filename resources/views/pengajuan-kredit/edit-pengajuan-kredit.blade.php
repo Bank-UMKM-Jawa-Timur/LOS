@@ -3307,6 +3307,7 @@
             var inputNumber = $(form + " input[type=number]")
             var select = $(form + " select")
             var textarea = $(form + " textarea")
+            var nullValue = []
     
             /*$.each(inputFile, function(i, v) {
                 if (v.value == '' && !$(this).prop('disabled') && $(this).closest('.filename') == '') {
@@ -3600,6 +3601,14 @@
     @include('pengajuan-kredit.partials.create-save-script')
     @include('pengajuan-kredit.modal.perhitungan-modal-edit')
     <script>
+    function stringContainsValueFromArray(inputString, searchArray) {
+        for (let i = 0; i < searchArray.length; i++) {
+            if (inputString.includes(searchArray[i])) {
+            return true; // Return true if a match is found
+            }
+        }
+        return false; // Return false if no match is found
+    }
         function calcForm() {
             var allFormData = [];
             var allIdInput = [];
@@ -3792,6 +3801,15 @@
         var indexBtnSimpan = 0;
         $('#btnEditPerhitungan').on('click', function() { 
             indexBtnSimpan += 1;
+            let data = {
+                idNasabah: {{ $dataUmum->id }}
+            }
+            $("#perhitunganModalEdit input").each(function(){
+                let input = $(this);
+
+                data[input.attr("name")] = input.val();
+                data['idNasabah'] = {{ $dataUmum->id }}
+            });
 
             $('#perhitungan_kredit_with_value_without_update').hide();
 
@@ -3856,7 +3874,7 @@
                         type: "GET",
                         data: {
                             parent_id: element2.id,
-                            id_nasabah: idClnNasabah,
+                            id_nasabah: {{ $dataUmum->id }},
                         },
                         success: function(res) {
                             resolve(res);
@@ -3870,13 +3888,12 @@
 
             async function getDataPerhitunganKreditLev1() {
                 try {
-                    // const res1 = await $.ajax({
-                    //     url: "{{ route('pengajuan-kredit.save-data-perhitungan-temp') }}",
-                    //     type: "POST",
-                    //     data: data,
-                    // });
-                    // console.log(res1);
-
+                    const res1 = await $.ajax({
+                        url: "{{ route('pengajuan-kredit.edit-perhitungan-kredit') }}",
+                        type: "POST",
+                        data: data,
+                    });
+                    console.log(res1);
                     const res2 = await $.ajax({
                         url: '{{ route('pengajuan-kredit.get-data-perhitungan-kredit-lev1') }}',
                         type: "GET",
@@ -3927,7 +3944,7 @@
                                 </div>
                             `);
 
-                            const res4 = await getDataPerhitunganKreditLev2(element2, 5765);
+                            const res4 = await getDataPerhitunganKreditLev2(element2, {{ $dataUmum->id }});
                             console.log(res4);
 
                             for (const element3 of res4.result) {
@@ -3943,7 +3960,7 @@
                         }
                     }
                     $.ajax({
-                        url: '/get-perhitungan-kredit-lev3-noparent/' + 5765,
+                        url: '/get-perhitungan-kredit-lev3-noparent/' + {{ $dataUmum->id }},
                         type: "Get",
                         success: function(res){
                             console.log(res);
@@ -3980,7 +3997,7 @@
                                     type: "Get",
                                     data: {
                                         parent_id: element4.id,
-                                        id_nasabah: 5765,
+                                        id_nasabah: {{ $dataUmum->id }},
                                     },
                                     success: function(res){
                                         console.log(res);
