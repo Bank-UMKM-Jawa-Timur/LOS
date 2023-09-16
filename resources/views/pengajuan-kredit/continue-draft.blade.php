@@ -681,6 +681,7 @@ is-invalid
             <div id="perhitungan_kredit_with_value">
             </div>
             {{-- End --}}
+            {{-- @endif --}}
             <div class="form-group col-md-6">
                 <label for="">{{ $item->nama }}</label>
                 <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
