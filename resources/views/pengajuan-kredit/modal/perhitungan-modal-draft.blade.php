@@ -57,7 +57,7 @@
                           <label for="inputHarta" class="font-weight-semibold">Pilih Periode :</label>
                           <select name="" style="width: 100%; height: 40px" class="select-date" id="periode" onchange="calcForm()">
                                 <option>--Pilih Bulan--</option>
-                                @if ($getPeriode)
+                                @if (count($getPeriode) > 0)
                                   @foreach ($arrayBulan as $key => $itemBulan)
                                       <option value="{{ $key+1 }}" {{ $getPeriode[0]->bulan == $key+1 ? 'selected' : '' }}>{{ $itemBulan }}</option>
                                   @endforeach
@@ -80,7 +80,7 @@
                               <label for="periode_tahun" class="font-weight-semibold">Pilih Periode Tahun :</label>
                               <select name="periode_tahun" id="periode_tahun" style="width: 100%; height: 40px" class="select-date">
                                   <option>--Pilih Tahun--</option>
-                                  @if ($getPeriode)
+                                  @if (count($getPeriode) > 0)
                                     @for ($i=0;$start_year <= $end_year;$i--)
                                       @php
                                         $year = $end_year--;
