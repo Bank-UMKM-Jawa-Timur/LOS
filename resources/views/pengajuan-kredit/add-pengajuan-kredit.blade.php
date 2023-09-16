@@ -2972,12 +2972,21 @@ null => 1,
                     success: function(res){
                         console.log(res);
                         res.result.forEach(element => {
-                            $('#table_perhitungan_kredit_lev3_noparent').append(`
-                                <tr>
-                                    <td width='50%'>${element.field}</td>
-                                    <td>${ formatRupiah(String(element.nominal == null ? 0 : element.nominal), '') }</td>
-                                </tr>
-                            `);
+                            if (element.field == "Repayment") {
+                                $('#table_perhitungan_kredit_lev3_noparent').append(`
+                                    <tr>
+                                        <td width='50%'>${element.field}</td>
+                                        <td>${ element.nominal == null ? 0 : element.nominal }</td>
+                                    </tr>
+                                `);
+                            }else{
+                                $('#table_perhitungan_kredit_lev3_noparent').append(`
+                                    <tr>
+                                        <td width='50%'>${element.field}</td>
+                                        <td>${ formatRupiah(String(element.nominal == null ? 0 : element.nominal), '') }</td>
+                                    </tr>
+                                `);
+                            }
                         });
                     }
                 });

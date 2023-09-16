@@ -901,6 +901,156 @@
                                     </div>
                                 @endforeach
                             @elseif ($item->opsi_jawaban == 'number')
+                            @if ($item->nama == 'Repayment Capacity')
+                            {{-- table Aspek Keuangan --}}
+                            <div class="form-group col-md-12">
+                                <button class="btn btn-danger" type="button" id="btn-perhitungan">Perhitungan</button>
+                            </div>
+                            <div class="form-group col-md-12" id="perhitungan_kredit_with_value_without_update">
+                                @php
+                                    $lev1 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)->where('level', 1)->get();
+                                    function rupiah($angka){
+                                        $format_rupiah = number_format($angka, 2, ',', '.');
+                                        $format_rupiah = rtrim($format_rupiah, '0'); 
+                                        $format_rupiah = str_replace(',', '', $format_rupiah); 
+                                        echo $format_rupiah;
+                                    }
+                                    $getPeriode = \App\Models\PeriodeAspekKeuangan::join('perhitungan_kredit', 'periode_aspek_keuangan.perhitungan_kredit_id', '=', 'perhitungan_kredit.id')
+                                                                        ->where('perhitungan_kredit.pengajuan_id', $dataUmum->id)
+                                                                        ->select('periode_aspek_keuangan.*', 'perhitungan_kredit.*') 
+                                                                        ->get();
+                                    function bulan($value){
+                                        if ($value == 1) {
+                                            echo "Januari";
+                                        }else if($value == 2){
+                                            echo "Februari";
+                                        }else if($value == 3){
+                                            echo "Maret";
+                                        }else if($value == 4){
+                                            echo "April";
+                                        }else if($value == 5){
+                                            echo "Mei";
+                                        }else if($value == 6){
+                                            echo "Juni";
+                                        }else if($value == 7){
+                                            echo "Juli";
+                                        }else if($value == 8){
+                                            echo "Agustus";
+                                        }else if($value == 9){
+                                            echo "September";
+                                        }else if($value == 10){
+                                            echo "Oktober";
+                                        }else if($value == 11){
+                                            echo "November";
+                                        }else{
+                                            echo "Desember";
+                                        }
+                                    }
+                                @endphp
+                                <div class="row">
+                                    @foreach ($lev1 as $itemAspekKeuangan)
+                                        <div class="form-group col-md-12">
+                                            <h5>{{ $itemAspekKeuangan->field }} periode : {{ bulan($getPeriode[0]->bulan) }} - {{ $getPeriode[0]->tahun }}</h5>
+                                        </div>
+                                        @php
+                                        $lev2 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
+                                                                                    ->where('level', 2)
+                                                                                    ->where('parent_id', $itemAspekKeuangan->id)
+                                                                                    ->get();
+                                        @endphp
+                                        @foreach ($lev2 as $itemAspekKeuangan2)
+                                            @php
+                                            $perhitunganKreditLev3 = \App\Models\PerhitunganKredit::rightJoin('mst_item_perhitungan_kredit', 'perhitungan_kredit.item_perhitungan_kredit_id', '=', 'mst_item_perhitungan_kredit.id')
+                                                            ->where('mst_item_perhitungan_kredit.skema_kredit_limit_id', 1)
+                                                            ->where('mst_item_perhitungan_kredit.level', 3)
+                                                            ->where('mst_item_perhitungan_kredit.parent_id', $itemAspekKeuangan2->id)
+                                                            ->where('perhitungan_kredit.pengajuan_id', $dataUmum->id)
+                                                            ->get();
+                                            @endphp
+                                            <div class="form-group col-md-6">
+                                                <table class="table table-bordered">
+                                                    <tr id="itemPerhitunganKreditLev2">
+                                                        <th colspan="2">{{ $itemAspekKeuangan2->field }} </th>
+                                                    </tr>
+                                                    @foreach ($perhitunganKreditLev3 as $itemAspek3)
+                                                        @if ($itemAspek3->field != "Total Angsuran")
+                                                            <tr>
+                                                                <td width='57%'>{{ $itemAspek3->field }}</td>
+                                                                <td>{{ rupiah($itemAspek3->nominal) }}</td>
+                                                            </tr>
+                                                        @endif
+                                                    @endforeach
+                                                </table>
+                                            </div>
+                                            
+                                        @endforeach
+                                    @endforeach
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-12">
+                                        @php
+                                        $dataUmumNasabahId = $dataUmum->id;
+                                        $results = \App\Models\MstItemPerhitunganKredit::leftJoin('perhitungan_kredit', function($join) use ($dataUmumNasabahId) {
+                                                        $join->on('mst_item_perhitungan_kredit.id', '=', 'perhitungan_kredit.item_perhitungan_kredit_id')
+                                                            ->where('perhitungan_kredit.pengajuan_id', '=', $dataUmumNasabahId);
+                                                    })
+                                                    ->where('mst_item_perhitungan_kredit.skema_kredit_limit_id', '=', 1)
+                                                    ->where('mst_item_perhitungan_kredit.level', '=', 3)
+                                                    ->whereNull('mst_item_perhitungan_kredit.parent_id')
+                                                    ->get();   
+                                        
+                                        @endphp
+                                        <table class="table table-bordered">
+                                            @foreach ($results as $item3NoParent)
+                                            <tr>
+                                                <td width='50%'>{{ $item3NoParent->field }}</td>
+                                                @if ($item3NoParent->field == "Repayment")
+                                                <td>{{ $item3NoParent->nominal }}</td>
+                                                @else
+                                                <td>{{ rupiah($item3NoParent->nominal) }}</td>
+                                                @endif
+                                            </tr>
+                                            @endforeach
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    @php
+                                    $lev2NoParent = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
+                                                                                ->where('level', 2)
+                                                                                ->whereNull('parent_id')
+                                                                                ->get();
+                                                                                $indexLev2 = 0;
+                                    @endphp
+                                    @foreach ($lev2NoParent as $item2NoParent)
+                                    @php      
+                                    $lev3NoParent = \App\Models\PerhitunganKredit::rightJoin('mst_item_perhitungan_kredit', 'perhitungan_kredit.item_perhitungan_kredit_id', '=', 'mst_item_perhitungan_kredit.id')
+                                                                                    ->where('mst_item_perhitungan_kredit.skema_kredit_limit_id', 1)
+                                                                                    ->where('mst_item_perhitungan_kredit.level', 3)
+                                                                                    ->where('mst_item_perhitungan_kredit.parent_id', $item2NoParent->id)
+                                                                                    ->where('perhitungan_kredit.pengajuan_id', $dataUmum->id)
+                                                                                    ->get();
+                                    @endphp
+                                        <div class="form-group col-md-6">
+                                            <table class="table table-bordered">
+                                                <tr>
+                                                    <th colspan="2">{{ $item2NoParent->field }}</th>
+                                                </tr>
+                                                @foreach ($lev3NoParent as $item3NoParent)
+                                                <tr>
+                                                    <td width='57%'>{{ $item3NoParent->field }}</td>
+                                                    <td>{{ rupiah($item3NoParent->nominal) }}</td>
+                                                </tr>
+                                                @endforeach
+                                            </table>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                            <div id="perhitungan_kredit_with_value">
+                            </div>
+                            {{-- End --}}
+                            @endif
                                 @foreach ($dataDetailJawabanText as $itemTextDua)
                                     @if (
                                         $itemTextDua->nama == 'Omzet Penjualan' ||
@@ -3446,5 +3596,417 @@
                 }
             })
         })
+    </script>
+    @include('pengajuan-kredit.partials.create-save-script')
+    @include('pengajuan-kredit.modal.perhitungan-modal-edit')
+    <script>
+        function calcForm() {
+            var allFormData = [];
+            var allIdInput = [];
+            $('#form-perhitungan input').each(function() {
+                var id = $(this).attr('id')
+                var formula = $(this).data('formula'); // If your forms have IDs, otherwise you can skip this
+                var detail = $(this).data('detail')
+                var level = $(this).data('level')
+                var inp_class = $(this).attr('class')
+                allIdInput.push(id)
+                if (formula) {
+                    // calculate by formula
+                    formula = formula.replace()
+                }
+                var formData = $(this).serializeArray();
+                allFormData.push({
+                    id: id,
+                    formula: formula,
+                    data: formData,
+                    detail: detail,
+                    level: level,
+                    inp_class: inp_class ? inp_class.replaceAll('form-control rupiah ', '') : '',
+                });
+            });
+            console.log('allFormData')
+            console.log(allFormData)
+            // console.log("jumlahkredit: " + $("#jumlah_kredit").val());
+            $.each(allFormData, function(i, item) {
+                var formula = item.formula
+                var detail = item.detail
+                var id_formula = item.id
+                var level = item.level
+                var inp_class = item.inp_class
+
+                if (typeof formula != 'undefined' && formula != '') {
+                    // check if have detail
+                    if (formula.includes('sum')) {
+                        console.log("formula " + formula);
+                        var child_id = formula.replaceAll('sum(', '')
+                        child_id = child_id.replaceAll(')', '')
+                        if (detail) {
+                            var parent_content = $(`#${id_formula}`).parent()
+                            var table = parent_content.find('table')
+                            var input = table.find(`[id^="${child_id}"]`)
+                            var result = 0
+                            input.each(function() {
+                                var val = parseInt($(this).val().replaceAll('.',''))
+                                val = isNaN(val) ? 0 : val
+                                result += val
+                            })
+                            $(`#${id_formula}`).val(isNaN(result) ? '' : formatrupiah(parseInt(result).toString()))
+                        } else{
+                            var table = $(this).parent().parent().parent()
+                            var input = $("#table_item").find(`[id^="${child_id}"]`)
+                            var result = 0
+                            input.each(function() {
+                                var val = parseInt($(this).val().replaceAll('.',''))
+                                // console.log("VAL Angsurang" + val);
+                                val = isNaN(val) ? 0 : val
+                                result += val
+                            })
+                            $(`#${id_formula}`).val(isNaN(result) ? '' : formatrupiah(parseInt(result).toString()))
+                        }
+                    }
+                    else {
+                        if (formula.includes('inp')) {
+                            // $.each(allIdInput,  function(j, id){
+                                // console.log(`index: ${j} id: ${id}`);
+                                if (level == 4) {
+                                    $.each(allIdInput,  function(j, id){
+                                        var inp_arr = $(`.${inp_class}`)
+                                        // console.log('inp arr')
+                                        // console.log(inp_arr)
+                                        $.each(inp_arr, function(k, val) {
+                                            // console.log('inp arr id')
+                                            var input_arr_id = $(this).attr('id')
+                                            var input_arr_class = $(this).attr('class')
+                                            // $(this).parent().parent().attr('.inp_14').val()
+                                            var item_formula = $(this).data('formula')
+                                            if (item_formula.includes('inp')) {
+
+                                            }
+                                            // console.log($(this).parent().parent().find('.inp_14').attr('id'))
+                                            var plafon = $(this).parent().parent().find('.inp_13').val()
+                                            var tenor = $(this).parent().parent().find('.inp_14').val()
+                                            // var input_val = $(`#${id}`).val().replaceAll('.', '')
+                                            var input_val = plafon.replaceAll('.', '')
+                                            input_val = isNaN(input_val) ? 0 : input_val
+                                            formula = item_formula.replaceAll(id, input_val)
+                                            var resultAngsuran = parseInt(plafon.replaceAll(".", "")) / parseInt(tenor.replaceAll(".", ""))
+                                            $(this).val(formatrupiah(parseInt(resultAngsuran).toString()))
+                                        })
+                                    })
+                                }
+                                else {
+                                    let formulaSplitted = formula.split(/[+-\/\*]/);
+                                    $.each(allIdInput,  function(j, id){
+                                        // console.log(`formula splitted:`);
+                                        // console.log(formulaSplitted);
+                                        if (stringContainsValueFromArray(formula, formulaSplitted)) {
+                                            try {
+                                                $.each(formulaSplitted, function(k, replaced){
+                                                    // console.log(`replaced: ${replaced}`);
+                                                    var input_val = typeof $(`#${replaced}`).val() != 'undefined' && $(`#${replaced}`).val() != '' ? $(`#${replaced}`).val().replaceAll('.', '') : 0
+                                                    input_val = isNaN(input_val) ? 0 : input_val
+                                                    // if(j == 46){
+                                                    //     console.log('input val 46 ' + id + " " + formula);
+                                                    //     console.log(input_val);
+                                                    // }
+                                                    // console.log(`formula include : ${input_val} formula:${formula}  id: ${id} index: ${j} id_item: ${id_formula} replaced: ${replaced}`);
+                                                    if(replaced != "100"){
+                                                        formula = formula.replace(replaced, input_val)
+                                                    }
+                                                    // console.log(`formula after replaced: ${formula}`);
+                                                    // // check if formula contain id from other input
+                                                    var other_id = alphaOnly(formula)
+                                                    if (other_id && $(`#${other_id}`).val()) {
+                                                        var input_val = $(`#${other_id}`).val().replaceAll('.', '')
+                                                        formula = formula.replaceAll(other_id, input_val)
+                                                    }
+                                                    // console.log('hasil formula')
+                                                    // console.log(formula)
+                                                    var result = calculateFormula(formula)
+                                                    if(id_formula != 'inp_68'){
+                                                        result = formatrupiah(parseInt(result).toString())
+                                                    } else{
+                                                        $("#repayment_capacity").val(result)
+                                                    }
+                                                    $(`#${id_formula}`).val(result)
+                                                    $(`#${id_formula}_label`).html(result)
+                                                })
+                                            } catch (error) {
+                                                console.log(`formula error : ${error}`)
+                                            }
+                                        }
+                                    })
+                                }
+                            // })
+                            // check input array or not
+                        } else {
+                            let formulaSplitted = formula.split(/[+-\/\*]/);
+                            $.each(allIdInput,  function(j, id){
+                                // console.log(`formula splitted:`);
+                                // console.log(formulaSplitted);
+                                if (stringContainsValueFromArray(formula, formulaSplitted)) {
+                                    try {
+                                        $.each(formulaSplitted, function(k, replaced){
+                                            // console.log(`replaced: ${replaced}`);
+                                            var input_val = typeof $(`#${replaced}`).val() != 'undefined' && $(`#${replaced}`).val() != '' ? $(`#${replaced}`).val().replaceAll('.', '') : 0
+                                            input_val = isNaN(input_val) ? 0 : input_val
+                                            // if(j == 46){
+                                            //     console.log('input val 46 ' + id + " " + formula);
+                                            //     console.log(input_val);
+                                            // }
+                                            // console.log(`formula include : ${input_val} formula:${formula}  id: ${id} index: ${j} id_item: ${id_formula} replaced: ${replaced}`);
+                                            if(replaced != "100"){
+                                                formula = formula.replace(replaced, input_val)
+                                            }
+                                            // check if formula contain id from other input
+                                            var other_id = alphaOnly(formula)
+                                            if (other_id && $(`#${other_id}`).val()) {
+                                                var input_val = $(`#${other_id}`).val().replaceAll('.', '')
+                                                formula = formula.replaceAll(other_id, input_val)
+                                            }
+                                            // console.log('hasil formula')
+                                            // console.log(formula)
+                                            var result = calculateFormula(formula)
+                                            if(id_formula != 'inp_67'){
+                                                result = formatrupiah(parseInt(result).toString())
+                                            }
+                                            $(`#${id_formula}`).val(result)
+                                            $(`#${id_formula}_label`).html(result)
+                                        })
+                                    } catch (error) {
+                                        console.log(`formula error : ${error}`)
+                                    }
+                                }
+                            })
+                        }
+                    }
+                }
+            })
+        }
+
+        $('#btn-perhitungan').on('click', function() { 
+            $("#perhitunganModalEdit").modal('show')
+            calcForm()
+        });
+
+        var indexBtnSimpan = 0;
+        $('#btnEditPerhitungan').on('click', function() { 
+            indexBtnSimpan += 1;
+
+            $('#perhitungan_kredit_with_value_without_update').hide();
+
+            if (indexBtnSimpan == 1) {
+                $('#perhitungan_kredit_with_value').append(`
+                    <div class="form-group col-md-12" id="table_perhitungan_kredit">
+                        <div class="row" id="row_perhitungan_kredit">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <div class="row">
+                            <div class="form-group col-md-12">
+                                <table class="table table-bordered" id="table_perhitungan_kredit_lev3_noparent">
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row" id="row_perhitungan_kredit_lev3_noparent">
+                        </div>
+                    </div>
+                `);
+            }else{
+                $('#perhitungan_kredit_with_value').empty();
+                $('#perhitungan_kredit_with_value').append(`
+                    <div class="form-group col-md-12" id="table_perhitungan_kredit">
+                        <div class="row" id="row_perhitungan_kredit">
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <div class="row">
+                            <div class="form-group col-md-12">
+                                <table class="table table-bordered" id="table_perhitungan_kredit_lev3_noparent">
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row" id="row_perhitungan_kredit_lev3_noparent">
+                        </div>
+                    </div>
+                `);
+            }
+
+            function formatRupiah(angka, prefix) {
+                var number_string = angka.replace(/[^,\d]/g, "").toString(),
+                    split = number_string.split(","),
+                    sisa = split[0].length % 3,
+                    rupiah = split[0].substr(0, sisa),
+                    ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+                // tambahkan titik jika yang di input sudah menjadi angka ribuan
+                if (ribuan) {
+                    separator = sisa ? "." : "";
+                    rupiah += separator + ribuan.join(".");
+                }
+
+                rupiah = split[1] != undefined ? rupiah + "," + split[1] : rupiah;
+                return prefix == undefined ? rupiah : rupiah ? "" + rupiah : "";
+            }
+
+            function getDataPerhitunganKreditLev2(element2, idClnNasabah) {
+                return new Promise(function(resolve, reject) {
+                    $.ajax({
+                        url: '/get-perhitungan-kredit-lev3',
+                        type: "GET",
+                        data: {
+                            parent_id: element2.id,
+                            id_nasabah: idClnNasabah,
+                        },
+                        success: function(res) {
+                            resolve(res);
+                        },
+                        error: function(err) {
+                            reject(err);
+                        }
+                    });
+                });
+            }    
+
+            async function getDataPerhitunganKreditLev1() {
+                try {
+                    // const res1 = await $.ajax({
+                    //     url: "{{ route('pengajuan-kredit.save-data-perhitungan-temp') }}",
+                    //     type: "POST",
+                    //     data: data,
+                    // });
+                    // console.log(res1);
+
+                    const res2 = await $.ajax({
+                        url: '{{ route('pengajuan-kredit.get-data-perhitungan-kredit-lev1') }}',
+                        type: "GET",
+                    });
+                    console.log(res2);
+
+                    // if (indexBtnSimpan == 1) {
+                    //     $.ajax({
+                    //         url: '{{ route('pengajuan-kredit.save-data-periode-aspek-keuangan') }}',
+                    //         type: 'POST',
+                    //         data: {
+                    //             perhitungan_kredit_id: res1.lastId,
+                    //             bulan: selectValueElementBulan,
+                    //             tahun: selectElementTahun,
+                    //         },
+                    //         success: function (response) {
+                    //             console.log(response);
+                    //         },
+                    //         error: function(error){
+                    //             console.log(error);
+                    //         }
+                    //     });
+                    // }
+
+                    for (const element of res2.result) {
+                        $('#row_perhitungan_kredit').append(`
+                            <div class="form-group col-md-12">
+                                <h5> ${element.field} periode : September - 2023 </h5>
+                            </div>
+                        `);
+
+                        const res3 = await $.ajax({
+                            url: '/get-perhitungan-kredit-lev2/' + element.id,
+                            type: "GET",
+                        });
+                        console.log(res3);
+
+                        for (const element2 of res3.result) {
+                            const uniqueTableId = `itemPerhitunganKreditLev2_${element2.id}`; // Buat id unik untuk setiap tabel
+
+                            $('#row_perhitungan_kredit').append(`
+                                <div class="form-group col-md-6">
+                                    <table class="table table-bordered" id="${uniqueTableId}">
+                                        <tr>
+                                            <th colspan="2">${ element2.field}</th>
+                                        </tr>
+                                    </table>
+                                </div>
+                            `);
+
+                            const res4 = await getDataPerhitunganKreditLev2(element2, 5765);
+                            console.log(res4);
+
+                            for (const element3 of res4.result) {
+                                if (element3.field != "Total Angsuran") {
+                                    $(`#${uniqueTableId}`).append(`
+                                        <tr>
+                                            <td width='57%'>${element3.field}</td>
+                                            <td>${ formatRupiah(String(element3.nominal), '') }</td>
+                                        </tr>
+                                    `);
+                                }
+                            }
+                        }
+                    }
+                    $.ajax({
+                        url: '/get-perhitungan-kredit-lev3-noparent/' + 5765,
+                        type: "Get",
+                        success: function(res){
+                            console.log(res);
+                            res.result.forEach(element => {
+                                $('#table_perhitungan_kredit_lev3_noparent').append(`
+                                    <tr>
+                                        <td width='50%'>${element.field}</td>
+                                        <td>${ formatRupiah(String(element.nominal == null ? 0 : element.nominal), '') }</td>
+                                    </tr>
+                                `);
+                            });
+                        }
+                    });
+
+                    $.ajax({
+                        url: '{{ route('pengajuan-kredit.get-data-perhitungan-kredit-lev2-noparent') }}',
+                        type: "Get",
+                        success: function(res){
+                            console.log(res);
+                            res.result.forEach(element4 => {
+                                const uniqueTableId2 = `itemPerhitunganKreditLev2_${element4.id}`;
+                                $('#row_perhitungan_kredit_lev3_noparent').append(`
+                                    <div class="form-group col-md-6">
+                                        <table class="table table-bordered" id="${uniqueTableId2}">
+                                            <tr>
+                                                <th colspan="2">${element4.field}</th>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                `);
+
+                                $.ajax({  
+                                    url: '{{ route('pengajuan-kredit.get-data-perhitungan-kredit-lev3-noparent2') }}',
+                                    type: "Get",
+                                    data: {
+                                        parent_id: element4.id,
+                                        id_nasabah: 5765,
+                                    },
+                                    success: function(res){
+                                        console.log(res);
+                                        res.result.forEach(element => {
+                                            $(`#${uniqueTableId2}`).append(`
+                                                <tr>
+                                                    <td width='57%'>${element.field}</td>
+                                                    <td>${formatRupiah(String(element.nominal), '')}</td>
+                                                </tr>
+                                            `);
+                                        });
+                                    }
+                                });
+                            });
+                        }
+                    });
+
+
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+
+
+            getDataPerhitunganKreditLev1();
+
+        });
     </script>
 @endpush
