@@ -671,6 +671,13 @@ is-invalid
             </div>
             @elseif ($item->opsi_jawaban == 'number')
             @if ($item->nama == 'Repayment Capacity')
+            {{-- table Aspek Keuangan --}}
+            <div class="form-group col-md-12">
+                <button class="btn btn-danger" type="button" id="btn-perhitungan">Perhitungan</button>
+            </div>
+            <div id="perhitungan_kredit_with_value">
+            </div>
+            {{-- End --}}
             <div class="form-group col-md-6">
                 <label for="">{{ $item->nama }}</label>
                 <input type="hidden" name="opsi_jawaban[{{ $item->id }}]" value="{{ $item->opsi_jawaban }}" id="">
@@ -2822,4 +2829,223 @@ is-invalid
 </script>
 @include('pengajuan-kredit.partials.save-script')
 <script src="{{ asset('') }}js/custom.js"></script>
+<script>
+    var indexBtnSimpan = 0;
+    $('#btn-perhitungan').on('click', function() { 
+        indexBtnSimpan += 1;
+
+        if (indexBtnSimpan == 1) {
+            $('#perhitungan_kredit_with_value').append(`
+                <div class="form-group col-md-12" id="table_perhitungan_kredit">
+                    <div class="row" id="row_perhitungan_kredit">
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <table class="table table-bordered" id="table_perhitungan_kredit_lev3_noparent">
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row" id="row_perhitungan_kredit_lev3_noparent">
+                    </div>
+                </div>
+            `);
+        }else{
+            $('#perhitungan_kredit_with_value').empty();
+            $('#perhitungan_kredit_with_value').append(`
+                <div class="form-group col-md-12" id="table_perhitungan_kredit">
+                    <div class="row" id="row_perhitungan_kredit">
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <table class="table table-bordered" id="table_perhitungan_kredit_lev3_noparent">
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row" id="row_perhitungan_kredit_lev3_noparent">
+                    </div>
+                </div>
+            `);
+        }
+
+        function formatRupiah(angka, prefix) {
+            var number_string = angka.replace(/[^,\d]/g, "").toString(),
+                split = number_string.split(","),
+                sisa = split[0].length % 3,
+                rupiah = split[0].substr(0, sisa),
+                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+            // tambahkan titik jika yang di input sudah menjadi angka ribuan
+            if (ribuan) {
+                separator = sisa ? "." : "";
+                rupiah += separator + ribuan.join(".");
+            }
+
+            rupiah = split[1] != undefined ? rupiah + "," + split[1] : rupiah;
+            return prefix == undefined ? rupiah : rupiah ? "" + rupiah : "";
+        }
+
+        function getDataPerhitunganKreditLev2(element2, idClnNasabah) {
+            return new Promise(function(resolve, reject) {
+                $.ajax({
+                    url: '/get-perhitungan-kredit-lev3',
+                    type: "GET",
+                    data: {
+                        parent_id: element2.id,
+                        id_nasabah: idClnNasabah,
+                    },
+                    success: function(res) {
+                        resolve(res);
+                    },
+                    error: function(err) {
+                        reject(err);
+                    }
+                });
+            });
+        }    
+
+        async function getDataPerhitunganKreditLev1() {
+            try {
+                // const res1 = await $.ajax({
+                //     url: "{{ route('pengajuan-kredit.save-data-perhitungan-temp') }}",
+                //     type: "POST",
+                //     data: data,
+                // });
+                // console.log(res1);
+
+                const res2 = await $.ajax({
+                    url: '{{ route('pengajuan-kredit.get-data-perhitungan-kredit-lev1') }}',
+                    type: "GET",
+                });
+                console.log(res2);
+
+                // if (indexBtnSimpan == 1) {
+                //     $.ajax({
+                //         url: '{{ route('pengajuan-kredit.save-data-periode-aspek-keuangan') }}',
+                //         type: 'POST',
+                //         data: {
+                //             perhitungan_kredit_id: res1.lastId,
+                //             bulan: selectValueElementBulan,
+                //             tahun: selectElementTahun,
+                //         },
+                //         success: function (response) {
+                //             console.log(response);
+                //         },
+                //         error: function(error){
+                //             console.log(error);
+                //         }
+                //     });
+                // }
+
+                for (const element of res2.result) {
+                    $('#row_perhitungan_kredit').append(`
+                        <div class="form-group col-md-12">
+                            <h5> ${element.field} periode : September - 2023 </h5>
+                        </div>
+                    `);
+
+                    const res3 = await $.ajax({
+                        url: '/get-perhitungan-kredit-lev2/' + element.id,
+                        type: "GET",
+                    });
+                    console.log(res3);
+
+                    for (const element2 of res3.result) {
+                        const uniqueTableId = `itemPerhitunganKreditLev2_${element2.id}`; // Buat id unik untuk setiap tabel
+
+                        $('#row_perhitungan_kredit').append(`
+                            <div class="form-group col-md-6">
+                                <table class="table table-bordered" id="${uniqueTableId}">
+                                    <tr>
+                                        <th colspan="2">${ element2.field}</th>
+                                    </tr>
+                                </table>
+                            </div>
+                        `);
+
+                        const res4 = await getDataPerhitunganKreditLev2(element2, 5765);
+                        console.log(res4);
+
+                        for (const element3 of res4.result) {
+                            if (element3.field != "Total Angsuran") {
+                                $(`#${uniqueTableId}`).append(`
+                                    <tr>
+                                        <td width='57%'>${element3.field}</td>
+                                        <td>${ formatRupiah(String(element3.nominal), '') }</td>
+                                    </tr>
+                                `);
+                            }
+                        }
+                    }
+                }
+                $.ajax({
+                    url: '/get-perhitungan-kredit-lev3-noparent/' + 5765,
+                    type: "Get",
+                    success: function(res){
+                        console.log(res);
+                        res.result.forEach(element => {
+                            $('#table_perhitungan_kredit_lev3_noparent').append(`
+                                <tr>
+                                    <td width='50%'>${element.field}</td>
+                                    <td>${ formatRupiah(String(element.nominal == null ? 0 : element.nominal), '') }</td>
+                                </tr>
+                            `);
+                        });
+                    }
+                });
+
+                $.ajax({
+                    url: '{{ route('pengajuan-kredit.get-data-perhitungan-kredit-lev2-noparent') }}',
+                    type: "Get",
+                    success: function(res){
+                        console.log(res);
+                        res.result.forEach(element4 => {
+                            const uniqueTableId2 = `itemPerhitunganKreditLev2_${element4.id}`;
+                            $('#row_perhitungan_kredit_lev3_noparent').append(`
+                                <div class="form-group col-md-6">
+                                    <table class="table table-bordered" id="${uniqueTableId2}">
+                                        <tr>
+                                            <th colspan="2">${element4.field}</th>
+                                        </tr>
+                                    </table>
+                                </div>
+                            `);
+
+                            $.ajax({
+                                url: '{{ route('pengajuan-kredit.get-data-perhitungan-kredit-lev3-noparent2') }}',
+                                type: "Get",
+                                data: {
+                                    parent_id: element4.id,
+                                    id_nasabah: 5765,
+                                },
+                                success: function(res){
+                                    console.log(res);
+                                    res.result.forEach(element => {
+                                        $(`#${uniqueTableId2}`).append(`
+                                            <tr>
+                                                <td width='57%'>${element.field}</td>
+                                                <td>${formatRupiah(String(element.nominal), '')}</td>
+                                            </tr>
+                                        `);
+                                    });
+                                }
+                            });
+                        });
+                    }
+                });
+
+
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+
+        getDataPerhitunganKreditLev1();
+
+     });
+</script>
 @endpush
