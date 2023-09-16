@@ -35,3 +35,14 @@ if(!function_exists('temporary_usulan')){
         return $temp->first();
     }
 }
+
+if(!function_exists('temporary_perhitungan')){
+    function temporary_perhitungan(int $id, int $nId){
+        $temp = DB::table('perhitungan_kredit')
+            ->where('temp_calon_nasabah_id', $nId)
+            ->where('item_perhitungan_kredit_id', $id)
+            ->orderByDesc('id');
+
+        return $temp->first();
+    }
+}

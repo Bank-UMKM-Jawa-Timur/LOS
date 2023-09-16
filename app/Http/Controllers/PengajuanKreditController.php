@@ -3799,7 +3799,7 @@ class PengajuanKreditController extends Controller
                     PerhitunganKredit::where('temp_calon_nasabah_id', $idCalonNasabah)
                         ->where('item_perhitungan_kredit_id', $key)
                         ->update([
-                            'nominal' => $item,
+                            'nominal' => str_replace('.', '', $item),
                             'updated_at' => now()
                         ]);
                 }
@@ -3807,7 +3807,7 @@ class PengajuanKreditController extends Controller
                     PerhitunganKredit::where('temp_calon_nasabah_id', $idCalonNasabah)
                         ->where('item_perhitungan_kredit_id', $key)
                         ->update([
-                            'nominal' => $item,
+                            'nominal' => str_replace('.', '', $item),
                             'updated_at' => now()
                         ]);
                 }
@@ -3825,13 +3825,13 @@ class PengajuanKreditController extends Controller
                 
                 foreach($request->inpLevelEmpat as $key => $item){
                     if($request->inpLevelEmpatId[$key] == $bakiDebetId){
-                        array_push($bakiDebet, strval($item));
+                        array_push($bakiDebet, strval(str_replace('.', '', $item)));
                     }
                     if($request->inpLevelEmpatId[$key] == $plafonId){
-                        array_push($plafon, strval($item));
+                        array_push($plafon, strval(str_replace('.', '', $item)));
                     }
                     if($request->inpLevelEmpatId[$key] == $tenorId){
-                        array_push($tenor, strval($item));
+                        array_push($tenor, strval(str_replace('.', '', $item)));
                     }
                 }
                 
