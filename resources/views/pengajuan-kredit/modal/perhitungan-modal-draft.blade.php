@@ -2,6 +2,39 @@
 {{-- <!-- Modal --> --}}
 @php
   $lev1 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)->where('level', 1)->get();
+  $arrayBulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+  $getPeriode = \App\Models\PeriodeAspekKeuangan::join('perhitungan_kredit', 'periode_aspek_keuangan.perhitungan_kredit_id', '=', 'perhitungan_kredit.id')
+                                                            ->where('perhitungan_kredit.pengajuan_id', $duTemp?->id)
+                                                            ->orWhere('perhitungan_kredit.temp_calon_nasabah_id', $duTemp?->id)
+                                                            ->select('periode_aspek_keuangan.*', 'perhitungan_kredit.*') 
+                                                            ->get();
+  function bulan($value){
+      if ($value == 1) {
+          echo "Januari";
+      }else if($value == 2){
+          echo "Februari";
+      }else if($value == 3){
+          echo "Maret";
+      }else if($value == 4){
+          echo "April";
+      }else if($value == 5){
+          echo "Mei";
+      }else if($value == 6){
+          echo "Juni";
+      }else if($value == 7){
+          echo "Juli";
+      }else if($value == 8){
+          echo "Agustus";
+      }else if($value == 9){
+          echo "September";
+      }else if($value == 10){
+          echo "Oktober";
+      }else if($value == 11){
+          echo "November";
+      }else{
+          echo "Desember";
+      }
+  }
 @endphp
 <div class="modal fade" id="perhitunganModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
@@ -23,19 +56,10 @@
                         <div class="form-group mb-4">
                           <label for="inputHarta" class="font-weight-semibold">Pilih Periode :</label>
                           <select name="" style="width: 100%; height: 40px" class="select-date" id="periode" onchange="calcForm()">
-                                <option selected>--Pilih Bulan--</option>
-                                <option value="1">Januari</option>
-                                <option value="2">Februari</option>
-                                <option value="3">Maret</option>
-                                <option value="4">April</option>
-                                <option value="5">Mei</option>
-                                <option value="6">Juni</option>
-                                <option value="7">Juli</option>
-                                <option value="8">Agustus</option>
-                                <option value="9">September</option>
-                                <option value="10">Oktober</option>
-                                <option value="11">November</option>
-                                <option value="12">Desember</option>
+                                <option>--Pilih Bulan--</option>
+                                @foreach ($arrayBulan as $key => $itemBulan)
+                                    <option value="{{ $key+1 }}" {{ $getPeriode[0]->bulan == $key+1 ? 'selected' : '' }}>{{ $itemBulan }}</option>
+                                @endforeach
                             </select>
                         </div>
                       </div>
@@ -49,12 +73,12 @@
                               @endphp
                               <label for="periode_tahun" class="font-weight-semibold">Pilih Periode Tahun :</label>
                               <select name="periode_tahun" id="periode_tahun" style="width: 100%; height: 40px" class="select-date">
-                                  <option selected>--Pilih Tahun--</option>
+                                  <option>--Pilih Tahun--</option>
                                   @for ($i=0;$start_year <= $end_year;$i--)
                                     @php
                                       $year = $end_year--;
                                     @endphp
-                                  <option value="{{$year}}">{{$year}}</option>
+                                  <option value="{{$year}}" {{ $year == $getPeriode[0]->tahun ? 'selected' : '' }}>{{$year}}</option>
                                   @endfor
                               </select>
                           </div>
@@ -122,37 +146,67 @@
                                                               </tr>
                                                           </thead>
                                                           <tbody>
-                                                              <tr>
-                                                                @php
-                                                                    $indexInpLevelEmpatId = 0;
-                                                                    $indexInpLevelEmpat = 0;
+                                                            @php
+                                                                $indexInpLevelEmpatId = 0;
+                                                                $indexInpLevelEmpat = 0;
+                                                                $rowLevelEmpat = [];
+                                                            @endphp
+                                                              @foreach ($lev4 as $i => $item4)
+                                                                @php  
+                                                                  $item = temporary_perhitungan($duTemp?->id, $item4->id);
+                                                                  $itemArray = [];
+                                                                  $itemPerhitunganEmpat = explode(',', $item);
+                                                                  foreach ($itemPerhitunganEmpat as $key => $itemEmpatPerhitungan) {
+                                                                      array_push($itemArray, str_replace(['[', ']'], '', $itemEmpatPerhitungan));
+                                                                  }
+                                                                  array_push($rowLevelEmpat, $itemArray);
                                                                 @endphp
-                                                                  @foreach ($lev4 as $i => $item4)
-                                                                    @php  
-                                                                      $item[$i] = temporary_perhitungan($duTemp?->id, $item4->id);
-                                                                    @endphp
-                                                                    @if ($item[$i] != null)
-                                                                        @foreach ($item[$i] as $itemLvlEmpat)
-                                                                          <td id="detail-item">
-                                                                              <input type="hidden" name="inpLevelEmpatId[{{ $indexInpLevelEmpatId++ }}]" value="{{ $item4->id }}">
-                                                                              <input class="form-control rupiah inp_{{$item4->id}}" type="@if(!$item4->is_hidden) text @else hidden @endif" name="inpLevelEmpat[{{ $indexInpLevelEmpat++ }}]"
-                                                                                id="inp_{{$item4->id}}" data-formula="{{$item4->formula}}" data-level="{{$item4->level}}" onkeyup="calcForm()" @if ($item4->readonly) readonly @endif value="{{ $itemLvlEmpat }}"/>
-                                                                          </td>
-                                                                        @endforeach
-                                                                    @else
+                                                              @endforeach
+                                                              @if (count($rowLevelEmpat) > 1)
+                                                                @for ($valItemEmpat = 0; $valItemEmpat < count($rowLevelEmpat[0]); $valItemEmpat++)
+                                                                  <tr>
+                                                                      @foreach ($lev4 as $keyEmpat => $item4)
+                                                                        <td id="detail-item">
+                                                                          <input type="hidden" name="inpLevelEmpatId[{{ $indexInpLevelEmpatId++ }}]" value="{{ $item4->id }}">
+                                                                          <input class="form-control rupiah inp_{{$item4->id}}" type="@if(!$item4->is_hidden) text @else hidden @endif" name="inpLevelEmpat[{{ $indexInpLevelEmpat++ }}]"
+                                                                            id="inp_{{$item4->id}}" data-formula="{{$item4->formula}}" data-level="{{$item4->level}}" onkeyup="calcForm()" @if ($item4->readonly) readonly @endif value="{{ number_format($rowLevelEmpat[$keyEmpat][$valItemEmpat], 0, '.', '.') }}"/>
+                                                                        </td>
+                                                                      @endforeach
+                                                                      @if ($valItemEmpat > 0)
+                                                                        <td>
+                                                                          <button class="btn-minus btn btn-danger" type="button">
+                                                                              -
+                                                                          </button>
+                                                                        </td>
+                                                                      @else
+                                                                        <td>
+                                                                          <button class="btn-add-2 btn btn-success" type="button">
+                                                                              +
+                                                                          </button>
+                                                                        </td>
+                                                                      @endif
+                                                                  </tr>
+                                                                @endfor
+                                                              @else
+                                                                <tr>
+                                                                  @php
+                                                                      $indexInpLevelEmpatId = 0;
+                                                                      $indexInpLevelEmpat = 0;
+                                                                  @endphp
+                                                                    @foreach ($lev4 as $item4)
                                                                       <td id="detail-item">
                                                                           <input type="hidden" name="inpLevelEmpatId[{{ $indexInpLevelEmpatId++ }}]" value="{{ $item4->id }}">
                                                                           <input class="form-control rupiah inp_{{$item4->id}}" type="@if(!$item4->is_hidden) text @else hidden @endif" name="inpLevelEmpat[{{ $indexInpLevelEmpat++ }}]"
                                                                             id="inp_{{$item4->id}}" data-formula="{{$item4->formula}}" data-level="{{$item4->level}}" onkeyup="calcForm()" @if ($item4->readonly) readonly @endif/>
                                                                       </td>
-                                                                    @endif
-                                                                  @endforeach
-                                                                  <td>
-                                                                      <button class="btn-add-2 btn btn-success" type="button">
-                                                                          +
-                                                                      </button>
-                                                                  </td>
-                                                              </tr>
+                                                                    @endforeach
+                                                                    <td>
+                                                                        <button class="btn-add-2 btn btn-success" type="button">
+                                                                            +
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>                                                                  
+                                                              @endif
                                                           </tbody>
                                                       </table>
                                                   </div>

@@ -3689,7 +3689,7 @@ class PengajuanKreditController extends Controller
 
                 foreach($request->inpLevelTigaParent as $key => $item){
                     array_push($parentLevelTiga, [
-                        'nominal' => str_replace('.', '', $item),
+                        'nominal' => $key != 68 ? str_replace('.', '', $item) : $item,
                         'item_perhitungan_kredit_id' => $key,
                         'temp_calon_nasabah_id' => $idCalonNasabah,
                         'created_at' => now()
@@ -3700,12 +3700,15 @@ class PengajuanKreditController extends Controller
                 $bakiDebetId = $request->inpLevelEmpatId[0];
                 $plafonId =  $request->inpLevelEmpatId[1];
                 $tenorId =  $request->inpLevelEmpatId[2];
+                $angsuranId =  $request->inpLevelEmpatId[3];
                 $bakiDebet = [];
                 $plafon = [];
                 $tenor = [];
+                $angsuran = [];
                 $bakiDebet_ = '';
                 $plafon_ = '';
                 $tenor_ = '';
+                $angsuran_ = '';
                 
                 foreach($request->inpLevelEmpat as $key => $item){
                     if($request->inpLevelEmpatId[$key] == $bakiDebetId){
@@ -3716,6 +3719,9 @@ class PengajuanKreditController extends Controller
                     }
                     if($request->inpLevelEmpatId[$key] == $tenorId){
                         array_push($tenor, strval(str_replace('.', '', $item)));
+                    }
+                    if($request->inpLevelEmpatId[$key] == $angsuranId){
+                        array_push($angsuran, strval(str_replace('.', '', $item)));
                     }
                 }
                 
@@ -3761,6 +3767,20 @@ class PengajuanKreditController extends Controller
                     }
                     $tenor_ .= $_tenor;
                 }
+                for($i = 0; $i < count($angsuran); $i++){
+                    if($i == 0){
+                        if(count($angsuran) > 1){
+                            $_angsuran = '[' . $angsuran[$i] . ',';
+                        } else{
+                            $_angsuran = '[' . $angsuran[$i] . ']';
+                        }
+                    } else if($i == count($angsuran) -1){
+                        $_angsuran = $angsuran[$i] . ']';
+                    } else{
+                        $_angsuran = $angsuran[$i] . ',';
+                    }
+                    $angsuran_ .= $_angsuran;
+                }
 
                 array_push($levelEmpat, [
                     'array_value' => $bakiDebet_,
@@ -3777,6 +3797,12 @@ class PengajuanKreditController extends Controller
                 array_push($levelEmpat, [
                     'array_value' => $tenor_,
                     'item_perhitungan_kredit_id' => $tenorId,
+                    'temp_calon_nasabah_id' => $idCalonNasabah,
+                    'created_at' => now()
+                ]);
+                array_push($levelEmpat, [
+                    'array_value' => $angsuran_,
+                    'item_perhitungan_kredit_id' => $angsuranId,
                     'temp_calon_nasabah_id' => $idCalonNasabah,
                     'created_at' => now()
                 ]);
@@ -3807,7 +3833,7 @@ class PengajuanKreditController extends Controller
                     PerhitunganKredit::where('temp_calon_nasabah_id', $idCalonNasabah)
                         ->where('item_perhitungan_kredit_id', $key)
                         ->update([
-                            'nominal' => str_replace('.', '', $item),
+                            'nominal' =>$key != 68 ? str_replace('.', '', $item) : $item,
                             'updated_at' => now()
                         ]);
                 }
