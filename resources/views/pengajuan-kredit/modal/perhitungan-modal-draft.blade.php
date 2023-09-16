@@ -57,9 +57,15 @@
                           <label for="inputHarta" class="font-weight-semibold">Pilih Periode :</label>
                           <select name="" style="width: 100%; height: 40px" class="select-date" id="periode" onchange="calcForm()">
                                 <option>--Pilih Bulan--</option>
-                                @foreach ($arrayBulan as $key => $itemBulan)
-                                    <option value="{{ $key+1 }}" {{ $getPeriode[0]->bulan == $key+1 ? 'selected' : '' }}>{{ $itemBulan }}</option>
-                                @endforeach
+                                @if ($getPeriode)
+                                  @foreach ($arrayBulan as $key => $itemBulan)
+                                      <option value="{{ $key+1 }}" {{ $getPeriode[0]->bulan == $key+1 ? 'selected' : '' }}>{{ $itemBulan }}</option>
+                                  @endforeach
+                                @else
+                                    @foreach ($arrayBulan as $key => $itemBulan)
+                                        <option value="{{ $key+1 }}">{{ $itemBulan }}</option>
+                                    @endforeach
+                                @endif
                             </select>
                         </div>
                       </div>
@@ -74,12 +80,21 @@
                               <label for="periode_tahun" class="font-weight-semibold">Pilih Periode Tahun :</label>
                               <select name="periode_tahun" id="periode_tahun" style="width: 100%; height: 40px" class="select-date">
                                   <option>--Pilih Tahun--</option>
-                                  @for ($i=0;$start_year <= $end_year;$i--)
-                                    @php
-                                      $year = $end_year--;
-                                    @endphp
-                                  <option value="{{$year}}" {{ $year == $getPeriode[0]->tahun ? 'selected' : '' }}>{{$year}}</option>
-                                  @endfor
+                                  @if ($getPeriode)
+                                    @for ($i=0;$start_year <= $end_year;$i--)
+                                      @php
+                                        $year = $end_year--;
+                                      @endphp
+                                    <option value="{{$year}}" {{ $year == $getPeriode[0]->tahun ? 'selected' : '' }}>{{$year}}</option>
+                                    @endfor
+                                  @else
+                                    @for ($i = 0; $start_year <= $end_year; $i--)
+                                      @php
+                                        $year = $end_year--;
+                                      @endphp
+                                    <option value="{{$year}}">{{$year}}</option>
+                                    @endfor
+                                  @endif
                               </select>
                           </div>
                       </div>
