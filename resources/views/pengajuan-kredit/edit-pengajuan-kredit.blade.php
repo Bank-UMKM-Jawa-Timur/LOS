@@ -1084,62 +1084,66 @@
                                     @endif
                                 @endforeach
                             @elseif ($item->opsi_jawaban == 'persen')
-                                @foreach ($dataDetailJawabanText as $itemTextDua)
-                                    <div class="form-group col-md-6">
-                                        <label for="">{{ $item->nama }}</label>
-                                        <div class="input-group mb-3">
-                                            <input type="number" step="any" name="info_text[]"
-                                                id="{{ $idLevelDua }}"
-                                                placeholder="Masukkan informasi {{ $item->nama }}"
-                                                class="form-control" aria-label="Recipient's username"
-                                                aria-describedby="basic-addon2"
-                                                value="{{ $itemTextDua != null ? $itemTextDua->opsi_text : null }}"  onkeydown="return event.keyCode !== 69" name="no_ktp">
-                                            <input type="hidden" name="skor_penyelia_text[]"
-                                                value="{{ $itemTextDua->skor_penyelia }}">
-                                            <input type="hidden" name="id_text[]" value="{{ $itemTextDua->id_item }}">
-                                            <input type="hidden" name="id_jawaban_text[]"
-                                                value="{{ $itemTextDua->id }}">
-                                            <div class="input-group-append">
-                                                <span class="input-group-text" id="basic-addon2">%</span>
+                                @if ($value->nama != 'Aspek Keuangan')
+                                    @foreach ($dataDetailJawabanText as $itemTextDua)
+                                        <div class="form-group col-md-6">
+                                            <label for="">{{ $item->nama }}</label>
+                                            <div class="input-group mb-3">
+                                                <input type="number" step="any" name="info_text[]"
+                                                    id="{{ $idLevelDua }}"
+                                                    placeholder="Masukkan informasi {{ $item->nama }}"
+                                                    class="form-control" aria-label="Recipient's username"
+                                                    aria-describedby="basic-addon2"
+                                                    value="{{ $itemTextDua != null ? $itemTextDua->opsi_text : null }}"  onkeydown="return event.keyCode !== 69" name="no_ktp">
+                                                <input type="hidden" name="skor_penyelia_text[]"
+                                                    value="{{ $itemTextDua->skor_penyelia }}">
+                                                <input type="hidden" name="id_text[]" value="{{ $itemTextDua->id_item }}">
+                                                <input type="hidden" name="id_jawaban_text[]"
+                                                    value="{{ $itemTextDua->id }}">
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text" id="basic-addon2">%</span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                @endforeach
+                                    @endforeach
+                                @endif
                             @elseif ($item->opsi_jawaban == 'file')
-                                @forelse ($dataDetailJawabanText as $itemTextDua)
-                                    <div class="form-group col-md-6">
-                                        <label for="">{{ $item->nama }}</label>
-                                        {{-- <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" --}}
-                                        {{-- id="{{ $idLevelDua }}"> --}}
-                                        <input type="hidden" name="id_file_text[]"
-                                            value="{{ $itemTextDua->id_item }}">
-                                        <label for="update_file" style="display: none"
-                                            id="nama_file">{{ $itemTextDua->opsi_text }}</label>
-                                        <input type="file" name="update_file[]" id="{{ $idLevelDua . 'file' }}"
-                                            placeholder=" {{ old($item->nama, $itemTextDua->opsi_text) }}"
-                                            value=" {{ $itemTextDua != null ? $itemTextDua->opsi_text : null }} "
-                                            class="form-control" title="{{ $item->opsi_text }}">
-                                        <input type="hidden" name="skor_penyelia_text[]"
-                                            value="{{ $itemTextDua->skor_penyelia }}">
-                                        <input type="hidden" name="id_update_file[]" value="{{ $itemTextDua->id }}">
-                                        <span class="filename"
-                                            style="display: inline;">{{ $itemTextDua?->opsi_text }}</span>
-                                    </div>
-                                @empty
-                                    <div class="form-group col-md-6">
-                                        <label for="">{{ $item->nama }}</label>
-                                        {{-- <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" --}}
-                                        {{-- id="{{ $idLevelDua }}"> --}}
-                                        <input type="hidden" name="id_file_text[]" value="{{ $item->id }}">
-                                        <label for="update_file" style="display: none" id="nama_file"></label>
-                                        <input type="file" name="update_file[]" id="{{ $idLevelDua . 'file' }}"
-                                            placeholder="" value="" class="form-control"
-                                            title="{{ $item->opsi_text }}">
-                                        <input type="hidden" name="skor_penyelia_text[]"
-                                            value="{{ $itemTextDua->skor_penyelia }}">
-                                        <input type="hidden" name="id_update_file[]" value="">
-                                    </div>
-                                @endforelse
+                                @if ($value->nama != 'Aspek Keuangan')
+                                    @forelse ($dataDetailJawabanText as $itemTextDua)
+                                        <div class="form-group col-md-6">
+                                            <label for="">{{ $item->nama }}</label>
+                                            {{-- <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" --}}
+                                            {{-- id="{{ $idLevelDua }}"> --}}
+                                            <input type="hidden" name="id_file_text[]"
+                                                value="{{ $itemTextDua->id_item }}">
+                                            <label for="update_file" style="display: none"
+                                                id="nama_file">{{ $itemTextDua->opsi_text }}</label>
+                                            <input type="file" name="update_file[]" id="{{ $idLevelDua . 'file' }}"
+                                                placeholder=" {{ old($item->nama, $itemTextDua->opsi_text) }}"
+                                                value=" {{ $itemTextDua != null ? $itemTextDua->opsi_text : null }} "
+                                                class="form-control" title="{{ $item->opsi_text }}">
+                                            <input type="hidden" name="skor_penyelia_text[]"
+                                                value="{{ $itemTextDua->skor_penyelia }}">
+                                            <input type="hidden" name="id_update_file[]" value="{{ $itemTextDua->id }}">
+                                            <span class="filename"
+                                                style="display: inline;">{{ $itemTextDua?->opsi_text }}</span>
+                                        </div>
+                                    @empty
+                                        <div class="form-group col-md-6">
+                                            <label for="">{{ $item->nama }}</label>
+                                            {{-- <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" --}}
+                                            {{-- id="{{ $idLevelDua }}"> --}}
+                                            <input type="hidden" name="id_file_text[]" value="{{ $item->id }}">
+                                            <label for="update_file" style="display: none" id="nama_file"></label>
+                                            <input type="file" name="update_file[]" id="{{ $idLevelDua . 'file' }}"
+                                                placeholder="" value="" class="form-control"
+                                                title="{{ $item->opsi_text }}">
+                                            <input type="hidden" name="skor_penyelia_text[]"
+                                                value="{{ $itemTextDua->skor_penyelia }}">
+                                            <input type="hidden" name="id_update_file[]" value="">
+                                        </div>
+                                    @endforelse
+                                @endif
                             @elseif ($item->opsi_jawaban == 'long text')
                                 @foreach ($dataDetailJawabanText as $itemTextDua)
                                     <div class="form-group col-md-6">
