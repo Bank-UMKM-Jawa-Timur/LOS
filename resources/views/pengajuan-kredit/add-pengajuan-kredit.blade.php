@@ -496,7 +496,7 @@ null => 1,
         <div class="" id="peringatan-pengajuan">
             <br>
             <div class="alert alert-info" role="alert">
-                Perhitungan kredit masih belum ditambahkan, silahkan klik bottom Perhitungan.
+                Perhitungan kredit masih belum ditambahkan, silahkan klik button Perhitungan.
             </div>
         </div>
        </div>
@@ -2614,7 +2614,7 @@ null => 1,
         })
 </script>
 @include('pengajuan-kredit.partials.create-save-script')
-@include('pengajuan-kredit.modal.perhitungan-modal')
+@include('pengajuan-kredit.modal.perhitungan-modal-copy')
 <script src="{{ asset('') }}js/custom.js"></script>
 <script>
     function calcForm() {
