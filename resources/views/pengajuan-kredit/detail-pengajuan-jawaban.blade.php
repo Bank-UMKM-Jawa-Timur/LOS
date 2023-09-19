@@ -389,7 +389,7 @@
                             value="{{ isset($komentarSlik->komentar) ? $komentarSlik->komentar : '' }}">
                         <div class="input-skor">
                             @php
-                                $skorSlik = $itemSlik ? $itemSlik?->skor_penyelia : $itemSlik?->skor;
+                                $skorSlik = $itemSlik?->skor_penyelia ? $itemSlik?->skor_penyelia : $itemSlik?->skor;
                             @endphp
                             <input type="number" class="form-control skorPenyeliaInput1" placeholder="" name="skor_penyelia[]"
                                 onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
@@ -1440,6 +1440,11 @@
 
 @push('custom-script')
     <script>
+        // disabled scrol on input type number
+        $(document).on("wheel", "input[type=number]", function (e) {
+            $(this).blur();
+        });
+
         let aspekArr;
         $(window).on('load', function() {
             $("#id_merk").trigger("change");
