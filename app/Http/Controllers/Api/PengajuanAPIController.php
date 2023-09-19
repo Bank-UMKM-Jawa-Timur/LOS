@@ -51,8 +51,8 @@ class PengajuanAPIController extends Controller
                     'users.*',
                     'cabang.kode_cabang'
                 )
-                ->where('email', $request['email'])
-                ->orWhere('nip', $request['email'])
+                ->where('users.email', $request['email'])
+                ->orWhere('users.nip', $request['email'])
                 ->leftJoin('cabang', 'cabang.id', 'users.id_cabang')
                 ->first();
 
