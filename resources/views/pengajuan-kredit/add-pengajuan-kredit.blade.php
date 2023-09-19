@@ -84,6 +84,7 @@ null => 1,
 <form id="pengajuan_kredit" action="{{ route('pengajuan-kredit.store') }}" method="post" enctype="multipart/form-data">
     @csrf
     <input type="hidden" name="id_nasabah" value="" id="id_nasabah">
+    <input type="hidden" name="max_kredit" value="{{ $maxKredit != null ? $maxKredit->to : null }}" id="max_kredit">
     <input type="hidden" name="progress" class="progress">
 
     <div class="form-wizard active" data-index='0' data-done='true' id="wizard-data-umum">
@@ -298,6 +299,7 @@ null => 1,
                     {{ $message }}
                 </div>
                 @enderror
+                <div class="info_jumlah_kredit_limit"></div>
             </div>
             <div class="form-group col-md-6">
                 <label for="">Tenor Yang Diminta</label>
@@ -2618,6 +2620,8 @@ null => 1,
 <script src="{{ asset('') }}js/custom.js"></script>
 <script>
     function calcForm() {
+        cekPlafon();
+        cekTenor();
         var allFormData = [];
         var allIdInput = [];
         $('#form-perhitungan input').each(function() {
@@ -3067,6 +3071,20 @@ null => 1,
 
     });
 
-    
+    $("#jumlah_kredit").keyup(function(){
+        var maxKredit = parseInt($("#max_kredit").val())
+        var jumlahKredit = parseInt($("#jumlah_kredit").val() != '' ? $("#jumlah_kredit").val().replaceAll('.', '') : 0);
+
+        if(jumlahKredit > maxKredit){
+            $(".info_jumlah_kredit_limit").empty();
+            $(".info_jumlah_kredit_limit").append(`
+            <div class="alert alert-danger" role="alert">
+                Jumlah kredit yang diminta tidak boleh melebihi limit kredit.
+            </div>
+            `)
+        } else {
+            $(".info_jumlah_kredit_limit").empty()
+        }
+    })
 </script>
 @endpush

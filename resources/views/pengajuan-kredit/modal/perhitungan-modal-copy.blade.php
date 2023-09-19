@@ -196,7 +196,7 @@
                                     <h5 class="card-header">{{ $item2->field }}</h5>
                                     <div class="card-body">
                                       <div class="table-responsive">
-                                        <table class="table table-bordered">
+                                        <table class="table">
                                           <thead>
                                             <tr>
                                               <th style="width: 40%;" scope="col">Field</th>
@@ -442,7 +442,7 @@
                                 <div class="form-group form-field">
                                     <label for="inp_{{$item3NoParent->id}}" class="font-weight-semibold">{{$item3NoParent->field}}</label>
                                     <div class="input-group">
-                                      <input type="{{ $item3NoParent->is_hidden ? 'hidden' : 'text' }}" class="form-control rupiah inp_{{$item3NoParent->id}}" name="inpLevelTigaParent[{{$item3NoParent->id}}]"
+                                      <input type="{{ $item3NoParent->is_hidden ? 'hidden' : 'text' }}" class="form-control rupiah inp_{{$item3NoParent->id}} {{ str_replace(' ', '_', strtolower($item3NoParent->field)) }}" name="inpLevelTigaParent[{{$item3NoParent->id}}]"
                                       id="inp_{{$item3NoParent->id}}" data-formula="{{$item3NoParent->formula}}" data-detail="{{$item3NoParent->have_detail}}"
                                       @if ($item3NoParent->readonly) readonly @endif onkeyup="calcForm()"/>
                                         @if ($item3NoParent->add_on)
@@ -451,6 +451,7 @@
                                           </div>
                                         @endif
                                     </div>
+                                    <div class="info_{{ str_replace(' ', '_', strtolower($item3NoParent->field)) }}"></div>
                                 </div>
                             </div>
                           @endif
@@ -480,7 +481,7 @@
                                   <div class="form-group form-field">
                                       <label for="inp_{{$item3NoParent->id}}" class="font-weight-semibold">{{$item3NoParent->field}}</label>
                                       <div class="input-group">
-                                        <input type="{{ $item3NoParent->is_hidden ? 'hidden' : 'text' }}" class="form-control rupiah inp_{{$item3NoParent->id}}"  name="inpLevelTigaParent[{{$item3NoParent->id}}]"
+                                        <input type="{{ $item3NoParent->is_hidden ? 'hidden' : 'text' }}" class="form-control rupiah inp_{{$item3NoParent->id}} {{ str_replace(' ', '_', $item3NoParent->field) }}"  name="inpLevelTigaParent[{{$item3NoParent->id}}]"
                                         id="inp_{{$item3NoParent->id}}" data-formula="{{$item3NoParent->formula}}" data-detail="{{$item3NoParent->have_detail}}"
                                         @if ($item3NoParent->readonly) readonly @endif onkeyup="calcForm()"/>
                                         @if ($item3NoParent->add_on)
@@ -660,6 +661,72 @@
       $(this).val(formatrupiah(input))
       calcForm()
   })
+
+  function cekPlafon(){
+    var plafonUsulan = parseInt($(".plafond_usulan").val() ? $(".plafond_usulan").val().replaceAll(".", "") : 0);
+    var plafonDataUmum  = parseInt($("#jumlah_kredit").val() ? $("#jumlah_kredit").val().replaceAll(".", "") : 0);
+    var higher = 0;
+    var lower = 0;
+    var showHigher = '';
+    var showLower = '';
+    if(plafonUsulan > 0 && plafonDataUmum > 0){
+      console.log(`plafonUsulan: ${plafonUsulan}`);
+      console.log(`plafonDataUmum: ${plafonDataUmum}`);
+      if(plafonUsulan > plafonDataUmum){
+        higher = plafonUsulan;
+        lower = plafonDataUmum;
+        showHigher = "Plafond Usulan"
+        showLower = "Plafond Pengajuan"
+        var selisih = higher - lower;
+        var persenPlafon = Math.round(eval((selisih / lower) * 100));
+        $(".info_plafond_usulan").empty()
+        $(".info_plafond_usulan").append(`
+          <div class="alert alert-info" role="alert">
+              ${showHigher} Lebih Besar ${persenPlafon}% Daripada ${showLower} Sebesar Rp.${formatrupiah(selisih.toString())}
+          </div>
+        `);
+      } else if(plafonUsulan < plafonDataUmum) {
+        higher = plafonDataUmum;
+        lower = plafonUsulan;
+        showHigher = "Plafond Pengajuan"
+        showLower = "Plafond Usulan"
+        var selisih = higher - lower;
+        var persenPlafon = Math.round(eval((selisih / lower) * 100));
+        $(".info_plafond_usulan").empty()
+        $(".info_plafond_usulan").append(`
+          <div class="alert alert-info" role="alert">
+              ${showHigher} Lebih Besar ${persenPlafon}% Daripada ${showLower} Sebesar Rp.${formatrupiah(selisih.toString())}
+          </div>
+        `);
+      } else if(plafonUsulan == plafonDataUmum){
+        $(".info_plafond_usulan").empty()
+      }
+    } else{
+      $(".info_plafond_usulan").empty();
+    }
+  } 
+
+  function cekTenor(){
+    var jangkaWaktuKredit = parseInt($(".jangka_waktu_kredit").val() != 0 ? $(".jangka_waktu_kredit").val() : 0);
+    var jangkaWaktuUsulan = parseInt($(".jangka_waktu_usulan").val() != 0 ? $(".jangka_waktu_usulan").val() : 0);
+
+    if(jangkaWaktuKredit > 0 && jangkaWaktuUsulan > 0){
+      if(jangkaWaktuUsulan < jangkaWaktuKredit){
+        console.log(`usulan: ${jangkaWaktuUsulan}`);
+        console.log(`Kredit: ${jangkaWaktuKredit}`);
+        $(".info_jangka_waktu_usulan").empty()
+        $(".info_jangka_waktu_usulan").append(`
+        <div class="alert alert-danger" role="alert">
+            Jangka Waktu Usulan Tidak Boleh Lebih Kecil Daripada Jangka Waktu Kredit
+        </div>
+        `)
+      } else{
+        $(".info_jangka_waktu_usulan").empty()
+      }
+    } else {
+      $(".info_jangka_waktu_usulan").empty()
+    }
+  }
 </script>
 <style>
   .modal-lg {

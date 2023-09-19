@@ -107,6 +107,7 @@ null => 1,
 <form id="pengajuan_kredit" action="{{ route('pengajuan-kredit.store') }}" method="post" enctype="multipart/form-data">
     @csrf
     <input type="hidden" name="id_nasabah" id="idCalonNasabah" value="{{ $duTemp?->id }}">
+    <input type="hidden" name="max_kredit" value="{{ $maxKredit != null ? $maxKredit->to : null }}" id="max_kredit">
     <input type="hidden" name="progress" class="progress">
 
     <div class="form-wizard active" data-index='0' data-done='true' id="wizard-data-umum">
@@ -336,6 +337,7 @@ is-invalid
                     {{ $message }}
                 </div>
                 @enderror
+                <div class="info_jumlah_kredit_limit"></div>
             </div>
             <div class="form-group col-md-6">
                 <label for="">Tenor Yang Diminta</label>
@@ -588,7 +590,7 @@ is-invalid
                 <div class="row">
                     @foreach ($lev1 as $itemAspekKeuangan)
                         <div class="form-group col-md-12">
-                            <h5>{{ $itemAspekKeuangan->field }} periode : {{ formatBulan($getPeriode[0]->bulan) }} - {{ $getPeriode[0]->tahun }}</h5>
+                            <h5>{{ $itemAspekKeuangan->field }} periode : {{ count($getPeriode) > 0 ? formatBulan($getPeriode[0]->bulan) : '' }} - {{ count($getPeriode) > 0 ? $getPeriode[0]->tahun : '' }}</h5>
                         </div>
                         @php
                         $lev2 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
@@ -3005,6 +3007,8 @@ is-invalid
 <script>
     var indexBtnSimpan = 0;
     function calcForm() {
+        cekPlafon();
+        cekTenor();
         var allFormData = [];
         var allIdInput = [];
         $('#form-perhitungan input').each(function() {
@@ -3451,5 +3455,21 @@ is-invalid
         }, 2000);
 
     });
+
+    $("#jumlah_kredit").keyup(function(){
+        var maxKredit = parseInt($("#max_kredit").val())
+        var jumlahKredit = parseInt($("#jumlah_kredit").val() != '' ? $("#jumlah_kredit").val().replaceAll('.', '') : 0);
+
+        if(jumlahKredit > maxKredit){
+            $(".info_jumlah_kredit_limit").empty();
+            $(".info_jumlah_kredit_limit").append(`
+            <div class="alert alert-danger" role="alert">
+                Jumlah kredit yang diminta tidak boleh melebihi limit kredit.
+            </div>
+            `)
+        } else {
+            $(".info_jumlah_kredit_limit").empty()
+        }
+    })
 </script>
 @endpush

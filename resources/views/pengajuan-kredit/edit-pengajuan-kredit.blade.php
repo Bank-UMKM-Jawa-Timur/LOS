@@ -950,7 +950,7 @@
                                 <div class="row">
                                     @foreach ($lev1 as $itemAspekKeuangan)
                                         <div class="form-group col-md-12">
-                                            <h5>{{ $itemAspekKeuangan->field }} periode : {{ bulan($getPeriode[0]->bulan) }} - {{ $getPeriode[0]->tahun }}</h5>
+                                            <h5>{{ $itemAspekKeuangan->field }} periode : {{ count($getPeriode) > 1 ? bulan($getPeriode[0]->bulan) : '-' }} - {{ count($getPeriode) > 1 ? $getPeriode[0]->tahun : '-' }}</h5>
                                         </div>
                                         @php
                                         $lev2 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
@@ -3614,6 +3614,8 @@
         return false; // Return false if no match is found
     }
         function calcForm() {
+            cekPlafon();
+            cekTenor();
             var allFormData = [];
             var allIdInput = [];
             $('#form-perhitungan input').each(function() {
