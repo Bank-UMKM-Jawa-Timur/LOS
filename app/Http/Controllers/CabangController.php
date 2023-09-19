@@ -78,6 +78,7 @@ class CabangController extends Controller
             $cabang = new Cabang;
             $cabang->kode_cabang = $validated['kode_cabang'];
             $cabang->cabang = $validated['cabang'];
+            $cabang->email = $validated['email'];
             $cabang->alamat = $validated['alamat'];
             $cabang->save();
         } catch (Exception $e) {
@@ -126,11 +127,13 @@ class CabangController extends Controller
     public function update(Request $request, $id)
     {
         $kode_cabang = Cabang::find($id);
-        $isUniqueKodeCabang = $kode_cabang->kode_cabang == $request->kode_cabang ? '' : '|unique:cabang';
+        $isUniqueKodeCabang = $kode_cabang->kode_cabang == $request->kode_cabang ? '' : '|unique:cabang,kode_cabang';
+        $isUniqueEmail = $kode_cabang->email == $request->email ? '' : '|unique:cabang,email';
         $validatedData = $request->validate(
             [
                 'kode_cabang' => 'required'.$isUniqueKodeCabang,
                 'cabang' => 'required',
+                'email' => 'required'.$isUniqueEmail,
                 'alamat' => 'required',
             ],
         );
@@ -139,6 +142,7 @@ class CabangController extends Controller
             $cabang = Cabang::findOrFail($id);
             $cabang->kode_cabang = $request->get('kode_cabang');
             $cabang->cabang = $request->get('cabang');
+            $cabang->email = $request->get('email');
             $cabang->alamat = $request['alamat'];
             $cabang->save();
 

@@ -342,6 +342,7 @@
                                     $userPBO = \App\Models\User::select('id')
                                         ->where('id_cabang', $item->id_cabang)
                                         ->where('role', 'PBO')
+                                        ->whereNotNull('nip')
                                         ->first();
                                     
                                     $userPBP = \App\Models\User::select('id')

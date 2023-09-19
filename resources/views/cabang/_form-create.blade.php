@@ -19,7 +19,15 @@
                 </div>
             @enderror
         </div>
-
+        <div class="form-group col-md-6">
+            <label>Email</label>
+            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" placeholder="Email" value="{{old('email')}}">
+            @error('email')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+            @enderror
+        </div>
         <div class="form-group col-md-6">
             <label>Alamat</label>
             <input type="text" name="alamat" class="form-control @error('alamat') is-invalid @enderror" placeholder="Alamat" value="{{old('alamat')}}">

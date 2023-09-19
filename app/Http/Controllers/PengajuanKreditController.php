@@ -3623,38 +3623,38 @@ class PengajuanKreditController extends Controller
 
                     // No PO Handler
                 case 'PO':
-                    $message = 'nomor PO dan file PO.';
-                    $po = $request->no_po;
-                    DB::table('data_po')
-                        ->where('id_pengajuan', $id)
-                        ->update([
-                            'no_po' => $po
-                        ]);
-
-                    // File PO Handler
-                    $folderPO = public_path() . '/upload/' . $id . '/po/';
-                    $filePO = $request->po;
-                    $filenamePO = date('YmdHis') . '.' . $filePO->getClientOriginalExtension();
-                    $pathPO = realpath($folderPO);
-                    // If it exist, check if it's a directory
-                    if (!($pathPO !== true and is_dir($pathPO))) {
-                        // Path/folder does not exist then create a new folder
-                        mkdir($folderPO, 0755, true);
-                    }
-                    $filePO->move($folderPO, $filenamePO);
-                    DB::table('pengajuan')
-                        ->where('id', $id)
-                        ->update([
-                            'po' => $filenamePO
-                        ]);
-
                     // POST data kredit & PO to API Data Warehouse
                     try {
+                        $message = 'nomor PO dan file PO.';
+                        $po = $request->no_po;
+                        DB::table('data_po')
+                            ->where('id_pengajuan', $id)
+                            ->update([
+                                'no_po' => $po
+                            ]);
+
+                        // File PO Handler
+                        $folderPO = public_path() . '/upload/' . $id . '/po/';
+                        $filePO = $request->po;
+                        $filenamePO = date('YmdHis') . '.' . $filePO->getClientOriginalExtension();
+                        $pathPO = realpath($folderPO);
+                        // If it exist, check if it's a directory
+                        if (!($pathPO !== true and is_dir($pathPO))) {
+                            // Path/folder does not exist then create a new folder
+                            mkdir($folderPO, 0755, true);
+                        }
+                        $filePO->move($folderPO, $filenamePO);
+                        DB::table('pengajuan')
+                            ->where('id', $id)
+                            ->update([
+                                'po' => $filenamePO
+                            ]);
+
                         $getPo =
                             DB::table('data_po as dp')
                             ->join('pengajuan as p', 'p.id', 'dp.id_pengajuan')
                             ->join('calon_nasabah as cn', 'cn.id_pengajuan', 'p.id')
-                            ->select('cn.tenor_yang_diminta as tenor', 'dp.harga')
+                            ->select('cn.tenor_yang_diminta as tenor', 'dp.harga', 'cn.jumlah_kredit')
                             ->where('dp.id_pengajuan', $id)->first();
 
                         // store api
@@ -3668,17 +3668,36 @@ class PengajuanKreditController extends Controller
                                 'pengajuan_id' => $id,
                                 'kode_cabang' => $kode_cabang->kode_cabang,
                                 'nomor_po' => $po,
-                                'harga_kendaraan' => $getPo->harga,
+                                'plafon' => intval($getPo->jumlah_kredit),
                                 'tenor' => intval($getPo->tenor)
                             ]);
 
                             $statusCode = $response->status();
                             $responseBody = json_decode($response->getBody(), true);
+                            if ($responseBody) {
+                                if (array_key_exists('status', $responseBody)) {
+                                    if ($responseBody['status'] == 'failed') {
+                                        DB::rollBack();
+                                        $message = array_key_exists('message', $responseBody) ? $responseBody['message'] : '';
+                                        return redirect()->route('pengajuan-kredit.index')->withStatus('Terjadi kesalahan.'.$message);
+                                    }
+                                }
+                                else {
+                                    DB::rollBack();
+                                    return redirect()->route('pengajuan-kredit.index')->withStatus('Terjadi kesalahan saat mengirim data ke sistem Dashboard KKB');
+                                }
+                            }
+                            else {
+                                DB::rollBack();
+                                return redirect()->route('pengajuan-kredit.index')->withStatus('Terjadi kesalahan saat mengirim data ke sistem Dashboard KKB');
+                            }
                         } catch (\Illuminate\Http\Client\ConnectionException $e) {
-                            // return $e->getMessage();
+                            DB::rollBack();
+                            return redirect()->route('pengajuan-kredit.index')->withStatus('Terjadi kesalahan. ' . $e->getMessage());
                         }
                     } catch (Exception $e) {
-                        return redirect()->route('pengajuan-kredit.index')->withStatus('Terjadi kesalahan pada. ' . $e->getMessage());
+                        DB::rollBack();
+                        return redirect()->route('pengajuan-kredit.index')->withStatus('Terjadi kesalahan. ' . $e->getMessage());
                     }
 
                     break;
@@ -3704,6 +3723,7 @@ class PengajuanKreditController extends Controller
                     break;
             }
 
+            DB::commit();
             return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil menambahkan ' . $message);
         } catch (Exception $e) {
             DB::rollBack();
