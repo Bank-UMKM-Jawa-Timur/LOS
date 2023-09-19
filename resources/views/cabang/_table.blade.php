@@ -5,6 +5,7 @@
                 <th class="text-center">#</th>
                 <th>Kode Cabang</th>
                 <th>Kantor Cabang</th>
+                <th>Email</th>
                 <th>Alamat</th>
                 <th>Aksi</th>
             </tr>
@@ -19,6 +20,7 @@
                     <td class="text-center text-muted">{{ $no }}</td>
                     <td>{{ $item->kode_cabang }}</td>
                     <td>{{ $item->cabang }}</td>
+                    <td>{{ $item->email }}</td>
                     <td>{{ $item->alamat }}</td>
                     <td>
                         <div class="form-inline btn-action">

@@ -1,4 +1,4 @@
-<form action="{{ route('cabang.update', $cabang->kode_cabang) }}" method="POST">
+<form action="{{ route('cabang.update', $cabang->id) }}" method="POST">
   @csrf
   @method('PUT')
   <div class="row">
@@ -15,6 +15,15 @@
         <label>Cabang</label>
         <input type="text" name="cabang" class="form-control @error('cabang') is-invalid @enderror" placeholder="Nama Cabang" value="{{old('cabang', $cabang->cabang)}}">
         @error('cabang')
+            <div class="invalid-feedback">
+                {{ $message }}
+            </div>
+        @enderror
+    </div>
+    <div class="form-group col-md-6">
+        <label>Email</label>
+        <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" placeholder="Email" value="{{old('email', $cabang->email)}}">
+        @error('email')
             <div class="invalid-feedback">
                 {{ $message }}
             </div>
