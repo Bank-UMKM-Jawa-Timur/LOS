@@ -4315,7 +4315,7 @@ class PengajuanKreditController extends Controller
                                             ->get();
         return response()->json(['result' => $perhitunganKreditLev3]);
     }
-
+    
     public function saveDataPeriodeAspekKeuangan(Request $request) {
         $data = [
             'perhitungan_kredit_id' => $request->perhitungan_kredit_id,
@@ -4323,10 +4323,42 @@ class PengajuanKreditController extends Controller
             'tahun' => $request->tahun,
         ];
         PeriodeAspekKeuangan::create($data);
+        $idTerakhir = DB::table('periode_aspek_keuangan')->latest('id')->first()->id;
         return response()->json([
             'success' => 'Data Berhasil di Simpan',
+            'result' => $data,
+            'lastId' => $idTerakhir,
+        ]);
+    }
+
+    public function updateDataPeriodeAspekKeuangan(Request $request, $id) {
+        $data = [
+            'perhitungan_kredit_id' => $request->perhitungan_kredit_id,
+            'bulan' => $request->bulan,
+            'tahun' => $request->tahun,
+        ];
+        PeriodeAspekKeuangan::where('id', $id)->update($data);
+        return response()->json([
+            'success' => 'Data Berhasil di Update',
             'result' => $data,
         ]);
     }
     
+    public function getPeriodeAspekKeuanganEdit($pengajuan_id) {
+        $getPeriode = \App\Models\PeriodeAspekKeuangan::join('perhitungan_kredit', 'periode_aspek_keuangan.perhitungan_kredit_id', '=', 'perhitungan_kredit.id')
+                                            ->where('perhitungan_kredit.pengajuan_id', $pengajuan_id)
+                                            ->select('periode_aspek_keuangan.id','periode_aspek_keuangan.perhitungan_kredit_id',
+                                            'periode_aspek_keuangan.bulan','periode_aspek_keuangan.tahun') 
+                                            ->get();
+        return response()->json(['result' => $getPeriode]);
+    }
+
+    public function getPeriodeAspekKeuanganDraft($calon_nasabah_id) {
+        $getPeriode = \App\Models\PeriodeAspekKeuangan::join('perhitungan_kredit', 'periode_aspek_keuangan.perhitungan_kredit_id', '=', 'perhitungan_kredit.id')
+                                            ->where('perhitungan_kredit.temp_calon_nasabah_id', $calon_nasabah_id)
+                                            ->select('periode_aspek_keuangan.id','periode_aspek_keuangan.perhitungan_kredit_id',
+                                            'periode_aspek_keuangan.bulan','periode_aspek_keuangan.tahun') 
+                                            ->get();
+        return response()->json(['result' => $getPeriode]);
+    }
 }
