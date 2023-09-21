@@ -365,8 +365,7 @@
                                             <div class="dropdown-menu">
                                                 <a href="{{ route('pengajuan.detailjawaban', $item->id_pengajuan) }}"
                                                     class="dropdown-item">Review</a>
-                                                <a href="{{ route('pengajuan.backToInputProses', $item->id_pengajuan) }}"
-                                                    class="dropdown-item">Kembalikan Ke Staff</a>
+                                                <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalKembalikan-{{ $item->id }}" id="btnKembalikan">Kembalikan Ke Staff</a>
                                                 @if ($userPBO)
                                                     <a href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbo"
                                                         class="dropdown-item">Lanjutkan Ke PBO</a>
@@ -395,8 +394,7 @@
                                             <div class="dropdown-menu">
                                                 <a href="{{ route('pengajuan.detailjawaban', $item->id_pengajuan) }}"
                                                     class="dropdown-item">Review</a>
-                                                <a href="{{ route('pengajuan.backToInputProses', $item->id_pengajuan) }}"
-                                                    class="dropdown-item">Kembalikan Ke Staff</a>
+                                                <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalKembalikan-{{ $item->id }}" id="btnKembalikan">Kembalikan Ke Staff</a>
                                                 @if ($userPBO)
                                                     <a href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbo"
                                                         class="dropdown-item">Lanjutkan Ke PBO</a>
@@ -422,6 +420,15 @@
                                         <div class="dropdown-menu">
                                             <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
                                                 class="dropdown-item">Cetak</a>
+                                            @if ($item->posisi == "PBP")
+                                                @if ($item->id_pbo != null)
+                                                    <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalKembalikan-{{ $item->id }}" id="btnKembalikan">Kembalikan Ke PBO</a>
+                                                @else
+                                                    <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalKembalikan-{{ $item->id }}" id="btnKembalikan">Kembalikan Ke Penyelia</a>
+                                                @endif
+                                            @elseif ($item->posisi == "PBO")
+                                                <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalKembalikan-{{ $item->id }}" id="btnKembalikan">Kembalikan Ke Penyelia</a>
+                                            @endif
                                             @if ($item->skema_kredit == 'KKB' && $item->posisi == 'Selesai')
                                                 @php
                                                     $tglCetak = DB::table('log_cetak_kkb')
@@ -490,3 +497,4 @@
 @include('layouts.popup-upload-sppk')
 @include('layouts.popup-upload-po')
 @include('layouts.popup-upload-pk')
+@include('layouts.modal-kembalikan')

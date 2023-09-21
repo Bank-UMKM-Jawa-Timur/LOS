@@ -414,6 +414,13 @@
                                                     @if (Auth::user()->role == 'Pincab')
                                                         <a href="{{ route('pengajuan.check.pincab.status.detail', $item->id_pengajuan) }}"
                                                             class="dropdown-item">Review</a>
+                                                        @if ($item->id_pbp != null)
+                                                            <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalKembalikan-{{ $item->id }}" id="btnKembalikan">Kembalikan ke PBP</a>
+                                                        @elseif ($item->id_pbp == null && $item->id_pbo != null)
+                                                            <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalKembalikan-{{ $item->id }}" id="btnKembalikan">Kembalikan ke PBO</a>
+                                                        @else
+                                                            <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalKembalikan-{{ $item->id }}" id="btnKembalikan">Kembalikan ke Penyelia</a>
+                                                        @endif
                                                         <a href="#" class="dropdown-item" data-toggle="modal"
                                                             data-id="{{ $item->id_pengajuan }}"
                                                             data-target="#exampleModal-{{ $item->id_pengajuan }}">Disetujui /
@@ -822,6 +829,7 @@
     @include('layouts.popup-upload-sppk')
     @include('layouts.popup-upload-po')
     @include('layouts.popup-upload-pk')
+    @include('layouts.modal-kembalikan')
 
 
 @endsection
