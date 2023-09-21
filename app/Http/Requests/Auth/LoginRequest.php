@@ -70,10 +70,8 @@ class LoginRequest extends FormRequest
         }
         Auth::login($user, $this->boolean(key : 'remember'));
         RateLimiter::clear($this->throttleKey());
-     }
-
-
-
+    }
+    
     public function ensureIsNotRateLimited()
     {
         if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
