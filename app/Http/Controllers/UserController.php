@@ -270,13 +270,28 @@ class UserController extends Controller
 
         try {
             $keyword = $request->get('keyword');
-            $this->param['data'] = DB::table('sessions')
+            $data = DB::table('sessions')
                 ->join('users', 'users.id', 'sessions.user_id')
-                ->select('users.email', 'users.role', 'sessions.id', 'users.id_cabang', 'sessions.user_id')
+                ->select('users.email', 'users.nip', 'users.role', 'sessions.id', 'users.id_cabang', 'sessions.user_id', 'sessions.created_at')
                 ->when($request->keyword, function ($query, $search) {
                     return $query->where('users.email', 'like', '%' . $search . '%');
                 })
                 ->paginate(10);
+            
+            $pengajuanController = new PengajuanKreditController;
+            foreach ($data as $key => $value) {
+                if ($value->nip) {
+                    $karyawan = $pengajuanController->getKaryawanFromAPI($value->nip);
+                    $value->karyawan = null;
+
+                    if ($karyawan) {
+                        if (!array_key_exists('error', $karyawan))
+                            $value->karyawan = $karyawan;
+                    }
+                }
+            }
+
+            $this->param['data'] = $data;
         } catch (\Illuminate\Database\QueryException $e) {
             return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
         } catch (Exception $e) {
