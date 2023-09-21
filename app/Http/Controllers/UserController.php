@@ -280,9 +280,9 @@ class UserController extends Controller
             
             $pengajuanController = new PengajuanKreditController;
             foreach ($data as $key => $value) {
+                $value->karyawan = null;
                 if ($value->nip) {
                     $karyawan = $pengajuanController->getKaryawanFromAPI($value->nip);
-                    $value->karyawan = null;
 
                     if ($karyawan) {
                         if (is_array($karyawan)) {
@@ -332,9 +332,9 @@ class UserController extends Controller
 
             $pengajuanController = new PengajuanKreditController;
             foreach ($data as $key => $value) {
+                $value->karyawan = null;
                 if ($value->nip) {
                     $karyawan = $pengajuanController->getKaryawanFromAPI($value->nip);
-                    $value->karyawan = null;
 
                     if ($karyawan) {
                         if (is_array($karyawan)) {
