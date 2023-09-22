@@ -45,7 +45,7 @@
                     <td>{{ $item->role }}</td>
                     <td>{{ $cabang }}</td>
                     <td>
-                        <span id="clock_{{$item->id}}"></span>
+                        <span class="clock_{{$item->id}}"></span>
                         <script>
                             currentTime({{$hours}}, {{$mins}}, {{$secs}}, "clock_{{$item->id}}")
                             function currentTime(h, m, s, widget_id) {
@@ -69,7 +69,7 @@
                                 ss = (ss < 10) ? "0" + ss : ss;
                                 
                                 let time = hh + ":" + mm + ":" + ss;
-                                document.getElementById(`${widget_id}`).innerText = time; 
+                                $(`.${widget_id}`).html(time)
                                 var t = setTimeout(function(){ currentTime(hh, mm, ss, `${widget_id}`) }, 1000); 
                             }
                         </script>
