@@ -136,6 +136,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/get-merk-kendaraan', [PengajuanKreditController::class, 'getMerkKendaraan'])->name('get-merk-kendaraan');
     Route::get('/get-tipe-kendaraan', [PengajuanKreditController::class, 'getTipeByMerk'])->name('get-tipe-kendaraan');
+
+    Route::post('/pengajuan-kredit/kembalikan-ke-posisi-sebelumnya', [PengajuanKreditController::class, 'kembalikanDataKePosisiSebelumnya'])->name('pengajuan-kredit.kembalikan-ke-posisi-sebelumnya');
 });
 
 require __DIR__ . '/auth.php';
