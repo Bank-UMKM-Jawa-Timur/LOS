@@ -365,7 +365,9 @@
                                             <div class="dropdown-menu">
                                                 <a href="{{ route('pengajuan.detailjawaban', $item->id_pengajuan) }}"
                                                     class="dropdown-item">Review</a>
-                                                <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalKembalikan-{{ $item->id }}" id="btnKembalikan">Kembalikan Ke Staff</a>
+                                                <a href="#" class="dropdown-item btn-kembalikan" data-toggle="modal"
+                                                    data-target="#modalKembalikan-{{ $item->id }}" data-backto="Staff"
+                                                    id="btnKembalikan">Kembalikan Ke Staff</a>
                                                 @if ($userPBO)
                                                     <a href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbo"
                                                         class="dropdown-item">Lanjutkan Ke PBO</a>
@@ -394,7 +396,9 @@
                                             <div class="dropdown-menu">
                                                 <a href="{{ route('pengajuan.detailjawaban', $item->id_pengajuan) }}"
                                                     class="dropdown-item">Review</a>
-                                                <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalKembalikan-{{ $item->id }}" id="btnKembalikan">Kembalikan Ke Staff</a>
+                                                <a href="#" class="dropdown-item btn-kembalikan" data-toggle="modal"
+                                                    data-target="#modalKembalikan-{{ $item->id }}" data-backto="Staff"
+                                                    id="btnKembalikan">Kembalikan Ke Staff</a>
                                                 @if ($userPBO)
                                                     <a href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbo"
                                                         class="dropdown-item">Lanjutkan Ke PBO</a>
@@ -422,12 +426,18 @@
                                                 class="dropdown-item">Cetak</a>
                                             @if ($item->posisi == "PBP")
                                                 @if ($item->id_pbo != null)
-                                                    <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalKembalikan-{{ $item->id }}" id="btnKembalikan">Kembalikan Ke PBO</a>
+                                                    <a href="#" class="dropdown-item btn-kembalikan" data-toggle="modal"
+                                                        data-target="#modalKembalikan-{{ $item->id }}" data-backto="PBO"
+                                                        id="btnKembalikan">Kembalikan Ke PBO</a>
                                                 @else
-                                                    <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalKembalikan-{{ $item->id }}" id="btnKembalikan">Kembalikan Ke Penyelia</a>
+                                                    <a href="#" class="dropdown-item btn-kembalikan" data-toggle="modal"
+                                                        data-target="#modalKembalikan-{{ $item->id }}" data-backto="Penyelia"
+                                                        id="btnKembalikan">Kembalikan Ke Penyelia</a>
                                                 @endif
                                             @elseif ($item->posisi == "PBO")
-                                                <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalKembalikan-{{ $item->id }}" id="btnKembalikan">Kembalikan Ke Penyelia</a>
+                                                <a href="#" class="dropdown-item btn-kembalikan" data-toggle="modal"
+                                                    data-target="#modalKembalikan-{{ $item->id }}" data-backto="Penyelia"
+                                                    id="btnKembalikan">Kembalikan Ke Penyelia</a>
                                             @endif
                                             @if ($item->skema_kredit == 'KKB' && $item->posisi == 'Selesai')
                                                 @php
@@ -498,3 +508,14 @@
 @include('layouts.popup-upload-po')
 @include('layouts.popup-upload-pk')
 @include('layouts.modal-kembalikan')
+
+@push('custom-script')
+    <script>
+        $('.btn-kembalikan').on('click', function (e) {
+            const data_target = $(this).data('target')
+            const data_backto = $(this).data('backto')
+            
+            $(`${data_target} .modal-title`).html(`Kembalikan ke ${data_backto}`)
+        })
+    </script>
+@endpush

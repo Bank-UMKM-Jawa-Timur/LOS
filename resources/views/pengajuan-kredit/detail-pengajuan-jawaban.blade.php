@@ -76,39 +76,6 @@
                         ->get();
                     //dd($dataLevelDua);
                 @endphp
-                <div class="row col-md-12 table-responsive mb-3">
-                    <label for="">Riwayat Pengembalian Data</label>
-                    <div class="col-md-12">
-                        <table style="width: 100%" class="table table-borderless">
-                            <thead>
-                                <tr>
-                                    <th>No.</th>
-                                    <th>Alasan Pengembalian</th>
-                                    <th>Dari</th>
-                                    <th>Ke</th>
-                                    <th>Tanggal</th>
-                                    <th>User</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse ($alasanPengembalian as $key => $itemPengembalian)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td> 
-                                        <td>{{ $itemPengembalian->alasan }}</td> 
-                                        <td>{{ $itemPengembalian->dari }}</td> 
-                                        <td>{{ $itemPengembalian->ke }}</td> 
-                                        <td>{{ date_format($itemPengembalian->created_at, 'd M Y') }}</td> 
-                                        <td>{{ getKaryawan($itemPengembalian->nip) }}</td> 
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="6" class="text-center">Tidak Ada Riwayat Pengembalian Data</td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
                 @foreach ($dataLevelDua as $item)
                     @if ($item->opsi_jawaban == 'file')
                         @php
@@ -1381,6 +1348,39 @@
         </div>
         @endforeach
         {{-- pendapat dan usulan --}}
+        <div class="row col-md-12 table-responsive mb-3">
+            <label for="">Riwayat Pengembalian Data</label>
+            <div class="col-md-12">
+                <table style="width: 100%" class="table table-borderless">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Alasan Pengembalian</th>
+                            <th>Dari</th>
+                            <th>Ke</th>
+                            <th>Tanggal</th>
+                            <th>User</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($alasanPengembalian as $key => $itemPengembalian)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td> 
+                                <td>{{ $itemPengembalian->alasan }}</td> 
+                                <td>{{ $itemPengembalian->dari }}</td> 
+                                <td>{{ $itemPengembalian->ke }}</td> 
+                                <td>{{ date_format($itemPengembalian->created_at, 'd M Y') }}</td> 
+                                <td>{{ getKaryawan($itemPengembalian->nip) }}</td> 
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="text-center">Tidak Ada Riwayat Pengembalian Data</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
         @if (Auth::user()->role == 'Penyelia Kredit')
             <div class="form-wizard" data-index='{{ $dataUmumNasabah->skema_kredit == 'KKB' ? count($dataAspek) + $dataIndex + 1 : count($dataAspek) + $dataIndex }}' data-done='true'>
                 <div class="row">

@@ -415,11 +415,17 @@
                                                         <a href="{{ route('pengajuan.check.pincab.status.detail', $item->id_pengajuan) }}"
                                                             class="dropdown-item">Review</a>
                                                         @if ($item->id_pbp != null)
-                                                            <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalKembalikan-{{ $item->id }}" id="btnKembalikan">Kembalikan ke PBP</a>
+                                                            <a href="#" class="dropdown-item btn-kembalikan" data-toggle="modal"
+                                                                data-target="#modalKembalikan-{{ $item->id }}" data-backto="PBP"
+                                                                id="btnKembalikan">Kembalikan ke PBP</a>
                                                         @elseif ($item->id_pbp == null && $item->id_pbo != null)
-                                                            <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalKembalikan-{{ $item->id }}" id="btnKembalikan">Kembalikan ke PBO</a>
+                                                            <a href="#" class="dropdown-item btn-kembalikan" data-toggle="modal"
+                                                                data-target="#modalKembalikan-{{ $item->id }}" data-backto="PBO"
+                                                                id="btnKembalikan">Kembalikan ke PBO</a>
                                                         @else
-                                                            <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalKembalikan-{{ $item->id }}" id="btnKembalikan">Kembalikan ke Penyelia</a>
+                                                            <a href="#" class="dropdown-item btn-kembalikan" data-toggle="modal"
+                                                                data-target="#modalKembalikan-{{ $item->id }}" data-backto="Penyelia"
+                                                                id="btnKembalikan">Kembalikan ke Penyelia</a>
                                                         @endif
                                                         <a href="#" class="dropdown-item" data-toggle="modal"
                                                             data-id="{{ $item->id_pengajuan }}"
@@ -805,24 +811,28 @@
     </div>
 
     <script>
-    $(document).ready(function() {
-    $(".hapus").on('click', function(e) {
-        $("#loadingModal").modal({
-            keyboard: false
+        $(document).ready(function() {
+            $(".hapus").on('click', function(e) {
+                $("#loadingModal").modal({
+                    keyboard: false
+                });
+                $("#loadingModal").modal("show");
+            });
+
+            $(".restore").on('click', function(e) {
+                $("#loadingModal").modal({
+                    keyboard: false
+                });
+                $("#loadingModal").modal("show");
+            });
         });
-        $("#loadingModal").modal("show");
-    });
-
-    $(".restore").on('click', function(e) {
-        $("#loadingModal").modal({
-            keyboard: false
-        });
-        $("#loadingModal").modal("show");
-    });
-});
-</script>
-
-
+        $('.btn-kembalikan').on('click', function (e) {
+            const data_target = $(this).data('target')
+            const data_backto = $(this).data('backto')
+            
+            $(`${data_target} .modal-title`).html(`Kembalikan ke ${data_backto}`)
+        })
+    </script>
 
     @include('pengajuan-kredit.modal-filter')
     @include('layouts.modal')

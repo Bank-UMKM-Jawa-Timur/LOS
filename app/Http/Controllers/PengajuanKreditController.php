@@ -2859,6 +2859,11 @@ class PengajuanKreditController extends Controller
             ->find($id);
         $param['comment'] = KomentarModel::where('id_pengajuan', $id)->first();
 
+        $param['alasanPengembalian'] = AlasanPengembalianData::where('id_pengajuan', $id)
+                                                            ->join('users', 'users.id', 'alasan_pengembalian_data.id_user')
+                                                            ->select('users.nip', 'alasan_pengembalian_data.*')
+                                                            ->get();
+
         $param['pendapatDanUsulan'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff', 'komentar_penyelia', 'komentar_pincab', 'komentar_pbo', 'komentar_pbp')->first();
         if ($param['dataUmum']->skema_kredit == 'KKB') {
             $param['dataPO'] = DB::table('data_po')
