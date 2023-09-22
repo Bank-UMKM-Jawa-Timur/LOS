@@ -41,7 +41,9 @@
                 <tr class="border-bottom-primary">
                     <td class="text-center text-muted">{{ $no }}</td>
                     <td>{{ $item->email }}</td>
-                    <td>{{ $item->karyawan ? $item->karyawan['nama'] : 'undifined' }}</td>
+                    <td>
+                        {{ $item->karyawan ? $item->karyawan['nama'] : $item->name }}
+                    </td>
                     <td>{{ $item->role }}</td>
                     <td>{{ $cabang }}</td>
                     <td>
