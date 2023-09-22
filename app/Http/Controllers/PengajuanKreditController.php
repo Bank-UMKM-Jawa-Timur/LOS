@@ -2346,6 +2346,10 @@ class PengajuanKreditController extends Controller
                 $countDoc += $count;
             }
             $param['countIjin'] = $countDoc;
+            $param['alasanPengembalian'] = AlasanPengembalianData::where('id_pengajuan', $id)
+                ->join('users', 'users.id', 'alasan_pengembalian_data.id_user')
+                ->select('users.nip', 'alasan_pengembalian_data.*')
+                ->get();
             // $param['dataAnswer'] = $this->getAnswer($id);
 
             return view('pengajuan-kredit.detail-pengajuan-jawaban', $param);
