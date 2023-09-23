@@ -3225,7 +3225,7 @@ is-invalid
                                                 // console.log(formula)
                                                 var result = calculateFormula(formula)
                                                 if(id_formula != 'inp_68'){
-                                                    result = formatrupiah(parseInt(result).toString())
+                                                    result = result < 0 ? `(${formatrupiah(parseInt(result).toString())})` : formatrupiah(parseInt(result).toString())
                                                 } else{
                                                     $("#repayment_capacity").val(result)
                                                 }

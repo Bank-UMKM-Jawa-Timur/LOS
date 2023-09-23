@@ -3945,7 +3945,7 @@ class PengajuanKreditController extends Controller
                     PerhitunganKredit::where('temp_calon_nasabah_id', $idCalonNasabah)
                         ->where('item_perhitungan_kredit_id', $key)
                         ->update([
-                            'nominal' => str_replace('.', '', $item),
+                            'nominal' => str_replace('.', '', str_replace(['(', ')'], '-', $item)),
                             'updated_at' => now()
                         ]);
                 }
@@ -3953,7 +3953,7 @@ class PengajuanKreditController extends Controller
                     PerhitunganKredit::where('temp_calon_nasabah_id', $idCalonNasabah)
                         ->where('item_perhitungan_kredit_id', $key)
                         ->update([
-                            'nominal' =>$key != 68 ? str_replace('.', '', $item) : $item,
+                            'nominal' =>$key != 68 ? str_replace('.', '', str_replace(['(', ')'], '-', $item)) : $item,
                             'updated_at' => now()
                         ]);
                 }
@@ -4222,7 +4222,7 @@ class PengajuanKreditController extends Controller
                     PerhitunganKredit::where('pengajuan_id', $idCalonNasabah)
                         ->where('item_perhitungan_kredit_id', $key)
                         ->update([
-                            'nominal' => str_replace('.', '', $item),
+                            'nominal' => str_replace('.', '', str_replace(['(', ')'], '-', $item)),
                             'updated_at' => now()
                         ]);
                 }
@@ -4230,7 +4230,7 @@ class PengajuanKreditController extends Controller
                     PerhitunganKredit::where('pengajuan_id', $idCalonNasabah)
                         ->where('item_perhitungan_kredit_id', $key)
                         ->update([
-                            'nominal' =>$key != 68 ? str_replace('.', '', $item) : $item,
+                            'nominal' =>$key != 68 ? str_replace('.', '', str_replace(['(', ')'], '-', $item)) : $item,
                             'updated_at' => now()
                         ]);
                 }

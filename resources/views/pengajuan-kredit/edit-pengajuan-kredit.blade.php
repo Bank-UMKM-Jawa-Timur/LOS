@@ -3877,7 +3877,7 @@
                                             // console.log(formula)
                                             var result = calculateFormula(formula)
                                             if(id_formula != 'inp_67'){
-                                                result = formatrupiah(parseInt(result).toString())
+                                                result = result < 0 ? `(${formatrupiah(parseInt(result).toString())})` : formatrupiah(parseInt(result).toString())
                                             }
                                             $(`#${id_formula}`).val(result)
                                             $(`#${id_formula}_label`).html(result)
