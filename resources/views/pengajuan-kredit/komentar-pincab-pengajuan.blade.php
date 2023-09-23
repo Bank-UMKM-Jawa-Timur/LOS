@@ -71,10 +71,9 @@
     </div>
     </div>
 
-
     <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="home-tab" data-toggle="tab" data-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true"><i class="fas fa-database"></i> Data Pengajuan</button>
+        <button class="nav-link" id="home-tab" data-toggle="tab" data-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true"><i class="fas fa-database"></i> Data Pengajuan</button>
     </li>
     @if (auth()->user()->role == 'Administrator')
     <li class="nav-item" role="presentation">
@@ -569,7 +568,7 @@
                         @endforeach
                     </tbody>
                 </table>
-                    {{ $data_pengajuan->links() }}
+                    {{ $data_pengajuan->fragment('home-tab')->links() }}
                     Menampilkan
                     {{ $data_pengajuan->firstItem() }}
                     -
@@ -764,7 +763,7 @@
                         @endforeach
                     </tbody>
                 </table>
-                    {{ $sampah_pengajuan->links() }}
+                    {{ $sampah_pengajuan->fragment('profile-tab')->links() }}
                     Menampilkan
                     {{ $sampah_pengajuan->firstItem() }}
                     -
@@ -799,20 +798,46 @@
 
     <script>
     $(document).ready(function() {
-    $(".hapus").on('click', function(e) {
-        $("#loadingModal").modal({
-            keyboard: false
-        });
-        $("#loadingModal").modal("show");
-    });
+        var activeTab = window.location.hash;
+        var currentPage = 1;
 
-    $(".restore").on('click', function(e) {
-        $("#loadingModal").modal({
-            keyboard: false
+        if (!activeTab) {
+            activeTab = '#home-tab';
+        }
+
+        $(activeTab).tab('show');
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            var newUrl = window.location.href.split('#')[0] + e.target.getAttribute('href');
+            window.history.pushState(null, null, newUrl);
         });
-        $("#loadingModal").modal("show");
+
+        $('#home-tab').on('click', function (e) { 
+            var newUrl = window.location.href.split('?')[0] + '?page=1#home-tab';
+            window.history.pushState(null, null, newUrl);
+            location.reload();
+        });
+        $('#profile-tab').on('click', function (e) { 
+            var newUrl = window.location.href.split('?')[0] + '?page=1#profile-tab';
+            window.history.pushState(null, null, newUrl);
+            location.reload();
+         });
+
+
+        $(".hapus").on('click', function(e) {
+            $("#loadingModal").modal({
+                keyboard: false
+            });
+            $("#loadingModal").modal("show");
+        });
+
+        $(".restore").on('click', function(e) {
+            $("#loadingModal").modal({
+                keyboard: false
+            });
+            $("#loadingModal").modal("show");
+        });
     });
-});
 </script>
 
 

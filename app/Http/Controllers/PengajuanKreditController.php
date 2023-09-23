@@ -250,6 +250,8 @@ class PengajuanKreditController extends Controller
      */
     public function index(Request $request)
     {
+        // $param['activeTab'] = $request->input('active_tab', 'home-tab');
+        // $page = $request->input('page', 1);
         $param['pageTitle'] = "Dashboard";
         $id_cabang = Auth::user()->id_cabang;
         $param['cabang'] = DB::table('cabang')
@@ -683,6 +685,16 @@ class PengajuanKreditController extends Controller
                 $dataPengajuanSampah->where('pengajuan.id_cabang', $request->cbg);
             }
 
+            // if ($param['activeTab'] === 'home-tab') {
+            //     $param['data_pengajuan'] = $dataPengajuan->paginate(5, ['*'], 'page', $page)->withQueryString();
+            //     $param['sampah_pengajuan'] = $dataPengajuanSampah->paginate(5, ['*'], 'page', $page)->withQueryString();
+            // } elseif ($param['activeTab'] === 'profile-tab') {
+            //     $param['data_pengajuan'] = $dataPengajuan->paginate(5, ['*'], 'page', $page)->withQueryString();
+            //     $param['sampah_pengajuan'] = $dataPengajuanSampah->paginate(5, ['*'], 'page', $page)->withQueryString();
+            // } else {
+            //     $param['data_pengajuan'] = $dataPengajuan->paginate(5)->withQueryString();
+            //     $param['sampah_pengajuan'] = $dataPengajuanSampah->paginate(5)->withQueryString();
+            // }
             $param['data_pengajuan'] = $dataPengajuan->paginate(5)->withQueryString();
             $param['sampah_pengajuan'] = $dataPengajuanSampah->paginate(5)->withQueryString();
 
