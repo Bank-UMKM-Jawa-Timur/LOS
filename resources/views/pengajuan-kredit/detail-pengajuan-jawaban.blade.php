@@ -632,7 +632,6 @@
                 </div>
             </div>
         @endif
-
         <input type="hidden" id="jumlahData" name="jumlahData" hidden value="{{ $dataUmumNasabah->skema_kredit == 'KKB' ? count($dataAspek) + $dataIndex + 1 : count($dataAspek) + $dataIndex }}">
         <input type="hidden" id="id_pengajuan" name="id_pengajuan" value="{{ $dataUmum->id }}">
         @php
@@ -671,10 +670,165 @@
                     ->first();
             @endphp
             {{-- level level 2 --}}
-
+            
             <div class="form-wizard {{$key}}" data-index='{{ $key }}' data-done='true'>
                 <div class="">
                     @foreach ($dataLevelDua as $item)
+                    @if ($item->opsi_jawaban == 'number')
+                        @if ($item->nama == 'Repayment Capacity')
+                        {{-- table aspek keuangan --}}
+                        {{-- <hr> --}}
+                        @php
+                        $lev1 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)->where('level', 1)->get();
+                        function rupiah($angka){
+                            $format_rupiah = number_format($angka, 2, ',', '.');
+                            $format_rupiah = rtrim($format_rupiah, '0'); 
+                            $format_rupiah = str_replace(',', '', $format_rupiah); 
+                            echo $format_rupiah;
+                        }
+                        $getPeriode = \App\Models\PeriodeAspekKeuangan::join('perhitungan_kredit', 'periode_aspek_keuangan.perhitungan_kredit_id', '=', 'perhitungan_kredit.id')
+                                                            ->where('perhitungan_kredit.pengajuan_id', $dataUmumNasabah->id)
+                                                            ->select('periode_aspek_keuangan.*', 'perhitungan_kredit.*') 
+                                                            ->get();
+                        function bulan($value){
+                            if ($value == 1) {
+                                echo "Januari";
+                            }else if($value == 2){
+                                echo "Februari";
+                            }else if($value == 3){
+                                echo "Maret";
+                            }else if($value == 4){
+                                echo "April";
+                            }else if($value == 5){
+                                echo "Mei";
+                            }else if($value == 6){
+                                echo "Juni";
+                            }else if($value == 7){
+                                echo "Juli";
+                            }else if($value == 8){
+                                echo "Agustus";
+                            }else if($value == 9){
+                                echo "September";
+                            }else if($value == 10){
+                                echo "Oktober";
+                            }else if($value == 11){
+                                echo "November";
+                            }else{
+                                echo "Desember";
+                            }
+                        }
+                        @endphp
+                            <div class="row">
+                                @foreach ($lev1 as $itemAspek)
+                                    <div class="form-group col-md-12">
+                                        <h5>{{ $itemAspek->field }} periode : {{ bulan($getPeriode[0]->bulan) }} - {{ $getPeriode[0]->tahun }}</h5>
+                                    </div>
+                                    @php
+                                    $lev2 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
+                                                                                ->where('level', 2)
+                                                                                ->where('parent_id', $itemAspek->id)
+                                                                                ->get();
+                                    @endphp
+                                    @foreach ($lev2 as $itemAspek2)
+                                        @php
+                                        $perhitunganKreditLev3 = \App\Models\PerhitunganKredit::rightJoin('mst_item_perhitungan_kredit', 'perhitungan_kredit.item_perhitungan_kredit_id', '=', 'mst_item_perhitungan_kredit.id')
+                                                        ->where('mst_item_perhitungan_kredit.skema_kredit_limit_id', 1)
+                                                        ->where('mst_item_perhitungan_kredit.level', 3)
+                                                        ->where('mst_item_perhitungan_kredit.parent_id', $itemAspek2->id)
+                                                        ->where('perhitungan_kredit.pengajuan_id', $dataUmumNasabah->id)
+                                                        ->get();
+                                        @endphp
+                                        <div class="form-group col-md-6">
+                                            <table class="table table-bordered">
+                                                <tr id="itemPerhitunganKreditLev2">
+                                                    <th colspan="2">{{ $itemAspek2->field }} </th>
+                                                </tr>
+                                                @foreach ($perhitunganKreditLev3 as $itemAspek3)
+                                                    @php
+                                                    // $lev4 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
+                                                    //                                             ->where('level', 4)
+                                                    //                                             ->where('parent_id', $itemAspek3->id)
+                                                    //                                             ->get(); 
+                                                    @endphp
+                                                    @if ($itemAspek3->field != "Total Angsuran")
+                                                        <tr>
+                                                            <td width='57%'>{{ $itemAspek3->field }}</td>
+                                                            <td>{{ rupiah($itemAspek3->nominal) }}</td>
+                                                        </tr>
+                                                    @endif
+                                                @endforeach
+                                            </table>
+                                        </div>
+                                        
+                                    @endforeach
+                                @endforeach
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    @php
+                                // $lev3NoParent = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
+                                // ->where('level', 3)
+                                // ->whereNull('parent_id')
+                                // ->get();
+                                $dataUmumNasabahId = $dataUmumNasabah->id;
+                                $results = \App\Models\MstItemPerhitunganKredit::leftJoin('perhitungan_kredit', function($join) use ($dataUmumNasabahId) {
+                                                $join->on('mst_item_perhitungan_kredit.id', '=', 'perhitungan_kredit.item_perhitungan_kredit_id')
+                                                    ->where('perhitungan_kredit.pengajuan_id', '=', $dataUmumNasabahId);
+                                            })
+                                            ->where('mst_item_perhitungan_kredit.skema_kredit_limit_id', '=', 1)
+                                            ->where('mst_item_perhitungan_kredit.level', '=', 3)
+                                            ->whereNull('mst_item_perhitungan_kredit.parent_id')
+                                            ->get();   
+                                
+                                @endphp
+                                    <table class="table table-bordered">
+                                        @foreach ($results as $item3NoParent)
+                                        <tr>
+                                            <td width='50%'>{{ $item3NoParent->field }}</td>
+                                            <td>{{ rupiah($item3NoParent->nominal) }}</td>
+                                        </tr>
+                                        @endforeach
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                @php
+                                $lev2NoParent = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
+                                                                            ->where('level', 2)
+                                                                            ->whereNull('parent_id')
+                                                                            ->get();
+                                                                            $indexLev2 = 0;
+                                @endphp
+                                @foreach ($lev2NoParent as $item2NoParent)
+                                @php
+                                // $lev3NoParent = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
+                                //                                             ->where('level', 3)
+                                //                                             ->where('parent_id', $item2NoParent->id)
+                                //                                             ->get();         
+                                $lev3NoParent = \App\Models\PerhitunganKredit::rightJoin('mst_item_perhitungan_kredit', 'perhitungan_kredit.item_perhitungan_kredit_id', '=', 'mst_item_perhitungan_kredit.id')
+                                                                                ->where('mst_item_perhitungan_kredit.skema_kredit_limit_id', 1)
+                                                                                ->where('mst_item_perhitungan_kredit.level', 3)
+                                                                                ->where('mst_item_perhitungan_kredit.parent_id', $item2NoParent->id)
+                                                                                ->where('perhitungan_kredit.pengajuan_id', $dataUmumNasabah->id)
+                                                                                ->get();
+                                @endphp
+                                    <div class="form-group col-md-6">
+                                        <table class="table table-bordered">
+                                            <tr>
+                                                <th colspan="2">{{ $item2NoParent->field }}</th>
+                                            </tr>
+                                            @foreach ($lev3NoParent as $item3NoParent)
+                                            <tr>
+                                                <td width='57%'>{{ $item3NoParent->field }}</td>
+                                                <td>{{ rupiah($item3NoParent->nominal) }}</td>
+                                            </tr>
+                                            @endforeach
+                                        </table>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
+                        @endif
                         @if ($item->opsi_jawaban != 'option')
                             @php
                                 $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')

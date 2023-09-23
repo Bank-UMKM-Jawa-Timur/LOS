@@ -35,3 +35,35 @@ if(!function_exists('temporary_usulan')){
         return $temp->first();
     }
 }
+
+if(!function_exists('temporary_perhitungan')){
+    function temporary_perhitungan(int $nId, int $id){
+        $temp = DB::table('perhitungan_kredit')
+            ->where('temp_calon_nasabah_id', $nId)
+            ->where('item_perhitungan_kredit_id', $id)
+            ->orderByDesc('id');
+
+        if($temp->first()?->nominal){
+            return number_format($temp->first()?->nominal, 0, '.', '.');
+        } else if($temp->first()?->array_value){
+            return $temp->first()->array_value;
+        }
+        return 0;
+    }
+}
+
+if(!function_exists('edit_perhitungan')){
+    function edit_perhitungan(int $nId, int $id){
+        $temp = DB::table('perhitungan_kredit')
+            ->where('pengajuan_id', $nId)
+            ->where('item_perhitungan_kredit_id', $id)
+            ->orderByDesc('id');
+
+        if($temp->first()?->nominal){
+            return number_format($temp->first()?->nominal, 0, '.', '.');
+        } else if($temp->first()?->array_value){
+            return $temp->first()->array_value;
+        }
+        return 0;
+    }
+}
