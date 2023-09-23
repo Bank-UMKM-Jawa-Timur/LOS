@@ -911,9 +911,10 @@
                                     </div>
                                     @php
                                     $getPeriode = \App\Models\PeriodeAspekKeuangan::join('perhitungan_kredit', 'periode_aspek_keuangan.perhitungan_kredit_id', '=', 'perhitungan_kredit.id')
-                                                                            ->where('perhitungan_kredit.pengajuan_id', $dataUmum->id)
-                                                                            ->select('periode_aspek_keuangan.*', 'perhitungan_kredit.*') 
-                                                                            ->get();
+                                            ->where('perhitungan_kredit.pengajuan_id', $dataUmum->id)
+                                            ->select('periode_aspek_keuangan.id','periode_aspek_keuangan.perhitungan_kredit_id',
+                                            'periode_aspek_keuangan.bulan','periode_aspek_keuangan.tahun') 
+                                            ->get();
                                     @endphp
                                     @if(!$getPeriode->isEmpty())
                                         <div class="form-group col-md-12" id="perhitungan_kredit_with_value_without_update">
@@ -962,61 +963,68 @@
                                                     ->where('parent_id', $itemAspekKeuangan->id)
                                                     ->get();
                                                 @endphp
+                                                @if ($lev1Count > 1)
+                                                    @if ($itemAspekKeuangan->field != "Maksimal Pembiayaan")
+                                                        <div class="card">
+                                                            <h5 class="card-header">{{ $itemAspekKeuangan->field }} Periode : {{ bulan($getPeriode[0]->bulan) - $getPeriode[0]->tahun }}</h5>
+                                                            <div class="card-body">
+                                                                <table class="table table-bordered">
+                                                                    @php $lev2Count = 0; @endphp
+                                                                    @foreach ($lev2 as $itemAspekKeuangan2)
+                                                                    @php
+                                                                    $lev2Count += 1;
+                                                                    $perhitunganKreditLev3 = \App\Models\PerhitunganKredit::rightJoin('mst_item_perhitungan_kredit', 'perhitungan_kredit.item_perhitungan_kredit_id', '=', 'mst_item_perhitungan_kredit.id')
+                                                                        ->where('mst_item_perhitungan_kredit.skema_kredit_limit_id', 1)
+                                                                        ->where('mst_item_perhitungan_kredit.level', 3)
+                                                                        ->where('mst_item_perhitungan_kredit.parent_id', $itemAspekKeuangan2->id)
+                                                                        ->where('perhitungan_kredit.pengajuan_id', $dataUmum->id)
+                                                                        ->get();
+                                                                    $fieldValues = [];
+                                                                    @endphp
+                                                                    <tr>
+                                                                        <th>{{ $itemAspekKeuangan2->field }}</th>
+                                                                        <td></td>
+                                                                        @if ($lev2Count > 1)
+                                                                            <th colspan="2"></th>
+                                                                        @else
+                                                                            <th>Sebelum Kredit</th>
+                                                                            <th>Sesudah Kredit</th>
+                                                                        @endif
+                                                                    </tr>
+                                                                        @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
+                                                                            @php
+                                                                            $fieldValue = $itemAspekKeuangan3->field;
+                                                                            $nominal = $itemAspekKeuangan3->nominal;
+                                                                            @endphp
+                                                                            @if (!in_array($fieldValue, $fieldValues))
+                                                                                <tr>
+                                                                                    <td>{{ $fieldValue }}</td>
+                                                                                    <td style="text-align: center">:</td>
+                                                                                    <td>Rp {{ rupiah($nominal) }}</td>
+                                                                                    <td>
+                                                                                        @foreach ($perhitunganKreditLev3 as $item3)
+                                                                                            @if ($item3->field == $fieldValue)
+                                                                                                @if ($item3->nominal != $nominal)
+                                                                                                    Rp {{ rupiah($item3->nominal) }}<br>
+                                                                                                @endif
+                                                                                            @endif
+                                                                                        @endforeach
+                                                                                    </td>
+                                                                                </tr>
+                                                                                @php
+                                                                                $fieldValues[] = $fieldValue;
+                                                                                @endphp
+                                                                            @endif
+                                                                        @endforeach
+                                                                    @endforeach
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    @endif
+                                                @else
                                                 <div class="card">
                                                     <h5 class="card-header">{{ $itemAspekKeuangan->field }} Periode : {{ bulan($getPeriode[0]->bulan) - $getPeriode[0]->tahun }}</h5>
                                                     <div class="card-body">
-                                                        @if ($lev1Count > 1)
-                                                            <table class="table table-bordered">
-                                                                @php $lev2Count = 0; @endphp
-                                                                @foreach ($lev2 as $itemAspekKeuangan2)
-                                                                @php
-                                                                $lev2Count += 1;
-                                                                $perhitunganKreditLev3 = \App\Models\PerhitunganKredit::rightJoin('mst_item_perhitungan_kredit', 'perhitungan_kredit.item_perhitungan_kredit_id', '=', 'mst_item_perhitungan_kredit.id')
-                                                                    ->where('mst_item_perhitungan_kredit.skema_kredit_limit_id', 1)
-                                                                    ->where('mst_item_perhitungan_kredit.level', 3)
-                                                                    ->where('mst_item_perhitungan_kredit.parent_id', $itemAspekKeuangan2->id)
-                                                                    ->where('perhitungan_kredit.pengajuan_id', $dataUmum->id)
-                                                                    ->get();
-                                                                $fieldValues = [];
-                                                                @endphp
-                                                                <tr>
-                                                                    <th>{{ $itemAspekKeuangan2->field }}</th>
-                                                                    <td></td>
-                                                                    @if ($lev2Count > 1)
-                                                                        <th colspan="2"></th>
-                                                                    @else
-                                                                        <th>Sebelum Kredit</th>
-                                                                        <th>Sesudah Kredit</th>
-                                                                    @endif
-                                                                </tr>
-                                                                    @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
-                                                                        @php
-                                                                        $fieldValue = $itemAspekKeuangan3->field;
-                                                                        $nominal = $itemAspekKeuangan3->nominal;
-                                                                        @endphp
-                                                                        @if (!in_array($fieldValue, $fieldValues))
-                                                                            <tr>
-                                                                                <td>{{ $fieldValue }}</td>
-                                                                                <td style="text-align: center">:</td>
-                                                                                <td>Rp {{ rupiah($nominal) }}</td>
-                                                                                <td>
-                                                                                    @foreach ($perhitunganKreditLev3 as $item3)
-                                                                                        @if ($item3->field == $fieldValue)
-                                                                                            @if ($item3->nominal != $nominal)
-                                                                                                Rp {{ rupiah($item3->nominal) }}<br>
-                                                                                            @endif
-                                                                                        @endif
-                                                                                    @endforeach
-                                                                                </td>
-                                                                            </tr>
-                                                                            @php
-                                                                            $fieldValues[] = $fieldValue;
-                                                                            @endphp
-                                                                        @endif
-                                                                    @endforeach
-                                                                @endforeach
-                                                            </table>
-                                                        @else
                                                         <div class="row">
                                                             @foreach ($lev2 as $itemAspekKeuangan2)
                                                                 @php
@@ -1044,11 +1052,12 @@
                                                                 </div>
                                                             @endforeach
                                                         </div>
-                                                        @endif
                                                     </div>
                                                 </div>
                                                 <br>
+                                                @endif
                                             @endforeach
+                                            <br>
                                             <div class="row">
                                                 @php
                                                 $lev2NoParent = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
@@ -1083,13 +1092,71 @@
                                                     </div>
                                                 @endforeach
                                             </div>
+                                            <div class="card">
+                                                @foreach ($lev1 as $itemAspekKeuangan)
+                                                    @php
+                                                    $lev1Count += 1;
+                                                    $lev2 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
+                                                        ->where('level', 2)
+                                                        ->where('parent_id', $itemAspekKeuangan->id)
+                                                        ->get();
+                                                    @endphp
+                                                    @if ($lev1Count > 1)
+                                                        @if ($itemAspekKeuangan->field == "Maksimal Pembiayaan")
+                                                            <h5 class="card-header">{{ $itemAspekKeuangan->field }}</h5>
+                                                            <div class="card-body">
+                                                                <table class="table table-bordered">
+                                                                    @foreach ($lev2 as $itemAspekKeuangan2)
+                                                                        @php
+                                                                            $perhitunganKreditLev3 = \App\Models\PerhitunganKredit::rightJoin('mst_item_perhitungan_kredit', 'perhitungan_kredit.item_perhitungan_kredit_id', '=', 'mst_item_perhitungan_kredit.id')
+                                                                                        ->where('mst_item_perhitungan_kredit.skema_kredit_limit_id', 1)
+                                                                                        ->where('mst_item_perhitungan_kredit.level', 3)
+                                                                                        ->where('mst_item_perhitungan_kredit.parent_id', $itemAspekKeuangan2->id)
+                                                                                        ->where('perhitungan_kredit.pengajuan_id', $dataUmum->id)
+                                                                                        ->get();
+                                                                        @endphp
+                                                                        @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
+                                                                        @if ($itemAspekKeuangan->field == "Maksimal Pembiayaan")
+                                                                            @if ($itemAspekKeuangan3->field != "Kebutuhan Kredit")
+                                                                                <tr>
+                                                                                    <td width="47%">{{ $itemAspekKeuangan3->field }}</td>
+                                                                                    <td width="6%" style="text-align: center">:</td>
+                                                                                    <td>Rp {{ rupiah($itemAspekKeuangan3->nominal) }}</td>
+                                                                                </tr>
+                                                                            @else  
+                                                                                <table class="table table-bordered">
+                                                                                    <div class="row">
+                                                                                        <div class="col-md-7">
+                                                                                            <hr width="94%" style="margin-left: 0; border: none; height: 1px; color: #333; background-color: #333;">
+                                                                                        </div>
+                                                                                        <div class="col-md-5">
+                                                                                            <h4>+</h4>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <tr>
+                                                                                        <td width="47%">{{ $itemAspekKeuangan3->field }}</td>
+                                                                                        <td width="6%" style="text-align: center">:</td>
+                                                                                        <td>Rp {{ rupiah($itemAspekKeuangan3->nominal) }}</td>
+                                                                                    </tr>
+                                                                                </table>
+                                                                            @endif
+                                                                        @endif
+                                                                        @endforeach
+                                                                    @endforeach
+                                                                </table>
+                                                            </div>
+                                                            @endif
+                                                        @endif
+                                                @endforeach
+                                            </div>
+                                            <br>
                                             <div class="row">
                                                 <div class="form-group col-md-12">
                                                     @php
                                                     $dataUmumNasabahId = $dataUmum->id;
                                                     $results = \App\Models\MstItemPerhitunganKredit::leftJoin('perhitungan_kredit', function($join) use ($dataUmumNasabahId) {
                                                                     $join->on('mst_item_perhitungan_kredit.id', '=', 'perhitungan_kredit.item_perhitungan_kredit_id')
-                                                                        ->where('perhitungan_kredit.temp_calon_nasabah_id', '=', $dataUmumNasabahId);
+                                                                        ->where('perhitungan_kredit.pengajuan_id', '=', $dataUmumNasabahId);
                                                                 })
                                                                 ->where('mst_item_perhitungan_kredit.skema_kredit_limit_id', '=', 1)
                                                                 ->where('mst_item_perhitungan_kredit.level', '=', 3)
@@ -1098,6 +1165,7 @@
                                                     
                                                     @endphp
                                                     <div class="card">
+                                                        <h5 class="card-header"></h5>
                                                         <div class="card-body">
                                                             <table class="table table-bordered">
                                                                 @foreach ($results as $item3NoParent)
@@ -1106,19 +1174,15 @@
                                                                     @elseif($item3NoParent->field == "Keuntungan Usaha")
                                                                     @elseif($item3NoParent->field == "Repayment")
                                                                     @elseif($item3NoParent->field == "Laba Setelah Kredit")
-                                                                    @elseif($item3NoParent->field == "Jangka Waktu Usulan")
                                                                     @elseif($item3NoParent->field == "Dibulatkan")
+                                                                    @elseif($item3NoParent->field == "Jangka Waktu Usulan")
                                                                         <td>{{ $item3NoParent->field }}</td>
                                                                         <td style="text-align: center">:</td>
-                                                                        <td>{{ $item3NoParent->nominal }}</td>
-                                                                    @elseif($item3NoParent->field == "Plafond usulan")
-                                                                        <td>{{ $item3NoParent->field }}</td>
-                                                                        <td style="text-align: center">:</td>
-                                                                        <td>{{ $item3NoParent->nominal }}</td>
+                                                                        <td>{{ $item3NoParent->nominal }} Bulan</td>
                                                                     @elseif($item3NoParent->field == "Jangka Waktu Kredit")
                                                                         <td>{{ $item3NoParent->field }}</td>
                                                                         <td style="text-align: center">:</td>
-                                                                        <td>{{ $item3NoParent->nominal }}</td>
+                                                                        <td>{{ $item3NoParent->nominal }} Bulan</td>
                                                                     @else
                                                                         <td width="47%">{{ $item3NoParent->field }}</td>
                                                                         <td width="6%" style="text-align: center">:</td>
@@ -1134,7 +1198,6 @@
                                             </div>
                                         </div>
                                     @else
-                                        
                                         <div class="" id="peringatan-pengajuan">
                                             <div class="form-group col-md-12">
                                             <div class="alert alert-info" role="alert">
@@ -3959,6 +4022,7 @@
                     <div class="row" id="table_perhitungan_kredit_lev3_noparent">
                     </div>
                     <div class="card">
+                        <h5 class="card-header"></h5>
                         <div class="card-body">
                             <table class="table table-bordered" id="table_perhitungan_kredit_lev4_noparent">
                             </table>
@@ -3974,6 +4038,7 @@
                     <div class="row" id="table_perhitungan_kredit_lev3_noparent">
                     </div>
                     <div class="card">
+                        <h5 class="card-header"></h5>
                         <div class="card-body">
                             <table class="table table-bordered" id="table_perhitungan_kredit_lev4_noparent">
                             </table>
@@ -3982,6 +4047,7 @@
                 `);
             }
 
+            var fieldValues = [];
             function formatRupiah(angka, prefix) {
                 var number_string = angka.replace(/[^,\d]/g, "").toString(),
                     split = number_string.split(","),
@@ -4080,17 +4146,33 @@
                     for (const element of res2.result) {
                         lev1Count += 1;
                         if (lev1Count > 1) {
-                            $('#row_perhitungan_kredit').append(`
-                                <div class="form-group col-md-12">
-                                    <div class="card">
-                                        <h5 class="card-header">${element.field} periode : ${formatBulan(resPeriode2.result[0].bulan)} - ${resPeriode2.result[0].tahun} </h5>
-                                        <div class="card-body">
-                                            <table class="table table-bordered" id="lev1_count_dua">
-                                            </table>
+                            if (element.field != 'Maksimal Pembiayaan') {
+                                $('#row_perhitungan_kredit').append(`
+                                    <div class="form-group col-md-12">
+                                        <div class="card">
+                                            <h5 class="card-header">${element.field} periode : ${formatBulan(resPeriode2.result[0].bulan)} - ${resPeriode2.result[0].tahun}</h5>
+                                            <div class="card-body">
+                                                <table class="table table-bordered" id="lev1_count_dua">
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                        `   );
+                            `   );
+                            }else{
+                                $('#table_perhitungan_kredit_lev3_noparent').after(`
+                                    <div class="row">
+                                        <div class="form-group col-md-12">
+                                            <div class="card">
+                                                <h5 class="card-header">${element.field}</h5>
+                                                <div class="card-body">
+                                                    <table class="table table-bordered" id="lev1_count_dua2">
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                            `   );
+                            }
                         }else{
                             $('#row_perhitungan_kredit').append(`
                                 <div class="form-group col-md-12">
@@ -4116,16 +4198,28 @@
                             const uniqueTableId = `itemPerhitunganKreditLev2_${element2.id}`; // Buat id unik untuk setiap tabel
 
                             if (lev1Count > 1) {
-                                var row = $('<tr>');
-                                row.append($("<th>").text(element2.field));
-                                row.append($("<th>").text(''));
-                                if (lev2Count === 1) {
-                                    row.append($("<th>").text("Sebelum Kredit"));
-                                    row.append($("<th>").text("Sesudah Kredit"));
-                                }else{
-                                    row.append($("<th>").attr("colspan", 2));
+                                if (element.field != 'Maksimal Pembiayaan') {
+                                    var row = $('<tr>');
+                                    row.append($("<th>").text(element2.field));
+                                    row.append($("<th>").text(''));
+                                    if (lev2Count === 1) {
+                                        row.append($("<th>").text("Sebelum Kredit"));
+                                        row.append($("<th>").text("Sesudah Kredit"));
+                                    }else{
+                                        row.append($("<th>").attr("colspan", 2));
+                                    }
+                                    $('#lev1_count_dua').append(row);   
                                 }
-                                $('#lev1_count_dua').append(row);
+                                // var row = $('<tr>');
+                                // row.append($("<th>").text(element2.field));
+                                // row.append($("<th>").text(''));
+                                // if (lev2Count === 1) {
+                                //     row.append($("<th>").text("Sebelum Kredit"));
+                                //     row.append($("<th>").text("Sesudah Kredit"));
+                                // }else{
+                                //     row.append($("<th>").attr("colspan", 2));
+                                // }
+                                // $('#lev1_count_dua').append(row);
                             }else{
 
                                 $('#lev_count_satu').append(`
@@ -4151,35 +4245,64 @@
                                     var fieldValue = itemAspekKeuangan3.field;
                                     var nominal = itemAspekKeuangan3.nominal;
                                     lev3Count += 1;
-                                    console.log("itemAspekKeuangan3 = " + itemAspekKeuangan3);
-
-                                    if (!displayedFieldValues[fieldValue]) {
-                                        var rowLevel3 = `
-                                            <tr>
-                                                <td>${fieldValue}</td>
-                                                <td style="text-align: center">:</td>
-                                                <td>Rp ${formatRupiah(String(nominal), '')}</td>
-                                                <td>`;
-
-                                        var isFirstNominalDisplayed = false;
-                                        
-                                        res4.result.forEach(function(item) {
-                                            if (item.field === fieldValue) {
-                                                if (isFirstNominalDisplayed) {
-                                                    rowLevel3 += `Rp ${formatRupiah(String(item.nominal), '')}`;
-                                                } else {
-                                                    isFirstNominalDisplayed = true;
+                                    console.log(itemAspekKeuangan3);
+                                    if (element.field != 'Maksimal Pembiayaan') {
+                                        if (!fieldValues.includes(fieldValue)) {
+                                            var rowLevel3 = `
+                                                <tr>
+                                                    <td>${fieldValue}</td>
+                                                    <td style="text-align: center">:</td>
+                                                    <td>Rp ${formatRupiah(String(nominal), '')}</td>
+                                                    <td>`;
+        
+                                            var isFirstNominalDisplayed = false;
+                                            
+                                            res4.result.forEach(function(item) {
+                                                if (item.field === fieldValue) {
+                                                    if (isFirstNominalDisplayed) {
+                                                        rowLevel3 += `Rp ${formatRupiah(String(item.nominal), '')}`;
+                                                    } else {
+                                                        isFirstNominalDisplayed = true;
+                                                    }
                                                 }
-                                            }
-                                        });
-
-                                        rowLevel3 += `
-                                                </td>
-                                            </tr>
-                                        `;
-
-                                        $('#lev1_count_dua').append(rowLevel3);
-                                        displayedFieldValues[fieldValue] = true;
+                                            });
+        
+                                            rowLevel3 += `
+                                                    </td>
+                                                </tr>
+                                            `;
+        
+                                            $('#lev1_count_dua').append(rowLevel3);
+                                            fieldValues.push(fieldValue);
+                                        }
+                                    }else{
+                                        if (fieldValue != 'Kebutuhan Kredit') {
+                                            $('#lev1_count_dua2').append(`
+                                                <tr>
+                                                    <td width="47%">${itemAspekKeuangan3.field}</td>
+                                                    <td width="6%" style="text-align: center">:</td>
+                                                    <td>Rp ${formatRupiah(String(itemAspekKeuangan3.nominal), '')}</td>
+                                                </tr>
+                                            `);
+                                        }else{
+                                            $('#lev1_count_dua2').after(`
+                                                <table class="table table-bordered">
+                                                    <div class="row">
+                                                        <div class="col-md-7">
+                                                            <hr width="94%" style="margin-left: 0; border: none; height: 1px; color: #333; background-color: #333;">
+                                                        </div>
+                                                        <div class="col-md-5">
+                                                            <h4>+</h4>
+                                                        </div>
+                                                    </div>
+                                                    <tr>
+                                                        <td width="47%">${fieldValue}</td>
+                                                        <td width="6%" style="text-align: center">:</td>
+                                                        <td>Rp ${formatRupiah(String(nominal), '')}</td>
+                                                    </tr>
+                                                </table>
+                                            `);
+                                        }
                                     }
                                 });
                             }else{
@@ -4196,6 +4319,7 @@
                             }
                         }
                     }
+
                     $.ajax({
                         url: '/get-perhitungan-kredit-lev3-noparent-edit/' + res1.request.idNasabah,
                         type: "Get",
@@ -4206,21 +4330,13 @@
                                 }else if(element.field == "Keuntungan Usaha"){
                                 }else if(element.field == "Repayment"){
                                 }else if(element.field == "Laba Setelah Kredit"){
-                                }else if(element.field == "Jangka Waktu Usulan"){
                                 }else if(element.field == "Dibulatkan"){
+                                }else if(element.field == "Jangka Waktu Usulan"){
                                     $('#table_perhitungan_kredit_lev4_noparent').append(`
                                         <tr>
                                             <td>${element.field}</td>
                                             <td style="text-align: center">:</td>
-                                            <td>${ element.nominal == null ? 0 : element.nominal }</td>
-                                        </tr>
-                                    `);
-                                }else if(element.field == "Plafond usulan"){
-                                    $('#table_perhitungan_kredit_lev4_noparent').append(`
-                                        <tr>
-                                            <td>${element.field}</td>
-                                            <td style="text-align: center">:</td>
-                                            <td>${ element.nominal == null ? 0 : element.nominal }</td>
+                                            <td>${ element.nominal == null ? 0 : element.nominal } Bulan</td>
                                         </tr>
                                     `);
                                 }else if(element.field == "Jangka Waktu Kredit"){
@@ -4228,7 +4344,7 @@
                                         <tr>
                                             <td>${element.field}</td>
                                             <td style="text-align: center">:</td>
-                                            <td>${ element.nominal == null ? 0 : element.nominal }</td>
+                                            <td>${ element.nominal == null ? 0 : element.nominal } Bulan</td>
                                         </tr>
                                     `);
                                 }else{

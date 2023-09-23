@@ -3137,21 +3137,13 @@ null => 1,
                             }else if(element.field == "Keuntungan Usaha"){
                             }else if(element.field == "Repayment"){
                             }else if(element.field == "Laba Setelah Kredit"){
-                            }else if(element.field == "Jangka Waktu Usulan"){
                             }else if(element.field == "Dibulatkan"){
+                            }else if(element.field == "Jangka Waktu Usulan"){
                                 $('#table_perhitungan_kredit_lev4_noparent').append(`
                                     <tr>
                                         <td>${element.field}</td>
                                         <td style="text-align: center">:</td>
-                                        <td>${ element.nominal == null ? 0 : element.nominal }</td>
-                                    </tr>
-                                `);
-                            }else if(element.field == "Plafond usulan"){
-                                $('#table_perhitungan_kredit_lev4_noparent').append(`
-                                    <tr>
-                                        <td>${element.field}</td>
-                                        <td style="text-align: center">:</td>
-                                        <td>${ element.nominal == null ? 0 : element.nominal }</td>
+                                        <td>${ element.nominal == null ? 0 : element.nominal } Bulan</td>
                                     </tr>
                                 `);
                             }else if(element.field == "Jangka Waktu Kredit"){
@@ -3159,7 +3151,7 @@ null => 1,
                                     <tr>
                                         <td>${element.field}</td>
                                         <td style="text-align: center">:</td>
-                                        <td>${ element.nominal == null ? 0 : element.nominal }</td>
+                                        <td>${ element.nominal == null ? 0 : element.nominal } Bulan</td>
                                     </tr>
                                 `);
                             }else{
