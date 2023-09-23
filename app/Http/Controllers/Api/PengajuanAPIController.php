@@ -56,6 +56,22 @@ class PengajuanAPIController extends Controller
                 ->leftJoin('cabang', 'cabang.id', 'users.id_cabang')
                 ->first();
 
+        if (!empty($_SERVER['HTTP_CLIENT_IP']))
+        {
+            $ip_address = $_SERVER['HTTP_CLIENT_IP'];
+        }
+        //whether ip is from proxy
+        elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
+        {
+            $ip_address = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        }
+        //whether ip is from remote address
+        else
+        {
+            $ip_address = $_SERVER['REMOTE_ADDR'];
+        }
+        $device_name = gethostname();
+
         $detail = [
             'nip' => null,
             'nama' => null,
@@ -100,6 +116,15 @@ class PengajuanAPIController extends Controller
             }
 
             $token = $user->createToken('auth_token')->plainTextToken;
+            $pat_id = explode('|', $token)[0];
+
+            // Set device name
+            DB::table('personal_access_tokens')
+                ->where('id', $pat_id)
+                ->update([
+                    'device_name' => $device_name,
+                    'ip_address' => $ip_address,
+                ]);
 
             return response()->json([
                 'status' => 'berhasil',
@@ -130,6 +155,7 @@ class PengajuanAPIController extends Controller
             }
 
             $token = $user->createToken('auth_token')->plainTextToken;
+            $pat_id = explode('|', $token)[0];
             if ($user->role == 'Direksi') {
                 $detail['nama'] = $user->name;
             }
@@ -141,6 +167,14 @@ class PengajuanAPIController extends Controller
                     $detail['nama'] = $user->name;
                 }
             }
+
+            // Set device name
+            DB::table('personal_access_tokens')
+                ->where('id', $pat_id)
+                ->update([
+                    'device_name' => $device_name,
+                    'ip_address' => $ip_address,
+                ]);
 
             return response()->json([
                 'status' => 'berhasil',
