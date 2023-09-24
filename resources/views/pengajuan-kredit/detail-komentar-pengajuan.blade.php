@@ -956,8 +956,36 @@ function getKaryawan($nip){
                                                 ->select('periode_aspek_keuangan.id','periode_aspek_keuangan.perhitungan_kredit_id',
                                                 'periode_aspek_keuangan.bulan','periode_aspek_keuangan.tahun') 
                                                 ->get();
+                                        function bulan($value){
+                                                if ($value == 1) {
+                                                    echo "Januari";
+                                                }else if($value == 2){
+                                                    echo "Februari";
+                                                }else if($value == 3){
+                                                    echo "Maret";
+                                                }else if($value == 4){
+                                                    echo "April";
+                                                }else if($value == 5){
+                                                    echo "Mei";
+                                                }else if($value == 6){
+                                                    echo "Juni";
+                                                }else if($value == 7){
+                                                    echo "Juli";
+                                                }else if($value == 8){
+                                                    echo "Agustus";
+                                                }else if($value == 9){
+                                                    echo "September";
+                                                }else if($value == 10){
+                                                    echo "Oktober";
+                                                }else if($value == 11){
+                                                    echo "November";
+                                                }else{
+                                                    echo "Desember";
+                                                }
+                                            }
                                         @endphp
                                         @if(!$getPeriode->isEmpty())
+                                            <h5>Periode : {{ bulan($getPeriode[0]->bulan) - $getPeriode[0]->tahun }}</h5>
                                             <div class="" id="perhitungan_kredit_with_value_without_update">
                                                 @php
                                                     $lev1 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)->where('level', 1)->get();
@@ -966,33 +994,6 @@ function getKaryawan($nip){
                                                         $format_rupiah = rtrim($format_rupiah, '0'); 
                                                         $format_rupiah = str_replace(',', '', $format_rupiah); 
                                                         echo $format_rupiah;
-                                                    }
-                                                    function bulan($value){
-                                                        if ($value == 1) {
-                                                            echo "Januari";
-                                                        }else if($value == 2){
-                                                            echo "Februari";
-                                                        }else if($value == 3){
-                                                            echo "Maret";
-                                                        }else if($value == 4){
-                                                            echo "April";
-                                                        }else if($value == 5){
-                                                            echo "Mei";
-                                                        }else if($value == 6){
-                                                            echo "Juni";
-                                                        }else if($value == 7){
-                                                            echo "Juli";
-                                                        }else if($value == 8){
-                                                            echo "Agustus";
-                                                        }else if($value == 9){
-                                                            echo "September";
-                                                        }else if($value == 10){
-                                                            echo "Oktober";
-                                                        }else if($value == 11){
-                                                            echo "November";
-                                                        }else{
-                                                            echo "Desember";
-                                                        }
                                                     }
                                                     $lev1Count = 0;
                                                 @endphp
@@ -1007,7 +1008,7 @@ function getKaryawan($nip){
                                                     @if ($lev1Count > 1)
                                                         @if ($itemAspekKeuangan->field != "Maksimal Pembiayaan")
                                                             <div class="card">
-                                                                <h5 class="card-header">{{ $itemAspekKeuangan->field }} Periode : {{ bulan($getPeriode[0]->bulan) - $getPeriode[0]->tahun }}</h5>
+                                                                <h5 class="card-header">{{ $itemAspekKeuangan->field }}</h5>
                                                                 <div class="card-body">
                                                                     <table class="table table-bordered">
                                                                         @php $lev2Count = 0; @endphp
@@ -1064,7 +1065,7 @@ function getKaryawan($nip){
                                                         @endif
                                                     @else
                                                     <div class="card">
-                                                        <h5 class="card-header">{{ $itemAspekKeuangan->field }} Periode : {{ bulan($getPeriode[0]->bulan) - $getPeriode[0]->tahun }}</h5>
+                                                        <h5 class="card-header">{{ $itemAspekKeuangan->field }}</h5>
                                                         <div class="card-body">
                                                             <div class="row">
                                                                 @foreach ($lev2 as $itemAspekKeuangan2)
@@ -1170,7 +1171,7 @@ function getKaryawan($nip){
                                                                                             <div class="col-md-7">
                                                                                                 <hr width="94%" style="margin-left: 0; border: none; height: 1px; color: #333; background-color: #333;">
                                                                                             </div>
-                                                                                            <div class="col-md-5">
+                                                                                            <div class="col-md-5 justify-content-center text-right">
                                                                                                 <h4>+</h4>
                                                                                             </div>
                                                                                         </div>

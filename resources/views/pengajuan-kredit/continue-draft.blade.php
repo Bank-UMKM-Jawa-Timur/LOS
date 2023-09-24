@@ -550,8 +550,36 @@ is-invalid
                                         ->where('perhitungan_kredit.temp_calon_nasabah_id', $duTemp->id)
                                         ->select('periode_aspek_keuangan.*', 'perhitungan_kredit.*') 
                                         ->get();
+        function formatBulan($value){
+            if ($value == 1) {
+                echo "Januari";
+            }else if($value == 2){
+                echo "Februari";
+            }else if($value == 3){
+                echo "Maret";
+            }else if($value == 4){
+                echo "April";
+            }else if($value == 5){
+                echo "Mei";
+            }else if($value == 6){
+                echo "Juni";
+            }else if($value == 7){
+                echo "Juli";
+            }else if($value == 8){
+                echo "Agustus";
+            }else if($value == 9){
+                echo "September";
+            }else if($value == 10){
+                echo "Oktober";
+            }else if($value == 11){
+                echo "November";
+            }else{
+                echo "Desember";
+            }
+        }
         @endphp
         @if(!$getPeriode->isEmpty())
+            <h5>Periode : {{ formatBulan($getPeriode[0]->bulan) - $getPeriode[0]->tahun }}</h5>
             <div class="" id="perhitungan_kredit_with_value_without_update">
                 @php
                     $lev1 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)->where('level', 1)->get();
@@ -561,34 +589,6 @@ is-invalid
                         $format_rupiah = rtrim($format_rupiah, '0'); 
                         $format_rupiah = str_replace(',', '', $format_rupiah); 
                         echo $format_rupiah;
-                    }
-
-                    function formatBulan($value){
-                        if ($value == 1) {
-                            echo "Januari";
-                        }else if($value == 2){
-                            echo "Februari";
-                        }else if($value == 3){
-                            echo "Maret";
-                        }else if($value == 4){
-                            echo "April";
-                        }else if($value == 5){
-                            echo "Mei";
-                        }else if($value == 6){
-                            echo "Juni";
-                        }else if($value == 7){
-                            echo "Juli";
-                        }else if($value == 8){
-                            echo "Agustus";
-                        }else if($value == 9){
-                            echo "September";
-                        }else if($value == 10){
-                            echo "Oktober";
-                        }else if($value == 11){
-                            echo "November";
-                        }else{
-                            echo "Desember";
-                        }
                     }
                 @endphp
                     @php
@@ -606,7 +606,7 @@ is-invalid
                             @if ($itemAspekKeuangan->field != "Maksimal Pembiayaan")
                                 <div class="card">
                                     @if ($itemAspekKeuangan->field != "Maksimal Pembiayaan")
-                                    <h5 class="card-header">{{ $itemAspekKeuangan->field }} Periode : {{ formatBulan($getPeriode[0]->bulan) - $getPeriode[0]->tahun }}</h5>
+                                    <h5 class="card-header">{{ $itemAspekKeuangan->field }}</h5>
                                     @endif
                                     <div class="card-body">
                                         <table class="table table-bordered">
@@ -668,7 +668,7 @@ is-invalid
                             @endif
                         @else
                         <div class="card">
-                            <h5 class="card-header">{{ $itemAspekKeuangan->field }} Periode : {{ formatBulan($getPeriode[0]->bulan) - $getPeriode[0]->tahun }}</h5>
+                            <h5 class="card-header">{{ $itemAspekKeuangan->field }}</h5>
                             <div class="card-body">
                                 <div class="row">
                                     @foreach ($lev2 as $itemAspekKeuangan2)
@@ -774,7 +774,7 @@ is-invalid
                                                                 <div class="col-md-7">
                                                                     <hr width="94%" style="margin-left: 0; border: none; height: 1px; color: #333; background-color: #333;">
                                                                 </div>
-                                                                <div class="col-md-5">
+                                                                <div class="col-md-5 justify-content-center text-right">
                                                                     <h4>+</h4>
                                                                 </div>
                                                             </div>
@@ -3411,9 +3411,11 @@ is-invalid
         var selectElementBulan = $("#periode").find(":selected").text();
         var selectValueElementBulan = $("#periode").val();
         var selectElementTahun = $("#periode_tahun").find(":selected").text();
+        var titlePeriode = ``;
         
         if (indexBtnSimpan == 1) {
             $('#perhitungan_kredit_with_value').append(`
+                <h5>${titlePeriode === "undefined" ? '' : titlePeriode }</h5>
                 <div class="row" id="row_perhitungan_kredit">
                 </div>
                 <div class="row" id="table_perhitungan_kredit_lev3_noparent">
@@ -3429,6 +3431,7 @@ is-invalid
         }else{
             $('#perhitungan_kredit_with_value').empty();
             $('#perhitungan_kredit_with_value').append(`
+                <h5>${titlePeriode === "undefined" ? '' : titlePeriode}</h5>
                 <div class="row" id="row_perhitungan_kredit">
                 </div>
                 <div class="row" id="table_perhitungan_kredit_lev3_noparent">
@@ -3542,12 +3545,14 @@ is-invalid
                 var lev1Count = 0;
                 for (const element of res2.result) {
                     lev1Count += 1;
+                    titlePeriode = `Periode : ${formatBulan(resPeriode2.result[0].bulan)} - ${resPeriode2.result[0].tahun}`;
+            
                     if (lev1Count > 1) {
                         if (element.field != 'Maksimal Pembiayaan') {
                             $('#row_perhitungan_kredit').append(`
                                 <div class="form-group col-md-12">
                                     <div class="card">
-                                        <h5 class="card-header">${element.field} periode : ${formatBulan(resPeriode2.result[0].bulan)} - ${resPeriode2.result[0].tahun}</h5>
+                                        <h5 class="card-header">${element.field}</h5>
                                         <div class="card-body">
                                             <table class="table table-bordered" id="lev1_count_dua">
                                             </table>
@@ -3555,7 +3560,7 @@ is-invalid
                                     </div>
                                 </div>
                         `   );
-                    }else{
+                        }else{
                             $('#table_perhitungan_kredit_lev3_noparent').after(`
                                 <div class="row">
                                     <div class="form-group col-md-12">
@@ -3574,7 +3579,7 @@ is-invalid
                         $('#row_perhitungan_kredit').append(`
                             <div class="form-group col-md-12">
                                 <div class="card">
-                                    <h5 class="card-header">${element.field} periode : ${formatBulan(resPeriode2.result[0].bulan)} - ${resPeriode2.result[0].tahun}</h5>
+                                    <h5 class="card-header">${element.field}</h5>
                                     <div class="card-body">
                                         <div class="row" id="lev_count_satu">
                                         </div>
@@ -3676,7 +3681,7 @@ is-invalid
                                                     <div class="col-md-7">
                                                         <hr width="94%" style="margin-left: 0; border: none; height: 1px; color: #333; background-color: #333;">
                                                     </div>
-                                                    <div class="col-md-5">
+                                                    <div class="col-md-5 justify-content-center text-right">
                                                         <h4>+</h4>
                                                     </div>
                                                 </div>

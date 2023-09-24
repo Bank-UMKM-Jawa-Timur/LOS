@@ -2848,10 +2848,12 @@ null => 1,
         var selectElementBulan = $("#periode").find(":selected").text();
         selectValueElementBulan = $("#periode").val();
         selectElementTahun = $("#periode_tahun").find(":selected").text();
+        var titlePeriode = ``;
         
         if (indexBtnSimpan == 1) {
             $('#perhitungan_kredit_with_value').append(`
                 <br>
+                <h5>Periode : ${selectElementBulan} - ${selectElementTahun}</h5>
                 <div class="row" id="row_perhitungan_kredit">
                 </div>
                 <div class="row" id="table_perhitungan_kredit_lev3_noparent">
@@ -2868,6 +2870,7 @@ null => 1,
             $('#perhitungan_kredit_with_value').empty();
             $('#perhitungan_kredit_with_value').append(`
                 <br>
+                <h5>Periode : ${selectElementBulan} - ${selectElementTahun}</h5>
                 <div class="row" id="row_perhitungan_kredit">
                 </div>
                 <div class="row" id="table_perhitungan_kredit_lev3_noparent">
@@ -2976,7 +2979,7 @@ null => 1,
                             $('#row_perhitungan_kredit').append(`
                                 <div class="form-group col-md-12">
                                     <div class="card">
-                                        <h5 class="card-header">${element.field} periode : ${selectElementBulan} - ${selectElementTahun}</h5>
+                                        <h5 class="card-header">${element.field}</h5>
                                         <div class="card-body">
                                             <table class="table table-bordered" id="lev1_count_dua">
                                             </table>
@@ -3002,7 +3005,7 @@ null => 1,
                         $('#row_perhitungan_kredit').append(`
                             <div class="form-group col-md-12">
                                 <div class="card">
-                                    <h5 class="card-header">${element.field} periode : ${selectElementBulan} - ${selectElementTahun}</h5>
+                                    <h5 class="card-header">${element.field}</h5>
                                     <div class="card-body">
                                         <div class="row" id="lev_count_satu">
                                         </div>
@@ -3105,7 +3108,7 @@ null => 1,
                                                     <div class="col-md-7">
                                                         <hr width="94%" style="margin-left: 0; border: none; height: 1px; color: #333; background-color: #333;">
                                                     </div>
-                                                    <div class="col-md-5">
+                                                    <div class="col-md-5 justify-content-center text-right">
                                                         <h4>+</h4>
                                                     </div>
                                                 </div>

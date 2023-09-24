@@ -225,6 +225,8 @@
                             <div class="form-group col-md-12">
                                     @php
                                     $lev1Count = 0;
+                                    $totalAktiva = 0;
+                                    $totalPasiva = 0;
                                     @endphp
                                     @foreach ($lev1 as $itemAspekKeuangan)
                                         @php
@@ -235,9 +237,9 @@
                                             ->get();
                                         @endphp
                                         @if ($lev1Count > 1)
-                                            <table style="margin-left: 33px;">
+                                            <table style="margin-left: 33px; border-collapse: collapse;">
                                                 <tr>
-                                                    <th colspan="4" style="padding-top: 10px; padding-bottom: 10px; text-align: left;">{{ $itemAspekKeuangan->field }} Periode : {{ formatBulan($getPeriode[0]->bulan) - $getPeriode[0]->tahun }} </th>
+                                                    <th colspan="4" style="padding-top: 10px; padding-bottom: 10px; text-align: center; padding-left: 7px; border-left: 0px solid black; border-right: 0px solid black;">{{ $itemAspekKeuangan->field }} Periode : {{ formatBulan($getPeriode[0]->bulan) - $getPeriode[0]->tahun }} </th>
                                                 </tr>
                                                 @php $lev2Count = 0; @endphp
                                                 @foreach ($lev2 as $itemAspekKeuangan2)
@@ -252,14 +254,13 @@
                                                 $fieldValues = [];
                                                 @endphp
                                                 <tr>
-                                                    <th style="padding-top: 5px; padding-bottom: 5px; text-align: left">{{ $itemAspekKeuangan2->field }}</th>
-                                                    <td></td>
+                                                    <th style="padding-top: 5px; padding-bottom: 5px; text-align: left; padding-left: 7px; border-top: 1px solid black; border-bottom: 1px solid black; border-left: 1px solid black;">{{ $itemAspekKeuangan2->field }}</th>
+                                                    <td style="border-top: 1px solid black; border-bottom: 1px solid black;"></td>
                                                     @if ($lev2Count > 1)
-                                                        <th></th>
-                                                        <th></th>
+                                                        <th colspan="2" style="border-top: 1px solid black; border-bottom: 1px solid black; border-right: 1px solid black;"></th>
                                                     @else
-                                                        <th style="text-align: left; padding-left: 20px">Sebelum Kredit</th>
-                                                        <th style="text-align: left;">Sesudah Kredit</th>
+                                                        <th style="text-align: left; padding-left: 20px; border-top: 1px solid black; border-bottom: 1px solid black;">Sebelum Kredit</th>
+                                                        <th style="text-align: left; padding-left: 7px; border-top: 1px solid black; border-bottom: 1px solid black; border-right: 1px solid black;">Sesudah Kredit</th>
                                                     @endif
                                                 </tr>
                                                 @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
@@ -268,11 +269,15 @@
                                                     $nominal = $itemAspekKeuangan3->nominal;
                                                     @endphp
                                                     @if (!in_array($fieldValue, $fieldValues))
-                                                        <tr>
+                                                        @if ($fieldValue == "Sisa Pendapatan Setiap Bulan")
+                                                        <tr style="border-left: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black;">
+                                                        @else
+                                                            <tr style="border-left: 1px solid black; border-right: 1px solid black;">
+                                                        @endif
                                                             <td width="220px" style="padding-left: 20px">{{ $fieldValue }}</td>
                                                             <td>:</td>
                                                             <td width="150px" style="padding-left: 20px;">Rp {{ formatRupiah($nominal) }}</td>
-                                                            <td width="150px">
+                                                            <td width="150px" style="padding-left: 7px;">
                                                                 @foreach ($perhitunganKreditLev3 as $item)
                                                                     @if ($item->field == $fieldValue)
                                                                         @if ($item->nominal != $nominal)
@@ -290,17 +295,19 @@
                                             @endforeach
                                             </table>
                                         @else
-                                            <table style="margin-left: 33px;">
+                                            <table style="margin-left: 33px;
+                                            border-collapse: collapse;">
                                                 <tr>
-                                                    <th colspan="{{ count($lev2) * 2 + 2 }}" style="padding-top: 5px; padding-bottom: 5px; text-align: left;">{{ $itemAspekKeuangan->field }} Periode : {{ formatBulan($getPeriode[0]->bulan) - $getPeriode[0]->tahun }} </th>
+                                                    <th colspan="{{ count($lev2) * 2 + 2 }}" style="padding-top: 5px; padding-bottom: 5px; text-align: center; padding-left: 7px">{{ $itemAspekKeuangan->field }} Periode : {{ formatBulan($getPeriode[0]->bulan) - $getPeriode[0]->tahun }} </th>
                                                 </tr>
-                                                <tr>
+                                                <tr style="border: 1px solid black;">
                                                     @php $lev2Count = 0; @endphp
                                                     @foreach ($lev2 as $itemAspekKeuangan2)
                                                     @php $lev2Count += 1; @endphp
-                                                    <th colspan="2" style="padding-left: 20px; padding-top: 2px; padding-bottom: 2px; text-align: left">{{ $itemAspekKeuangan2->field }}</th>
+                                                    <th colspan="2" style="border: 0; padding-left: 20px; padding-top: 2px; padding-bottom: 2px; text-align: left">{{ $itemAspekKeuangan2->field }}</th>
+                                                    {{-- <th>Rp</th> --}}
                                                         @if ($lev2Count <= 1)
-                                                            <td></td>
+                                                            <td style="border: 1px solid black;"></td>
                                                         @endif
                                                     @endforeach
                                                 </tr>
@@ -319,22 +326,33 @@
                                                 }
                                                 @endphp
                                                 @for ($i = 0; $i < $maxRowCount; $i++)
-                                                    <tr>
-                                                        @php $lev3Count = 0; @endphp
+                                                    <tr style="border: 1px solid black;">
+                                                        @php 
+                                                        $lev3Count = 0; 
+                                                        @endphp
                                                         @foreach ($perhitunganKreditLev3List as $perhitunganKreditLev3)
-                                                            @php $lev3Count += 1; @endphp
+                                                            @php 
+                                                            $lev3Count += 1;
+                                                            @endphp
                                                             @if ($i < count($perhitunganKreditLev3))
                                                                 @if ($perhitunganKreditLev3[$i]->field != "Total Angsuran")
                                                                 <td width="100px" style="padding-left: 20px">{{ $perhitunganKreditLev3[$i]->field }}</td>
                                                                 <td width="100px" style=" padding-left: 10px;">Rp {{ formatRupiah($perhitunganKreditLev3[$i]->nominal) }}</td>
                                                                     @if ($lev3Count <= 1)
-                                                                    <td width="20px"></td>
+                                                                    <td width="20px" style="border: 1px solid black;"></td>
                                                                     @endif
                                                                 @endif
                                                             @endif
                                                         @endforeach
                                                     </tr>
                                                 @endfor
+                                                {{-- <tr style="border: 1px solid black;">
+                                                    <th>Total</th>
+                                                    <td style="border: 1px solid black;">{{ $totalAktiva }}</td>
+                                                    <td style="border: 1px solid black;"></td>
+                                                    <td></td>
+                                                    <td style="border: 1px solid black;">{{ $totalPasiva }}</td>
+                                                </tr> --}}
                                             </table>
                                         @endif
                                         <br>
@@ -355,15 +373,16 @@
                                                                                     ->where('perhitungan_kredit.pengajuan_id', $dataNasabah->id_pengajuan)
                                                                                     ->get();
                                     @endphp
-                                            <table style="margin-left: 33px;">
+                                            <table style="margin-left: 33px; border: 1px solid black">
                                                 <tr>
-                                                    <th colspan="3" style=" padding-top: 5px; padding-bottom: 5px; text-align: left">{{ $item2NoParent->field }}</th>
+                                                    <th colspan="4" style=" padding-top: 5px; padding-bottom: 5px; text-align: left; padding-left: 7px; border-bottom: 1px solid black">{{ $item2NoParent->field }}</th>
                                                 </tr>
                                                 @foreach ($lev3NoParent as $item3NoParent)
                                                 <tr>
                                                     <td width="220px" style="padding-left: 20px">{{ $item3NoParent->field }}</td>
                                                     <td>:</td>
-                                                    <td style="padding-left: 20px">Rp {{ formatRupiah($item3NoParent->nominal) }}</td>
+                                                    <td width="150px" style="padding-left: 20px">Rp {{ formatRupiah($item3NoParent->nominal) }}</td>
+                                                    <td width="145px"></td>
                                                 </tr>
                                                 @endforeach
                                             </table>
@@ -394,16 +413,16 @@
                                                 @elseif($item3NoParent->field == "Jangka Waktu Usulan")
                                                     <td width="220px" style="padding-left: 20px">{{ $item3NoParent->field }}</td>
                                                     <td>:</td>
-                                                    <td style="padding-left: 20px">{{ empty($item3NoParent->nominal) ? 0 : $item3NoParent->nominal }}</td>
+                                                    <td style="padding-left: 20px; border-bottom: 1px solid black">{{ empty($item3NoParent->nominal) ? 0 : $item3NoParent->nominal }}</td>
                                                 @elseif($item3NoParent->field == "Jangka Waktu Kredit")
                                                     <td width="220px" style="padding-left: 20px">{{ $item3NoParent->field }}</td>
                                                     <td>:</td>
-                                                    <td style="padding-left: 20px">{{ empty($item3NoParent->nominal) ? 0 : $item3NoParent->nominal }}</td>
+                                                    <td style="padding-left: 20px; border-top: 1px solid black; border-bottom: 1px solid black">{{ empty($item3NoParent->nominal) ? 0 : $item3NoParent->nominal }}</td>
                                                 @elseif($item3NoParent->field == "Repayment")
                                                 @else
                                                     <td width="220px" style="">{{ $item3NoParent->field }}</td>
                                                     <td>:</td>
-                                                    <td style="padding-left: 20px">Rp {{ formatRupiah(empty($item3NoParent->nominal) ? 0 : $item3NoParent->nominal) }}</td>
+                                                    <td style="padding-left: 20px; border-top: 1px solid black; ">Rp {{ formatRupiah(empty($item3NoParent->nominal) ? 0 : $item3NoParent->nominal) }}</td>
                                                 @endif
                                             </tr>
                                             @endforeach

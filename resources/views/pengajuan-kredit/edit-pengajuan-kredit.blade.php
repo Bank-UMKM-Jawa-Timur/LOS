@@ -915,9 +915,37 @@
                                             ->select('periode_aspek_keuangan.id','periode_aspek_keuangan.perhitungan_kredit_id',
                                             'periode_aspek_keuangan.bulan','periode_aspek_keuangan.tahun') 
                                             ->get();
+                                    function bulan($value){
+                                            if ($value == 1) {
+                                                echo "Januari";
+                                            }else if($value == 2){
+                                                echo "Februari";
+                                            }else if($value == 3){
+                                                echo "Maret";
+                                            }else if($value == 4){
+                                                echo "April";
+                                            }else if($value == 5){
+                                                echo "Mei";
+                                            }else if($value == 6){
+                                                echo "Juni";
+                                            }else if($value == 7){
+                                                echo "Juli";
+                                            }else if($value == 8){
+                                                echo "Agustus";
+                                            }else if($value == 9){
+                                                echo "September";
+                                            }else if($value == 10){
+                                                echo "Oktober";
+                                            }else if($value == 11){
+                                                echo "November";
+                                            }else{
+                                                echo "Desember";
+                                            }
+                                        }
                                     @endphp
                                     @if(!$getPeriode->isEmpty())
                                         <div class="form-group col-md-12" id="perhitungan_kredit_with_value_without_update">
+                                            <h5>Periode : {{ bulan($getPeriode[0]->bulan) - $getPeriode[0]->tahun }}</h5>
                                             @php
                                                 $lev1 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)->where('level', 1)->get();
                                                 function rupiah($angka){
@@ -925,33 +953,6 @@
                                                     $format_rupiah = rtrim($format_rupiah, '0'); 
                                                     $format_rupiah = str_replace(',', '', $format_rupiah); 
                                                     echo $format_rupiah;
-                                                }
-                                                function bulan($value){
-                                                    if ($value == 1) {
-                                                        echo "Januari";
-                                                    }else if($value == 2){
-                                                        echo "Februari";
-                                                    }else if($value == 3){
-                                                        echo "Maret";
-                                                    }else if($value == 4){
-                                                        echo "April";
-                                                    }else if($value == 5){
-                                                        echo "Mei";
-                                                    }else if($value == 6){
-                                                        echo "Juni";
-                                                    }else if($value == 7){
-                                                        echo "Juli";
-                                                    }else if($value == 8){
-                                                        echo "Agustus";
-                                                    }else if($value == 9){
-                                                        echo "September";
-                                                    }else if($value == 10){
-                                                        echo "Oktober";
-                                                    }else if($value == 11){
-                                                        echo "November";
-                                                    }else{
-                                                        echo "Desember";
-                                                    }
                                                 }
                                                 $lev1Count = 0;
                                             @endphp
@@ -966,7 +967,7 @@
                                                 @if ($lev1Count > 1)
                                                     @if ($itemAspekKeuangan->field != "Maksimal Pembiayaan")
                                                         <div class="card">
-                                                            <h5 class="card-header">{{ $itemAspekKeuangan->field }} Periode : {{ bulan($getPeriode[0]->bulan) - $getPeriode[0]->tahun }}</h5>
+                                                            <h5 class="card-header">{{ $itemAspekKeuangan->field }}</h5>
                                                             <div class="card-body">
                                                                 <table class="table table-bordered">
                                                                     @php $lev2Count = 0; @endphp
@@ -1023,7 +1024,7 @@
                                                     @endif
                                                 @else
                                                 <div class="card">
-                                                    <h5 class="card-header">{{ $itemAspekKeuangan->field }} Periode : {{ bulan($getPeriode[0]->bulan) - $getPeriode[0]->tahun }}</h5>
+                                                    <h5 class="card-header">{{ $itemAspekKeuangan->field }}</h5>
                                                     <div class="card-body">
                                                         <div class="row">
                                                             @foreach ($lev2 as $itemAspekKeuangan2)
@@ -1129,7 +1130,7 @@
                                                                                         <div class="col-md-7">
                                                                                             <hr width="94%" style="margin-left: 0; border: none; height: 1px; color: #333; background-color: #333;">
                                                                                         </div>
-                                                                                        <div class="col-md-5">
+                                                                                        <div class="col-md-5 justify-content-center text-right">
                                                                                             <h4>+</h4>
                                                                                         </div>
                                                                                     </div>
@@ -4013,10 +4014,11 @@
             var selectElementBulan = $("#periode").find(":selected").text();
             selectValueElementBulan = $("#periode").val();
             selectElementTahun = $("#periode_tahun").find(":selected").text();
+            var titlePeriode = ``;
 
             if (indexBtnSimpan == 1) {
                 $('#perhitungan_kredit_with_value').append(`
-                    <br>
+                    <h5>Periode : ${selectElementBulan} - ${selectElementTahun}</h5>
                     <div class="row" id="row_perhitungan_kredit">
                     </div>
                     <div class="row" id="table_perhitungan_kredit_lev3_noparent">
@@ -4032,7 +4034,7 @@
             }else{
                 $('#perhitungan_kredit_with_value').empty();
                 $('#perhitungan_kredit_with_value').append(`
-                    <br>
+                    <h5>Periode : ${selectElementBulan} - ${selectElementTahun}</h5>
                     <div class="row" id="row_perhitungan_kredit">
                     </div>
                     <div class="row" id="table_perhitungan_kredit_lev3_noparent">
@@ -4145,12 +4147,13 @@
                     var lev1Count = 0;
                     for (const element of res2.result) {
                         lev1Count += 1;
+                        titlePeriode = `Periode : ${formatBulan(resPeriode2.result[0].bulan)} - ${resPeriode2.result[0].tahun}`;
                         if (lev1Count > 1) {
                             if (element.field != 'Maksimal Pembiayaan') {
                                 $('#row_perhitungan_kredit').append(`
                                     <div class="form-group col-md-12">
                                         <div class="card">
-                                            <h5 class="card-header">${element.field} periode : ${formatBulan(resPeriode2.result[0].bulan)} - ${resPeriode2.result[0].tahun}</h5>
+                                            <h5 class="card-header">${element.field}</h5>
                                             <div class="card-body">
                                                 <table class="table table-bordered" id="lev1_count_dua">
                                                 </table>
@@ -4177,7 +4180,7 @@
                             $('#row_perhitungan_kredit').append(`
                                 <div class="form-group col-md-12">
                                     <div class="card">
-                                        <h5 class="card-header">${element.field} periode : ${formatBulan(resPeriode2.result[0].bulan)} - ${resPeriode2.result[0].tahun} </h5>
+                                        <h5 class="card-header">${element.field}</h5>
                                         <div class="card-body">
                                             <div class="row" id="lev_count_satu">
                                             </div>
@@ -4291,7 +4294,7 @@
                                                         <div class="col-md-7">
                                                             <hr width="94%" style="margin-left: 0; border: none; height: 1px; color: #333; background-color: #333;">
                                                         </div>
-                                                        <div class="col-md-5">
+                                                        <div class="col-md-5 justify-content-center text-right">
                                                             <h4>+</h4>
                                                         </div>
                                                     </div>
