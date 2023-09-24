@@ -2857,6 +2857,7 @@ null => 1,
                 <div class="row" id="table_perhitungan_kredit_lev3_noparent">
                 </div>
                 <div class="card">
+                    <h5 class="card-header"></h5>
                     <div class="card-body">
                         <table class="table table-bordered" id="table_perhitungan_kredit_lev4_noparent">
                         </table>
@@ -2872,6 +2873,7 @@ null => 1,
                 <div class="row" id="table_perhitungan_kredit_lev3_noparent">
                 </div>
                 <div class="card">
+                    <h5 class="card-header"></h5>
                     <div class="card-body">
                         <table class="table table-bordered" id="table_perhitungan_kredit_lev4_noparent">
                         </table>
@@ -2970,17 +2972,32 @@ null => 1,
                 for (const element of res2.result) {
                     lev1Count += 1;
                     if (lev1Count > 1) {
-                        $('#row_perhitungan_kredit').append(`
-                            <div class="form-group col-md-12">
-                                <div class="card">
-                                    <h5 class="card-header">${element.field} periode : ${selectElementBulan} - ${selectElementTahun}</h5>
-                                    <div class="card-body">
-                                        <table class="table table-bordered" id="lev1_count_dua">
-                                        </table>
+                        if (element.field != 'Maksimal Pembiayaan') {
+                            $('#row_perhitungan_kredit').append(`
+                                <div class="form-group col-md-12">
+                                    <div class="card">
+                                        <h5 class="card-header">${element.field} periode : ${selectElementBulan} - ${selectElementTahun}</h5>
+                                        <div class="card-body">
+                                            <table class="table table-bordered" id="lev1_count_dua">
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                    `   );
+                        `   );
+                        }else{
+                            $('#table_perhitungan_kredit_lev3_noparent').after(`
+                                <div class="">
+                                    <div class="card">
+                                        <h5 class="card-header">${element.field}</h5>
+                                        <div class="card-body">
+                                            <table class="table table-bordered" id="lev1_count_dua2">
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                        `   );
+                        }
                     }else{
                         $('#row_perhitungan_kredit').append(`
                             <div class="form-group col-md-12">
@@ -3006,18 +3023,19 @@ null => 1,
                         var uniqueTableId = `itemPerhitunganKreditLev2_${element2.id}`;
                         console.log(lev2Count);
                         if (lev1Count > 1) {
-                            var row = $('<tr>');
-                            row.append($("<th>").text(element2.field));
-                            row.append($("<th>").text(''));
-                            if (lev2Count === 1) {
-                                row.append($("<th>").text("Sebelum Kredit"));
-                                row.append($("<th>").text("Sesudah Kredit"));
-                            }else{
-                                row.append($("<th>").attr("colspan", 2));
+                            if (element.field != 'Maksimal Pembiayaan') {
+                                var row = $('<tr>');
+                                row.append($("<th>").text(element2.field));
+                                row.append($("<th>").text(''));
+                                if (lev2Count === 1) {
+                                    row.append($("<th>").text("Sebelum Kredit"));
+                                    row.append($("<th>").text("Sesudah Kredit"));
+                                }else{
+                                    row.append($("<th>").attr("colspan", 2));
+                                }
+                                $('#lev1_count_dua').append(row);
                             }
-                            $('#lev1_count_dua').append(row);
                         }else{
-
                             $('#lev_count_satu').append(`
                                 <div class="form-group col-md-6">
                                     <table class="table table-bordered" id="${uniqueTableId}">
@@ -3042,33 +3060,63 @@ null => 1,
                                 lev3Count += 1;
                                 console.log(itemAspekKeuangan3);
 
-                                if (!fieldValues.includes(fieldValue)) {
-                                    var rowLevel3 = `
-                                        <tr>
-                                            <td>${fieldValue}</td>
-                                            <td style="text-align: center">:</td>
-                                            <td>Rp ${formatRupiah(String(nominal), '')}</td>
-                                            <td>`;
-
-                                    var isFirstNominalDisplayed = false;
-                                    
-                                    res4.result.forEach(function(item) {
-                                        if (item.field === fieldValue) {
-                                            if (isFirstNominalDisplayed) {
-                                                rowLevel3 += `Rp ${formatRupiah(String(item.nominal), '')}`;
-                                            } else {
-                                                isFirstNominalDisplayed = true;
+                                if (element.field != 'Maksimal Pembiayaan') {
+                                    if (!fieldValues.includes(fieldValue)) {
+                                        var rowLevel3 = `
+                                            <tr>
+                                                <td>${fieldValue}</td>
+                                                <td style="text-align: center">:</td>
+                                                <td>Rp ${formatRupiah(String(nominal), '')}</td>
+                                                <td>`;
+    
+                                        var isFirstNominalDisplayed = false;
+                                        
+                                        res4.result.forEach(function(item) {
+                                            if (item.field === fieldValue) {
+                                                if (isFirstNominalDisplayed) {
+                                                    rowLevel3 += `Rp ${formatRupiah(String(item.nominal), '')}`;
+                                                } else {
+                                                    isFirstNominalDisplayed = true;
+                                                }
                                             }
-                                        }
-                                    });
-
-                                    rowLevel3 += `
-                                            </td>
-                                        </tr>
-                                    `;
-
-                                    $('#lev1_count_dua').append(rowLevel3);
-                                    fieldValues.push(fieldValue);
+                                        });
+    
+                                        rowLevel3 += `
+                                                </td>
+                                            </tr>
+                                        `;
+    
+                                        $('#lev1_count_dua').append(rowLevel3);
+                                        fieldValues.push(fieldValue);
+                                    }
+                                }else{
+                                    if (fieldValue != 'Kebutuhan Kredit') {
+                                        $('#lev1_count_dua2').append(`
+                                            <tr>
+                                                <td width="47%">${fieldValue}</td>
+                                                <td width="6%" style="text-align: center">:</td>
+                                                <td>Rp ${formatRupiah(String(nominal), '')}</td>
+                                            </tr>
+                                        `);
+                                    }else{
+                                        $('#lev1_count_dua2').after(`
+                                            <table class="table table-bordered">
+                                                <div class="row">
+                                                    <div class="col-md-7">
+                                                        <hr width="94%" style="margin-left: 0; border: none; height: 1px; color: #333; background-color: #333;">
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <h4>+</h4>
+                                                    </div>
+                                                </div>
+                                                <tr>
+                                                    <td width="47%">${fieldValue}</td>
+                                                    <td width="6%" style="text-align: center">:</td>
+                                                    <td>Rp ${formatRupiah(String(nominal), '')}</td>
+                                                </tr>
+                                            </table>
+                                        `);
+                                    }
                                 }
                             });
                         }else{
