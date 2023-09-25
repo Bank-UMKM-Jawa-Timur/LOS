@@ -944,34 +944,90 @@
                                         }
                                     @endphp
                                     @if(!$getPeriode->isEmpty())
-                                        <div class="form-group col-md-12" id="perhitungan_kredit_with_value_without_update">
-                                            <h5>Periode : {{ bulan($getPeriode[0]->bulan) - $getPeriode[0]->tahun }}</h5>
+                                    <div class="col-md-12">
+                                        <h5>Periode : {{ bulan($getPeriode[0]->bulan) - $getPeriode[0]->tahun }}</h5>
+                                    </div>
+                                    <div class="col-md-12" id="perhitungan_kredit_with_value_without_update">
+                                        @php
+                                            $lev1 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)->where('level', 1)->get();
+                                            function rupiah($angka){
+                                                $format_rupiah = number_format($angka, 2, ',', '.');
+                                                $format_rupiah = rtrim($format_rupiah, '0'); 
+                                                $format_rupiah = str_replace(',', '', $format_rupiah); 
+                                                echo $format_rupiah;
+                                            }
+                                            $lev1Count = 0;
+                                        @endphp
+                                        @foreach ($lev1 as $itemAspekKeuangan)
                                             @php
-                                                $lev1 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)->where('level', 1)->get();
-                                                function rupiah($angka){
-                                                    $format_rupiah = number_format($angka, 2, ',', '.');
-                                                    $format_rupiah = rtrim($format_rupiah, '0'); 
-                                                    $format_rupiah = str_replace(',', '', $format_rupiah); 
-                                                    echo $format_rupiah;
-                                                }
-                                                $lev1Count = 0;
+                                            $lev1Count += 1;
+                                            $lev2 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
+                                                ->where('level', 2)
+                                                ->where('parent_id', $itemAspekKeuangan->id)
+                                                ->get();
                                             @endphp
-                                            @foreach ($lev1 as $itemAspekKeuangan)
-                                                @php
-                                                $lev1Count += 1;
-                                                $lev2 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
-                                                    ->where('level', 2)
-                                                    ->where('parent_id', $itemAspekKeuangan->id)
-                                                    ->get();
-                                                @endphp
-                                                @if ($lev1Count > 1)
-                                                    @if ($itemAspekKeuangan->field != "Maksimal Pembiayaan")
-                                                        <div class="card">
-                                                            <h5 class="card-header">{{ $itemAspekKeuangan->field }}</h5>
-                                                            <div class="card-body">
-                                                                <table class="table table-bordered">
-                                                                    @php $lev2Count = 0; @endphp
-                                                                    @foreach ($lev2 as $itemAspekKeuangan2)
+                                            @if ($lev1Count > 1)
+                                                @if ($itemAspekKeuangan->field != "Laba Rugi")
+                                                    <div class="row">
+                                                        @foreach ($lev2 as $itemAspekKeuangan2)
+                                                            @php
+                                                                $perhitunganKreditLev3 = \App\Models\PerhitunganKredit::rightJoin('mst_item_perhitungan_kredit', 'perhitungan_kredit.item_perhitungan_kredit_id', '=', 'mst_item_perhitungan_kredit.id')
+                                                                        ->where('mst_item_perhitungan_kredit.skema_kredit_limit_id', 1)
+                                                                        ->where('mst_item_perhitungan_kredit.level', 3)
+                                                                        ->where('mst_item_perhitungan_kredit.parent_id', $itemAspekKeuangan2->id)
+                                                                        ->where('perhitungan_kredit.pengajuan_id', $dataUmum->id)
+                                                                        ->get();
+                                                            @endphp
+                                                            @if ($itemAspekKeuangan2->field == "Perputaran Usaha")
+                                                                <div class="form-group col-md-12">
+                                                                    <div class="card">
+                                                                        <h5 class="card-header">{{ $itemAspekKeuangan2->field }}</h5>
+                                                                        <div class="card-body">
+                                                                            <table class="table table-bordered">
+                                                                                @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
+                                                                                    @if ($itemAspekKeuangan3->field == "Perputaran Usaha")
+                                                                                        <tr>
+                                                                                            <td width="47%">{{ $itemAspekKeuangan3->field }}</td>
+                                                                                            <td width="6%" style="text-align: center">:</td>
+                                                                                            @if ($itemAspekKeuangan3->add_on == "Bulan")
+                                                                                                <td>{{ $itemAspekKeuangan3->nominal }} {{ $itemAspekKeuangan3->add_on }}</td>
+                                                                                            @endif
+                                                                                        </tr>
+                                                                                    @endif
+                                                                                @endforeach
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            @elseif ($itemAspekKeuangan2->field == "Kebutuhan Modal Kerja" || $itemAspekKeuangan2->field == "Modal Kerja Sekarang")
+                                                                <div class="form-group col-md-6">
+                                                                    <div class="card">
+                                                                        <h5 class="card-header">{{ $itemAspekKeuangan2->field }}</h5>
+                                                                        <div class="card-body">
+                                                                            <table class="table table-bordered">
+                                                                                @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
+                                                                                    @if ($itemAspekKeuangan2->field == "Kebutuhan Modal Kerja" || $itemAspekKeuangan2->field == "Modal Kerja Sekarang")
+                                                                                        <tr>
+                                                                                            <td>{{ $itemAspekKeuangan3->field }}</td>
+                                                                                            <td style="text-align: center">:</td>
+                                                                                            <td class="text-{{ $itemAspekKeuangan3->align }}">Rp {{ rupiah($itemAspekKeuangan3->nominal) }}</td>
+                                                                                        </tr>
+                                                                                    @endif
+                                                                                @endforeach
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            @endif
+                                                        @endforeach
+                                                    </div>
+                                                @else
+                                                    <div class="card">
+                                                        <h5 class="card-header">{{ $itemAspekKeuangan->field }}</h5>
+                                                        <div class="card-body">
+                                                            <table class="table table-bordered">
+                                                                @php $lev2Count = 0; @endphp
+                                                                @foreach ($lev2 as $itemAspekKeuangan2)
                                                                     @php
                                                                     $lev2Count += 1;
                                                                     $perhitunganKreditLev3 = \App\Models\PerhitunganKredit::rightJoin('mst_item_perhitungan_kredit', 'perhitungan_kredit.item_perhitungan_kredit_id', '=', 'mst_item_perhitungan_kredit.id')
@@ -992,222 +1048,176 @@
                                                                             <th>Sesudah Kredit</th>
                                                                         @endif
                                                                     </tr>
-                                                                        @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
-                                                                            @php
-                                                                            $fieldValue = $itemAspekKeuangan3->field;
-                                                                            $nominal = $itemAspekKeuangan3->nominal;
-                                                                            @endphp
-                                                                            @if (!in_array($fieldValue, $fieldValues))
-                                                                                <tr>
-                                                                                    <td>{{ $fieldValue }}</td>
-                                                                                    <td style="text-align: center">:</td>
-                                                                                    <td>Rp {{ rupiah($nominal) }}</td>
-                                                                                    <td>
-                                                                                        @foreach ($perhitunganKreditLev3 as $item3)
-                                                                                            @if ($item3->field == $fieldValue)
-                                                                                                @if ($item3->nominal != $nominal)
-                                                                                                    Rp {{ rupiah($item3->nominal) }}<br>
-                                                                                                @endif
-                                                                                            @endif
-                                                                                        @endforeach
-                                                                                    </td>
-                                                                                </tr>
-                                                                                @php
-                                                                                $fieldValues[] = $fieldValue;
-                                                                                @endphp
-                                                                            @endif
-                                                                        @endforeach
-                                                                    @endforeach
-                                                                </table>
-                                                            </div>
-                                                        </div>
-                                                    @endif
-                                                @else
-                                                <div class="card">
-                                                    <h5 class="card-header">{{ $itemAspekKeuangan->field }}</h5>
-                                                    <div class="card-body">
-                                                        <div class="row">
-                                                            @foreach ($lev2 as $itemAspekKeuangan2)
-                                                                @php
-                                                                $perhitunganKreditLev3 = \App\Models\PerhitunganKredit::rightJoin('mst_item_perhitungan_kredit', 'perhitungan_kredit.item_perhitungan_kredit_id', '=', 'mst_item_perhitungan_kredit.id')
-                                                                    ->where('mst_item_perhitungan_kredit.skema_kredit_limit_id', 1)
-                                                                    ->where('mst_item_perhitungan_kredit.level', 3)
-                                                                    ->where('mst_item_perhitungan_kredit.parent_id', $itemAspekKeuangan2->id)
-                                                                    ->where('perhitungan_kredit.pengajuan_id', $dataUmum->id)
-                                                                    ->get();
-                                                                @endphp
-                                                                <div class="form-group col-md-6">
-                                                                    <table class="table table-bordered">
-                                                                        <tr>
-                                                                            <th colspan="2">{{ $itemAspekKeuangan2->field }}</th>
-                                                                        </tr>
-                                                                        @foreach ($perhitunganKreditLev3 as $itemAspek3)
-                                                                        @if ($itemAspek3->field != "Total Angsuran")
-                                                                            <tr>
-                                                                                <td width='57%'>{{ $itemAspek3->field }}</td>
-                                                                                <td>Rp {{ rupiah($itemAspek3->nominal) }}</td>
-                                                                            </tr>
-                                                                        @endif
-                                                                        @endforeach
-                                                                    </table>
-                                                                </div>
-                                                            @endforeach
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <br>
-                                                @endif
-                                            @endforeach
-                                            <br>
-                                            <div class="row">
-                                                @php
-                                                $lev2NoParent = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
-                                                                                            ->where('level', 2)
-                                                                                            ->whereNull('parent_id')
-                                                                                            ->get();
-                                                @endphp
-                                                @foreach ($lev2NoParent as $item2NoParent)
-                                                @php
-                                                $lev3NoParent = \App\Models\PerhitunganKredit::rightJoin('mst_item_perhitungan_kredit', 'perhitungan_kredit.item_perhitungan_kredit_id', '=', 'mst_item_perhitungan_kredit.id')
-                                                                                                ->where('mst_item_perhitungan_kredit.skema_kredit_limit_id', 1)
-                                                                                                ->where('mst_item_perhitungan_kredit.level', 3)
-                                                                                                ->where('mst_item_perhitungan_kredit.parent_id', $item2NoParent->id)
-                                                                                                ->where('perhitungan_kredit.pengajuan_id', $dataUmum->id)
-                                                                                                ->get();
-                                                @endphp
-                                                    <div class="form-group col-md-6">
-                                                        <div class="card">
-                                                            <h5 class="card-header">{{ $item2NoParent->field }}</h5>
-                                                            <div class="card-body">
-                                                                <table class="table table-bordered">
-                                                                    @foreach ($lev3NoParent as $item3NoParent)
-                                                                    <tr>
-                                                                        <td>{{ $item3NoParent->field }}</td>
-                                                                        <td style="text-align: center">:</td>
-                                                                        <td>Rp {{ rupiah($item3NoParent->nominal) }}</td>
-                                                                    </tr>
-                                                                    @endforeach
-                                                                </table>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                @endforeach
-                                            </div>
-                                            <div class="card">
-                                                @foreach ($lev1 as $itemAspekKeuangan)
-                                                    @php
-                                                    $lev1Count += 1;
-                                                    $lev2 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
-                                                        ->where('level', 2)
-                                                        ->where('parent_id', $itemAspekKeuangan->id)
-                                                        ->get();
-                                                    @endphp
-                                                    @if ($lev1Count > 1)
-                                                        @if ($itemAspekKeuangan->field == "Maksimal Pembiayaan")
-                                                            <h5 class="card-header">{{ $itemAspekKeuangan->field }}</h5>
-                                                            <div class="card-body">
-                                                                <table class="table table-bordered">
-                                                                    @foreach ($lev2 as $itemAspekKeuangan2)
+                                                                    @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
                                                                         @php
-                                                                            $perhitunganKreditLev3 = \App\Models\PerhitunganKredit::rightJoin('mst_item_perhitungan_kredit', 'perhitungan_kredit.item_perhitungan_kredit_id', '=', 'mst_item_perhitungan_kredit.id')
-                                                                                        ->where('mst_item_perhitungan_kredit.skema_kredit_limit_id', 1)
-                                                                                        ->where('mst_item_perhitungan_kredit.level', 3)
-                                                                                        ->where('mst_item_perhitungan_kredit.parent_id', $itemAspekKeuangan2->id)
-                                                                                        ->where('perhitungan_kredit.pengajuan_id', $dataUmum->id)
-                                                                                        ->get();
+                                                                        $fieldValue = $itemAspekKeuangan3->field;
+                                                                        $nominal = $itemAspekKeuangan3->nominal;
                                                                         @endphp
-                                                                        @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
-                                                                        @if ($itemAspekKeuangan->field == "Maksimal Pembiayaan")
-                                                                            @if ($itemAspekKeuangan3->field != "Kebutuhan Kredit")
-                                                                                <tr>
-                                                                                    <td width="47%">{{ $itemAspekKeuangan3->field }}</td>
-                                                                                    <td width="6%" style="text-align: center">:</td>
-                                                                                    <td>Rp {{ rupiah($itemAspekKeuangan3->nominal) }}</td>
-                                                                                </tr>
-                                                                            @else  
-                                                                                <table class="table table-bordered">
-                                                                                    <div class="row">
-                                                                                        <div class="col-md-7">
-                                                                                            <hr width="94%" style="margin-left: 0; border: none; height: 1px; color: #333; background-color: #333;">
-                                                                                        </div>
-                                                                                        <div class="col-md-5 justify-content-center text-right">
-                                                                                            <h4>+</h4>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <tr>
-                                                                                        <td width="47%">{{ $itemAspekKeuangan3->field }}</td>
-                                                                                        <td width="6%" style="text-align: center">:</td>
-                                                                                        <td>Rp {{ rupiah($itemAspekKeuangan3->nominal) }}</td>
-                                                                                    </tr>
-                                                                                </table>
-                                                                            @endif
+                                                                        @if (!in_array($fieldValue, $fieldValues))
+                                                                            <tr>
+                                                                                <td>{{ $fieldValue }}</td>
+                                                                                <td style="text-align: center">:</td>
+                                                                                <td class="text-{{ $itemAspekKeuangan3->align }}">Rp {{ rupiah($nominal) }}</td>
+                                                                                <td class="text-{{ $itemAspekKeuangan3->align }}">
+                                                                                    @foreach ($perhitunganKreditLev3 as $item3)
+                                                                                        @if ($item3->field == $fieldValue)
+                                                                                            @if ($item3->nominal != $nominal)
+                                                                                                Rp {{ rupiah($item3->nominal) }}<br>
+                                                                                            @endif
+                                                                                        @endif
+                                                                                    @endforeach
+                                                                                </td>
+                                                                            </tr>
+                                                                            @php
+                                                                            $fieldValues[] = $fieldValue;
+                                                                            @endphp
                                                                         @endif
-                                                                        @endforeach
                                                                     @endforeach
-                                                                </table>
-                                                            </div>
-                                                            @endif
-                                                        @endif
-                                                @endforeach
-                                            </div>
-                                            <br>
-                                            <div class="row">
-                                                <div class="form-group col-md-12">
-                                                    @php
-                                                    $dataUmumNasabahId = $dataUmum->id;
-                                                    $results = \App\Models\MstItemPerhitunganKredit::leftJoin('perhitungan_kredit', function($join) use ($dataUmumNasabahId) {
-                                                                    $join->on('mst_item_perhitungan_kredit.id', '=', 'perhitungan_kredit.item_perhitungan_kredit_id')
-                                                                        ->where('perhitungan_kredit.pengajuan_id', '=', $dataUmumNasabahId);
-                                                                })
-                                                                ->where('mst_item_perhitungan_kredit.skema_kredit_limit_id', '=', 1)
-                                                                ->where('mst_item_perhitungan_kredit.level', '=', 3)
-                                                                ->whereNull('mst_item_perhitungan_kredit.parent_id')
-                                                                ->get();   
-                                                    
-                                                    @endphp
-                                                    <div class="card">
-                                                        <h5 class="card-header"></h5>
-                                                        <div class="card-body">
-                                                            <table class="table table-bordered">
-                                                                @foreach ($results as $item3NoParent)
-                                                                <tr>
-                                                                    @if ($item3NoParent->field == "Perputaran Usaha")
-                                                                    @elseif($item3NoParent->field == "Keuntungan Usaha")
-                                                                    @elseif($item3NoParent->field == "Repayment")
-                                                                    @elseif($item3NoParent->field == "Laba Setelah Kredit")
-                                                                    @elseif($item3NoParent->field == "Dibulatkan")
-                                                                    @elseif($item3NoParent->field == "Jangka Waktu Usulan")
-                                                                        <td>{{ $item3NoParent->field }}</td>
-                                                                        <td style="text-align: center">:</td>
-                                                                        <td>{{ $item3NoParent->nominal }} Bulan</td>
-                                                                    @elseif($item3NoParent->field == "Jangka Waktu Kredit")
-                                                                        <td>{{ $item3NoParent->field }}</td>
-                                                                        <td style="text-align: center">:</td>
-                                                                        <td>{{ $item3NoParent->nominal }} Bulan</td>
-                                                                    @else
-                                                                        <td width="47%">{{ $item3NoParent->field }}</td>
-                                                                        <td width="6%" style="text-align: center">:</td>
-                                                                        <td>Rp {{ rupiah($item3NoParent->nominal) }}</td>
-                                                                    @endif
-                                                                </tr>
                                                                 @endforeach
                                                             </table>
                                                         </div>
                                                     </div>
                                                     <br>
+                                                @endif
+                                            @else
+                                            <div class="card">
+                                                <h5 class="card-header">{{ $itemAspekKeuangan->field }}</h5>
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        @foreach ($lev2 as $itemAspekKeuangan2)
+                                                            @php
+                                                            $perhitunganKreditLev3 = \App\Models\PerhitunganKredit::rightJoin('mst_item_perhitungan_kredit', 'perhitungan_kredit.item_perhitungan_kredit_id', '=', 'mst_item_perhitungan_kredit.id')
+                                                                ->where('mst_item_perhitungan_kredit.skema_kredit_limit_id', 1)
+                                                                ->where('mst_item_perhitungan_kredit.level', 3)
+                                                                ->where('mst_item_perhitungan_kredit.parent_id', $itemAspekKeuangan2->id)
+                                                                ->where('perhitungan_kredit.pengajuan_id', $dataUmum->id)
+                                                                ->get();
+                                                            @endphp
+                                                            <div class="form-group col-md-6">
+                                                                <table class="table table-bordered">
+                                                                    <tr>
+                                                                        <th colspan="2">{{ $itemAspekKeuangan2->field }}</th>
+                                                                    </tr>
+                                                                    @foreach ($perhitunganKreditLev3 as $itemAspek3)
+                                                                    @if ($itemAspek3->field != "Total Angsuran")
+                                                                        <tr>
+                                                                            <td width='57%'>{{ $itemAspek3->field }}</td>
+                                                                            <td class="text-{{ $itemAspek3->align }}">Rp {{ rupiah($itemAspek3->nominal) }}</td>
+                                                                        </tr>
+                                                                    @endif
+                                                                    @endforeach
+                                                                </table>
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
                                                 </div>
                                             </div>
+                                            <br>
+                                            @endif
+                                        @endforeach
+                                        @foreach ($lev1 as $itemAspekKeuangan)
+                                            @php
+                                            $lev1Count += 1;
+                                            $lev2 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
+                                                ->where('level', 2)
+                                                ->where('parent_id', $itemAspekKeuangan->id)
+                                                ->get();
+                                            @endphp
+                                            @if ($lev1Count > 1)
+                                                @if ($itemAspekKeuangan->field != "Laba Rugi")
+                                                    <div class="row">
+                                                        @foreach ($lev2 as $itemAspekKeuangan2)
+                                                            @php
+                                                                $perhitunganKreditLev3 = \App\Models\PerhitunganKredit::rightJoin('mst_item_perhitungan_kredit', 'perhitungan_kredit.item_perhitungan_kredit_id', '=', 'mst_item_perhitungan_kredit.id')
+                                                                        ->where('mst_item_perhitungan_kredit.skema_kredit_limit_id', 1)
+                                                                        ->where('mst_item_perhitungan_kredit.level', 3)
+                                                                        ->where('mst_item_perhitungan_kredit.parent_id', $itemAspekKeuangan2->id)
+                                                                        ->where('perhitungan_kredit.pengajuan_id', $dataUmum->id)
+                                                                        ->get();
+                                                            @endphp
+                                                            @if ($itemAspekKeuangan2->field == "Maksimal Pembiayaan")
+                                                                <div class="form-group col-md-12">
+                                                                    <div class="card">
+                                                                        <h5 class="card-header">{{ $itemAspekKeuangan2->field }}</h5>
+                                                                        <div class="card-body">
+                                                                            <table class="table table-bordered">
+                                                                                @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
+                                                                                    @if ($itemAspekKeuangan2->field == "Maksimal Pembiayaan")
+                                                                                        @if ($itemAspekKeuangan3->field != "Kebutuhan Kredit")
+                                                                                            <tr>
+                                                                                                <td width="47%">{{ $itemAspekKeuangan3->field }}</td>
+                                                                                                <td width="6%" style="text-align: center">:</td>
+                                                                                                <td class="text-{{ $itemAspekKeuangan3->align }}">Rp {{ rupiah($itemAspekKeuangan3->nominal) }}</td>
+                                                                                            </tr>
+                                                                                        @else  
+                                                                                            <table class="table table-bordered">
+                                                                                                <div class="row">
+                                                                                                    <div class="col-md-6">
+                                                                                                    </div>
+                                                                                                    <div class="col-md-6">
+                                                                                                        <div class="row">
+                                                                                                            <div class="col-md-10 justify-content-center text-left" style="padding-left: 30px;">
+                                                                                                                <hr style="border: none; height: 1px; color: #333; background-color: #333;">
+                                                                                                            </div>
+                                                                                                            <div class="col-md-2">
+                                                                                                                <h4>+</h4>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <tr>
+                                                                                                    <td width="47%">{{ $itemAspekKeuangan3->field }}</td>
+                                                                                                    <td width="6%" style="text-align: center">:</td>
+                                                                                                    <td class="text-{{ $itemAspekKeuangan3->align }}">Rp {{ rupiah($itemAspekKeuangan3->nominal) }}</td>
+                                                                                                </tr>
+                                                                                            </table>
+                                                                                        @endif
+                                                                                    @endif
+                                                                                @endforeach
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                @elseif ($itemAspekKeuangan2->field == "Plafon dan Tenor")
+                                                                <div class="form-group col-md-12">
+                                                                    <div class="card">
+                                                                        <h5 class="card-header">{{ $itemAspekKeuangan2->field }}</h5>
+                                                                        <div class="card-body">
+                                                                            <table class="table table-bordered">
+                                                                                @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
+                                                                                    @if ($itemAspekKeuangan2->field == "Plafon dan Tenor")
+                                                                                        <tr>
+                                                                                            <td width="47%">{{ $itemAspekKeuangan3->field }}</td>
+                                                                                            <td width="6%" style="text-align: center">:</td>
+                                                                                            @if ($itemAspekKeuangan3->add_on == "Bulan")
+                                                                                                <td class="text-{{ $itemAspekKeuangan3->align }}">{{ $itemAspekKeuangan3->nominal }} {{ $itemAspekKeuangan3->add_on }}</td>
+                                                                                            @else
+                                                                                                <td class="text-{{ $itemAspekKeuangan3->align }}">Rp {{ rupiah($itemAspekKeuangan3->nominal) }}</td>
+                                                                                            @endif
+                                                                                        </tr>
+                                                                                    @endif
+                                                                                @endforeach
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            @endif
+                                                        @endforeach
+                                                    </div>
+                                                @endif
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <div class="" id="peringatan-pengajuan">
+                                        <div class="form-group col-md-12">
+                                        <div class="alert alert-info" role="alert">
+                                            Perhitungan kredit masih belum ditambahkan, silahkan klik button Perhitungan.
                                         </div>
-                                    @else
-                                        <div class="" id="peringatan-pengajuan">
-                                            <div class="form-group col-md-12">
-                                            <div class="alert alert-info" role="alert">
-                                                Perhitungan kredit masih belum ditambahkan, silahkan klik button Perhitungan.
-                                            </div>
-                                            </div>
                                         </div>
-                                    @endif
-                                    {{-- End --}}
+                                    </div>
+                                @endif
+                                {{-- End --}}
                                 @endif
                                 @foreach ($dataDetailJawabanText as $itemTextDua)
                                     @if (
@@ -4024,7 +4034,7 @@
                     <div class="row" id="table_perhitungan_kredit_lev3_noparent">
                     </div>
                     <div class="card">
-                        <h5 class="card-header"></h5>
+                        <h5 class="card-header">Plafon dan Usulan</h5>
                         <div class="card-body">
                             <table class="table table-bordered" id="table_perhitungan_kredit_lev4_noparent">
                             </table>
@@ -4040,7 +4050,7 @@
                     <div class="row" id="table_perhitungan_kredit_lev3_noparent">
                     </div>
                     <div class="card">
-                        <h5 class="card-header"></h5>
+                        <h5 class="card-header">Plafon dan Usulan</h5>
                         <div class="card-body">
                             <table class="table table-bordered" id="table_perhitungan_kredit_lev4_noparent">
                             </table>
@@ -4159,6 +4169,14 @@
                                                 </table>
                                             </div>
                                         </div>
+                                        <br>
+                                        <div class="card">
+                                            <h5 class="card-header">Perputaran Usaha</h5>
+                                            <div class="card-body">
+                                                <table class="table table-bordered" id="lev1_count_dua3">
+                                                </table>
+                                            </div>
+                                        </div>
                                     </div>
                             `   );
                             }else{
@@ -4255,8 +4273,8 @@
                                                 <tr>
                                                     <td>${fieldValue}</td>
                                                     <td style="text-align: center">:</td>
-                                                    <td>Rp ${formatRupiah(String(nominal), '')}</td>
-                                                    <td>`;
+                                                    <td class="text-${itemAspekKeuangan3.align}">Rp ${formatRupiah(String(nominal), '')}</td>
+                                                    <td class="text-${itemAspekKeuangan3.align}">`;
         
                                             var isFirstNominalDisplayed = false;
                                             
@@ -4284,24 +4302,30 @@
                                                 <tr>
                                                     <td width="47%">${itemAspekKeuangan3.field}</td>
                                                     <td width="6%" style="text-align: center">:</td>
-                                                    <td>Rp ${formatRupiah(String(itemAspekKeuangan3.nominal), '')}</td>
+                                                    <td class="text-${itemAspekKeuangan3.align}">Rp ${formatRupiah(String(itemAspekKeuangan3.nominal), '')}</td>
                                                 </tr>
                                             `);
                                         }else{
                                             $('#lev1_count_dua2').after(`
                                                 <table class="table table-bordered">
                                                     <div class="row">
-                                                        <div class="col-md-7">
-                                                            <hr width="94%" style="margin-left: 0; border: none; height: 1px; color: #333; background-color: #333;">
+                                                        <div class="col-md-6">
                                                         </div>
-                                                        <div class="col-md-5 justify-content-center text-right">
-                                                            <h4>+</h4>
+                                                        <div class="col-md-6">
+                                                            <div class="row">
+                                                                <div class="col-md-10 justify-content-center text-left" style="padding-left: 30px;">
+                                                                    <hr style="border: none; height: 1px; color: #333; background-color: #333;">
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    <h4>+</h4>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <tr>
                                                         <td width="47%">${fieldValue}</td>
                                                         <td width="6%" style="text-align: center">:</td>
-                                                        <td>Rp ${formatRupiah(String(nominal), '')}</td>
+                                                        <td class="text-${itemAspekKeuangan3.align}">Rp ${formatRupiah(String(nominal), '')}</td>
                                                     </tr>
                                                 </table>
                                             `);
@@ -4314,7 +4338,7 @@
                                         $(`#${uniqueTableId}`).append(`
                                             <tr>
                                                 <td width='57%'>${element3.field}</td>
-                                                <td>Rp ${ formatRupiah(String(element3.nominal), '') }</td>
+                                                <td class="text-${element3.align}">Rp ${ formatRupiah(String(element3.nominal), '') }</td>
                                             </tr>
                                         `);
                                     }
@@ -4330,6 +4354,13 @@
                             console.log(res);
                             res.result.forEach(element => {
                                 if (element.field == "Perputaran Usaha") {
+                                    $('#lev1_count_dua3').append(`
+                                        <tr>
+                                            <td width="47%">${element.field}</td>
+                                            <td width="6%" style="text-align: center">:</td>
+                                            <td>${ element.nominal == null ? 0 : element.nominal } Bulan</td>
+                                        </tr>
+                                    `);
                                 }else if(element.field == "Keuntungan Usaha"){
                                 }else if(element.field == "Repayment"){
                                 }else if(element.field == "Laba Setelah Kredit"){
@@ -4355,7 +4386,7 @@
                                         <tr>
                                             <td width="47%">${element.field}</td>
                                             <td width="6%" style="text-align: center">:</td>
-                                            <td>Rp ${ formatRupiah(String(element.nominal == null ? 0 : element.nominal), '') }</td>
+                                            <td class="text-${element.align}">Rp ${ formatRupiah(String(element.nominal == null ? 0 : element.nominal), '') }</td>
                                         </tr>
                                     `);
                                 }
@@ -4396,7 +4427,7 @@
                                                 <tr>
                                                     <td>${element.field}</td>
                                                     <td style="text-align: center">:</td>
-                                                    <td>Rp ${formatRupiah(String(element.nominal), '')}</td>
+                                                    <td class="text-${element.align}">Rp ${formatRupiah(String(element.nominal), '')}</td>
                                                 </tr>
                                             `);
                                         });
