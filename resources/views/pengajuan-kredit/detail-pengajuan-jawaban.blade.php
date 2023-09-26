@@ -918,21 +918,23 @@
                                                                                 <td class="text-{{ $itemAspekKeuangan3->align }}">Rp {{ rupiah($itemAspekKeuangan3->nominal) }}</td>
                                                                             </tr>
                                                                         @else  
-                                                                            <table class="table table-bordered">
-                                                                                <div class="row">
-                                                                                    <div class="col-md-6">
-                                                                                    </div>
-                                                                                    <div class="col-md-6">
-                                                                                        <div class="row">
-                                                                                            <div class="col-md-10 justify-content-center text-left" style="padding-left: 30px;">
+                                                                            <table class="table table-borderless" style="margin: 0 auto; padding: 0 auto;">
+                                                                                <tr>
+                                                                                    <td width="47%"></td>
+                                                                                    <td width="6%"></td>
+                                                                                    <td width="" style="padding: 0">
+                                                                                        <div class="d-flex w-100">
+                                                                                            <div class="w-100">
                                                                                                 <hr style="border: none; height: 1px; color: #333; background-color: #333;">
                                                                                             </div>
-                                                                                            <div class="col-md-2">
-                                                                                                <h4>+</h4>
+                                                                                            <div class="w-0 ms-2">
+                                                                                                +
                                                                                             </div>
                                                                                         </div>
-                                                                                    </div>
-                                                                                </div>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </table>
+                                                                            <table class="table table-bordered">
                                                                                 <tr>
                                                                                     <td width="47%">{{ $itemAspekKeuangan3->field }}</td>
                                                                                     <td width="6%" style="text-align: center">:</td>

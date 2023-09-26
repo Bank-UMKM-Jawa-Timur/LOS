@@ -3009,7 +3009,7 @@ null => 1,
                         lev2Count += 1;
                         var uniqueTableId = `itemPerhitunganKreditLev2_${element2.id}`;
                         var uniqueTableId2 = `lev1_count_dua_${element2.id}`;
-                        console.log(lev2Count);
+
                         if (lev1Count > 1) {
                             if (element.field == 'Laba Rugi') {
                                 var row = $('<tr>');
@@ -3144,21 +3144,23 @@ null => 1,
                                                 `);
                                             }else{
                                                 $('#table_max_pembiayaan').after(`
-                                                    <table class="table table-bordered">
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <div class="row">
-                                                                    <div class="col-md-10 justify-content-center text-left" style="padding-left: 30px;">
+                                                    <table class="table table-borderless" style="margin: 0 auto; padding: 0 auto;">
+                                                        <tr>
+                                                            <td width="47%"></td>
+                                                            <td width="6%"></td>
+                                                            <td width="" style="padding: 0">
+                                                                <div class="d-flex w-100">
+                                                                    <div class="w-100">
                                                                         <hr style="border: none; height: 1px; color: #333; background-color: #333;">
                                                                     </div>
-                                                                    <div class="col-md-2">
-                                                                        <h4>+</h4>
+                                                                    <div class="w-0 ms-2">
+                                                                        +
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                        </div>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                    <table class="table table-bordered">
                                                         <tr>
                                                             <td width="47%">${fieldValue}</td>
                                                             <td width="6%" style="text-align: center">:</td>

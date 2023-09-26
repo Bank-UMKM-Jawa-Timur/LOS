@@ -579,8 +579,8 @@ is-invalid
         }
         @endphp
        @if(!$getPeriode->isEmpty())
-            <h5>Periode : {{ formatBulan($getPeriode[0]->bulan) - $getPeriode[0]->tahun }}</h5>
             <div class="" id="perhitungan_kredit_with_value_without_update">
+                <h5>Periode : {{ formatBulan($getPeriode[0]->bulan) - $getPeriode[0]->tahun }}</h5>
                 @php
                     $lev1 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)->where('level', 1)->get();
                     function formatRupiah($angka){
@@ -783,21 +783,23 @@ is-invalid
                                                                     <td class="text-{{ $itemAspekKeuangan3->align }}">Rp {{ formatRupiah($itemAspekKeuangan3->nominal) }}</td>
                                                                 </tr>
                                                             @else  
-                                                                <table class="table table-bordered">
-                                                                    <div class="row">
-                                                                        <div class="col-md-6">
-                                                                        </div>
-                                                                        <div class="col-md-6">
-                                                                            <div class="row">
-                                                                                <div class="col-md-10 justify-content-center text-left" style="padding-left: 30px;">
+                                                                <table class="table table-borderless" style="margin: 0 auto; padding: 0 auto;">
+                                                                    <tr>
+                                                                        <td width="47%"></td>
+                                                                        <td width="6%"></td>
+                                                                        <td width="" style="padding: 0">
+                                                                            <div class="d-flex w-100">
+                                                                                <div class="w-100">
                                                                                     <hr style="border: none; height: 1px; color: #333; background-color: #333;">
                                                                                 </div>
-                                                                                <div class="col-md-2">
-                                                                                    <h4>+</h4>
+                                                                                <div class="w-0 ms-2">
+                                                                                    +
                                                                                 </div>
                                                                             </div>
-                                                                        </div>
-                                                                    </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                                <table class="table table-bordered">
                                                                     <tr>
                                                                         <td width="47%">{{ $itemAspekKeuangan3->field }}</td>
                                                                         <td width="6%" style="text-align: center">:</td>
@@ -3356,6 +3358,7 @@ is-invalid
 
     $('#btn-perhitungan').on('click', function() { 
         $('#loading-simpan-perhitungan').hide();
+        $('#perhitunganModalAfterLoading').show();
         $("#perhitunganModal").modal("show");
         calcForm();
      });
@@ -3414,33 +3417,29 @@ is-invalid
         
         if (indexBtnSimpan == 1) {
             $('#perhitungan_kredit_with_value').append(`
-                <h5>${titlePeriode === "undefined" ? '' : titlePeriode }</h5>
+                <h5>Periode : ${selectElementBulan} - ${selectElementTahun}</h5>
                 <div class="row" id="row_perhitungan_kredit">
                 </div>
                 <div class="row" id="table_perhitungan_kredit_lev3_noparent">
                 </div>
-                <div class="card">
-                    <h5 class="card-header"></h5>
-                    <div class="card-body">
-                        <table class="table table-bordered" id="table_perhitungan_kredit_lev4_noparent">
-                        </table>
-                    </div>
+                <div class="row" id="row_max_pembiayaan">
+                </div>
+                <br>
+                <div class="row" id="row_plafon">
                 </div>
             `);
         }else{
             $('#perhitungan_kredit_with_value').empty();
             $('#perhitungan_kredit_with_value').append(`
-                <h5>${titlePeriode === "undefined" ? '' : titlePeriode}</h5>
+                <h5>Periode : ${selectElementBulan} - ${selectElementTahun}</h5>
                 <div class="row" id="row_perhitungan_kredit">
                 </div>
                 <div class="row" id="table_perhitungan_kredit_lev3_noparent">
                 </div>
-                <div class="card">
-                    <h5 class="card-header"></h5>
-                    <div class="card-body">
-                        <table class="table table-bordered" id="table_perhitungan_kredit_lev4_noparent">
-                        </table>
-                    </div>
+                <div class="row" id="row_max_pembiayaan">
+                </div>
+                <br>
+                <div class="row" id="row_plafon">
                 </div>
             `);
         }
@@ -3545,9 +3544,8 @@ is-invalid
                 for (const element of res2.result) {
                     lev1Count += 1;
                     titlePeriode = `Periode : ${formatBulan(resPeriode2.result[0].bulan)} - ${resPeriode2.result[0].tahun}`;
-            
                     if (lev1Count > 1) {
-                        if (element.field != 'Maksimal Pembiayaan') {
+                        if (element.field == "Laba Rugi") {
                             $('#row_perhitungan_kredit').append(`
                                 <div class="form-group col-md-12">
                                     <div class="card">
@@ -3555,28 +3553,6 @@ is-invalid
                                         <div class="card-body">
                                             <table class="table table-bordered" id="lev1_count_dua">
                                             </table>
-                                        </div>
-                                    </div>
-                                    <br>
-                                    <div class="card">
-                                        <h5 class="card-header">Perputaran Usaha</h5>
-                                        <div class="card-body">
-                                            <table class="table table-bordered" id="lev1_count_dua3">
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                        `   );
-                        }else{
-                            $('#table_perhitungan_kredit_lev3_noparent').after(`
-                                <div class="row">
-                                    <div class="form-group col-md-12">
-                                        <div class="card">
-                                            <h5 class="card-header">${element.field}</h5>
-                                            <div class="card-body">
-                                                <table class="table table-bordered" id="lev1_count_dua2">
-                                                </table>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -3605,9 +3581,10 @@ is-invalid
                     for (const element2 of res3.result) {
                         lev2Count += 1;
                         var uniqueTableId = `itemPerhitunganKreditLev2_${element2.id}`;
-                        console.log(lev2Count);
+                        var uniqueTableId2 = `lev1_count_dua_${element2.id}`;
+
                         if (lev1Count > 1) {
-                            if (element.field != 'Maksimal Pembiayaan') {
+                            if (element.field == 'Laba Rugi') {
                                 var row = $('<tr>');
                                 row.append($("<th>").text(element2.field));
                                 row.append($("<th>").text(''));
@@ -3617,7 +3594,48 @@ is-invalid
                                 }else{
                                     row.append($("<th>").attr("colspan", 2));
                                 }
-                                $('#lev1_count_dua').append(row);   
+                                $('#lev1_count_dua').append(row);
+                            }else{
+                                if(element2.field != "Maksimal Pembiayaan" && element2.field != "Plafon dan Tenor"){
+                                    $('#table_perhitungan_kredit_lev3_noparent').append(`
+                                        <div class="col-md-${element2.field === 'Kebutuhan Modal Kerja' || element2.field === 'Modal Kerja Sekarang' ? `6` : `12`}">
+                                            <div class="card">
+                                                <h5 class="card-header">${element2.field}</h5>
+                                                <div class="card-body">
+                                                    <table class="table table-bordered" id="${uniqueTableId2}">
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <br>
+                                        </div>
+                                `   );
+                                }else{
+                                    if (element2.field == "Maksimal Pembiayaan") {
+                                        $('#row_max_pembiayaan').append(`
+                                            <div class="col-md-12">
+                                                <div class="card">
+                                                    <h5 class="card-header">${element2.field}</h5>
+                                                    <div class="card-body">
+                                                        <table class="table table-bordered" id="table_max_pembiayaan">
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    `   );
+                                    }else{
+                                        $('#row_plafon').append(`
+                                            <div class="col-md-12">
+                                                <div class="card">
+                                                    <h5 class="card-header">${element2.field}</h5>
+                                                    <div class="card-body">
+                                                        <table class="table table-bordered" id="table_plafon">
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    `   );
+                                    }
+                                }
                             }
                         }else{
                             $('#lev_count_satu').append(`
@@ -3643,7 +3661,7 @@ is-invalid
                                 var nominal = itemAspekKeuangan3.nominal;
                                 lev3Count += 1;
                                 console.log(itemAspekKeuangan3);
-                                if (element.field != 'Maksimal Pembiayaan') {
+                                if (element.field == 'Laba Rugi') {
                                     if (!fieldValues.includes(fieldValue)) {
                                         var rowLevel3 = `
                                             <tr>
@@ -3673,38 +3691,69 @@ is-invalid
                                         fieldValues.push(fieldValue);
                                     }
                                 }else{
-                                    if (fieldValue != 'Kebutuhan Kredit') {
-                                        $('#lev1_count_dua2').append(`
+                                    if(element2.field != "Maksimal Pembiayaan" && element2.field != "Plafon dan Tenor"){
+                                        $(`#${uniqueTableId2}`).append(`
                                             <tr>
                                                 <td width="47%">${fieldValue}</td>
                                                 <td width="6%" style="text-align: center">:</td>
-                                                <td class="text-${itemAspekKeuangan3.align}">Rp ${formatRupiah(String(nominal), '')}</td>
+                                                ${itemAspekKeuangan3.add_on === "Bulan" ? `
+                                                    <td class="text-${itemAspekKeuangan3.align}">${nominal} ${itemAspekKeuangan3.add_on}</td>
+                                                ` : `
+                                                    <td class="text-${itemAspekKeuangan3.align}">Rp ${formatRupiah(String(nominal), '')}</td>
+                                                `}
+                                                
                                             </tr>
                                         `);
                                     }else{
-                                        $('#lev1_count_dua2').after(`
-                                            <table class="table table-bordered">
-                                                <div class="row">
-                                                    <div class="col-md-6">
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="row">
-                                                            <div class="col-md-10 justify-content-center text-left" style="padding-left: 30px;">
-                                                                <hr style="border: none; height: 1px; color: #333; background-color: #333;">
-                                                            </div>
-                                                            <div class="col-md-2">
-                                                                <h4>+</h4>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                        if (element2.field == "Maksimal Pembiayaan") {
+                                            if (fieldValue != 'Kebutuhan Kredit') {
+                                                $('#table_max_pembiayaan').append(`
+                                                    <tr>
+                                                        <td width="47%">${fieldValue}</td>
+                                                        <td width="6%" style="text-align: center">:</td>
+                                                        <td class="text-${itemAspekKeuangan3.align}">Rp ${formatRupiah(String(nominal), '')}</td>
+                                                    </tr>
+                                                `);
+                                            }else{
+                                                $('#table_max_pembiayaan').after(`
+                                                    <table class="table table-borderless" style="margin: 0 auto; padding: 0 auto;">
+                                                        <tr>
+                                                            <td width="47%"></td>
+                                                            <td width="6%"></td>
+                                                            <td width="" style="padding: 0">
+                                                                <div class="d-flex w-100">
+                                                                    <div class="w-100">
+                                                                        <hr style="border: none; height: 1px; color: #333; background-color: #333;">
+                                                                    </div>
+                                                                    <div class="w-0 ms-2">
+                                                                        +
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                    <table class="table table-bordered">
+                                                        <tr>
+                                                            <td width="47%">${fieldValue}</td>
+                                                            <td width="6%" style="text-align: center">:</td>
+                                                            <td class="text-${itemAspekKeuangan3.align}">Rp ${formatRupiah(String(nominal), '')}</td>
+                                                        </tr>
+                                                    </table>
+                                                `);
+                                            }
+                                        }else{
+                                            $('#table_plafon').append(`
                                                 <tr>
                                                     <td width="47%">${fieldValue}</td>
                                                     <td width="6%" style="text-align: center">:</td>
-                                                    <td class="text-${itemAspekKeuangan3.align}">Rp ${formatRupiah(String(nominal), '')}</td>
+                                                    ${itemAspekKeuangan3.add_on === "Bulan" ? `
+                                                        <td class="text-${itemAspekKeuangan3.align}">${nominal} ${itemAspekKeuangan3.add_on}</td>
+                                                    ` : `
+                                                        <td class="text-${itemAspekKeuangan3.align}">Rp ${formatRupiah(String(nominal), '')}</td>
+                                                    `}
                                                 </tr>
-                                            </table>
-                                        `);
+                                            `);
+                                        }
                                     }
                                 }
                             });
@@ -3722,94 +3771,6 @@ is-invalid
                         }
                     }
                 }
-                $.ajax({
-                    url: '{{ route('pengajuan-kredit.get-data-perhitungan-kredit-lev2-noparent') }}',
-                    type: "Get",
-                    success: function(res){
-                        console.log(res);
-                        res.result.forEach(element4 => {
-                            const uniqueTableId2 = `itemPerhitunganKreditLev2_${element4.id}`;
-                            $('#table_perhitungan_kredit_lev3_noparent').append(`
-                                <div class="form-group col-md-6">
-                                    <div class="card">
-                                        <h5 class="card-header">${element4.field}</h5>
-                                        <div class="card-body">
-                                            <table class="table table-bordered" id="${uniqueTableId2}">
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            `);
-
-                            $.ajax({
-                                url: '{{ route('pengajuan-kredit.get-data-perhitungan-kredit-lev3-noparent2') }}',
-                                type: "Get",
-                                data: {
-                                    parent_id: element4.id,
-                                    id_nasabah: res1.request.idCalonNasabah,
-                                },
-                                success: function(res){
-                                    console.log(res);
-                                    res.result.forEach(element => {
-                                        $(`#${uniqueTableId2}`).append(`
-                                            <tr>
-                                                <td>${element.field}</td>
-                                                <td style="text-align: center">:</td>
-                                                <td class="text-${element.align}">Rp ${formatRupiah(String(element.nominal), '')}</td>
-                                            </tr>
-                                        `);
-                                    });
-                                }
-                            });
-                        });
-                    }
-                });
-                $.ajax({
-                    url: '/get-perhitungan-kredit-lev3-noparent/' + res1.request.idCalonNasabah,
-                    type: "Get",
-                    success: function(res){
-                        console.log(res);
-                        res.result.forEach(element => {
-                            if (element.field == "Perputaran Usaha") {
-                                $('#lev1_count_dua3').append(`
-                                    <tr>
-                                        <td width="47%">${element.field}</td>
-                                        <td width="6%" style="text-align: center">:</td>
-                                        <td>${ element.nominal == null ? 0 : element.nominal } Bulan</td>
-                                    </tr>
-                                `);
-                            }else if(element.field == "Keuntungan Usaha"){
-                            }else if(element.field == "Repayment"){
-                            }else if(element.field == "Laba Setelah Kredit"){
-                            }else if(element.field == "Dibulatkan"){
-                            }else if(element.field == "Jangka Waktu Usulan"){
-                                $('#table_perhitungan_kredit_lev4_noparent').append(`
-                                    <tr>
-                                        <td>${element.field}</td>
-                                        <td style="text-align: center">:</td>
-                                        <td>${ element.nominal == null ? 0 : element.nominal } Bulan</td>
-                                    </tr>
-                                `);
-                            }else if(element.field == "Jangka Waktu Kredit"){
-                                $('#table_perhitungan_kredit_lev4_noparent').append(`
-                                    <tr>
-                                        <td>${element.field}</td>
-                                        <td style="text-align: center">:</td>
-                                        <td>${ element.nominal == null ? 0 : element.nominal } Bulan</td>
-                                    </tr>
-                                `);
-                            }else{
-                                $('#table_perhitungan_kredit_lev4_noparent').append(`
-                                    <tr>
-                                        <td width="47%">${element.field}</td>
-                                        <td width="6%" style="text-align: center">:</td>
-                                        <td class="text-${element.align}">Rp ${ formatRupiah(String(element.nominal == null ? 0 : element.nominal), '') }</td>
-                                    </tr>
-                                `);
-                            }
-                        });
-                    }
-                });
 
 
             } catch (error) {
@@ -3824,7 +3785,7 @@ is-invalid
             $('#loading-simpan-perhitungan').hide();
         }, 2000);
         setTimeout(function(){
-            $('#perhitunganModalAfterLoading').show();
+            $('.modal').modal('hide');
         }, 2000);
 
     });
