@@ -2874,7 +2874,29 @@ class PengajuanKreditController extends Controller
             $countDoc += $count;
         }
         $param['countIjin'] = $countDoc;
-        $param['logPengajuan'] = DB::table('log_pengajuan')->selectRaw("DISTINCT(date(created_at)) as tgl")->where('id_pengajuan', $id)->get();
+        $logPengajuan = DB::table('log_pengajuan')->selectRaw("DISTINCT(date(created_at)) as tgl")->where('id_pengajuan', $id)->get();
+        $log = array();
+        if($logPengajuan){
+            foreach($logPengajuan as $item){
+                $itemLog = DB::table('log_pengajuan')
+                    ->where('id_pengajuan', $id)
+                    ->whereDate('created_at', $item->tgl)
+                    ->get();
+                $itemsLog = array();
+
+                foreach($itemLog as $itemLogPengajuan){
+                    array_push($itemsLog, $itemLogPengajuan);
+                }
+                array_push($log, [
+                    'tgl' => $item->tgl,
+                    'data' => $itemLog
+                ]);
+            }
+        } else {
+            $log = [];
+        }
+        // dd($log[0]['tgl']);
+        $param['logPengajuan'] = $log;
 
         return view('pengajuan-kredit.detail-komentar-pengajuan', $param);
     }

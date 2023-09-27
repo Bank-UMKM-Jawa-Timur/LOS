@@ -251,7 +251,7 @@
         <div class="timeline">
             <div class="conten-timeline right">
                 @if (Auth::user()->role != 'Pincab')
-                    @if (!$log)
+                    @if (!count($logPengajuan) > 0)
                         <div class="row">
                             <div class="col-md-12 text-center">
                                 <p>Tidak ada log pengajuan pada data ini, dikarenakan data dikategorikan data lama pada
@@ -261,15 +261,9 @@
                     @else
                         @foreach ($logPengajuan as $item)
                             <div class="content">
-                                @php
-                                    $itemLog = DB::table('log_pengajuan')
-                                        ->where('id_pengajuan', $dataUmum->id)
-                                        ->whereDate('created_at', $item->tgl)
-                                        ->get();
-                                @endphp
-                                <h2 class="title-log">{{ date('d F Y', strtotime($item->tgl)) }}</h2>
+                                <h2 class="title-log">{{ date('d F Y', strtotime($item['tgl'])) }}</h2>
                                 <table>
-                                    @foreach ($itemLog as $itemLog)
+                                    @foreach ($item['data'] as $itemLog)
                                         <tr>
                                             <td class="jrk"><span class="fa fa-clock mr-1"></span>
                                                 {{ date('H:i:s', strtotime($itemLog->created_at)) }}</td>
