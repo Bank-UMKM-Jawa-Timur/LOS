@@ -136,7 +136,7 @@ null => 1,
                 <input type="file" name="upload_file[{{ $itemSP->id }}]" id="surat_permohonan"
                     data-id="{{ temporary($duTemp->id, $itemSP->id)?->id }}"
                     placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-control limit-size">
-                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
                 @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                 <div class="invalid-feedback">
                     {{ $errors->first('dataLevelDua.' . $key) }}
@@ -305,7 +305,7 @@ is-invalid
                 <input type="file" name="upload_file[{{ $itemP->id }}]" id="file_slik"
                     data-id="{{ temporary($duTemp->id, $itemP->id)?->id }}"
                     placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-control limit-size">
-                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
                 @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                 <div class="invalid-feedback">
                     {{ $errors->first('dataLevelDua.' . $key) }}
@@ -910,7 +910,7 @@ is-invalid
                         data-id="{{ temporary($duTemp->id, $itemNIB->id)?->id }}"
                         placeholder="Masukkan informasi {{ $itemNIB->nama }}" id="file_nib" class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none" id="docNIB_text">Besaran file
-                        tidak boleh lebih dari 5 MB</span>
+                        tidak boleh lebih dari 10 MB</span>
                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                     <div class="invalid-feedback">
                         {{ $errors->first('dataLevelTiga.' . $key) }}
@@ -937,7 +937,7 @@ is-invalid
                         data-id="{{ temporary($duTemp->id, $itemSKU->id)?->id }}"
                         placeholder="Masukkan informasi {{ $itemSKU->nama }}" id="file_sku" class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none" id="docSKU_text">Besaran file
-                        tidak boleh lebih dari 5 MB</span>
+                        tidak boleh lebih dari 10 MB</span>
                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                     <div class="invalid-feedback">
                         {{ $errors->first('dataLevelTiga.' . $key) }}
@@ -967,7 +967,7 @@ is-invalid
                         placeholder="Masukkan informasi {{ $itemNPWP->nama }}" class="form-control limit-size"
                         id="docNPWP_upload_file">
                     <span class="invalid-tooltip" style="display: none" id="docNPWP_text">Besaran file
-                        tidak boleh lebih dari 5 MB</span>
+                        tidak boleh lebih dari 10 MB</span>
                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                     <div class="invalid-feedback">
                         {{ $errors->first('dataLevelTiga.' . $key) }}
@@ -1054,7 +1054,7 @@ is-invalid
                         placeholder="Masukkan informasi {{ $item->nama }}" class="form-control limit-size"
                         id="{{ $idLevelDua }}">
                     <span class="invalid-tooltip" style="display: none">Besaran file tidak
-                        boleh lebih dari 5 MB</span>
+                        boleh lebih dari 10 MB</span>
                     <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $item->id)?->opsi_text
                         }}</span>
                 </div>
@@ -1245,7 +1245,7 @@ is-invalid
                             placeholder="Masukkan informasi {{ $itemTiga->nama }}[]" class="form-control limit-size"
                             id="{{ $idLevelTiga }}">
                         <span class="invalid-tooltip" style="display: none">Besaran file
-                            tidak boleh lebih dari 5 MB</span>
+                            tidak boleh lebih dari 10 MB</span>
                         <span class="filename" style="display: inline;">{{ $tempData->opsi_text }}</span>
                     </div>
                     @if (in_array(trim($itemTiga->nama), $multipleFiles))
@@ -1272,7 +1272,7 @@ is-invalid
                             data-id="{{ temporary($duTemp->id, $itemTiga->id)?->id }}"
                             placeholder="Masukkan informasi {{ $itemTiga->nama }}" class="form-control limit-size">
                         <span class="invalid-tooltip" style="display: none">Besaran file
-                            tidak boleh lebih dari 5 MB</span>
+                            tidak boleh lebih dari 10 MB</span>
                         <span class="filename" style="display: inline;">{{ temporary($duTemp->id,
                             $itemTiga->id)?->opsi_text }}</span>
                     </div>
@@ -1421,7 +1421,7 @@ is-invalid
                     placeholder="Masukkan informasi {{ $itemEmpat->nama }}" class="form-control limit-size"
                     id="{{ $idLevelEmpat }}">
                 <span class="invalid-tooltip" style="display: none">Besaran file tidak
-                    boleh lebih dari 5 MB</span>
+                    boleh lebih dari 10 MB</span>
                 <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemEmpat->id)?->opsi_text
                     }}</span>
             </div>
@@ -1789,7 +1789,7 @@ is-invalid
         <label for="">{{ $itemKTPIs->nama }}</label>
             <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
             <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" id="Foto_KTP_Istri" data-id="{{ temporary($duTemp->id, $itemKTPIs->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size">
-            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
             @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                 <div class="invalid-feedback">
                     {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1801,7 +1801,7 @@ is-invalid
         <label for="">{{ $itemKTPSu->nama }}</label>
             <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
             <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" id="Foto_KTP_Suami" data-id="{{ temporary($duTemp->id, $itemKTPSu->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size">
-            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
             @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                 <div class="invalid-feedback">
                     {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1815,7 +1815,7 @@ is-invalid
             <label for="">{{ $itemKTPNas->nama }}</label>
             <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
             <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPNas->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-control limit-size">
-            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
             @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                 <div class="invalid-feedback">
                     {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1827,7 +1827,7 @@ is-invalid
         // Limit Upload
         $('.limit-size').on('change', function() {
             var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-            if (size > 5) {
+            if (size > 10) {
                 $(this).next().css({
                     "display": "block"
                 });
@@ -1855,7 +1855,7 @@ is-invalid
         <label for="">{{ $itemKTPIs->nama }}</label>
             <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
             <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" id="Foto_KTP_Istri" data-id="{{ temporary($duTemp->id, $itemKTPIs->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size">
-            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
             @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                 <div class="invalid-feedback">
                     {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1867,7 +1867,7 @@ is-invalid
         <label for="">{{ $itemKTPSu->nama }}</label>
             <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
             <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" id="Foto_KTP_Suami" data-id="{{ temporary($duTemp->id, $itemKTPSu->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size">
-            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
             @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                 <div class="invalid-feedback">
                     {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1881,7 +1881,7 @@ is-invalid
             <label for="">{{ $itemKTPNas->nama }}</label>
             <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
             <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPNas->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-control limit-size">
-            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
             @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                 <div class="invalid-feedback">
                     {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1894,7 +1894,7 @@ is-invalid
         // Limit Upload
         $('.limit-size').on('change', function() {
             var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-            if (size > 5) {
+            if (size > 10) {
                 $(this).next().css({
                     "display": "block"
                 });
@@ -2126,7 +2126,7 @@ is-invalid
                                 <label>${valItem.nama}</label>
                                 <input type="hidden" name="id_item_file[${valItem.id}]" value="${valItem.id}" id="" class="input">
                                 <input type="file" name="upload_file[${valItem.id}]" data-id="" class="form-control limit-size">
-                                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
                                 <span class="filename" style="display: inline;"></span>
                             </div>`);
                             } else {
@@ -2262,7 +2262,7 @@ is-invalid
                                             placeholder="Masukkan informasi ${valItem.nama}"
                                             class="form-control limit-size" id="${valItem.nama.toString().replaceAll(" ", "_").toLowerCase()}"
                                             value="{{$tempData->opsi_text}}">
-                                            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                                            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
                                         <span class="filename" style="display: inline;">{{ $tempData->opsi_text }}</span>
                                     </div>
                                     <div class="col-1">
@@ -2286,7 +2286,7 @@ is-invalid
                                         <input type="file" name="upload_file[${valItem.id}][]" data-id=""
                                             placeholder="Masukkan informasi ${valItem.nama}"
                                             class="form-control limit-size" id="${valItem.nama.toString().replaceAll(" ", "_").toLowerCase()}">
-                                            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                                            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
                                         <span class="filename" style="display: inline;"></span>
                                     </div>
                                     <div class="col-1">
@@ -2380,7 +2380,7 @@ is-invalid
         // Limit Upload
         $('.limit-size').on('change', function() {
             var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-            if (size > 5) {
+            if (size > 10) {
                 $(this).next().css({
                     "display": "block"
                 });
@@ -2840,7 +2840,7 @@ is-invalid
     $('.limit-size').on('change', function() {
         var size = (this.files[0].size / 1024 / 1024).toFixed(2)
         //console.log(size);
-        if (size > 5) {
+        if (size > 10) {
             $(this).next().css({
                 "display": "block"
             });

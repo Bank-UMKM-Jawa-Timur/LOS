@@ -1050,6 +1050,7 @@ class PengajuanKreditController extends Controller
         $statusSlik = false;
         $find = array('Rp ', '.');
         $request->validate([
+            // 'upload_file.*' => 'file|max:5120',
             'name' => 'required',
             'alamat_rumah' => 'required',
             'alamat_usaha' => 'required',
@@ -1389,6 +1390,14 @@ class PengajuanKreditController extends Controller
             $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan proses pembuatan data pengajuan atas nama ' . $namaNasabah . '.', $id_pengajuan, Auth::user()->id, Auth::user()->nip);
 
             DB::commit();
+
+            // $files = $request->file('upload_file');
+            // foreach ($files as $file) {
+            //     if ($file->getSize() > 10 * 1024 * 1024) {
+            //         return redirect()->route('pengajuan-kredit.index')->withError('Salah satu atau lebih berkas melebihi 10MB.');
+            //     }
+            // }
+
             if (!$statusSlik)
                 return redirect()->route('pengajuan-kredit.index')->withStatus('Data berhasil disimpan.');
             else

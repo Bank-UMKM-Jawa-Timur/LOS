@@ -110,7 +110,7 @@ null => 1,
                 <input type="hidden" name="id_item_file[{{ $itemSP->id }}]" value="{{ $itemSP->id }}" id="">
                 <input type="file" name="upload_file[{{ $itemSP->id }}]" data-id=""
                     placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-control limit-size" id="foto_sp">
-                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
                 @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                 <div class="invalid-feedback">
                     {{ $errors->first('dataLevelDua.' . $key) }}
@@ -553,7 +553,7 @@ null => 1,
                         placeholder="Masukkan informasi {{ $itemNIB->nama }}" class="form-control limit-size"
                         id="file_nib">
                     <span class="invalid-tooltip" style="display: none" id="docNIB_text">Besaran file
-                        tidak boleh lebih dari 5 MB</span>
+                        tidak boleh lebih dari 10 MB</span>
                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                     <div class="invalid-feedback">
                         {{ $errors->first('dataLevelTiga.' . $key) }}
@@ -579,7 +579,7 @@ null => 1,
                         data-id="" placeholder="Masukkan informasi {{ $itemSKU->nama }}"
                         class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none" id="docSKU_text">Besaran file
-                        tidak boleh lebih dari 5 MB</span>
+                        tidak boleh lebih dari 10 MB</span>
                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                     <div class="invalid-feedback">
                         {{ $errors->first('dataLevelTiga.' . $key) }}
@@ -605,7 +605,7 @@ null => 1,
                     <input type="file" name="upload_file[{{ $itemNPWP->id }}]" id="npwp_file" data-id=""
                         placeholder="Masukkan informasi {{ $itemNPWP->nama }}" class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none" id="docNPWP_text">Besaran file
-                        tidak boleh lebih dari 5 MB</span>
+                        tidak boleh lebih dari 10 MB</span>
                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                     <div class="invalid-feedback">
                         {{ $errors->first('dataLevelTiga.' . $key) }}
@@ -803,7 +803,7 @@ null => 1,
                         <input type="hidden" name="id_item_file[{{ $item->id }}]" value="{{ $item->id }}" id="">
                         <input type="file" name="upload_file[{{ $item->id }}]" id="{{ $idLevelDua }}" data-id=""
                             placeholder="Masukkan informasi {{ $item->nama }}" class="form-control limit-size">
-                        <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15
+                        <span class="invalid-tooltip" style="display: none">Maximum upload file size is 10
                             MB</span>
                         <span class="filename" style="display: inline;"></span>
                     </div>
@@ -978,7 +978,7 @@ null => 1,
                             placeholder="Masukkan informasi {{ $itemTiga->nama }}"
                             class="form-control limit-size file-usaha" accept="image/*">
                         <span class="invalid-tooltip" style="display: none">Maximum upload
-                            file size is 15 MB</span>
+                            file size is 10 MB</span>
                         <span class="filename" style="display: inline;"></span>
                     </div>
                     <div class="col-1">
@@ -1115,7 +1115,7 @@ null => 1,
                 <input type="file" id="{{ $idLevelEmpat }}" name="upload_file[{{ $itemEmpat->id }}]" data-id=""
                     placeholder="Masukkan informasi {{ $itemEmpat->nama }}" class="form-control limit-size">
                 <span class="invalid-tooltip" style="display: none">Maximum upload file
-                    size is 15 MB</span>
+                    size is 10 MB</span>
                 <span class="filename" style="display: inline;"></span>
             </div>
             @elseif ($itemEmpat->opsi_jawaban == 'long text')
@@ -1234,9 +1234,23 @@ null => 1,
 @push('custom-script')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    // document.getElementById('file_slik').addEventListener('change', function() {
+    //     var fileInput = this;
+    //     var fileError = document.getElementById('file_slik_error');
+    //     var maxSize = 5 * 1024 * 1024;
 
-
-
+    //     if (fileInput.files.length > 0) {
+    //         var fileSize = fileInput.files[0].size;
+    //         if (fileSize > maxSize) {
+    //             fileInput.value = '';
+    //             fileError.innerText = 'Ukuran berkas melebihi 5MB.';
+    //         } else {
+    //             fileError.innerText = '';
+    //         }
+    //     }
+    // });
+</script>
+<script>
 
     //var isPincetar = "{{Request::url()}}".includes('pincetar');
     let dataAspekArr;
@@ -1300,7 +1314,7 @@ null => 1,
                     <label for="">{{ $itemKTPIs->nama }}</label>
                     <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
                     <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size" id="foto_ktp_istri">
-                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
                             {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1312,7 +1326,7 @@ null => 1,
                         <label for="">{{ $itemKTPSu->nama }}</label>
                         <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
                         <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size" id="foto_ktp_suami">
-                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
                         @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                             <div class="invalid-feedback">
                                 {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1327,7 +1341,7 @@ null => 1,
                     <label for="">{{ $itemKTPNas->nama }}</label>
                     <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
                     <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-control limit-size" id="foto_ktp_nasabah">
-                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
                             {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1339,7 +1353,7 @@ null => 1,
             }
             $('.limit-size').on('change', function() {
                 var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-                if (size > 5) {
+                if (size > 10) {
                     $(this).next().css({
                         "display": "block"
                     });
@@ -1505,7 +1519,7 @@ null => 1,
                                         <label>${valItem.nama}</label>
                                         <input type="hidden" name="id_item_file[${valItem.id}]" value="${valItem.id}" id="" class="input">
                                         <input type="file" name="upload_file[${valItem.id}]" data-id="" class="form-control limit-size">
-                                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
                                         <span class="filename" style="display: inline;"></span>
                                     </div>`);
                                 } else {
@@ -1638,7 +1652,7 @@ null => 1,
                                                 <input type="file" id="${valItem.nama.toString().replaceAll(" ", "_")}" name="upload_file[${valItem.id}][]" data-id=""
                                                     placeholder="Masukkan informasi ${valItem.nama}"
                                                     class="form-control limit-size">
-                                                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                                                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
                                                 <span class="filename" style="display: inline;"></span>
                                             </div>
                                             <div class="col-1">
@@ -2120,7 +2134,7 @@ null => 1,
         // Limit Upload
         $('.limit-size').on('change', function() {
             var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-            if (size > 5) {
+            if (size > 10) {
                 $(this).next().css({
                     "display": "block"
                 });
@@ -2156,7 +2170,7 @@ null => 1,
             $clone.insertAfter(wrapper);
             $('.limit-size').on('change', function() {
                 var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-                if (size > 5) {
+                if (size > 10) {
                     $(this).next().css({
                         "display": "block"
                     });
