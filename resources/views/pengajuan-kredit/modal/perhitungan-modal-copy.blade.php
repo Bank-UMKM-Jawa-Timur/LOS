@@ -15,7 +15,7 @@
 }
 </style>
 @php
-  $lev1 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)->where('level', 1)->get();
+  $lev1 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)->where('level', 1)->orderBy('sequence', 'asc')->get();
 @endphp
 <div class="modal fade" id="perhitunganModal" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
   <div id="loading-simpan-perhitungan" style="display: none;" class="text-center">
@@ -80,106 +80,108 @@
                     </div>
                     <!-- form bagian level 1 -->
                     @foreach ($lev1 as $item)
-                      <div class="card mb-4">
-                        <h4 class="card-header">{{ $item->field }}</h4>
-                        <div class="card-body">
-                          @if ($item->field == 'Neraca')
-                            @php
-                              $lev2 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
-                                                                          ->where('level', 2)
-                                                                          ->where('parent_id', $item->id)
-                                                                          ->get();
-                            @endphp
-                            <div class="row">
-                              @foreach ($lev2 as $item2)
-                                @php
-                                  $lev3 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
-                                                                              ->where('level', 3)
-                                                                              ->where('parent_id', $item2->id)
-                                                                              ->get();
-                                @endphp
-                                <div class="col-md-6">
-                                  <div class="card mb-3">
-                                      <h5 class="card-header">{{$item2->field}}</h5>
-                                      <div class="card-body">
-                                        <!-- form bagian level 3 -->
-                                        @foreach ($lev3 as $item3)
-                                          @if (!$item3->is_hidden)
-                                            <div class="form-group">
-                                                <label for="inp_{{$item3->id}}" class="font-weight-semibold">{{$item3->field}}</label>  
-                                                <div class="input-group">
-                                                  <input type="{{ $item3->is_hidden ? 'hidden' : 'text' }}" class="form-control rupiah inp_{{$item3->id}}" name="inpLevelTiga[{{$item3->id}}]"
-                                                    id="inp_{{$item3->id}}" data-formula="{{$item3->formula}}" data-detail="{{$item3->have_detail}}"
-                                                    @if ($item3->readonly) readonly @endif onkeyup="calcForm()"/>
-                                                  @if ($item3->have_detail)
-                                                    @php
-                                                      $lev4 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
-                                                                                                  ->where('level', 4)
-                                                                                                  ->where('parent_id', $item3->id)
-                                                                                                  ->get();
-                                                    @endphp
-                                                    <div class="input-group-prepend">
-                                                        <a class="btn btn-danger" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
-                                                            aria-controls="collapseExample">
-                                                            Tampilkan
-                                                            <i class="bi bi-caret-down"></i>
-                                                        </a>
-                                                    </div>
-                                                    <div class="collapse mt-4" id="collapseExample">
-                                                        <div class="table-responsive">
-                                                            <table class="table" id="table_item" style="box-sizing: border-box">
-                                                                <thead>
-                                                                    <tr>
-                                                                        @foreach ($lev4 as $item4)
-                                                                          <th scope="col">{{$item4->field}}</th>
-                                                                        @endforeach
-                                                                        <th scope="col">Aksi</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <tr>
-                                                                      @php
-                                                                          $indexInpLevelEmpatId = 0;
-                                                                          $indexInpLevelEmpat = 0;
-                                                                      @endphp
-                                                                        @foreach ($lev4 as $item4)
-                                                                          <td id="detail-item">
-                                                                              <input type="hidden" name="inpLevelEmpatId[{{ $indexInpLevelEmpatId++ }}]" value="{{ $item4->id }}">
-                                                                              <input class="form-control rupiah inp_{{$item4->id}}" type="@if(!$item4->is_hidden) text @else hidden @endif" name="inpLevelEmpat[{{ $indexInpLevelEmpat++ }}]"
-                                                                                id="inp_{{$item4->id}}" data-formula="{{$item4->formula}}" data-level="{{$item4->level}}" onkeyup="calcForm()" @if ($item4->readonly) readonly @endif/>
+                      <div class="card @if(!$item->is_card_show) border-0 p-0 @else mb-4 @endif">
+                        @if ($item->is_card_show)
+                          <h4 class="card-header">{{ $item->field }}</h4>  
+                        @endif
+                        <div class="card-body @if(!$item->is_card_show && !$item->is_two_columns) p-0 @endif">
+                          @if ($item->is_two_columns)
+                              @php
+                                $lev2 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
+                                                                            ->where('level', 2)
+                                                                            ->where('parent_id', $item->id)
+                                                                            ->get();
+                              @endphp
+                              <div class="row">
+                                @foreach ($lev2 as $key2 => $item2)
+                                  @php
+                                    $lev3 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
+                                                                                ->where('level', 3)
+                                                                                ->where('parent_id', $item2->id)
+                                                                                ->get();
+                                  @endphp
+                                  <div class="col-md-6 @if($key2 == 0 && !$item->is_card_show) pl-0 @elseif($key2 != 0 && !$item->is_card_show) pr-0 @endif">
+                                    <div class="card mb-3">
+                                        <h5 class="card-header">{{$item2->field}}</h5>
+                                        <div class="card-body">
+                                          <!-- form bagian level 3 -->
+                                          @foreach ($lev3 as $item3)
+                                            @if (!$item3->is_hidden)
+                                              <div class="form-group">
+                                                  <label for="inp_{{$item3->id}}" class="font-weight-semibold">{{$item3->field}}</label>  
+                                                  <div class="input-group">
+                                                    <input type="{{ $item3->is_hidden ? 'hidden' : 'text' }}" class="form-control rupiah inp_{{$item3->id}}" name="inpLevelTiga[{{$item3->id}}]"
+                                                      id="inp_{{$item3->id}}" data-formula="{{$item3->formula}}" data-detail="{{$item3->have_detail}}"
+                                                      @if ($item3->readonly) readonly @endif onkeyup="calcForm()"/>
+                                                    @if ($item3->have_detail)
+                                                      @php
+                                                        $lev4 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
+                                                                                                    ->where('level', 4)
+                                                                                                    ->where('parent_id', $item3->id)
+                                                                                                    ->get();
+                                                      @endphp
+                                                      <div class="input-group-prepend">
+                                                          <a class="btn btn-danger" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
+                                                              aria-controls="collapseExample">
+                                                              Tampilkan
+                                                              <i class="bi bi-caret-down"></i>
+                                                          </a>
+                                                      </div>
+                                                      <div class="collapse mt-4" id="collapseExample">
+                                                          <div class="table-responsive">
+                                                              <table class="table" id="table_item" style="box-sizing: border-box">
+                                                                  <thead>
+                                                                      <tr>
+                                                                          @foreach ($lev4 as $item4)
+                                                                            <th scope="col">{{$item4->field}}</th>
+                                                                          @endforeach
+                                                                          <th scope="col">Aksi</th>
+                                                                      </tr>
+                                                                  </thead>
+                                                                  <tbody>
+                                                                      <tr>
+                                                                        @php
+                                                                            $indexInpLevelEmpatId = 0;
+                                                                            $indexInpLevelEmpat = 0;
+                                                                        @endphp
+                                                                          @foreach ($lev4 as $item4)
+                                                                            <td id="detail-item">
+                                                                                <input type="hidden" name="inpLevelEmpatId[{{ $indexInpLevelEmpatId++ }}]" value="{{ $item4->id }}">
+                                                                                <input class="form-control rupiah inp_{{$item4->id}}" type="@if(!$item4->is_hidden) text @else hidden @endif" name="inpLevelEmpat[{{ $indexInpLevelEmpat++ }}]"
+                                                                                  id="inp_{{$item4->id}}" data-formula="{{$item4->formula}}" data-level="{{$item4->level}}" onkeyup="calcForm()" @if ($item4->readonly) readonly @endif/>
+                                                                            </td>
+                                                                          @endforeach
+                                                                          <td>
+                                                                              <button class="btn-add-2 btn btn-success" type="button">
+                                                                                  +
+                                                                              </button>
                                                                           </td>
-                                                                        @endforeach
-                                                                        <td>
-                                                                            <button class="btn-add-2 btn btn-success" type="button">
-                                                                                +
-                                                                            </button>
-                                                                        </td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                  @endif
-                                                  @if ($item3->add_on)
-                                                    <div class="input-group-append">
-                                                        <span class="input-group-text" id="basic-addon2">{{$item3->add_on}}</span>
-                                                    </div>
-                                                  @endif
-                                                </div>
-                                            </div>
-                                          @else
-                                            <input type="{{ $item3->is_hidden ? 'hidden' : 'text' }}" class="form-control rupiah inp_{{$item3->id}}" name="inpLevelTiga[{{$item3->id}}]"
-                                              id="inp_{{$item3->id}}" data-formula="{{$item3->formula}}" data-detail="{{$item3->have_detail}}"
-                                              @if ($item3->readonly) readonly @endif onkeyup="calcForm()"/>
-                                          @endif
-                                        @endforeach
-                                        <!-- end form bagian level 3 -->
+                                                                      </tr>
+                                                                  </tbody>
+                                                              </table>
+                                                          </div>
+                                                      </div>
+                                                    @endif
+                                                    @if ($item3->add_on)
+                                                      <div class="input-group-append">
+                                                          <span class="input-group-text" id="basic-addon2">{{$item3->add_on}}</span>
+                                                      </div>
+                                                    @endif
+                                                  </div>
+                                              </div>
+                                            @else
+                                              <input type="{{ $item3->is_hidden ? 'hidden' : 'text' }}" class="form-control rupiah inp_{{$item3->id}}" name="inpLevelTiga[{{$item3->id}}]"
+                                                id="inp_{{$item3->id}}" data-formula="{{$item3->formula}}" data-detail="{{$item3->have_detail}}"
+                                                @if ($item3->readonly) readonly @endif onkeyup="calcForm()"/>
+                                            @endif
+                                          @endforeach
+                                          <!-- end form bagian level 3 -->
+                                        </div>
                                       </div>
                                     </div>
-                                  </div>
-                              @endforeach
-                            </div>
-                          @else
+                                @endforeach
+                              </div>
+                          @elseif ($item->field == 'Laba Rugi')
                             @php
                               $lev2 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
                                     ->where('level', 2)
@@ -206,7 +208,7 @@
                                           </thead>
                                           <tbody>
                                               @php
-  
+
                                                 $lev3Hidden = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
                                                       ->where('level', 3)
                                                       ->where('parent_id', $item2->id)
@@ -314,6 +316,117 @@
                                   </tbody>
                                 </table>
                               </div> --}}
+                            </div>
+                          @else
+                            @php
+                                $lev2 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
+                                    ->where('level', 2)
+                                    ->where('parent_id', $item->id)
+                                    ->get();
+                            @endphp
+
+                            <div class="row">
+                                @foreach ($lev2 as $key => $item2)
+                                  @php
+                                    $lev3 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
+                                                                                ->where('level', 3)
+                                                                                ->where('parent_id', $item2->id)
+                                                                                ->get();
+                                  @endphp
+                                  <div class="col-md-12">
+                                    <div class="card mb-3">
+                                      <h5 class="card-header">{{ $item2->field }}</h5>
+                                      <div class="card-body">
+                                        <div class="row m-0">
+                                          @foreach ($lev3 as $item3)
+                                            @if (!$item3->is_hidden)
+                                                <div class=" @if($item2->inline) col @else col-md-12 @endif">
+                                                  <div class="form-group">
+                                                      <label for="inp_{{$item3->id}}" class="font-weight-semibold">{{$item3->field}}</label>  
+                                                      <div class="input-group">
+                                                        <input type="{{ $item3->is_hidden ? 'hidden' : 'text' }}" class="form-control rupiah inp_{{$item3->id}} {{ str_replace(' ', '_', strtolower($item3->field)) }}" name="inpLevelTiga[{{$item3->id}}]"
+                                                          id="inp_{{$item3->id}}" data-formula="{{$item3->formula}}" data-detail="{{$item3->have_detail}}"
+                                                          @if ($item3->readonly) readonly @endif onkeyup="calcForm()"/>
+                                                          @if ($item2->inline && $item3->add_on)
+                                                              <b class="my-auto ml-4 text-lg">{{ $item3->add_on }}</b>
+                                                          @endif
+                                                        @if ($item3->have_detail)
+                                                          @php
+                                                            $lev4 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
+                                                                                                        ->where('level', 4)
+                                                                                                        ->where('parent_id', $item3->id)
+                                                                                                        ->get();
+                                                          @endphp
+                                                          <div class="input-group-prepend">
+                                                              <a class="btn btn-danger" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
+                                                                  aria-controls="collapseExample">
+                                                                  Tampilkan
+                                                                  <i class="bi bi-caret-down"></i>
+                                                              </a>
+                                                          </div>
+                                                          <div class="collapse mt-4" id="collapseExample">
+                                                              <div class="table-responsive">
+                                                                  <table class="table" id="table_item" style="box-sizing: border-box">
+                                                                      <thead>
+                                                                          <tr>
+                                                                              @foreach ($lev4 as $item4)
+                                                                                <th scope="col">{{$item4->field}}</th>
+                                                                              @endforeach
+                                                                              <th scope="col">Aksi</th>
+                                                                          </tr>
+                                                                      </thead>
+                                                                      <tbody>
+                                                                          <tr>
+                                                                            @php
+                                                                                $indexInpLevelEmpatId = 0;
+                                                                                $indexInpLevelEmpat = 0;
+                                                                            @endphp
+                                                                              @foreach ($lev4 as $item4)
+                                                                                <td id="detail-item">
+                                                                                    <input type="hidden" name="inpLevelEmpatId[{{ $indexInpLevelEmpatId++ }}]" value="{{ $item4->id }}">
+                                                                                    <input class="form-control rupiah inp_{{$item4->id}}" type="@if(!$item4->is_hidden) text @else hidden @endif" name="inpLevelEmpat[{{ $indexInpLevelEmpat++ }}]"
+                                                                                      id="inp_{{$item4->id}}" data-formula="{{$item4->formula}}" data-level="{{$item4->level}}" onkeyup="calcForm()" @if ($item4->readonly) readonly @endif/>
+                                                                                </td>
+                                                                              @endforeach
+                                                                              <td>
+                                                                                  <button class="btn-add-2 btn btn-success" type="button">
+                                                                                      +
+                                                                                  </button>
+                                                                              </td>
+                                                                          </tr>
+                                                                      </tbody>
+                                                                  </table>
+                                                              </div>
+                                                          </div>
+                                                        @endif
+                                                        @if ($item3->add_on && !$item2->inline)
+                                                          <div class="input-group-append">
+                                                              <span class="input-group-text" id="basic-addon2">{{$item3->add_on}}</span>
+                                                          </div>
+                                                        @endif
+                                                      </div>
+                                                      <div class="info_{{ str_replace(' ', '_', strtolower($item3->field)) }}"></div>
+                                                  </div>
+                                                </div>
+                                                {{-- @if ($item3->field == 'Utang Bank')
+                                                  <div class="col-md-11 ">
+                                                    <hr style="border: none; height: 1px; color: #333; background-color: #333;">
+                                                  </div>
+                                                  <div class="col-md-1 justify-content-center text-center">
+                                                    <h6 class="mx-auto">+</h6>
+                                                  </div>
+                                                @endif --}}
+                                            @else
+                                              <input type="{{ $item3->is_hidden ? 'hidden' : 'text' }}" class="form-control rupiah inp_{{$item3->id}}" name="inpLevelTiga[{{$item3->id}}]"
+                                                id="inp_{{$item3->id}}" data-formula="{{$item3->formula}}" data-detail="{{$item3->have_detail}}"
+                                                @if ($item3->readonly) readonly @endif onkeyup="calcForm()"/>
+                                            @endif
+                                          @endforeach
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                @endforeach
                             </div>
                           @endif
                         </div>
@@ -663,7 +776,7 @@
   })
 
   function cekPlafon(){
-    var plafonUsulan = parseInt($(".plafond_usulan").val() ? $(".plafond_usulan").val().replaceAll(".", "") : 0);
+    var plafonUsulan = parseInt($(".plafon_usulan").val() ? $(".plafon_usulan").val().replaceAll(".", "") : 0);
     var plafonDataUmum  = parseInt($("#jumlah_kredit").val() ? $("#jumlah_kredit").val().replaceAll(".", "") : 0);
     var higher = 0;
     var lower = 0;
@@ -679,8 +792,8 @@
         showLower = "Plafond Pengajuan"
         var selisih = higher - lower;
         var persenPlafon = Math.round(eval((selisih / lower) * 100));
-        $(".info_plafond_usulan").empty()
-        $(".info_plafond_usulan").append(`
+        $(".info_plafon_usulan").empty()
+        $(".info_plafon_usulan").append(`
           <div class="alert alert-info" role="alert">
               ${showHigher} Lebih Besar ${persenPlafon}% Daripada ${showLower} Sebesar Rp.${formatrupiah(selisih.toString())}
           </div>
@@ -692,17 +805,17 @@
         showLower = "Plafond Usulan"
         var selisih = higher - lower;
         var persenPlafon = Math.round(eval((selisih / lower) * 100));
-        $(".info_plafond_usulan").empty()
-        $(".info_plafond_usulan").append(`
+        $(".info_plafon_usulan").empty()
+        $(".info_plafon_usulan").append(`
           <div class="alert alert-info" role="alert">
               ${showHigher} Lebih Besar ${persenPlafon}% Daripada ${showLower} Sebesar Rp.${formatrupiah(selisih.toString())}
           </div>
         `);
       } else if(plafonUsulan == plafonDataUmum){
-        $(".info_plafond_usulan").empty()
+        $(".info_plafon_usulan").empty()
       }
     } else{
-      $(".info_plafond_usulan").empty();
+      $(".info_plafon_usulan").empty();
     }
   } 
 
@@ -720,13 +833,23 @@
             Jangka Waktu Usulan Tidak Boleh Lebih Kecil Daripada Jangka Waktu Kredit
         </div>
         `)
+        $("#btnSimpanPerhitungan").attr("disabled", true)
       } else{
         $(".info_jangka_waktu_usulan").empty()
+        $("#btnSimpanPerhitungan").removeAttr("disabled")
       }
     } else {
       $(".info_jangka_waktu_usulan").empty()
+      $("#btnSimpanPerhitungan").removeAttr("disabled")
     }
   }
+
+  $(document).on('click', function(e) {
+    var $navsearch = $('.collapse');
+    if(!$(e.target).closest($navsearch).length && $navsearch.is(':visible')) {
+        $navsearch.collapse('hide')
+    }        
+})
 </script>
 <style>
   .modal-lg {

@@ -1050,6 +1050,7 @@ class PengajuanKreditController extends Controller
         $statusSlik = false;
         $find = array('Rp ', '.');
         $request->validate([
+            // 'upload_file.*' => 'file|max:5120',
             'name' => 'required',
             'alamat_rumah' => 'required',
             'alamat_usaha' => 'required',
@@ -1389,6 +1390,14 @@ class PengajuanKreditController extends Controller
             $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan proses pembuatan data pengajuan atas nama ' . $namaNasabah . '.', $id_pengajuan, Auth::user()->id, Auth::user()->nip);
 
             DB::commit();
+
+            // $files = $request->file('upload_file');
+            // foreach ($files as $file) {
+            //     if ($file->getSize() > 10 * 1024 * 1024) {
+            //         return redirect()->route('pengajuan-kredit.index')->withError('Salah satu atau lebih berkas melebihi 10MB.');
+            //     }
+            // }
+
             if (!$statusSlik)
                 return redirect()->route('pengajuan-kredit.index')->withStatus('Data berhasil disimpan.');
             else
@@ -3800,7 +3809,7 @@ class PengajuanKreditController extends Controller
                 // Data Level Tiga
                 foreach($request->inpLevelTiga as $key => $item){
                     array_push($levelTiga, [
-                        'nominal' => str_replace('.', '', $item),
+                        'nominal' => str_replace('.', '', str_replace(['(', ')'], '-', $item)),
                         'item_perhitungan_kredit_id' => $key,
                         'temp_calon_nasabah_id' => $idCalonNasabah,
                         'created_at' => now()
@@ -3809,7 +3818,7 @@ class PengajuanKreditController extends Controller
 
                 foreach($request->inpLevelTigaParent as $key => $item){
                     array_push($parentLevelTiga, [
-                        'nominal' => $key != 68 ? str_replace('.', '', $item) : $item,
+                        'nominal' => $key != 68 ? str_replace('.', '', str_replace(['(', ')'], '-', $item)) : $item,
                         'item_perhitungan_kredit_id' => $key,
                         'temp_calon_nasabah_id' => $idCalonNasabah,
                         'created_at' => now()
@@ -3945,7 +3954,7 @@ class PengajuanKreditController extends Controller
                     PerhitunganKredit::where('temp_calon_nasabah_id', $idCalonNasabah)
                         ->where('item_perhitungan_kredit_id', $key)
                         ->update([
-                            'nominal' => str_replace('.', '', $item),
+                            'nominal' => str_replace('.', '', str_replace(['(', ')'], '-', $item)),
                             'updated_at' => now()
                         ]);
                 }
@@ -3953,7 +3962,7 @@ class PengajuanKreditController extends Controller
                     PerhitunganKredit::where('temp_calon_nasabah_id', $idCalonNasabah)
                         ->where('item_perhitungan_kredit_id', $key)
                         ->update([
-                            'nominal' =>$key != 68 ? str_replace('.', '', $item) : $item,
+                            'nominal' =>$key != 68 ? str_replace('.', '', str_replace(['(', ')'], '-', $item)) : $item,
                             'updated_at' => now()
                         ]);
                 }
@@ -4077,7 +4086,7 @@ class PengajuanKreditController extends Controller
                 // Data Level Tiga
                 foreach($request->inpLevelTiga as $key => $item){
                     array_push($levelTiga, [
-                        'nominal' => str_replace('.', '', $item),
+                        'nominal' => str_replace('.', '', str_replace(['(', ')'], '-', $item)),
                         'item_perhitungan_kredit_id' => $key,
                         'pengajuan_id' => $idCalonNasabah,
                         'created_at' => now()
@@ -4086,7 +4095,7 @@ class PengajuanKreditController extends Controller
 
                 foreach($request->inpLevelTigaParent as $key => $item){
                     array_push($parentLevelTiga, [
-                        'nominal' => $key != 68 ? str_replace('.', '', $item) : $item,
+                        'nominal' => $key != 68 ? str_replace('.', '', str_replace(['(', ')'], '-', $item)) : $item,
                         'item_perhitungan_kredit_id' => $key,
                         'pengajuan_id' => $idCalonNasabah,
                         'created_at' => now()
@@ -4222,7 +4231,7 @@ class PengajuanKreditController extends Controller
                     PerhitunganKredit::where('pengajuan_id', $idCalonNasabah)
                         ->where('item_perhitungan_kredit_id', $key)
                         ->update([
-                            'nominal' => str_replace('.', '', $item),
+                            'nominal' => str_replace('.', '', str_replace(['(', ')'], '-', $item)),
                             'updated_at' => now()
                         ]);
                 }
@@ -4230,7 +4239,7 @@ class PengajuanKreditController extends Controller
                     PerhitunganKredit::where('pengajuan_id', $idCalonNasabah)
                         ->where('item_perhitungan_kredit_id', $key)
                         ->update([
-                            'nominal' =>$key != 68 ? str_replace('.', '', $item) : $item,
+                            'nominal' =>$key != 68 ? str_replace('.', '', str_replace(['(', ')'], '-', $item)) : $item,
                             'updated_at' => now()
                         ]);
                 }

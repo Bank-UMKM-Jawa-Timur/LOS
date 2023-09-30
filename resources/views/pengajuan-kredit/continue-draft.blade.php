@@ -136,7 +136,7 @@ null => 1,
                 <input type="file" name="upload_file[{{ $itemSP->id }}]" id="surat_permohonan"
                     data-id="{{ temporary($duTemp->id, $itemSP->id)?->id }}"
                     placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-control limit-size">
-                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
                 @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                 <div class="invalid-feedback">
                     {{ $errors->first('dataLevelDua.' . $key) }}
@@ -305,7 +305,7 @@ is-invalid
                 <input type="file" name="upload_file[{{ $itemP->id }}]" id="file_slik"
                     data-id="{{ temporary($duTemp->id, $itemP->id)?->id }}"
                     placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-control limit-size">
-                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
                 @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                 <div class="invalid-feedback">
                     {{ $errors->first('dataLevelDua.' . $key) }}
@@ -550,61 +550,113 @@ is-invalid
                                         ->where('perhitungan_kredit.temp_calon_nasabah_id', $duTemp->id)
                                         ->select('periode_aspek_keuangan.*', 'perhitungan_kredit.*') 
                                         ->get();
+        function formatBulan($value){
+            if ($value == 1) {
+                echo "Januari";
+            }else if($value == 2){
+                echo "Februari";
+            }else if($value == 3){
+                echo "Maret";
+            }else if($value == 4){
+                echo "April";
+            }else if($value == 5){
+                echo "Mei";
+            }else if($value == 6){
+                echo "Juni";
+            }else if($value == 7){
+                echo "Juli";
+            }else if($value == 8){
+                echo "Agustus";
+            }else if($value == 9){
+                echo "September";
+            }else if($value == 10){
+                echo "Oktober";
+            }else if($value == 11){
+                echo "November";
+            }else{
+                echo "Desember";
+            }
+        }
         @endphp
-        @if(!$getPeriode->isEmpty())
+       @if(!$getPeriode->isEmpty())
             <div class="" id="perhitungan_kredit_with_value_without_update">
+                <h5>Periode : {{ formatBulan($getPeriode[0]->bulan) - $getPeriode[0]->tahun }}</h5>
                 @php
                     $lev1 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)->where('level', 1)->get();
-
                     function formatRupiah($angka){
                         $format_rupiah = number_format($angka, 2, ',', '.');
                         $format_rupiah = rtrim($format_rupiah, '0'); 
                         $format_rupiah = str_replace(',', '', $format_rupiah); 
                         echo $format_rupiah;
                     }
-
-                    function formatBulan($value){
-                        if ($value == 1) {
-                            echo "Januari";
-                        }else if($value == 2){
-                            echo "Februari";
-                        }else if($value == 3){
-                            echo "Maret";
-                        }else if($value == 4){
-                            echo "April";
-                        }else if($value == 5){
-                            echo "Mei";
-                        }else if($value == 6){
-                            echo "Juni";
-                        }else if($value == 7){
-                            echo "Juli";
-                        }else if($value == 8){
-                            echo "Agustus";
-                        }else if($value == 9){
-                            echo "September";
-                        }else if($value == 10){
-                            echo "Oktober";
-                        }else if($value == 11){
-                            echo "November";
-                        }else{
-                            echo "Desember";
-                        }
-                    }
-                @endphp
-                    @php
                     $lev1Count = 0;
+                @endphp
+                @foreach ($lev1 as $itemAspekKeuangan)
+                    @php
+                    $lev1Count += 1;
+                    $lev2 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
+                        ->where('level', 2)
+                        ->where('parent_id', $itemAspekKeuangan->id)
+                        ->get();
                     @endphp
-                    @foreach ($lev1 as $itemAspekKeuangan)
-                        @php
-                        $lev1Count += 1;
-                        $lev2 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
-                            ->where('level', 2)
-                            ->where('parent_id', $itemAspekKeuangan->id)
-                            ->get();
-                        @endphp
-                        @if ($lev1Count > 1)
+                    @if ($lev1Count > 1)
+                        @if ($itemAspekKeuangan->field != "Laba Rugi")
+                            <div class="row">
+                                @foreach ($lev2 as $itemAspekKeuangan2)
+                                    @php
+                                        $perhitunganKreditLev3 = \App\Models\PerhitunganKredit::rightJoin('mst_item_perhitungan_kredit', 'perhitungan_kredit.item_perhitungan_kredit_id', '=', 'mst_item_perhitungan_kredit.id')
+                                                ->where('mst_item_perhitungan_kredit.skema_kredit_limit_id', 1)
+                                                ->where('mst_item_perhitungan_kredit.level', 3)
+                                                ->where('mst_item_perhitungan_kredit.parent_id', $itemAspekKeuangan2->id)
+                                                ->where('perhitungan_kredit.temp_calon_nasabah_id', $duTemp->id)
+                                                ->get();
+                                    @endphp
+                                    @if ($itemAspekKeuangan2->field == "Perputaran Usaha")
+                                        <div class="form-group col-md-12">
+                                            <div class="card">
+                                                <h5 class="card-header">{{ $itemAspekKeuangan2->field }}</h5>
+                                                <div class="card-body">
+                                                    <table class="table table-bordered">
+                                                        @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
+                                                            @if ($itemAspekKeuangan3->field == "Perputaran Usaha")
+                                                                <tr>
+                                                                    <td width="47%">{{ $itemAspekKeuangan3->field }}</td>
+                                                                    <td width="6%" style="text-align: center">:</td>
+                                                                    @if ($itemAspekKeuangan3->add_on == "Bulan")
+                                                                        <td>{{ $itemAspekKeuangan3->nominal }} {{ $itemAspekKeuangan3->add_on }}</td>
+                                                                    @endif
+                                                                </tr>
+                                                            @endif
+                                                        @endforeach
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @elseif ($itemAspekKeuangan2->field == "Kebutuhan Modal Kerja" || $itemAspekKeuangan2->field == "Modal Kerja Sekarang")
+                                        <div class="form-group col-md-6">
+                                            <div class="card">
+                                                <h5 class="card-header">{{ $itemAspekKeuangan2->field }}</h5>
+                                                <div class="card-body">
+                                                    <table class="table table-bordered">
+                                                        @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
+                                                            @if ($itemAspekKeuangan2->field == "Kebutuhan Modal Kerja" || $itemAspekKeuangan2->field == "Modal Kerja Sekarang")
+                                                                <tr>
+                                                                    <td>{{ $itemAspekKeuangan3->field }}</td>
+                                                                    <td style="text-align: center">:</td>
+                                                                    <td class="text-{{ $itemAspekKeuangan3->align }}">Rp {{ formatRupiah($itemAspekKeuangan3->nominal) }}</td>
+                                                                </tr>
+                                                            @endif
+                                                        @endforeach
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endforeach
+                            </div>
+                        @else
                             <div class="card">
-                                <h5 class="card-header">{{ $itemAspekKeuangan->field }} Periode : {{ formatBulan($getPeriode[0]->bulan) - $getPeriode[0]->tahun }}</h5>
+                                <h5 class="card-header">{{ $itemAspekKeuangan->field }}</h5>
                                 <div class="card-body">
                                     <table class="table table-bordered">
                                         @php $lev2Count = 0; @endphp
@@ -619,166 +671,177 @@ is-invalid
                                             ->get();
                                         $fieldValues = [];
                                         @endphp
-                                        <tr>
-                                            <th>{{ $itemAspekKeuangan2->field }}</th>
-                                            <td></td>
-                                            @if ($lev2Count > 1)
-                                                <th colspan="2"></th>
-                                            @else
-                                                <th>Sebelum Kredit</th>
-                                                <th>Sesudah Kredit</th>
-                                            @endif
-                                        </tr>
-                                        @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
-                                            @php
-                                            $fieldValue = $itemAspekKeuangan3->field;
-                                            $nominal = $itemAspekKeuangan3->nominal;
-                                            @endphp
-                                            @if (!in_array($fieldValue, $fieldValues))
-                                                <tr>
-                                                    <td>{{ $fieldValue }}</td>
-                                                    <td style="text-align: center">:</td>
-                                                    <td>Rp {{ formatRupiah($nominal) }}</td>
-                                                    <td>
-                                                        @foreach ($perhitunganKreditLev3 as $item)
-                                                            @if ($item->field == $fieldValue)
-                                                                @if ($item->nominal != $nominal)
-                                                                    Rp {{ formatRupiah($item->nominal) }}<br>
-                                                                @endif
-                                                            @endif
-                                                        @endforeach
-                                                    </td>
-                                                </tr>
-                                                @php
-                                                $fieldValues[] = $fieldValue;
-                                                @endphp
-                                            @endif
-                                        @endforeach
-                                        @endforeach
-                                    </table>
-                                </div>
-                            </div>
-                        @else
-                        <div class="card">
-                            <h5 class="card-header">{{ $itemAspekKeuangan->field }} Periode : {{ formatBulan($getPeriode[0]->bulan) - $getPeriode[0]->tahun }}</h5>
-                            <div class="card-body">
-                                <div class="row">
-                                    @foreach ($lev2 as $itemAspekKeuangan2)
-                                        @php
-                                        $perhitunganKreditLev3 = \App\Models\PerhitunganKredit::rightJoin('mst_item_perhitungan_kredit', 'perhitungan_kredit.item_perhitungan_kredit_id', '=', 'mst_item_perhitungan_kredit.id')
-                                            ->where('mst_item_perhitungan_kredit.skema_kredit_limit_id', 1)
-                                            ->where('mst_item_perhitungan_kredit.level', 3)
-                                            ->where('mst_item_perhitungan_kredit.parent_id', $itemAspekKeuangan2->id)
-                                            ->where('perhitungan_kredit.temp_calon_nasabah_id', $duTemp->id)
-                                            ->get();
-                                        @endphp
-                                        <div class="form-group col-md-6">
-                                            <table class="table table-bordered">
-                                                <tr>
-                                                    <th colspan="2">{{ $itemAspekKeuangan2->field }}</th>
-                                                </tr>
-                                                @foreach ($perhitunganKreditLev3 as $itemAspek3)
-                                                @if ($itemAspek3->field != "Total Angsuran")
-                                                    <tr>
-                                                        <td width='57%'>{{ $itemAspek3->field }}</td>
-                                                        <td>Rp {{ formatRupiah($itemAspek3->nominal) }}</td>
-                                                    </tr>
-                                                @endif
-                                                @endforeach
-                                            </table>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                        <br>
-                        @endif
-                    @endforeach
-                    <br>
-                    <div class="row">
-                        @php
-                        $lev2NoParent = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
-                                                                    ->where('level', 2)
-                                                                    ->whereNull('parent_id')
-                                                                    ->get();
-                        @endphp
-                        @foreach ($lev2NoParent as $item2NoParent)
-                        @php
-                        $lev3NoParent = \App\Models\PerhitunganKredit::rightJoin('mst_item_perhitungan_kredit', 'perhitungan_kredit.item_perhitungan_kredit_id', '=', 'mst_item_perhitungan_kredit.id')
-                                                                        ->where('mst_item_perhitungan_kredit.skema_kredit_limit_id', 1)
-                                                                        ->where('mst_item_perhitungan_kredit.level', 3)
-                                                                        ->where('mst_item_perhitungan_kredit.parent_id', $item2NoParent->id)
-                                                                        ->where('perhitungan_kredit.temp_calon_nasabah_id', $duTemp->id)
-                                                                        ->get();
-                        @endphp
-                            <div class="form-group col-md-6">
-                                <div class="card">
-                                    <h5 class="card-header">{{ $item2NoParent->field }}</h5>
-                                    <div class="card-body">
-                                        <table class="table table-bordered">
-                                            @foreach ($lev3NoParent as $item3NoParent)
                                             <tr>
-                                                <td>{{ $item3NoParent->field }}</td>
-                                                <td style="text-align: center">:</td>
-                                                <td>Rp {{ formatRupiah($item3NoParent->nominal) }}</td>
+                                                <th>{{ $itemAspekKeuangan2->field }}</th>
+                                                <td></td>
+                                                @if ($lev2Count > 1)
+                                                    <th colspan="2"></th>
+                                                @else
+                                                    <th>Sebelum Kredit</th>
+                                                    <th>Sesudah Kredit</th>
+                                                @endif
                                             </tr>
+                                            @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
+                                                @php
+                                                $fieldValue = $itemAspekKeuangan3->field;
+                                                $nominal = $itemAspekKeuangan3->nominal;
+                                                @endphp
+                                                @if (!in_array($fieldValue, $fieldValues))
+                                                    <tr>
+                                                        <td>{{ $fieldValue }}</td>
+                                                        <td style="text-align: center">:</td>
+                                                        <td class="text-{{ $itemAspekKeuangan3->align }}">Rp {{ formatRupiah($nominal) }}</td>
+                                                        <td class="text-{{ $itemAspekKeuangan3->align }}">
+                                                            @foreach ($perhitunganKreditLev3 as $item3)
+                                                                @if ($item3->field == $fieldValue)
+                                                                    @if ($item3->nominal != $nominal)
+                                                                        Rp {{ formatRupiah($item3->nominal) }}<br>
+                                                                    @endif
+                                                                @endif
+                                                            @endforeach
+                                                        </td>
+                                                    </tr>
+                                                    @php
+                                                    $fieldValues[] = $fieldValue;
+                                                    @endphp
+                                                @endif
                                             @endforeach
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                    <div class="row">
-                        <div class="form-group col-md-12">
-                            @php
-                            $dataUmumNasabahId = $duTemp->id;
-                            $results = \App\Models\MstItemPerhitunganKredit::leftJoin('perhitungan_kredit', function($join) use ($dataUmumNasabahId) {
-                                            $join->on('mst_item_perhitungan_kredit.id', '=', 'perhitungan_kredit.item_perhitungan_kredit_id')
-                                                ->where('perhitungan_kredit.temp_calon_nasabah_id', '=', $dataUmumNasabahId);
-                                        })
-                                        ->where('mst_item_perhitungan_kredit.skema_kredit_limit_id', '=', 1)
-                                        ->where('mst_item_perhitungan_kredit.level', '=', 3)
-                                        ->whereNull('mst_item_perhitungan_kredit.parent_id')
-                                        ->get();   
-                            
-                            @endphp
-                            <div class="card">
-                                {{-- <h5 class="card-header">{{ $item2NoParent->field }}</h5> --}}
-                                <div class="card-body">
-                                    <table class="table table-bordered">
-                                        @foreach ($results as $item3NoParent)
-                                        <tr>
-                                            @if ($item3NoParent->field == "Perputaran Usaha")
-                                            @elseif($item3NoParent->field == "Keuntungan Usaha")
-                                            @elseif($item3NoParent->field == "Repayment")
-                                            @elseif($item3NoParent->field == "Laba Setelah Kredit")
-                                            @elseif($item3NoParent->field == "Jangka Waktu Usulan")
-                                            @elseif($item3NoParent->field == "Dibulatkan")
-                                                <td>{{ $item3NoParent->field }}</td>
-                                                <td style="text-align: center">:</td>
-                                                <td>{{ $item3NoParent->nominal }}</td>
-                                            @elseif($item3NoParent->field == "Plafond usulan")
-                                                <td>{{ $item3NoParent->field }}</td>
-                                                <td style="text-align: center">:</td>
-                                                <td>{{ $item3NoParent->nominal }}</td>
-                                            @elseif($item3NoParent->field == "Jangka Waktu Kredit")
-                                                <td>{{ $item3NoParent->field }}</td>
-                                                <td style="text-align: center">:</td>
-                                                <td>{{ $item3NoParent->nominal }}</td>
-                                            @else
-                                                <td width="47%">{{ $item3NoParent->field }}</td>
-                                                <td width="6%" style="text-align: center">:</td>
-                                                <td>Rp {{ formatRupiah($item3NoParent->nominal) }}</td>
-                                            @endif
-                                        </tr>
                                         @endforeach
                                     </table>
                                 </div>
                             </div>
                             <br>
+                        @endif
+                    @else
+                    <div class="card">
+                        <h5 class="card-header">{{ $itemAspekKeuangan->field }}</h5>
+                        <div class="card-body">
+                            <div class="row">
+                                @foreach ($lev2 as $itemAspekKeuangan2)
+                                    @php
+                                    $perhitunganKreditLev3 = \App\Models\PerhitunganKredit::rightJoin('mst_item_perhitungan_kredit', 'perhitungan_kredit.item_perhitungan_kredit_id', '=', 'mst_item_perhitungan_kredit.id')
+                                        ->where('mst_item_perhitungan_kredit.skema_kredit_limit_id', 1)
+                                        ->where('mst_item_perhitungan_kredit.level', 3)
+                                        ->where('mst_item_perhitungan_kredit.parent_id', $itemAspekKeuangan2->id)
+                                        ->where('perhitungan_kredit.temp_calon_nasabah_id', $duTemp->id)
+                                        ->get();
+                                    @endphp
+                                    <div class="form-group col-md-6">
+                                        <table class="table table-bordered">
+                                            <tr>
+                                                <th colspan="2">{{ $itemAspekKeuangan2->field }}</th>
+                                            </tr>
+                                            @foreach ($perhitunganKreditLev3 as $itemAspek3)
+                                            @if ($itemAspek3->field != "Total Angsuran")
+                                                <tr>
+                                                    <td width='57%'>{{ $itemAspek3->field }}</td>
+                                                    <td class="text-{{ $itemAspek3->align }}">Rp {{ formatRupiah($itemAspek3->nominal) }}</td>
+                                                </tr>
+                                            @endif
+                                            @endforeach
+                                        </table>
+                                    </div>
+                                @endforeach
+                            </div>
                         </div>
                     </div>
+                    <br>
+                    @endif
+                @endforeach
+                @foreach ($lev1 as $itemAspekKeuangan)
+                @php
+                $lev1Count += 1;
+                $lev2 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
+                    ->where('level', 2)
+                    ->where('parent_id', $itemAspekKeuangan->id)
+                    ->get();
+                @endphp
+                @if ($lev1Count > 1)
+                    @if ($itemAspekKeuangan->field != "Laba Rugi")
+                        <div class="row">
+                            @foreach ($lev2 as $itemAspekKeuangan2)
+                                @php
+                                    $perhitunganKreditLev3 = \App\Models\PerhitunganKredit::rightJoin('mst_item_perhitungan_kredit', 'perhitungan_kredit.item_perhitungan_kredit_id', '=', 'mst_item_perhitungan_kredit.id')
+                                            ->where('mst_item_perhitungan_kredit.skema_kredit_limit_id', 1)
+                                            ->where('mst_item_perhitungan_kredit.level', 3)
+                                            ->where('mst_item_perhitungan_kredit.parent_id', $itemAspekKeuangan2->id)
+                                            ->where('perhitungan_kredit.temp_calon_nasabah_id', $duTemp->id)
+                                            ->get();
+                                @endphp
+                                @if ($itemAspekKeuangan2->field == "Maksimal Pembiayaan")
+                                    <div class="form-group col-md-12">
+                                        <div class="card">
+                                            <h5 class="card-header">{{ $itemAspekKeuangan2->field }}</h5>
+                                            <div class="card-body">
+                                                <table class="table table-bordered">
+                                                    @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
+                                                        @if ($itemAspekKeuangan2->field == "Maksimal Pembiayaan")
+                                                            @if ($itemAspekKeuangan3->field != "Kebutuhan Kredit")
+                                                                <tr>
+                                                                    <td width="47%">{{ $itemAspekKeuangan3->field }}</td>
+                                                                    <td width="6%" style="text-align: center">:</td>
+                                                                    <td class="text-{{ $itemAspekKeuangan3->align }}">Rp {{ formatRupiah($itemAspekKeuangan3->nominal) }}</td>
+                                                                </tr>
+                                                            @else  
+                                                                <table class="table table-borderless" style="margin: 0 auto; padding: 0 auto;">
+                                                                    <tr>
+                                                                        <td width="47%"></td>
+                                                                        <td width="6%"></td>
+                                                                        <td width="" style="padding: 0">
+                                                                            <div class="d-flex w-100">
+                                                                                <div class="w-100">
+                                                                                    <hr style="border: none; height: 1px; color: #333; background-color: #333;">
+                                                                                </div>
+                                                                                <div class="w-0 ms-2">
+                                                                                    +
+                                                                                </div>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                                <table class="table table-bordered">
+                                                                    <tr>
+                                                                        <td width="47%">{{ $itemAspekKeuangan3->field }}</td>
+                                                                        <td width="6%" style="text-align: center">:</td>
+                                                                        <td class="text-{{ $itemAspekKeuangan3->align }}">Rp {{ formatRupiah($itemAspekKeuangan3->nominal) }}</td>
+                                                                    </tr>
+                                                                </table>
+                                                            @endif
+                                                        @endif
+                                                    @endforeach
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @elseif ($itemAspekKeuangan2->field == "Plafon dan Tenor")
+                                        <div class="form-group col-md-12">
+                                            <div class="card">
+                                                <h5 class="card-header">{{ $itemAspekKeuangan2->field }}</h5>
+                                                <div class="card-body">
+                                                    <table class="table table-bordered">
+                                                        @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
+                                                            @if ($itemAspekKeuangan2->field == "Plafon dan Tenor")
+                                                                <tr>
+                                                                    <td width="47%">{{ $itemAspekKeuangan3->field }}</td>
+                                                                    <td width="6%" style="text-align: center">:</td>
+                                                                    @if ($itemAspekKeuangan3->add_on == "Bulan")
+                                                                        <td class="text-{{ $itemAspekKeuangan3->align }}">{{ $itemAspekKeuangan3->nominal }} {{ $itemAspekKeuangan3->add_on }}</td>
+                                                                    @else
+                                                                        <td class="text-{{ $itemAspekKeuangan3->align }}">Rp {{ formatRupiah($itemAspekKeuangan3->nominal) }}</td>
+                                                                    @endif
+                                                                </tr>
+                                                            @endif
+                                                        @endforeach
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+                            @endforeach
+                        </div>
+                    @endif
+                @endif
+                @endforeach
             </div>
         @else
             <div class="" id="peringatan-pengajuan">
@@ -847,7 +910,7 @@ is-invalid
                         data-id="{{ temporary($duTemp->id, $itemNIB->id)?->id }}"
                         placeholder="Masukkan informasi {{ $itemNIB->nama }}" id="file_nib" class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none" id="docNIB_text">Besaran file
-                        tidak boleh lebih dari 5 MB</span>
+                        tidak boleh lebih dari 10 MB</span>
                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                     <div class="invalid-feedback">
                         {{ $errors->first('dataLevelTiga.' . $key) }}
@@ -874,7 +937,7 @@ is-invalid
                         data-id="{{ temporary($duTemp->id, $itemSKU->id)?->id }}"
                         placeholder="Masukkan informasi {{ $itemSKU->nama }}" id="file_sku" class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none" id="docSKU_text">Besaran file
-                        tidak boleh lebih dari 5 MB</span>
+                        tidak boleh lebih dari 10 MB</span>
                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                     <div class="invalid-feedback">
                         {{ $errors->first('dataLevelTiga.' . $key) }}
@@ -904,7 +967,7 @@ is-invalid
                         placeholder="Masukkan informasi {{ $itemNPWP->nama }}" class="form-control limit-size"
                         id="docNPWP_upload_file">
                     <span class="invalid-tooltip" style="display: none" id="docNPWP_text">Besaran file
-                        tidak boleh lebih dari 5 MB</span>
+                        tidak boleh lebih dari 10 MB</span>
                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                     <div class="invalid-feedback">
                         {{ $errors->first('dataLevelTiga.' . $key) }}
@@ -991,7 +1054,7 @@ is-invalid
                         placeholder="Masukkan informasi {{ $item->nama }}" class="form-control limit-size"
                         id="{{ $idLevelDua }}">
                     <span class="invalid-tooltip" style="display: none">Besaran file tidak
-                        boleh lebih dari 5 MB</span>
+                        boleh lebih dari 10 MB</span>
                     <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $item->id)?->opsi_text
                         }}</span>
                 </div>
@@ -1182,7 +1245,7 @@ is-invalid
                             placeholder="Masukkan informasi {{ $itemTiga->nama }}[]" class="form-control limit-size"
                             id="{{ $idLevelTiga }}">
                         <span class="invalid-tooltip" style="display: none">Besaran file
-                            tidak boleh lebih dari 5 MB</span>
+                            tidak boleh lebih dari 10 MB</span>
                         <span class="filename" style="display: inline;">{{ $tempData->opsi_text }}</span>
                     </div>
                     @if (in_array(trim($itemTiga->nama), $multipleFiles))
@@ -1209,7 +1272,7 @@ is-invalid
                             data-id="{{ temporary($duTemp->id, $itemTiga->id)?->id }}"
                             placeholder="Masukkan informasi {{ $itemTiga->nama }}" class="form-control limit-size">
                         <span class="invalid-tooltip" style="display: none">Besaran file
-                            tidak boleh lebih dari 5 MB</span>
+                            tidak boleh lebih dari 10 MB</span>
                         <span class="filename" style="display: inline;">{{ temporary($duTemp->id,
                             $itemTiga->id)?->opsi_text }}</span>
                     </div>
@@ -1358,7 +1421,7 @@ is-invalid
                     placeholder="Masukkan informasi {{ $itemEmpat->nama }}" class="form-control limit-size"
                     id="{{ $idLevelEmpat }}">
                 <span class="invalid-tooltip" style="display: none">Besaran file tidak
-                    boleh lebih dari 5 MB</span>
+                    boleh lebih dari 10 MB</span>
                 <span class="filename" style="display: inline;">{{ temporary($duTemp->id, $itemEmpat->id)?->opsi_text
                     }}</span>
             </div>
@@ -1726,7 +1789,7 @@ is-invalid
         <label for="">{{ $itemKTPIs->nama }}</label>
             <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
             <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" id="Foto_KTP_Istri" data-id="{{ temporary($duTemp->id, $itemKTPIs->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size">
-            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
             @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                 <div class="invalid-feedback">
                     {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1738,7 +1801,7 @@ is-invalid
         <label for="">{{ $itemKTPSu->nama }}</label>
             <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
             <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" id="Foto_KTP_Suami" data-id="{{ temporary($duTemp->id, $itemKTPSu->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size">
-            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
             @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                 <div class="invalid-feedback">
                     {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1752,7 +1815,7 @@ is-invalid
             <label for="">{{ $itemKTPNas->nama }}</label>
             <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
             <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPNas->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-control limit-size">
-            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
             @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                 <div class="invalid-feedback">
                     {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1764,7 +1827,7 @@ is-invalid
         // Limit Upload
         $('.limit-size').on('change', function() {
             var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-            if (size > 5) {
+            if (size > 10) {
                 $(this).next().css({
                     "display": "block"
                 });
@@ -1792,7 +1855,7 @@ is-invalid
         <label for="">{{ $itemKTPIs->nama }}</label>
             <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
             <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" id="Foto_KTP_Istri" data-id="{{ temporary($duTemp->id, $itemKTPIs->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size">
-            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
             @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                 <div class="invalid-feedback">
                     {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1804,7 +1867,7 @@ is-invalid
         <label for="">{{ $itemKTPSu->nama }}</label>
             <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
             <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" id="Foto_KTP_Suami" data-id="{{ temporary($duTemp->id, $itemKTPSu->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size">
-            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
             @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                 <div class="invalid-feedback">
                     {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1818,7 +1881,7 @@ is-invalid
             <label for="">{{ $itemKTPNas->nama }}</label>
             <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
             <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="{{ temporary($duTemp->id, $itemKTPNas->id)?->id }}" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-control limit-size">
-            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
             @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                 <div class="invalid-feedback">
                     {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1831,7 +1894,7 @@ is-invalid
         // Limit Upload
         $('.limit-size').on('change', function() {
             var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-            if (size > 5) {
+            if (size > 10) {
                 $(this).next().css({
                     "display": "block"
                 });
@@ -2063,7 +2126,7 @@ is-invalid
                                 <label>${valItem.nama}</label>
                                 <input type="hidden" name="id_item_file[${valItem.id}]" value="${valItem.id}" id="" class="input">
                                 <input type="file" name="upload_file[${valItem.id}]" data-id="" class="form-control limit-size">
-                                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
                                 <span class="filename" style="display: inline;"></span>
                             </div>`);
                             } else {
@@ -2199,7 +2262,7 @@ is-invalid
                                             placeholder="Masukkan informasi ${valItem.nama}"
                                             class="form-control limit-size" id="${valItem.nama.toString().replaceAll(" ", "_").toLowerCase()}"
                                             value="{{$tempData->opsi_text}}">
-                                            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                                            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
                                         <span class="filename" style="display: inline;">{{ $tempData->opsi_text }}</span>
                                     </div>
                                     <div class="col-1">
@@ -2223,7 +2286,7 @@ is-invalid
                                         <input type="file" name="upload_file[${valItem.id}][]" data-id=""
                                             placeholder="Masukkan informasi ${valItem.nama}"
                                             class="form-control limit-size" id="${valItem.nama.toString().replaceAll(" ", "_").toLowerCase()}">
-                                            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                                            <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
                                         <span class="filename" style="display: inline;"></span>
                                     </div>
                                     <div class="col-1">
@@ -2317,7 +2380,7 @@ is-invalid
         // Limit Upload
         $('.limit-size').on('change', function() {
             var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-            if (size > 5) {
+            if (size > 10) {
                 $(this).next().css({
                     "display": "block"
                 });
@@ -2777,7 +2840,7 @@ is-invalid
     $('.limit-size').on('change', function() {
         var size = (this.files[0].size / 1024 / 1024).toFixed(2)
         //console.log(size);
-        if (size > 5) {
+        if (size > 10) {
             $(this).next().css({
                 "display": "block"
             });
@@ -3225,7 +3288,7 @@ is-invalid
                                                 // console.log(formula)
                                                 var result = calculateFormula(formula)
                                                 if(id_formula != 'inp_68'){
-                                                    result = formatrupiah(parseInt(result).toString())
+                                                    result = result < 0 ? `(${formatrupiah(parseInt(result).toString())})` : formatrupiah(parseInt(result).toString())
                                                 } else{
                                                     $("#repayment_capacity").val(result)
                                                 }
@@ -3295,6 +3358,7 @@ is-invalid
 
     $('#btn-perhitungan').on('click', function() { 
         $('#loading-simpan-perhitungan').hide();
+        $('#perhitunganModalAfterLoading').show();
         $("#perhitunganModal").modal("show");
         calcForm();
      });
@@ -3349,32 +3413,33 @@ is-invalid
         var selectElementBulan = $("#periode").find(":selected").text();
         var selectValueElementBulan = $("#periode").val();
         var selectElementTahun = $("#periode_tahun").find(":selected").text();
+        var titlePeriode = ``;
         
         if (indexBtnSimpan == 1) {
             $('#perhitungan_kredit_with_value').append(`
+                <h5>Periode : ${selectElementBulan} - ${selectElementTahun}</h5>
                 <div class="row" id="row_perhitungan_kredit">
                 </div>
                 <div class="row" id="table_perhitungan_kredit_lev3_noparent">
                 </div>
-                <div class="card">
-                    <div class="card-body">
-                        <table class="table table-bordered" id="table_perhitungan_kredit_lev4_noparent">
-                        </table>
-                    </div>
+                <div class="row" id="row_max_pembiayaan">
+                </div>
+                <br>
+                <div class="row" id="row_plafon">
                 </div>
             `);
         }else{
             $('#perhitungan_kredit_with_value').empty();
             $('#perhitungan_kredit_with_value').append(`
+                <h5>Periode : ${selectElementBulan} - ${selectElementTahun}</h5>
                 <div class="row" id="row_perhitungan_kredit">
                 </div>
                 <div class="row" id="table_perhitungan_kredit_lev3_noparent">
                 </div>
-                <div class="card">
-                    <div class="card-body">
-                        <table class="table table-bordered" id="table_perhitungan_kredit_lev4_noparent">
-                        </table>
-                    </div>
+                <div class="row" id="row_max_pembiayaan">
+                </div>
+                <br>
+                <div class="row" id="row_plafon">
                 </div>
             `);
         }
@@ -3478,23 +3543,26 @@ is-invalid
                 var lev1Count = 0;
                 for (const element of res2.result) {
                     lev1Count += 1;
+                    titlePeriode = `Periode : ${formatBulan(resPeriode2.result[0].bulan)} - ${resPeriode2.result[0].tahun}`;
                     if (lev1Count > 1) {
-                        $('#row_perhitungan_kredit').append(`
-                            <div class="form-group col-md-12">
-                                <div class="card">
-                                    <h5 class="card-header">${element.field} periode : ${formatBulan(resPeriode2.result[0].bulan)} - ${resPeriode2.result[0].tahun}</h5>
-                                    <div class="card-body">
-                                        <table class="table table-bordered" id="lev1_count_dua">
-                                        </table>
+                        if (element.field == "Laba Rugi") {
+                            $('#row_perhitungan_kredit').append(`
+                                <div class="form-group col-md-12">
+                                    <div class="card">
+                                        <h5 class="card-header">${element.field}</h5>
+                                        <div class="card-body">
+                                            <table class="table table-bordered" id="lev1_count_dua">
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                    `   );
+                        `   );
+                        }
                     }else{
                         $('#row_perhitungan_kredit').append(`
                             <div class="form-group col-md-12">
                                 <div class="card">
-                                    <h5 class="card-header">${element.field} periode : ${formatBulan(resPeriode2.result[0].bulan)} - ${resPeriode2.result[0].tahun}</h5>
+                                    <h5 class="card-header">${element.field}</h5>
                                     <div class="card-body">
                                         <div class="row" id="lev_count_satu">
                                         </div>
@@ -3513,20 +3581,63 @@ is-invalid
                     for (const element2 of res3.result) {
                         lev2Count += 1;
                         var uniqueTableId = `itemPerhitunganKreditLev2_${element2.id}`;
-                        console.log(lev2Count);
-                        if (lev1Count > 1) {
-                            var row = $('<tr>');
-                            row.append($("<th>").text(element2.field));
-                            row.append($("<th>").text(''));
-                            if (lev2Count === 1) {
-                                row.append($("<th>").text("Sebelum Kredit"));
-                                row.append($("<th>").text("Sesudah Kredit"));
-                            }else{
-                                row.append($("<th>").attr("colspan", 2));
-                            }
-                            $('#lev1_count_dua').append(row);
-                        }else{
+                        var uniqueTableId2 = `lev1_count_dua_${element2.id}`;
 
+                        if (lev1Count > 1) {
+                            if (element.field == 'Laba Rugi') {
+                                var row = $('<tr>');
+                                row.append($("<th>").text(element2.field));
+                                row.append($("<th>").text(''));
+                                if (lev2Count === 1) {
+                                    row.append($("<th>").text("Sebelum Kredit"));
+                                    row.append($("<th>").text("Sesudah Kredit"));
+                                }else{
+                                    row.append($("<th>").attr("colspan", 2));
+                                }
+                                $('#lev1_count_dua').append(row);
+                            }else{
+                                if(element2.field != "Maksimal Pembiayaan" && element2.field != "Plafon dan Tenor"){
+                                    $('#table_perhitungan_kredit_lev3_noparent').append(`
+                                        <div class="col-md-${element2.field === 'Kebutuhan Modal Kerja' || element2.field === 'Modal Kerja Sekarang' ? `6` : `12`}">
+                                            <div class="card">
+                                                <h5 class="card-header">${element2.field}</h5>
+                                                <div class="card-body">
+                                                    <table class="table table-bordered" id="${uniqueTableId2}">
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <br>
+                                        </div>
+                                `   );
+                                }else{
+                                    if (element2.field == "Maksimal Pembiayaan") {
+                                        $('#row_max_pembiayaan').append(`
+                                            <div class="col-md-12">
+                                                <div class="card">
+                                                    <h5 class="card-header">${element2.field}</h5>
+                                                    <div class="card-body">
+                                                        <table class="table table-bordered" id="table_max_pembiayaan">
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    `   );
+                                    }else{
+                                        $('#row_plafon').append(`
+                                            <div class="col-md-12">
+                                                <div class="card">
+                                                    <h5 class="card-header">${element2.field}</h5>
+                                                    <div class="card-body">
+                                                        <table class="table table-bordered" id="table_plafon">
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    `   );
+                                    }
+                                }
+                            }
+                        }else{
                             $('#lev_count_satu').append(`
                                 <div class="form-group col-md-6">
                                     <table class="table table-bordered" id="${uniqueTableId}">
@@ -3550,34 +3661,100 @@ is-invalid
                                 var nominal = itemAspekKeuangan3.nominal;
                                 lev3Count += 1;
                                 console.log(itemAspekKeuangan3);
-
-                                if (!fieldValues.includes(fieldValue)) {
-                                    var rowLevel3 = `
-                                        <tr>
-                                            <td>${fieldValue}</td>
-                                            <td style="text-align: center">:</td>
-                                            <td>Rp ${formatRupiah(String(nominal), '')}</td>
-                                            <td>`;
-
-                                    var isFirstNominalDisplayed = false;
-                                    
-                                    res4.result.forEach(function(item) {
-                                        if (item.field === fieldValue) {
-                                            if (isFirstNominalDisplayed) {
-                                                rowLevel3 += `Rp ${formatRupiah(String(item.nominal), '')}`;
-                                            } else {
-                                                isFirstNominalDisplayed = true;
+                                if (element.field == 'Laba Rugi') {
+                                    if (!fieldValues.includes(fieldValue)) {
+                                        var rowLevel3 = `
+                                            <tr>
+                                                <td>${fieldValue}</td>
+                                                <td style="text-align: center">:</td>
+                                                <td class="text-${itemAspekKeuangan3.align}">Rp ${formatRupiah(String(nominal), '')}</td>
+                                                <td class="text-${itemAspekKeuangan3.align}">`;
+    
+                                        var isFirstNominalDisplayed = false;
+                                        
+                                        res4.result.forEach(function(item) {
+                                            if (item.field === fieldValue) {
+                                                if (isFirstNominalDisplayed) {
+                                                    rowLevel3 += `Rp ${formatRupiah(String(item.nominal), '')}`;
+                                                } else {
+                                                    isFirstNominalDisplayed = true;
+                                                }
                                             }
+                                        });
+    
+                                        rowLevel3 += `
+                                                </td>
+                                            </tr>
+                                        `;
+    
+                                        $('#lev1_count_dua').append(rowLevel3);
+                                        fieldValues.push(fieldValue);
+                                    }
+                                }else{
+                                    if(element2.field != "Maksimal Pembiayaan" && element2.field != "Plafon dan Tenor"){
+                                        $(`#${uniqueTableId2}`).append(`
+                                            <tr>
+                                                <td width="47%">${fieldValue}</td>
+                                                <td width="6%" style="text-align: center">:</td>
+                                                ${itemAspekKeuangan3.add_on === "Bulan" ? `
+                                                    <td class="text-${itemAspekKeuangan3.align}">${nominal} ${itemAspekKeuangan3.add_on}</td>
+                                                ` : `
+                                                    <td class="text-${itemAspekKeuangan3.align}">Rp ${formatRupiah(String(nominal), '')}</td>
+                                                `}
+                                                
+                                            </tr>
+                                        `);
+                                    }else{
+                                        if (element2.field == "Maksimal Pembiayaan") {
+                                            if (fieldValue != 'Kebutuhan Kredit') {
+                                                $('#table_max_pembiayaan').append(`
+                                                    <tr>
+                                                        <td width="47%">${fieldValue}</td>
+                                                        <td width="6%" style="text-align: center">:</td>
+                                                        <td class="text-${itemAspekKeuangan3.align}">Rp ${formatRupiah(String(nominal), '')}</td>
+                                                    </tr>
+                                                `);
+                                            }else{
+                                                $('#table_max_pembiayaan').after(`
+                                                    <table class="table table-borderless" style="margin: 0 auto; padding: 0 auto;">
+                                                        <tr>
+                                                            <td width="47%"></td>
+                                                            <td width="6%"></td>
+                                                            <td width="" style="padding: 0">
+                                                                <div class="d-flex w-100">
+                                                                    <div class="w-100">
+                                                                        <hr style="border: none; height: 1px; color: #333; background-color: #333;">
+                                                                    </div>
+                                                                    <div class="w-0 ms-2">
+                                                                        +
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                    <table class="table table-bordered">
+                                                        <tr>
+                                                            <td width="47%">${fieldValue}</td>
+                                                            <td width="6%" style="text-align: center">:</td>
+                                                            <td class="text-${itemAspekKeuangan3.align}">Rp ${formatRupiah(String(nominal), '')}</td>
+                                                        </tr>
+                                                    </table>
+                                                `);
+                                            }
+                                        }else{
+                                            $('#table_plafon').append(`
+                                                <tr>
+                                                    <td width="47%">${fieldValue}</td>
+                                                    <td width="6%" style="text-align: center">:</td>
+                                                    ${itemAspekKeuangan3.add_on === "Bulan" ? `
+                                                        <td class="text-${itemAspekKeuangan3.align}">${nominal} ${itemAspekKeuangan3.add_on}</td>
+                                                    ` : `
+                                                        <td class="text-${itemAspekKeuangan3.align}">Rp ${formatRupiah(String(nominal), '')}</td>
+                                                    `}
+                                                </tr>
+                                            `);
                                         }
-                                    });
-
-                                    rowLevel3 += `
-                                            </td>
-                                        </tr>
-                                    `;
-
-                                    $('#lev1_count_dua').append(rowLevel3);
-                                    fieldValues.push(fieldValue);
+                                    }
                                 }
                             });
                         }else{
@@ -3586,7 +3763,7 @@ is-invalid
                                     $(`#${uniqueTableId}`).append(`
                                         <tr>
                                             <td width='57%'>${element3.field}</td>
-                                            <td>Rp ${ formatRupiah(String(element3.nominal), '') }</td>
+                                            <td class="text-${element3.align}">Rp ${ formatRupiah(String(element3.nominal), '') }</td>
                                         </tr>
                                     `);
                                 }
@@ -3594,95 +3771,6 @@ is-invalid
                         }
                     }
                 }
-                $.ajax({
-                    url: '{{ route('pengajuan-kredit.get-data-perhitungan-kredit-lev2-noparent') }}',
-                    type: "Get",
-                    success: function(res){
-                        console.log(res);
-                        res.result.forEach(element4 => {
-                            const uniqueTableId2 = `itemPerhitunganKreditLev2_${element4.id}`;
-                            $('#table_perhitungan_kredit_lev3_noparent').append(`
-                                <div class="form-group col-md-6">
-                                    <div class="card">
-                                        <h5 class="card-header">${element4.field}</h5>
-                                        <div class="card-body">
-                                            <table class="table table-bordered" id="${uniqueTableId2}">
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            `);
-
-                            $.ajax({
-                                url: '{{ route('pengajuan-kredit.get-data-perhitungan-kredit-lev3-noparent2') }}',
-                                type: "Get",
-                                data: {
-                                    parent_id: element4.id,
-                                    id_nasabah: res1.request.idCalonNasabah,
-                                },
-                                success: function(res){
-                                    console.log(res);
-                                    res.result.forEach(element => {
-                                        $(`#${uniqueTableId2}`).append(`
-                                            <tr>
-                                                <td>${element.field}</td>
-                                                <td style="text-align: center">:</td>
-                                                <td>Rp ${formatRupiah(String(element.nominal), '')}</td>
-                                            </tr>
-                                        `);
-                                    });
-                                }
-                            });
-                        });
-                    }
-                });
-                $.ajax({
-                    url: '/get-perhitungan-kredit-lev3-noparent/' + res1.request.idCalonNasabah,
-                    type: "Get",
-                    success: function(res){
-                        console.log(res);
-                        res.result.forEach(element => {
-                            if (element.field == "Perputaran Usaha") {
-                            }else if(element.field == "Keuntungan Usaha"){
-                            }else if(element.field == "Repayment"){
-                            }else if(element.field == "Laba Setelah Kredit"){
-                            }else if(element.field == "Jangka Waktu Usulan"){
-                            }else if(element.field == "Dibulatkan"){
-                                $('#table_perhitungan_kredit_lev4_noparent').append(`
-                                    <tr>
-                                        <td>${element.field}</td>
-                                        <td style="text-align: center">:</td>
-                                        <td>${ element.nominal == null ? 0 : element.nominal }</td>
-                                    </tr>
-                                `);
-                            }else if(element.field == "Plafond usulan"){
-                                $('#table_perhitungan_kredit_lev4_noparent').append(`
-                                    <tr>
-                                        <td>${element.field}</td>
-                                        <td style="text-align: center">:</td>
-                                        <td>${ element.nominal == null ? 0 : element.nominal }</td>
-                                    </tr>
-                                `);
-                            }else if(element.field == "Jangka Waktu Kredit"){
-                                $('#table_perhitungan_kredit_lev4_noparent').append(`
-                                    <tr>
-                                        <td>${element.field}</td>
-                                        <td style="text-align: center">:</td>
-                                        <td>${ element.nominal == null ? 0 : element.nominal }</td>
-                                    </tr>
-                                `);
-                            }else{
-                                $('#table_perhitungan_kredit_lev4_noparent').append(`
-                                    <tr>
-                                        <td width="47%">${element.field}</td>
-                                        <td width="6%" style="text-align: center">:</td>
-                                        <td>Rp ${ formatRupiah(String(element.nominal == null ? 0 : element.nominal), '') }</td>
-                                    </tr>
-                                `);
-                            }
-                        });
-                    }
-                });
 
 
             } catch (error) {
@@ -3697,7 +3785,7 @@ is-invalid
             $('#loading-simpan-perhitungan').hide();
         }, 2000);
         setTimeout(function(){
-            $('#perhitunganModalAfterLoading').show();
+            $('.modal').modal('hide');
         }, 2000);
 
     });

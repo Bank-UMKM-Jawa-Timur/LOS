@@ -110,7 +110,7 @@ null => 1,
                 <input type="hidden" name="id_item_file[{{ $itemSP->id }}]" value="{{ $itemSP->id }}" id="">
                 <input type="file" name="upload_file[{{ $itemSP->id }}]" data-id=""
                     placeholder="Masukkan informasi {{ $itemSP->nama }}" class="form-control limit-size" id="foto_sp">
-                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
                 @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                 <div class="invalid-feedback">
                     {{ $errors->first('dataLevelDua.' . $key) }}
@@ -553,7 +553,7 @@ null => 1,
                         placeholder="Masukkan informasi {{ $itemNIB->nama }}" class="form-control limit-size"
                         id="file_nib">
                     <span class="invalid-tooltip" style="display: none" id="docNIB_text">Besaran file
-                        tidak boleh lebih dari 5 MB</span>
+                        tidak boleh lebih dari 10 MB</span>
                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                     <div class="invalid-feedback">
                         {{ $errors->first('dataLevelTiga.' . $key) }}
@@ -579,7 +579,7 @@ null => 1,
                         data-id="" placeholder="Masukkan informasi {{ $itemSKU->nama }}"
                         class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none" id="docSKU_text">Besaran file
-                        tidak boleh lebih dari 5 MB</span>
+                        tidak boleh lebih dari 10 MB</span>
                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                     <div class="invalid-feedback">
                         {{ $errors->first('dataLevelTiga.' . $key) }}
@@ -605,7 +605,7 @@ null => 1,
                     <input type="file" name="upload_file[{{ $itemNPWP->id }}]" id="npwp_file" data-id=""
                         placeholder="Masukkan informasi {{ $itemNPWP->nama }}" class="form-control limit-size">
                     <span class="invalid-tooltip" style="display: none" id="docNPWP_text">Besaran file
-                        tidak boleh lebih dari 5 MB</span>
+                        tidak boleh lebih dari 10 MB</span>
                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                     <div class="invalid-feedback">
                         {{ $errors->first('dataLevelTiga.' . $key) }}
@@ -803,7 +803,7 @@ null => 1,
                         <input type="hidden" name="id_item_file[{{ $item->id }}]" value="{{ $item->id }}" id="">
                         <input type="file" name="upload_file[{{ $item->id }}]" id="{{ $idLevelDua }}" data-id=""
                             placeholder="Masukkan informasi {{ $item->nama }}" class="form-control limit-size">
-                        <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15
+                        <span class="invalid-tooltip" style="display: none">Maximum upload file size is 10
                             MB</span>
                         <span class="filename" style="display: inline;"></span>
                     </div>
@@ -978,7 +978,7 @@ null => 1,
                             placeholder="Masukkan informasi {{ $itemTiga->nama }}"
                             class="form-control limit-size file-usaha" accept="image/*">
                         <span class="invalid-tooltip" style="display: none">Maximum upload
-                            file size is 15 MB</span>
+                            file size is 10 MB</span>
                         <span class="filename" style="display: inline;"></span>
                     </div>
                     <div class="col-1">
@@ -1115,7 +1115,7 @@ null => 1,
                 <input type="file" id="{{ $idLevelEmpat }}" name="upload_file[{{ $itemEmpat->id }}]" data-id=""
                     placeholder="Masukkan informasi {{ $itemEmpat->nama }}" class="form-control limit-size">
                 <span class="invalid-tooltip" style="display: none">Maximum upload file
-                    size is 15 MB</span>
+                    size is 10 MB</span>
                 <span class="filename" style="display: inline;"></span>
             </div>
             @elseif ($itemEmpat->opsi_jawaban == 'long text')
@@ -1234,9 +1234,23 @@ null => 1,
 @push('custom-script')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    // document.getElementById('file_slik').addEventListener('change', function() {
+    //     var fileInput = this;
+    //     var fileError = document.getElementById('file_slik_error');
+    //     var maxSize = 5 * 1024 * 1024;
 
-
-
+    //     if (fileInput.files.length > 0) {
+    //         var fileSize = fileInput.files[0].size;
+    //         if (fileSize > maxSize) {
+    //             fileInput.value = '';
+    //             fileError.innerText = 'Ukuran berkas melebihi 5MB.';
+    //         } else {
+    //             fileError.innerText = '';
+    //         }
+    //     }
+    // });
+</script>
+<script>
 
     //var isPincetar = "{{Request::url()}}".includes('pincetar');
     let dataAspekArr;
@@ -1300,7 +1314,7 @@ null => 1,
                     <label for="">{{ $itemKTPIs->nama }}</label>
                     <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
                     <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-control limit-size" id="foto_ktp_istri">
-                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
                             {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1312,7 +1326,7 @@ null => 1,
                         <label for="">{{ $itemKTPSu->nama }}</label>
                         <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
                         <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-control limit-size" id="foto_ktp_suami">
-                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
                         @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                             <div class="invalid-feedback">
                                 {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1327,7 +1341,7 @@ null => 1,
                     <label for="">{{ $itemKTPNas->nama }}</label>
                     <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
                     <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-control limit-size" id="foto_ktp_nasabah">
-                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
                             {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1339,7 +1353,7 @@ null => 1,
             }
             $('.limit-size').on('change', function() {
                 var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-                if (size > 5) {
+                if (size > 10) {
                     $(this).next().css({
                         "display": "block"
                     });
@@ -1505,7 +1519,7 @@ null => 1,
                                         <label>${valItem.nama}</label>
                                         <input type="hidden" name="id_item_file[${valItem.id}]" value="${valItem.id}" id="" class="input">
                                         <input type="file" name="upload_file[${valItem.id}]" data-id="" class="form-control limit-size">
-                                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                                        <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
                                         <span class="filename" style="display: inline;"></span>
                                     </div>`);
                                 } else {
@@ -1638,7 +1652,7 @@ null => 1,
                                                 <input type="file" id="${valItem.nama.toString().replaceAll(" ", "_")}" name="upload_file[${valItem.id}][]" data-id=""
                                                     placeholder="Masukkan informasi ${valItem.nama}"
                                                     class="form-control limit-size">
-                                                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                                                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
                                                 <span class="filename" style="display: inline;"></span>
                                             </div>
                                             <div class="col-1">
@@ -2120,7 +2134,7 @@ null => 1,
         // Limit Upload
         $('.limit-size').on('change', function() {
             var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-            if (size > 5) {
+            if (size > 10) {
                 $(this).next().css({
                     "display": "block"
                 });
@@ -2156,7 +2170,7 @@ null => 1,
             $clone.insertAfter(wrapper);
             $('.limit-size').on('change', function() {
                 var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-                if (size > 5) {
+                if (size > 10) {
                     $(this).next().css({
                         "display": "block"
                     });
@@ -2749,7 +2763,7 @@ null => 1,
                                                 // console.log(formula)
                                                 var result = calculateFormula(formula)
                                                 if(id_formula != 'inp_68'){
-                                                    result = formatrupiah(parseInt(result).toString())
+                                                    result = result < 0 ? `(${formatrupiah(parseInt(result).toString())})` : formatrupiah(parseInt(result).toString())
                                                 } else{
                                                     $("#repayment_capacity").val(result)
                                                 }
@@ -2811,6 +2825,7 @@ null => 1,
 
     $("#btn-perhitungan").on('click', function() {
         $('#loading-simpan-perhitungan').hide();
+        $('#perhitunganModalAfterLoading').show();
         $("#perhitunganModal").modal('show')
         calcForm()
     })
@@ -2848,34 +2863,35 @@ null => 1,
         var selectElementBulan = $("#periode").find(":selected").text();
         selectValueElementBulan = $("#periode").val();
         selectElementTahun = $("#periode_tahun").find(":selected").text();
+        var titlePeriode = ``;
         
         if (indexBtnSimpan == 1) {
             $('#perhitungan_kredit_with_value').append(`
                 <br>
+                <h5>Periode : ${selectElementBulan} - ${selectElementTahun}</h5>
                 <div class="row" id="row_perhitungan_kredit">
                 </div>
                 <div class="row" id="table_perhitungan_kredit_lev3_noparent">
                 </div>
-                <div class="card">
-                    <div class="card-body">
-                        <table class="table table-bordered" id="table_perhitungan_kredit_lev4_noparent">
-                        </table>
-                    </div>
+                <div class="row" id="row_max_pembiayaan">
+                </div>
+                <br>
+                <div class="row" id="row_plafon">
                 </div>
             `);
         }else{
             $('#perhitungan_kredit_with_value').empty();
             $('#perhitungan_kredit_with_value').append(`
                 <br>
+                <h5>Periode : ${selectElementBulan} - ${selectElementTahun}</h5>
                 <div class="row" id="row_perhitungan_kredit">
                 </div>
                 <div class="row" id="table_perhitungan_kredit_lev3_noparent">
                 </div>
-                <div class="card">
-                    <div class="card-body">
-                        <table class="table table-bordered" id="table_perhitungan_kredit_lev4_noparent">
-                        </table>
-                    </divv>
+                <div class="row" id="row_max_pembiayaan">
+                </div>
+                <br>
+                <div class="row" id="row_plafon">
                 </div>
             `);
         }
@@ -2970,22 +2986,24 @@ null => 1,
                 for (const element of res2.result) {
                     lev1Count += 1;
                     if (lev1Count > 1) {
-                        $('#row_perhitungan_kredit').append(`
-                            <div class="form-group col-md-12">
-                                <div class="card">
-                                    <h5 class="card-header">${element.field} periode : ${selectElementBulan} - ${selectElementTahun}</h5>
-                                    <div class="card-body">
-                                        <table class="table table-bordered" id="lev1_count_dua">
-                                        </table>
+                        if (element.field == "Laba Rugi") {
+                            $('#row_perhitungan_kredit').append(`
+                                <div class="form-group col-md-12">
+                                    <div class="card">
+                                        <h5 class="card-header">${element.field}</h5>
+                                        <div class="card-body">
+                                            <table class="table table-bordered" id="lev1_count_dua">
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                    `   );
+                        `   );
+                        }
                     }else{
                         $('#row_perhitungan_kredit').append(`
                             <div class="form-group col-md-12">
                                 <div class="card">
-                                    <h5 class="card-header">${element.field} periode : ${selectElementBulan} - ${selectElementTahun}</h5>
+                                    <h5 class="card-header">${element.field}</h5>
                                     <div class="card-body">
                                         <div class="row" id="lev_count_satu">
                                         </div>
@@ -3004,20 +3022,63 @@ null => 1,
                     for (const element2 of res3.result) {
                         lev2Count += 1;
                         var uniqueTableId = `itemPerhitunganKreditLev2_${element2.id}`;
-                        console.log(lev2Count);
-                        if (lev1Count > 1) {
-                            var row = $('<tr>');
-                            row.append($("<th>").text(element2.field));
-                            row.append($("<th>").text(''));
-                            if (lev2Count === 1) {
-                                row.append($("<th>").text("Sebelum Kredit"));
-                                row.append($("<th>").text("Sesudah Kredit"));
-                            }else{
-                                row.append($("<th>").attr("colspan", 2));
-                            }
-                            $('#lev1_count_dua').append(row);
-                        }else{
+                        var uniqueTableId2 = `lev1_count_dua_${element2.id}`;
 
+                        if (lev1Count > 1) {
+                            if (element.field == 'Laba Rugi') {
+                                var row = $('<tr>');
+                                row.append($("<th>").text(element2.field));
+                                row.append($("<th>").text(''));
+                                if (lev2Count === 1) {
+                                    row.append($("<th>").text("Sebelum Kredit"));
+                                    row.append($("<th>").text("Sesudah Kredit"));
+                                }else{
+                                    row.append($("<th>").attr("colspan", 2));
+                                }
+                                $('#lev1_count_dua').append(row);
+                            }else{
+                                if(element2.field != "Maksimal Pembiayaan" && element2.field != "Plafon dan Tenor"){
+                                    $('#table_perhitungan_kredit_lev3_noparent').append(`
+                                        <div class="col-md-${element2.field === 'Kebutuhan Modal Kerja' || element2.field === 'Modal Kerja Sekarang' ? `6` : `12`}">
+                                            <div class="card">
+                                                <h5 class="card-header">${element2.field}</h5>
+                                                <div class="card-body">
+                                                    <table class="table table-bordered" id="${uniqueTableId2}">
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <br>
+                                        </div>
+                                `   );
+                                }else{
+                                    if (element2.field == "Maksimal Pembiayaan") {
+                                        $('#row_max_pembiayaan').append(`
+                                            <div class="col-md-12">
+                                                <div class="card">
+                                                    <h5 class="card-header">${element2.field}</h5>
+                                                    <div class="card-body">
+                                                        <table class="table table-bordered" id="table_max_pembiayaan">
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    `   );
+                                    }else{
+                                        $('#row_plafon').append(`
+                                            <div class="col-md-12">
+                                                <div class="card">
+                                                    <h5 class="card-header">${element2.field}</h5>
+                                                    <div class="card-body">
+                                                        <table class="table table-bordered" id="table_plafon">
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                    `   );
+                                    }
+                                }
+                            }
+                        }else{
                             $('#lev_count_satu').append(`
                                 <div class="form-group col-md-6">
                                     <table class="table table-bordered" id="${uniqueTableId}">
@@ -3042,33 +3103,100 @@ null => 1,
                                 lev3Count += 1;
                                 console.log(itemAspekKeuangan3);
 
-                                if (!fieldValues.includes(fieldValue)) {
-                                    var rowLevel3 = `
-                                        <tr>
-                                            <td>${fieldValue}</td>
-                                            <td style="text-align: center">:</td>
-                                            <td>Rp ${formatRupiah(String(nominal), '')}</td>
-                                            <td>`;
-
-                                    var isFirstNominalDisplayed = false;
-                                    
-                                    res4.result.forEach(function(item) {
-                                        if (item.field === fieldValue) {
-                                            if (isFirstNominalDisplayed) {
-                                                rowLevel3 += `Rp ${formatRupiah(String(item.nominal), '')}`;
-                                            } else {
-                                                isFirstNominalDisplayed = true;
+                                if (element.field == 'Laba Rugi') {
+                                    if (!fieldValues.includes(fieldValue)) {
+                                        var rowLevel3 = `
+                                            <tr>
+                                                <td>${fieldValue}</td>
+                                                <td style="text-align: center">:</td>
+                                                <td class="text-${itemAspekKeuangan3.align}">Rp ${formatRupiah(String(nominal), '')}</td>
+                                                <td class="text-${itemAspekKeuangan3.align}">`;
+    
+                                        var isFirstNominalDisplayed = false;
+                                        
+                                        res4.result.forEach(function(item) {
+                                            if (item.field === fieldValue) {
+                                                if (isFirstNominalDisplayed) {
+                                                    rowLevel3 += `Rp ${formatRupiah(String(item.nominal), '')}`;
+                                                } else {
+                                                    isFirstNominalDisplayed = true;
+                                                }
                                             }
+                                        });
+    
+                                        rowLevel3 += `
+                                                </td>
+                                            </tr>
+                                        `;
+    
+                                        $('#lev1_count_dua').append(rowLevel3);
+                                        fieldValues.push(fieldValue);
+                                    }
+                                }else{
+                                    if(element2.field != "Maksimal Pembiayaan" && element2.field != "Plafon dan Tenor"){
+                                        $(`#${uniqueTableId2}`).append(`
+                                            <tr>
+                                                <td width="47%">${fieldValue}</td>
+                                                <td width="6%" style="text-align: center">:</td>
+                                                ${itemAspekKeuangan3.add_on === "Bulan" ? `
+                                                    <td class="text-${itemAspekKeuangan3.align}">${nominal} ${itemAspekKeuangan3.add_on}</td>
+                                                ` : `
+                                                    <td class="text-${itemAspekKeuangan3.align}">Rp ${formatRupiah(String(nominal), '')}</td>
+                                                `}
+                                                
+                                            </tr>
+                                        `);
+                                    }else{
+                                        if (element2.field == "Maksimal Pembiayaan") {
+                                            if (fieldValue != 'Kebutuhan Kredit') {
+                                                $('#table_max_pembiayaan').append(`
+                                                    <tr>
+                                                        <td width="47%">${fieldValue}</td>
+                                                        <td width="6%" style="text-align: center">:</td>
+                                                        <td class="text-${itemAspekKeuangan3.align}">Rp ${formatRupiah(String(nominal), '')}</td>
+                                                    </tr>
+                                                `);
+                                            }else{
+                                                $('#table_max_pembiayaan').after(`
+                                                    <table class="table table-borderless" style="margin: 0 auto; padding: 0 auto;">
+                                                        <tr>
+                                                            <td width="47%"></td>
+                                                            <td width="6%"></td>
+                                                            <td width="" style="padding: 0">
+                                                                <div class="d-flex w-100">
+                                                                    <div class="w-100">
+                                                                        <hr style="border: none; height: 1px; color: #333; background-color: #333;">
+                                                                    </div>
+                                                                    <div class="w-0 ms-2">
+                                                                        +
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                    <table class="table table-bordered">
+                                                        <tr>
+                                                            <td width="47%">${fieldValue}</td>
+                                                            <td width="6%" style="text-align: center">:</td>
+                                                            <td class="text-${itemAspekKeuangan3.align}">Rp ${formatRupiah(String(nominal), '')}</td>
+                                                        </tr>
+                                                    </table>
+                                                `);
+                                            }
+                                        }else{
+                                            $('#table_plafon').append(`
+                                                <tr>
+                                                    <td width="47%">${fieldValue}</td>
+                                                    <td width="6%" style="text-align: center">:</td>
+                                                    ${itemAspekKeuangan3.add_on === "Bulan" ? `
+                                                        <td class="text-${itemAspekKeuangan3.align}">${nominal} ${itemAspekKeuangan3.add_on}</td>
+                                                    ` : `
+                                                        <td class="text-${itemAspekKeuangan3.align}">Rp ${formatRupiah(String(nominal), '')}</td>
+                                                    `}
+                                                </tr>
+                                            `);
                                         }
-                                    });
-
-                                    rowLevel3 += `
-                                            </td>
-                                        </tr>
-                                    `;
-
-                                    $('#lev1_count_dua').append(rowLevel3);
-                                    fieldValues.push(fieldValue);
+                                    }
                                 }
                             });
                         }else{
@@ -3077,7 +3205,7 @@ null => 1,
                                     $(`#${uniqueTableId}`).append(`
                                         <tr>
                                             <td width='57%'>${element3.field}</td>
-                                            <td>Rp ${ formatRupiah(String(element3.nominal), '') }</td>
+                                            <td class="text-${element3.align}">Rp ${ formatRupiah(String(element3.nominal), '') }</td>
                                         </tr>
                                     `);
                                 }
@@ -3085,96 +3213,6 @@ null => 1,
                         }
                     }
                 }
-                $.ajax({
-                    url: '{{ route('pengajuan-kredit.get-data-perhitungan-kredit-lev2-noparent') }}',
-                    type: "Get",
-                    success: function(res){
-                        console.log(res);
-                        res.result.forEach(element4 => {
-                            const uniqueTableId2 = `itemPerhitunganKreditLev2_${element4.id}`;
-                            $('#table_perhitungan_kredit_lev3_noparent').append(`
-                                <div class="form-group col-md-6">
-                                    <div class="card">
-                                        <h5 class="card-header">${element4.field}</h5>
-                                        <div class="card-body">
-                                            <table class="table table-bordered" id="${uniqueTableId2}">
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            `);
-
-                            $.ajax({
-                                url: '{{ route('pengajuan-kredit.get-data-perhitungan-kredit-lev3-noparent2') }}',
-                                type: "Get",
-                                data: {
-                                    parent_id: element4.id,
-                                    id_nasabah: res1.request.idCalonNasabah,
-                                },
-                                success: function(res){
-                                    console.log(res);
-                                    res.result.forEach(element => {
-                                        $(`#${uniqueTableId2}`).append(`
-                                            <tr>
-                                                <td>${element.field}</td>
-                                                <td style="text-align: center">:</td>
-                                                <td>Rp ${formatRupiah(String(element.nominal), '')}</td>
-                                            </tr>
-                                        `);
-                                    });
-                                }
-                            });
-                        });
-                    }
-                });
-                $.ajax({
-                    url: '/get-perhitungan-kredit-lev3-noparent/' + res1.request.idCalonNasabah,
-                    type: "Get",
-                    success: function(res){
-                        console.log(res);
-                        res.result.forEach(element => {
-                            if (element.field == "Perputaran Usaha") {
-                            }else if(element.field == "Keuntungan Usaha"){
-                            }else if(element.field == "Repayment"){
-                            }else if(element.field == "Laba Setelah Kredit"){
-                            }else if(element.field == "Jangka Waktu Usulan"){
-                            }else if(element.field == "Dibulatkan"){
-                                $('#table_perhitungan_kredit_lev4_noparent').append(`
-                                    <tr>
-                                        <td>${element.field}</td>
-                                        <td style="text-align: center">:</td>
-                                        <td>${ element.nominal == null ? 0 : element.nominal }</td>
-                                    </tr>
-                                `);
-                            }else if(element.field == "Plafond usulan"){
-                                $('#table_perhitungan_kredit_lev4_noparent').append(`
-                                    <tr>
-                                        <td>${element.field}</td>
-                                        <td style="text-align: center">:</td>
-                                        <td>${ element.nominal == null ? 0 : element.nominal }</td>
-                                    </tr>
-                                `);
-                            }else if(element.field == "Jangka Waktu Kredit"){
-                                $('#table_perhitungan_kredit_lev4_noparent').append(`
-                                    <tr>
-                                        <td>${element.field}</td>
-                                        <td style="text-align: center">:</td>
-                                        <td>${ element.nominal == null ? 0 : element.nominal }</td>
-                                    </tr>
-                                `);
-                            }else{
-                                $('#table_perhitungan_kredit_lev4_noparent').append(`
-                                    <tr>
-                                        <td width="47%">${element.field}</td>
-                                        <td width="6%" style="text-align: center">:</td>
-                                        <td>Rp ${ formatRupiah(String(element.nominal == null ? 0 : element.nominal), '') }</td>
-                                    </tr>
-                                `);
-                            }
-                        });
-                    }
-                });
-
 
             } catch (error) {
                 console.error(error);
@@ -3188,7 +3226,7 @@ null => 1,
             $('#loading-simpan-perhitungan').hide();
         }, 2000);
         setTimeout(function(){
-            $('#perhitunganModalAfterLoading').show();
+            $('.modal').modal('hide');
         }, 2000);
 
     });
