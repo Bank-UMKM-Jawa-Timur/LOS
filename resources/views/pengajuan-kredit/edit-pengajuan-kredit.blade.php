@@ -686,9 +686,9 @@
                                     <div class="row">
                                         <div class="col-md-3">
                                             <input type="checkbox" name="isNpwp" id="isNpwp" class="form-control"
-                                                @if (isset($jawabanDokNPWP->opsi_text) != null) checked @endif>
+                                                @if (isset($dataDetailJawabanTextnpwp->opsi_text) != null) checked @endif>
                                             <input type="hidden" name="isNpwp" id="statusNpwp" class="form-control"
-                                                value="{{ isset($jawabanDokNPWP->opsi_text) != null ? '1' : '0' }}">
+                                                value="{{ isset($dataDetailJawabanTextnpwp->opsi_text) != null ? '1' : '0' }}">
                                         </div>
                                     </div>
                                 </div>
@@ -822,6 +822,33 @@
                                         <input type="hidden" name="id_jawaban_text[]" id="id_jawaban_npwp"
                                             value="{{ $dataDetailJawabanTextnpwp != null ? $dataDetailJawabanTextnpwp->id : null }}"
                                             @if ($dataDetailJawabanTextnpwp == null) disabled="disabled" @endif>
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        <label for="">Dokumen NPWP</label>
+                                        <input type="hidden" name="id_file_text[]" value="153" id="docNPWP_id">
+                                        @if (isset($jawabanDokNPWP->opsi_text) != null)
+                                            <input type="hidden" name="id_update_file[]" value="{{$jawabanDokNPWP->id ?? ''}}"
+                                                id="npwp_opsi_jawaban">
+                                            <label for="update_file" style="display: none"
+                                                id="docNPWPnama_file">{{ $jawabanDokNPWP->opsi_text }}</label>
+                                            <input type="file" name="update_file[]" id="docNPWP_update_file"
+                                                placeholder="Masukkan informasi Dokumen NPWP" class="form-control limit-size"
+                                                value="{{ $jawabanDokNPWP->opsi_text }}">
+
+                                            <span class="invalid-tooltip" style="display: none">Besaran file tidak
+                                                boleh lebih dari 5 MB</span>
+                                        @else
+                                            <input type="hidden" name="id_update_file[]" value="{{$jawabanDokNPWP->id ?? ''}}"
+                                                id="npwp_opsi_jawaban">
+                                            <label for="update_file" style="display: none" id="docNPWPnama_file">Belum Upload
+                                                Dokumen NPWP</label>
+                                            <input type="file" name="update_file[]" id="docNPWP_update_file"
+                                                placeholder="Masukkan informasi Dokumen NPWP" class="form-control limit-size">
+
+                                            <span class="invalid-tooltip" style="display: none">Besaran file tidak
+                                                boleh lebih dari 5 MB</span>
+                                        @endif
                                     </div>
                                 @else
                                     <div class="form-group col-md-6">
@@ -2245,6 +2272,7 @@
                 $('#id_surat_keterangan_usaha_text').attr('disabled', true);
                 $('#id_jawaban_surat_keterangan_usaha').attr('disabled', true);
                 $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
+                $('#id_jawaban_sku').attr('disabled', true);
 
                 $('#docSKU').hide();
                 $('#docSKU_id').attr('disabled', true);
