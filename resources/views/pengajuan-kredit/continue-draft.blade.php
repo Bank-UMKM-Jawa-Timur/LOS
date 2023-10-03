@@ -3267,8 +3267,12 @@ is-invalid
                                         try {
                                             $.each(formulaSplitted, function(k, replaced){
                                                 // console.log(`replaced: ${replaced}`);
-                                                var input_val = typeof $(`#${replaced}`).val() != 'undefined' && $(`#${replaced}`).val() != '' ? $(`#${replaced}`).val().replaceAll('.', '') : 0
-                                                input_val = isNaN(input_val) ? 0 : input_val
+                                                if(!isNaN(replaced)){
+                                                    var input_val = parseInt(replaced)
+                                                } else{
+                                                    var input_val = typeof $(`#${replaced}`).val() != 'undefined' && $(`#${replaced}`).val() != '' ? $(`#${replaced}`).val().replaceAll('.', '') : 0
+                                                    input_val = isNaN(input_val) ? 0 : input_val
+                                                }
                                                 // if(j == 46){
                                                 //     console.log('input val 46 ' + id + " " + formula);
                                                 //     console.log(input_val);
