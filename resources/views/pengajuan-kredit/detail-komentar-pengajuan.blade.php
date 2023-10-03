@@ -1227,15 +1227,31 @@ function getKaryawan($nip){
                                                                                 <table class="table table-bordered">
                                                                                     @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
                                                                                         @if ($itemAspekKeuangan2->field == "Plafon dan Tenor")
+                                                                                            @if ($itemAspekKeuangan3->field == "Plafon usulan" || $itemAspekKeuangan3->field == "Bunga Usulan")
+                                                                                                <tr>
+                                                                                                    <td width="47%">{{ $itemAspekKeuangan3->field }}</td>
+                                                                                                    <td width="6%" style="text-align: center">:</td>
+                                                                                                    @if ($itemAspekKeuangan3->add_on == "Bulan" || $itemAspekKeuangan3->add_on == "%")
+                                                                                                        <td class="text-{{ $itemAspekKeuangan3->align }}">{{ $itemAspekKeuangan3->nominal }} {{ $itemAspekKeuangan3->add_on }}</td>
+                                                                                                    @else
+                                                                                                        <td class="text-{{ $itemAspekKeuangan3->align }}">Rp {{ rupiah($itemAspekKeuangan3->nominal) }}</td>
+                                                                                                    @endif
+                                                                                                </tr>
+                                                                                            @endif
+                                                                                        @endif
+                                                                                    @endforeach
+                                                                                    @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
+                                                                                        @if ($itemAspekKeuangan2->field == "Plafon dan Tenor")
+                                                                                            @if ($itemAspekKeuangan3->field == "Plafon usulan" || $itemAspekKeuangan3->field == "Bunga Usulan")
+                                                                                            @else
                                                                                             <tr>
                                                                                                 <td width="47%">{{ $itemAspekKeuangan3->field }}</td>
                                                                                                 <td width="6%" style="text-align: center">:</td>
-                                                                                                @if ($itemAspekKeuangan3->add_on == "Bulan")
+                                                                                                @if ($itemAspekKeuangan3->add_on == "Bulan" || $itemAspekKeuangan3->add_on == "%")
                                                                                                     <td class="text-{{ $itemAspekKeuangan3->align }}">{{ $itemAspekKeuangan3->nominal }} {{ $itemAspekKeuangan3->add_on }}</td>
-                                                                                                @else
-                                                                                                    <td class="text-{{ $itemAspekKeuangan3->align }}">Rp {{ rupiah($itemAspekKeuangan3->nominal) }}</td>
                                                                                                 @endif
                                                                                             </tr>
+                                                                                            @endif
                                                                                         @endif
                                                                                     @endforeach
                                                                                 </table>
@@ -1258,7 +1274,7 @@ function getKaryawan($nip){
                                                 </div>
                                             </div>
                                         @endif
-                                        {{-- End --}}
+                                        {{-- End Aspek Keuangan --}}
                                     @endif
                                 @else
                                     <div class="row form-group sub pl-4">
@@ -2112,7 +2128,7 @@ function getKaryawan($nip){
                         @endphp
                         {{-- @php
                     echo "<pre>"; print_r($pendapatUsulanStaf);echo "</pre>";
-                @endphp --}}
+                    @endphp --}}
                         @foreach ($pendapatUsulanStaf as $item)
                             @if ($item->id_aspek == $itemAspek->id)
                                 <div class="alert alert-success">
@@ -2208,6 +2224,143 @@ function getKaryawan($nip){
                     </div>
                 </div>
             @endforeach
+            {{-- Summary Usulan --}}
+            <div class="card mb-3">
+                <div class="card-header bg-info color-white font-weight-bold" data-toggle="collapse" href=#cardSummaryUsulan>
+                    Summary Usulan
+                </div>
+                <div class="card-body collapse multi-collapse show" id="cardSummaryUsulan">
+                    <div class="form-group row sub mb-0" style="">
+                        <label for="staticEmail" class="col-sm-3 col-form-label font-weight-bold">
+                            Plafon Usulan</label>
+                        <label for="staticEmail" class="col-sm-1 col-form-label px-0 font-weight-bold">
+                            <div class="d-flex justify-content-end">
+                                <div style="width: 20px">
+                                    :
+                                </div>
+                            </div>
+                        </label>
+                        <div class="col">
+                            @if ($itemAspekKeuangan->field != "Laba Rugi")
+                                @php
+                                    $perhitunganKreditLev3 = \App\Models\PerhitunganKredit::rightJoin('mst_item_perhitungan_kredit', 'perhitungan_kredit.item_perhitungan_kredit_id', '=', 'mst_item_perhitungan_kredit.id')
+                                            ->where('mst_item_perhitungan_kredit.skema_kredit_limit_id', 1)
+                                            ->where('mst_item_perhitungan_kredit.level', 3)
+                                            ->where('perhitungan_kredit.pengajuan_id', $dataUmum->id)
+                                            ->get();
+                                @endphp
+                                @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
+                                    @if ($itemAspekKeuangan2->field == "Plafon dan Tenor")
+                                        @if ($itemAspekKeuangan3->field == "Plafon usulan")
+                                            <input type="text" readonly="" class="form-control-plaintext" id="staticEmail" value="Rp.{{ number_format((int) $itemAspekKeuangan3->nominal, 2, ',', '.') }}">
+                                        @endif
+                                    @endif
+                                @endforeach
+                            @endif
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group row sub mb-0" style="">
+                        <label for="staticEmail" class="col-sm-3 col-form-label font-weight-bold">
+                            Tenor Usulan</label>
+                        <label for="staticEmail" class="col-sm-1 col-form-label px-0 font-weight-bold">
+                            <div class="d-flex justify-content-end">
+                                <div style="width: 20px">
+                                    :
+                                </div>
+                            </div>
+                        </label>
+                        <div class="col">
+                            @php
+                                $perhitunganKreditLev3 = \App\Models\PerhitunganKredit::rightJoin('mst_item_perhitungan_kredit', 'perhitungan_kredit.item_perhitungan_kredit_id', '=', 'mst_item_perhitungan_kredit.id')
+                                        ->where('mst_item_perhitungan_kredit.skema_kredit_limit_id', 1)
+                                        ->where('mst_item_perhitungan_kredit.level', 3)
+                                        ->where('perhitungan_kredit.pengajuan_id', $dataUmum->id)
+                                        ->get();
+                            @endphp
+                            @foreach ($perhitunganKreditLev3 as $itemLev3)
+                                @if ($itemLev3->field == "Jangka Waktu Usulan")
+                                    <input type="text" readonly="" class="form-control-plaintext" id="staticEmail" value="{{ $itemLev3->nominal }} {{ $itemLev3->add_on }}">
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group row sub mb-0" style="">
+                        <label for="staticEmail" class="col-sm-3 col-form-label font-weight-bold">
+                            Bunga Usulan</label>
+                        <label for="staticEmail" class="col-sm-1 col-form-label px-0 font-weight-bold">
+                            <div class="d-flex justify-content-end">
+                                <div style="width: 20px">
+                                    :
+                                </div>
+                            </div>
+                        </label>
+                        <div class="col">
+                            @php
+                                $perhitunganKreditLev4 = \App\Models\PerhitunganKredit::rightJoin('mst_item_perhitungan_kredit', 'perhitungan_kredit.item_perhitungan_kredit_id', '=', 'mst_item_perhitungan_kredit.id')
+                                        ->where('mst_item_perhitungan_kredit.skema_kredit_limit_id', 1)
+                                        ->where('mst_item_perhitungan_kredit.level', 3)
+                                        ->where('perhitungan_kredit.pengajuan_id', $dataUmum->id)
+                                        ->get();
+                            @endphp
+                            @foreach ($perhitunganKreditLev4 as $itemLev4)
+                                @if ($itemLev4->field == "Bunga Usulan")
+                                    <input type="text" readonly="" class="form-control-plaintext" id="staticEmail" value="{{ $itemLev4->nominal }} {{ $itemLev4->add_on }}">
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group row sub mb-0" style="">
+                        <label for="staticEmail" class="col-sm-3 col-form-label font-weight-bold">
+                            Repayment Capacity</label>
+                        <label for="staticEmail" class="col-sm-1 col-form-label px-0 font-weight-bold">
+                            <div class="d-flex justify-content-end">
+                                <div style="width: 20px">
+                                    :
+                                </div>
+                            </div>
+                        </label>
+                        <div class="col">
+                            @foreach ($dataLevelDua as $item)
+                                @if ($item->opsi_jawaban != 'file')
+                                    @php
+                                        $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama', 'item.status_skor', 'item.is_commentable')
+                                            ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                            ->where('jawaban_text.id_pengajuan', $dataUmum->id)
+                                            ->where('jawaban_text.id_jawaban', $item->id)
+                                            ->get();
+                                    @endphp
+                                    @foreach ($dataDetailJawabanText as $itemTextDua)
+                                        @if (is_numeric($itemJawaban->option) && strlen($itemJawaban->option) > 3)
+                                        @else
+                                            <input type="text" readonly class="form-control-plaintext"
+                                            id="staticEmail" value="{{ $itemTextDua->opsi_text }} {{$itemTiga->opsi_jawaban == 'persen' ? '%' : ''}} {{$item->opsi_jawaban == 'persen' ? '%' : ''}}">
+                                        @endif
+                                    @endforeach
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group row sub mb-0" style="">
+                        <label for="staticEmail" class="col-sm-3 col-form-label font-weight-bold">
+                            Ratio Coverage</label>
+                        <label for="staticEmail" class="col-sm-1 col-form-label px-0 font-weight-bold">
+                            <div class="d-flex justify-content-end">
+                                <div style="width: 20px">
+                                    :
+                                </div>
+                            </div>
+                        </label>
+                        <div class="col">
+                            <input type="text" readonly="" class="form-control-plaintext" id="staticEmail" value="-">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{-- End Summary Usulan --}}
             @php
                 $userPBO = \App\Models\User::select('id')
                     ->where('id_cabang', $dataUmum->id_cabang)

@@ -358,6 +358,7 @@
                                     $lev3 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
                                                                                 ->where('level', 3)
                                                                                 ->where('parent_id', $item2->id)
+                                                                                ->orderBy('sequence', 'asc')
                                                                                 ->get();
                                   @endphp
                                   <div class="col-md-12">
@@ -367,7 +368,7 @@
                                         <div class="row m-0">
                                           @foreach ($lev3 as $item3)
                                             @if (!$item3->is_hidden)
-                                                <div class=" @if($item2->inline) col @else col-md-12 @endif">
+                                            <div class=" @if($item2->inline) col @elseif( !$item->is_card_show && count($lev3) > 1) col-md-6 @else col-md-12 @endif">
                                                   <div class="form-group">
                                                       <label for="inp_{{$item3->id}}" class="font-weight-semibold">{{$item3->field}}</label>  
                                                       <div class="input-group">

@@ -2742,8 +2742,12 @@ null => 1,
                                         try {
                                             $.each(formulaSplitted, function(k, replaced){
                                                 // console.log(`replaced: ${replaced}`);
-                                                var input_val = typeof $(`#${replaced}`).val() != 'undefined' && $(`#${replaced}`).val() != '' ? $(`#${replaced}`).val().replaceAll('.', '') : 0
-                                                input_val = isNaN(input_val) ? 0 : input_val
+                                                if(!isNaN(replaced)){
+                                                    var input_val = parseInt(replaced)
+                                                } else{
+                                                    var input_val = typeof $(`#${replaced}`).val() != 'undefined' && $(`#${replaced}`).val() != '' ? $(`#${replaced}`).val().replaceAll('.', '') : 0
+                                                    input_val = isNaN(input_val) ? 0 : input_val
+                                                }
                                                 // if(j == 46){
                                                 //     console.log('input val 46 ' + id + " " + formula);
                                                 //     console.log(input_val);
@@ -3096,6 +3100,7 @@ null => 1,
                         var angsuranPokokSetiapBulanCount = 0;
                         var lev3Count = 0;
                         var maxRowCount = 0;
+                        var lengthPlafonUsulan = 0;
                         if (lev1Count > 1) {
                             $.each(res4.result, function(index, itemAspekKeuangan3) {
                                 var fieldValue = itemAspekKeuangan3.field;
@@ -3184,17 +3189,32 @@ null => 1,
                                                 `);
                                             }
                                         }else{
-                                            $('#table_plafon').append(`
-                                                <tr>
-                                                    <td width="47%">${fieldValue}</td>
-                                                    <td width="6%" style="text-align: center">:</td>
-                                                    ${itemAspekKeuangan3.add_on === "Bulan" ? `
-                                                        <td class="text-${itemAspekKeuangan3.align}">${nominal} ${itemAspekKeuangan3.add_on}</td>
-                                                    ` : `
-                                                        <td class="text-${itemAspekKeuangan3.align}">Rp ${formatRupiah(String(nominal), '')}</td>
-                                                    `}
-                                                </tr>
-                                            `);
+                                            lengthPlafonUsulan += 1;
+                                            if (fieldValue != "Bunga Usulan") {
+                                                $('#table_plafon').append(`
+                                                    <tr id="plafon_tenor${lengthPlafonUsulan}">
+                                                        <td width="47%">${fieldValue}</td>
+                                                        <td width="6%" style="text-align: center">:</td>
+                                                        ${itemAspekKeuangan3.add_on === "Bulan" || itemAspekKeuangan3.add_on === "%" ? `
+                                                            <td class="text-${itemAspekKeuangan3.align}">${nominal} ${itemAspekKeuangan3.add_on}</td>
+                                                        ` : `
+                                                            <td class="text-${itemAspekKeuangan3.align}">Rp ${formatRupiah(String(nominal), '')}</td>
+                                                        `}
+                                                    </tr>
+                                                `);
+                                            }else{
+                                                $('#plafon_tenor1').after(`
+                                                    <tr id="plafon_tenor${lengthPlafonUsulan}">
+                                                        <td width="47%">${fieldValue}</td>
+                                                        <td width="6%" style="text-align: center">:</td>
+                                                        ${itemAspekKeuangan3.add_on === "Bulan" || itemAspekKeuangan3.add_on === "%" ? `
+                                                            <td class="text-${itemAspekKeuangan3.align}">${nominal} ${itemAspekKeuangan3.add_on}</td>
+                                                        ` : `
+                                                            <td class="text-${itemAspekKeuangan3.align}">Rp ${formatRupiah(String(nominal), '')}</td>
+                                                        `}
+                                                    </tr>
+                                                `);
+                                            }
                                         }
                                     }
                                 }

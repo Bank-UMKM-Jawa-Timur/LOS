@@ -172,6 +172,13 @@
                 @endphp
                 <tr>
                     <td style="width: 40%; padding-left: 17px">{{ $loop->iteration }}. <u><strong>{{ $itemAspek->nama }}</strong></u></td>
+                    @if ($itemAspek->nama == "Aspek Keuangan")
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                    @else
+                    @endif
                 </tr>
                 <tr></tr>
                 @php
@@ -184,8 +191,6 @@
                     @foreach ($dataLevelDua as $item)
                         {{-- Aspek Keuangan --}}
                         @if ($item->nama == "Repayment Capacity")
-                        <br>    
-                        <br>    
                             @php
                             $lev1 = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)->where('level', 1)->get();
 
@@ -391,7 +396,7 @@
                                 @endif
                                 <p></p>
                             @endforeach
-                            <table style="border-collapse: collapse; width: 100%;">
+                            <table style="border-collapse: collapse; width: 100%; border: 1px solid black;">
                                 @foreach ($lev1 as $itemAspekKeuangan)
                                     @php
                                     $lev1Count += 1;
@@ -414,45 +419,66 @@
                                                 @if ($itemAspekKeuangan2->field == "Maksimal Pembiayaan")
                                                     <tr>
                                                         <th colspan="" style="border-top: 1px solid black; border-bottom: 1px solid black; text-align: left">{{ $itemAspekKeuangan2->field }}</th>
-                                                        <th style="border: 1px solid black;"></th>
-                                                        <th style="border-bottom: 1px solid black; border-top: 1px solid black;">Nominal</th>
-                                                        <th style="color: transparent">Nominal</th>
+                                                        <th style="border-left: 1px solid black; border-bottom: 1px solid black;"></th>
+                                                        <th colspan="2" style="width: 49%; border-bottom: 1px solid black; border-top: 1px solid black;">Nominal</th>
+                                                        {{-- <th style="border-bottom: 1px solid black; color: transparent">Nominal</th> --}}
                                                     </tr>
                                                     @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
                                                         @if ($itemAspekKeuangan2->field == "Maksimal Pembiayaan")
                                                             @if ($itemAspekKeuangan3->field != "Kebutuhan Kredit")
                                                                 <tr>
                                                                     <td style="padding-left: 7px;">{{ $itemAspekKeuangan3->field }}</td>
-                                                                    <td style="text-align: center">:</td>
-                                                                    <td style="text-align: {{ $itemAspekKeuangan3->align }}">Rp {{ formatRupiah($itemAspekKeuangan3->nominal) }}</td>
+                                                                    <td style="text-align: center; border-left: 1px solid black;"></td>
+                                                                    <td style="text-align: {{ $itemAspekKeuangan3->align }}">{{ formatRupiah($itemAspekKeuangan3->nominal) }}</td>
                                                                 </tr>
                                                             @else 
                                                                 <tr>
                                                                     <td style="padding-left: 7px;">{{ $itemAspekKeuangan3->field }}</td>
-                                                                    <td style="text-align: center">:</td>
-                                                                    <td style="border-top: 1px solid black; text-align: {{ $itemAspekKeuangan3->align }}">Rp {{ formatRupiah($itemAspekKeuangan3->nominal) }}</td>
+                                                                    <td style="border-left: 1px solid black;"></td>
+                                                                    <td style="border-top: 1px solid black; text-align: {{ $itemAspekKeuangan3->align }}">{{ formatRupiah($itemAspekKeuangan3->nominal) }}</td>
                                                                 </tr>
                                                             @endif
                                                         @endif
                                                     @endforeach
                                                 @elseif ($itemAspekKeuangan2->field == "Plafon dan Tenor")
                                                     <tr>
-                                                        <th colspan="2" style="text-align: left">{{ $itemAspekKeuangan2->field }}</th>
+                                                        <th style="text-align: left; border-left: 1px solid black; border-top: 1px solid black;">{{ $itemAspekKeuangan2->field }}</th>
+                                                        <th style="border-left: 1px solid black;"></th>
                                                         <th></th>
                                                     </tr>
                                                     @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
                                                         @if ($itemAspekKeuangan2->field == "Plafon dan Tenor")
-                                                            <tr>
-                                                                @if ($itemAspekKeuangan3->add_on == "Bulan")
-                                                                    <td style="padding-left: 20px;">{{ $itemAspekKeuangan3->field }}</td>
-                                                                    <td style="text-align: center">:</td>
-                                                                    <td class="text-{{ $itemAspekKeuangan3->align }}">{{ $itemAspekKeuangan3->nominal }} {{ $itemAspekKeuangan3->add_on }}</td>
-                                                                @else
-                                                                    <td style="padding-left: 7px;">{{ $itemAspekKeuangan3->field }}</td>
-                                                                    <td style="text-align: center">:</td>
-                                                                    <td style="text-align: {{ $itemAspekKeuangan3->align }}">Rp {{ formatRupiah($itemAspekKeuangan3->nominal) }}</td>
-                                                                @endif
-                                                            </tr>
+                                                            @if ($itemAspekKeuangan3->field == "Plafon usulan" || $itemAspekKeuangan3->field == "Bunga Usulan")
+                                                                <tr>
+                                                                    @if ($itemAspekKeuangan3->add_on == "Bulan" || $itemAspekKeuangan3->add_on == "%")
+                                                                        <td style="padding-left: 20px;">{{ $itemAspekKeuangan3->field }}</td>
+                                                                        <td style="border-left: 1px solid black;"></td>
+                                                                        <td class="text-{{ $itemAspekKeuangan3->align }}">{{ $itemAspekKeuangan3->nominal }} {{ $itemAspekKeuangan3->add_on }}</td>
+                                                                    @else
+                                                                        <td style="padding-left: 7px;">{{ $itemAspekKeuangan3->field }}</td>
+                                                                        <td style="border-left: 1px solid black;"></td>
+                                                                        <td style="text-align: {{ $itemAspekKeuangan3->align }}">{{ formatRupiah($itemAspekKeuangan3->nominal) }}</td>
+                                                                    @endif
+                                                                </tr>
+                                                            @endif
+                                                        @endif
+                                                    @endforeach
+                                                    @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
+                                                        @if ($itemAspekKeuangan2->field == "Plafon dan Tenor")
+                                                            @if ($itemAspekKeuangan3->field == "Plafon usulan" || $itemAspekKeuangan3->field == "Bunga Usulan")
+                                                            @else
+                                                                <tr>
+                                                                    @if ($itemAspekKeuangan3->add_on == "Bulan" || $itemAspekKeuangan3->add_on == "%")
+                                                                        <td style="padding-left: 20px;">{{ $itemAspekKeuangan3->field }}</td>
+                                                                        <td style="border-left: 1px solid black;"></td>
+                                                                        <td class="text-{{ $itemAspekKeuangan3->align }}">{{ $itemAspekKeuangan3->nominal }} {{ $itemAspekKeuangan3->add_on }}</td>
+                                                                    @else
+                                                                        <td style="padding-left: 7px;">{{ $itemAspekKeuangan3->field }}</td>
+                                                                        <td style="border-left: 1px solid black;"></td>
+                                                                        <td style="text-align: {{ $itemAspekKeuangan3->align }}">{{ formatRupiah($itemAspekKeuangan3->nominal) }}</td>
+                                                                    @endif
+                                                                </tr>
+                                                            @endif
                                                         @endif
                                                     @endforeach
                                                 @endif
