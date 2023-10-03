@@ -443,7 +443,7 @@
                                                     @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
                                                         @if ($itemAspekKeuangan2->field == "Plafon dan Tenor")
                                                             <tr>
-                                                                @if ($itemAspekKeuangan3->add_on == "Bulan")
+                                                                @if ($itemAspekKeuangan3->add_on == "Bulan" || $itemAspekKeuangan3->add_on == "%")
                                                                     <td style="padding-left: 20px;">{{ $itemAspekKeuangan3->field }}</td>
                                                                     <td style="text-align: center">:</td>
                                                                     <td class="text-{{ $itemAspekKeuangan3->align }}">{{ $itemAspekKeuangan3->nominal }} {{ $itemAspekKeuangan3->add_on }}</td>
