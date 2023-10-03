@@ -959,7 +959,7 @@
                                                                             <tr>
                                                                                 <td width="47%">{{ $itemAspekKeuangan3->field }}</td>
                                                                                 <td width="6%" style="text-align: center">:</td>
-                                                                                @if ($itemAspekKeuangan3->add_on == "Bulan")
+                                                                                @if ($itemAspekKeuangan3->add_on == "Bulan" || $itemAspekKeuangan3->add_on == "%")
                                                                                     <td class="text-{{ $itemAspekKeuangan3->align }}">{{ $itemAspekKeuangan3->nominal }} {{ $itemAspekKeuangan3->add_on }}</td>
                                                                                 @else
                                                                                     <td class="text-{{ $itemAspekKeuangan3->align }}">Rp {{ rupiah($itemAspekKeuangan3->nominal) }}</td>

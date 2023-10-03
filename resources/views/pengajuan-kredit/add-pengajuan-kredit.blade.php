@@ -3188,7 +3188,7 @@ null => 1,
                                                 <tr>
                                                     <td width="47%">${fieldValue}</td>
                                                     <td width="6%" style="text-align: center">:</td>
-                                                    ${itemAspekKeuangan3.add_on === "Bulan" ? `
+                                                    ${itemAspekKeuangan3.add_on === "Bulan" || itemAspekKeuangan3.add_on === "%" ? `
                                                         <td class="text-${itemAspekKeuangan3.align}">${nominal} ${itemAspekKeuangan3.add_on}</td>
                                                     ` : `
                                                         <td class="text-${itemAspekKeuangan3.align}">Rp ${formatRupiah(String(nominal), '')}</td>
