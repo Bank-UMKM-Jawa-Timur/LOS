@@ -1227,15 +1227,31 @@ function getKaryawan($nip){
                                                                                 <table class="table table-bordered">
                                                                                     @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
                                                                                         @if ($itemAspekKeuangan2->field == "Plafon dan Tenor")
+                                                                                            @if ($itemAspekKeuangan3->field == "Plafon usulan" || $itemAspekKeuangan3->field == "Bunga Usulan")
+                                                                                                <tr>
+                                                                                                    <td width="47%">{{ $itemAspekKeuangan3->field }}</td>
+                                                                                                    <td width="6%" style="text-align: center">:</td>
+                                                                                                    @if ($itemAspekKeuangan3->add_on == "Bulan" || $itemAspekKeuangan3->add_on == "%")
+                                                                                                        <td class="text-{{ $itemAspekKeuangan3->align }}">{{ $itemAspekKeuangan3->nominal }} {{ $itemAspekKeuangan3->add_on }}</td>
+                                                                                                    @else
+                                                                                                        <td class="text-{{ $itemAspekKeuangan3->align }}">Rp {{ rupiah($itemAspekKeuangan3->nominal) }}</td>
+                                                                                                    @endif
+                                                                                                </tr>
+                                                                                            @endif
+                                                                                        @endif
+                                                                                    @endforeach
+                                                                                    @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
+                                                                                        @if ($itemAspekKeuangan2->field == "Plafon dan Tenor")
+                                                                                            @if ($itemAspekKeuangan3->field == "Plafon usulan" || $itemAspekKeuangan3->field == "Bunga Usulan")
+                                                                                            @else
                                                                                             <tr>
                                                                                                 <td width="47%">{{ $itemAspekKeuangan3->field }}</td>
                                                                                                 <td width="6%" style="text-align: center">:</td>
                                                                                                 @if ($itemAspekKeuangan3->add_on == "Bulan" || $itemAspekKeuangan3->add_on == "%")
                                                                                                     <td class="text-{{ $itemAspekKeuangan3->align }}">{{ $itemAspekKeuangan3->nominal }} {{ $itemAspekKeuangan3->add_on }}</td>
-                                                                                                @else
-                                                                                                    <td class="text-{{ $itemAspekKeuangan3->align }}">Rp {{ rupiah($itemAspekKeuangan3->nominal) }}</td>
                                                                                                 @endif
                                                                                             </tr>
+                                                                                            @endif
                                                                                         @endif
                                                                                     @endforeach
                                                                                 </table>

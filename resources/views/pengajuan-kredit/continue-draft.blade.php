@@ -821,15 +821,31 @@ is-invalid
                                                     <table class="table table-bordered">
                                                         @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
                                                             @if ($itemAspekKeuangan2->field == "Plafon dan Tenor")
+                                                                @if ($itemAspekKeuangan3->field == "Plafon usulan" || $itemAspekKeuangan3->field == "Bunga Usulan")
+                                                                    <tr>
+                                                                        <td width="47%">{{ $itemAspekKeuangan3->field }}</td>
+                                                                        <td width="6%" style="text-align: center">:</td>
+                                                                        @if ($itemAspekKeuangan3->add_on == "Bulan" || $itemAspekKeuangan3->add_on == "%")
+                                                                            <td class="text-{{ $itemAspekKeuangan3->align }}">{{ $itemAspekKeuangan3->nominal }} {{ $itemAspekKeuangan3->add_on }}</td>
+                                                                        @else
+                                                                            <td class="text-{{ $itemAspekKeuangan3->align }}">Rp {{ rupiah($itemAspekKeuangan3->nominal) }}</td>
+                                                                        @endif
+                                                                    </tr>
+                                                                @endif
+                                                            @endif
+                                                        @endforeach
+                                                        @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
+                                                            @if ($itemAspekKeuangan2->field == "Plafon dan Tenor")
+                                                                @if ($itemAspekKeuangan3->field == "Plafon usulan" || $itemAspekKeuangan3->field == "Bunga Usulan")
+                                                                @else
                                                                 <tr>
                                                                     <td width="47%">{{ $itemAspekKeuangan3->field }}</td>
                                                                     <td width="6%" style="text-align: center">:</td>
                                                                     @if ($itemAspekKeuangan3->add_on == "Bulan" || $itemAspekKeuangan3->add_on == "%")
                                                                         <td class="text-{{ $itemAspekKeuangan3->align }}">{{ $itemAspekKeuangan3->nominal }} {{ $itemAspekKeuangan3->add_on }}</td>
-                                                                    @else
-                                                                        <td class="text-{{ $itemAspekKeuangan3->align }}">Rp {{ formatRupiah($itemAspekKeuangan3->nominal) }}</td>
                                                                     @endif
                                                                 </tr>
+                                                                @endif
                                                             @endif
                                                         @endforeach
                                                     </table>
@@ -3659,6 +3675,7 @@ is-invalid
                         var angsuranPokokSetiapBulanCount = 0;
                         var lev3Count = 0;
                         var maxRowCount = 0;
+                        var lengthPlafonUsulan = 0;
                         if (lev1Count > 1) {
                             $.each(res4.result, function(index, itemAspekKeuangan3) {
                                 var fieldValue = itemAspekKeuangan3.field;
@@ -3746,17 +3763,32 @@ is-invalid
                                                 `);
                                             }
                                         }else{
-                                            $('#table_plafon').append(`
-                                                <tr>
-                                                    <td width="47%">${fieldValue}</td>
-                                                    <td width="6%" style="text-align: center">:</td>
-                                                    ${itemAspekKeuangan3.add_on === "Bulan" || itemAspekKeuangan3.add_on === "%" ? `
-                                                        <td class="text-${itemAspekKeuangan3.align}">${nominal} ${itemAspekKeuangan3.add_on}</td>
-                                                    ` : `
-                                                        <td class="text-${itemAspekKeuangan3.align}">Rp ${formatRupiah(String(nominal), '')}</td>
-                                                    `}
-                                                </tr>
-                                            `);
+                                            lengthPlafonUsulan += 1;
+                                            if (fieldValue != "Bunga Usulan") {
+                                                $('#table_plafon').append(`
+                                                    <tr id="plafon_tenor${lengthPlafonUsulan}">
+                                                        <td width="47%">${fieldValue}</td>
+                                                        <td width="6%" style="text-align: center">:</td>
+                                                        ${itemAspekKeuangan3.add_on === "Bulan" || itemAspekKeuangan3.add_on === "%" ? `
+                                                            <td class="text-${itemAspekKeuangan3.align}">${nominal} ${itemAspekKeuangan3.add_on}</td>
+                                                        ` : `
+                                                            <td class="text-${itemAspekKeuangan3.align}">Rp ${formatRupiah(String(nominal), '')}</td>
+                                                        `}
+                                                    </tr>
+                                                `);
+                                            }else{
+                                                $('#plafon_tenor1').after(`
+                                                    <tr id="plafon_tenor${lengthPlafonUsulan}">
+                                                        <td width="47%">${fieldValue}</td>
+                                                        <td width="6%" style="text-align: center">:</td>
+                                                        ${itemAspekKeuangan3.add_on === "Bulan" || itemAspekKeuangan3.add_on === "%" ? `
+                                                            <td class="text-${itemAspekKeuangan3.align}">${nominal} ${itemAspekKeuangan3.add_on}</td>
+                                                        ` : `
+                                                            <td class="text-${itemAspekKeuangan3.align}">Rp ${formatRupiah(String(nominal), '')}</td>
+                                                        `}
+                                                    </tr>
+                                                `);
+                                            }
                                         }
                                     }
                                 }
