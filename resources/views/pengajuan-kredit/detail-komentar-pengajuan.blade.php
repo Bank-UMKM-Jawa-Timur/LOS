@@ -1140,10 +1140,27 @@ function getKaryawan($nip){
                                                                             </tr>
                                                                             @foreach ($perhitunganKreditLev3 as $itemAspek3)
                                                                             @if ($itemAspek3->field != "Total Angsuran")
-                                                                                <tr>
-                                                                                    <td width='57%'>{{ $itemAspek3->field }}</td>
-                                                                                    <td class="text-{{ $itemAspek3->align }}">Rp {{ rupiah($itemAspek3->nominal) }}</td>
-                                                                                </tr>
+                                                                                @if ($itemAspek3->field == "Total")
+                                                                                    <table class="table table-bordered">
+                                                                                        <div class="d-flex w-100" style="padding: 0">
+                                                                                            <div class="w-100">
+                                                                                                <hr style="border: none; height: 1px; color: #333; background-color: #333;">
+                                                                                            </div>
+                                                                                            <div class="w-0 ms-2">
+                                                                                                +
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <tr>
+                                                                                            <td width='57%'>{{ $itemAspek3->field }}</td>
+                                                                                            <td class="text-{{ $itemAspek3->align }}">Rp {{ rupiah($itemAspek3->nominal) }}</td>
+                                                                                        </tr>
+                                                                                    </table>
+                                                                                @else
+                                                                                    <tr>
+                                                                                        <td width='57%'>{{ $itemAspek3->field }}</td>
+                                                                                        <td class="text-{{ $itemAspek3->align }}">Rp {{ rupiah($itemAspek3->nominal) }}</td>
+                                                                                    </tr>
+                                                                                @endif
                                                                             @endif
                                                                             @endforeach
                                                                         </table>
@@ -1228,7 +1245,7 @@ function getKaryawan($nip){
                                                                                 <table class="table table-bordered">
                                                                                     @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
                                                                                         @if ($itemAspekKeuangan2->field == "Plafon dan Tenor")
-                                                                                            @if ($itemAspekKeuangan3->field == "Plafon usulan" || $itemAspekKeuangan3->field == "Bunga Usulan (P.a)")
+                                                                                            @if ($itemAspekKeuangan3->field == "Plafon usulan" || $itemAspekKeuangan3->field == "Bunga Anuitas Usulan (P.a)")
                                                                                                 <tr>
                                                                                                     <td width="47%">{{ $itemAspekKeuangan3->field }}</td>
                                                                                                     <td width="6%" style="text-align: center">:</td>
@@ -1243,7 +1260,7 @@ function getKaryawan($nip){
                                                                                     @endforeach
                                                                                     @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
                                                                                         @if ($itemAspekKeuangan2->field == "Plafon dan Tenor")
-                                                                                            @if ($itemAspekKeuangan3->field == "Plafon usulan" || $itemAspekKeuangan3->field == "Bunga Usulan (P.a)")
+                                                                                            @if ($itemAspekKeuangan3->field == "Plafon usulan" || $itemAspekKeuangan3->field == "Bunga Anuitas Usulan (P.a)")
                                                                                             @else
                                                                                             <tr>
                                                                                                 <td width="47%">{{ $itemAspekKeuangan3->field }}</td>
@@ -2289,7 +2306,7 @@ function getKaryawan($nip){
                     <hr>
                     <div class="form-group row sub mb-0" style="">
                         <label for="staticEmail" class="col-sm-3 col-form-label font-weight-bold">
-                            Bunga Usulan (P.a)</label>
+                            Bunga Anuitas Usulan (P.a)</label>
                         <label for="staticEmail" class="col-sm-1 col-form-label px-0 font-weight-bold">
                             <div class="d-flex justify-content-end">
                                 <div style="width: 20px">
@@ -2306,7 +2323,7 @@ function getKaryawan($nip){
                                         ->get();
                             @endphp
                             @foreach ($perhitunganKreditLev4 as $itemLev4)
-                                @if ($itemLev4->field == "Bunga Usulan (P.a)")
+                                @if ($itemLev4->field == "Bunga Anuitas Usulan (P.a)")
                                     <input type="text" readonly="" class="form-control-plaintext" id="staticEmail" value="{{ $itemLev4->nominal }} {{ $itemLev4->add_on }}">
                                 @endif
                             @endforeach

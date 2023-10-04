@@ -869,10 +869,27 @@
                                                         </tr>
                                                         @foreach ($perhitunganKreditLev3 as $itemAspek3)
                                                         @if ($itemAspek3->field != "Total Angsuran")
-                                                            <tr>
-                                                                <td width='57%'>{{ $itemAspek3->field }}</td>
-                                                                <td class="text-{{ $itemAspek3->align }}">Rp {{ rupiah($itemAspek3->nominal) }}</td>
-                                                            </tr>
+                                                            @if ($itemAspek3->field == "Total")
+                                                                <table class="table table-bordered">
+                                                                    <div class="d-flex w-100" style="padding: 0">
+                                                                        <div class="w-100">
+                                                                            <hr style="border: none; height: 1px; color: #333; background-color: #333;">
+                                                                        </div>
+                                                                        <div class="w-0 ms-2">
+                                                                            +
+                                                                        </div>
+                                                                    </div>
+                                                                    <tr>
+                                                                        <td width='57%'>{{ $itemAspek3->field }}</td>
+                                                                        <td class="text-{{ $itemAspek3->align }}">Rp {{ rupiah($itemAspek3->nominal) }}</td>
+                                                                    </tr>
+                                                                </table>
+                                                            @else
+                                                                <tr>
+                                                                    <td width='57%'>{{ $itemAspek3->field }}</td>
+                                                                    <td class="text-{{ $itemAspek3->align }}">Rp {{ rupiah($itemAspek3->nominal) }}</td>
+                                                                </tr>
+                                                            @endif
                                                         @endif
                                                         @endforeach
                                                     </table>
@@ -957,7 +974,7 @@
                                                                 <table class="table table-bordered">
                                                                     @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
                                                                         @if ($itemAspekKeuangan2->field == "Plafon dan Tenor")
-                                                                            @if ($itemAspekKeuangan3->field == "Plafon usulan" || $itemAspekKeuangan3->field == "Bunga Usulan (P.a)")
+                                                                            @if ($itemAspekKeuangan3->field == "Plafon usulan" || $itemAspekKeuangan3->field == "Bunga Anuitas Usulan (P.a)")
                                                                                 <tr>
                                                                                     <td width="47%">{{ $itemAspekKeuangan3->field }}</td>
                                                                                     <td width="6%" style="text-align: center">:</td>
@@ -972,7 +989,7 @@
                                                                     @endforeach
                                                                     @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
                                                                         @if ($itemAspekKeuangan2->field == "Plafon dan Tenor")
-                                                                            @if ($itemAspekKeuangan3->field == "Plafon usulan" || $itemAspekKeuangan3->field == "Bunga Usulan (P.a)")
+                                                                            @if ($itemAspekKeuangan3->field == "Plafon usulan" || $itemAspekKeuangan3->field == "Bunga Anuitas Usulan (P.a)")
                                                                             @else
                                                                             <tr>
                                                                                 <td width="47%">{{ $itemAspekKeuangan3->field }}</td>

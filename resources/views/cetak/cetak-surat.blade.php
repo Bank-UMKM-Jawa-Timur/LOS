@@ -375,7 +375,24 @@
                                         }
                                         @endphp
                                         @for ($i = 0; $i < $maxRowCount; $i++)
-                                            <tr>
+                                            {{-- @if ($i <= 4) --}}
+                                                <tr>
+                                                    @php 
+                                                    $lev3Count = 0; 
+                                                    @endphp
+                                                    @foreach ($perhitunganKreditLev3List as $perhitunganKreditLev3)
+                                                        @php 
+                                                        $lev3Count += 1;
+                                                        @endphp
+                                                        @if ($i < count($perhitunganKreditLev3))
+                                                            @if ($perhitunganKreditLev3[$i]->field != "Total Angsuran")
+                                                            <td style="padding-left: 10px">{{ $perhitunganKreditLev3[$i]->field }} {{ $i }}</td>
+                                                            <td style="border-right: 1px solid black; padding-right: 7px; text-align: {{ $perhitunganKreditLev3[$i]->align }}">{{ formatRupiah($perhitunganKreditLev3[$i]->nominal) }}</td>
+                                                            @endif
+                                                        @endif
+                                                    @endforeach
+                                                </tr>
+                                            {{-- @else
                                                 @php 
                                                 $lev3Count = 0; 
                                                 @endphp
@@ -385,12 +402,12 @@
                                                     @endphp
                                                     @if ($i < count($perhitunganKreditLev3))
                                                         @if ($perhitunganKreditLev3[$i]->field != "Total Angsuran")
-                                                        <td style="padding-left: 10px">{{ $perhitunganKreditLev3[$i]->field }}</td>
+                                                        <td style="padding-left: 10px">{{ $perhitunganKreditLev3[$i]->field }} {{ $i }}</td>
                                                         <td style="border-right: 1px solid black; padding-right: 7px; text-align: {{ $perhitunganKreditLev3[$i]->align }}">{{ formatRupiah($perhitunganKreditLev3[$i]->nominal) }}</td>
                                                         @endif
                                                     @endif
                                                 @endforeach
-                                            </tr>
+                                            @endif --}}
                                         @endfor
                                     </table>
                                 @endif
@@ -448,7 +465,7 @@
                                                     </tr>
                                                     @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
                                                         @if ($itemAspekKeuangan2->field == "Plafon dan Tenor")
-                                                            @if ($itemAspekKeuangan3->field == "Plafon usulan" || $itemAspekKeuangan3->field == "Bunga Usulan (P.a)")
+                                                            @if ($itemAspekKeuangan3->field == "Plafon usulan" || $itemAspekKeuangan3->field == "Bunga Anuitas Usulan (P.a)")
                                                                 <tr>
                                                                     @if ($itemAspekKeuangan3->add_on == "Bulan" || $itemAspekKeuangan3->add_on == "%")
                                                                         <td style="padding-left: 20px;">{{ $itemAspekKeuangan3->field }}</td>
@@ -465,7 +482,7 @@
                                                     @endforeach
                                                     @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
                                                         @if ($itemAspekKeuangan2->field == "Plafon dan Tenor")
-                                                            @if ($itemAspekKeuangan3->field == "Plafon usulan" || $itemAspekKeuangan3->field == "Bunga Usulan (P.a)")
+                                                            @if ($itemAspekKeuangan3->field == "Plafon usulan" || $itemAspekKeuangan3->field == "Bunga Anuitas Usulan (P.a)")
                                                             @else
                                                                 <tr>
                                                                     @if ($itemAspekKeuangan3->add_on == "Bulan" || $itemAspekKeuangan3->add_on == "%")
