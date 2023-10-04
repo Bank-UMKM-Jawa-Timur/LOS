@@ -3047,10 +3047,6 @@ null => 1,
                             $('#loading-simpan-perhitungan').show();
                             $('#perhitunganModalAfterLoading').hide();
                         },
-                        success: function (response3) { 
-                            // $('#loading-simpan-perhitungan').hide();
-                            // $('.modal').modal('hide');
-                         }
                     });
                     console.log(res3);
                     var lev2Count = 0;
