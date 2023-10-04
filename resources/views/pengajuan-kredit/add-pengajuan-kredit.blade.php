@@ -3217,7 +3217,7 @@ null => 1,
                                             }
                                         }else{
                                             lengthPlafonUsulan += 1;
-                                            if (fieldValue != "Bunga(P.a) Usulan") {
+                                            if (fieldValue != "Bunga Usulan (P.a)") {
                                                 $('#table_plafon').append(`
                                                     <tr id="plafon_tenor${lengthPlafonUsulan}">
                                                         <td width="47%">${fieldValue}</td>
