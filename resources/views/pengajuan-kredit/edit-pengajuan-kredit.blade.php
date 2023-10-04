@@ -1086,7 +1086,8 @@
                                                                                 <td class="text-{{ $itemAspekKeuangan3->align }}">
                                                                                     @foreach ($perhitunganKreditLev3 as $item3)
                                                                                         @if ($item3->field == $fieldValue)
-                                                                                            @if ($item3->nominal != $nominal)
+                                                                                            {{-- @if ($item3->nominal != $nominal) --}}
+                                                                                            @if ($loop->iteration % 2 == 0)
                                                                                                 Rp {{ rupiah($item3->nominal) }}<br>
                                                                                             @endif
                                                                                         @endif
@@ -1213,7 +1214,7 @@
                                                                             <table class="table table-bordered">
                                                                                 @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
                                                                                     @if ($itemAspekKeuangan2->field == "Plafon dan Tenor")
-                                                                                        @if ($itemAspekKeuangan3->field == "Plafon usulan" || $itemAspekKeuangan3->field == "Bunga Usulan")
+                                                                                        @if ($itemAspekKeuangan3->field == "Plafon usulan" || $itemAspekKeuangan3->field == "Bunga(P.a) Usulan")
                                                                                             <tr>
                                                                                                 <td width="47%">{{ $itemAspekKeuangan3->field }}</td>
                                                                                                 <td width="6%" style="text-align: center">:</td>
@@ -1228,7 +1229,7 @@
                                                                                 @endforeach
                                                                                 @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
                                                                                     @if ($itemAspekKeuangan2->field == "Plafon dan Tenor")
-                                                                                        @if ($itemAspekKeuangan3->field == "Plafon usulan" || $itemAspekKeuangan3->field == "Bunga Usulan")
+                                                                                        @if ($itemAspekKeuangan3->field == "Plafon usulan" || $itemAspekKeuangan3->field == "Bunga(P.a) Usulan")
                                                                                         @else
                                                                                         <tr>
                                                                                             <td width="47%">{{ $itemAspekKeuangan3->field }}</td>
@@ -4127,7 +4128,7 @@
             function getDataPerhitunganKreditLev2(element2, idClnNasabah) {
                 return new Promise(function(resolve, reject) {
                     $.ajax({
-                        url: "{{ route('pengajuan-kredit.get-data-perhitungan-kredit-lev3') }}",
+                        url: "{{ route('pengajuan-kredit.get-data-perhitungan-kredit-lev3-edit') }}",
                         type: "GET",
                         data: {
                             parent_id: element2.id,
@@ -4149,7 +4150,7 @@
                         }
                     });
                 });
-            }    
+            }  
 
             async function getDataPerhitunganKreditLev1() {
                 try {
@@ -4232,6 +4233,7 @@
                             $('#perhitunganModalAfterLoading').hide();
                         },
                     });
+                    console.log(resPeriode2);
 
                     var lev1Count = 0;
                     for (const element of res2.result) {
@@ -4347,6 +4349,7 @@
                             }
 
                             const res4 = await getDataPerhitunganKreditLev2(element2, res1.request.idNasabah);
+                            console.log("RES 4 = " + res1.request.idNasabah);
                             console.log(res4);
 
                             var angsuranPokokSetiapBulanCount = 0;
@@ -4442,7 +4445,7 @@
                                                 }
                                             }else{
                                                 lengthPlafonUsulan += 1;
-                                                if (fieldValue != "Bunga Usulan") {
+                                                if (fieldValue != "Bunga(P.a) Usulan") {
                                                     $('#table_plafon').append(`
                                                         <tr id="plafon_tenor${lengthPlafonUsulan}">
                                                             <td width="47%">${fieldValue}</td>
