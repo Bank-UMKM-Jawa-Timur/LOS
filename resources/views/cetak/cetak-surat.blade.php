@@ -448,7 +448,7 @@
                                                     </tr>
                                                     @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
                                                         @if ($itemAspekKeuangan2->field == "Plafon dan Tenor")
-                                                            @if ($itemAspekKeuangan3->field == "Plafon usulan" || $itemAspekKeuangan3->field == "Bunga Usulan")
+                                                            @if ($itemAspekKeuangan3->field == "Plafon usulan" || $itemAspekKeuangan3->field == "Bunga Usulan (P.a)")
                                                                 <tr>
                                                                     @if ($itemAspekKeuangan3->add_on == "Bulan" || $itemAspekKeuangan3->add_on == "%")
                                                                         <td style="padding-left: 20px;">{{ $itemAspekKeuangan3->field }}</td>
@@ -465,7 +465,7 @@
                                                     @endforeach
                                                     @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
                                                         @if ($itemAspekKeuangan2->field == "Plafon dan Tenor")
-                                                            @if ($itemAspekKeuangan3->field == "Plafon usulan" || $itemAspekKeuangan3->field == "Bunga Usulan")
+                                                            @if ($itemAspekKeuangan3->field == "Plafon usulan" || $itemAspekKeuangan3->field == "Bunga Usulan (P.a)")
                                                             @else
                                                                 <tr>
                                                                     @if ($itemAspekKeuangan3->add_on == "Bulan" || $itemAspekKeuangan3->add_on == "%")

@@ -822,7 +822,7 @@ is-invalid
                                                     <table class="table table-bordered">
                                                         @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
                                                             @if ($itemAspekKeuangan2->field == "Plafon dan Tenor")
-                                                                @if ($itemAspekKeuangan3->field == "Plafon usulan" || $itemAspekKeuangan3->field == "Bunga(P.a) Usulan")
+                                                                @if ($itemAspekKeuangan3->field == "Plafon usulan" || $itemAspekKeuangan3->field == "Bunga Usulan (P.a)")
                                                                     <tr>
                                                                         <td width="47%">{{ $itemAspekKeuangan3->field }}</td>
                                                                         <td width="6%" style="text-align: center">:</td>
@@ -837,7 +837,7 @@ is-invalid
                                                         @endforeach
                                                         @foreach ($perhitunganKreditLev3 as $itemAspekKeuangan3)
                                                             @if ($itemAspekKeuangan2->field == "Plafon dan Tenor")
-                                                                @if ($itemAspekKeuangan3->field == "Plafon usulan" || $itemAspekKeuangan3->field == "Bunga(P.a) Usulan")
+                                                                @if ($itemAspekKeuangan3->field == "Plafon usulan" || $itemAspekKeuangan3->field == "Bunga Usulan (P.a)")
                                                                 @else
                                                                 <tr>
                                                                     <td width="47%">{{ $itemAspekKeuangan3->field }}</td>
@@ -3800,7 +3800,7 @@ is-invalid
                                             }
                                         }else{
                                             lengthPlafonUsulan += 1;
-                                            if (fieldValue != "Bunga(P.a) Usulan") {
+                                            if (fieldValue != "Bunga Usulan (P.a)") {
                                                 $('#table_plafon').append(`
                                                     <tr id="plafon_tenor${lengthPlafonUsulan}">
                                                         <td width="47%">${fieldValue}</td>
