@@ -4040,7 +4040,7 @@
 
             $('#peringatan-pengajuan').empty();
             $('#perhitungan_kredit_with_value_without_update').empty();
-            $('#loading-simpan-perhitungan').show();
+            // $('#loading-simpan-perhitungan').show();
 
             var selectElementBulan = $("#periode").find(":selected").text();
             selectValueElementBulan = $("#periode").val();
@@ -4099,14 +4099,22 @@
             function getDataPerhitunganKreditLev2(element2, idClnNasabah) {
                 return new Promise(function(resolve, reject) {
                     $.ajax({
-                        url: '/get-perhitungan-kredit-lev3-edit',
+                        url: "{{ route('pengajuan-kredit.get-data-perhitungan-kredit-lev3') }}",
                         type: "GET",
                         data: {
                             parent_id: element2.id,
                             id_nasabah: idClnNasabah,
                         },
+                        beforeSend: function() {
+                            $('#loading-simpan-perhitungan').show();
+                            $('#perhitunganModalAfterLoading').hide();
+                        },
                         success: function(res) {
                             resolve(res);
+                            setTimeout(function(){
+                                $('#loading-simpan-perhitungan').hide();
+                                $('.modal').modal('hide');
+                            }, 1000);
                         },
                         error: function(err) {
                             reject(err);
@@ -4121,17 +4129,29 @@
                         url: "{{ route('pengajuan-kredit.edit-perhitungan-kredit') }}",
                         type: "POST",
                         data: data,
+                        beforeSend: function() {
+                            $('#loading-simpan-perhitungan').show();
+                            $('#perhitunganModalAfterLoading').hide();
+                        },
                     });
                     console.log(res1);
                     const res2 = await $.ajax({
                         url: '{{ route('pengajuan-kredit.get-data-perhitungan-kredit-lev1') }}',
                         type: "GET",
+                        beforeSend: function() {
+                            $('#loading-simpan-perhitungan').show();
+                            $('#perhitunganModalAfterLoading').hide();
+                        },
                     });
                     console.log(res2)
 
                     const resPeriode = await $.ajax({
                         url: '/get-periode-perhitungan-kredit-edit/' + res1.request.idNasabah,
                         type: "GET",
+                        beforeSend: function() {
+                            $('#loading-simpan-perhitungan').show();
+                            $('#perhitunganModalAfterLoading').hide();
+                        },
                     });
 
                     if (resPeriode.length === 0) {
@@ -4142,6 +4162,10 @@
                                 perhitungan_kredit_id: res1.lastId,
                                 bulan: selectValueElementBulan,
                                 tahun: selectElementTahun,
+                            },
+                            beforeSend: function() {
+                                $('#loading-simpan-perhitungan').show();
+                                $('#perhitunganModalAfterLoading').hide();
                             },
                             success: function (response) {
                                 console.log(response);
@@ -4159,6 +4183,10 @@
                                 bulan: selectValueElementBulan,
                                 tahun: selectElementTahun,
                             },
+                            beforeSend: function() {
+                                $('#loading-simpan-perhitungan').show();
+                                $('#perhitunganModalAfterLoading').hide();
+                            },
                             success: function (response2) {
                                 console.log("PERIODE = " + JSON.stringify(response2));
                             },
@@ -4171,6 +4199,10 @@
                     const resPeriode2 = await $.ajax({
                         url: '/get-periode-perhitungan-kredit-edit/' + res1.request.idNasabah,
                         type: "GET",
+                        beforeSend: function() {
+                            $('#loading-simpan-perhitungan').show();
+                            $('#perhitunganModalAfterLoading').hide();
+                        },
                     });
 
                     var lev1Count = 0;
@@ -4208,6 +4240,10 @@
                         const res3 = await $.ajax({
                             url: '/get-perhitungan-kredit-lev2/' + element.id,
                             type: "GET",
+                            beforeSend: function() {
+                                $('#loading-simpan-perhitungan').show();
+                                $('#perhitunganModalAfterLoading').hide();
+                            },
                         });
                         console.log(res3);
                         var lev2Count = 0;
@@ -4425,18 +4461,21 @@
 
                 } catch (error) {
                     console.error(error);
+                    $('#perhitunganModalAfterLoading').hide();
+                    $('#loading-simpan-perhitungan').hide();
+                    $('.modal').modal('hide');
                 }
             }
 
 
             getDataPerhitunganKreditLev1();
-            $('#perhitunganModalAfterLoading').hide();
-            setTimeout(function(){
-                $('#loading-simpan-perhitungan').hide();
-            }, 2000);
-            setTimeout(function(){
-                $('.modal').modal('hide');
-            }, 2000);
+            // $('#perhitunganModalAfterLoading').hide();
+            // setTimeout(function(){
+            //     $('#loading-simpan-perhitungan').hide();
+            // }, 2000);
+            // setTimeout(function(){
+            //     $('.modal').modal('hide');
+            // }, 2000);
 
         });
     </script>
