@@ -150,7 +150,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/save-data-perhitungan-temp', [PengajuanKreditController::class, 'saveDataPerhitunganTemp'])->name('pengajuan-kredit.save-data-perhitungan-temp');
     Route::post('/edit-perhitungan-kredit', [PengajuanKreditController::class, 'editPerhitunganKredit'])->name('pengajuan-kredit.edit-perhitungan-kredit');
     Route::get('/get-perhitungan-kredit-lev1', [PengajuanKreditController::class, 'getPerhitunganKreditLev1'])->name('pengajuan-kredit.get-data-perhitungan-kredit-lev1');
-    Route::get('/get-perhitungan-kredit-lev2/{parent_id}', [PengajuanKreditController::class, 'getPerhitunganKreditLev2'])->name('pengajuan-kredit.get-data-perhitungan-kredit-lev2');
+    Route::get('/get-perhitungan-kredit-lev2', [PengajuanKreditController::class, 'getPerhitunganKreditLev2'])->name('pengajuan-kredit.get-data-perhitungan-kredit-lev2');
     Route::get('/get-perhitungan-kredit-lev3', [PengajuanKreditController::class, 'getDataPerhitunganKreditLev3'])->name('pengajuan-kredit.get-data-perhitungan-kredit-lev3');
     Route::get('/get-perhitungan-kredit-lev3-edit', [PengajuanKreditController::class, 'getDataPerhitunganKreditLev3Edit'])->name('pengajuan-kredit.get-data-perhitungan-kredit-lev3-edit');
     Route::get('/get-perhitungan-kredit-lev3-noparent/{idClnNasabah}', [PengajuanKreditController::class, 'getDataPerhitunganKreditLev3NoParent']);
@@ -159,9 +159,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/get-perhitungan-kredit-lev3-noparent2', [PengajuanKreditController::class, 'getDataPerhitunganKreditLev3NoParent2'])->name('pengajuan-kredit.get-data-perhitungan-kredit-lev3-noparent2');
     Route::get('/get-perhitungan-kredit-lev3-noparent2-edit', [PengajuanKreditController::class, 'getDataPerhitunganKreditLev3NoParent2Edit'])->name('pengajuan-kredit.get-data-perhitungan-kredit-lev3-noparent2-edit');
     Route::post('/save-data-periode-aspek-keuangan', [PengajuanKreditController::class, 'saveDataPeriodeAspekKeuangan'])->name('pengajuan-kredit.save-data-periode-aspek-keuangan');
-    Route::put('/update-data-periode-aspek-keuangan/{id}', [PengajuanKreditController::class, 'updateDataPeriodeAspekKeuangan']);
-    Route::get('/get-periode-perhitungan-kredit-edit/{pengajuan_id}', [PengajuanKreditController::class, 'getPeriodeAspekKeuanganEdit']);
-    Route::get('/get-periode-perhitungan-kredit-draft/{calon_nasabah_id}', [PengajuanKreditController::class, 'getPeriodeAspekKeuanganDraft']);
+    Route::put('/update-data-periode-aspek-keuangan', [PengajuanKreditController::class, 'updateDataPeriodeAspekKeuangan'])->name('pengajuan-kredit.update-data-periode-aspek-keuangan');
+    Route::get('/get-periode-perhitungan-kredit-edit', [PengajuanKreditController::class, 'getPeriodeAspekKeuanganEdit'])->name('get-periode-perhitungan-kredit-edit');
+    Route::get('/get-periode-perhitungan-kredit-draft', [PengajuanKreditController::class, 'getPeriodeAspekKeuanganDraft'])->name('get-periode-perhitungan-kredit-draft');
 });
 
 require __DIR__ . '/auth.php';

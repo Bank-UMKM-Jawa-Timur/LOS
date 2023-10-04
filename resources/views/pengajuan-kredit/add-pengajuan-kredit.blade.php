@@ -2990,7 +2990,7 @@ null => 1,
                 }else{
                     console.log(periodePerhitunganKreditId);
                     $.ajax({
-                        url: '{{ route('pengajuan-kredit.update-data-periode-aspek-keuangan') }}' + '/' + periodePerhitunganKreditId,
+                        url: '{{ route('pengajuan-kredit.update-data-periode-aspek-keuangan') }}' + '?id=' + periodePerhitunganKreditId,
                         type: 'PUT',
                         data: {
                             perhitungan_kredit_id: periodePerhitunganKreditLastId,
@@ -3041,7 +3041,7 @@ null => 1,
                     }
 
                     const res3 = await $.ajax({
-                        url: '/get-perhitungan-kredit-lev2/' + element.id,
+                        url: '{{ route('pengajuan-kredit.get-data-perhitungan-kredit-lev2') }}?parent_id=' + element.id,
                         type: "GET",
                         beforeSend: function() {
                             $('#loading-simpan-perhitungan').show();

@@ -4146,7 +4146,7 @@
                     console.log(res2)
 
                     const resPeriode = await $.ajax({
-                        url: '/get-periode-perhitungan-kredit-edit/' + res1.request.idNasabah,
+                        url: '{{ route('get-periode-perhitungan-kredit-edit') }}?pengajuan_id=' + res1.request.idNasabah,
                         type: "GET",
                         beforeSend: function() {
                             $('#loading-simpan-perhitungan').show();
@@ -4176,7 +4176,7 @@
                         });
                     }else{
                         $.ajax({
-                            url: '/update-data-periode-aspek-keuangan/' + resPeriode.result[0].id,
+                            url: '{{ route("pengajuan-kredit.update-data-periode-aspek-keuangan") }}?id' + resPeriode.result[0].id,
                             type: 'PUT',
                             data: {
                                 perhitungan_kredit_id: resPeriode.result[0].perhitungan_kredit_id,
@@ -4197,7 +4197,7 @@
                     }
 
                     const resPeriode2 = await $.ajax({
-                        url: '/get-periode-perhitungan-kredit-edit/' + res1.request.idNasabah,
+                        url: '{{ route('get-periode-perhitungan-kredit-edit') }}?pengajuan_id=' + res1.request.idNasabah,
                         type: "GET",
                         beforeSend: function() {
                             $('#loading-simpan-perhitungan').show();
@@ -4238,7 +4238,7 @@
                         }
 
                         const res3 = await $.ajax({
-                            url: '/get-perhitungan-kredit-lev2/' + element.id,
+                            url: '{{ route('pengajuan-kredit.get-data-perhitungan-kredit-lev2') }}?parent_id=' + element.id,
                             type: "GET",
                             beforeSend: function() {
                                 $('#loading-simpan-perhitungan').show();

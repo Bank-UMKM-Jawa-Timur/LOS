@@ -2793,10 +2793,9 @@ is-invalid
         let omzetPenjualan = parseInt($('#omzet_penjualan').val().split('.').join(''));
         let persentaseNetIncome = parseInt($('#persentase_net_income').val()) / 100;
         let rencanaPeningkatan = parseInt($('#rencana_peningkatan').val()) / 100;
-        let installment = parseInt($('#installment').val().split('.').join(''));
+        // let installment = parseInt($('#installment').val().split('.').join(''));
 
-        let repaymentCapacity = parseFloat(persentaseNetIncome * omzetPenjualan * (1 + rencanaPeningkatan) /
-            installment); //cek rumusnya lagi
+        let repaymentCapacity = parseFloat(persentaseNetIncome * omzetPenjualan * (1 + rencanaPeningkatan)); //cek rumusnya lagi
 
         $('#repayment_capacity').val(repaymentCapacity.toFixed(2));
 
@@ -3532,7 +3531,7 @@ is-invalid
                 console.log(res2);
 
                 const resPeriode = await $.ajax({
-                    url: '/get-periode-perhitungan-kredit-draft/' + res1.request.idCalonNasabah,
+                    url: '{{ route('get-periode-perhitungan-kredit-draft') }}?calon_nasabah_id=' + res1.request.idCalonNasabah,
                     type: "GET",
                     beforeSend: function() {
                         $('#loading-simpan-perhitungan').show();
@@ -3563,7 +3562,7 @@ is-invalid
                     });
                 }else{
                     $.ajax({
-                        url: '/update-data-periode-aspek-keuangan/' + resPeriode.result[0].id,
+                        url: '{{ route('pengajuan-kredit.update-data-periode-aspek-keuangan') }}?id' + resPeriode.result[0].id,
                         type: 'PUT',
                         data: {
                             perhitungan_kredit_id: resPeriode.result[0].perhitungan_kredit_id,
@@ -3584,7 +3583,7 @@ is-invalid
                 }
 
                 const resPeriode2 = await $.ajax({
-                    url: '/get-periode-perhitungan-kredit-draft/' + res1.request.idCalonNasabah,
+                    url: '{{ route('get-periode-perhitungan-kredit-draft') }}?calon_nasabah_id=' + res1.request.idCalonNasabah,
                     type: "GET",
                     beforeSend: function() {
                         $('#loading-simpan-perhitungan').show();
@@ -3625,7 +3624,7 @@ is-invalid
                     }
 
                     const res3 = await $.ajax({
-                        url: '/get-perhitungan-kredit-lev2/' + element.id,
+                        url: '{{ route('pengajuan-kredit.get-data-perhitungan-kredit-lev2') }}?parent_id=' + element.id,
                         type: "GET",
                         beforeSend: function() {
                             $('#loading-simpan-perhitungan').show();

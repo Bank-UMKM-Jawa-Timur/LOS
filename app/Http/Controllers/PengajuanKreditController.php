@@ -1368,7 +1368,7 @@ class PengajuanKreditController extends Controller
             }
 
             // dd($request->id_nasabah);
-            PerhitunganKredit::where('temp_calon_nasabah_id', $request->id_nasabah)
+            PerhitunganKredit::where('temp_calon_nasabah_id', $tempNasabah->id)
                 ->update([
                     'pengajuan_id' => $id_pengajuan,
                     'temp_calon_nasabah_id' => null
@@ -4356,7 +4356,8 @@ class PengajuanKreditController extends Controller
         return response()->json(['result' => $data]);
     }
 
-    public function getPerhitunganKreditLev2($parent_id){
+    public function getPerhitunganKreditLev2(Request $request){
+        $parent_id = $request->parent_id;
         $data = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
                                                                     ->where('level', 2)
                                                                     ->where('parent_id', $parent_id)
@@ -4455,7 +4456,8 @@ class PengajuanKreditController extends Controller
         ]);
     }
 
-    public function updateDataPeriodeAspekKeuangan(Request $request, $id) {
+    public function updateDataPeriodeAspekKeuangan(Request $request) {
+        $id = $request->id;
         $data = [
             'perhitungan_kredit_id' => $request->perhitungan_kredit_id,
             'bulan' => $request->bulan,
@@ -4468,7 +4470,8 @@ class PengajuanKreditController extends Controller
         ]);
     }
     
-    public function getPeriodeAspekKeuanganEdit($pengajuan_id) {
+    public function getPeriodeAspekKeuanganEdit(Request $request) {
+        $pengajuan_id = $request->pengajuan_id;
         $getPeriode = \App\Models\PeriodeAspekKeuangan::join('perhitungan_kredit', 'periode_aspek_keuangan.perhitungan_kredit_id', '=', 'perhitungan_kredit.id')
                                             ->where('perhitungan_kredit.pengajuan_id', $pengajuan_id)
                                             ->select('periode_aspek_keuangan.id','periode_aspek_keuangan.perhitungan_kredit_id',
@@ -4477,7 +4480,8 @@ class PengajuanKreditController extends Controller
         return response()->json(['result' => $getPeriode]);
     }
 
-    public function getPeriodeAspekKeuanganDraft($calon_nasabah_id) {
+    public function getPeriodeAspekKeuanganDraft(Request $request) {
+        $calon_nasabah_id = $request->calon_nasabah_id;
         $getPeriode = \App\Models\PeriodeAspekKeuangan::join('perhitungan_kredit', 'periode_aspek_keuangan.perhitungan_kredit_id', '=', 'perhitungan_kredit.id')
                                             ->where('perhitungan_kredit.temp_calon_nasabah_id', $calon_nasabah_id)
                                             ->select('periode_aspek_keuangan.id','periode_aspek_keuangan.perhitungan_kredit_id',
