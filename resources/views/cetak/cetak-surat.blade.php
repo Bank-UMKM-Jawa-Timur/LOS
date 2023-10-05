@@ -375,24 +375,7 @@
                                         }
                                         @endphp
                                         @for ($i = 0; $i < $maxRowCount; $i++)
-                                            {{-- @if ($i <= 4) --}}
-                                                <tr>
-                                                    @php 
-                                                    $lev3Count = 0; 
-                                                    @endphp
-                                                    @foreach ($perhitunganKreditLev3List as $perhitunganKreditLev3)
-                                                        @php 
-                                                        $lev3Count += 1;
-                                                        @endphp
-                                                        @if ($i < count($perhitunganKreditLev3))
-                                                            @if ($perhitunganKreditLev3[$i]->field != "Total Angsuran")
-                                                            <td style="padding-left: 10px">{{ $perhitunganKreditLev3[$i]->field }} {{ $i }}</td>
-                                                            <td style="border-right: 1px solid black; padding-right: 7px; text-align: {{ $perhitunganKreditLev3[$i]->align }}">{{ formatRupiah($perhitunganKreditLev3[$i]->nominal) }}</td>
-                                                            @endif
-                                                        @endif
-                                                    @endforeach
-                                                </tr>
-                                            {{-- @else
+                                            <tr>
                                                 @php 
                                                 $lev3Count = 0; 
                                                 @endphp
@@ -402,13 +385,29 @@
                                                     @endphp
                                                     @if ($i < count($perhitunganKreditLev3))
                                                         @if ($perhitunganKreditLev3[$i]->field != "Total Angsuran")
-                                                        <td style="padding-left: 10px">{{ $perhitunganKreditLev3[$i]->field }} {{ $i }}</td>
-                                                        <td style="border-right: 1px solid black; padding-right: 7px; text-align: {{ $perhitunganKreditLev3[$i]->align }}">{{ formatRupiah($perhitunganKreditLev3[$i]->nominal) }}</td>
+                                                            @if ($perhitunganKreditLev3[$i]->field != "Total")
+                                                                <td style="padding-left: 10px">{{ $perhitunganKreditLev3[$i]->field }}</td>
+                                                                <td style="border-right: 1px solid black; padding-right: 7px; text-align: {{ $perhitunganKreditLev3[$i]->align }}">{{ formatRupiah($perhitunganKreditLev3[$i]->nominal) }}</td>
+                                                            @endif
                                                         @endif
                                                     @endif
                                                 @endforeach
-                                            @endif --}}
+                                            </tr>
                                         @endfor
+                                        <tr>
+                                            @for ($i = 0; $i < $maxRowCount; $i++)
+                                                @foreach ($perhitunganKreditLev3List as $perhitunganKreditLev3)
+                                                    @if ($i < count($perhitunganKreditLev3))
+                                                        @if ($perhitunganKreditLev3[$i]->field != "Total Angsuran")
+                                                            @if ($perhitunganKreditLev3[$i]->field == "Total")
+                                                                <td style="padding-left: 10px">{{ $perhitunganKreditLev3[$i]->field }}</td>
+                                                                <td style="border-right: 1px solid black; padding-right: 7px; text-align: {{ $perhitunganKreditLev3[$i]->align }}">{{ formatRupiah($perhitunganKreditLev3[$i]->nominal) }}</td>
+                                                            @endif
+                                                        @endif
+                                                    @endif
+                                                @endforeach
+                                            @endfor
+                                        </tr>
                                     </table>
                                 @endif
                                 <p></p>
