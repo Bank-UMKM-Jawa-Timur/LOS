@@ -2697,10 +2697,10 @@ is-invalid
         let thls = $('#thls').val() ? parseInt($('#thls').val().split('.').join('')) : '';
         let nilaiAsuransi = $('#nilai_pertanggungan_asuransi').val() ? parseInt($('#nilai_pertanggungan_asuransi').val()
             .split('.').join('')) : '';
-        let kreditYangDiminta = $('#jumlah_kredit').val() ? parseInt($('#jumlah_kredit').val().split('.').join('')) :
+        let plafon_usulan = $('.plafon_usulan').val() ? parseInt($('.plafon_usulan').val().split('.').join('')) :
             '';
 
-        let ratioCoverage = (thls + nilaiAsuransi) / kreditYangDiminta * 100; //cek rumus nya lagi
+        let ratioCoverage = (thls + nilaiAsuransi) / plafon_usulan * 100; //cek rumus nya lagi
         $('#ratio_coverage').val(ratioCoverage);
 
         if (ratioCoverage >= 150) {

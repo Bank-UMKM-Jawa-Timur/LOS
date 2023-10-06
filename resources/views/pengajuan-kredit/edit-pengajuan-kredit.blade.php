@@ -2899,9 +2899,9 @@
         function hitungRatioCoverage() {
             let thls = parseInt($('#thls').val());
             let nilaiAsuransi = parseInt($('#nilai_pertanggungan_asuransi').val());
-            let kreditYangDiminta = parseInt($('#jumlah_kredit').val());
+            let plafon_usulan = parseInt($('.plafon_usulan').val());
 
-            let ratioCoverage = (thls + nilaiAsuransi) / kreditYangDiminta * 100; //cek rumus nya lagi
+            let ratioCoverage = (thls + nilaiAsuransi) / plafon_usulan * 100; //cek rumus nya lagi
             $('#ratio_coverage').val(ratioCoverage);
 
             if (ratioCoverage >= 150) {
