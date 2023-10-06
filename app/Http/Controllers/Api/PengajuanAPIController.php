@@ -56,102 +56,110 @@ class PengajuanAPIController extends Controller
                 ->leftJoin('cabang', 'cabang.id', 'users.id_cabang')
                 ->first();
 
-        $detail = [
-            'nip' => null,
-            'nama' => null,
-            'jabatan' => null,
-            'nama_jabatan' => null,
-            'entitas' => null,
-            'bagian' => null,
-        ];
-
-        if ($user->role != 'Direksi') {
-            // Cek User ditemukan atau tidak
-            if (is_numeric($request['email'])) {
-                $cekNIPUser = User::where('nip', $request['email'])
-                    ->first();
-                if ($cekNIPUser) {
-                    if (!Auth::attempt(['email' => $cekNIPUser->email, 'password' => $request['password']])) {
-                        return response()->json([
-                            'status' => 'gagal',
-                            'message' => 'Email atau NIP tidak ditemukan.',
-                            'req' => $request->all()
-                        ], 401);
-                    }
-                } else {
-                    if (!Auth::attempt(['email' => $request['email'], 'password' => $request['password']])) {
-                        return response()->json([
-                            'status' => 'gagal',
-                            'message' => 'Email atau NIP tidak ditemukan.',
-                            'req' => $request->all()
-                        ], 401);
+        if ($user) {
+            $detail = [
+                'nip' => null,
+                'nama' => null,
+                'jabatan' => null,
+                'nama_jabatan' => null,
+                'entitas' => null,
+                'bagian' => null,
+            ];
+    
+            if ($user->role != 'Direksi') {
+                // Cek User ditemukan atau tidak
+                if (is_numeric($request['email'])) {
+                    $cekNIPUser = User::where('nip', $request['email'])
+                        ->first();
+                    if ($cekNIPUser) {
+                        if (!Auth::attempt(['email' => $cekNIPUser->email, 'password' => $request['password']])) {
+                            return response()->json([
+                                'status' => 'gagal',
+                                'message' => 'Email atau NIP tidak ditemukan.',
+                                'req' => $request->all()
+                            ], 401);
+                        }
+                    } else {
+                        if (!Auth::attempt(['email' => $request['email'], 'password' => $request['password']])) {
+                            return response()->json([
+                                'status' => 'gagal',
+                                'message' => 'Email atau NIP tidak ditemukan.',
+                                'req' => $request->all()
+                            ], 401);
+                        }
                     }
                 }
             }
-        }
-
-        // Cek Role user jika tersedia
-        if($user->role == 'Administrator'){
-            if(DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->count() > 0){
-                return response()->json([
-                    'status' => 'gagal',
-                    'message' => 'Akun sedang digunakan di perangkat lain.'
-                ], 401);
-            }
-
-            $token = $user->createToken('auth_token')->plainTextToken;
-
-            return response()->json([
-                'status' => 'berhasil',
-                'message' => 'berhasil login',
-                'id' => $user->id,
-                'email' => $user->email,
-                'role' => $user->role,
-                'kode_cabang' => $user->role == 'Administrator' ? $user->kode_cabang : '001',
-                'access_token' => $token,
-                'token_type' => 'Bearer',
-                'data' => $user->nip ? $this->getKaryawan($user->nip) : $user
-            ]);
-        } else {
-            if($user->nip != null || $user->role == 'Direksi'){
+    
+            // Cek Role user jika tersedia
+            if($user->role == 'Administrator'){
                 if(DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->count() > 0){
                     return response()->json([
                         'status' => 'gagal',
                         'message' => 'Akun sedang digunakan di perangkat lain.'
                     ], 401);
                 }
+    
+                $token = $user->createToken('auth_token')->plainTextToken;
+    
+                return response()->json([
+                    'status' => 'berhasil',
+                    'message' => 'berhasil login',
+                    'id' => $user->id,
+                    'email' => $user->email,
+                    'role' => $user->role,
+                    'kode_cabang' => $user->role == 'Administrator' ? $user->kode_cabang : '001',
+                    'access_token' => $token,
+                    'token_type' => 'Bearer',
+                    'data' => $user->nip ? $this->getKaryawan($user->nip) : $user
+                ]);
             } else {
-                if ($user->role != 'Direksi') {
-                    return response()->json([
-                        'status' => 401,
-                        'message' => 'Belum dilakukan Pengkinian Data User untuk $request->email.\nHarap menghubungi Divisi Pemasaran atau TI & AK.',
-                    ]);
+                if($user->nip != null || $user->role == 'Direksi'){
+                    if(DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->count() > 0){
+                        return response()->json([
+                            'status' => 'gagal',
+                            'message' => 'Akun sedang digunakan di perangkat lain.'
+                        ], 401);
+                    }
+                } else {
+                    if ($user->role != 'Direksi') {
+                        return response()->json([
+                            'status' => 401,
+                            'message' => 'Belum dilakukan Pengkinian Data User untuk $request->email.\nHarap menghubungi Divisi Pemasaran atau TI & AK.',
+                        ]);
+                    }
                 }
-            }
-
-            $token = $user->createToken('auth_token')->plainTextToken;
-            if ($user->role == 'Direksi') {
-                $detail['nama'] = $user->name;
-            }
-            else {
-                if ($user->nip) {
-                    $detail = $this->getKaryawan($user->nip);
-                }
-                else {
+    
+                $token = $user->createToken('auth_token')->plainTextToken;
+                if ($user->role == 'Direksi') {
                     $detail['nama'] = $user->name;
                 }
+                else {
+                    if ($user->nip) {
+                        $detail = $this->getKaryawan($user->nip);
+                    }
+                    else {
+                        $detail['nama'] = $user->name;
+                    }
+                }
+    
+                return response()->json([
+                    'status' => 'berhasil',
+                    'message' => 'berhasil login',
+                    'id' => $user->id,
+                    'email' => $user->email,
+                    'role' => $user->role,
+                    'kode_cabang' => $user->role == 'Administrator' ? '001' : $user->kode_cabang,
+                    'access_token' => $token,
+                    'token_type' => 'Bearer',
+                    'data' => $detail,
+                ]);
             }
-
+        }
+        else {
             return response()->json([
-                'status' => 'berhasil',
-                'message' => 'berhasil login',
-                'id' => $user->id,
-                'email' => $user->email,
-                'role' => $user->role,
-                'kode_cabang' => $user->role == 'Administrator' ? '001' : $user->kode_cabang,
-                'access_token' => $token,
-                'token_type' => 'Bearer',
-                'data' => $detail,
+                'status' => 'gagal',
+                'message' => 'User tidak ditemukan',
             ]);
         }
     }
