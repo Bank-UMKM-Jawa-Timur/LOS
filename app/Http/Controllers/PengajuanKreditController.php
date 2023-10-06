@@ -1050,6 +1050,7 @@ class PengajuanKreditController extends Controller
         $statusSlik = false;
         $find = array('Rp ', '.');
         $request->validate([
+            // 'upload_file.*' => 'file|max:5120',
             'name' => 'required',
             'alamat_rumah' => 'required',
             'alamat_usaha' => 'required',
@@ -1367,7 +1368,7 @@ class PengajuanKreditController extends Controller
             }
 
             // dd($request->id_nasabah);
-            PerhitunganKredit::where('temp_calon_nasabah_id', $request->id_nasabah)
+            PerhitunganKredit::where('temp_calon_nasabah_id', $tempNasabah->id)
                 ->update([
                     'pengajuan_id' => $id_pengajuan,
                     'temp_calon_nasabah_id' => null
@@ -1389,6 +1390,14 @@ class PengajuanKreditController extends Controller
             $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan proses pembuatan data pengajuan atas nama ' . $namaNasabah . '.', $id_pengajuan, Auth::user()->id, Auth::user()->nip);
 
             DB::commit();
+
+            // $files = $request->file('upload_file');
+            // foreach ($files as $file) {
+            //     if ($file->getSize() > 10 * 1024 * 1024) {
+            //         return redirect()->route('pengajuan-kredit.index')->withError('Salah satu atau lebih berkas melebihi 10MB.');
+            //     }
+            // }
+
             if (!$statusSlik)
                 return redirect()->route('pengajuan-kredit.index')->withStatus('Data berhasil disimpan.');
             else
@@ -1620,7 +1629,7 @@ class PengajuanKreditController extends Controller
                         ->delete();
                 }
             }
-            if ($request->statusNpwp == 0) {
+            if ($request->isNpwp == 0) {
                 $dokumenUsaha = DB::table('item')
                     ->orWhere('nama', 'LIKE', '%NPWP%')
                     ->get();
@@ -2749,7 +2758,29 @@ class PengajuanKreditController extends Controller
             $countDoc += $count;
         }
         $param['countIjin'] = $countDoc;
-        $param['logPengajuan'] = DB::table('log_pengajuan')->selectRaw("DISTINCT(date(created_at)) as tgl")->where('id_pengajuan', $id)->get();
+        $logPengajuan = DB::table('log_pengajuan')->selectRaw("DISTINCT(date(created_at)) as tgl")->where('id_pengajuan', $id)->get();
+        $log = array();
+        if($logPengajuan){
+            foreach($logPengajuan as $item){
+                $itemLog = DB::table('log_pengajuan')
+                    ->where('id_pengajuan', $id)
+                    ->whereDate('created_at', $item->tgl)
+                    ->get();
+                $itemsLog = array();
+
+                foreach($itemLog as $itemLogPengajuan){
+                    array_push($itemsLog, $itemLogPengajuan);
+                }
+                array_push($log, [
+                    'tgl' => $item->tgl,
+                    'data' => $itemLog
+                ]);
+            }
+        } else {
+            $log = [];
+        }
+        // dd($log[0]['tgl']);
+        $param['logPengajuan'] = $log;
 
         return view('pengajuan-kredit.detail-komentar-pengajuan', $param);
     }
@@ -3800,7 +3831,7 @@ class PengajuanKreditController extends Controller
                 // Data Level Tiga
                 foreach($request->inpLevelTiga as $key => $item){
                     array_push($levelTiga, [
-                        'nominal' => str_replace('.', '', $item),
+                        'nominal' => str_replace('.', '', str_replace(['(', ')'], '-', $item)),
                         'item_perhitungan_kredit_id' => $key,
                         'temp_calon_nasabah_id' => $idCalonNasabah,
                         'created_at' => now()
@@ -3809,7 +3840,7 @@ class PengajuanKreditController extends Controller
 
                 foreach($request->inpLevelTigaParent as $key => $item){
                     array_push($parentLevelTiga, [
-                        'nominal' => $key != 68 ? str_replace('.', '', $item) : $item,
+                        'nominal' => $key != 68 ? str_replace('.', '', str_replace(['(', ')'], '-', $item)) : $item,
                         'item_perhitungan_kredit_id' => $key,
                         'temp_calon_nasabah_id' => $idCalonNasabah,
                         'created_at' => now()
@@ -3945,7 +3976,7 @@ class PengajuanKreditController extends Controller
                     PerhitunganKredit::where('temp_calon_nasabah_id', $idCalonNasabah)
                         ->where('item_perhitungan_kredit_id', $key)
                         ->update([
-                            'nominal' => str_replace('.', '', $item),
+                            'nominal' => str_replace('.', '', str_replace(['(', ')'], '-', $item)),
                             'updated_at' => now()
                         ]);
                 }
@@ -3953,7 +3984,7 @@ class PengajuanKreditController extends Controller
                     PerhitunganKredit::where('temp_calon_nasabah_id', $idCalonNasabah)
                         ->where('item_perhitungan_kredit_id', $key)
                         ->update([
-                            'nominal' =>$key != 68 ? str_replace('.', '', $item) : $item,
+                            'nominal' =>$key != 68 ? str_replace('.', '', str_replace(['(', ')'], '-', $item)) : $item,
                             'updated_at' => now()
                         ]);
                 }
@@ -4077,7 +4108,7 @@ class PengajuanKreditController extends Controller
                 // Data Level Tiga
                 foreach($request->inpLevelTiga as $key => $item){
                     array_push($levelTiga, [
-                        'nominal' => str_replace('.', '', $item),
+                        'nominal' => str_replace('.', '', str_replace(['(', ')'], '-', $item)),
                         'item_perhitungan_kredit_id' => $key,
                         'pengajuan_id' => $idCalonNasabah,
                         'created_at' => now()
@@ -4086,7 +4117,7 @@ class PengajuanKreditController extends Controller
 
                 foreach($request->inpLevelTigaParent as $key => $item){
                     array_push($parentLevelTiga, [
-                        'nominal' => $key != 68 ? str_replace('.', '', $item) : $item,
+                        'nominal' => $key != 68 ? str_replace('.', '', str_replace(['(', ')'], '-', $item)) : $item,
                         'item_perhitungan_kredit_id' => $key,
                         'pengajuan_id' => $idCalonNasabah,
                         'created_at' => now()
@@ -4222,7 +4253,7 @@ class PengajuanKreditController extends Controller
                     PerhitunganKredit::where('pengajuan_id', $idCalonNasabah)
                         ->where('item_perhitungan_kredit_id', $key)
                         ->update([
-                            'nominal' => str_replace('.', '', $item),
+                            'nominal' => str_replace('.', '', str_replace(['(', ')'], '-', $item)),
                             'updated_at' => now()
                         ]);
                 }
@@ -4230,7 +4261,7 @@ class PengajuanKreditController extends Controller
                     PerhitunganKredit::where('pengajuan_id', $idCalonNasabah)
                         ->where('item_perhitungan_kredit_id', $key)
                         ->update([
-                            'nominal' =>$key != 68 ? str_replace('.', '', $item) : $item,
+                            'nominal' =>$key != 68 ? str_replace('.', '', str_replace(['(', ')'], '-', $item)) : $item,
                             'updated_at' => now()
                         ]);
                 }
@@ -4347,7 +4378,8 @@ class PengajuanKreditController extends Controller
         return response()->json(['result' => $data]);
     }
 
-    public function getPerhitunganKreditLev2($parent_id){
+    public function getPerhitunganKreditLev2(Request $request){
+        $parent_id = $request->parent_id;
         $data = \App\Models\MstItemPerhitunganKredit::where('skema_kredit_limit_id', 1)
                                                                     ->where('level', 2)
                                                                     ->where('parent_id', $parent_id)
@@ -4446,7 +4478,8 @@ class PengajuanKreditController extends Controller
         ]);
     }
 
-    public function updateDataPeriodeAspekKeuangan(Request $request, $id) {
+    public function updateDataPeriodeAspekKeuangan(Request $request) {
+        $id = $request->id;
         $data = [
             'perhitungan_kredit_id' => $request->perhitungan_kredit_id,
             'bulan' => $request->bulan,
@@ -4459,7 +4492,8 @@ class PengajuanKreditController extends Controller
         ]);
     }
     
-    public function getPeriodeAspekKeuanganEdit($pengajuan_id) {
+    public function getPeriodeAspekKeuanganEdit(Request $request) {
+        $pengajuan_id = $request->pengajuan_id;
         $getPeriode = \App\Models\PeriodeAspekKeuangan::join('perhitungan_kredit', 'periode_aspek_keuangan.perhitungan_kredit_id', '=', 'perhitungan_kredit.id')
                                             ->where('perhitungan_kredit.pengajuan_id', $pengajuan_id)
                                             ->select('periode_aspek_keuangan.id','periode_aspek_keuangan.perhitungan_kredit_id',
@@ -4468,7 +4502,8 @@ class PengajuanKreditController extends Controller
         return response()->json(['result' => $getPeriode]);
     }
 
-    public function getPeriodeAspekKeuanganDraft($calon_nasabah_id) {
+    public function getPeriodeAspekKeuanganDraft(Request $request) {
+        $calon_nasabah_id = $request->calon_nasabah_id;
         $getPeriode = \App\Models\PeriodeAspekKeuangan::join('perhitungan_kredit', 'periode_aspek_keuangan.perhitungan_kredit_id', '=', 'perhitungan_kredit.id')
                                             ->where('perhitungan_kredit.temp_calon_nasabah_id', $calon_nasabah_id)
                                             ->select('periode_aspek_keuangan.id','periode_aspek_keuangan.perhitungan_kredit_id',
