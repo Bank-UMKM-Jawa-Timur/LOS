@@ -1755,7 +1755,7 @@ class PengajuanKreditController extends Controller
                         ->delete();
                 }
             }
-            if ($request->statusNpwp == 0) {
+            if ($request->isNpwp == 0) {
                 $dokumenUsaha = DB::table('item')
                     ->orWhere('nama', 'LIKE', '%NPWP%')
                     ->get();
