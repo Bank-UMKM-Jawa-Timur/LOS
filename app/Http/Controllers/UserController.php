@@ -324,7 +324,7 @@ class UserController extends Controller
         try {
             $data = DB::table('personal_access_tokens')
                 ->join('users', 'users.id', 'personal_access_tokens.tokenable_id')
-                ->select('users.name', 'users.email', 'users.nip', 'users.role', 'personal_access_tokens.id', 'users.id_cabang', 'personal_access_tokens.tokenable_id', 'personal_access_tokens.created_at')
+                ->select('users.email', 'users.nip', 'users.role', 'personal_access_tokens.id', 'users.id_cabang', 'personal_access_tokens.tokenable_id', 'personal_access_tokens.created_at', 'personal_access_tokens.project')
                 ->when($request->keyword, function ($query, $search) {
                     return $query->where('users.email', 'like', '%' . $search . '%');
                 })

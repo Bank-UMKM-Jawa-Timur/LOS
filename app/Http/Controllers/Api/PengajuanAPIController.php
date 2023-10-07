@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class PengajuanAPIController extends Controller
 {
@@ -47,6 +48,8 @@ class PengajuanAPIController extends Controller
 
     public function login(Request $request)
     {
+        // $personalAccessToken = new PersonalAccessToken();
+        // array_push($personalAccessToken->fillable, 'project');
         $user = User::select(
                     'users.*',
                     'cabang.kode_cabang'
@@ -90,10 +93,39 @@ class PengajuanAPIController extends Controller
                     }
                 }
             }
-    
-            // Cek Role user jika tersedia
-            if($user->role == 'Administrator'){
-                if(DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->count() > 0){
+        }
+
+        // Cek Role user jika tersedia
+        if($user->role == 'Administrator'){
+            if(DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->where('project', $request->project)->count() > 0){
+                return response()->json([
+                    'status' => 'gagal',
+                    'message' => 'Akun sedang digunakan di perangkat lain.'
+                ], 401);
+            }
+
+            $token = $user->createToken('auth_token')->plainTextToken;
+            $tokenId =  explode('|', $token);
+            DB::table('personal_access_tokens')
+                ->where('id', $tokenId[0])
+                ->update([
+                    'project' => $request->project
+                ]);
+
+            return response()->json([
+                'status' => 'berhasil',
+                'message' => 'berhasil login',
+                'id' => $user->id,
+                'email' => $user->email,
+                'role' => $user->role,
+                'kode_cabang' => $user->role == 'Administrator' ? $user->kode_cabang : '001',
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+                'data' => $user->nip ? $this->getKaryawan($user->nip) : $user
+            ]);
+        } else {
+            if($user->nip != null || $user->role == 'Direksi'){
+                if(DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->where('project', $request->project)->count() > 0){
                     return response()->json([
                         'status' => 'gagal',
                         'message' => 'Akun sedang digunakan di perangkat lain.'
@@ -129,9 +161,23 @@ class PengajuanAPIController extends Controller
                         ]);
                     }
                 }
-    
-                $token = $user->createToken('auth_token')->plainTextToken;
-                if ($user->role == 'Direksi') {
+            }
+
+            $token = $user->createToken('auth_token')->plainTextToken;
+            $tokenId =  explode('|', $token);
+            DB::table('personal_access_tokens')
+                ->where('id', $tokenId[0])
+                ->update([
+                    'project' => $request->project
+                ]);
+            if ($user->role == 'Direksi') {
+                $detail['nama'] = $user->name;
+            }
+            else {
+                if ($user->nip) {
+                    $detail = $this->getKaryawan($user->nip);
+                }
+                else {
                     $detail['nama'] = $user->name;
                 }
                 else {
@@ -182,7 +228,7 @@ class PengajuanAPIController extends Controller
 
     public function logout()
     {
-        auth()->user()->tokens()->delete();
+        auth()->user()->currentAccessToken()->delete();
 
         return response()->json([
             'message' => 'Successfully logged out'

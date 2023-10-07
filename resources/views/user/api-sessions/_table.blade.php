@@ -7,6 +7,7 @@
                 <th>Nama</th>
                 <th>Role</th>
                 <th>Cabang</th>
+                <th>Aplikasi</th>
                 <th>Lama Login</th>
                 <th>Status</th>
                 <th>Aksi</th>
@@ -46,6 +47,7 @@
                     </td>
                     <td>{{ $item->role }}</td>
                     <td>{{ $cabang }}</td>
+                    <td>{{ ucwords(str_replace('_', ' ', $item->project)) }}</td>
                     <td>
                         <span class="clock_{{$item->id}}"></span>
                         <script>
