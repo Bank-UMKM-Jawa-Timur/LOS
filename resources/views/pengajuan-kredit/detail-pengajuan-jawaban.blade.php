@@ -6,8 +6,33 @@
         'Talangan Umroh' => 1,
         'Prokesra' => 1,
         'Kusuma' => 1,
-        null => 1,
+        null => 2,
     };
+
+    function getKaryawan($nip){
+        $host = env('HCS_HOST');
+        $curl = curl_init();
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $host . '/api/v1/karyawan/' . $nip,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+        ]);
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        $json = json_decode($response);
+
+        if ($json) {
+            if ($json->data)
+                return $json->data->nama_karyawan;
+        }
+    }
 @endphp
 @section('content')
     @include('components.notification')
@@ -42,6 +67,41 @@
     <form id="pengajuan_kredit" action="{{ route('pengajuan.insertkomentar') }}" method="post">
         @csrf
         <div class="form-wizard active" data-index='0' data-done='true'>
+            <div class="row col-md-12 table-responsive mb-3">
+                <label for="">Riwayat Pengembalian Data</label>
+                <div class="col-md-12">
+                    <table style="width: 100%" class="table table-borderless">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Alasan Pengembalian</th>
+                                <th>Dari</th>
+                                <th>Ke</th>
+                                <th>Tanggal</th>
+                                <th>User</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($alasanPengembalian as $key => $itemPengembalian)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td> 
+                                    <td>{{ $itemPengembalian->alasan }}</td> 
+                                    <td>{{ $itemPengembalian->dari }}</td> 
+                                    <td>{{ $itemPengembalian->ke }}</td> 
+                                    <td>{{ date_format($itemPengembalian->created_at, 'd M Y') }}</td> 
+                                    <td>{{ getKaryawan($itemPengembalian->nip) }}</td> 
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="text-center">Tidak Ada Riwayat Pengembalian Data</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="form-wizard" data-index='1' data-done='true'>
             <div class="row">
                 @php
                     $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide')
@@ -524,7 +584,7 @@
                 $keterangan = $dataPO->keterangan;
                 $pemesanan = str_replace('Pemesanan ', '', $keterangan);
             @endphp
-            <div class="form-wizard" data-index='1' data-done='true' id="data-po">
+            <div class="form-wizard" data-index='2' data-done='true' id="data-po">
             {{--  <div class="row" id="data-po">  --}}
                 <div class="form-group col-md-12">
                     <span style="color: black; font-weight: bold; font-size: 18px;">Jenis Kendaraan Roda 2 :</span>
@@ -1325,6 +1385,39 @@
         </div>
         @endforeach
         {{-- pendapat dan usulan --}}
+        {{-- <div class="row col-md-12 table-responsive mb-3">
+            <label for="">Riwayat Pengembalian Data</label>
+            <div class="col-md-12">
+                <table style="width: 100%" class="table table-borderless">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Alasan Pengembalian</th>
+                            <th>Dari</th>
+                            <th>Ke</th>
+                            <th>Tanggal</th>
+                            <th>User</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($alasanPengembalian as $key => $itemPengembalian)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td> 
+                                <td>{{ $itemPengembalian->alasan }}</td> 
+                                <td>{{ $itemPengembalian->dari }}</td> 
+                                <td>{{ $itemPengembalian->ke }}</td> 
+                                <td>{{ date_format($itemPengembalian->created_at, 'd M Y') }}</td> 
+                                <td>{{ getKaryawan($itemPengembalian->nip) }}</td> 
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="text-center">Tidak Ada Riwayat Pengembalian Data</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div> --}}
         @if (Auth::user()->role == 'Penyelia Kredit')
             <div class="form-wizard" data-index='{{ $dataUmumNasabah->skema_kredit == 'KKB' ? count($dataAspek) + $dataIndex + 1 : count($dataAspek) + $dataIndex }}' data-done='true'>
                 <div class="row">

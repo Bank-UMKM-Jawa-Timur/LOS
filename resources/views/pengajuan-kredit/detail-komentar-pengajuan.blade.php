@@ -104,6 +104,50 @@ function getKaryawan($nip){
                 @include('pengajuan-kredit.log_pengajuan')
             @endif
 
+            {{--  riwayat pengembalian data  --}}
+
+            <div class="card mb-3">
+                <div class="card-header bg-info color-white font-weight-bold" data-toggle="collapse" href="#cardRiwayatPengembalian">
+                    Riwayat Pengembalian Data
+                </div>
+                <div class="card-body collapse multi-collapse show" id="cardRiwayatPengembalian">
+                    <div class="row mb-3">
+                        <div class="col-12 p-0">
+                            <div class="table-responsive">
+                                <table style="width: 100%" class="table table-borderless">
+                                    <thead>
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>Alasan Pengembalian</th>
+                                            <th>Dari</th>
+                                            <th>Ke</th>
+                                            <th>Tanggal</th>
+                                            <th>User</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($alasanPengembalian as $key => $itemPengembalian)
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td> 
+                                                <td>{{ $itemPengembalian->alasan }}</td> 
+                                                <td>{{ $itemPengembalian->dari }}</td> 
+                                                <td>{{ $itemPengembalian->ke }}</td> 
+                                                <td>{{ date_format($itemPengembalian->created_at, 'd M Y') }}</td> 
+                                                <td>{{ getKaryawan($itemPengembalian->nip) }}</td> 
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="6">Tidak Ada Riwayat Pengembalian Data</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {{-- calon nasabah --}}
             <div class="card mb-3">
                 <div class="card-header bg-info color-white font-weight-bold" data-toggle="collapse" href="#cardDataUmum">
