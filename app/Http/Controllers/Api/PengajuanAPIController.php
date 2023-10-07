@@ -123,7 +123,7 @@ class PengajuanAPIController extends Controller
                 'token_type' => 'Bearer',
                 'data' => $user->nip ? $this->getKaryawan($user->nip) : $user
             ]);
-        } else {
+        } else if($user->role != 'Administrator'){
             if($user->nip != null || $user->role == 'Direksi'){
                 if(DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->where('project', $request->project)->count() > 0){
                     return response()->json([
@@ -179,14 +179,6 @@ class PengajuanAPIController extends Controller
                 }
                 else {
                     $detail['nama'] = $user->name;
-                }
-                else {
-                    if ($user->nip) {
-                        $detail = $this->getKaryawan($user->nip);
-                    }
-                    else {
-                        $detail['nama'] = $user->name;
-                    }
                 }
     
                 return response()->json([
