@@ -92,8 +92,36 @@ class PengajuanAPIController extends Controller
             }
     
             // Cek Role user jika tersedia
-            if($user->role == 'Administrator'){
-                if(DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->count() > 0){
+        if($user->role == 'Administrator'){
+            if(DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->where('project', $request->project)->count() > 0){
+                return response()->json([
+                    'status' => 'gagal',
+                    'message' => 'Akun sedang digunakan di perangkat lain.'
+                ], 401);
+            }
+
+            $token = $user->createToken('auth_token')->plainTextToken;
+            $tokenId =  explode('|', $token);
+            DB::table('personal_access_tokens')
+                ->where('id', $tokenId[0])
+                ->update([
+                    'project' => $request->project
+                ]);
+
+            return response()->json([
+                'status' => 'berhasil',
+                'message' => 'berhasil login',
+                'id' => $user->id,
+                'email' => $user->email,
+                'role' => $user->role,
+                'kode_cabang' => '001',
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+                'data' => $user->nip ? $this->getKaryawan($user->nip) : $user
+            ]);
+        } else if($user->role != 'Administrator'){
+            if($user->nip != null || $user->role == 'Direksi'){
+                if(DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->where('project', $request->project)->count() > 0){
                     return response()->json([
                         'status' => 'gagal',
                         'message' => 'Akun sedang digunakan di perangkat lain.'
@@ -108,7 +136,7 @@ class PengajuanAPIController extends Controller
                     'id' => $user->id,
                     'email' => $user->email,
                     'role' => $user->role,
-                    'kode_cabang' => $user->role == 'Administrator' ? $user->kode_cabang : '001',
+                    'kode_cabang' => $user->kode_cabang,
                     'access_token' => $token,
                     'token_type' => 'Bearer',
                     'data' => $user->nip ? $this->getKaryawan($user->nip) : $user
@@ -129,18 +157,24 @@ class PengajuanAPIController extends Controller
                         ]);
                     }
                 }
-    
-                $token = $user->createToken('auth_token')->plainTextToken;
-                if ($user->role == 'Direksi') {
-                    $detail['nama'] = $user->name;
+            }
+
+            $token = $user->createToken('auth_token')->plainTextToken;
+            $tokenId =  explode('|', $token);
+            DB::table('personal_access_tokens')
+                ->where('id', $tokenId[0])
+                ->update([
+                    'project' => $request->project
+                ]);
+            if ($user->role == 'Direksi') {
+                $detail['nama'] = $user->name;
+            }
+            else {
+                if ($user->nip) {
+                    $detail = $this->getKaryawan($user->nip);
                 }
                 else {
-                    if ($user->nip) {
-                        $detail = $this->getKaryawan($user->nip);
-                    }
-                    else {
-                        $detail['nama'] = $user->name;
-                    }
+                    $detail['nama'] = $user->name;
                 }
     
                 return response()->json([
@@ -155,6 +189,13 @@ class PengajuanAPIController extends Controller
                     'data' => $detail,
                 ]);
             }
+        }
+        else {
+            return response()->json([
+                'status' => 'gagal',
+                'message' => 'User tidak ditemukan',
+            ]);
+        }
         }
         else {
             return response()->json([
