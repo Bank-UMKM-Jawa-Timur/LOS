@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class PengajuanAPIController extends Controller
 {
@@ -47,6 +48,8 @@ class PengajuanAPIController extends Controller
 
     public function login(Request $request)
     {
+        // $personalAccessToken = new PersonalAccessToken();
+        // array_push($personalAccessToken->fillable, 'project');
         $user = User::select(
                     'users.*',
                     'cabang.kode_cabang'
@@ -90,8 +93,9 @@ class PengajuanAPIController extends Controller
                     }
                 }
             }
-    
-            // Cek Role user jika tersedia
+        }
+
+        // Cek Role user jika tersedia
         if($user->role == 'Administrator'){
             if(DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->where('project', $request->project)->count() > 0){
                 return response()->json([
@@ -196,13 +200,6 @@ class PengajuanAPIController extends Controller
                 'message' => 'User tidak ditemukan',
             ]);
         }
-        }
-        else {
-            return response()->json([
-                'status' => 'gagal',
-                'message' => 'User tidak ditemukan',
-            ]);
-        }
     }
 
     public function getSessionCheck($id){
@@ -223,7 +220,7 @@ class PengajuanAPIController extends Controller
 
     public function logout()
     {
-        auth()->user()->tokens()->delete();
+        auth()->user()->currentAccessToken()->delete();
 
         return response()->json([
             'message' => 'Successfully logged out'

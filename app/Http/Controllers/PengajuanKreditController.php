@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AlasanPengembalianData;
 use App\Models\CalonNasabah;
 use App\Models\CalonNasabahTemp;
 use App\Models\Desa;
@@ -1754,7 +1755,7 @@ class PengajuanKreditController extends Controller
                         ->delete();
                 }
             }
-            if ($request->statusNpwp == 0) {
+            if ($request->isNpwp == 0) {
                 $dokumenUsaha = DB::table('item')
                     ->orWhere('nama', 'LIKE', '%NPWP%')
                     ->get();
@@ -2345,6 +2346,10 @@ class PengajuanKreditController extends Controller
                 $countDoc += $count;
             }
             $param['countIjin'] = $countDoc;
+            $param['alasanPengembalian'] = AlasanPengembalianData::where('id_pengajuan', $id)
+                ->join('users', 'users.id', 'alasan_pengembalian_data.id_user')
+                ->select('users.nip', 'alasan_pengembalian_data.*')
+                ->get();
             // $param['dataAnswer'] = $this->getAnswer($id);
 
             return view('pengajuan-kredit.detail-pengajuan-jawaban', $param);
@@ -2853,6 +2858,11 @@ class PengajuanKreditController extends Controller
         $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit', 'pengajuan.average_by_sistem', 'pengajuan.average_by_penyelia', 'pengajuan.average_by_pbo', 'pengajuan.average_by_pbp')
             ->find($id);
         $param['comment'] = KomentarModel::where('id_pengajuan', $id)->first();
+
+        $param['alasanPengembalian'] = AlasanPengembalianData::where('id_pengajuan', $id)
+                                                            ->join('users', 'users.id', 'alasan_pengembalian_data.id_user')
+                                                            ->select('users.nip', 'alasan_pengembalian_data.*')
+                                                            ->get();
 
         $param['pendapatDanUsulan'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff', 'komentar_penyelia', 'komentar_pincab', 'komentar_pbo', 'komentar_pbp')->first();
         if ($param['dataUmum']->skema_kredit == 'KKB') {
@@ -3819,6 +3829,79 @@ class PengajuanKreditController extends Controller
             return redirect()->route('pengajuan-kredit.index')->withStatus('Data '.$data->nama.' berhasil direstore.');
         } else {
             return redirect()->route('pengajuan-kredit.index')->withErrors('Data dengan ID tersebut tidak ditemukan.');
+        }
+    }
+
+    public function kembalikanDataKePosisiSebelumnya(Request $request){
+        // dd($request);
+        DB::beginTransaction();
+        try{
+            $dataPengajuan = PengajuanModel::find($request->id);
+            $alasan = $request->alasan;
+            $dari = '';
+            $ke = '';
+            if($dataPengajuan->posisi == 'Pincab'){
+                $dari = 'Pincab';
+
+                //If data pengajuan di pincab 
+                if($dataPengajuan->id_pbp != null){
+                    // If cabang ada pbp
+                    $dataPengajuan->posisi = 'PBP';
+                    $ke = 'PBP';
+                } else if($dataPengajuan->id_pbp == null && $dataPengajuan->id_pbo != null){
+                    // if cabang tidak ada pbp & ada pbo
+                    $dataPengajuan->posisi = 'PBO';
+                    $ke = 'PBO';
+                } else{
+                    // if tidak ada pbo & pbp
+                    $dataPengajuan->posisi = 'Review Penyelia';
+                    $ke = 'Review Penyelia';
+                }
+            } else if($dataPengajuan->posisi == 'PBP'){
+                $dari = 'PBP';
+
+                // If data pengajuan di PBP
+                if($dataPengajuan->id_pbo != null){
+                    // If cabang ada pbo
+                    $dataPengajuan->posisi = 'PBO';
+                    $ke = 'PBO';
+                } else{
+                    // If cabang tidak ada pbo
+                    $dataPengajuan->posisi = 'Review Penyelia';
+                    $ke = 'Review Penyelia';
+                }
+            } else if($dataPengajuan->posisi == 'PBO'){
+                $dari = 'PBO';
+                $ke = 'Review Penyelia';
+                
+                // If data pengajuan di PBO
+                $dataPengajuan->posisi = 'Review Penyelia';
+            } else{
+                $dari = 'Review Penyelia';
+                $ke = 'Proses Input Data';
+
+                // If data pengajuan di review penyelia
+                $dataPengajuan->posisi = 'Proses Input Data';
+            }
+
+            $dataPengajuan->save();
+            AlasanPengembalianData::insert([
+                'id_pengajuan' => $request->id,
+                'id_user' => auth()->user()->id,
+                'dari' => $dari,
+                'ke' => $ke,
+                'alasan' => $alasan,
+                'created_at' => now()
+            ]);
+            DB::commit();
+
+            return redirect()->back()->withStatus('Berhasil mengembalikan data ke ' . $ke . '.');
+        } catch(Exception $e){
+            DB::rollBack();
+            return redirect()->back()->withError('Terjadi kesalahan. ' . $e->getMessage());
+        } catch(QueryException $e){
+            DB::rollBack();
+            return redirect()->back()->withError('Terjadi kesalahan. ' . $e->getMessage());
         }
     }
 }
