@@ -80,7 +80,7 @@
                     <td>
                         <form action="{{ route('reset-api-session', $item->id) }}" method="post">
                             @csrf
-                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmResetApiSession">
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmResetApiSession{{ $item->id }}">
                                 Reset
                             </button>
                             @include('user.api-sessions.confirm-modal')
