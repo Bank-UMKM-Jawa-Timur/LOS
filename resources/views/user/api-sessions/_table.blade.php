@@ -43,7 +43,11 @@
                     <td class="text-center text-muted">{{ $no }}</td>
                     <td>{{ $item->email }}</td>
                     <td>
-                        {{ $item->karyawan ? $item->karyawan['nama'] : $item->name }}
+                        @if ($item->karyawan)
+                            {{ array_key_exists('nama', $item->karyawan) ? $item->karyawan['nama'] : '-' }}
+                        @else
+                            {{ property_exists($item, 'name') ? $item->name : '-' }}
+                        @endif
                     </td>
                     <td>{{ $item->role }}</td>
                     <td>{{ $cabang }}</td>
