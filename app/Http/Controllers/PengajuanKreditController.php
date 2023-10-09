@@ -1847,12 +1847,21 @@ class PengajuanKreditController extends Controller
                 DB::table('data_po')
                     ->where('id_pengajuan', $id)
                     ->update([
+                        // 'tahun_kendaraan' => $request->tahun,
+                        // 'id_type' => $request->id_tipe,
+                        // 'warna' => $request->warna,
+                        // 'keterangan' => 'Pemesanan ' . $request->pemesanan,
+                        // 'jumlah' => $request->sejumlah,
+                        // 'harga'
+                        // 'id_pengajuan' => $id_pengajuan,
                         'tahun_kendaraan' => $request->tahun,
-                        'id_type' => $request->id_tipe,
+                        // 'id_type' => $request->id_tipe,
+                        'merk' => $request->merk,
+                        'tipe' => $request->tipe_kendaraan,
                         'warna' => $request->warna,
                         'keterangan' => 'Pemesanan ' . $request->pemesanan,
                         'jumlah' => $request->sejumlah,
-                        'harga'
+                        'harga' => str_replace($find, '', $request->harga)
                     ]);
             }
             foreach ($request->id_jawaban_text as $key => $value) {

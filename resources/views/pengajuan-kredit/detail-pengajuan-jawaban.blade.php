@@ -794,23 +794,23 @@
                         @endphp
                         @foreach ($dataOption as $itemOption)
                             @if ($itemOption->option == '-')
-                                <div class="row">
-                                    <div class="form-group col-md-12">
-                                        @if ($item->nama != 'Ijin Usaha')
-                                        <h4>{{ $item->nama }}</h4>
-                                        @endif
-                                    </div>
-                                    {{-- @if ($item->nama == 'Ijin Usaha' && $countIjin == 0)
-                                        <div class="row col-md-12 mb-0 ml-1">
-                                            <div class="col-md-12 form-group">
-                                                <b>Jawaban: </b>
-                                                <div class="jawaban-responsive">
-                                                    Tidak Ada Legalitas Usaha
+                                @if ($item->nama != "Ijin Usaha")
+                                    <div class="row">
+                                        <div class="form-group col-md-12">
+                                            <h4>{{ $item->nama }}</h4>
+                                        </div>
+                                        @if ($item->nama == 'Ijin Usaha' && $countIjin == 0)
+                                            <div class="row col-md-12 mb-0 ml-1">
+                                                <div class="col-md-12 form-group">
+                                                    <b>Jawaban: </b>
+                                                    <div class="jawaban-responsive">
+                                                        Tidak Ada Legalitas Usaha
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    @endif --}}
-                                </div>
+                                        @endif
+                                    </div> 
+                                @endif
                             @endif
                         @endforeach
 

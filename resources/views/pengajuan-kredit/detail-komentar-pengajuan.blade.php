@@ -1,13 +1,13 @@
 @extends('layouts.template')
 @php
-$dataIndex = match ($dataUmum->skema_kredit) {
-    'PKPJ' => 1,
-    'KKB' => 2,
-    'Talangan Umroh' => 1,
-    'Prokesra' => 1,
-    'Kusuma' => 1,
-    null => 1
-};
+// $dataIndex = match ($dataUmum->skema_kredit) {
+//     'PKPJ' => 1,
+//     'KKB' => 2,
+//     'Talangan Umroh' => 1,
+//     'Prokesra' => 1,
+//     'Kusuma' => 1,
+//     null => 1
+// };
 
 if ($dataUmum->id_cabang == 1) {
     $roles = [
@@ -671,6 +671,7 @@ function getKaryawan($nip){
                         Data PO
                     </div>
                     <div class="card-body collapse multi-collapse" id="cardDataPO">
+                        <p class="fs-6">Jenis Kendaraan Roda 2 : </p>
                         <div class="form-group row">
                             <label for="staticEmail" class="col-sm-3 col-form-label">Merk/Type</label>
                             <label for="staticEmail" class="col-sm-1 col-form-label px-0">
@@ -715,7 +716,8 @@ function getKaryawan($nip){
                                     value="{{ $dataPO?->warna }}">
                             </div>
                         </div>
-                        <hr>
+                        {{-- <hr> --}}
+                        <p class="fs-6">Keterangan : </p>
                         <div class="form-group row">
                             @php
                                 $keterangan = $dataPO?->keterangan;
@@ -803,49 +805,51 @@ function getKaryawan($nip){
                                             ->get();
                                     @endphp
 
-                                    <div class="row form-group sub pl-4">
-                                        <label for="staticEmail"
-                                            class="col-sm-3 col-form-label font-weight-bold">{{ $item->nama }}</label>
-                                        <label for="staticEmail" class="col-sm-1 col-form-label px-0">
-                                            <div class="d-flex justify-content-end">
-                                                <div style="width: 20px">
-                                                    :
+                                    @if ($itemTextDua->opsi_text != "tidak_ada_legalitas_usaha")
+                                        <div class="row form-group sub pl-4">
+                                            <label for="staticEmail"
+                                                class="col-sm-3 col-form-label font-weight-bold">{{ $item->nama }}</label>
+                                            <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                                                <div class="d-flex justify-content-end">
+                                                    <div style="width: 20px">
+                                                        :
+                                                    </div>
                                                 </div>
+                                            </label>
+                                            <div class="col">
+                                                @if ($item->opsi_jawaban == 'file')
+                                                <br>
+                                                    @php
+                                                        $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                                                    @endphp
+                                                    @if ($file_parts['extension'] == 'pdf')
+                                                        <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" width="100%" height="700px"></iframe>
+                                                    @else
+                                                        <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="700px">
+                                                    @endif
+                                                    @elseif ($item->opsi_jawaban == 'number' && $item->id != 143)
+                                                    <p class="badge badge-info text-lg"><b>
+                                                            Rp. {{ number_format((int) $itemTextDua->opsi_text, 2, ',', '.') }}
+                                                        </b></p>
+                                                @else
+                                                    @if (is_numeric($itemJawaban->option) && strlen($itemJawaban->option) > 3)
+                                                        {{--  <input type="text" readonly
+                                                            class="form-control-plaintext font-weight-bold" id="staticEmail"
+                                                            value="{{ $itemTextDua->opsi_text }}">  --}}
+                                                        <input type="hidden" name="id[]" value="{{ $itemAspek->id }} {{$itemTiga->opsi_jawaban == 'persen' ? '%' : ''}} {{$item->opsi_jawaban == 'persen' ? '%' : ''}}">
+                                                        <input type="hidden" class="form-control-plaintext" id="staticEmail"
+                                                        value="{{ $itemTextDua->opsi_text }}">
+                                                        <p class="form-control-plaintext text-justify">{{ $itemTextDua->opsi_text }}</p>
+                                                    @else
+                                                        <input type="text" readonly class="form-control-plaintext font-weight-bold"
+                                                            id="staticEmail" value="{{ $itemTextDua->opsi_text }} {{$itemTiga->opsi_jawaban == 'persen' ? '%' : ''}} {{$item->opsi_jawaban == 'persen' ? '%' : ''}}">
+                                                        <input type="hidden" name="id[]" value="{{ $itemAspek->id }}">
+                                                        {{-- <p class="form-control-plaintext text-justify">{{ $itemTextDua->opsi_text }} {{$itemTiga->opsi_jawaban == 'persen' ? '%' : ''}} {{$item->opsi_jawaban == 'persen' ? '%' : ''}}</p> --}}
+                                                    @endif
+                                                @endif
                                             </div>
-                                        </label>
-                                        <div class="col">
-                                            @if ($item->opsi_jawaban == 'file')
-                                            <br>
-                                                @php
-                                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
-                                                @endphp
-                                                @if ($file_parts['extension'] == 'pdf')
-                                                    <iframe src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" width="100%" height="700px"></iframe>
-                                                @else
-                                                    <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt="" width="700px">
-                                                @endif
-                                                @elseif ($item->opsi_jawaban == 'number' && $item->id != 143)
-                                                <p class="badge badge-info text-lg"><b>
-                                                        Rp. {{ number_format((int) $itemTextDua->opsi_text, 2, ',', '.') }}
-                                                    </b></p>
-                                            @else
-                                                @if (is_numeric($itemJawaban->option) && strlen($itemJawaban->option) > 3)
-                                                    {{--  <input type="text" readonly
-                                                        class="form-control-plaintext font-weight-bold" id="staticEmail"
-                                                        value="{{ $itemTextDua->opsi_text }}">  --}}
-                                                    <input type="hidden" name="id[]" value="{{ $itemAspek->id }} {{$itemTiga->opsi_jawaban == 'persen' ? '%' : ''}} {{$item->opsi_jawaban == 'persen' ? '%' : ''}}">
-                                                    <input type="hidden" class="form-control-plaintext" id="staticEmail"
-                                                    value="{{ $itemTextDua->opsi_text }}">
-                                                    <p class="form-control-plaintext text-justify">{{ $itemTextDua->opsi_text }}</p>
-                                                @else
-                                                    <input type="text" readonly class="form-control-plaintext font-weight-bold"
-                                                        id="staticEmail" value="{{ $itemTextDua->opsi_text }} {{$itemTiga->opsi_jawaban == 'persen' ? '%' : ''}} {{$item->opsi_jawaban == 'persen' ? '%' : ''}}">
-                                                    <input type="hidden" name="id[]" value="{{ $itemAspek->id }}">
-                                                    <p class="form-control-plaintext text-justify">{{ $itemTextDua->opsi_text }} {{$itemTiga->opsi_jawaban == 'persen' ? '%' : ''}} {{$item->opsi_jawaban == 'persen' ? '%' : ''}}</p>
-                                                @endif
-                                            @endif
                                         </div>
-                                    </div>
+                                    @endif
                                     @if ($itemTextDua->status_skor == 1)
                                         <div class="p-3">
                                             <div class="row form-group sub pl-4">
@@ -903,7 +907,9 @@ function getKaryawan($nip){
                                     @endif
                                     @if ($item->nama == 'Repayment Capacity')
                                     @else
-                                        <hr>
+                                        @if ($itemTextDua->opsi_text != "tidak_ada_legalitas_usaha")
+                                            <hr>
+                                        @endif
                                     @endif
                                 @endforeach
                                 @if ($item->nama == 'Ijin Usaha' && $countIjin == 0)
