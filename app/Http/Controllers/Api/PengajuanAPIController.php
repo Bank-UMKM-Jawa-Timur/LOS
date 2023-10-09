@@ -133,6 +133,12 @@ class PengajuanAPIController extends Controller
                 }
     
                 $token = $user->createToken('auth_token')->plainTextToken;
+                $tokenId =  explode('|', $token);
+                DB::table('personal_access_tokens')
+                    ->where('id', $tokenId[0])
+                    ->update([
+                        'project' => $request->project
+                    ]);
     
                 return response()->json([
                     'status' => 'berhasil',
