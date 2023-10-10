@@ -83,6 +83,7 @@
                         </thead>
                         <tbody>
                             @forelse ($alasanPengembalian as $key => $itemPengembalian)
+                                <input type="hidden" id="val_pengembalian" value="1">
                                 <tr>
                                     <td>{{ $loop->iteration }}</td> 
                                     <td>{{ $itemPengembalian->alasan }}</td> 
@@ -92,6 +93,7 @@
                                     <td>{{ getKaryawan($itemPengembalian->nip) }}</td> 
                                 </tr>
                             @empty
+                                <input type="hidden" id="val_pengembalian" value="0">
                                 <tr>
                                     <td colspan="6" class="text-center">Tidak Ada Riwayat Pengembalian Data</td>
                                 </tr>
@@ -1218,11 +1220,13 @@
                                         // ;
                                     @endphp
                                     @if ($itemEmpat->opsi_jawaban == 'option' && $isJawabanExist > 0)
-                                        <div class="row">
-                                            <div class="form-group col-md-12 mb-0">
-                                                <label for="">{{ $itemEmpat->nama }}</label>
-                                            </div>
-                                        </div>
+                                        @if ($itemEmpat->nama != "Tidak Memiliki Jaminan Tambahan")
+                                            <div class="row">
+                                                <div class="form-group col-md-12 mb-0">
+                                                    <label for="">{{ $itemEmpat->nama }}</label>
+                                                </div>
+                                            </div> 
+                                        @endif
                                     @endif
 
                                     {{-- Data jawaban Level Empat --}}
@@ -1245,14 +1249,16 @@
                                                 @if (in_array($itemJawabanLevelEmpat->id, $data))
                                                     @if (isset($data))
                                                         <div class="col-md-12 form-group">
-                                                            <div class="row">
-                                                                <div class="col-md-12">
-                                                                    <b>Jawaban : </b>
-                                                                    <div class="jawaban-responsive">
-                                                                        {{ $itemJawabanLevelEmpat->option }}
+                                                            @if ($itemEmpat->nama != "Tidak Memiliki Jaminan Tambahan")
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <b>Jawaban : </b>
+                                                                        <div class="jawaban-responsive">
+                                                                            {{ $itemJawabanLevelEmpat->option }}
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
+                                                            @endif
                                                             <div class="input-group input-b-bottom">
                                                                 <input type="hidden" name="id_item[]"
                                                                     value="{{ $itemEmpat->id }}">
