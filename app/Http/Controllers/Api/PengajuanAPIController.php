@@ -344,6 +344,81 @@ class PengajuanAPIController extends Controller
         }
     }
 
+    public function getDataPengajuanSearch($user_id, Request $request)
+    {
+        $q = $request->get('query');
+        $user = User::select('id', 'role')->find($user_id);
+        $data = DB::table('pengajuan')
+            ->where('skema_kredit', 'KKB')
+            ->where('posisi', 'Selesai')
+            ->whereNotNull('po')
+            ->where('calon_nasabah.nama', 'like', "%$q%")
+            ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+            ->join('data_po', 'data_po.id_pengajuan', 'pengajuan.id')
+            ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
+            ->select('pengajuan.id', 'calon_nasabah.nama', 'calon_nasabah.jumlah_kredit', 'data_po.no_po', 'data_po.tipe', 'data_po.merk', 'calon_nasabah.tenor_yang_diminta', 'calon_nasabah.alamat_rumah', 'calon_nasabah.alamat_usaha', 'pengajuan.sppk', 'pengajuan.po', 'pengajuan.tanggal', 'pengajuan.pk', 'data_po.tahun_kendaraan', 'data_po.harga', 'data_po.jumlah AS jumlah_kendaraan', 'cabang.kode_cabang', 'cabang.cabang', 'cabang.email AS email_cabang', 'cabang.alamat AS alamat_cabang');
+
+        if ($user_id != 0) {
+            if ($user->role == 'Staf Analis Kredit') {
+                $data->where('id_staf', $user_id);
+            }
+            if ($user->role == 'Penyelia Kredit') {
+                $data->where('id_penyelia', $user_id);
+            }
+            if ($user->role == 'PBO') {
+                $data->where('id_pbo', $user_id);
+            }
+            if ($user->role == 'PBP') {
+                $data->where('id_pbp', $user_id);
+            }
+            if ($user->role == 'Pincab') {
+                $data->where('id_pincab', $user_id);
+            }
+        }
+        $data = $data->get();
+
+        if ($data) {
+            $arr = [];
+            foreach ($data as $key => $value) {
+                $arr_data = [
+                    'id_pengajuan' => $value->id,
+                    'nama' => $value->nama,
+                    'alamat_rumah' => $value->alamat_rumah,
+                    'alamat_usaha' => $value->alamat_usaha,
+                    'jumlah_kredit' => intval($value->jumlah_kredit),
+                    'no_po' => $value->no_po,
+                    'tenor' => intval($value->tenor_yang_diminta),
+                    'sppk' => $value->sppk ?? null,
+                    'po' => $value->po ?? null,
+                    'pk' => $value->pk ?? null,
+                    'merk' => $value->merk,
+                    'tipe' => $value->tipe,
+                    'tahun_kendaraan' => $value->tahun_kendaraan,
+                    'harga_kendaraan' => $value->harga,
+                    'jumlah_kendaraan' => $value->jumlah_kendaraan,
+                    'tanggal' => $value->tanggal,
+                    'kode_cabang' => $value->kode_cabang,
+                    'cabang' => $value->cabang,
+                    'email_cabang' => $value->email_cabang,
+                    'alamat_cabang' => $value->alamat_cabang,
+                ];
+                array_push($arr, $arr_data);
+            }
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data retrieved',
+                'total' => count($arr),
+                'data' => $arr,
+            ]);
+        }
+        else {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data not found'
+            ]);
+        }
+    }
+
     public function getDataUserById($id)
     {
         $data = DB::table('users')
