@@ -64,12 +64,35 @@
         }
     </style>
 </head>
+@php
+    function getKaryawan($nip){
+        // from api
+        $host = env('HCS_HOST');
+        $apiURL = $host . '/api/karyawan';
+
+        $response = Http::get($apiURL, [
+            'nip' => $nip,
+        ]);
+
+        $statusCode = $response->status();
+
+        if ($statusCode === 200) {
+            $responseData = $response->json();
+            $nama = $responseData['data']['nama'];
+            return $nama;
+        } else {
+            return null;
+        }
+    }
+@endphp
 <body onload="printPage()">
     <div class="data-surat">
         <table class="table-header-kota" style="margin-bottom: 10px;">
             <tr>
-                <td style="width: 0.5%">Kota, </td>
-                <td style="width: 50%">{{ $dataCabang->cabang }}</td>
+                <td style="width: 0.5%">{{ $dataCabang->cabang }}</td>
+            </tr>
+            <tr>
+                <td style="width: 0.5%">Kota, {{ $tgl }}</td>
             </tr>
         </table>
     
@@ -96,7 +119,11 @@
                 <td>Di</td>
             </tr>
             <tr>
-                <td>......................................</td>
+                <td></td>
+                <td>
+                    Kab. {{ Str::title($dataNasabah->kabupaten) }}, Kec. {{ Str::title($dataNasabah->kecamatan) }}, Desa. {{ Str::title($dataNasabah->desa) }}, Alamat. 
+                    {{ $dataNasabah->alamat_rumah }}
+                </td>
             </tr>
         </table>
     
@@ -167,12 +194,15 @@
                             <td>__________________________</td>
                         </tr>
                         <tr>
-                            <td></td>
+                            <td>{{ getKaryawan($dataPincab[0]['nip']) }}</td>
                         </tr>
                     </table>
                 </td>
                 <td style="text-align: center; padding-top: 70px">
                     <table style="width: 100%; text-align: center;">
+                        <tr>
+                            <td>________________________</td>
+                        </tr>
                         <tr>
                             <td>{{ $dataNasabah->nama }}</td>
                         </tr>

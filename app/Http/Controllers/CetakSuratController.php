@@ -7,7 +7,9 @@ use App\Models\CalonNasabah;
 use App\Models\ItemModel;
 use App\Models\KomentarModel;
 use App\Models\PengajuanModel;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class CetakSuratController extends Controller
 {
@@ -127,10 +129,11 @@ class CetakSuratController extends Controller
                 ]);
         }
     
-        $param['dataNasabah'] = CalonNasabah::select('calon_nasabah.*','kabupaten.id as kabupaten_id','kabupaten.kabupaten','kecamatan.id as kecamatan_id','kecamatan.id_kabupaten','kecamatan.kecamatan','desa.id as desa_id','desa.id_kabupaten','desa.id_kecamatan','desa.desa')
+        $param['dataNasabah'] = CalonNasabah::select('calon_nasabah.*','kabupaten.id as kabupaten_id','kabupaten.kabupaten','kecamatan.id as kecamatan_id','kecamatan.id_kabupaten','kecamatan.kecamatan','desa.id as desa_id','desa.id_kabupaten','desa.id_kecamatan','desa.desa','pengajuan.*')
             ->join('kabupaten','kabupaten.id','calon_nasabah.id_kabupaten')
             ->join('kecamatan','kecamatan.id','calon_nasabah.id_kecamatan')
             ->join('desa','desa.id','calon_nasabah.id_desa')
+            ->join('pengajuan','pengajuan.id','calon_nasabah.id_pengajuan')
             ->where('calon_nasabah.id_pengajuan',$id)
             ->first();
             
@@ -144,6 +147,11 @@ class CetakSuratController extends Controller
         $param['tglCetak'] = DB::table('log_cetak_kkb')
             ->where('id_pengajuan', $id)
             ->first();
+
+        $kodePincab = $param['dataNasabah']['id_pincab'];
+        $kodePenyelia = $param['dataNasabah']['id_penyelia'];
+        $param['dataPincab'] = User::where('id', $kodePincab)->get();
+        $param['dataPenyelia'] = User::where('id', $kodePenyelia)->get();
 
         $indexBulan = intval(date('m', strtotime($param['tglCetak']->tgl_cetak_sppk))) - 1;
         $param['tgl'] = date('d', strtotime($param['tglCetak']->tgl_cetak_sppk)) . ' ' . $this->bulan[$indexBulan] . ' ' . date('Y', strtotime($param['tglCetak']->tgl_cetak_sppk));
@@ -175,10 +183,11 @@ class CetakSuratController extends Controller
                 ]);
         }
 
-        $param['dataNasabah'] = CalonNasabah::select('calon_nasabah.*','kabupaten.id as kabupaten_id','kabupaten.kabupaten','kecamatan.id as kecamatan_id','kecamatan.id_kabupaten','kecamatan.kecamatan','desa.id as desa_id','desa.id_kabupaten','desa.id_kecamatan','desa.desa')
+        $param['dataNasabah'] = CalonNasabah::select('calon_nasabah.*','kabupaten.id as kabupaten_id','kabupaten.kabupaten','kecamatan.id as kecamatan_id','kecamatan.id_kabupaten','kecamatan.kecamatan','desa.id as desa_id','desa.id_kabupaten','desa.id_kecamatan','desa.desa','pengajuan.*')
             ->join('kabupaten','kabupaten.id','calon_nasabah.id_kabupaten')
             ->join('kecamatan','kecamatan.id','calon_nasabah.id_kecamatan')
             ->join('desa','desa.id','calon_nasabah.id_desa')
+            ->join('pengajuan','pengajuan.id','calon_nasabah.id_pengajuan')
             ->where('calon_nasabah.id_pengajuan',$id)
             ->first();
             
@@ -193,6 +202,9 @@ class CetakSuratController extends Controller
         $param['dataCabang'] = DB::table('cabang')
             ->where('id', $param['dataUmum']->id_cabang)
             ->first();
+
+        $kodePincab = $param['dataNasabah']['id_pincab'];
+        $param['dataPincab'] = User::where('id', $kodePincab)->get();
 
         $indexBulan = intval(date('m', strtotime($param['tglCetak']->tgl_cetak_po))) - 1;
         $param['tgl'] = date('d', strtotime($param['tglCetak']->tgl_cetak_po)) . ' ' . $this->bulan[$indexBulan] . ' ' . date('Y', strtotime($param['tglCetak']->tgl_cetak_po));
