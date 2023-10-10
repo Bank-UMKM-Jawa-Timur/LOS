@@ -71,9 +71,29 @@
 @php
     function rupiah($angka){
 	
-	$hasil_rupiah = number_format($angka,0,',','.');
-	return $hasil_rupiah;
-}
+        $hasil_rupiah = number_format($angka,0,',','.');
+        return $hasil_rupiah;
+    }
+
+    function getKaryawan($nip){
+        // from api
+        $host = env('HCS_HOST');
+        $apiURL = $host . '/api/karyawan';
+
+        $response = Http::get($apiURL, [
+            'nip' => $nip,
+        ]);
+
+        $statusCode = $response->status();
+
+        if ($statusCode === 200) {
+            $responseData = $response->json();
+            $nama = $responseData['data']['nama'];
+            return $nama;
+        } else {
+            return null;
+        }
+    }
 @endphp
 <body onload="printPage()">
     <div class="data-surat">
@@ -82,7 +102,7 @@
                 <td style="width: 7%">Nomor</td>
                 <td style="width: 1%">:</td>
                 <td style="width: 50%">............/SPPK/{{ $dataCabang->kode_cabang }}/{{ date('m', strtotime($tglCetak->tgl_cetak_sppk)) }}/{{ date('Y', strtotime($tglCetak->tgl_cetak_sppk)) }}</td>
-                <td style="width: 13%">Kota {{ $dataCabang->cabang }}</td>
+                <td style="width: 13%; text-align: right">{{ $dataCabang->cabang }}</td>
                 <td style="width: 1%">,</td>
                 <td>tanggal {{ $tgl }}</td>
             </tr>
@@ -105,7 +125,9 @@
             </tr>
             <tr>
                 <td></td>
-                <td>{{ $dataNasabah->alamat_rumah }}</td>
+                <td>
+                    Kab. {{ Str::title($dataNasabah->kabupaten) }}, Kec. {{ Str::title($dataNasabah->kecamatan) }}, Desa. {{ Str::title($dataNasabah->desa) }}, Alamat. 
+                    {{ $dataNasabah->alamat_rumah }}</td>
             </tr>
         </table>
     
@@ -266,8 +288,8 @@
                 <td style="text-align: center; padding-top: 100px">
                     <table style="width: 100%; text-align: center;">
                         <tr>
-                            <td>(.....................................)</td>
-                            <td>(.....................................)</td>
+                            <td>({{ getKaryawan($dataPincab[0]['nip']) }})</td>
+                            <td>({{ getKaryawan($dataPenyelia[0]['nip']) }})</td>
                         </tr>
                         <tr>
                             <td>Pemimpin Cabang</td>

@@ -37,4 +37,8 @@ class CalonNasabah extends Model
     {
         return $this->belongsTo('\App\Models\Users', 'id');
     }
+    public function pengajuan()
+    {
+        return $this->belongsTo('\App\Models\PengajuanModel', 'id');
+    }
 }
