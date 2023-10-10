@@ -1007,7 +1007,7 @@
                                 @else
                                     @if (isset($checkJawabanKelayakan))
                                         @if ($itemTiga->nama != 'Kelayakan Usaha')
-                                        @else
+                                        {{-- @else --}}
                                             <div class="row">
                                                 <div class="form-group col-md-12">
                                                     <label for="">{{ $itemTiga->nama }}</label>
@@ -1761,6 +1761,18 @@
                     e.preventDefault()
                 }
             })
+
+            if ($('#val_pengembalian').val() == 0) {
+                $(".side-wizard li[data-index='0'] a span i").html("0%");
+            }else{
+                $(".side-wizard li[data-index='0'] a span i").html("100%");
+            }
+
+            if ($("#komentar_penyelia_keseluruhan").val() == '') {
+                $(".side-wizard li[data-index=9] a span i").html("0%")
+            } else {
+                $(".side-wizard li[data-index=9] a span i").html("100%")
+            }
         })
 
         @if ($dataUmum->skema_kredit == 'KKB')
@@ -1890,11 +1902,12 @@
             // $(".side-wizard li[data-index='"+index+"'] input.answerFilled").val(allInputFilled);
         }
 
-        $('textarea[name=komentar_penyelia_keseluruhan]').on('change', function() {
+        // $('textarea[name=komentar_penyelia_keseluruhan]').on('change', function() {
+        $('#komentar_penyelia_keseluruhan').on('change', function() {
             if ($("textarea[name=komentar_penyelia_keseluruhan]").val() == '') {
-                $(".side-wizard li[data-index=7] a span i").html("0%")
+                $(".side-wizard li[data-index=9] a span i").html("0%")
             } else {
-                $(".side-wizard li[data-index=7] a span i").html("100%")
+                $(".side-wizard li[data-index=9] a span i").html("100%")
             }
         })
 
