@@ -7,6 +7,7 @@
                 <th>Nama</th>
                 <th>Role</th>
                 <th>Cabang</th>
+                <th>Aplikasi</th>
                 <th>Lama Login</th>
                 <th>IP</th>
                 <th>Perangkat</th>
@@ -44,10 +45,15 @@
                     <td class="text-center text-muted">{{ $no }}</td>
                     <td>{{ $item->email }}</td>
                     <td>
-                        {{ $item->karyawan ? $item->karyawan['nama'] : $item->name }}
+                        @if ($item->karyawan)
+                            {{ array_key_exists('nama', $item->karyawan) ? $item->karyawan['nama'] : '-' }}
+                        @else
+                            {{ property_exists($item, 'name') ? $item->name : '-' }}
+                        @endif
                     </td>
                     <td>{{ $item->role }}</td>
                     <td>{{ $cabang }}</td>
+                    <td>{{ ucwords(str_replace('_', ' ', $item->project)) }}</td>
                     <td>
                         <span class="clock_{{$item->id}}"></span>
                         <script>

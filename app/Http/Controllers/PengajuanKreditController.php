@@ -1721,14 +1721,21 @@ class PengajuanKreditController extends Controller
                 DB::table('data_po')
                     ->where('id_pengajuan', $id)
                     ->update([
-                        'merk' => $request->merk,
-                        'tipe' => $request->tipe_kendaraan,
+                        // 'tahun_kendaraan' => $request->tahun,
+                        // 'id_type' => $request->id_tipe,
+                        // 'warna' => $request->warna,
+                        // 'keterangan' => 'Pemesanan ' . $request->pemesanan,
+                        // 'jumlah' => $request->sejumlah,
+                        // 'harga'
+                        // 'id_pengajuan' => $id_pengajuan,
                         'tahun_kendaraan' => $request->tahun,
                         // 'id_type' => $request->id_tipe,
+                        'merk' => $request->merk,
+                        'tipe' => $request->tipe_kendaraan,
                         'warna' => $request->warna,
                         'keterangan' => 'Pemesanan ' . $request->pemesanan,
                         'jumlah' => $request->sejumlah,
-                        'harga' => $request->harga,
+                        'harga' => str_replace($find, '', $request->harga)
                     ]);
             }
             foreach ($request->id_jawaban_text as $key => $value) {
@@ -3584,6 +3591,7 @@ class PengajuanKreditController extends Controller
                         try {
                             $response = Http::timeout(3)->withHeaders($headers)->withOptions(['verify' => false])->post($apiURL, [
                                 'pengajuan_id' => $id,
+                                'staf_id' => Auth::user()->id,
                                 'kode_cabang' => $kode_cabang->kode_cabang,
                                 'nomor_po' => $po,
                                 'plafon' => intval($getPo->jumlah_kredit),
