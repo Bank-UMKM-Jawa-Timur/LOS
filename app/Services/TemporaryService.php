@@ -104,7 +104,7 @@ class TemporaryService
             'status' => $request->status,
             'sektor_kredit' => $request->sektor_kredit,
             'jenis_usaha' => $request->jenis_usaha,
-            'jumlah_kredit' => str_replace('.', '', $request->jumlah_kredit),
+            'jumlah_kredit' => str_replace(['.', ',00'], '', $request->jumlah_kredit),
             'tujuan_kredit' => $request->tujuan_kredit,
             'jaminan_kredit' => $request->jaminan,
             'hubungan_bank' => $request->hubungan_bank,
