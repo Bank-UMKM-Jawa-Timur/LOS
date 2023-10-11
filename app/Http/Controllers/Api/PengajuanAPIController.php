@@ -48,6 +48,7 @@ class PengajuanAPIController extends Controller
 
     public function login(Request $request)
     {
+        $ip = $this->get_client_ip();
         // $personalAccessToken = new PersonalAccessToken();
         // array_push($personalAccessToken->fillable, 'project');
         $user = User::select(
@@ -109,6 +110,7 @@ class PengajuanAPIController extends Controller
             DB::table('personal_access_tokens')
                 ->where('id', $tokenId[0])
                 ->update([
+                    'ip_address' => $ip,
                     'project' => $request->project
                 ]);
 
@@ -137,6 +139,7 @@ class PengajuanAPIController extends Controller
                 DB::table('personal_access_tokens')
                     ->where('id', $tokenId[0])
                     ->update([
+                        'ip_address' => $ip,
                         'project' => $request->project
                     ]);
     
@@ -174,6 +177,7 @@ class PengajuanAPIController extends Controller
             DB::table('personal_access_tokens')
                 ->where('id', $tokenId[0])
                 ->update([
+                    'ip_address' => $ip,
                     'project' => $request->project
                 ]);
             if ($user->role == 'Direksi') {
