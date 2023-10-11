@@ -17,7 +17,7 @@
                 $page = Request::get('page');
                 $no = !$page || $page == 1 ? 1 : ($page - 1) * 10 + 1;
             @endphp
-            @foreach ($data as $item)
+            @foreach ($data as $key => $item)
                 @php
                     $cabang = '-';
                     if ($item->id_cabang) {
@@ -81,10 +81,10 @@
                         @if (auth()->user()->id != $item->user_id)
                             <form action="{{ route('reset-session', $item->user_id) }}" method="post">
                                 @csrf
-                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmResetSession{{ $item->user_id }}">
+                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmResetSession-{{$key}}">
                                     Reset
                                 </button>
-                                <div class="modal fade" id="confirmResetSession{{ $item->user_id }}" tabindex="-1" role="dialog" aria-labelledby="confirmResetSessionLabel" aria-hidden="true">
+                                <div class="modal fade" id="confirmResetSession-{{$key}}" tabindex="-1" role="dialog" aria-labelledby="confirmResetSessionLabel" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">

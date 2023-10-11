@@ -18,7 +18,7 @@
                 $page = Request::get('page');
                 $no = !$page || $page == 1 ? 1 : ($page - 1) * 10 + 1;
             @endphp
-            @foreach ($data as $item)
+            @foreach ($data as $key => $item)
                 @php
                     $cabang = '-';
                     if ($item->id_cabang) {
@@ -86,7 +86,7 @@
                     <td>
                         <form action="{{ route('reset-api-session', $item->id) }}" method="post">
                             @csrf
-                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmResetApiSession">
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmResetApiSession-{{$key}}">
                                 Reset
                             </button>
                             @include('user.api-sessions.confirm-modal')

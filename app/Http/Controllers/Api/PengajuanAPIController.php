@@ -95,6 +95,12 @@ class PengajuanAPIController extends Controller
                 }
             }
         }
+        else {
+            return response()->json([
+                'status' => 'gagal',
+                'message' => 'User tidak ditemukan',
+            ]);
+        }
 
         // Cek Role user jika tersedia
         if($user->role == 'Administrator'){

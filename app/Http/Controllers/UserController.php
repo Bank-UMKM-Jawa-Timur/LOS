@@ -303,7 +303,7 @@ class UserController extends Controller
         return view('user.sessions.index', $this->param);
     }
 
-    function resetSession($id)
+    public function resetSession($id)
     {
         try {
             DB::table('sessions')
@@ -344,7 +344,7 @@ class UserController extends Controller
                     }
                 }
             }
-
+            
             $this->param['data'] = $data;
         } catch (\Illuminate\Database\QueryException $e) {
             return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
