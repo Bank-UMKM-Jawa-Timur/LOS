@@ -106,7 +106,7 @@ function getKaryawan($nip){
 
             {{--  riwayat pengembalian data  --}}
 
-            <div class="card mb-3">
+            {{-- <div class="card mb-3">
                 <div class="card-header bg-info color-white font-weight-bold" data-toggle="collapse" href="#cardRiwayatPengembalian">
                     Riwayat Pengembalian Data
                 </div>
@@ -146,7 +146,7 @@ function getKaryawan($nip){
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
             {{-- calon nasabah --}}
             <div class="card mb-3">

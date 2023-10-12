@@ -1,5 +1,6 @@
 @extends('layouts.template')
 @section('content')
+
     @push('extraStyle')
         <style>
             .text-sm span {
@@ -105,6 +106,13 @@
                     </thead>
                     <tbody>
                         @foreach ($data_pengajuan as $item)
+                            @php
+                                $countAlasan = \App\Models\AlasanPengembalianData::where('id_pengajuan', $item->id)
+                                            ->join('users', 'users.id', 'alasan_pengembalian_data.id_user')
+                                            ->select('users.nip', 'alasan_pengembalian_data.*')
+                                            ->count();  
+                            @endphp
+
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $item->tanggal }}</td>
@@ -436,21 +444,21 @@
                                                         class="dropdown-item">Cetak
                                                     </a>
                                                     @if (Auth::user()->role == 'Administrator')
+                                                        <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalLogPengajuan-{{ $item->id }}">
+                                                            Log Pengajuan
+                                                        </a>
                                                         <a href="javascript:void(0)" class="dropdown-item text-danger" data-toggle="modal" data-target="#confirmHapusModal{{$item->id}}">
                                                         Hapus
                                                         </a>
                                                     @endif
                                                     @if (Auth::user()->role == 'SPI' || Auth::user()->role == 'Kredit Umum' || auth()->user()->role == 'Direksi')
                                                         <a href="{{ route('pengajuan.check.pincab.status.detail', $item->id_pengajuan) }}"
-                                                            class="dropdown-item">Log Pengajuan</a>
-                                                    @endif
-                                                    @if ($item->skema_kredit == 'KKB')
-                                                        <a target="_blank" href="{{ route('cetak-sppk', $item->id_pengajuan) }}"
-                                                            class="dropdown-item">Cetak SPPK</a>
-                                                        <a target="_blank" href="{{ route('cetak-pk', $item->id_pengajuan) }}"
-                                                            class="dropdown-item">Cetak PK</a>
-                                                        <a target="_blank" href="{{ route('cetak-po', $item->id_pengajuan) }}"
-                                                            class="dropdown-item">Cetak PO</a>
+                                                            class="dropdown-item">Review Pengajuan</a>
+                                                        @if ($countAlasan > 0)
+                                                            <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalRiwayatPengembalian-{{ $item->id }}">
+                                                                Riwayat Pengembalian
+                                                            </a>
+                                                        @endif
                                                     @endif
                                                 </div>
                                                 </div>
@@ -466,57 +474,24 @@
                                                     </svg>
                                                 </button>
                                                 <div class="dropdown-menu">
-                                                    @if ($item->skema_kredit == 'KKB' && $item->posisi == 'Selesai')
-                                                        @php
-                                                            $tglCetak = DB::table('log_cetak_kkb')
-                                                                ->where('id_pengajuan', $item->id_pengajuan)
-                                                                ->first();
-                                                        @endphp
-                                                        @if ($tglCetak?->tgl_cetak_sppk == null || $tglCetak == null)
-                                                            <a target="_blank"
-                                                                href="{{ route('cetak-sppk', $item->id_pengajuan) }}"
-                                                                class="dropdown-item">Cetak SPPK</a>
-                                                        @elseif($tglCetak?->tgl_cetak_sppk != null && $item->sppk == null)
-                                                            <a href="#" class="dropdown-item" data-toggle="modal"
-                                                                data-id="{{ $item->id_pengajuan }}"
-                                                                data-target="#uploadSPPKModal-{{ $item->id_pengajuan }}">Upload
-                                                                File SPPK</a>
-                                                        @endif
-
-                                                        @if ($item->sppk != null && $tglCetak?->tgl_cetak_sppk != null && $tglCetak?->tgl_cetak_po == null)
-                                                            <a target="_blank"
-                                                                href="{{ route('cetak-po', $item->id_pengajuan) }}"
-                                                                class="dropdown-item">Cetak PO</a>
-                                                        @elseif($item->sppk != null && $tglCetak->tgl_cetak_po != null && $item->po == null)
-                                                            <a href="#" class="dropdown-item" data-toggle="modal"
-                                                                data-id="{{ $item->id_pengajuan }}"
-                                                                data-target="#uploadPOModal-{{ $item->id_pengajuan }}">Upload
-                                                                File
-                                                                PO</a>
-                                                        @endif
-
-                                                        @if ($item->po != null && $tglCetak?->tgl_cetak_po != null && $tglCetak?->tgl_cetak_pk == null)
-                                                            <a target="_blank"
-                                                                href="{{ route('cetak-pk', $item->id_pengajuan) }}"
-                                                                class="dropdown-item">Cetak PK</a>
-                                                        @elseif($item->po != null && $tglCetak?->tgl_cetak_pk != null && $item->pk == null)
-                                                            <a href="#" class="dropdown-item" data-toggle="modal"
-                                                                data-id="{{ $item->id_pengajuan }}"
-                                                                data-target="#uploadPKModal-{{ $item->id_pengajuan }}">Upload
-                                                                File
-                                                                PK</a>
-                                                        @endif
-                                                    @endif
                                                     @if (Auth::user()->role == 'Pincab')
                                                         <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
                                                             class="dropdown-item">Cetak</a>
                                                     @endif
                                                     @if (Auth::user()->role == 'SPI' || Auth::user()->role == 'Kredit Umum' || auth()->user()->role == 'Direksi')
                                                         <a href="{{ route('pengajuan.check.pincab.status.detail', $item->id_pengajuan) }}"
-                                                            class="dropdown-item">Log Pengajuan</a>
+                                                            class="dropdown-item">Review Pengajuan</a>
+                                                        @if ($countAlasan > 0)
+                                                            <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalRiwayatPengembalian-{{ $item->id }}">
+                                                                Riwayat Pengembalian
+                                                            </a>
+                                                        @endif
                                                     @endif
 
                                                     @if (Auth::user()->role == 'Administrator')
+                                                        <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalLogPengajuan-{{ $item->id }}">
+                                                            Log Pengajuan
+                                                        </a>
                                                         <a href="javascript:void(0)" class="dropdown-item text-danger" data-toggle="modal" data-target="#confirmHapusModal{{$item->id}}">
                                                         Hapus
                                                         </a>
@@ -537,11 +512,19 @@
                                                 <div class="dropdown-menu">
                                                     @if (Auth::user()->role == 'SPI' || Auth::user()->role == 'Kredit Umum' || auth()->user()->role == 'Direksi')
                                                         <a href="{{ route('pengajuan.check.pincab.status.detail', $item->id_pengajuan) }}"
-                                                            class="dropdown-item">Log Pengajuan</a>
+                                                            class="dropdown-item">Review Pengajuan</a>
+                                                        @if ($countAlasan > 0)
+                                                            <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalRiwayatPengembalian-{{ $item->id }}">
+                                                                Riwayat Pengembalian
+                                                            </a>
+                                                        @endif
                                                     @endif
                                                     <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
                                                         class="dropdown-item">Cetak</a>
                                                     @if (Auth::user()->role == 'Administrator')
+                                                        <a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalLogPengajuan-{{ $item->id }}">
+                                                            Log Pengajuan
+                                                        </a>
                                                         <a href="javascript:void(0)" class="dropdown-item text-danger" data-toggle="modal" data-target="#confirmHapusModal{{$item->id}}">
                                                         Hapus
                                                         </a>
@@ -840,6 +823,8 @@
     @include('layouts.popup-upload-po')
     @include('layouts.popup-upload-pk')
     @include('layouts.modal-kembalikan')
+    @include('pengajuan-kredit.modal.modal-log-pengajuan')
+    @include('pengajuan-kredit.modal.modal-riwayat')
 
 
 @endsection
