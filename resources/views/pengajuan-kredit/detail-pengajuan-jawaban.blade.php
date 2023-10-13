@@ -6,7 +6,7 @@
         'Talangan Umroh' => 1,
         'Prokesra' => 1,
         'Kusuma' => 1,
-        null => 2,
+        null => 1,
     };
 
     function getKaryawan($nip){
@@ -66,7 +66,7 @@
 
     <form id="pengajuan_kredit" action="{{ route('pengajuan.insertkomentar') }}" method="post">
         @csrf
-        <div class="form-wizard active" data-index='0' data-done='true'>
+        {{-- <div class="form-wizard active" data-index='0' data-done='true'>
             <div class="row col-md-12 table-responsive mb-3">
                 <label for="">Riwayat Pengembalian Data</label>
                 <div class="col-md-12">
@@ -102,8 +102,8 @@
                     </table>
                 </div>
             </div>
-        </div>
-        <div class="form-wizard" data-index='1' data-done='true'>
+        </div> --}}
+        <div class="form-wizard active" data-index='0' data-done='true'>
             <div class="row">
                 @php
                     $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide')
@@ -586,7 +586,7 @@
                 $keterangan = $dataPO->keterangan;
                 $pemesanan = str_replace('Pemesanan ', '', $keterangan);
             @endphp
-            <div class="form-wizard" data-index='2' data-done='true' id="data-po">
+            <div class="form-wizard" data-index='1' data-done='true' id="data-po">
             {{--  <div class="row" id="data-po">  --}}
                 <div class="form-group col-md-12">
                     <span style="color: black; font-weight: bold; font-size: 18px;">Jenis Kendaraan Roda 2 :</span>
@@ -816,7 +816,7 @@
                             @endif
                         @endforeach
 
-                        @if (count($dataJawaban) != 0)
+                        @if (count($dataJawaban) != 0 && $item->nama != 'Repayment Capacity Opsi')
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="">{{ $item->nama }}</label>
@@ -1326,7 +1326,7 @@
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Pendapat dan Usulan Penyelia Kredit</label>
-                    <p>{{ $pendapatPenyeliaPerAspek->pendapat_per_aspek }}</p>
+                    <p>{{ $pendapatPenyeliaPerAspek?->pendapat_per_aspek }}</p>
                 </div>
                 @if ($dataUmumNasabah->id_pbo)
                     <div class="form-group col-md-12">
