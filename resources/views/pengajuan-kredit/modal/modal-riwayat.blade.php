@@ -14,6 +14,33 @@
     }
 </style>
 
+@php
+    function getKaryawan($nip){
+        $host = env('HCS_HOST');
+        $curl = curl_init();
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $host . '/api/v1/karyawan/' . $nip,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+        ]);
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        $json = json_decode($response);
+
+        if ($json) {
+            if ($json->data)
+                return $json->data->nama_karyawan;
+        }
+    }
+@endphp
+
 @foreach ($data_pengajuan as $item)
 @php
     $alasanPengembalian = \App\Models\AlasanPengembalianData::where('id_pengajuan', $item->id)
