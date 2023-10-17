@@ -48,9 +48,11 @@ class PengajuanAPIController extends Controller
 
     public function login(Request $request)
     {
-        $ip = $this->get_client_ip();
+        // $ip = $this->get_client_ip();
         // $personalAccessToken = new PersonalAccessToken();
         // array_push($personalAccessToken->fillable, 'project');
+        $ip = \Request::getClientIp(true);
+        
         $user = User::select(
                     'users.*',
                     'cabang.kode_cabang'
@@ -59,6 +61,8 @@ class PengajuanAPIController extends Controller
                 ->orWhere('users.nip', $request['email'])
                 ->leftJoin('cabang', 'cabang.id', 'users.id_cabang')
                 ->first();
+
+        
 
         if ($user) {
             $detail = [
@@ -129,6 +133,7 @@ class PengajuanAPIController extends Controller
                 'kode_cabang' => '001',
                 'access_token' => $token,
                 'token_type' => 'Bearer',
+                'ip_address' => $ip,
                 'data' => $user->nip ? $this->getKaryawan($user->nip) : $user
             ]);
         } else if($user->role != 'Administrator'){
@@ -158,6 +163,7 @@ class PengajuanAPIController extends Controller
                     'kode_cabang' => $user->kode_cabang,
                     'access_token' => $token,
                     'token_type' => 'Bearer',
+                    'ip_address' => $ip,
                     'data' => $user->nip ? $this->getKaryawan($user->nip) : $user
                 ]);
             } else {
@@ -206,6 +212,7 @@ class PengajuanAPIController extends Controller
                     'kode_cabang' => $user->role == 'Administrator' ? '001' : $user->kode_cabang,
                     'access_token' => $token,
                     'token_type' => 'Bearer',
+                    'ip_address' => $ip,
                     'data' => $detail,
                 ]);
             }
