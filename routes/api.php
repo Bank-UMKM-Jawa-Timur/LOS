@@ -48,6 +48,7 @@ Route::prefix('v1')->group(function(){
         Route::get('get-count-pengajuan', [PengajuanAPIController::class, 'getCountPengajuan']);
         Route::get('get-cabang', [PengajuanAPIController::class, 'getAllCabangMobile']);
         Route::get('get-sum-skema', [PengajuanAPIController::class, 'getSumSkema']);
+        Route::get('get-list-pengajuan/{user_id}', [PengajuanAPIController::class, 'getListPengajuan']);
     });
 });
 

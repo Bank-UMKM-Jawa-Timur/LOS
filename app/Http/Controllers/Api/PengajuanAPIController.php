@@ -52,7 +52,7 @@ class PengajuanAPIController extends Controller
         // $personalAccessToken = new PersonalAccessToken();
         // array_push($personalAccessToken->fillable, 'project');
         $ip = \Request::getClientIp(true);
-        
+
         $user = User::select(
                     'users.*',
                     'cabang.kode_cabang'
@@ -62,7 +62,7 @@ class PengajuanAPIController extends Controller
                 ->leftJoin('cabang', 'cabang.id', 'users.id_cabang')
                 ->first();
 
-        
+
 
         if ($user) {
             $detail = [
@@ -73,7 +73,7 @@ class PengajuanAPIController extends Controller
                 'entitas' => null,
                 'bagian' => null,
             ];
-    
+
             if ($user->role != 'Direksi') {
                 // Cek User ditemukan atau tidak
                 if (is_numeric($request['email'])) {
@@ -144,7 +144,7 @@ class PengajuanAPIController extends Controller
                         'message' => 'Akun sedang digunakan di perangkat lain.'
                     ], 401);
                 }
-    
+
                 $token = $user->createToken('auth_token')->plainTextToken;
                 $tokenId =  explode('|', $token);
                 DB::table('personal_access_tokens')
@@ -153,7 +153,7 @@ class PengajuanAPIController extends Controller
                         'ip_address' => $ip,
                         'project' => $request->project
                     ]);
-    
+
                 return response()->json([
                     'status' => 'berhasil',
                     'message' => 'berhasil login',
@@ -202,7 +202,7 @@ class PengajuanAPIController extends Controller
                 else {
                     $detail['nama'] = $user->name;
                 }
-    
+
                 return response()->json([
                     'status' => 'berhasil',
                     'message' => 'berhasil login',
@@ -265,7 +265,7 @@ class PengajuanAPIController extends Controller
             // ->join('mst_merk', 'mst_merk.id', 'mst_tipe.id_merk')
             // ->select('pengajuan.id', 'calon_nasabah.nama', 'calon_nasabah.jumlah_kredit', 'data_po.no_po', 'calon_nasabah.tenor_yang_diminta', 'pengajuan.sppk', 'pengajuan.po', 'pengajuan.tanggal', 'pengajuan.pk', 'mst_merk.merk', 'mst_tipe.tipe', 'data_po.tahun_kendaraan', 'data_po.harga', 'data_po.jumlah AS jumlah_kendaraan')
             ->select('pengajuan.id', 'calon_nasabah.nama', 'calon_nasabah.jumlah_kredit', 'data_po.no_po', 'data_po.tipe', 'data_po.merk', 'calon_nasabah.tenor_yang_diminta', 'calon_nasabah.alamat_rumah', 'calon_nasabah.alamat_usaha', 'pengajuan.sppk', 'pengajuan.po', 'pengajuan.tanggal', 'pengajuan.pk', 'data_po.tahun_kendaraan', 'data_po.harga', 'data_po.jumlah AS jumlah_kendaraan', 'cabang.kode_cabang', 'cabang.cabang', 'cabang.alamat AS alamat_cabang');
-        
+
         if ($user_id != 0) {
             if ($user->role == 'Staf Analis Kredit') {
                 $data->where('id_staf', $user_id);
@@ -283,7 +283,7 @@ class PengajuanAPIController extends Controller
                 $data->where('id_pincab', $user_id);
             }
         }
-        
+
         $data = $data->first();
         if ($data) {
             return response()->json([
@@ -327,7 +327,7 @@ class PengajuanAPIController extends Controller
             ->join('data_po', 'data_po.id_pengajuan', 'pengajuan.id')
             ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
             ->select('pengajuan.id', 'calon_nasabah.nama', 'calon_nasabah.jumlah_kredit', 'data_po.no_po', 'data_po.tipe', 'data_po.merk', 'calon_nasabah.tenor_yang_diminta', 'calon_nasabah.alamat_rumah', 'calon_nasabah.alamat_usaha', 'pengajuan.sppk', 'pengajuan.po', 'pengajuan.tanggal', 'pengajuan.pk', 'data_po.tahun_kendaraan', 'data_po.harga', 'data_po.jumlah AS jumlah_kendaraan', 'cabang.kode_cabang', 'cabang.cabang', 'cabang.email AS email_cabang', 'cabang.alamat AS alamat_cabang');
-        
+
         $data = $data->first();
         if ($data) {
             return response()->json([
@@ -996,6 +996,55 @@ class PengajuanAPIController extends Controller
             //     ->where('c.kode_cabang', '!=', '000')
             //     ->groupBy('kodeC',)
             //     ->get();
+        }
+    }
+
+    public function getListPengajuan($user_id){
+        $user = User::select('id', 'role')->find($user_id);
+        $data = DB::table('pengajuan')
+        ->where('skema_kredit', 'KKB')
+        ->where('posisi', 'Selesai')
+        ->whereNotNull('po')
+            ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+            ->join('data_po', 'data_po.id_pengajuan', 'pengajuan.id')
+            ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
+            // ->join('mst_tipe', 'mst_tipe.id', 'data_po.id_type')
+            // ->join('mst_merk', 'mst_merk.id', 'mst_tipe.id_merk')
+            // ->select('pengajuan.id', 'calon_nasabah.nama', 'calon_nasabah.jumlah_kredit', 'data_po.no_po', 'calon_nasabah.tenor_yang_diminta', 'pengajuan.sppk', 'pengajuan.po', 'pengajuan.tanggal', 'pengajuan.pk', 'mst_merk.merk', 'mst_tipe.tipe', 'data_po.tahun_kendaraan', 'data_po.harga', 'data_po.jumlah AS jumlah_kendaraan')
+            ->select('pengajuan.id', 'calon_nasabah.nama', 'calon_nasabah.tanggal_lahir','calon_nasabah.alamat_rumah','calon_nasabah.no_ktp', 'calon_nasabah.jumlah_kredit', 'calon_nasabah.tenor_yang_diminta', 'pengajuan.sppk', 'pengajuan.po', 'pengajuan.tanggal', 'pengajuan.pk', 'cabang.kode_cabang', 'cabang.cabang', 'cabang.alamat AS alamat_cabang');
+
+        if ($user_id != 0) {
+            if ($user->role == 'Staf Analis Kredit') {
+                $data->where('id_staf', $user_id);
+            }
+            if ($user->role == 'Penyelia Kredit') {
+                $data->where('id_penyelia', $user_id);
+            }
+            if ($user->role == 'PBO') {
+                $data->where('id_pbo', $user_id);
+            }
+            if ($user->role == 'PBP') {
+                $data->where('id_pbp', $user_id);
+            }
+            if ($user->role == 'Pincab') {
+                $data->where('id_pincab', $user_id);
+            }
+        }
+
+        $data = $data->get();
+        $total_data = count($data);
+        if ($data) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'success',
+                'total_data' => $total_data,
+                'data' => $data,
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Data not found'
+            ]);
         }
     }
 }
