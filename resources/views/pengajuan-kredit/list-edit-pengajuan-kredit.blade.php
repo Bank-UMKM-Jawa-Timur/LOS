@@ -404,7 +404,7 @@
                                                 class="dropdown-item">Cetak</a>
                                             @if ($item->skema_kredit == 'KKB' && $item->posisi == 'Selesai')
                                                 @php
-                                                    $tglCetak = DB::table('log_cetak_kkb')
+                                                    $tglCetak = DB::table('log_cetak')
                                                         ->where('id_pengajuan', $item->id_pengajuan)
                                                         ->first();
                                                 @endphp
