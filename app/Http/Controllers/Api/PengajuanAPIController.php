@@ -52,14 +52,15 @@ class PengajuanAPIController extends Controller
         // $personalAccessToken = new PersonalAccessToken();
         // array_push($personalAccessToken->fillable, 'project');
 
-        $os = PHP_OS; // Get sistem operasi server
-        if (strpos($os, 'WIN') !== false) { // Windows
-            $ip = exec('ipconfig');
-        } elseif (strpos($os, 'Darwin') !== false) { // MacOS
-            $ip = exec('ipconfig getifaddr en0');
-        } else { // Linux
-            $ip = exec('hostname -I');
-        }
+        // $os = PHP_OS; // Get sistem operasi server
+        // if (strpos($os, 'WIN') !== false) { // Windows
+        //     $ip = exec('ipconfig');
+        // } elseif (strpos($os, 'Darwin') !== false) { // MacOS
+        //     $ip = exec('ipconfig getifaddr en0');
+        // } else { // Linux
+        //     $ip = exec('hostname -I');
+        // }
+        $ip = \Request::getClientIp(true);
 
         $user = User::select(
                     'users.*',
