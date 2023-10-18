@@ -3,6 +3,7 @@
         <thead>
             <tr class="table-primary">
                 <th class="text-center">#</th>
+                <th>Id Address</th>
                 <th>Email</th>
                 <th>Nama</th>
                 <th>Role</th>
@@ -64,6 +65,7 @@
 
                 <tr class="border-bottom-primary">
                     <td class="text-center text-muted">{{ $no }}</td>
+                    <td>{{ $item->ip_address }}</td>
                     <td>{{ $item->email }}</td>
                     <td>
                         {{ $item->karyawan ? $item->karyawan['nama'] : $item->name }}
