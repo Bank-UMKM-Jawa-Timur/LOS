@@ -51,7 +51,7 @@ class PengajuanAPIController extends Controller
         // $ip = $this->get_client_ip();
         // $personalAccessToken = new PersonalAccessToken();
         // array_push($personalAccessToken->fillable, 'project');
-        $ip = \Request::getClientIp(true);
+        $ip = gethostbyname(gethostname());
 
         $user = User::select(
                     'users.*',
