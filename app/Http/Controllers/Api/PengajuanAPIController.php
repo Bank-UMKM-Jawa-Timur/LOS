@@ -453,6 +453,11 @@ class PengajuanAPIController extends Controller
             ->where('users.id', $id)
             ->first();
 
+        if ($data) {
+            $detail = $this->getKaryawan($data->nip);
+            $data->detail = $detail;
+        }
+
         return response()->json($data);
     }
 
