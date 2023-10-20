@@ -1014,12 +1014,12 @@ class PengajuanAPIController extends Controller
         ->where('skema_kredit', '!=', 'KKB')
         ->where('posisi', 'Selesai')
         ->whereNotNull('pk')
-            ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
-            ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
-            // ->join('mst_tipe', 'mst_tipe.id', 'data_po.id_type')
-            // ->join('mst_merk', 'mst_merk.id', 'mst_tipe.id_merk')
-            // ->select('pengajuan.id', 'calon_nasabah.nama', 'calon_nasabah.jumlah_kredit', 'data_po.no_po', 'calon_nasabah.tenor_yang_diminta', 'pengajuan.sppk', 'pengajuan.po', 'pengajuan.tanggal', 'pengajuan.pk', 'mst_merk.merk', 'mst_tipe.tipe', 'data_po.tahun_kendaraan', 'data_po.harga', 'data_po.jumlah AS jumlah_kendaraan')
-            ->select('pengajuan.id', 'calon_nasabah.nama', 'calon_nasabah.tanggal_lahir','calon_nasabah.alamat_rumah','calon_nasabah.no_ktp', 'calon_nasabah.jumlah_kredit', 'calon_nasabah.tenor_yang_diminta', 'pengajuan.sppk', 'pengajuan.po', 'pengajuan.pk', 'pengajuan.tanggal', 'cabang.kode_cabang', 'cabang.cabang', 'cabang.alamat AS alamat_cabang');
+        ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+        ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
+        // ->join('mst_tipe', 'mst_tipe.id', 'data_po.id_type')
+        // ->join('mst_merk', 'mst_merk.id', 'mst_tipe.id_merk')
+        // ->select('pengajuan.id', 'calon_nasabah.nama', 'calon_nasabah.jumlah_kredit', 'data_po.no_po', 'calon_nasabah.tenor_yang_diminta', 'pengajuan.sppk', 'pengajuan.po', 'pengajuan.tanggal', 'pengajuan.pk', 'mst_merk.merk', 'mst_tipe.tipe', 'data_po.tahun_kendaraan', 'data_po.harga', 'data_po.jumlah AS jumlah_kendaraan')
+        ->select('pengajuan.id', 'calon_nasabah.nama', 'calon_nasabah.tanggal_lahir','calon_nasabah.alamat_rumah','calon_nasabah.no_ktp', 'calon_nasabah.jumlah_kredit', 'calon_nasabah.tenor_yang_diminta', 'pengajuan.sppk', 'pengajuan.po', 'pengajuan.pk', 'pengajuan.tanggal', 'cabang.kode_cabang', 'cabang.cabang', 'cabang.alamat AS alamat_cabang', 'pengajuan.skema_kredit');
 
         if ($user_id != 0) {
             if ($user->role == 'Staf Analis Kredit') {
