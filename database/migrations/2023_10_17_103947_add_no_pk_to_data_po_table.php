@@ -26,7 +26,7 @@ class AddNoPkToDataPoTable extends Migration
     public function down()
     {
         Schema::table('data_po', function (Blueprint $table) {
-            //
+            $table->dropColumn('no_pk');
         });
     }
 }
