@@ -112,17 +112,17 @@ class CetakSuratController extends Controller
 
     public function cetakSPPk($id)
     {
-        $count = DB::table('log_cetak_kkb')
+        $count = DB::table('log_cetak')
             ->where('id_pengajuan', $id)
             ->count('*');
         if($count < 1){
-            DB::table('log_cetak_kkb')
+            DB::table('log_cetak')
                 ->insert([
                     'id_pengajuan' => $id,
                     'tgl_cetak_sppk' => now()
                 ]);
         } else{
-            DB::table('log_cetak_kkb')
+            DB::table('log_cetak')
                 ->where('id_pengajuan', $id)
                 ->update([
                     'tgl_cetak_sppk' => now()
@@ -144,7 +144,7 @@ class CetakSuratController extends Controller
             ->where('id', $param['dataUmum']->id_cabang)
             ->first();
 
-        $param['tglCetak'] = DB::table('log_cetak_kkb')
+        $param['tglCetak'] = DB::table('log_cetak')
             ->where('id_pengajuan', $id)
             ->first();
 
@@ -166,17 +166,17 @@ class CetakSuratController extends Controller
 
     public function cetakPO($id)
     {
-        $count = DB::table('log_cetak_kkb')
+        $count = DB::table('log_cetak')
             ->where('id_pengajuan', $id)
             ->count('*');
         if($count < 1){
-            DB::table('log_cetak_kkb')
+            DB::table('log_cetak')
                 ->insert([
                     'id_pengajuan' => $id,
                     'tgl_cetak_po' => now()
                 ]);
         } else {
-            DB::table('log_cetak_kkb')
+            DB::table('log_cetak')
                 ->where('id_pengajuan', $id)
                 ->update([
                     'tgl_cetak_po' => now()
@@ -195,7 +195,7 @@ class CetakSuratController extends Controller
             ->find($id);
             
 
-        $param['tglCetak'] = DB::table('log_cetak_kkb')
+        $param['tglCetak'] = DB::table('log_cetak')
             ->where('id_pengajuan', $id)
             ->first();
 
@@ -221,11 +221,11 @@ class CetakSuratController extends Controller
 
     public function cetakPk($id)
     {
-        $count = DB::table('log_cetak_kkb')
+        $count = DB::table('log_cetak')
             ->where('id_pengajuan', $id)
             ->count('tgl_cetak_pk');
         if($count < 1){
-            DB::table('log_cetak_kkb')
+            DB::table('log_cetak')
                 ->where('id_pengajuan', $id)
                 ->update([
                     'tgl_cetak_pk' => now()
@@ -240,7 +240,7 @@ class CetakSuratController extends Controller
             ->first();
             
 
-        $param['tglCetak'] = DB::table('log_cetak_kkb')
+        $param['tglCetak'] = DB::table('log_cetak')
             ->where('id_pengajuan', $id)
             ->first();
 
