@@ -149,13 +149,12 @@ class UserController extends Controller
                 Rule::unique('users')->ignore($user->id),
             ],
             'role' => 'required',
-            'id_cabang' => 'required',
+            'id_cabang' => 'present',
         ],
         [
             'email.unique' => 'Email sudah di gunakan'
             ]
         );
-
         try {
             $user->nip = $request->get('nip');
             $user->name = $request->get('name');
