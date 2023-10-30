@@ -44,6 +44,7 @@
                 <option value="SPI" {{ old('role') == 'SPI' ? ' selected' : '' }}>SPI</option>
                 <option value="Kredit Umum" {{ old('role') == 'Kredit Umum' ? ' selected' : '' }}>Kredit Umum</option>
                 <option value="Direksi" {{ old('role') == 'Direksi' ? ' selected' : '' }}>Direksi</option>
+                <option value="Pemasaran" {{ old('role') == 'Pemasaran' ? ' selected' : '' }}>Pemasaran</option>
             </select>
             @error('role')
                 <div class="invalid-feedback">

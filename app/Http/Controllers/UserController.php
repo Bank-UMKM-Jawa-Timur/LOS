@@ -140,20 +140,19 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $user = User::findOrFail($id);
-
         $validatedData = $request->validate(
-            [
-                'nip' => 'sometimes|nullable|unique:users,nip,' . $user->id,
-                'name' => 'required',
-                'email' => [
-                    'required',
-                    Rule::unique('users')->ignore($user->id),
-                ],
-                'role' => 'required',
-                'id_cabang' => 'required',
+        [
+            'nip' => 'sometimes|nullable|unique:users,nip,' . $user->id,
+            'name' => 'required',
+            'email' => [
+                'required',
+                Rule::unique('users')->ignore($user->id),
             ],
-            [
-                'email.unique' => 'Email sudah di gunakan'
+            'role' => 'required',
+            'id_cabang' => 'required',
+        ],
+        [
+            'email.unique' => 'Email sudah di gunakan'
             ]
         );
 
@@ -161,7 +160,7 @@ class UserController extends Controller
             $user->nip = $request->get('nip');
             $user->name = $request->get('name');
             $user->email = $request['email'];
-            $user->role = $request['role'];
+            $user->role = $request->get('role');
             $user->id_cabang = $request['id_cabang'];
             $user->save();
         } catch (\Exception $e) {
@@ -277,7 +276,7 @@ class UserController extends Controller
                     return $query->where('users.email', 'like', '%' . $search . '%');
                 })
                 ->paginate(10);
-            
+
             $pengajuanController = new PengajuanKreditController;
             foreach ($data as $key => $value) {
                 $value->karyawan = null;
@@ -292,7 +291,7 @@ class UserController extends Controller
                     }
                 }
             }
-            
+
             $this->param['data'] = $data;
         } catch (\Illuminate\Database\QueryException $e) {
             return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
@@ -344,7 +343,7 @@ class UserController extends Controller
                     }
                 }
             }
-            
+
             $this->param['data'] = $data;
         } catch (\Illuminate\Database\QueryException $e) {
             return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
