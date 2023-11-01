@@ -402,7 +402,7 @@
                                         @else
                                             <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
                                                 class="dropdown-item">Cetak</a>
-                                            @if ($item->skema_kredit == 'KKB' && $item->posisi == 'Selesai')
+                                            @if ($item->posisi == 'Selesai')
                                                 @php
                                                     $tglCetak = DB::table('log_cetak')
                                                         ->where('id_pengajuan', $item->id_pengajuan)

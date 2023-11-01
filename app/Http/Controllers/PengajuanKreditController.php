@@ -3758,7 +3758,7 @@ class PengajuanKreditController extends Controller
                         mkdir($folderPK, 0755, true);
                     }
                     $filePK->move($folderPK, $filenamePK);
-                    DB::table('data_po')
+                    DB::table('log_cetak')
                         ->where('id_pengajuan', $id)
                         ->update([
                             'no_pk' => $noPK
