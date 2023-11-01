@@ -3705,7 +3705,7 @@ class PengajuanKreditController extends Controller
                             'mid-client-key' => env('DWH_TOKEN')
                         ];
                         try {
-                            $response = Http::timeout(3)->withHeaders($headers)->withOptions(['verify' => false])->post($apiURL, [
+                            $response = Http::timeout(60)->withHeaders($headers)->withOptions(['verify' => false])->post($apiURL, [
                                 'pengajuan_id' => $id,
                                 'staf_id' => Auth::user()->id,
                                 'kode_cabang' => $kode_cabang->kode_cabang,

@@ -60,7 +60,7 @@ class PengajuanAPIController extends Controller
         // } else { // Linux
         //     $ip = exec('hostname -I');
         // }
-        $ip = \Request::getClientIp(true);
+        $ip = $_SERVER['REMOTE_ADDR'];
 
         $user = User::select(
                     'users.*',
@@ -452,6 +452,11 @@ class PengajuanAPIController extends Controller
             ->leftJoin('cabang AS c', 'c.id', 'users.id_cabang')
             ->where('users.id', $id)
             ->first();
+
+        if ($data) {
+            $detail = $this->getKaryawan($data->nip);
+            $data->detail = $detail;
+        }
 
         return response()->json($data);
     }
