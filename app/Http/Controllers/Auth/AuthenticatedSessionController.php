@@ -9,6 +9,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -30,10 +31,12 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request)
     {
-        $user = User::select('email','nip', 'password', 'role')
+        $user = User::select('id', 'email','nip', 'password', 'role')
                     ->where('email', $request->email)
                     ->orWhere('nip', $request->email)
                     ->first();
+        $device_name = gethostname();
+
         if ($user) {
             if ($user->role == 'Administrator') {
                 if (\Hash::check($request->password, $user->password)) {
@@ -48,6 +51,13 @@ class AuthenticatedSessionController extends Controller
                     }
 
                     $request->session()->regenerate();
+                    
+                    // Set device name
+                    DB::table('sessions')
+                        ->where('user_id', auth()->user()->id)
+                        ->update([
+                            'device_name' => $device_name
+                        ]);
 
                     return redirect()->intended(RouteServiceProvider::HOME);
                 } else {
@@ -65,8 +75,15 @@ class AuthenticatedSessionController extends Controller
                             $request->session()->regenerateToken();
                             return back()->withError("Akun sedang digunakan di perangkat lain.");
                         }
+                        // Set device name
+                        DB::table('sessions')
+                            ->where('id', Session::getId())
+                            ->update([
+                                'device_name' => $device_name
+                            ]);
 
                         $request->session()->regenerate();
+
 
                         return redirect()->intended(RouteServiceProvider::HOME);
                     } else {

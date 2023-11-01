@@ -72,10 +72,9 @@
     </div>
     </div>
 
-
     <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="home-tab" data-toggle="tab" data-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true"><i class="fas fa-database"></i> Data Pengajuan</button>
+        <button class="nav-link" id="home-tab" data-toggle="tab" data-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true"><i class="fas fa-database"></i> Data Pengajuan</button>
     </li>
     @if (auth()->user()->role == 'Administrator')
     <li class="nav-item" role="presentation">
@@ -565,7 +564,7 @@
                         @endforeach
                     </tbody>
                 </table>
-                    {{ $data_pengajuan->links() }}
+                    {{ $data_pengajuan->fragment('home-tab')->links() }}
                     Menampilkan
                     {{ $data_pengajuan->firstItem() }}
                     -
@@ -760,7 +759,7 @@
                         @endforeach
                     </tbody>
                 </table>
-                    {{ $sampah_pengajuan->links() }}
+                    {{ $sampah_pengajuan->fragment('profile-tab')->links() }}
                     Menampilkan
                     {{ $sampah_pengajuan->firstItem() }}
                     -
@@ -795,6 +794,32 @@
 
     <script>
         $(document).ready(function() {
+            var activeTab = window.location.hash;
+            var currentPage = 1;
+
+            if (!activeTab) {
+                activeTab = '#home-tab';
+            }
+
+            $(activeTab).tab('show');
+
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                var newUrl = window.location.href.split('#')[0] + e.target.getAttribute('href');
+                window.history.pushState(null, null, newUrl);
+            });
+
+            $('#home-tab').on('click', function (e) { 
+                var newUrl = window.location.href.split('?')[0] + '?page=1#home-tab';
+                window.history.pushState(null, null, newUrl);
+                location.reload();
+            });
+            $('#profile-tab').on('click', function (e) { 
+                var newUrl = window.location.href.split('?')[0] + '?page=1#profile-tab';
+                window.history.pushState(null, null, newUrl);
+                location.reload();
+            });
+
+
             $(".hapus").on('click', function(e) {
                 $("#loadingModal").modal({
                     keyboard: false
@@ -808,14 +833,17 @@
                 });
                 $("#loadingModal").modal("show");
             });
+
+            $('.btn-kembalikan').on('click', function (e) {
+                const data_target = $(this).data('target')
+                const data_backto = $(this).data('backto')
+                
+                $(`${data_target} .modal-title`).html(`Kembalikan ke ${data_backto}`)
+            })
         });
-        $('.btn-kembalikan').on('click', function (e) {
-            const data_target = $(this).data('target')
-            const data_backto = $(this).data('backto')
-            
-            $(`${data_target} .modal-title`).html(`Kembalikan ke ${data_backto}`)
-        })
     </script>
+
+
 
     @include('pengajuan-kredit.modal-filter')
     @include('layouts.modal')

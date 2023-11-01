@@ -71,8 +71,31 @@ class PengajuanAPIController extends Controller
                 ->leftJoin('cabang', 'cabang.id', 'users.id_cabang')
                 ->first();
 
+        if (!empty($_SERVER['HTTP_CLIENT_IP']))
+        {
+            $ip_address = $_SERVER['HTTP_CLIENT_IP'];
+        }
+        //whether ip is from proxy
+        elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
+        {
+            $ip_address = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        }
+        //whether ip is from remote address
+        else
+        {
+            $ip_address = $_SERVER['REMOTE_ADDR'];
+        }
+        $device_name = gethostname();
 
-
+        $detail = [
+            'nip' => null,
+            'nama' => null,
+            'jabatan' => null,
+            'nama_jabatan' => null,
+            'entitas' => null,
+            'bagian' => null,
+        ];
+        
         if ($user) {
             $detail = [
                 'nip' => null,
@@ -125,12 +148,15 @@ class PengajuanAPIController extends Controller
             }
 
             $token = $user->createToken('auth_token')->plainTextToken;
-            $tokenId =  explode('|', $token);
+            $pat_id = explode('|', $token)[0];
+
+            // Set device name
             DB::table('personal_access_tokens')
-                ->where('id', $tokenId[0])
+                ->where('id', $pat_id)
                 ->update([
                     'ip_address' => $ip,
-                    'project' => $request->project
+                    'project' => $request->project,
+                    'device_name' => $device_name,
                 ]);
 
             return response()->json([
@@ -194,6 +220,7 @@ class PengajuanAPIController extends Controller
             }
 
             $token = $user->createToken('auth_token')->plainTextToken;
+            $pat_id = explode('|', $token)[0];
             $tokenId =  explode('|', $token);
             DB::table('personal_access_tokens')
                 ->where('id', $tokenId[0])
@@ -225,8 +252,15 @@ class PengajuanAPIController extends Controller
                     'data' => $detail,
                 ]);
             }
-        }
-        else {
+
+            // Set device name
+            DB::table('personal_access_tokens')
+                ->where('id', $pat_id)
+                ->update([
+                    'device_name' => $device_name,
+                    'ip_address' => $ip_address,
+                ]);
+
             return response()->json([
                 'status' => 'gagal',
                 'message' => 'User tidak ditemukan',
