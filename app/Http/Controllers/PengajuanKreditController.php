@@ -1226,6 +1226,7 @@ class PengajuanKreditController extends Controller
             $addPengajuan->id_cabang = auth()->user()->id_cabang;
             $addPengajuan->progress_pengajuan_data = $request->progress;
             $addPengajuan->skema_kredit = $request->skema_kredit;
+            $addPengajuan->pekerjaan = $request->pekerjaan;
             $addPengajuan->save();
             $id_pengajuan = $addPengajuan->id;
 
@@ -1721,6 +1722,7 @@ class PengajuanKreditController extends Controller
             $updateData->id_kecamatan = $request->kec;
             $updateData->id_kabupaten = $request->kabupaten;
             $updateData->tenor_yang_diminta = $request->tenor_yang_diminta;
+            $updateData->pekerjaan = $request->pekerjaan;
             $updateData->save();
             $id_calon_nasabah = $updateData->id;
 
