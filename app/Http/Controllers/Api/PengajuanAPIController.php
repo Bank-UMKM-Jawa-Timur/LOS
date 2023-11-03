@@ -95,7 +95,7 @@ class PengajuanAPIController extends Controller
             'entitas' => null,
             'bagian' => null,
         ];
-        
+
         if ($user) {
             $detail = [
                 'nip' => null,
@@ -1048,15 +1048,29 @@ class PengajuanAPIController extends Controller
     }
 
     public function getListPengajuan($user_id){
+        $page_length = Request()->page_length ? Request()->page_length : 5;
         $user = User::select('id', 'role')->find($user_id);
+
+
+
+
         $data = DB::table('pengajuan')
-        ->where('skema_kredit', '!=', 'KKB')
-        ->where('posisi', 'Selesai')
-        ->whereNotNull('pk')
-        ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
-        ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
-        ->join('log_cetak AS log', 'log.id_pengajuan', 'pengajuan.id')
-        ->select('pengajuan.id', 'calon_nasabah.nama', 'calon_nasabah.tanggal_lahir','calon_nasabah.alamat_rumah','calon_nasabah.no_ktp', 'calon_nasabah.jumlah_kredit', 'calon_nasabah.tenor_yang_diminta', 'pengajuan.sppk', 'pengajuan.po', 'pengajuan.pk', 'log.tgl_cetak_pk', 'log.no_pk', 'pengajuan.tanggal', 'cabang.kode_cabang', 'cabang.cabang', 'cabang.alamat AS alamat_cabang', 'pengajuan.skema_kredit');
+            ->where('skema_kredit', '!=', 'KKB')
+            ->where('posisi', 'Selesai')
+            ->whereNotNull('pk')
+            ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+            ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
+            ->join('log_cetak AS log', 'log.id_pengajuan', 'pengajuan.id')
+            ->select('pengajuan.id', 'pengajuan.tanggal as tanggal_pengajuan', 'calon_nasabah.nama', 'calon_nasabah.tanggal_lahir', 'calon_nasabah.alamat_rumah', 'calon_nasabah.no_ktp', 'calon_nasabah.jumlah_kredit', 'calon_nasabah.tenor_yang_diminta', 'pengajuan.sppk', 'pengajuan.po', 'pengajuan.pk', 'log.tgl_cetak_pk', 'log.no_pk', 'pengajuan.tanggal', 'cabang.kode_cabang', 'cabang.cabang', 'cabang.alamat AS alamat_cabang', 'pengajuan.skema_kredit')
+            // ->when(Request()->query, function ($query) use ($searhQuery) {
+            //     return $query->where('calon_nasabah.nama', 'LIKE', "%$searhQuery%");
+            // })
+            // ->when($tAwal, function ($query) use ($tAwal, $tAkhir) {
+            //     return $query->whereBetween('log.tgl_cetak_pk', [$tAwal, $tAkhir]);
+            // }, function ($query) use ($tAwal, $hari_ini) {
+            //     return $query->where('log.tgl_cetak_pk', [$tAwal, $hari_ini]);
+            // })
+        ;
 
         if ($user_id != 0) {
             if ($user->role == 'Staf Analis Kredit') {
@@ -1076,21 +1090,31 @@ class PengajuanAPIController extends Controller
             }
         }
 
-        $data = $data->get();
-        $total_data = count($data);
-        if ($total_data > 0) {
-            return response()->json([
-                'status' => 'success',
-                'message' => 'success',
-                'total_data' => $total_data,
-                'data' => $data,
-            ]);
-        } else {
-            return response()->json([
-                'status' => 'failed',
-                'message' => 'Data not found'
-            ]);
+        if (Request()->has('str')) {
+            $searhQuery = Request()->str;
+            // dd($searhQuery);
+            $data->where('calon_nasabah.nama', 'LIKE', "%$searhQuery%");
+            // $data->where('calon_nasabah.nama', Request()->query);
         }
+        if (Request()->has('tAwal')) {
+            $tAwal = Request()->tAwal;
+            $tAkhir = Request()->tAkhir;
+            $hari_ini = now();
+
+            if ($tAkhir != null) {
+                $data->whereBetween('pengajuan.tanggal', [$tAwal, $tAkhir]);
+            } else {
+                $data->whereBetween('pengajuan.tanggal', [$tAwal, $hari_ini]);
+            }
+        }
+
+        $data = $data->paginate($page_length);
+        // $data = $data->get();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $data,
+        ]);
     }
 
     public function getListPengajuanById($id){
