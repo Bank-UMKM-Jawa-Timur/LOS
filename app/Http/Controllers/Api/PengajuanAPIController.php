@@ -1058,18 +1058,18 @@ class PengajuanAPIController extends Controller
             ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
             ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
             ->join('log_cetak AS log', 'log.id_pengajuan', 'pengajuan.id')
-            ->select('pengajuan.id', 'pengajuan.tanggal as tanggal_pengajuan', 'calon_nasabah.nama', 'calon_nasabah.tanggal_lahir', 'calon_nasabah.alamat_rumah', 'calon_nasabah.no_ktp', 'calon_nasabah.jumlah_kredit', 'calon_nasabah.tenor_yang_diminta', 'pengajuan.sppk', 'pengajuan.po', 'pengajuan.pk', 'log.tgl_cetak_pk', 'log.no_pk', 'pengajuan.tanggal', 'cabang.kode_cabang', 'cabang.cabang', 'cabang.alamat AS alamat_cabang', 'pengajuan.skema_kredit')
-        ;
-
+            ->select(
+                'pengajuan.id',
+                'pengajuan.id_penyelia',
+                'u.nip AS nip_penyelia',
+                'pengajuan.tanggal as tanggal_pengajuan', 'calon_nasabah.nama', 'calon_nasabah.tanggal_lahir', 'calon_nasabah.alamat_rumah', 'calon_nasabah.no_ktp', 'calon_nasabah.jumlah_kredit', 'calon_nasabah.tenor_yang_diminta', 'pengajuan.sppk', 'pengajuan.po', 'pengajuan.pk', 'log.tgl_cetak_pk', 'log.no_pk', 'pengajuan.tanggal', 'cabang.kode_cabang', 'cabang.cabang', 'cabang.alamat AS alamat_cabang', 'pengajuan.skema_kredit',
+            )->leftJoin('users AS u', 'u.id', 'pengajuan.id_penyelia');
         if ($user_id != 0) {
             if ($user->role == 'Staf Analis Kredit') {
                 $data->where('id_staf', $user_id);
             }
             if ($user->role == 'Penyelia Kredit') {
-                $data->where('id_penyelia', $user_id)
-                ->select('users.name as nama_penyelia', 'users.nip as nip_penyelia')
-                ->join('users', 'pengajuan.id_penyelia', 'users.id')
-                ;
+                $data->where('id_penyelia', $user_id);
             }
             if ($user->role == 'PBO') {
                 $data->where('id_pbo', $user_id);
@@ -1098,7 +1098,10 @@ class PengajuanAPIController extends Controller
             }
         }
         $data = $data->paginate($page_length);
-        // $data = $data->get();
+        foreach ($data as $key => $value) {
+            $value->karyawan = $this->getKaryawan($value->nip_penyelia);
+        }
+
         return response()->json([
             'status' => 'success',
             'message' => 'success',
@@ -1116,15 +1119,27 @@ class PengajuanAPIController extends Controller
         ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
         ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
         ->join('log_cetak AS log', 'log.id_pengajuan', 'pengajuan.id')
-        ->select('pengajuan.id', 'calon_nasabah.nama', 'calon_nasabah.tanggal_lahir', 'calon_nasabah.alamat_rumah', 'calon_nasabah.no_ktp', 'calon_nasabah.jumlah_kredit', 'calon_nasabah.tenor_yang_diminta', 'pengajuan.sppk', 'pengajuan.po', 'pengajuan.pk', 'log.tgl_cetak_pk', 'log.no_pk', 'pengajuan.tanggal','cabang.kode_cabang', 'cabang.cabang', 'cabang.alamat AS alamat_cabang', 'pengajuan.skema_kredit');
+        ->leftJoin('users AS u', 'u.id', 'pengajuan.id_penyelia')
+        ->select('pengajuan.id',
+        'calon_nasabah.nama',
+        'pengajuan.id_penyelia',
+        'u.nip AS nip_penyelia',
+        'calon_nasabah.tanggal_lahir',
+        'calon_nasabah.alamat_rumah', 'calon_nasabah.no_ktp', 'calon_nasabah.jumlah_kredit', 'calon_nasabah.tenor_yang_diminta', 'pengajuan.sppk', 'pengajuan.po', 'pengajuan.pk', 'log.tgl_cetak_pk', 'log.no_pk', 'pengajuan.tanggal','cabang.kode_cabang', 'cabang.cabang', 'cabang.alamat AS alamat_cabang', 'pengajuan.skema_kredit');
 
         $data = $data->first();
+        // foreach ($data as $key => $value) {
+        //     return $value->nip_penyelia;
+        //     $value->karyawan = $this->getKaryawan($value->nip_penyelia);
+        // }
+        $penyelia = $this->getKaryawan($data->nip_penyelia);
 
         if ($data) {
             return response()->json([
                 'status' => 'success',
                 'message' => 'success',
                 'data' => $data,
+                'penyelia' => $penyelia
             ]);
         } else {
             return response()->json([
