@@ -1051,9 +1051,6 @@ class PengajuanAPIController extends Controller
         $page_length = Request()->page_length ? Request()->page_length : 5;
         $user = User::select('id', 'role')->find($user_id);
 
-
-
-
         $data = DB::table('pengajuan')
             ->where('skema_kredit', '!=', 'KKB')
             ->where('posisi', 'Selesai')
@@ -1062,14 +1059,6 @@ class PengajuanAPIController extends Controller
             ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
             ->join('log_cetak AS log', 'log.id_pengajuan', 'pengajuan.id')
             ->select('pengajuan.id', 'pengajuan.tanggal as tanggal_pengajuan', 'calon_nasabah.nama', 'calon_nasabah.tanggal_lahir', 'calon_nasabah.alamat_rumah', 'calon_nasabah.no_ktp', 'calon_nasabah.jumlah_kredit', 'calon_nasabah.tenor_yang_diminta', 'pengajuan.sppk', 'pengajuan.po', 'pengajuan.pk', 'log.tgl_cetak_pk', 'log.no_pk', 'pengajuan.tanggal', 'cabang.kode_cabang', 'cabang.cabang', 'cabang.alamat AS alamat_cabang', 'pengajuan.skema_kredit')
-            // ->when(Request()->query, function ($query) use ($searhQuery) {
-            //     return $query->where('calon_nasabah.nama', 'LIKE', "%$searhQuery%");
-            // })
-            // ->when($tAwal, function ($query) use ($tAwal, $tAkhir) {
-            //     return $query->whereBetween('log.tgl_cetak_pk', [$tAwal, $tAkhir]);
-            // }, function ($query) use ($tAwal, $hari_ini) {
-            //     return $query->where('log.tgl_cetak_pk', [$tAwal, $hari_ini]);
-            // })
         ;
 
         if ($user_id != 0) {
@@ -1077,7 +1066,10 @@ class PengajuanAPIController extends Controller
                 $data->where('id_staf', $user_id);
             }
             if ($user->role == 'Penyelia Kredit') {
-                $data->where('id_penyelia', $user_id);
+                $data->where('id_penyelia', $user_id)
+                ->select('users.name as nama_penyelia', 'users.nip as nip_penyelia')
+                ->join('users', 'pengajuan.id_penyelia', 'users.id')
+                ;
             }
             if ($user->role == 'PBO') {
                 $data->where('id_pbo', $user_id);
@@ -1092,9 +1084,7 @@ class PengajuanAPIController extends Controller
 
         if (Request()->has('str')) {
             $searhQuery = Request()->str;
-            // dd($searhQuery);
             $data->where('calon_nasabah.nama', 'LIKE', "%$searhQuery%");
-            // $data->where('calon_nasabah.nama', Request()->query);
         }
         if (Request()->has('tAwal')) {
             $tAwal = Request()->tAwal;
@@ -1107,7 +1097,6 @@ class PengajuanAPIController extends Controller
                 $data->whereBetween('pengajuan.tanggal', [$tAwal, $hari_ini]);
             }
         }
-
         $data = $data->paginate($page_length);
         // $data = $data->get();
         return response()->json([
