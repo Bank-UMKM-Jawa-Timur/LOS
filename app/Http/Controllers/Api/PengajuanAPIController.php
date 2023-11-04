@@ -1128,18 +1128,13 @@ class PengajuanAPIController extends Controller
         'calon_nasabah.alamat_rumah', 'calon_nasabah.no_ktp', 'calon_nasabah.jumlah_kredit', 'calon_nasabah.tenor_yang_diminta', 'pengajuan.sppk', 'pengajuan.po', 'pengajuan.pk', 'log.tgl_cetak_pk', 'log.no_pk', 'pengajuan.tanggal','cabang.kode_cabang', 'cabang.cabang', 'cabang.alamat AS alamat_cabang', 'pengajuan.skema_kredit');
 
         $data = $data->first();
-        // foreach ($data as $key => $value) {
-        //     return $value->nip_penyelia;
-        //     $value->karyawan = $this->getKaryawan($value->nip_penyelia);
-        // }
-        $penyelia = $this->getKaryawan($data->nip_penyelia);
+        $data->penyelia = $this->getKaryawan($data->nip_penyelia);
 
         if ($data) {
             return response()->json([
                 'status' => 'success',
                 'message' => 'success',
-                'data' => $data,
-                'penyelia' => $penyelia
+                'data' => $data
             ]);
         } else {
             return response()->json([
