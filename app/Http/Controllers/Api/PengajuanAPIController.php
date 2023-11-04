@@ -495,6 +495,22 @@ class PengajuanAPIController extends Controller
         return response()->json($data);
     }
 
+    public function getDataStafByCabang($kode_cabang)
+    {
+        $data = DB::table('users')
+            ->select('users.*', 'c.kode_cabang')
+            ->join('cabang AS c', 'c.id', 'users.id_cabang')
+            ->where('c.kode_cabang', $kode_cabang)
+            ->where('users.role', 'Staf Analis Kredit')
+            ->get();
+
+        foreach ($data as $key => $value) {
+            $value->detail = $this->getKaryawan($value->nip);
+        }
+
+        return response()->json($data);
+    }
+
     public function getDataUsersByCabang($kode_cabang)
     {
         $data = DB::table('users')
@@ -502,6 +518,10 @@ class PengajuanAPIController extends Controller
             ->join('cabang AS c', 'c.id', 'users.id_cabang')
             ->where('c.kode_cabang', $kode_cabang)
             ->get();
+
+        foreach ($data as $key => $value) {
+            $value->detail = $this->getKaryawan($value->nip);
+        }
 
         return response()->json($data);
     }
