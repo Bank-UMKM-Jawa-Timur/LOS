@@ -95,7 +95,7 @@ class PengajuanAPIController extends Controller
             'entitas' => null,
             'bagian' => null,
         ];
-        
+
         if ($user) {
             $detail = [
                 'nip' => null,
@@ -1048,16 +1048,22 @@ class PengajuanAPIController extends Controller
     }
 
     public function getListPengajuan($user_id){
+        $page_length = Request()->page_length ? Request()->page_length : 5;
         $user = User::select('id', 'role')->find($user_id);
-        $data = DB::table('pengajuan')
-        ->where('skema_kredit', '!=', 'KKB')
-        ->where('posisi', 'Selesai')
-        ->whereNotNull('pk')
-        ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
-        ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
-        ->join('log_cetak AS log', 'log.id_pengajuan', 'pengajuan.id')
-        ->select('pengajuan.id', 'calon_nasabah.nama', 'calon_nasabah.tanggal_lahir','calon_nasabah.alamat_rumah','calon_nasabah.no_ktp', 'calon_nasabah.jumlah_kredit', 'calon_nasabah.tenor_yang_diminta', 'pengajuan.sppk', 'pengajuan.po', 'pengajuan.pk', 'log.tgl_cetak_pk', 'log.no_pk', 'pengajuan.tanggal', 'cabang.kode_cabang', 'cabang.cabang', 'cabang.alamat AS alamat_cabang', 'pengajuan.skema_kredit');
 
+        $data = DB::table('pengajuan')
+            ->where('skema_kredit', '!=', 'KKB')
+            ->where('posisi', 'Selesai')
+            ->whereNotNull('pk')
+            ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+            ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
+            ->join('log_cetak AS log', 'log.id_pengajuan', 'pengajuan.id')
+            ->select(
+                'pengajuan.id',
+                'pengajuan.id_penyelia',
+                'u.nip AS nip_penyelia',
+                'pengajuan.tanggal as tanggal_pengajuan', 'calon_nasabah.nama', 'calon_nasabah.tanggal_lahir', 'calon_nasabah.alamat_rumah', 'calon_nasabah.no_ktp', 'calon_nasabah.jumlah_kredit', 'calon_nasabah.tenor_yang_diminta', 'pengajuan.sppk', 'pengajuan.po', 'pengajuan.pk', 'log.tgl_cetak_pk', 'log.no_pk', 'pengajuan.tanggal', 'cabang.kode_cabang', 'cabang.cabang', 'cabang.alamat AS alamat_cabang', 'pengajuan.skema_kredit',
+            )->leftJoin('users AS u', 'u.id', 'pengajuan.id_penyelia');
         if ($user_id != 0) {
             if ($user->role == 'Staf Analis Kredit') {
                 $data->where('id_staf', $user_id);
@@ -1076,21 +1082,31 @@ class PengajuanAPIController extends Controller
             }
         }
 
-        $data = $data->get();
-        $total_data = count($data);
-        if ($total_data > 0) {
-            return response()->json([
-                'status' => 'success',
-                'message' => 'success',
-                'total_data' => $total_data,
-                'data' => $data,
-            ]);
-        } else {
-            return response()->json([
-                'status' => 'failed',
-                'message' => 'Data not found'
-            ]);
+        if (Request()->has('str')) {
+            $searhQuery = Request()->str;
+            $data->where('calon_nasabah.nama', 'LIKE', "%$searhQuery%");
         }
+        if (Request()->has('tAwal')) {
+            $tAwal = Request()->tAwal;
+            $tAkhir = Request()->tAkhir;
+            $hari_ini = now();
+
+            if ($tAkhir != null) {
+                $data->whereBetween('pengajuan.tanggal', [$tAwal, $tAkhir]);
+            } else {
+                $data->whereBetween('pengajuan.tanggal', [$tAwal, $hari_ini]);
+            }
+        }
+        $data = $data->paginate($page_length);
+        foreach ($data as $key => $value) {
+            $value->karyawan = $this->getKaryawan($value->nip_penyelia);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $data,
+        ]);
     }
 
     public function getListPengajuanById($id){
@@ -1103,15 +1119,22 @@ class PengajuanAPIController extends Controller
         ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
         ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
         ->join('log_cetak AS log', 'log.id_pengajuan', 'pengajuan.id')
-        ->select('pengajuan.id', 'calon_nasabah.nama', 'calon_nasabah.tanggal_lahir', 'calon_nasabah.alamat_rumah', 'calon_nasabah.no_ktp', 'calon_nasabah.jumlah_kredit', 'calon_nasabah.tenor_yang_diminta', 'pengajuan.sppk', 'pengajuan.po', 'pengajuan.pk', 'log.tgl_cetak_pk', 'log.no_pk', 'pengajuan.tanggal','cabang.kode_cabang', 'cabang.cabang', 'cabang.alamat AS alamat_cabang');
+        ->leftJoin('users AS u', 'u.id', 'pengajuan.id_penyelia')
+        ->select('pengajuan.id',
+        'calon_nasabah.nama',
+        'pengajuan.id_penyelia',
+        'u.nip AS nip_penyelia',
+        'calon_nasabah.tanggal_lahir',
+        'calon_nasabah.alamat_rumah', 'calon_nasabah.no_ktp', 'calon_nasabah.jumlah_kredit', 'calon_nasabah.tenor_yang_diminta', 'pengajuan.sppk', 'pengajuan.po', 'pengajuan.pk', 'log.tgl_cetak_pk', 'log.no_pk', 'pengajuan.tanggal','cabang.kode_cabang', 'cabang.cabang', 'cabang.alamat AS alamat_cabang', 'pengajuan.skema_kredit');
 
         $data = $data->first();
+        $data->penyelia = $this->getKaryawan($data->nip_penyelia);
 
         if ($data) {
             return response()->json([
                 'status' => 'success',
                 'message' => 'success',
-                'data' => $data,
+                'data' => $data
             ]);
         } else {
             return response()->json([
