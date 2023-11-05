@@ -1129,6 +1129,75 @@ class PengajuanAPIController extends Controller
         ]);
     }
 
+    public function getListPengajuanByCabang(Request $request){
+        $page_length = Request()->page_length ? Request()->page_length : 5;
+        $kode_cabang = $request->kode_cabang;
+        $user_id = $request->user;
+
+        $data = DB::table('pengajuan')
+            ->where('skema_kredit', '!=', 'KKB')
+            ->where('posisi', 'Selesai')
+            ->whereNotNull('pk')
+            ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
+            ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
+            ->join('log_cetak AS log', 'log.id_pengajuan', 'pengajuan.id')
+            ->select(
+                'pengajuan.id',
+                'pengajuan.id_penyelia',
+                'u.nip AS nip_penyelia',
+                'pengajuan.tanggal as tanggal_pengajuan', 'calon_nasabah.nama', 'calon_nasabah.tanggal_lahir', 'calon_nasabah.alamat_rumah', 'calon_nasabah.no_ktp', 'calon_nasabah.jumlah_kredit', 'calon_nasabah.tenor_yang_diminta', 'pengajuan.sppk', 'pengajuan.po', 'pengajuan.pk', 'log.tgl_cetak_pk', 'log.no_pk', 'pengajuan.tanggal', 'cabang.kode_cabang', 'cabang.cabang', 'cabang.alamat AS alamat_cabang', 'pengajuan.skema_kredit',
+            )->leftJoin('users AS u', 'u.id', 'pengajuan.id_penyelia');
+        
+        if ($kode_cabang != 'all') {
+            $data->where('cabang.kode_cabang', $kode_cabang);
+        }
+
+        if ($user_id != 'all') {
+            $user = User::select('id', 'role')->find($user_id);
+            if ($user->role == 'Staf Analis Kredit') {
+                $data->where('id_staf', $user_id);
+            }
+            if ($user->role == 'Penyelia Kredit') {
+                $data->where('id_penyelia', $user_id);
+            }
+            if ($user->role == 'PBO') {
+                $data->where('id_pbo', $user_id);
+            }
+            if ($user->role == 'PBP') {
+                $data->where('id_pbp', $user_id);
+            }
+            if ($user->role == 'Pincab') {
+                $data->where('id_pincab', $user_id);
+            }
+        }
+
+        if (Request()->has('str')) {
+            $searhQuery = Request()->str;
+            $data->where('calon_nasabah.nama', 'LIKE', "%$searhQuery%");
+        }
+        if (Request()->has('tAwal')) {
+            $tAwal = Request()->tAwal;
+            $tAkhir = Request()->tAkhir;
+            $hari_ini = now();
+
+            if ($tAkhir != null) {
+                $data->whereBetween('pengajuan.tanggal', [$tAwal, $tAkhir]);
+            } else {
+                $data->whereBetween('pengajuan.tanggal', [$tAwal, $hari_ini]);
+            }
+        }
+        $data = $data->paginate($page_length);
+        foreach ($data as $key => $value) {
+            $value->karyawan = $this->getKaryawan($value->nip_penyelia);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $data,
+        ]);
+    }
+
     public function getListPengajuanById($id){
 
         $data = DB::table('pengajuan')
