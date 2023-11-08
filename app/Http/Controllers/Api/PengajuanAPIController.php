@@ -1080,10 +1080,14 @@ class PengajuanAPIController extends Controller
             ->join('log_cetak AS log', 'log.id_pengajuan', 'pengajuan.id')
             ->select(
                 'pengajuan.id',
+                'pengajuan.id_staf',
                 'pengajuan.id_penyelia',
-                'u.nip AS nip_penyelia',
+                'u.nip AS nip_staf',
+                'u2.nip AS nip_penyelia',
                 'pengajuan.tanggal as tanggal_pengajuan', 'calon_nasabah.nama', 'calon_nasabah.tanggal_lahir', 'calon_nasabah.alamat_rumah', 'calon_nasabah.no_ktp', 'calon_nasabah.jumlah_kredit', 'calon_nasabah.tenor_yang_diminta', 'pengajuan.sppk', 'pengajuan.po', 'pengajuan.pk', 'log.tgl_cetak_pk', 'log.no_pk', 'pengajuan.tanggal', 'cabang.kode_cabang', 'cabang.cabang', 'cabang.alamat AS alamat_cabang', 'pengajuan.skema_kredit',
-            )->leftJoin('users AS u', 'u.id', 'pengajuan.id_penyelia');
+            )
+            ->leftJoin('users AS u', 'u.id', 'pengajuan.id_staf')
+            ->leftJoin('users AS u2', 'u2.id', 'pengajuan.id_penyelia');
         if ($user_id != 0) {
             if ($user->role == 'Staf Analis Kredit') {
                 $data->where('id_staf', $user_id);
@@ -1119,6 +1123,7 @@ class PengajuanAPIController extends Controller
         }
         $data = $data->paginate($page_length);
         foreach ($data as $key => $value) {
+            $value->staf = $this->getKaryawan($value->nip_staf);
             $value->karyawan = $this->getKaryawan($value->nip_penyelia);
         }
 
@@ -1144,9 +1149,12 @@ class PengajuanAPIController extends Controller
             ->select(
                 'pengajuan.id',
                 'pengajuan.id_penyelia',
-                'u.nip AS nip_penyelia',
+                'u.nip AS nip_staf',
+                'u2.nip AS nip_penyelia',
                 'pengajuan.tanggal as tanggal_pengajuan', 'calon_nasabah.nama', 'calon_nasabah.tanggal_lahir', 'calon_nasabah.alamat_rumah', 'calon_nasabah.no_ktp', 'calon_nasabah.jumlah_kredit', 'calon_nasabah.tenor_yang_diminta', 'pengajuan.sppk', 'pengajuan.po', 'pengajuan.pk', 'log.tgl_cetak_pk', 'log.no_pk', 'pengajuan.tanggal', 'cabang.kode_cabang', 'cabang.cabang', 'cabang.alamat AS alamat_cabang', 'pengajuan.skema_kredit',
-            )->leftJoin('users AS u', 'u.id', 'pengajuan.id_penyelia');
+            )
+            ->leftJoin('users AS u', 'u.id', 'pengajuan.id_staf')
+            ->leftJoin('users AS u2', 'u2.id', 'pengajuan.id_penyelia');
         
         if ($kode_cabang != 'all') {
             $data->where('cabang.kode_cabang', $kode_cabang);
@@ -1188,6 +1196,7 @@ class PengajuanAPIController extends Controller
         }
         $data = $data->paginate($page_length);
         foreach ($data as $key => $value) {
+            $value->staf = $this->getKaryawan($value->nip_staf);
             $value->karyawan = $this->getKaryawan($value->nip_penyelia);
         }
 
@@ -1208,15 +1217,18 @@ class PengajuanAPIController extends Controller
         ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
         ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
         ->join('log_cetak AS log', 'log.id_pengajuan', 'pengajuan.id')
-        ->leftJoin('users AS u', 'u.id', 'pengajuan.id_penyelia')
+        ->leftJoin('users AS u', 'u.id', 'pengajuan.id_staf')
+        ->leftJoin('users AS u2', 'u2.id', 'pengajuan.id_penyelia')
         ->select('pengajuan.id',
         'calon_nasabah.nama',
         'pengajuan.id_penyelia',
-        'u.nip AS nip_penyelia',
+        'u.nip AS nip_staf',
+        'u2.nip AS nip_penyelia',
         'calon_nasabah.tanggal_lahir',
         'calon_nasabah.alamat_rumah', 'calon_nasabah.no_ktp', 'calon_nasabah.jumlah_kredit', 'calon_nasabah.tenor_yang_diminta', 'pengajuan.sppk', 'pengajuan.po', 'pengajuan.pk', 'log.tgl_cetak_pk', 'log.no_pk', 'pengajuan.tanggal','cabang.kode_cabang', 'cabang.cabang', 'cabang.alamat AS alamat_cabang', 'pengajuan.skema_kredit');
 
         $data = $data->first();
+        $data->staf = $this->getKaryawan($data->nip_penyelia);
         $data->penyelia = $this->getKaryawan($data->nip_penyelia);
 
         if ($data) {
