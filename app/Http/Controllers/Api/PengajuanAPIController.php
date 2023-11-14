@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\PengajuanKreditController;
 use App\Models\User;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -117,11 +118,27 @@ class PengajuanAPIController extends Controller
 
         // Cek Role user jika tersedia
         if($user->role == 'Administrator'){
-            if(DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->where('project', $request->project)->count() > 0){
-                return response()->json([
-                    'status' => 'gagal',
-                    'message' => 'Akun sedang digunakan di perangkat lain.'
-                ], 401);
+            $current_token = DB::table('personal_access_tokens')
+                                ->where('tokenable_id', $user->id)
+                                ->where('project', $request->project)
+                                ->first();
+            if($current_token){
+                $last_used = new DateTime($current_token->last_used_at);
+                $now = new DateTime(date('Y-m-d H:i:s'));
+                $interval = $last_used->diff($now);
+                $diff_minutes = $interval->format("%i");
+                
+                if (intval($diff_minutes) > 30) {
+                    DB::table('personal_access_tokens')
+                        ->where('tokenable_id', $user->id)
+                        ->where('project', $request->project)
+                        ->delete();
+                } else {
+                    return response()->json([
+                        'status' => 'gagal',
+                        'message' => 'Akun sedang digunakan di perangkat lain.'
+                    ], 401);
+                }
             }
 
             $token = $user->createToken('auth_token')->plainTextToken;
@@ -147,11 +164,27 @@ class PengajuanAPIController extends Controller
             ]);
         } else if($user->role != 'Administrator'){
             if($user->nip != null || $user->role == 'Direksi'){
-                if(DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->where('project', $request->project)->count() > 0){
-                    return response()->json([
-                        'status' => 'gagal',
-                        'message' => 'Akun sedang digunakan di perangkat lain.'
-                    ], 401);
+                $current_token = DB::table('personal_access_tokens')
+                                    ->where('tokenable_id', $user->id)
+                                    ->where('project', $request->project)
+                                    ->first();
+                if($current_token){
+                    $last_used = new DateTime($current_token->last_used_at);
+                    $now = new DateTime(date('Y-m-d H:i:s'));
+                    $interval = $last_used->diff($now);
+                    $diff_minutes = $interval->format("%i");
+                    
+                    if (intval($diff_minutes) > 30) {
+                        DB::table('personal_access_tokens')
+                            ->where('tokenable_id', $user->id)
+                            ->where('project', $request->project)
+                            ->delete();
+                    } else {
+                        return response()->json([
+                            'status' => 'gagal',
+                            'message' => 'Akun sedang digunakan di perangkat lain.'
+                        ], 401);
+                    }
                 }
 
                 $token = $user->createToken('auth_token')->plainTextToken;
@@ -177,11 +210,27 @@ class PengajuanAPIController extends Controller
                 ]);
             } else {
                 if($user->nip != null || $user->role == 'Direksi'){
-                    if(DB::table('personal_access_tokens')->where('tokenable_id', $user->id)->count() > 0){
-                        return response()->json([
-                            'status' => 'gagal',
-                            'message' => 'Akun sedang digunakan di perangkat lain.'
-                        ], 401);
+                    $current_token = DB::table('personal_access_tokens')
+                                        ->where('tokenable_id', $user->id)
+                                        ->where('project', $request->project)
+                                        ->first();
+                    if($current_token){
+                        $last_used = new DateTime($current_token->last_used_at);
+                        $now = new DateTime(date('Y-m-d H:i:s'));
+                        $interval = $last_used->diff($now);
+                        $diff_minutes = $interval->format("%i");
+                        
+                        if (intval($diff_minutes) > 30) {
+                            DB::table('personal_access_tokens')
+                                ->where('tokenable_id', $user->id)
+                                ->where('project', $request->project)
+                                ->delete();
+                        } else {
+                            return response()->json([
+                                'status' => 'gagal',
+                                'message' => 'Akun sedang digunakan di perangkat lain.'
+                            ], 401);
+                        }
                     }
                 } else {
                     if ($user->role != 'Direksi') {
