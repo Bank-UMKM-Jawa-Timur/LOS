@@ -27,7 +27,7 @@ Route::group(['middleware' => ['auth:sanctum']], function(){
     Route::post('/logout', [PengajuanAPIController::class, 'logout']);
 });
 
-Route::prefix('kkb')->group(function(){
+Route::prefix('kkb')->middleware(['auth:sanctum'])->group(function(){
     Route::middleware([APIToken::class])->group(function(){
         Route::get('/get-data-pengajuan/{id}/{user_id}', [PengajuanAPIController::class, 'getDataPengajuan']);
         Route::get('/get-data-pengajuan-by-id/{id}', [PengajuanAPIController::class, 'getDataPengajuanById']);
@@ -41,7 +41,7 @@ Route::prefix('kkb')->group(function(){
     });
 });
 
-Route::prefix('v1')->group(function(){
+Route::prefix('v1')->middleware(['auth:sanctum'])->group(function(){
     Route::middleware([APIToken::class])->group(function(){
         Route::get('get-sum-cabang', [PengajuanAPIController::class, 'getSumPengajuan']);
         // Route::get('/get-posisi-pengajuan', [PengajuanAPIController::class, 'getPosisiPengajuan']);
