@@ -143,6 +143,7 @@ class DashboardController extends Controller
                             )
                             ->leftJoin('pengajuan AS p', 'c.id', 'p.id_cabang')
                             ->where('c.kode_cabang', '!=', 000)
+                            ->whereNull('p.deleted_at')
                             ->groupBy('kodeC')
                             ->orderBy('total', 'desc');
 
@@ -169,6 +170,7 @@ class DashboardController extends Controller
                             )
                             ->leftJoin('pengajuan AS p', 'c.id', 'p.id_cabang')
                             ->where('c.kode_cabang', '!=', 000)
+                            ->whereNull('p.deleted_at')
                             ->groupBy('kodeC')
                             ->orderBy('total', 'desc');
 
