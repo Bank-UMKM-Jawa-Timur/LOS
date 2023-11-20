@@ -2276,8 +2276,6 @@ class PengajuanKreditController extends Controller
     // get detail jawaban dan skor pengajuan
     public function getDetailJawaban($id)
     {
-        // return $this->getAnswer($id);
-
         if (auth()->user()->role == 'Penyelia Kredit' || auth()->user()->role == 'PBO' || auth()->user()->role == 'PBP') {
             $param['pageTitle'] = "Dashboard";
             $param['dataAspek'] = ItemModel::where('level', 1)->where('nama', '!=', 'Data Umum')->get();
@@ -2359,7 +2357,6 @@ class PengajuanKreditController extends Controller
                 ->join('users', 'users.id', 'alasan_pengembalian_data.id_user')
                 ->select('users.nip', 'alasan_pengembalian_data.*')
                 ->get();
-            // $param['dataAnswer'] = $this->getAnswer($id);
 
             return view('pengajuan-kredit.detail-pengajuan-jawaban', $param);
         } else {
