@@ -1423,12 +1423,17 @@ class PengajuanKreditController extends Controller
                     $data = $this->getDataLevel($mergedDataLevel[$i]);
                     array_push($arrTes, $data);
                     if (is_numeric($data[0])) {
-                        if ($data[1] == 71 || $data[1] == 186) {
-                            if ($data[0] == '1') {
-                                $statusSlik = true;
+                        if ($data[0] > 0) {
+                            if ($data[1] == 71 || $data[1] == 186) {
+                                if ($data[0] == '1') {
+                                    $statusSlik = true;
+                                }
                             }
+                            $totalScore += $data[0];
                         }
-                        $totalScore += $data[0];
+                        else {
+                            $totalDataNull++;
+                        }
                     } else
                         $totalDataNull++;
                 } else
@@ -1451,15 +1456,19 @@ class PengajuanKreditController extends Controller
                 $status = "merah";
             }
 
+            // dd($mergedDataLevel, $totalDataNull, $totalScore, count($mergedDataLevel) - $totalDataNull, $avgResult);
+
             for ($i = 0; $i < count($mergedDataLevel); $i++) {
                 if ($mergedDataLevel[$i] != null) {
                     $data = $this->getDataLevel($mergedDataLevel[$i]);
                     if (is_numeric($data[0])) {
-                        JawabanPengajuanModel::insert([
-                            'id_pengajuan' => $id_pengajuan,
-                            'id_jawaban' => $this->getDataLevel($mergedDataLevel[$i])[1],
-                            'skor' => $this->getDataLevel($mergedDataLevel[$i])[0],
-                        ]);
+                        if ($data[0] > 0) {
+                            JawabanPengajuanModel::insert([
+                                'id_pengajuan' => $id_pengajuan,
+                                'id_jawaban' => $this->getDataLevel($mergedDataLevel[$i])[1],
+                                'skor' => $this->getDataLevel($mergedDataLevel[$i])[0],
+                            ]);
+                        }
                     } else {
                         JawabanPengajuanModel::insert([
                             'id_pengajuan' => $id_pengajuan,
@@ -2366,7 +2375,6 @@ class PengajuanKreditController extends Controller
     // insert komentar
     public function getInsertKomentar(Request $request)
     {
-        // return $request;
         $role = Auth::user()->role;
         if ($role == 'Penyelia Kredit' || $role == 'PBO' || $role == 'PBP') {
             try {
@@ -2375,7 +2383,6 @@ class PengajuanKreditController extends Controller
                 $totalDataNull = 0;
                 $sum_select = 0;
                 foreach ($request->skor_penyelia as $key => $value) {
-                    // if ($value != '' || $value == null) {
                     if (is_numeric($value)) {
                         array_push($finalArray, [
                             'skor_penyelia' => $value
