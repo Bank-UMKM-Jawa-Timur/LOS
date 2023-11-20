@@ -85,12 +85,12 @@
                             @forelse ($alasanPengembalian as $key => $itemPengembalian)
                                 <input type="hidden" id="val_pengembalian" value="1">
                                 <tr>
-                                    <td>{{ $loop->iteration }}</td> 
-                                    <td>{{ $itemPengembalian->alasan }}</td> 
-                                    <td>{{ $itemPengembalian->dari }}</td> 
-                                    <td>{{ $itemPengembalian->ke }}</td> 
-                                    <td>{{ date_format($itemPengembalian->created_at, 'd M Y') }}</td> 
-                                    <td>{{ getKaryawan($itemPengembalian->nip) }}</td> 
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $itemPengembalian->alasan }}</td>
+                                    <td>{{ $itemPengembalian->dari }}</td>
+                                    <td>{{ $itemPengembalian->ke }}</td>
+                                    <td>{{ date_format($itemPengembalian->created_at, 'd M Y') }}</td>
+                                    <td>{{ getKaryawan($itemPengembalian->nip) }}</td>
                                 </tr>
                             @empty
                                 <input type="hidden" id="val_pengembalian" value="0">
@@ -933,12 +933,22 @@
                                             ->where('jawaban_text.id_pengajuan', $dataUmum->id)
                                             ->where('jawaban_text.id_jawaban', $itemTiga->id)
                                             ->get();
+
+                                            $jumlahDataDetailJawabanText = $dataDetailJawabanText ? count($dataDetailJawabanText) : 0;
                                     @endphp
                                     @foreach ($dataDetailJawabanText as $itemTextTiga)
                                         @if ($itemTextTiga->nama != 'Ratio Tenor Asuransi')
                                             <div class="row">
                                                 <div class="form-group col-md-12 mb-0">
-                                                    <label for="">{{ $itemTextTiga->nama }}</label>
+                                                    @if ($itemTiga->opsi_jawaban == 'file')
+                                                        @if ($jumlahDataDetailJawabanText > 1)
+                                                            <label for="">{{ $itemTextTiga->nama }} {{$loop->iteration}}</label>
+                                                        @else
+                                                            <label for="">{{ $itemTextTiga->nama }}</label>
+                                                        @endif
+                                                    @else
+                                                            <label for="">{{ $itemTextTiga->nama }}</label>
+                                                    @endif
                                                 </div>
                                                 <div class="col-md-12">
                                                     <b>Jawaban: </b>
@@ -948,10 +958,11 @@
                                                             @endphp
                                                             @if ($file_parts['extension'] == 'pdf')
                                                                 <iframe
+                                                                    style="border: 5px solid #dc3545;"
                                                                     src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}"
                                                                     width="100%" height="800px"></iframe>
                                                             @else
-                                                                <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}"
+                                                                <img style="border: 5px solid #dc3545;" src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}"
                                                                     alt="" width="800px">
                                                             @endif
                                                             {{-- Rupiah data tiga --}}
@@ -1439,12 +1450,12 @@
                     <tbody>
                         @forelse ($alasanPengembalian as $key => $itemPengembalian)
                             <tr>
-                                <td>{{ $loop->iteration }}</td> 
-                                <td>{{ $itemPengembalian->alasan }}</td> 
-                                <td>{{ $itemPengembalian->dari }}</td> 
-                                <td>{{ $itemPengembalian->ke }}</td> 
-                                <td>{{ date_format($itemPengembalian->created_at, 'd M Y') }}</td> 
-                                <td>{{ getKaryawan($itemPengembalian->nip) }}</td> 
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $itemPengembalian->alasan }}</td>
+                                <td>{{ $itemPengembalian->dari }}</td>
+                                <td>{{ $itemPengembalian->ke }}</td>
+                                <td>{{ date_format($itemPengembalian->created_at, 'd M Y') }}</td>
+                                <td>{{ getKaryawan($itemPengembalian->nip) }}</td>
                             </tr>
                         @empty
                             <tr>
@@ -1697,10 +1708,10 @@
                         const value = pendapatPerAspek[i].value;
                         if (!value) {
                             const aspek = aspekArr[i].nama
-                            msgPendapat += '<li class="text-left">Pendapat pada '+aspek+' harus diisi.</li>'; 
+                            msgPendapat += '<li class="text-left">Pendapat pada '+aspek+' harus diisi.</li>';
                         }
                     }
-                    
+
                     if (msgPendapat != '') {
                         console.log(msgPendapat)
                         Swal.fire({

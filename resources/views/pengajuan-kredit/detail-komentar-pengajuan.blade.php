@@ -128,12 +128,12 @@ function getKaryawan($nip){
                                     <tbody>
                                         @forelse ($alasanPengembalian as $key => $itemPengembalian)
                                             <tr>
-                                                <td>{{ $loop->iteration }}</td> 
-                                                <td>{{ $itemPengembalian->alasan }}</td> 
-                                                <td>{{ $itemPengembalian->dari }}</td> 
-                                                <td>{{ $itemPengembalian->ke }}</td> 
-                                                <td>{{ date_format($itemPengembalian->created_at, 'd M Y') }}</td> 
-                                                <td>{{ getKaryawan($itemPengembalian->nip) }}</td> 
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $itemPengembalian->alasan }}</td>
+                                                <td>{{ $itemPengembalian->dari }}</td>
+                                                <td>{{ $itemPengembalian->ke }}</td>
+                                                <td>{{ date_format($itemPengembalian->created_at, 'd M Y') }}</td>
+                                                <td>{{ getKaryawan($itemPengembalian->nip) }}</td>
                                             </tr>
                                         @empty
                                             <tr>
@@ -427,28 +427,54 @@ function getKaryawan($nip){
                             <label for="staticEmail" class="col-sm-3 col-form-label"></label>
                             <label for="staticEmail" class="col-sm-1 col-form-label px-0">
                                 <div class="d-flex justify-content-end">
-                                    <div style="width: 20px">
-
-                                    </div>
+                                    <div style="width: 20px"></div>
                                 </div>
                             </label>
                             <div class="col">
-                                <div class="d-flex">
+                                <div class="form-group row">
+                                    <label for="slik" class="col-sm-4 col-form-label">SKOR</label>
+                                    <label for="slik" class="col-sm-1 col-form-label px-0">
+                                        <div class="d-flex justify-content-end">
+                                            <div style="width: 20px">
+                                                :
+                                            </div>
+                                        </div>
+                                    </label>
+                                    <div class="col">
+                                        <p class="badge badge-info text-lg"><b>
+                                                {{ ($itemSlik != null) ? $itemSlik->skor_penyelia != null ? $itemSlik->skor_penyelia : $itemSlik->skor : '-' }}
+                                            </b>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="slik" class="col-sm-4 col-form-label">Komentar Penyelia</label>
+                                    <label for="slik" class="col-sm-1 col-form-label px-0">
+                                        <div class="d-flex justify-content-end">
+                                            <div style="width: 20px">
+                                                :
+                                            </div>
+                                        </div>
+                                    </label>
+                                    <div class="col">
+                                        <h6 class="font-italic">{{ ($itemSlik != null) ? $komentarSlikPenyelia?->komentar : '-' }}</h6>
+                                    </div>
+                                </div>
+                                {{-- <div class="d-flex">
                                     <div class="">
                                         <p><strong>Skor : </strong></p>
                                     </div>
                                     <div class="px-2">
-
-
                                         <p class="badge badge-info text-lg"><b>
-                                                {{ ($itemSlik != null) ? $itemSlik->skor_penyelia != null ? $itemSlik->skor_penyelia : $itemSlik->skor : '-' }}</b></p>
-
+                                                {{ ($itemSlik != null) ? $itemSlik->skor_penyelia != null ? $itemSlik->skor_penyelia : $itemSlik->skor : '-' }}
+                                            </b>
+                                        </p>
                                     </div>
-                                </div>
+                                </div> --}}
 
                             </div>
                         </div>
-                        <div class="row form-group sub pl-4">
+                        {{-- <div class="row form-group sub pl-4">
                             <label for="staticEmail" class="col-sm-3 col-form-label"></label>
                             <label for="staticEmail" class="col-sm-1 col-form-label px-0">
                                 <div class="d-flex justify-content-end">
@@ -463,11 +489,10 @@ function getKaryawan($nip){
                                         <p class="p-0 m-0"><strong>Komentar Penyelia : </strong></p>
                                     </div>
                                     <h6 class="font-italic">{{ ($itemSlik != null) ? $komentarSlikPenyelia?->komentar : '-' }}</h6>
-                                    {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
-
+                                    <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}">
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         @if ($userPBO)
                         <div class="row form-group sub pl-4">
                             <label for="staticEmail" class="col-sm-3 col-form-label"></label>
@@ -500,18 +525,32 @@ function getKaryawan($nip){
                                         </div>
                                     </div>
                                 </label>
-                                <div class="col">
-                                    <div class="d-flex">
+                                <div class="col pt--3">
+                                    <div class="form-group row">
+                                        <label for="slik" class="col-sm-4 col-form-label">Komentar PBP</label>
+                                        <label for="slik" class="col-sm-1 col-form-label px-0">
+                                            <div class="d-flex justify-content-end">
+                                                <div style="width: 20px">
+                                                    :
+                                                </div>
+                                            </div>
+                                        </label>
+                                        <div class="col">
+                                            <h6 class="font-italic">{{ $itemSlik ? $komentarSlikPBP?->komentar : '-' }}</h6>
+                                        </div>
+                                    </div>
+                                    {{-- <div class="d-flex">
                                         <div style="width: 30%">
                                             <p class="p-0 m-0"><strong>Komentar PBP : </strong></p>
                                         </div>
                                         <h6 class="font-italic">{{ $itemSlik ? $komentarSlikPBP?->komentar : '-' }}</h6>
-                                        {{-- <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}"> --}}
+                                        <input type="text" readonly class="form-control-plaintext font-italic" id="komentar" value="{{ $itemKomentar->komentar }}">
 
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                         @endif
+                        <hr>
                     @php
                         $dataLaporanSLIK = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide')
                         ->where('level', 2)
