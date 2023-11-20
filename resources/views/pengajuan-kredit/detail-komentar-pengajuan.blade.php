@@ -1150,6 +1150,9 @@ function getKaryawan($nip){
                                     @endif
                                 @endif
                             @endif
+                            @php
+                                $no = 0;
+                            @endphp
                             @foreach ($dataLevelTiga as $keyTiga => $itemTiga)
                                 @if ($itemTiga->opsi_jawaban != 'option')
                                     @php
@@ -1158,6 +1161,7 @@ function getKaryawan($nip){
                                             ->where('jawaban_text.id_pengajuan', $dataUmum->id)
                                             ->where('jawaban_text.id_jawaban', $itemTiga->id)
                                             ->get();
+                                        $jumlahDataDetailJawabanText = $dataDetailJawabanText ? count($dataDetailJawabanText) : 0;
                                         $getKomentar2 = \App\Models\DetailKomentarModel::select('*')
                                             ->join('komentar', 'komentar.id', 'detail_komentar.id_komentar')
                                             ->where('detail_komentar.id_item', $itemTiga->id)
@@ -1174,11 +1178,23 @@ function getKaryawan($nip){
                                         @endphp
                                         @if ($itemTextTiga->nama == 'NIB' || $itemTextTiga->nama == 'Surat Keterangan Usaha')
                                             <div class="row form-group sub pl-4">
-                                            <label for="staticEmail" class="col-sm-3 col-form-label font-weight-bold">{{ $itemTextTiga->nama }}</label>
+                                            <label for="staticEmail" class="col-sm-3 col-form-label font-weight-bold">
+                                                @if ($jumlahDataDetailJawabanText > 1)
+                                                    {{ $itemTextTiga->nama }} {{$loop->iteration}}
+                                                @else
+                                                    {{ $itemTextTiga->nama }}
+                                                @endif
+                                            </label>
                                             <label for="staticEmail" class="col-sm-1 col-form-label px-0">
                                         @else
                                             <div class="row form-group sub pl-5">
-                                            <label for="staticEmail" class="col-sm-3 col-form-label">{{ $itemTextTiga->nama }}</label>
+                                            <label for="staticEmail" class="col-sm-3 col-form-label">
+                                                @if($jumlahDataDetailJawabanText > 1)
+                                                    {{ $itemTextTiga->nama }} {{$loop->iteration}}
+                                                @else
+                                                    {{ $itemTextTiga->nama }}
+                                                @endif
+                                            </label>
                                             <label for="staticEmail" class="col-sm-1 col-form-label">
                                         @endif
                                                 <div class="d-flex justify-content-end">
@@ -1483,8 +1499,7 @@ function getKaryawan($nip){
                                                         ->get();
                                                 @endphp
                                                 @if ($itemEmpat->id_parent == '95')
-                                                    <div class="row form-group sub pl-4">
-                                                        <label for="staticEmail" class="col-sm-3 col-form-label font-weight-bold">Jaminan Utama</label>
+                                                    <div class="row form-group sub pl-4">" class="col-sm-3 col-form-label font-weight-bold">Jaminan Utama</label>
                                                         {{-- @elseif ($itemEmpat->id_paret == '110')
                                                         <label for="staticEmail" class="col-sm-3 col-form-label">Jaminan Tambahan</label> --}}
                                                         <label for="staticEmail" class="col-sm-1 col-form-label px-0">
