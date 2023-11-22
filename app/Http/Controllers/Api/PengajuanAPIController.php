@@ -61,7 +61,7 @@ class PengajuanAPIController extends Controller
         // } else { // Linux
         //     $ip = exec('hostname -I');
         // }
-        $ip = $_SERVER['REMOTE_ADDR'];
+        $ip = $request->has('ip') ? $request->get('ip') : $_SERVER['REMOTE_ADDR'];
 
         $user = User::select(
                     'users.*',

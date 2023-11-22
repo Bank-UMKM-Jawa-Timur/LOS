@@ -642,8 +642,8 @@
                                 </td>
                                 <td>
                                     <div class="d-flex">
-                                       <a href="javascript:void(0)" class="text-danger" style="text-decoration: none;" data-toggle="modal" data-target="#confirmModal{{$item->id}}">
-                                            Restore
+                                       <a href="javascript:void(0)" class="btn btn-warning" style="text-decoration: none;" data-toggle="modal" data-target="#confirmModal{{$item->id}}">
+                                            Kembalikan
                                        </a>
                                     </div>
                                 </td>
@@ -654,20 +654,21 @@
                                                     <div class="modal-dialog" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                                <h5 class="modal-title" id="confirmModalLabel">Konfirmasi Restore Data</h5>
+                                                                <h5 class="modal-title" id="confirmModalLabel">Konfirmasi</h5>
                                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                     <span aria-hidden="true">&times;</span>
                                                                 </button>
                                                             </div>
                                                             <div class="modal-body">
-                                                               <p> Apakah Anda Yakin Ingin Mengembalikan Pengajuan Kredit <b>{{$item->nama}}</b>?</p>                                                            </div>
+                                                               <p> Apakah Anda yakin ingin mengembalikan data pengajuan atas nama <b>{{$item->nama}}</b>?</p>
+                                                            </div>
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                                                                 <form action="{{ route('restore-pengajuan-kredit') }}" id="restoreForm" method="POST">
                                                                     @csrf
                                                                     @method('PUT')
                                                                     <input type="hidden" name="idPengajuan" value="{{$item->id}}">
-                                                                    <button type="submit" id="btn-restore" class="btn btn-danger restore">Restore</button>
+                                                                    <button type="submit" id="btn-restore" class="btn btn-danger restore">Kembalikan</button>
                                                                 </form>
                                                             </div>
                                                         </div>
