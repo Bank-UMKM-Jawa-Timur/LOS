@@ -1193,7 +1193,7 @@ class PengajuanKreditController extends Controller
     public function store(Request $request)
     {
         $statusSlik = false;
-        $find = array('Rp ', '.');
+        $find = array('Rp ', '.', ',');
         $request->validate([
             'name' => 'required',
             'alamat_rumah' => 'required',
@@ -1675,7 +1675,7 @@ class PengajuanKreditController extends Controller
     {
         // dd($request->all());
         // dd($request->dataLevelDua, $request->dataLevelTiga, $request->dataLevelTiga);
-        $find = array('Rp.', '.');
+        $find = array('Rp.', '.', ',');
         $request->validate([
             'name' => 'required',
             'alamat_rumah' => 'required',
