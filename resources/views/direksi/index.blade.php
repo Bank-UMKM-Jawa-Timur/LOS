@@ -248,6 +248,21 @@
 @endsection
 @push('script-injection')
   <script>
+
+    Pusher.logToConsole = true;
+
+    var pusher = new Pusher("fd114c25a90cd2005634", {
+        cluster: "ap1",
+    });
+    let channel = pusher.subscribe("los-monitoring");
+
+    channel.bind('los-event', function(data) {
+      run();
+    });
+    run();
+
+    function run(){
+
       var options = {
           series: [
               {
@@ -495,9 +510,9 @@ var staticToken = "gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFV
       });
     }
 
-    console.log(arr_pengajuan_total_diterima);
-    console.log(arr_pengajuan_total_ditolak);
-    console.log(arr_pengajuan_total_diproses);
+    // console.log(arr_pengajuan_total_diterima);
+    // console.log(arr_pengajuan_total_ditolak);
+    // console.log(arr_pengajuan_total_diproses);
 
       $.ajax({
         type: "GET",
@@ -573,6 +588,7 @@ var staticToken = "gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFV
           chartSkemaKredit(dataTotal.Kusuma, dataTotal.PKPJ, dataTotal.KKB, dataTotal.Umroh, dataTotal.Prokesra, total);
         }
       });
+    }
 
 </script>
 @endpush
