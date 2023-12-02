@@ -77,9 +77,7 @@
           </div>
           <div class="mt-1">
             <h2
-              class="text-theme-text text-2xl font-bold tracking-tighter"
-            >
-              5200
+              class="text-theme-text text-2xl font-bold tracking-tighter" id="totalPengajuan">
             </h2>
             <p class="text-gray-500 text-sm tracking-tighter">
               Total Pengajuan
@@ -100,8 +98,7 @@
           <div class="mt-1">
             <h2
               class="text-theme-text text-2xl font-bold tracking-tighter"
-            >
-              3200
+              id="disetujui">
             </h2>
             <p class="text-gray-500 text-sm tracking-tighter">
               Disetujui
@@ -122,8 +119,7 @@
           <div class="mt-1">
             <h2
               class="text-theme-text text-2xl font-bold tracking-tighter"
-            >
-              1000
+              id="ditolak">
             </h2>
             <p class="text-gray-500 text-sm tracking-tighter">Ditolak</p>
           </div>
@@ -142,8 +138,7 @@
           <div class="mt-1">
             <h2
               class="text-theme-text text-2xl font-bold tracking-tighter"
-            >
-              200
+              id="diproses">
             </h2>
             <p class="text-gray-500 text-sm tracking-tighter">Diproses</p>
           </div>
@@ -211,152 +206,10 @@
           </div>
         </div>
         <div class="body-card w-full box">
-          <div
-            class="lg:flex grid grid-cols-1 gap-5 w-full mt-5 box-border"
-          >
-            <div class="card-wrapper space-y-2 w-full box-border">
-              <div class="card border flex gap-4 p-2 w-full">
-                <button class="px-5 py-2 rounded bg-green-400">
-                  <h2 class="text-lg font-bold text-white">1</h2>
-                </button>
-                <div class="content w-full">
-                  <h2 class="text-lg font-semibold text-theme-secondary">
-                    Surabaya
-                  </h2>
-                  <p class="text-sm font-semibold text-gray-400">001</p>
-                </div>
-                <div class="total pr-3">
-                  <h2 class="text-theme-secondary font-bold mt-3">24</h2>
-                </div>
-              </div>
-              <div class="card border flex gap-4 p-2 w-full">
-                <button class="px-5 py-2 rounded bg-green-400">
-                  <h2 class="text-lg font-bold text-white">2</h2>
-                </button>
-                <div class="content w-full">
-                  <h2 class="text-lg font-semibold text-theme-secondary">
-                    Malang
-                  </h2>
-                  <p class="text-sm font-semibold text-gray-400">008</p>
-                </div>
-                <div class="total pr-3">
-                  <h2 class="text-theme-secondary font-bold mt-3">221</h2>
-                </div>
-              </div>
-              <div class="card border flex gap-4 p-2 w-full">
-                <button class="px-5 py-2 rounded bg-green-400">
-                  <h2 class="text-lg font-bold text-white">3</h2>
-                </button>
-                <div class="content w-full">
-                  <h2 class="text-lg font-semibold text-theme-secondary">
-                    Pemekasan
-                  </h2>
-                  <p class="text-sm font-semibold text-gray-400">002</p>
-                </div>
-                <div class="total pr-3">
-                  <h2 class="text-theme-secondary font-bold mt-3">200</h2>
-                </div>
-              </div>
-              <div class="card border flex gap-4 p-2 w-full">
-                <button class="px-5 py-2 rounded bg-green-400">
-                  <h2 class="text-lg font-bold text-white">4</h2>
-                </button>
-                <div class="content w-full">
-                  <h2 class="text-lg font-semibold text-theme-secondary">
-                    Banyuwangi
-                  </h2>
-                  <p class="text-sm font-semibold text-gray-400">004</p>
-                </div>
-                <div class="total pr-3">
-                  <h2 class="text-theme-secondary font-bold mt-3">120</h2>
-                </div>
-              </div>
-              <div class="card border flex gap-4 p-2 w-full">
-                <button class="px-5 py-2 rounded bg-green-400">
-                  <h2 class="text-lg font-bold text-white">5</h2>
-                </button>
-                <div class="content w-full">
-                  <h2 class="text-lg font-semibold text-theme-secondary">
-                    Blitar
-                  </h2>
-                  <p class="text-sm font-semibold text-gray-400">010</p>
-                </div>
-                <div class="total pr-3">
-                  <h2 class="text-theme-secondary font-bold mt-3">80</h2>
-                </div>
-              </div>
+          <div class="lg:flex grid grid-cols-1 gap-5 w-full mt-5 box-border">
+            <div class="card-wrapper space-y-2 w-full box-border" id="ranking_tertinggi">
             </div>
-            <div class="card-wrapper w-full space-y-2 box-border">
-              <div class="card border flex gap-4 p-2 w-full box-border">
-                <button class="px-5 py-2 rounded bg-red-500">
-                  <h2 class="text-lg font-bold text-white">1</h2>
-                </button>
-                <div class="content w-full">
-                  <h2 class="text-lg font-semibold text-theme-secondary">
-                    Jember
-                  </h2>
-                  <p class="text-sm font-semibold text-gray-400">024</p>
-                </div>
-                <div class="total pr-3">
-                  <h2 class="text-theme-secondary font-bold mt-3">20</h2>
-                </div>
-              </div>
-              <div class="card border flex gap-4 p-2 w-full box-border">
-                <button class="px-5 py-2 rounded bg-red-500">
-                  <h2 class="text-lg font-bold text-white">2</h2>
-                </button>
-                <div class="content w-full">
-                  <h2 class="text-lg font-semibold text-theme-secondary">
-                    Probolinggo
-                  </h2>
-                  <p class="text-sm font-semibold text-gray-400">006</p>
-                </div>
-                <div class="total pr-3">
-                  <h2 class="text-theme-secondary font-bold mt-3">31</h2>
-                </div>
-              </div>
-              <div class="card border flex gap-4 p-2 w-full">
-                <button class="px-5 py-2 rounded bg-red-500">
-                  <h2 class="text-lg font-bold text-white">3</h2>
-                </button>
-                <div class="content w-full">
-                  <h2 class="text-lg font-semibold text-theme-secondary">
-                    Bondowoso
-                  </h2>
-                  <p class="text-sm font-semibold text-gray-400">029</p>
-                </div>
-                <div class="total pr-3">
-                  <h2 class="text-theme-secondary font-bold mt-3">12</h2>
-                </div>
-              </div>
-              <div class="card border flex gap-4 p-2 w-full">
-                <button class="px-5 py-2 rounded bg-red-500">
-                  <h2 class="text-lg font-bold text-white">4</h2>
-                </button>
-                <div class="content w-full">
-                  <h2 class="text-lg font-semibold text-theme-secondary">
-                    Situbondo
-                  </h2>
-                  <p class="text-sm font-semibold text-gray-400">027</p>
-                </div>
-                <div class="total pr-3">
-                  <h2 class="text-theme-secondary font-bold mt-3">21</h2>
-                </div>
-              </div>
-              <div class="card border flex gap-4 p-2 w-full">
-                <button class="px-5 py-2 rounded bg-red-500">
-                  <h2 class="text-lg font-bold text-white">5</h2>
-                </button>
-                <div class="content w-full">
-                  <h2 class="text-lg font-semibold text-theme-secondary">
-                    Lumajang
-                  </h2>
-                  <p class="text-sm font-semibold text-gray-400">005</p>
-                </div>
-                <div class="total pr-3">
-                  <h2 class="text-theme-secondary font-bold mt-3">22</h2>
-                </div>
-              </div>
+            <div class="card-wrapper w-full space-y-2 box-border" id="ranking_terendah">
             </div>
           </div>
         </div>
@@ -370,7 +223,7 @@
           <h2
             class="text-lg text-theme-text font-semibold tracking-tighter"
           >
-            Posisi Pengajuan
+            Proses Skema Kredit
           </h2>
         </div>
         <div class="flex justify-center lg:mt-0 mt-5">
@@ -398,73 +251,75 @@
 
 @push('script-injection')
   <script>
-    var options = {
-    series: [
-        {
-            name: "Disetujui",
-            data: [31, 40, 28, 51, 42, 45, 58, 60, 72, 80, 109, 100],
-        },
-        {
-            name: "Ditolak",
-            data: [11, 32, 45, 32, 34, 52, 41, 43, 46, 49, 80, 85],
-        },
-        {
-            name: "Diproses",
-            data: [11, 32, 45, 32, 34, 52, 41, 43, 46, 49, 40, 65],
-        },
-    ],
-    colors: ["#00FF61", "#DC3545", "#F7C35C"],
-    chart: {
-        width: "100%",
-        height: "80%",
-        type: 'area',
-        toolbar: {
-            show: false,
-        },
-        zoom: {
-            enabled: false,
-        },
-        fontFamily: "'Poppins', sans-serif",
-    },
-    dataLabels: {
-        enabled: false,
-    },
-    plotOptions: {
-        bar: {
-            dataLabels: {
-                position: "top",
-            },
-        },
-    },
-    stroke: {
-        curve: "smooth",
-    },
-    legend: {
-        position: "top",
-        horizontalAlign: "right",
-    },
-    xaxis: {
-        categories: [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "Mei",
-            "Jun",
-            "Jul",
-            "Agu",
-            "Sep",
-            "Okt",
-            "Nov",
-            "Des",
-        ],
-    },
-    tooltip: {
-        x: {
-            format: "dd/MM/yy HH:mm",
-        },
-    },
-};
+    function yearChartPengajuan() { 
+      var options = {
+          series: [
+              {
+                  name: "Disetujui",
+                  data: [31, 40, 28, 51, 42, 45, 58, 60, 72, 80, 109, 100],
+              },
+              {
+                  name: "Ditolak",
+                  data: [11, 32, 45, 32, 34, 52, 41, 43, 46, 49, 80, 85],
+              },
+              {
+                  name: "Diproses",
+                  data: [11, 32, 45, 32, 34, 52, 41, 43, 46, 49, 40, 65],
+              },
+          ],
+          colors: ["#00FF61", "#DC3545", "#F7C35C"],
+          chart: {
+              width: "100%",
+              height: "100%",
+              type: 'area',
+              toolbar: {
+                  show: false,
+              },
+              zoom: {
+                  enabled: false,
+              },
+              fontFamily: "'Poppins', sans-serif",
+          },
+          dataLabels: {
+              enabled: false,
+          },
+          plotOptions: {
+              bar: {
+                  dataLabels: {
+                      position: "top",
+                  },
+              },
+          },
+          stroke: {
+              curve: "smooth",
+          },
+          legend: {
+              position: "top",
+              horizontalAlign: "right",
+          },
+          xaxis: {
+              categories: [
+                  "Jan",
+                  "Feb",
+                  "Mar",
+                  "Apr",
+                  "Mei",
+                  "Jun",
+                  "Jul",
+                  "Agu",
+                  "Sep",
+                  "Okt",
+                  "Nov",
+                  "Des",
+              ],
+          },
+          tooltip: {
+              x: {
+                  format: "dd/MM/yy HH:mm",
+              },
+          },
+      };
+    }
 
 var chartTotalPengajuan = new ApexCharts(
     document.querySelector("#chart-total-pengajuan"),
@@ -542,18 +397,25 @@ Highcharts.chart("posisi-pengajuan", {
         },
     ],
 });
-Highcharts.chart("skema-kredit", {
+
+function chartSkemaKredit(kusuma, pkpj, kkb, talangan, prokesra, total){
+  return Highcharts.chart("skema-kredit", {
     chart: {
         type: "pie",
         width: 500,
         height: 400,
     },
     title: {
-        verticalAlign: "middle",
-        floating: true,
-        text: `<span class="font-bold font-poppins text-5xl flex">
-                <p class="mt-20"><br /> <br />789<br><br></p>
-        </span>`,
+      align: 'center',
+      verticalAlign: 'middle',
+        text: `
+        <br /><br />
+        <span class="font-bold font-poppins text-6xl absolute">
+                <p class="mt-[50%]"><br /><br />${total} <br /><br></p>
+        </span>
+        <br />
+        `
+        ,
     },
     tooltip: {
         headerFormat: "",
@@ -583,34 +445,144 @@ Highcharts.chart("skema-kredit", {
             data: [
                 {
                     name: "PKPJ",
-                    y: 505992,
-                    z: 92,
+                    y: parseInt(pkpj),
+                    z: pkpj,
                 },
                 {
                     name: "KKB",
-                    y: 551695,
-                    z: 119,
+                    y: parseInt(kkb),
+                    z: kkb,
                 },
                 {
                     name: "Talangan",
-                    y: 312679,
-                    z: 121,
+                    y: parseInt(talangan),
+                    z: talangan,
                 },
                 {
                     name: "Prokesra",
-                    y: 78865,
-                    z: 136,
+                    y: parseInt(prokesra),
+                    z: prokesra,
                 },
                 {
                     name: "Kusuma",
-                    y: 301336,
-                    z: 200,
+                    y: parseInt(kusuma),
+                    z: kusuma,
                 },
             ],
             colors: ["#FF3649", "#FFE920", "#25E76E", "#C300D3", "#4A90F9"],
         },
     ],
 });
+}
 
+  </script>
+  <script>
+    var staticToken = "gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFVaNj";
+    // get data pengajuan 1 year
+    var arr_pengajuan_total_diterima = [];
+    var arr_pengajuan_total_ditolak = [];
+    var arr_pengajuan_total_diproses = [];
+    for (let i = 1; i <= 12; i++) {
+      $.ajax({
+        type: "GET",
+        url: `https://pincetar.bankumkm.id/api/v1/get-count-pengajuan?tAwal=2023-${i}-01&tAkhir=2023-${i}-30`,
+        dataType: "json",
+        headers: {
+          "Content-Type": "application/json",
+          "token": staticToken
+        },
+        success: function (response) {
+          // console.log(response);
+          arr_pengajuan_total_diterima.push(
+            response.total_disetujui
+          );
+          arr_pengajuan_total_ditolak.push(
+            response.total_ditolak
+          );
+          arr_pengajuan_total_diproses.push(
+            response.total_diproses
+          );
+        }
+      });
+    }
+
+    console.log(arr_pengajuan_total_diterima);
+    console.log(arr_pengajuan_total_ditolak);
+    console.log(arr_pengajuan_total_diproses);
+
+      $.ajax({
+        type: "GET",
+        url: "api/v1/get-sum-cabang",
+        dataType: "json",
+        headers: {
+          "Content-Type": "application/json",
+          "token": staticToken
+        },
+        success: function (response) {
+          // console.log(response);
+          $('#totalPengajuan').append(response.total_disetujui + response.total_ditolak + response.total_diproses);
+          $('#disetujui').append(response.total_disetujui);
+          $('#ditolak').append(response.total_ditolak);
+          $('#diproses').append(response.total_diproses);
+
+          var dataTertinggi = response.data.tertinggi;
+          var dataTerendah = response.data.terendah;
+          
+          // Data ranking tertinggi
+          $.map(dataTertinggi, function (item, index) {
+            $('#ranking_tertinggi').append(`
+              <div class="card border flex gap-4 p-2 w-full">
+                <button class="px-5 py-2 rounded bg-green-400">
+                  <h2 class="text-lg font-bold text-white">${index + 1 }</h2>
+                </button>
+                <div class="content w-full">
+                  <h2 class="text-lg font-semibold text-theme-secondary">
+                    ${item.cabang}
+                  </h2>
+                  <p class="text-sm font-semibold text-gray-400">${item.kode_cabang}</p>
+                </div>
+                <div class="total pr-3">
+                  <h2 class="text-theme-secondary font-bold mt-3">${item.total}</h2>
+                </div>
+              </div>
+            `);
+          });
+
+          // Data ranking terendah
+          $.map(dataTerendah, function (item, index) {
+            $('#ranking_terendah').append(`
+              <div class="card border flex gap-4 p-2 w-full">
+                <button class="px-5 py-2 rounded bg-red-500">
+                  <h2 class="text-lg font-bold text-white">${index + 1 }</h2>
+                </button>
+                <div class="content w-full">
+                  <h2 class="text-lg font-semibold text-theme-secondary">
+                    ${item.cabang}
+                  </h2>
+                  <p class="text-sm font-semibold text-gray-400">${item.kode_cabang}</p>
+                </div>
+                <div class="total pr-3">
+                  <h2 class="text-theme-secondary font-bold mt-3">${item.total}</h2>
+                </div>
+              </div>
+            `);
+          });
+        }
+      });
+
+      $.ajax({
+        type: "GET",
+        url: "https://pincetar.bankumkm.id/api/v1/get-sum-skema",
+        headers: {
+          "Content-Type": "application/json",
+          "token": staticToken
+        },
+        success: function (response) {
+          var dataTotal = response.data.total[0];
+          var total = parseInt(dataTotal.Kusuma) + parseInt(dataTotal.PKPJ) + parseInt(dataTotal.KKB) + parseInt(dataTotal.Umroh) + parseInt(dataTotal.Prokesra);
+          
+          chartSkemaKredit(dataTotal.Kusuma, dataTotal.PKPJ, dataTotal.KKB, dataTotal.Umroh, dataTotal.Prokesra, total);
+        }
+      });
   </script>
 @endpush

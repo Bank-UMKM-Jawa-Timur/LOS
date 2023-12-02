@@ -12,6 +12,7 @@ use \App\Http\Controllers\UserController;
 use \App\Http\Controllers\MerkController;
 use \App\Http\Controllers\TipeController;
 use \App\Http\Controllers\CetakSuratController;
+use App\Http\Controllers\DashboardDireksiController;
 use \App\Http\Controllers\LogPengajuanController;
 /*
 |--------------------------------------------------------------------------
@@ -42,9 +43,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index']);
     Route::post('/print-data-nominatif', [DashboardController::class, 'cetak'])->name('print_data_nominatif');
 
-    Route::get('/direksi', function(){
-        return view('direksi.index');
-    });
+    Route::get('/direksi', [DashboardDireksiController::class, 'index']);
 
     // check Pincab
     Route::post('pengajuan-kredit/pincabStatusDetailPost', [PengajuanKreditController::class, "checkPincabStatusDetailPost"])->name('pengajuan.check.pincab.status.detail.post');
