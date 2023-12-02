@@ -40,6 +40,6 @@
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <script src="{{ asset('js/app.js') }}"></script>
-    <script src="{{ asset('plugins/pusher') }}"></script>
+    {{-- <script src="{{ asset('plugins/pusher') }}"></script> --}}
     @stack('script-injection')
 </html>

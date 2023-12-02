@@ -246,12 +246,8 @@
   </section>
   
 @endsection
-
-
-
 @push('script-injection')
   <script>
-    function yearChartPengajuan() { 
       var options = {
           series: [
               {
@@ -270,7 +266,7 @@
           colors: ["#00FF61", "#DC3545", "#F7C35C"],
           chart: {
               width: "100%",
-              height: "100%",
+              height: 380,
               type: 'area',
               toolbar: {
                   show: false,
@@ -319,14 +315,9 @@
               },
           },
       };
-    }
-
-var chartTotalPengajuan = new ApexCharts(
-    document.querySelector("#chart-total-pengajuan"),
-    options
-);
-chartTotalPengajuan.render();
-
+      
+      var chartTotalPengajuan = new ApexCharts(document.querySelector("#chart-total-pengajuan"), options);
+      chartTotalPengajuan.render();
 // ====================================================================
 
 Highcharts.chart("posisi-pengajuan", {
@@ -475,9 +466,7 @@ function chartSkemaKredit(kusuma, pkpj, kkb, talangan, prokesra, total){
 });
 }
 
-  </script>
-  <script>
-    var staticToken = "gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFVaNj";
+var staticToken = "gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFVaNj";
     // get data pengajuan 1 year
     var arr_pengajuan_total_diterima = [];
     var arr_pengajuan_total_ditolak = [];
@@ -584,5 +573,6 @@ function chartSkemaKredit(kusuma, pkpj, kkb, talangan, prokesra, total){
           chartSkemaKredit(dataTotal.Kusuma, dataTotal.PKPJ, dataTotal.KKB, dataTotal.Umroh, dataTotal.Prokesra, total);
         }
       });
-  </script>
+
+</script>
 @endpush
