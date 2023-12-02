@@ -35,7 +35,7 @@ class AuthenticatedSessionController extends Controller
                     ->orWhere('nip', $request->email)
                     ->first();
         if ($user) {
-            if ($user->role == 'Administrator') {
+            if ($user->role == 'Administrator' || $user->role == 'Direksi') {
                 if (\Hash::check($request->password, $user->password)) {
                     $request->authenticate();
                     if (DB::table('sessions')->where('user_id', auth()->user()->id)->count() > 0) {
