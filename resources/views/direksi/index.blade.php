@@ -248,10 +248,29 @@
 @endsection
 @push('script-injection')
   <script>
+<<<<<<< HEAD
       function yearChartPengajuan(disetujui, ditolak, diproses) { 
         // console.log(ditolak);
         console.log(disetujui);
         var options = {
+=======
+
+    Pusher.logToConsole = true;
+
+    var pusher = new Pusher("fd114c25a90cd2005634", {
+        cluster: "ap1",
+    });
+    let channel = pusher.subscribe("los-monitoring");
+
+    channel.bind('los-event', function(data) {
+      run();
+    });
+    run();
+
+    function run(){
+
+      var options = {
+>>>>>>> 88c145741418afd5656c89a55a2c71d963b99bf5
           series: [
               {
                   name: "Disetujui",
@@ -505,8 +524,12 @@ var staticToken = "gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFV
       });
     }
 
+<<<<<<< HEAD
     // console.log(arr_pengajuan_total_disetujui);
     yearChartPengajuan(arr_pengajuan_total_disetujui, arr_pengajuan_total_ditolak, arr_pengajuan_total_diproses);
+=======
+    // console.log(arr_pengajuan_total_diterima);
+>>>>>>> 88c145741418afd5656c89a55a2c71d963b99bf5
     // console.log(arr_pengajuan_total_ditolak);
     // console.log(arr_pengajuan_total_diproses);
 
@@ -584,6 +607,7 @@ var staticToken = "gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFV
           chartSkemaKredit(dataTotal.Kusuma, dataTotal.PKPJ, dataTotal.KKB, dataTotal.Umroh, dataTotal.Prokesra, total);
         }
       });
+    }
 
 </script>
 @endpush
