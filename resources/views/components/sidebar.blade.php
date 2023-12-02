@@ -166,6 +166,22 @@
                 </div>
               </ul>
             </div>
+            <ul class="absolute bottom-5">
+              <li class="menu-item">
+                <a
+                  href="#"
+                  class="toggle-dp-menu"
+                >
+                  <button
+                    class="item-link relative   w-full flex gap-2 font-medium text-left px-4 py-3 rounded-md"
+                  >
+                    <span>
+                      <iconify-icon icon="solar:logout-outline" class="text-2xl mt-1"></iconify-icon>
+                    </span>
+                  </button>
+                </a>
+              </li>
+            </ul>
           </div>
           <!-- end menu -->
         </nav>

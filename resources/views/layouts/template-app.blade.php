@@ -21,6 +21,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body class="bg-theme-body font-poppins">
+    @yield('modal')
     <div class="layout-wrapper flex justify-center">
         <div class="layout-sidebar flex-auto">
             @include('components.sidebar')
@@ -38,4 +39,5 @@
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
     <script src="{{ asset('js/app.js') }}"></script>
+    @stack('script-injection')
 </html>

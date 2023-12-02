@@ -1,6 +1,10 @@
 @extends('layouts.template-app')
-@section('content')
 
+@section('modal')
+  @include('direksi.modal.filter')
+  @include('direksi.modal.export')
+@endsection
+@section('content')
 <section class="p-5 overflow-y-auto">
     <div
       class="lg:flex grid grid-cols-1 justify-between w-full font-poppins"
@@ -389,3 +393,224 @@
   </section>
   
 @endsection
+
+
+
+@push('script-injection')
+  <script>
+    var options = {
+    series: [
+        {
+            name: "Disetujui",
+            data: [31, 40, 28, 51, 42, 45, 58, 60, 72, 80, 109, 100],
+        },
+        {
+            name: "Ditolak",
+            data: [11, 32, 45, 32, 34, 52, 41, 43, 46, 49, 80, 85],
+        },
+        {
+            name: "Diproses",
+            data: [11, 32, 45, 32, 34, 52, 41, 43, 46, 49, 40, 65],
+        },
+    ],
+    colors: ["#00FF61", "#DC3545", "#F7C35C"],
+    chart: {
+        width: "100%",
+        height: "80%",
+        type: 'area',
+        toolbar: {
+            show: false,
+        },
+        zoom: {
+            enabled: false,
+        },
+        fontFamily: "'Poppins', sans-serif",
+    },
+    dataLabels: {
+        enabled: false,
+    },
+    plotOptions: {
+        bar: {
+            dataLabels: {
+                position: "top",
+            },
+        },
+    },
+    stroke: {
+        curve: "smooth",
+    },
+    legend: {
+        position: "top",
+        horizontalAlign: "right",
+    },
+    xaxis: {
+        categories: [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "Mei",
+            "Jun",
+            "Jul",
+            "Agu",
+            "Sep",
+            "Okt",
+            "Nov",
+            "Des",
+        ],
+    },
+    tooltip: {
+        x: {
+            format: "dd/MM/yy HH:mm",
+        },
+    },
+};
+
+var chartTotalPengajuan = new ApexCharts(
+    document.querySelector("#chart-total-pengajuan"),
+    options
+);
+chartTotalPengajuan.render();
+
+// ====================================================================
+
+Highcharts.chart("posisi-pengajuan", {
+    chart: {
+        type: "pie",
+        width: 500,
+        height: 400,
+    },
+    title: {
+        verticalAlign: "middle",
+        floating: true,
+        text: `<span class="font-bold font-poppins text-5xl flex">
+                    <p class="mt-20 left-14"><br /> <br />789<br><br></p>
+            </span>`,
+    },
+    tooltip: {
+        headerFormat: "",
+        pointFormat:
+            '<span style="color:{point.color}">\u25CF</span> <b> {point.name} </b><br/><span class="text-gray-400" >{point.y}</span>',
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            borderWidth: 5,
+            cursor: "pointer",
+            dataLabels: {
+                enabled: true,
+                format: `<b style="font-size: 13px; fontFamily: 'Poppins', sans-serif;">{point.name}</b><br><span style="font-size: 18px; color: #333; fontFamily: 'Poppins', sans-serif;"">{point.z}</span>`,
+                distance: 20,
+            },
+        },
+    },
+    series: [
+        {
+            minPointSize: 50,
+            innerSize: "70%",
+            zMin: 0,
+            name: "countries",
+            borderRadius: 0,
+            data: [
+                {
+                    name: "Pincab",
+                    y: 505992,
+                    z: 92,
+                },
+                {
+                    name: "PBP",
+                    y: 551695,
+                    z: 119,
+                },
+                {
+                    name: "PBO",
+                    y: 312679,
+                    z: 121,
+                },
+                {
+                    name: "Penyelia",
+                    y: 78865,
+                    z: 136,
+                },
+                {
+                    name: "Staff",
+                    y: 301336,
+                    z: 200,
+                },
+            ],
+            colors: ["#67A4FF", "#FF00B8", "#FFB357", "#C300D3", "#00E0FF"],
+        },
+    ],
+});
+Highcharts.chart("skema-kredit", {
+    chart: {
+        type: "pie",
+        width: 500,
+        height: 400,
+    },
+    title: {
+        verticalAlign: "middle",
+        floating: true,
+        text: `<span class="font-bold font-poppins text-5xl flex">
+                <p class="mt-20"><br /> <br />789<br><br></p>
+        </span>`,
+    },
+    tooltip: {
+        headerFormat: "",
+        pointFormat:
+            '<span style="color:{point.color}">\u25CF</span> <b> {point.name} </b><br/><span class="text-gray-400" >{point.y}</span>',
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            borderWidth: 5,
+            cursor: "pointer",
+            dataLabels: {
+                enabled: true,
+                format: `<b style="font-size: 13px; fontFamily: 'Poppins', sans-serif;">{point.name}</b><br><span style="font-size: 18px; color: #333; fontFamily: 'Poppins', sans-serif;"">{point.z}</span>`,
+                distance: 20,
+            },
+        },
+    },
+    series: [
+        {
+            minPointSize: 20,
+            innerSize: "70%",
+            zMin: 0,
+            name: "countries",
+            borderRadius: 0,
+
+            data: [
+                {
+                    name: "PKPJ",
+                    y: 505992,
+                    z: 92,
+                },
+                {
+                    name: "KKB",
+                    y: 551695,
+                    z: 119,
+                },
+                {
+                    name: "Talangan",
+                    y: 312679,
+                    z: 121,
+                },
+                {
+                    name: "Prokesra",
+                    y: 78865,
+                    z: 136,
+                },
+                {
+                    name: "Kusuma",
+                    y: 301336,
+                    z: 200,
+                },
+            ],
+            colors: ["#FF3649", "#FFE920", "#25E76E", "#C300D3", "#4A90F9"],
+        },
+    ],
+});
+
+  </script>
+@endpush
