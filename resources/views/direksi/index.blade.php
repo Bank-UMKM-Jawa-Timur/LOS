@@ -248,6 +248,12 @@
 @endsection
 @push('script-injection')
   <script>
+<<<<<<< HEAD
+      function yearChartPengajuan(disetujui, ditolak, diproses) { 
+        // console.log(ditolak);
+        console.log(disetujui);
+        var options = {
+=======
 
     Pusher.logToConsole = true;
 
@@ -263,17 +269,24 @@
 
     function run(){
       var options = {
+>>>>>>> 88c145741418afd5656c89a55a2c71d963b99bf5
           series: [
               {
                   name: "Disetujui",
-                  data: [31, 40, 28, 51, 42, 45, 58, 60, 72, 80, 109, 100],
+                  // data: $.map(disetujui, function (item, i) {
+                  //   item
+                  // }),
+                  // data: disetujui,
+                  data: [11, 32, 45, 32, 34, 52, 41, 43, 46, 49, 80, 85],
               },
               {
                   name: "Ditolak",
                   data: [11, 32, 45, 32, 34, 52, 41, 43, 46, 49, 80, 85],
+                  // data: ditolak,
               },
               {
                   name: "Diproses",
+                  // data: diproses,
                   data: [11, 32, 45, 32, 34, 52, 41, 43, 46, 49, 40, 65],
               },
           ],
@@ -328,10 +341,11 @@
                   format: "dd/MM/yy HH:mm",
               },
           },
-      };
+        };
       
-      var chartTotalPengajuan = new ApexCharts(document.querySelector("#chart-total-pengajuan"), options);
-      chartTotalPengajuan.render();
+        var chartTotalPengajuan = new ApexCharts(document.querySelector("#chart-total-pengajuan"), options);
+        chartTotalPengajuan.render();
+      }
 // ====================================================================
 
 Highcharts.chart("posisi-pengajuan", {
@@ -482,7 +496,7 @@ function chartSkemaKredit(kusuma, pkpj, kkb, talangan, prokesra, total){
 
 var staticToken = "gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFVaNj";
     // get data pengajuan 1 year
-    var arr_pengajuan_total_diterima = [];
+    var arr_pengajuan_total_disetujui = [];
     var arr_pengajuan_total_ditolak = [];
     var arr_pengajuan_total_diproses = [];
     for (let i = 1; i <= 12; i++) {
@@ -496,7 +510,7 @@ var staticToken = "gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFV
         },
         success: function (response) {
           // console.log(response);
-          arr_pengajuan_total_diterima.push(
+          arr_pengajuan_total_disetujui.push(
             response.total_disetujui
           );
           arr_pengajuan_total_ditolak.push(
@@ -509,7 +523,12 @@ var staticToken = "gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFV
       });
     }
 
+<<<<<<< HEAD
+    // console.log(arr_pengajuan_total_disetujui);
+    yearChartPengajuan(arr_pengajuan_total_disetujui, arr_pengajuan_total_ditolak, arr_pengajuan_total_diproses);
+=======
     // console.log(arr_pengajuan_total_diterima);
+>>>>>>> 88c145741418afd5656c89a55a2c71d963b99bf5
     // console.log(arr_pengajuan_total_ditolak);
     // console.log(arr_pengajuan_total_diproses);
 
