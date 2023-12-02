@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Monitoring LOS</title>
     <link
         rel="preconnect"
         href="https://fonts.googleapis.com"
@@ -38,6 +38,8 @@
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('plugins/pusher') }}"></script>
     @stack('script-injection')
 </html>
