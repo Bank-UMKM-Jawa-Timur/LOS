@@ -1062,6 +1062,38 @@ class PengajuanAPIController extends Controller
         }
     }
 
+    public function getCountYearPengajuan(Request $request) {
+        $tAkhir = $request->tAkhir;
+        $tAwal = $request->tAwal;
+        $tahun = "2023";
+
+        $total_disetujui = DB::table('pengajuan')
+            // ->where('tanggal', 'like', $tahun . '%')
+            ->where('tanggal', 'like', '2023-12%')
+            ->orWhere('posisi', 'Selesai')
+            ->whereNull('pengajuan.deleted_at')
+            ->count();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => [
+                'total_disetujui' => $total_disetujui,
+            ]
+        ], 200);
+
+        // $total_ditolak = DB::table('pengajuan')
+        //     ->whereBetween('tanggal', [$tAwal, $tAkhir != null ? $tAkhir : now()])
+        //     ->where('posisi', 'Ditolak')
+        //     ->whereNull('pengajuan.deleted_at')
+        //     ->count();
+        // $total_diproses = DB::table('pengajuan')
+        //     ->whereBetween('tanggal', [$tAwal, $tAkhir != null ? $tAkhir : now()])
+        //     ->whereIn('posisi', ['Pincab','PBP','PBO','Review Penyelia','Proses Input Data'])
+        //     ->whereNull('pengajuan.deleted_at')
+        //     ->count();
+    }
+
     public function getListPengajuan($user_id){
         $user = User::select('id', 'role')->find($user_id);
         $data = DB::table('pengajuan')

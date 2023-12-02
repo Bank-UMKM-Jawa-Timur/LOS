@@ -262,7 +262,6 @@
     run();
 
     function run(){
-
       var options = {
           series: [
               {
