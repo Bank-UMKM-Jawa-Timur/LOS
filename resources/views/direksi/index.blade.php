@@ -248,12 +248,6 @@
 @endsection
 @push('script-injection')
   <script>
-<<<<<<< HEAD
-      function yearChartPengajuan(disetujui, ditolak, diproses) { 
-        // console.log(ditolak);
-        console.log(disetujui);
-        var options = {
-=======
 
     Pusher.logToConsole = true;
 
@@ -269,26 +263,61 @@
 
     function run(){
 
-      var options = {
->>>>>>> 88c145741418afd5656c89a55a2c71d963b99bf5
+      function yearChartPengajuan(disetujui, ditolak, diproses) { 
+        
+        console.log(disetujui.January)
+        var options = {
           series: [
               {
                   name: "Disetujui",
-                  // data: $.map(disetujui, function (item, i) {
-                  //   item
-                  // }),
-                  // data: disetujui,
-                  data: [11, 32, 45, 32, 34, 52, 41, 43, 46, 49, 80, 85],
+                  data: [
+                    disetujui.January, 
+                    disetujui.February, 
+                    disetujui.March, 
+                    disetujui.April, 
+                    disetujui.May, 
+                    disetujui.June, 
+                    disetujui.July, 
+                    disetujui.August, 
+                    disetujui.September, 
+                    disetujui.October, 
+                    disetujui.November, 
+                    disetujui.December
+                  ],
               },
               {
                   name: "Ditolak",
-                  data: [11, 32, 45, 32, 34, 52, 41, 43, 46, 49, 80, 85],
-                  // data: ditolak,
+                  data: [
+                    ditolak.January, 
+                    ditolak.February, 
+                    ditolak.March, 
+                    ditolak.April, 
+                    ditolak.May, 
+                    ditolak.June, 
+                    ditolak.July, 
+                    ditolak.August, 
+                    ditolak.September, 
+                    ditolak.October, 
+                    ditolak.November, 
+                    ditolak.December
+                  ],
               },
               {
                   name: "Diproses",
-                  // data: diproses,
-                  data: [11, 32, 45, 32, 34, 52, 41, 43, 46, 49, 40, 65],
+                  data: [
+                    diproses.January, 
+                    diproses.February, 
+                    diproses.March, 
+                    diproses.April, 
+                    diproses.May, 
+                    diproses.June, 
+                    diproses.July, 
+                    diproses.August, 
+                    diproses.September, 
+                    diproses.October, 
+                    diproses.November, 
+                    diproses.December
+                  ],
               },
           ],
           colors: ["#00FF61", "#DC3545", "#F7C35C"],
@@ -497,41 +526,18 @@ function chartSkemaKredit(kusuma, pkpj, kkb, talangan, prokesra, total){
 
 var staticToken = "gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFVaNj";
     // get data pengajuan 1 year
-    var arr_pengajuan_total_disetujui = [];
-    var arr_pengajuan_total_ditolak = [];
-    var arr_pengajuan_total_diproses = [];
-    for (let i = 1; i <= 12; i++) {
-      $.ajax({
-        type: "GET",
-        url: `https://pincetar.bankumkm.id/api/v1/get-count-pengajuan?tAwal=2023-${i}-01&tAkhir=2023-${i}-30`,
-        dataType: "json",
-        headers: {
-          "Content-Type": "application/json",
-          "token": staticToken
-        },
-        success: function (response) {
-          // console.log(response);
-          arr_pengajuan_total_disetujui.push(
-            response.total_disetujui
-          );
-          arr_pengajuan_total_ditolak.push(
-            response.total_ditolak
-          );
-          arr_pengajuan_total_diproses.push(
-            response.total_diproses
-          );
-        }
-      });
-    }
-
-<<<<<<< HEAD
-    // console.log(arr_pengajuan_total_disetujui);
-    yearChartPengajuan(arr_pengajuan_total_disetujui, arr_pengajuan_total_ditolak, arr_pengajuan_total_diproses);
-=======
-    // console.log(arr_pengajuan_total_diterima);
->>>>>>> 88c145741418afd5656c89a55a2c71d963b99bf5
-    // console.log(arr_pengajuan_total_ditolak);
-    // console.log(arr_pengajuan_total_diproses);
+    $.ajax({
+      type: "GET",
+      url: `api/v1/get-count-year-pengajuan`,
+      dataType: "json",
+      headers: {
+        "Content-Type": "application/json",
+        "token": staticToken
+      },
+      success: function (response) {
+        yearChartPengajuan(response.data.data_disetujui, response.data.data_ditolak, response.data.data_diproses)
+      }
+    });
 
       $.ajax({
         type: "GET",
@@ -608,6 +614,8 @@ var staticToken = "gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFV
         }
       });
     }
-
 </script>
 @endpush
+
+
+      

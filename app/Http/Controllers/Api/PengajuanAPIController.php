@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\PengajuanKreditController;
 use App\Models\User;
+use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -1060,6 +1061,107 @@ class PengajuanAPIController extends Controller
             //     ->groupBy('kodeC',)
             //     ->get();
         }
+    }
+
+    function getCountYearPengajuan(Request $request) {
+        $tAwal = now()->subYear();
+        $tAkhir = now();
+
+        if (request()->has('tAwal')) {
+            $tAwal = Carbon::parse(request('tAwal'))->startOfYear();
+        }
+        
+        if (request()->has('tAkhir')) {
+            $tAkhir = Carbon::parse(request('tAkhir'))->endOfYear();
+        }
+
+        $total_disetujui_perbulan = DB::table('pengajuan')
+            ->select(DB::raw('MONTH(tanggal) as bulan'), DB::raw('COUNT(*) as total'))
+            ->whereBetween('tanggal', [$tAwal, $tAkhir])
+            ->where('posisi', 'Selesai')
+            ->whereNull('pengajuan.deleted_at')
+            ->groupBy(DB::raw('MONTH(tanggal)'))
+            ->get();
+
+        $total_ditolak_perbulan = DB::table('pengajuan')
+            ->select(DB::raw('MONTH(tanggal) as bulan'), DB::raw('COUNT(*) as total'))
+            ->whereBetween('tanggal', [$tAwal, $tAkhir])
+            ->where('posisi', 'Ditolak')
+            ->whereNull('pengajuan.deleted_at')
+            ->groupBy(DB::raw('MONTH(tanggal)'))
+            ->get();
+
+        $total_diproses_perbulan = DB::table('pengajuan')
+            ->select(DB::raw('MONTH(tanggal) as bulan'), DB::raw('COUNT(*) as total'))
+            ->whereBetween('tanggal', [$tAwal, $tAkhir])
+            ->whereIn('posisi', ['Pincab','PBP','PBO','Review Penyelia','Proses Input Data'])
+            ->whereNull('pengajuan.deleted_at')
+            ->groupBy(DB::raw('MONTH(tanggal)'))
+            ->get();
+
+        $dataDisetujui = [
+            'January' => 0,
+            'February' => 0,
+            'March' => 0,
+            'April' => 0,
+            'May' => 0,
+            'June' => 0,
+            'July' => 0,
+            'August' => 0,
+            'September' => 0,
+            'October' => 0,
+            'November' => 0,
+            'December' => 0,
+        ];
+        $dataDitolak = [
+            'January' => 0,
+            'February' => 0,
+            'March' => 0,
+            'April' => 0,
+            'May' => 0,
+            'June' => 0,
+            'July' => 0,
+            'August' => 0,
+            'September' => 0,
+            'October' => 0,
+            'November' => 0,
+            'December' => 0,
+        ];
+        $dataDiproses = [
+            'January' => 0,
+            'February' => 0,
+            'March' => 0,
+            'April' => 0,
+            'May' => 0,
+            'June' => 0,
+            'July' => 0,
+            'August' => 0,
+            'September' => 0,
+            'October' => 0,
+            'November' => 0,
+            'December' => 0,
+        ];
+
+        foreach ($total_disetujui_perbulan as $item) {
+            $dataDisetujui[date('F', mktime(0, 0, 0, $item->bulan, 1))] = $item->total;
+        }
+        foreach ($total_ditolak_perbulan as $item) {
+            $dataDitolak[date('F', mktime(0, 0, 0, $item->bulan, 1))] = $item->total;
+        }
+        foreach ($total_diproses_perbulan as $item) {
+            $dataDiproses[date('F', mktime(0, 0, 0, $item->bulan, 1))] = $item->total;
+        }
+
+        return response()->json([
+            'status'=>"Berhasil",
+            'message'=>"Berhasil menampilkan data pengajuan dalam 1 tahun",
+            "data"=> [
+                'data_disetujui' => $dataDisetujui,
+                'data_ditolak' => $dataDitolak,
+                'data_diproses' => $dataDiproses,
+            ]
+        ],200);
+
     }
 
     public function getListPengajuan($user_id){

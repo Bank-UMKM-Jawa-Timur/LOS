@@ -70,6 +70,7 @@ Route::prefix('v1')->group(function(){
         // Route::get('/get-posisi-pengajuan', [PengajuanAPIController::class, 'getPosisiPengajuan']);
         Route::get('get-posisi-pengajuan', [PengajuanAPIController::class, 'getPosisiPengajuan']);
         Route::get('get-count-pengajuan', [PengajuanAPIController::class, 'getCountPengajuan']);
+        Route::get('get-count-year-pengajuan', [PengajuanAPIController::class, 'getCountYearPengajuan']);
         Route::get('get-cabang', [PengajuanAPIController::class, 'getAllCabangMobile']);
         Route::get('get-sum-skema', [PengajuanAPIController::class, 'getSumSkema']);
         Route::get('get-list-pengajuan/{user_id}', [PengajuanAPIController::class, 'getListPengajuan']);
