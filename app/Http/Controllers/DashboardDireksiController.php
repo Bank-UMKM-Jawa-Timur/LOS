@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 class DashboardDireksiController extends Controller
@@ -12,29 +13,13 @@ class DashboardDireksiController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        // $urlCabang = "api/v1/get-cabang";
-        // $token = "gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFVaNj";
+        $cabang = DB::table('cabang')
+            ->select('kode_cabang', 'cabang')
+            ->get();
 
-        // $response = Http::get($urlCabang, [
-        //     // "Content-Type" => "application/json",
-        //     "token"=> $token
-        // ]);
-        // $data = json_decode($response, true);
-
-        // $response = $client->request('GET', $urlCabang, [
-        //     'headers' => [
-        //         'token' => $token,
-        //         'Accept' => 'application/json',
-        //     ],
-        // ]);
-
-        // $responseBody = json_decode($response->getBody(), true);
-
-        // dd($response);
-
-        return view('direksi.index');
+        return view('direksi.index', compact('cabang'));
     }
 
     /**

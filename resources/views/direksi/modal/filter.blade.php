@@ -46,7 +46,7 @@ id="modal-filter"
             class="form-select"
             id="skema-kredit-filter"
           >
-            <option value="all" selected>-- Pilih Semua --</option>
+            <option value="all_skema" selected>-- Pilih Semua --</option>
             <option value="PKPJ">PKPJ</option>
             <option value="KKB">KKB</option>
             <option value="Umroh">Umroh</option>
@@ -61,8 +61,10 @@ id="modal-filter"
             class="form-select"
             id="cabang-filter"
           >
-            <option value="" selected>-- Pilih Cabang --</option>
-            <option value="Surabaya">Surabaya</option>
+            <option value="00" selected>-- Pilih Semua --</option>
+            @foreach ($cabang as $item)
+              <option value="{{ $item->kode_cabang }}">{{ $item->cabang }}</option>
+            @endforeach
           </select>
         </div>
       </div>
