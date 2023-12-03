@@ -264,8 +264,7 @@
     function run(){
 
       function yearChartPengajuan(disetujui, ditolak, diproses) { 
-        
-        console.log(disetujui.January)
+        console.log();
         var options = {
           series: [
               {
@@ -378,7 +377,9 @@
       }
 // ====================================================================
 
-Highcharts.chart("posisi-pengajuan", {
+function chartProsesSkemaKredit(pincab, pbp, pbo, penyelia, staf, total) { 
+  $('#posisi-pengajuan').empty();
+  return Highcharts.chart("posisi-pengajuan", {
     chart: {
         type: "pie",
         width: 500,
@@ -388,7 +389,7 @@ Highcharts.chart("posisi-pengajuan", {
         verticalAlign: "middle",
         floating: true,
         text: `<span class="font-bold font-poppins text-5xl flex">
-                    <p class="mt-20 left-14"><br /> <br />789<br><br></p>
+                    <p class="mt-20 left-14"><br /> <br />${total}<br><br></p>
             </span>`,
     },
     tooltip: {
@@ -418,36 +419,38 @@ Highcharts.chart("posisi-pengajuan", {
             data: [
                 {
                     name: "Pincab",
-                    y: 505992,
-                    z: 92,
+                    y: pincab,
+                    z: pincab,
                 },
                 {
                     name: "PBP",
-                    y: 551695,
-                    z: 119,
+                    y: pbp,
+                    z: pbp,
                 },
                 {
                     name: "PBO",
-                    y: 312679,
-                    z: 121,
+                    y: pbo,
+                    z: pbo,
                 },
                 {
                     name: "Penyelia",
-                    y: 78865,
-                    z: 136,
+                    y: penyelia,
+                    z: penyelia,
                 },
                 {
-                    name: "Staff",
-                    y: 301336,
-                    z: 200,
+                    name: "Staf",
+                    y: staf,
+                    z: staf,
                 },
             ],
             colors: ["#67A4FF", "#FF00B8", "#FFB357", "#C300D3", "#00E0FF"],
         },
     ],
-});
+  });
+}
 
 function chartSkemaKredit(kusuma, pkpj, kkb, talangan, prokesra, total){
+  $('#skema-kredit').empty();
   return Highcharts.chart("skema-kredit", {
     chart: {
         type: "pie",
@@ -524,24 +527,61 @@ function chartSkemaKredit(kusuma, pkpj, kkb, talangan, prokesra, total){
 });
 }
 
-var staticToken = "gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFVaNj";
+  var staticToken = "gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFVaNj";
+  var url_sum_cabang = "https://pincetar.bankumkm.id/api/v1/get-sum-cabang";
+  var url_count_year_pengajuan = "api/v1/get-count-year-pengajuan";
+  var url_sum_skema = "https://pincetar.bankumkm.id/api/v1/get-sum-skema";
+
+  $('#btnFilter').on('click', function () { 
+    var tAwal = document.getElementById("tgl_awal");
+    var tAkhir = document.getElementById("tgl_akhir");
+
+    if (tAwal.value != "" && tAkhir.value != "") {
+      url_sum_cabang = `https://pincetar.bankumkm.id/api/v1/get-sum-cabang?tanggal_awal=${tAwal.value}&tanggal_akhir=${tAkhir.value}`;
+      url_count_year_pengajuan = `api/v1/get-count-year-pengajuan?tAwal=${tAwal.value}&tAkhir=${tAkhir.value}`;
+      // url_sum_skema = `https://pincetar.bankumkm.id/api/v1/get-sum-skema?tanggal_awal=${tAwal}&tanggal_akhir=${tAkhir}`;
+    }else{
+      url_sum_cabang = "https://pincetar.bankumkm.id/api/v1/get-sum-cabang";
+      url_count_year_pengajuan = "api/v1/get-count-year-pengajuan";
+      // url_sum_skema = "https://pincetar.bankumkm.id/api/v1/get-sum-skema";
+    }
+
+    getDataPengajuanYear();
+    pengajuanRanking();
+  })
+  
+    getDataPengajuanYear();
+    pengajuanRanking();
+    getSkema();
+
     // get data pengajuan 1 year
-    $.ajax({
-      type: "GET",
-      url: `api/v1/get-count-year-pengajuan`,
-      dataType: "json",
-      headers: {
-        "Content-Type": "application/json",
-        "token": staticToken
-      },
-      success: function (response) {
-        yearChartPengajuan(response.data.data_disetujui, response.data.data_ditolak, response.data.data_diproses)
-      }
-    });
+    function getDataPengajuanYear() { 
+      $.ajax({
+        type: "GET",
+        url: url_count_year_pengajuan,
+        dataType: "json",
+        headers: {
+          "Content-Type": "application/json",
+          "token": staticToken
+        },
+        success: function (response) {
+          $('#chart-total-pengajuan').empty();
+          yearChartPengajuan(response.data.data_disetujui, response.data.data_ditolak, response.data.data_diproses)
+        }
+      });
+    }
+
+    function pengajuanRanking() { 
+      $('#totalPengajuan').empty()
+      $('#disetujui').empty()
+      $('#ditolak').empty()
+      $('#diproses').empty()
+      $('#ranking_tertinggi').empty()
+      $('#ranking_terendah').empty()
 
       $.ajax({
         type: "GET",
-        url: "api/v1/get-sum-cabang",
+        url: url_sum_cabang,
         dataType: "json",
         headers: {
           "Content-Type": "application/json",
@@ -598,22 +638,43 @@ var staticToken = "gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFV
           });
         }
       });
+    }
 
+    function getSkema() { 
+      // $('#posisi-pengajuan').empty();
+      // $('#skema-kredit').empty();
       $.ajax({
         type: "GET",
-        url: "https://pincetar.bankumkm.id/api/v1/get-sum-skema",
+        url: url_sum_skema,
         headers: {
           "Content-Type": "application/json",
           "token": staticToken
         },
         success: function (response) {
           var dataTotal = response.data.total[0];
+          var dataPosisi = response.data.posisi;
           var total = parseInt(dataTotal.Kusuma) + parseInt(dataTotal.PKPJ) + parseInt(dataTotal.KKB) + parseInt(dataTotal.Umroh) + parseInt(dataTotal.Prokesra);
-          
+          var prosesPincab = 0;
+          var prosesPbp = 0;
+          var prosesPbo = 0;
+          var prosesPenyelia = 0;
+          var prosesStaf = 0;
+
+          $.map(dataPosisi, function (item, i) {
+            prosesPincab += parseInt(item.posisi_pincab);
+            prosesPbp += parseInt(item.posisi_pbp);
+            prosesPbo += parseInt(item.posisi_pbo);
+            prosesPenyelia += parseInt(item.posisi_penyelia);
+            prosesStaf += parseInt(item.posisi_staf);
+          });
+
+          var totalProses = prosesPincab + prosesPbp + prosesPbo + prosesPenyelia + prosesStaf;
           chartSkemaKredit(dataTotal.Kusuma, dataTotal.PKPJ, dataTotal.KKB, dataTotal.Umroh, dataTotal.Prokesra, total);
+          chartProsesSkemaKredit(prosesPincab, prosesPbp, prosesPbo, prosesPenyelia, prosesStaf, totalProses);
         }
       });
     }
+}
 </script>
 @endpush
 

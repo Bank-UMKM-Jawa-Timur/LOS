@@ -25,6 +25,7 @@ id="modal-filter"
             type="date"
             name="tanggal"
             class="form-input"
+            id="tgl_awal"
           />
         </div>
         <div class="input-box">
@@ -33,6 +34,7 @@ id="modal-filter"
             type="date"
             name="tanggal"
             class="form-input"
+            id="tgl_akhir"
           />
         </div>
       </div>
@@ -59,11 +61,10 @@ id="modal-filter"
   <div class="modal-footer justify-end">
     <button
       class="btn-cancel"
-      data-dismiss-id="modal-filter"
-    >
+      data-dismiss-id="modal-filter">
       Batal
     </button>
-    <button class="btn-submit">Filter</button>
+    <button class="btn-submit" id="btnFilter">Filter</button>
   </div>
 </div>
 </div>

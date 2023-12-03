@@ -869,101 +869,159 @@ class PengajuanAPIController extends Controller
 
     }
 
+    // public function getPosisiPengajuan(Request $request)
+    // {
+    //     $pilCabang = $request->cabang;
+    //     $tAkhir = $request->tAkhir;
+    //     $tAwal = $request->tAwal;
+    //     $tanggal = $request->tAwal . ' ' . $request->tAkhir;
+    //     $tanggalAwal = date('Y') . '-' . date('m') . '-01';
+    //     $hari_ini = now();
+
+
+    //     // tanggal di pilih cabang tidak
+    //       if ($tAwal != null && $tAkhir != null && $pilCabang == null) {
+    //         $seluruh_data = DB::table('cabang AS c')
+    //         ->select(
+    //             'c.kode_cabang AS kodeC',
+    //             'c.cabang',
+    //             DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Pincab' AND deleted_at is null GROUP BY id_cabang), 0) AS pincab"),
+    //             DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'PBP' AND deleted_at is null GROUP BY id_cabang), 0) AS pbp"),
+    //             DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'PBO' AND deleted_at is null GROUP BY id_cabang), 0) AS pbo"),
+    //             DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Review Penyelia' AND deleted_at is null GROUP BY id_cabang), 0) AS penyelia"),
+    //             DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Proses Input Data' AND deleted_at is null GROUP BY id_cabang), 0) AS staff"),
+    //         )
+    //             ->leftJoin('pengajuan AS p', 'c.id', 'p.id_cabang')
+    //             ->where('c.kode_cabang', '!=', 000)
+    //             // ->whereNull('p.deleted_at')
+    //             ->groupBy('kodeC')
+    //             ->get();
+
+
+    //     }
+    //     // tanggal dipilih cabang juga
+    //     elseif ($tAwal != null && $tAkhir != null && $pilCabang != null) {
+    //         $seluruh_data = DB::table('cabang AS c')
+    //         ->select(
+    //             'c.kode_cabang AS kodeC',
+    //             'c.cabang',
+    //                 DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Pincab' AND deleted_at is null GROUP BY id_cabang), 0) AS pincab"),
+    //                 DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'PBP' AND deleted_at is null GROUP BY id_cabang), 0) AS pbp"),
+    //                 DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'PBO' AND deleted_at is null GROUP BY id_cabang), 0) AS pbo"),
+    //                 DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Review Penyelia' AND deleted_at is null GROUP BY id_cabang), 0) AS penyelia"),
+    //                 DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Proses Input Data' AND deleted_at is null GROUP BY id_cabang), 0) AS staff"),
+    //         )
+    //             ->leftJoin('pengajuan AS p', 'c.id', 'p.id_cabang')
+    //             ->where('c.kode_cabang', '!=', 000)
+    //             // ->whereNull('p.deleted_at')
+    //             ->groupBy('kodeC')
+    //             ->where('c.id', $pilCabang)
+    //             ->get();
+    //     }
+    //     // tanggal kosong cabang dipilih
+    //     elseif($tAwal == null && $tAkhir == null && $pilCabang != null) {
+
+    //         $seluruh_data = DB::table('cabang AS c')
+    //         ->select(
+    //             'c.kode_cabang AS kodeC',
+    //             'c.cabang',
+    //                 DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tanggalAwal' AND tanggal <= '$hari_ini' AND posisi = 'Pincab' AND deleted_at is null GROUP BY id_cabang), 0) AS pincab"),
+    //                 DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tanggalAwal' AND tanggal <= '$hari_ini' AND posisi = 'PBP' AND deleted_at is null GROUP BY id_cabang), 0) AS pbp"),
+    //                 DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tanggalAwal' AND tanggal <= '$hari_ini' AND posisi = 'PBO' AND deleted_at is null GROUP BY id_cabang), 0) AS pbo"),
+    //                 DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tanggalAwal' AND tanggal <= '$hari_ini' AND posisi = 'Review Penyelia' AND deleted_at is null GROUP BY id_cabang), 0) AS penyelia"),
+    //                 DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tanggalAwal' AND tanggal <= '$hari_ini' AND posisi = 'Proses Input Data' AND deleted_at is null GROUP BY id_cabang), 0) AS staff"),
+    //         )
+    //             ->leftJoin('pengajuan AS p', 'c.id', '=', 'p.id_cabang')
+    //             ->where('c.kode_cabang', '!=', '000')
+    //             // ->whereNull('p.deleted_at')
+    //             ->groupBy('kodeC',)
+    //             ->where('c.id', $pilCabang)
+    //             ->get();
+    //     }
+    //     // tidak milih request
+    //     else {
+    //         $seluruh_data = DB::table('cabang AS c')
+    //             ->select(
+    //                 'c.kode_cabang AS kodeC',
+    //                 'c.cabang',
+    //                 DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tanggalAwal' AND tanggal <= '$hari_ini' AND posisi = 'Pincab' AND deleted_at is null GROUP BY id_cabang), 0) AS pincab"),
+    //                 DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tanggalAwal' AND tanggal <= '$hari_ini' AND posisi = 'PBP' AND deleted_at is null GROUP BY id_cabang), 0) AS pbp"),
+    //                 DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tanggalAwal' AND tanggal <= '$hari_ini' AND posisi = 'PBO' AND deleted_at is null GROUP BY id_cabang), 0) AS pbo"),
+    //                 DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tanggalAwal' AND tanggal <= '$hari_ini' AND posisi = 'Review Penyelia' AND deleted_at is null GROUP BY id_cabang), 0) AS penyelia"),
+    //                 DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tanggalAwal' AND tanggal <= '$hari_ini' AND posisi = 'Proses Input Data' AND deleted_at is null GROUP BY id_cabang), 0) AS staff"),
+    //             )
+    //             ->leftJoin('pengajuan AS p', 'c.id', '=', 'p.id_cabang')
+    //             ->where('c.kode_cabang', '!=', '000')
+    //             // ->whereNull('p.deleted_at')
+    //             ->groupBy('kodeC',)
+    //             ->get();
+    //     }
+
+
+    //     return response()->json([
+    //         'status' => 'berhasil',
+    //         'message' => 'berhasil menampilkan data pengajuan.',
+    //         'data' => $seluruh_data
+    //     ]);
+    // }
+
     public function getPosisiPengajuan(Request $request)
     {
         $pilCabang = $request->cabang;
         $tAkhir = $request->tAkhir;
         $tAwal = $request->tAwal;
-        $tanggal = $request->tAwal . ' ' . $request->tAkhir;
-        $tanggalAwal = date('Y') . '-' . date('m') . '-01';
+        $tanggalAwal = now()->startOfMonth();
         $hari_ini = now();
 
-
-        // tanggal di pilih cabang tidak
-          if ($tAwal != null && $tAkhir != null && $pilCabang == null) {
-            $seluruh_data = DB::table('cabang AS c')
-            ->select(
-                'c.kode_cabang AS kodeC',
-                'c.cabang',
-                DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Pincab' AND deleted_at is null GROUP BY id_cabang), 0) AS pincab"),
-                DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'PBP' AND deleted_at is null GROUP BY id_cabang), 0) AS pbp"),
-                DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'PBO' AND deleted_at is null GROUP BY id_cabang), 0) AS pbo"),
-                DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Review Penyelia' AND deleted_at is null GROUP BY id_cabang), 0) AS penyelia"),
-                DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Proses Input Data' AND deleted_at is null GROUP BY id_cabang), 0) AS staff"),
-            )
-                ->leftJoin('pengajuan AS p', 'c.id', 'p.id_cabang')
-                ->where('c.kode_cabang', '!=', 000)
-                // ->whereNull('p.deleted_at')
-                ->groupBy('kodeC')
-                ->get();
-
-
-        }
-        // tanggal dipilih cabang juga
-        elseif ($tAwal != null && $tAkhir != null && $pilCabang != null) {
-            $seluruh_data = DB::table('cabang AS c')
-            ->select(
-                'c.kode_cabang AS kodeC',
-                'c.cabang',
-                DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Pincab' AND deleted_at is null GROUP BY id_cabang), 0) AS pincab"),
-                DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'PBP' AND deleted_at is null GROUP BY id_cabang), 0) AS pbp"),
-                DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'PBO' AND deleted_at is null GROUP BY id_cabang), 0) AS pbo"),
-                DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Review Penyelia' AND deleted_at is null GROUP BY id_cabang), 0) AS penyelia"),
-                DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tAwal' AND tanggal <= '$tAkhir' AND posisi = 'Proses Input Data' AND deleted_at is null GROUP BY id_cabang), 0) AS staff"),
-            )
-                ->leftJoin('pengajuan AS p', 'c.id', 'p.id_cabang')
-                ->where('c.kode_cabang', '!=', 000)
-                // ->whereNull('p.deleted_at')
-                ->groupBy('kodeC')
-                ->where('c.id', $pilCabang)
-                ->get();
-        }
-        // tanggal kosong cabang dipilih
-        elseif($tAwal == null && $tAkhir == null && $pilCabang != null) {
-
-            $seluruh_data = DB::table('cabang AS c')
-            ->select(
-                'c.kode_cabang AS kodeC',
-                'c.cabang',
-                    DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tanggalAwal' AND tanggal <= '$hari_ini' AND posisi = 'Pincab' AND deleted_at is null GROUP BY id_cabang), 0) AS pincab"),
-                    DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tanggalAwal' AND tanggal <= '$hari_ini' AND posisi = 'PBP' AND deleted_at is null GROUP BY id_cabang), 0) AS pbp"),
-                    DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tanggalAwal' AND tanggal <= '$hari_ini' AND posisi = 'PBO' AND deleted_at is null GROUP BY id_cabang), 0) AS pbo"),
-                    DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tanggalAwal' AND tanggal <= '$hari_ini' AND posisi = 'Review Penyelia' AND deleted_at is null GROUP BY id_cabang), 0) AS penyelia"),
-                    DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tanggalAwal' AND tanggal <= '$hari_ini' AND posisi = 'Proses Input Data' AND deleted_at is null GROUP BY id_cabang), 0) AS staff"),
-            )
-                ->leftJoin('pengajuan AS p', 'c.id', '=', 'p.id_cabang')
-                ->where('c.kode_cabang', '!=', '000')
-                // ->whereNull('p.deleted_at')
-                ->groupBy('kodeC',)
-                ->where('c.id', $pilCabang)
-                ->get();
-        }
-        // tidak milih request
-        else {
-            $seluruh_data = DB::table('cabang AS c')
+        if ($tAwal != null && $tAkhir != null) {
+            $query = DB::table('cabang AS c')
                 ->select(
-                    'c.kode_cabang AS kodeC',
-                    'c.cabang',
-                DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tanggalAwal' AND tanggal <= '$hari_ini' AND posisi = 'Pincab' AND deleted_at is null GROUP BY id_cabang), 0) AS pincab"),
-                DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tanggalAwal' AND tanggal <= '$hari_ini' AND posisi = 'PBP' AND deleted_at is null GROUP BY id_cabang), 0) AS pbp"),
-                DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tanggalAwal' AND tanggal <= '$hari_ini' AND posisi = 'PBO' AND deleted_at is null GROUP BY id_cabang), 0) AS pbo"),
-                DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tanggalAwal' AND tanggal <= '$hari_ini' AND posisi = 'Review Penyelia' AND deleted_at is null GROUP BY id_cabang), 0) AS penyelia"),
-                DB::raw("IFNULL((SELECT count(id) FROM pengajuan WHERE id_cabang = c.id AND tanggal >= '$tanggalAwal' AND tanggal <= '$hari_ini' AND posisi = 'Proses Input Data' AND deleted_at is null GROUP BY id_cabang), 0) AS staff"),
-                )
+                'kode_cabang AS kodeC',
+                'cabang',
+                DB::raw("COUNT(CASE WHEN p.tanggal BETWEEN '$tAwal' AND '$tAkhir' AND p.posisi = 'Pincab' AND p.deleted_at IS NULL THEN p.id END) AS pincab"),
+                DB::raw("COUNT(CASE WHEN p.tanggal BETWEEN '$tAwal' AND '$tAkhir' AND p.posisi = 'PBP' AND p.deleted_at IS NULL THEN p.id END) AS pbp"),
+                DB::raw("COUNT(CASE WHEN p.tanggal BETWEEN '$tAwal' AND '$tAkhir' AND p.posisi = 'PBO' AND p.deleted_at IS NULL THEN p.id END) AS pbo"),
+                DB::raw("COUNT(CASE WHEN p.tanggal BETWEEN '$tAwal' AND '$tAkhir' AND p.posisi = 'Review Penyelia' AND p.deleted_at IS NULL THEN p.id END) AS penyelia"),
+                DB::raw("COUNT(CASE WHEN p.tanggal BETWEEN '$tAwal' AND '$tAkhir' AND p.posisi = 'Proses Input Data' AND p.deleted_at IS NULL THEN p.id END) AS staff")
+            )
+                ->leftJoin('pengajuan AS p', function ($join) use ($tAwal, $tAkhir) {
+                    $join->on('c.id', '=', 'p.id_cabang')
+                        ->whereBetween('p.tanggal', [$tAwal, $tAkhir]);
+                        // ->whereNull('p.deleted_at');
+                })
+                ->where('c.kode_cabang', '!=', '000')
+                ->groupBy('kodeC', 'cabang');
+
+        }elseif($tAwal == null && $tAkhir == null){
+            $query = DB::table('cabang AS c')
+                ->select(
+                'kode_cabang AS kodeC',
+                'cabang',
+                DB::raw("COUNT(CASE WHEN p.tanggal BETWEEN '$tanggalAwal' AND '$hari_ini' AND p.posisi = 'Pincab' AND p.deleted_at IS NULL THEN p.id END) AS pincab"),
+                DB::raw("COUNT(CASE WHEN p.tanggal BETWEEN '$tanggalAwal' AND '$hari_ini' AND p.posisi = 'PBP' AND p.deleted_at IS NULL THEN p.id END) AS pbp"),
+                DB::raw("COUNT(CASE WHEN p.tanggal BETWEEN '$tanggalAwal' AND '$hari_ini' AND p.posisi = 'PBO' AND p.deleted_at IS NULL THEN p.id END) AS pbo"),
+                DB::raw("COUNT(CASE WHEN p.tanggal BETWEEN '$tanggalAwal' AND '$hari_ini' AND p.posisi = 'Review Penyelia' AND p.deleted_at IS NULL THEN p.id END) AS penyelia"),
+                DB::raw("COUNT(CASE WHEN p.tanggal BETWEEN '$tanggalAwal' AND '$hari_ini' AND p.posisi = 'Proses Input Data' AND p.deleted_at IS NULL THEN p.id END) AS staff")
+            )
                 ->leftJoin('pengajuan AS p', 'c.id', '=', 'p.id_cabang')
                 ->where('c.kode_cabang', '!=', '000')
-                // ->whereNull('p.deleted_at')
-                ->groupBy('kodeC',)
-                ->get();
+                ->groupBy('kodeC', 'cabang');
         }
 
+        if ($pilCabang != null) {
+            $query->where('c.id', $pilCabang);
+        }
+
+        $seluruh_data = $query->get();
 
         return response()->json([
             'status' => 'berhasil',
             'message' => 'berhasil menampilkan data pengajuan.',
-            'data' => $seluruh_data
+            'data' => $seluruh_data,
         ]);
     }
+
+
 
     public function getCountPengajuan(Request $request)
     {
@@ -1064,6 +1122,7 @@ class PengajuanAPIController extends Controller
     }
 
     function getCountYearPengajuan(Request $request) {
+        $pilCabang = $request->cabang;
         $tAwal = now()->subYear();
         $tAkhir = now();
 
@@ -1077,6 +1136,7 @@ class PengajuanAPIController extends Controller
 
         $total_disetujui_perbulan = DB::table('pengajuan')
             ->select(DB::raw('MONTH(tanggal) as bulan'), DB::raw('COUNT(*) as total'))
+            ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
             ->whereBetween('tanggal', [$tAwal, $tAkhir])
             ->where('posisi', 'Selesai')
             ->whereNull('pengajuan.deleted_at')
@@ -1085,6 +1145,7 @@ class PengajuanAPIController extends Controller
 
         $total_ditolak_perbulan = DB::table('pengajuan')
             ->select(DB::raw('MONTH(tanggal) as bulan'), DB::raw('COUNT(*) as total'))
+            ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
             ->whereBetween('tanggal', [$tAwal, $tAkhir])
             ->where('posisi', 'Ditolak')
             ->whereNull('pengajuan.deleted_at')
@@ -1093,6 +1154,7 @@ class PengajuanAPIController extends Controller
 
         $total_diproses_perbulan = DB::table('pengajuan')
             ->select(DB::raw('MONTH(tanggal) as bulan'), DB::raw('COUNT(*) as total'))
+            ->join('cabang', 'cabang.id', 'pengajuan.id_cabang')
             ->whereBetween('tanggal', [$tAwal, $tAkhir])
             ->whereIn('posisi', ['Pincab','PBP','PBO','Review Penyelia','Proses Input Data'])
             ->whereNull('pengajuan.deleted_at')
@@ -1141,6 +1203,12 @@ class PengajuanAPIController extends Controller
             'November' => 0,
             'December' => 0,
         ];
+
+        // if($pilCabang != null){
+        //     $total_disetujui_perbulan->where('cabang.kode_cabang', $pilCabang);
+        //     $total_ditolak_perbulan->where('cabang.kode_cabang', $pilCabang);
+        //     $total_diproses_perbulan->where('cabang.kode_cabang', $pilCabang);
+        // }
 
         foreach ($total_disetujui_perbulan as $item) {
             $dataDisetujui[date('F', mktime(0, 0, 0, $item->bulan, 1))] = $item->total;
