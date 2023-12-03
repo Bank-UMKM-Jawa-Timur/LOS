@@ -145,10 +145,8 @@
         </div>
       </div>
     </div>
-    <div class="lg:flex relative gap-2 mt-3">
-      <div
-        class="card bg-white p-0 lg:w-2/4 w-full rounded-md box-border border"
-      >
+    <div class="form-group-2 mt-3">
+      <div id="data-pengajuan" class="card bg-white p-0 w-full rounded-md box-border border">
         <div class="p-3 pl-5 pt-5">
           <h2
             class="font-poppins font-semibold tracking-tighter text-lg text-theme-text"
@@ -161,9 +159,7 @@
           class="w-full"
         ></div>
       </div>
-      <div
-        class="card bg-white p-5 lg:mt-0 mt-4 lg:w-2/4 border rounded-md w-full"
-      >
+      <div id="ranking-cabang" class="card bg-white p-5 lg:mt-0 mt-4  border rounded-md w-full">
         <div class="head flex justify-between gap-5">
           <div class="title">
             <h2
@@ -214,11 +210,7 @@
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 lg:gap-2 gap-4 justify-center mt-3"
-    >
-      <div class="card p-5 w-full border bg-white">
+      <div class="card p-5 w-full border bg-white" id="proses-skema-kredit">
         <div class="head">
           <h2
             class="text-lg text-theme-text font-semibold tracking-tighter"
@@ -230,7 +222,7 @@
           <div id="posisi-pengajuan"></div>
         </div>
       </div>
-      <div class="card p-5 w-full border bg-white">
+      <div class="card p-5 w-full border bg-white" id="skema-kredit-layout">
         <div class="head">
           <h2
             class="text-lg text-theme-text font-semibold tracking-tighter"
@@ -242,6 +234,7 @@
           <div id="skema-kredit"></div>
         </div>
       </div>
+    </div>
     </div>
   </section>
   
@@ -263,8 +256,8 @@
 
     function run(){
 
-      function yearChartPengajuan(disetujui, ditolak, diproses) { 
-        console.log();
+      function yearChartPengajuan(disetujui, ditolak, diproses) {
+        
         var options = {
           series: [
               {
@@ -533,21 +526,42 @@ function chartSkemaKredit(kusuma, pkpj, kkb, talangan, prokesra, total){
   var url_sum_skema = "https://pincetar.bankumkm.id/api/v1/get-sum-skema";
 
   $('#btnFilter').on('click', function () { 
-    var tAwal = document.getElementById("tgl_awal");
-    var tAkhir = document.getElementById("tgl_akhir");
+    let tAwal = document.getElementById("tgl_awal");
+    let tAkhir = document.getElementById("tgl_akhir");
+    let fSkemaKredit = $('#skema-kredit-filter');
+    let fCabang = document.getElementById("cabang-filter");
 
     if (tAwal.value != "" && tAkhir.value != "") {
       url_sum_cabang = `https://pincetar.bankumkm.id/api/v1/get-sum-cabang?tanggal_awal=${tAwal.value}&tanggal_akhir=${tAkhir.value}`;
       url_count_year_pengajuan = `api/v1/get-count-year-pengajuan?tAwal=${tAwal.value}&tAkhir=${tAkhir.value}`;
       // url_sum_skema = `https://pincetar.bankumkm.id/api/v1/get-sum-skema?tanggal_awal=${tAwal}&tanggal_akhir=${tAkhir}`;
+ 
     }else{
       url_sum_cabang = "https://pincetar.bankumkm.id/api/v1/get-sum-cabang";
       url_count_year_pengajuan = "api/v1/get-count-year-pengajuan";
       // url_sum_skema = "https://pincetar.bankumkm.id/api/v1/get-sum-skema";
     }
+    if(fCabang.value != ""){
+        
+      $('#ranking-cabang').addClass('hidden')
+      console.log("is hidden")
+    }else{
+        console.log("is not hidden")
+        $('#ranking-cabang').removeClass('hidden')
+    }
+
+    if(fSkemaKredit.value != ""){
+      $('#skema-kredit-layout').addClass('hidden')
+      console.log("is hidden")
+    }else{
+        console.log("is not hidden")
+        $('#skema-kredit-layout').removeClass('hidden')
+    }
 
     getDataPengajuanYear();
     pengajuanRanking();
+
+    $(".modal-layout").trigger('click');
   })
   
     getDataPengajuanYear();

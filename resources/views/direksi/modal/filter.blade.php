@@ -38,15 +38,31 @@ id="modal-filter"
           />
         </div>
       </div>
-      <div class="form-group-1 mb-4">
+      <div class="form-group-2 mb-4">
+        <div class="input-box">
+          <label for="">Skema Kredit</label>
+          <select
+            name="skema-kredit"
+            class="form-select"
+            id="skema-kredit-filter"
+          >
+            <option value="all" selected>-- Pilih Semua --</option>
+            <option value="PKPJ">PKPJ</option>
+            <option value="KKB">KKB</option>
+            <option value="Umroh">Umroh</option>
+            <option value="Prokesra">Prokesra</option>
+            <option value="Kusuma">Kusuma</option>
+          </select>
+        </div>
         <div class="input-box">
           <label for="">Cabang</label>
           <select
-            name=""
+            name="cabang"
             class="form-select"
-            id=""
+            id="cabang-filter"
           >
-            <option value="">-- Pilih Cabang --</option>
+            <option value="" selected>-- Pilih Cabang --</option>
+            <option value="Surabaya">Surabaya</option>
           </select>
         </div>
       </div>
