@@ -151,7 +151,7 @@
           <h2
             class="font-poppins font-semibold tracking-tighter text-lg text-theme-text"
           >
-            Data Pengajuan
+            Data Pengajuan - {{date('Y')}}
           </h2>
         </div>
         <div
@@ -215,7 +215,7 @@
           <h2
             class="text-lg text-theme-text font-semibold tracking-tighter"
           >
-            Proses Skema Kredit
+            Proses Skema Kredit - {{date('M').' '.date('Y')}}
           </h2>
         </div>
         <div class="flex justify-center lg:mt-0 mt-5">
@@ -227,7 +227,7 @@
           <h2
             class="text-lg text-theme-text font-semibold tracking-tighter"
           >
-            Skema Kredit
+            Skema Kredit - {{date('M').' '.date('Y')}}
           </h2>
         </div>
         <div class="flex justify-center lg:mt-0 mt-5">
