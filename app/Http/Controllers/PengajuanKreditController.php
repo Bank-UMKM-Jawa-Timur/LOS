@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\EventMonitoring;
 use App\Models\AlasanPengembalianData;
 use App\Models\CalonNasabah;
 use App\Models\CalonNasabahTemp;
@@ -1533,6 +1534,8 @@ class PengajuanKreditController extends Controller
             $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan proses pembuatan data pengajuan atas nama ' . $namaNasabah . '.', $id_pengajuan, Auth::user()->id, Auth::user()->nip);
 
             DB::commit();
+            event(new EventMonitoring('store pengajuan'));
+
             if (!$statusSlik)
                 return redirect()->route('pengajuan-kredit.index')->withStatus('Data berhasil disimpan.');
             else
@@ -2555,6 +2558,9 @@ class PengajuanKreditController extends Controller
                     $namaNasabah = $nasabah->nama;
 
                 $this->logPengajuan->store($role . ' dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan review terhadap pengajuan atas nama ' . $namaNasabah, $updateData->id, Auth::user()->id, Auth::user()->nip);
+
+                event(new EventMonitoring('review pengajuan'));
+
                 return redirect()->route('pengajuan-kredit.index')->withStatus('Berhasil Mereview');
             } catch (Exception $e) {
                 // return $e;
@@ -2968,6 +2974,8 @@ class PengajuanKreditController extends Controller
 
                 $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menyetujui pengajuan atas nama ' . $namaNasabah . '.', $id, Auth::user()->id, Auth::user()->nip);
 
+                event(new EventMonitoring('menyetujui pengajuan'));
+
                 return redirect()->back()->withStatus('Berhasil mengganti posisi.');
             } else {
                 return redirect()->back()->withError('Belum di review Pincab.');
@@ -2992,6 +3000,7 @@ class PengajuanKreditController extends Controller
                     $namaNasabah = $nasabah->nama;
 
                 $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menolak pengajuan atas nama ' . $namaNasabah . '.', $id, Auth::user()->id, Auth::user()->nip);
+                event(new EventMonitoring('tolak pengajuan'));
                 return redirect()->back()->withStatus('Berhasil mengganti posisi.');
             } else {
                 return redirect()->back()->withError('Belum di review Pincab.');
@@ -3822,9 +3831,10 @@ class PengajuanKreditController extends Controller
         $id_pengajuan = Request()->idPengajuan;
         $data = PengajuanModel::find($id_pengajuan);
 
-
         if ($data) {
             $data->delete();
+            event(new EventMonitoring('delete pengajuan'));
+
             return redirect()->route('pengajuan-kredit.index')->withStatus('Data '.$data->nama .' berhasil dihapus.');
         } else {
             return redirect()->route('pengajuan-kredit.index')->withErrors('Data dengan ID tersebut tidak ditemukan.');
@@ -3839,6 +3849,8 @@ class PengajuanKreditController extends Controller
 
         if ($data) {
             $data->restore();
+            event(new EventMonitoring('restore pengajuan'));
+            
             return redirect()->route('pengajuan-kredit.index')->withStatus('Data '.$data->nama.' berhasil direstore.');
         } else {
             return redirect()->route('pengajuan-kredit.index')->withErrors('Data dengan ID tersebut tidak ditemukan.');
@@ -3907,6 +3919,8 @@ class PengajuanKreditController extends Controller
                 'created_at' => now()
             ]);
             DB::commit();
+
+            event(new EventMonitoring('kembalikan data pengajuan'));
 
             return redirect()->back()->withStatus('Berhasil mengembalikan data ke ' . $ke . '.');
         } catch(Exception $e){
