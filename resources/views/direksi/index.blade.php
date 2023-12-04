@@ -252,6 +252,8 @@
   
 @endsection
 @push('script-injection')
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+
   <script>
 
     Pusher.logToConsole = true;
@@ -645,7 +647,6 @@ function chartSkemaKredit(kusuma, pkpj, kkb, talangan, prokesra, total){
   var lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
   var formattedFirstDay = firstDayOfMonth.toISOString().split('T')[0]; 
   var formattedLastDay = lastDayOfMonth.toISOString().split('T')[0];
-  
 function alertMessage(element, visible){
   if(visible == true){
     $(element).removeClass('alert');
@@ -659,10 +660,13 @@ function alertMessage(element, visible){
 
   var staticToken = "gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFVaNj";
   var base_url = "https://pincetar.bankumkm.id";
-  var url_sum_cabang = `api/v1/get-sum-cabang?tanggal_awal=${formattedFirstDay}&tanggal_akhir=${formattedLastDay}`;
+  var url_sum_cabang = `${base_url}/api/v1/get-sum-cabang?tanggal_awal=2023-12-01&tanggal_akhir=${formattedLastDay}`;
   var url_count_year_pengajuan = "api/v1/get-count-year-pengajuan";
-  var url_sum_skema = "api/v1/get-sum-skema";
-  var url_count_pengajuan = "api/v1/get-count-pengajuan";
+  var url_sum_skema = `${base_url}/api/v1/get-sum-skema`;
+  var url_count_pengajuan = `${base_url}/api/v1/get-count-pengajuan`;
+
+  console.log(formattedFirstDay);
+  console.log(formattedLastDay);
 
   $('#btnFilter').on('click', function () { 
     $('#ranking_tertinggi').empty()
@@ -746,12 +750,15 @@ function alertMessage(element, visible){
     getSkema();
     $(".modal-layout").trigger('click');
     
-  }
+    }
 
   })
-  
 
-
+    $('#totalPengajuan').empty()
+    $('#disetujui').empty()
+    $('#ditolak').empty()
+    $('#diproses').empty()
+    // pengajuanRanking();
 
     $('#proses-layout').addClass('hidden')
 
@@ -766,7 +773,6 @@ function alertMessage(element, visible){
           "token": staticToken
         },
         success: function (response) {
-          console.log(response)
           $('#chart-total-pengajuan').empty();
           yearChartPengajuan(response.data.data_disetujui, response.data.data_ditolak, response.data.data_diproses, response.data.data_keseluruhan)
         }
@@ -807,18 +813,12 @@ function alertMessage(element, visible){
         success: function (response) {
           var data = response.data[0];
           var total = parseInt(data.penyelia) + parseInt(data.pbp) + parseInt(data.pincab) + parseInt(data.pbo) + parseInt(data.staff);
-          console.log(total);
           chartProses(data.pincab, data.pbp, data.pbo, data.penyelia, data.staff, total);
         }
       });
     }
 
     function pengajuanRanking() { 
-      $('#totalPengajuan').empty()
-      $('#disetujui').empty()
-      $('#ditolak').empty()
-      $('#diproses').empty()
-
       $.ajax({
         type: "GET",
         url: url_sum_cabang,
