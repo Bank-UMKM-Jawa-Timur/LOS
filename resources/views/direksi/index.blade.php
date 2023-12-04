@@ -603,9 +603,15 @@ function chartSkemaKredit(kusuma, pkpj, kkb, talangan, prokesra, total){
 });
 }
 
+  var currentDate = new Date();
+  var firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+  var lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+  var formattedFirstDay = firstDayOfMonth.toISOString().split('T')[0]; 
+  var formattedLastDay = lastDayOfMonth.toISOString().split('T')[0];
+  
   var staticToken = "gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFVaNj";
   var base_url = "https://pincetar.bankumkm.id";
-  var url_sum_cabang = "api/v1/get-sum-cabang";
+  var url_sum_cabang = `api/v1/get-sum-cabang?tanggal_awal=${formattedFirstDay}&tanggal_akhir=${formattedLastDay}`;
   var url_count_year_pengajuan = "api/v1/get-count-year-pengajuan";
   var url_sum_skema = "api/v1/get-sum-skema";
   var url_count_pengajuan = "api/v1/get-count-pengajuan";
@@ -667,7 +673,7 @@ function chartSkemaKredit(kusuma, pkpj, kkb, talangan, prokesra, total){
       }
 
     }else{
-      url_sum_cabang = "api/v1/get-sum-cabang";
+      url_sum_cabang = `api/v1/get-sum-cabang?tanggal_awal=${formattedFirstDay}&tanggal_akhir=${formattedLastDay}`;
       url_count_year_pengajuan = "api/v1/get-count-year-pengajuan";
       url_sum_skema = "api/v1/get-sum-skema";
       url_count_pengajuan = "api/v1/get-count-pengajuan";
@@ -893,7 +899,7 @@ function chartSkemaKredit(kusuma, pkpj, kkb, talangan, prokesra, total){
             });
   
             var totalProses = prosesPincab + prosesPbp + prosesPbo + prosesPenyelia + prosesStaf;
-            chartSkemaKredit(dataTotal.Kusuma, dataTotal.PKPJ, dataTotal.KKB, dataTotal.Umroh, dataTotal.Prokesra, total);
+            chartSkemaKredit(dataTotal.Kusuma != null ? dataTotal.Kusuma : 0, dataTotal.PKPJ != null ? dataTotal.PKPJ : 0, dataTotal.KKB != null ? dataTotal.KKB : 0, dataTotal.Umroh != null ? dataTotal.Umroh : 0, dataTotal.Prokesra != null ? dataTotal.Prokesra : 0, dataTotal.Prokesra != null ? total : 0);
             chartProsesSkemaKredit(prosesPincab, prosesPbp, prosesPbo, prosesPenyelia, prosesStaf, totalProses);
           }
         }
