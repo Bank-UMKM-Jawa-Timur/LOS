@@ -80,7 +80,7 @@
               class="text-theme-text text-2xl font-bold tracking-tighter" id="totalPengajuan">
             </h2>
             <p class="text-gray-500 text-sm tracking-tighter">
-              Total Pengajuan pada bulan ini
+              Total Pengajuan 
             </p>
           </div>
         </div>
@@ -101,7 +101,7 @@
               id="disetujui">
             </h2>
             <p class="text-gray-500 text-sm tracking-tighter">
-              Disetujui pada bulan ini
+              Disetujui 
             </p>
           </div>
         </div>
@@ -121,7 +121,7 @@
               class="text-theme-text text-2xl font-bold tracking-tighter"
               id="ditolak">
             </h2>
-            <p class="text-gray-500 text-sm tracking-tighter">Ditolak pada bulan ini</p>
+            <p class="text-gray-500 text-sm tracking-tighter">Ditolak </p>
           </div>
         </div>
       </div>
@@ -140,7 +140,7 @@
               class="text-theme-text text-2xl font-bold tracking-tighter"
               id="diproses">
             </h2>
-            <p class="text-gray-500 text-sm tracking-tighter">Diproses pada bulan ini</p>
+            <p class="text-gray-500 text-sm tracking-tighter">Diproses </p>
           </div>
         </div>
       </div>
@@ -203,6 +203,9 @@
         </div>
         <div class="body-card w-full box">
           <div class="lg:flex grid grid-cols-1 gap-5 w-full mt-5 box-border">
+            <div class="alert-empty border  gap-4 p-2 w-full hidden">
+              <h2 class="">Tidak ada data di bulan ini.</h2>
+            </div>
             <div class="card-wrapper space-y-2 w-full box-border" id="ranking_tertinggi">
             </div>
             <div class="card-wrapper w-full space-y-2 box-border" id="ranking_terendah">
@@ -680,8 +683,7 @@ function alertMessage(element, visible){
     let tAwal = document.getElementById("tgl_awal");
     let tAkhir = document.getElementById("tgl_akhir");
     let fSkemaKredit = document.getElementById('skema-kredit-filter');
-    let fCabang = document.getElementById("cabang-filter");
-    console.log(tAwal);
+    let fCabang = document.getElementById("cabang-filter")
     var dateAwal = dayjs(tAwal.value).format('MMM');
     var dateAkhir = dayjs(tAkhir.value).format('MMM');
     var dateTahun = dayjs(tAwal.value).format('YYYY')
@@ -846,9 +848,12 @@ function alertMessage(element, visible){
           var dataTertinggi = response.data.tertinggi;
           var dataTerendah = response.data.terendah;
           
-          if(dataTertinggi.length > 0 && dataTerendah.length > 0) {
-               // Data ranking tertinggi
-            $.map(dataTertinggi, function (item, index) {
+          if(dataTertinggi.length === 0 && dataTerendah.length === 0) {
+            $('.alert-empty').removeClass('hidden')
+          }else{
+            $('.alert-empty').addClass('hidden')
+          // Data ranking tertinggi
+          $.map(dataTertinggi, function (item, index) {
             rankingTertinggi(index, item.cabang, item.kode_cabang, item.total);
           });
 
@@ -856,9 +861,6 @@ function alertMessage(element, visible){
           $.map(dataTerendah, function (item, index) {
             rankingTerendah(index, item.cabang, item.kode_cabang, item.total);
           });
-          }else{
-            emptyRanking('#ranking_tertinggi')
-            emptyRanking('#ranking_terendah')
           }
         }
       });
@@ -991,14 +993,6 @@ function alertMessage(element, visible){
           }
         }
       });
-    }
-
-    function emptyRanking(element) {
-      $(element).append(`
-        <div class="card border flex gap-4 p-2 w-full">
-          <h2 class="">Data kosong.</h2>
-        </div>
-      `);
     }
     function rankingTertinggi(no, cabang, kode, total) { 
       return $('#ranking_tertinggi').append(`
