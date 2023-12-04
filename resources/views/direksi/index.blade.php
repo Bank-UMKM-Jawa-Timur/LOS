@@ -239,7 +239,7 @@
           <h2
             class="text-lg text-theme-text font-semibold tracking-tighter"
           >
-            Proses
+            Proses - {{date('M Y')}}
           </h2>
         </div>
         <div class="flex justify-center lg:mt-0 mt-5">
@@ -665,6 +665,13 @@ function alertMessage(element, visible){
   var url_count_pengajuan = "api/v1/get-count-pengajuan";
 
   $('#btnFilter').on('click', function () { 
+    $('#ranking_tertinggi').empty()
+    $('#ranking_terendah').empty()
+    $('#totalPengajuan').empty()
+    $('#disetujui').empty()
+    $('#ditolak').empty()
+    $('#diproses').empty()
+
     let tAwal = document.getElementById("tgl_awal");
     let tAkhir = document.getElementById("tgl_akhir");
     let fSkemaKredit = document.getElementById('skema-kredit-filter');
