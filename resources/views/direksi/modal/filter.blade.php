@@ -63,7 +63,7 @@ id="modal-filter"
             class="form-select"
             id="cabang-filter"
           >
-            <option value="00" selected>-- Pilih Semua --</option>
+            <option value="" selected>-- Pilih Semua --</option>
             @foreach ($cabang as $item)
               <option value="{{ $item->kode_cabang }}">{{ $item->cabang }}</option>
             @endforeach
