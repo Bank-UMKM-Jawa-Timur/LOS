@@ -592,6 +592,13 @@ function chartSkemaKredit(kusuma, pkpj, kkb, talangan, prokesra, total){
             },
         },
     },
+    exporting: {
+     		buttons: {
+            contextButton: {
+              enabled: false
+            },
+          }
+        },
     series: [
         {
             minPointSize: 20,
