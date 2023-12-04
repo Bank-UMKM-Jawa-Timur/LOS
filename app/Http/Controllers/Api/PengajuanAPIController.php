@@ -1138,6 +1138,20 @@ class PengajuanAPIController extends Controller
             'November' => 0,
             'December' => 0,
         ];
+        $dataKeseluruhan = [
+            'January' => 0,
+            'February' => 0,
+            'March' => 0,
+            'April' => 0,
+            'May' => 0,
+            'June' => 0,
+            'July' => 0,
+            'August' => 0,
+            'September' => 0,
+            'October' => 0,
+            'November' => 0,
+            'December' => 0,
+        ];
 
         foreach ($total_disetujui_perbulan as $item) {
             $dataDisetujui[date('F', mktime(0, 0, 0, $item->bulan, 1))] = $item->total;
@@ -1148,6 +1162,12 @@ class PengajuanAPIController extends Controller
         foreach ($total_diproses_perbulan as $item) {
             $dataDiproses[date('F', mktime(0, 0, 0, $item->bulan, 1))] = $item->total;
         }
+        foreach ($dataKeseluruhan as $key=> $item) {
+            $disetujui = $dataDisetujui[$key];
+            $ditolak = $dataDitolak[$key];
+            $diproses = $dataDiproses[$key];
+            $dataKeseluruhan[$key] = intval($disetujui + $ditolak + $diproses);
+        }
 
         return response()->json([
             'status'=>"Berhasil",
@@ -1156,6 +1176,7 @@ class PengajuanAPIController extends Controller
                 'data_disetujui' => $dataDisetujui,
                 'data_ditolak' => $dataDitolak,
                 'data_diproses' => $dataDiproses,
+                'data_keseluruhan' => $dataKeseluruhan,
             ]
         ],200);
 
