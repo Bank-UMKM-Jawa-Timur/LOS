@@ -151,7 +151,7 @@
           <h2
             class="font-poppins font-semibold tracking-tighter text-lg text-theme-text"
           >
-            Data Pengajuan
+            Data Pengajuan - {{date('Y')}}
           </h2>
         </div>
         <div
@@ -165,7 +165,7 @@
             <h2
               class="font-semibold tracking-tighter text-lg text-theme-text"
             >
-              Ranking Cabang
+              Ranking Cabang - {{date('M Y')}}
             </h2>
           </div>
           <div class="legend-wrapper flex gap-5">
@@ -215,7 +215,7 @@
           <h2
             class="text-lg text-theme-text font-semibold tracking-tighter"
           >
-            Proses Skema Kredit
+            Proses Skema Kredit - {{date('M Y')}}
           </h2>
         </div>
         <div class="flex justify-center lg:mt-0 mt-5">
@@ -227,7 +227,7 @@
           <h2
             class="text-lg text-theme-text font-semibold tracking-tighter"
           >
-            Skema Kredit
+            Skema Kredit - {{date('M Y')}}
           </h2>
         </div>
         <div class="flex justify-center lg:mt-0 mt-5">
@@ -269,7 +269,7 @@
 
     function run(){
 
-      function yearChartPengajuan(disetujui, ditolak, diproses) {
+      function yearChartPengajuan(disetujui, ditolak, diproses, keseluruhan) {
         var options = {
           series: [
               {
@@ -323,8 +323,25 @@
                     diproses.December
                   ],
               },
+              {
+                  name: "Total Pengajuan",
+                  data: [
+                    keseluruhan.January, 
+                    keseluruhan.February, 
+                    keseluruhan.March, 
+                    keseluruhan.April, 
+                    keseluruhan.May, 
+                    keseluruhan.June, 
+                    keseluruhan.July, 
+                    keseluruhan.August, 
+                    keseluruhan.September, 
+                    keseluruhan.October, 
+                    keseluruhan.November, 
+                    keseluruhan.December
+                  ],
+              },
           ],
-          colors: ["#00FF61", "#DC3545", "#F7C35C"],
+          colors: ["#00FF61", "#DC3545", "#F7C35C", "#9334EA"],
           chart: {
               width: "100%",
               height: 380,
@@ -742,8 +759,9 @@ function alertMessage(element, visible){
           "token": staticToken
         },
         success: function (response) {
+          console.log(response)
           $('#chart-total-pengajuan').empty();
-          yearChartPengajuan(response.data.data_disetujui, response.data.data_ditolak, response.data.data_diproses)
+          yearChartPengajuan(response.data.data_disetujui, response.data.data_ditolak, response.data.data_diproses, response.data.data_keseluruhan)
         }
       });
     }
@@ -1010,6 +1028,3 @@ function alertMessage(element, visible){
 }
 </script>
 @endpush
-
-
-      
