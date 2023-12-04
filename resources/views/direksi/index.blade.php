@@ -80,7 +80,7 @@
               class="text-theme-text text-2xl font-bold tracking-tighter" id="totalPengajuan">
             </h2>
             <p class="text-gray-500 text-sm tracking-tighter">
-              Total Pengajuan Tahun 2023
+              Total Pengajuan
             </p>
           </div>
         </div>
@@ -101,7 +101,7 @@
               id="disetujui">
             </h2>
             <p class="text-gray-500 text-sm tracking-tighter">
-              Data Disetujui Tahun 2023
+              Data Disetujui
             </p>
           </div>
         </div>
@@ -121,7 +121,7 @@
               class="text-theme-text text-2xl font-bold tracking-tighter"
               id="ditolak">
             </h2>
-            <p class="text-gray-500 text-sm tracking-tighter">Data Ditolak Tahun 2023</p>
+            <p class="text-gray-500 text-sm tracking-tighter">Data Ditolak</p>
           </div>
         </div>
       </div>
@@ -140,7 +140,7 @@
               class="text-theme-text text-2xl font-bold tracking-tighter"
               id="diproses">
             </h2>
-            <p class="text-gray-500 text-sm tracking-tighter">Data Diproses Tahun 2023</p>
+            <p class="text-gray-500 text-sm tracking-tighter">Data Diproses</p>
           </div>
         </div>
       </div>
@@ -237,18 +237,6 @@
           <div id="skema-kredit"></div>
         </div>
       </div>
-      <div class="card p-5 w-full border bg-white" id="proses-layout">
-        <div class="head">
-          <h2
-            class="text-lg text-theme-text font-semibold tracking-tighter"
-          >
-            Proses - {{date('M Y')}}
-          </h2>
-        </div>
-        <div class="flex justify-center lg:mt-0 mt-5">
-          <div id="proses"></div>
-        </div>
-      </div>
     </div>
     </div>
   </section>
@@ -258,8 +246,6 @@
 <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
 
   <script>
- 
-
     Pusher.logToConsole = true;
 
     var pusher = new Pusher("fd114c25a90cd2005634", {
@@ -404,8 +390,8 @@
         chartTotalPengajuan.render();
       }
       // ====================================================================
-      function chartProses(pincab, pbp, pbo, penyelia, staf, total) { 
-        Highcharts.chart("proses", {
+      function chartProses(pincab, pbp, pbo, penyelia, staf, disetujui, ditolak, total) {
+        Highcharts.chart("posisi-pengajuan", {
           chart: {
               type: "pie",
               width: 500,
@@ -474,6 +460,16 @@
                           name: "Staf",
                           y: staf,
                           z: staf,
+                      },
+                      {
+                          name: "Disetujui",
+                          y: disetujui,
+                          z: disetujui,
+                      },
+                      {
+                          name: "Ditolak",
+                          y: ditolak,
+                          z: ditolak,
                       },
                   ],
                   colors: ["#67A4FF", "#FF00B8", "#FFB357", "#C300D3", "#00E0FF"],
@@ -653,7 +649,7 @@
       var lastDateOfYear = "2023-12-31";
 
       var firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-      var lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+      var lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
       var formattedFirstDay = firstDayOfMonth.toISOString().split('T')[0]; 
       var formattedLastDay = lastDayOfMonth.toISOString().split('T')[0];
       var firstDate = dayjs().format('YYYY-MM');
@@ -673,16 +669,12 @@
       var base_url = "https://pincetar.bankumkm.id";
       var url_sum_cabang = `api/v1/get-sum-cabang?tanggal_awal=${firstDate}-01&tanggal_akhir=${formattedLastDay}`;
       var url_count_year_pengajuan = "api/v1/get-count-year-pengajuan";
-      var url_sum_skema = `api/v1/get-sum-skema`;
+      var url_sum_skema = `api/v1/get-sum-skema?tanggal_awal=${formattedFirstDay}&tanggal_akhir=${formattedLastDay}`;
       var url_count_pengajuan = "api/v1/get-count-pengajuan?tAwal="+firstDateOfYear+"&tAkhir="+lastDateOfYear
 
       $('#btnFilter').on('click', function () { 
         $('#ranking_tertinggi').empty()
         $('#ranking_terendah').empty()
-        $('#totalPengajuan').empty()
-        $('#disetujui').empty()
-        $('#ditolak').empty()
-        $('#diproses').empty()
 
         let tAwal = document.getElementById("tgl_awal");
         let tAkhir = document.getElementById("tgl_akhir");
@@ -705,67 +697,65 @@
         }else if(tAkhir.value.trim(" ") == ""){
           alertMessage('#tgl_akhir', false)
         }else{
-          alertMessage('#tgl_awal', true)
-          alertMessage('#tgl_akhir', true)
+            alertMessage('#tgl_awal', true)
+            alertMessage('#tgl_akhir', true)
+            getProses()
 
         if (tAwal.value != "" && tAkhir.value != "") {
           url_sum_cabang = `api/v1/get-sum-cabang?tanggal_awal=${tAwal.value}&tanggal_akhir=${tAkhir.value}`;
-          url_count_pengajuan = `api/v1/get-count-pengajuan?tAwal=${tAwal.value}&tAkhir=${tAkhir.value}&cabang=${fCabang.value}`;
           getDataPengajuan();
 
-          if(fSkemaKredit.value != "all_skema" && fCabang.value != "00"){
-            // Pilih skeme & pilih cabang
-            url_sum_skema = `api/v1/get-sum-skema?tanggal_awal=${tAwal.value}&tanggal_akhir=${tAkhir.value}&skema=${fSkemaKredit.value}&cabang=${fCabang.value}`;
+            if(fSkemaKredit.value != "all_skema" && fCabang.value != "00"){
+              // Pilih skeme & pilih cabang
+              url_sum_skema = `api/v1/get-sum-skema?tanggal_awal=${tAwal.value}&tanggal_akhir=${tAkhir.value}&skema=${fSkemaKredit.value}&cabang=${fCabang.value}`;
 
-            $('#proses-skema-kredit').removeClass('hidden')
-            $('#skema-kredit-layout').addClass('hidden')
-            $('#ranking-cabang').addClass('hidden')
-            $('#proses-layout').addClass('hidden')
-          }else if(fSkemaKredit.value != "all_skema" && fCabang.value == "00"){
-            // Pilih skeme & semua cabang
-            url_sum_skema = `api/v1/get-sum-skema?tanggal_awal=${tAwal.value}&tanggal_akhir=${tAkhir.value}&skema=${fSkemaKredit.value}`;
+              $('#proses-skema-kredit').removeClass('hidden')
+              $('#skema-kredit-layout').addClass('hidden')
+              $('#ranking-cabang').addClass('hidden')
+              $('#proses-layout').addClass('hidden')
+            }else if(fSkemaKredit.value != "all_skema" && fCabang.value == "00"){
+              // Pilih skeme & semua cabang
+              url_sum_skema = `api/v1/get-sum-skema?tanggal_awal=${tAwal.value}&tanggal_akhir=${tAkhir.value}&skema=${fSkemaKredit.value}`;
 
-            $('#proses-skema-kredit').removeClass('hidden')
-            $('#skema-kredit-layout').addClass('hidden')
-            $('#ranking-cabang').removeClass('hidden')
-            $('#proses-layout').addClass('hidden')
-          }else if(fSkemaKredit.value == "all_skema" && fCabang.value != "00"){
-            // semua skeme & pilih cabang
-            url_sum_skema = `api/v1/get-sum-skema?tanggal_awal=${tAwal.value}&tanggal_akhir=${tAkhir.value}&cabang=${fCabang.value}`;
+              $('#proses-skema-kredit').removeClass('hidden')
+              $('#skema-kredit-layout').addClass('hidden')
+              $('#ranking-cabang').removeClass('hidden')
+              $('#proses-layout').addClass('hidden')
+            }else if(fSkemaKredit.value == "all_skema" && fCabang.value != "00"){
+              // semua skeme & pilih cabang
+              url_sum_skema = `api/v1/get-sum-skema?tanggal_awal=${tAwal.value}&tanggal_akhir=${tAkhir.value}&cabang=${fCabang.value}`;
 
+              $('#skema-kredit-layout').removeClass('hidden')
+        
+              $('#ranking-cabang').addClass('hidden')
+              $('#proses-layout').removeClass('hidden')
+              // di proses
+              getProses();
+            }else if(fSkemaKredit.value == "all_skema" && fCabang.value == "00"){
+              // semua skeme & semua cabang
+              url_sum_skema = `api/v1/get-sum-skema?tanggal_awal=${tAwal.value}&tanggal_akhir=${tAkhir.value}`;
+              url_count_pengajuan = `api/v1/get-count-pengajuan?tAwal=${tAwal.value}&tAkhir=${tAkhir.value}`;
+              $('#skema-kredit-layout').removeClass('hidden')
+              $('#ranking-cabang').removeClass('hidden')
+              $('#proses-layout').addClass('hidden')
+              pengajuanRanking();
+            }
+
+          }else{
+            url_sum_cabang = `api/v1/get-sum-cabang?tanggal_awal=${formattedFirstDay}&tanggal_akhir=${formattedLastDay}`;
+            url_count_year_pengajuan = "api/v1/get-count-year-pengajuan";
+            url_sum_skema = "api/v1/get-sum-skema";
+            url_count_pengajuan = "api/v1/get-count-pengajuan";
             $('#skema-kredit-layout').removeClass('hidden')
-            $('#proses-skema-kredit').addClass('hidden')
-            $('#ranking-cabang').addClass('hidden')
-            $('#proses-layout').removeClass('hidden')
-            // di proses
-            getProses();
-          }else if(fSkemaKredit.value == "all_skema" && fCabang.value == "00"){
-            // semua skeme & semua cabang
-            url_sum_skema = `api/v1/get-sum-skema?tanggal_awal=${tAwal.value}&tanggal_akhir=${tAkhir.value}`;
-            url_count_pengajuan = `api/v1/get-count-pengajuan?tAwal=${tAwal.value}&tAkhir=${tAkhir.value}`;
-
-            $('#proses-skema-kredit').addClass('hidden')
-            $('#skema-kredit-layout').removeClass('hidden')
-            $('#ranking-cabang').removeClass('hidden')
+            $('#proses-skema-kredit').removeClass('hidden')
             $('#proses-layout').addClass('hidden')
             pengajuanRanking();
           }
 
-        }else{
-          url_sum_cabang = `api/v1/get-sum-cabang?tanggal_awal=${formattedFirstDay}&tanggal_akhir=${formattedLastDay}`;
-          url_count_year_pengajuan = "api/v1/get-count-year-pengajuan";
-          url_sum_skema = "api/v1/get-sum-skema";
-          url_count_pengajuan = "api/v1/get-count-pengajuan";
-          $('#skema-kredit-layout').removeClass('hidden')
-          $('#proses-skema-kredit').removeClass('hidden')
-          $('#proses-layout').addClass('hidden')
-          pengajuanRanking();
+          getDataPengajuanYear();
+          getSkema();
+          $(".modal-layout").trigger('click'); 
         }
-
-        getDataPengajuanYear();
-        getSkema();
-        $(".modal-layout").trigger('click'); 
-      }
       })
       $('#proses-layout').addClass('hidden')
 
@@ -787,8 +777,20 @@
         });
       }
 
-      function getDataPengajuan() { 
-        console.log('get data pengajuan')
+      function getDataPengajuan() {
+        $('#totalPengajuan').empty()
+        $('#disetujui').empty()
+        $('#ditolak').empty()
+        $('#diproses').empty()
+        let tAwal = $('#tgl_awal').val() ? $('#tgl_awal').val() : formattedFirstDay ;
+        let tAkhir = $('#tgl_akhir').val() ? $('#tgl_akhir').val() : formattedLastDay;
+        let skema = $('#skema-kredit-filter').val() ? $('#skema-kredit-filter').val() : ''
+        var skemaParam = skema && skema != 'all_skema' ? `&skema=${skema}` : ''
+        let fCabang = document.getElementById("cabang-filter");
+        var cabangParam = fCabang.value ? `&cabang=${fCabang.value}` : ''
+        url_count_pengajuan = "api/v1/get-count-pengajuan?tAwal="+firstDateOfYear+"&tAkhir="+lastDateOfYear+skemaParam+cabangParam
+
+        console.log(`url_count_pengajuan : ${url_count_pengajuan}`)
         $.ajax({
           type: "GET",
           url: url_count_pengajuan,
@@ -798,12 +800,6 @@
             "token": staticToken
           },
           success: function (response) {
-            console.log(response)
-            $('#totalPengajuan').empty()
-            $('#disetujui').empty()
-            $('#ditolak').empty()
-            $('#diproses').empty()
-
             $('#totalPengajuan').append(parseInt(response.total_disetujui) + parseInt(response.total_ditolak) + parseInt(response.total_diproses));
             $('#disetujui').append(response.total_disetujui);
             $('#ditolak').append(response.total_ditolak);
@@ -812,23 +808,46 @@
         });
       }
 
-      function getProses() { 
-        let tAwal = document.getElementById("tgl_awal");
-        let tAkhir = document.getElementById("tgl_akhir");
+      function getProses() {
+        let tAwal = $('#tgl_awal').val() ? $('#tgl_awal').val() : formattedFirstDay ;
+        let tAkhir = $('#tgl_akhir').val() ? $('#tgl_akhir').val() : formattedLastDay;
+        let skema = $('#skema-kredit-filter').val() ? $('#skema-kredit-filter').val() : ''
+        var skemaParam = skema && skema != 'all_skema' ? `&skema=${skema}` : ''
         let fCabang = document.getElementById("cabang-filter");
+        var cabangParam = fCabang.value ? `&cabang=${fCabang.value}` : ''
+        var url = `api/v1/get-posisi-pengajuan?tAwal=${tAwal}&tAkhir=${tAkhir}${cabangParam}${skemaParam}`
+        console.log(`getproses: ${url}`)
         $.ajax({
           type: "GET",
-          url: `api/v1/get-posisi-pengajuan?tAwal=${tAwal.value}&tAkhir=${tAkhir.value}&cabang=${fCabang.value}`,
+          url: url,
           dataType: "json",
           headers: {
             "Content-Type": "application/json",
             "token": staticToken
           },
           success: function (response) {
-            var data = response.data[0];
-            var total = parseInt(data.penyelia) + parseInt(data.pbp) + parseInt(data.pincab) + parseInt(data.pbo) + parseInt(data.staff);
-            console.log(total);
-            chartProses(data.pincab, data.pbp, data.pbo, data.penyelia, data.staff, total);
+            console.log('success proses')
+            console.log(response)
+            var data = response.data;
+            var totalPenyelia = 0;
+            var totalPincab = 0;
+            var totalPBP = 0;
+            var totalPBO = 0;
+            var totalStaf = 0;
+            var totalDisetujui = 0;
+            var totalDitolak = 0;
+
+            for(var i=0; i < data.length; i++) {
+              totalPenyelia += data[i].penyelia ? parseInt(data[i].penyelia) : 0;
+              totalPincab += data[i].pincab ? parseInt(data[i].pincab) : 0;
+              totalPBP += data[i].pbp ? parseInt(data[i].pbp) : 0;
+              totalPBO += data[i].pbo ? parseInt(data[i].pbo) : 0;
+              totalStaf += data[i].staff ? parseInt(data[i].staff) : 0;
+              totalDisetujui += data[i].disetujui ? parseInt(data[i].disetujui) : 0;
+              totalDitolak += data[i].ditolak ? parseInt(data[i].ditolak) : 0;
+            }
+            var total = parseInt(totalPenyelia) + parseInt(totalPincab) + parseInt(totalPBP) + parseInt(totalPBO) + parseInt(totalStaf) + parseInt(totalDisetujui) + parseInt(totalDitolak);
+            chartProses(totalPincab, totalPBP, totalPBO, totalPenyelia, totalStaf, totalDisetujui, totalDitolak, total);
           }
         });
       }
@@ -870,12 +889,14 @@
         });
       }
 
-      function getSkema() { 
-        let tAwal = document.getElementById("tgl_awal");
-        let tAkhir = document.getElementById("tgl_akhir");
+      function getSkema() {
+        let tAwal = $('#tgl_awal').val() ? $('#tgl_awal').val() : formattedFirstDay ;
+        let tAkhir = $('#tgl_akhir').val() ? $('#tgl_akhir').val() : formattedLastDay;
         let fSkemaKredit = document.getElementById('skema-kredit-filter');
         let fCabang = document.getElementById("cabang-filter");
-
+        
+        console.log('getskema')
+        console.log(`url_sum_skema:${url_sum_skema}`)
         $.ajax({
           type: "GET",
           url: url_sum_skema,
@@ -884,6 +905,7 @@
             "token": staticToken
           },
           success: function (response) {
+            var data = response.data;
             // var skema kredit
             var totalKusuma = 0;
             var totalPkpj = 0;
@@ -940,7 +962,7 @@
               var totalSkema = totalKusuma + totalPkpj + totalKkb + totalTalangan + totalProkesra;
               chartSkemaKredit(totalKusuma, totalPkpj, totalKkb, totalTalangan, totalProkesra, totalSkema);
               var totalProses = prosesPincab + prosesPbp + prosesPbo + prosesPenyelia + prosesStaf;
-              chartProsesSkemaKredit(prosesPincab, prosesPbp, prosesPbo, prosesPenyelia, prosesStaf, totalProses);
+              //chartProsesSkemaKredit(prosesPincab, prosesPbp, prosesPbo, prosesPenyelia, prosesStaf, totalProses);
 
               // jika memilih skema dan semua cabang 
               // mengambil ranking dari sum skema
@@ -966,20 +988,32 @@
                 // });
 
                 // Total pengajuan
-                $('#totalPengajuan').append(tDisetujui + tDitolak + totalProses);
+                {{--  $('#totalPengajuan').append(tDisetujui + tDitolak + totalProses);
                 $('#disetujui').append(tDisetujui);
                 $('#ditolak').append(tDitolak);
-                $('#diproses').append(totalProses);
+                $('#diproses').append(totalProses);  --}}
               }else if(fSkemaKredit.value != "all_skema" && fCabang.value != "00"){
                 // Total pengajuan
-                $('#totalPengajuan').append(tDisetujui + tDitolak + totalProses);
+                {{--  $('#totalPengajuan').append(tDisetujui + tDitolak + totalProses);
                 $('#disetujui').append(tDisetujui);
                 $('#ditolak').append(tDitolak);
-                $('#diproses').append(totalProses);
+                $('#diproses').append(totalProses);  --}}
               }
 
             }else{
-              var dataTotal = response.data.total[0];
+              for(var i = 0; i < data.length; i++) {
+                totalKusuma += data[i].Kusuma ? parseInt(data[i].Kusuma) : 0
+                totalPkpj += data[i].PKPJ ? parseInt(data[i].PKPJ) : 0
+                totalKkb += data[i].KKB ? parseInt(data[i].KKB) : 0
+                totalProkesra += data[i].Prokesra ? parseInt(data[i].Prokesra) : 0
+                totalTalangan += data[i].Umroh ? parseInt(data[i].Umroh) : 0
+              }
+              console.log(`total pkpj : ${totalPkpj}`)
+              console.log(`total Kkb : ${totalKkb}`)
+              console.log(`total Talangan : ${totalTalangan}`)
+              console.log(`total Prokesra : ${totalProkesra}`)
+              console.log(`total Kusuma : ${totalKusuma}`)
+              var dataTotal = totalPkpj + totalKkb + totalTalangan + totalProkesra + totalKusuma;
               var dataPosisi = response.data.posisi;
               var total = parseInt(dataTotal.Kusuma) + parseInt(dataTotal.PKPJ) + parseInt(dataTotal.KKB) + parseInt(dataTotal.Umroh) + parseInt(dataTotal.Prokesra);
 
@@ -992,7 +1026,8 @@
               });
 
               var totalProses = prosesPincab + prosesPbp + prosesPbo + prosesPenyelia + prosesStaf;
-              chartSkemaKredit(dataTotal.Kusuma != null ? dataTotal.Kusuma : 0, dataTotal.PKPJ != null ? dataTotal.PKPJ : 0, dataTotal.KKB != null ? dataTotal.KKB : 0, dataTotal.Umroh != null ? dataTotal.Umroh : 0, dataTotal.Prokesra != null ? dataTotal.Prokesra : 0, dataTotal.Prokesra != null ? total : 0);
+              chartSkemaKredit(totalKusuma, totalPkpj, totalKkb, totalTalangan, totalProkesra, dataTotal)
+              //chartSkemaKredit(dataTotal.Kusuma != null ? dataTotal.Kusuma : 0, dataTotal.PKPJ != null ? dataTotal.PKPJ : 0, dataTotal.KKB != null ? dataTotal.KKB : 0, dataTotal.Umroh != null ? dataTotal.Umroh : 0, dataTotal.Prokesra != null ? dataTotal.Prokesra : 0, dataTotal.Prokesra != null ? total : 0);
               chartProsesSkemaKredit(prosesPincab, prosesPbp, prosesPbo, prosesPenyelia, prosesStaf, totalProses);
             }
           }
@@ -1040,6 +1075,7 @@
       getDataPengajuanYear();
       pengajuanRanking();
       getSkema();
+      getProses()
     }
 </script>
 
