@@ -5,13 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\PengajuanKreditController;
 use App\Models\User;
+use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Laravel\Sanctum\PersonalAccessToken;
-
 class PengajuanAPIController extends Controller
 {
     private $currentMonth;
@@ -72,98 +72,50 @@ class PengajuanAPIController extends Controller
                 ->leftJoin('cabang', 'cabang.id', 'users.id_cabang')
                 ->first();
 
+                if ($user) {
+                    $detail = [
+                        'nip' => null,
+                        'nama' => null,
+                        'jabatan' => null,
+                        'nama_jabatan' => null,
+                        'entitas' => null,
+                        'bagian' => null,
+                    ];
 
-
-        if ($user) {
-            $detail = [
-                'nip' => null,
-                'nama' => null,
-                'jabatan' => null,
-                'nama_jabatan' => null,
-                'entitas' => null,
-                'bagian' => null,
-            ];
-
-            if ($user->role != 'Direksi') {
-                // Cek User ditemukan atau tidak
-                if (is_numeric($request['email'])) {
-                    $cekNIPUser = User::where('nip', $request['email'])
-                        ->first();
-                    if ($cekNIPUser) {
-                        if (!Auth::attempt(['email' => $cekNIPUser->email, 'password' => $request['password']])) {
-                            return response()->json([
-                                'status' => 'gagal',
-                                'message' => 'Email atau NIP tidak ditemukan.',
-                                'req' => $request->all()
-                            ], 401);
-                        }
-                    } else {
-                        if (!Auth::attempt(['email' => $request['email'], 'password' => $request['password']])) {
-                            return response()->json([
-                                'status' => 'gagal',
-                                'message' => 'Email atau NIP tidak ditemukan.',
-                                'req' => $request->all()
-                            ], 401);
+                    if ($user->role != 'Direksi') {
+                        // Cek User ditemukan atau tidak
+                        if (is_numeric($request['email'])) {
+                            $cekNIPUser = User::where('nip', $request['email'])
+                                ->first();
+                            if ($cekNIPUser) {
+                                if (!Auth::attempt(['email' => $cekNIPUser->email, 'password' => $request['password']])) {
+                                    return response()->json([
+                                        'status' => 'gagal',
+                                        'message' => 'Email atau NIP tidak ditemukan.',
+                                        'req' => $request->all()
+                                    ], 401);
+                                }
+                            } else {
+                                if (!Auth::attempt(['email' => $request['email'], 'password' => $request['password']])) {
+                                    return response()->json([
+                                        'status' => 'gagal',
+                                        'message' => 'Email atau NIP tidak ditemukan.',
+                                        'req' => $request->all()
+                                    ], 401);
+                                }
+                            }
                         }
                     }
                 }
-            }
-        }
-        else {
-            return response()->json([
-                'status' => 'gagal',
-                'message' => 'User tidak ditemukan',
-            ]);
-        }
-
-        // Cek Role user jika tersedia
-        if($user->role == 'Administrator'){
-            $current_token = DB::table('personal_access_tokens')
-                                ->where('tokenable_id', $user->id)
-                                ->where('project', $request->project)
-                                ->first();
-            if($current_token){
-                $last_used = new DateTime($current_token->last_used_at);
-                $now = new DateTime(date('Y-m-d H:i:s'));
-                $interval = $last_used->diff($now);
-                $diff_minutes = $interval->format("%i");
-                
-                if (intval($diff_minutes) > 30) {
-                    DB::table('personal_access_tokens')
-                        ->where('tokenable_id', $user->id)
-                        ->where('project', $request->project)
-                        ->delete();
-                } else {
+                else {
                     return response()->json([
                         'status' => 'gagal',
-                        'message' => 'Akun sedang digunakan di perangkat lain.'
-                    ], 401);
+                        'message' => 'User tidak ditemukan',
+                    ]);
                 }
-            }
 
-            $token = $user->createToken('auth_token')->plainTextToken;
-            $tokenId =  explode('|', $token);
-            DB::table('personal_access_tokens')
-                ->where('id', $tokenId[0])
-                ->update([
-                    'ip_address' => $ip,
-                    'project' => $request->project
-                ]);
-
-            return response()->json([
-                'status' => 'berhasil',
-                'message' => 'berhasil login',
-                'id' => $user->id,
-                'email' => $user->email,
-                'role' => $user->role,
-                'kode_cabang' => '001',
-                'access_token' => $token,
-                'token_type' => 'Bearer',
-                'ip_address' => $ip,
-                'data' => $user->nip ? $this->getKaryawan($user->nip) : $user
-            ]);
-        } else if($user->role != 'Administrator'){
-            if($user->nip != null || $user->role == 'Direksi'){
+            // Cek Role user jika tersedia
+            if($user->role == 'Administrator'){
                 $current_token = DB::table('personal_access_tokens')
                                     ->where('tokenable_id', $user->id)
                                     ->where('project', $request->project)
@@ -202,13 +154,13 @@ class PengajuanAPIController extends Controller
                     'id' => $user->id,
                     'email' => $user->email,
                     'role' => $user->role,
-                    'kode_cabang' => $user->kode_cabang,
+                    'kode_cabang' => '001',
                     'access_token' => $token,
                     'token_type' => 'Bearer',
                     'ip_address' => $ip,
                     'data' => $user->nip ? $this->getKaryawan($user->nip) : $user
                 ]);
-            } else {
+            } else if($user->role != 'Administrator'){
                 if($user->nip != null || $user->role == 'Direksi'){
                     $current_token = DB::table('personal_access_tokens')
                                         ->where('tokenable_id', $user->id)
@@ -232,15 +184,61 @@ class PengajuanAPIController extends Controller
                             ], 401);
                         }
                     }
-                } else {
-                    if ($user->role != 'Direksi') {
-                        return response()->json([
-                            'status' => 401,
-                            'message' => 'Belum dilakukan Pengkinian Data User untuk $request->email.\nHarap menghubungi Divisi Pemasaran atau TI & AK.',
+
+                    $token = $user->createToken('auth_token')->plainTextToken;
+                    $tokenId =  explode('|', $token);
+                    DB::table('personal_access_tokens')
+                        ->where('id', $tokenId[0])
+                        ->update([
+                            'ip_address' => $ip,
+                            'project' => $request->project
                         ]);
+
+                    return response()->json([
+                        'status' => 'berhasil',
+                        'message' => 'berhasil login',
+                        'id' => $user->id,
+                        'email' => $user->email,
+                        'role' => $user->role,
+                        'kode_cabang' => $user->kode_cabang,
+                        'access_token' => $token,
+                        'token_type' => 'Bearer',
+                        'ip_address' => $ip,
+                        'data' => $user->nip ? $this->getKaryawan($user->nip) : $user
+                    ]);
+                } else {
+                    if($user->nip != null || $user->role == 'Direksi'){
+                        $current_token = DB::table('personal_access_tokens')
+                                            ->where('tokenable_id', $user->id)
+                                            ->where('project', $request->project)
+                                            ->first();
+                        if($current_token){
+                            $last_used = new DateTime($current_token->last_used_at);
+                            $now = new DateTime(date('Y-m-d H:i:s'));
+                            $interval = $last_used->diff($now);
+                            $diff_minutes = $interval->format("%i");
+                            
+                            if (intval($diff_minutes) > 30) {
+                                DB::table('personal_access_tokens')
+                                    ->where('tokenable_id', $user->id)
+                                    ->where('project', $request->project)
+                                    ->delete();
+                            } else {
+                                return response()->json([
+                                    'status' => 'gagal',
+                                    'message' => 'Akun sedang digunakan di perangkat lain.'
+                                ], 401);
+                            }
+                        }
+                    } else {
+                        if ($user->role != 'Direksi') {
+                            return response()->json([
+                                'status' => 401,
+                                'message' => 'Belum dilakukan Pengkinian Data User untuk $request->email.\nHarap menghubungi Divisi Pemasaran atau TI & AK.',
+                            ]);
+                        }
                     }
                 }
-            }
 
             $token = $user->createToken('auth_token')->plainTextToken;
             $tokenId =  explode('|', $token);
@@ -1060,6 +1058,107 @@ class PengajuanAPIController extends Controller
             //     ->groupBy('kodeC',)
             //     ->get();
         }
+    }
+
+    function getCountYearPengajuan(Request $request) {
+        $tAwal = now()->subYear();
+        $tAkhir = now();
+
+        if (request()->has('tAwal')) {
+            $tAwal = Carbon::parse(request('tAwal'))->startOfYear();
+        }
+        
+        if (request()->has('tAkhir')) {
+            $tAkhir = Carbon::parse(request('tAkhir'))->endOfYear();
+        }
+
+        $total_disetujui_perbulan = DB::table('pengajuan')
+            ->select(DB::raw('MONTH(tanggal) as bulan'), DB::raw('COUNT(*) as total'))
+            ->whereBetween('tanggal', [$tAwal, $tAkhir])
+            ->where('posisi', 'Selesai')
+            ->whereNull('pengajuan.deleted_at')
+            ->groupBy(DB::raw('MONTH(tanggal)'))
+            ->get();
+
+        $total_ditolak_perbulan = DB::table('pengajuan')
+            ->select(DB::raw('MONTH(tanggal) as bulan'), DB::raw('COUNT(*) as total'))
+            ->whereBetween('tanggal', [$tAwal, $tAkhir])
+            ->where('posisi', 'Ditolak')
+            ->whereNull('pengajuan.deleted_at')
+            ->groupBy(DB::raw('MONTH(tanggal)'))
+            ->get();
+
+        $total_diproses_perbulan = DB::table('pengajuan')
+            ->select(DB::raw('MONTH(tanggal) as bulan'), DB::raw('COUNT(*) as total'))
+            ->whereBetween('tanggal', [$tAwal, $tAkhir])
+            ->whereIn('posisi', ['Pincab','PBP','PBO','Review Penyelia','Proses Input Data'])
+            ->whereNull('pengajuan.deleted_at')
+            ->groupBy(DB::raw('MONTH(tanggal)'))
+            ->get();
+
+        $dataDisetujui = [
+            'January' => 0,
+            'February' => 0,
+            'March' => 0,
+            'April' => 0,
+            'May' => 0,
+            'June' => 0,
+            'July' => 0,
+            'August' => 0,
+            'September' => 0,
+            'October' => 0,
+            'November' => 0,
+            'December' => 0,
+        ];
+        $dataDitolak = [
+            'January' => 0,
+            'February' => 0,
+            'March' => 0,
+            'April' => 0,
+            'May' => 0,
+            'June' => 0,
+            'July' => 0,
+            'August' => 0,
+            'September' => 0,
+            'October' => 0,
+            'November' => 0,
+            'December' => 0,
+        ];
+        $dataDiproses = [
+            'January' => 0,
+            'February' => 0,
+            'March' => 0,
+            'April' => 0,
+            'May' => 0,
+            'June' => 0,
+            'July' => 0,
+            'August' => 0,
+            'September' => 0,
+            'October' => 0,
+            'November' => 0,
+            'December' => 0,
+        ];
+
+        foreach ($total_disetujui_perbulan as $item) {
+            $dataDisetujui[date('F', mktime(0, 0, 0, $item->bulan, 1))] = $item->total;
+        }
+        foreach ($total_ditolak_perbulan as $item) {
+            $dataDitolak[date('F', mktime(0, 0, 0, $item->bulan, 1))] = $item->total;
+        }
+        foreach ($total_diproses_perbulan as $item) {
+            $dataDiproses[date('F', mktime(0, 0, 0, $item->bulan, 1))] = $item->total;
+        }
+
+        return response()->json([
+            'status'=>"Berhasil",
+            'message'=>"Berhasil menampilkan data pengajuan dalam 1 tahun",
+            "data"=> [
+                'data_disetujui' => $dataDisetujui,
+                'data_ditolak' => $dataDitolak,
+                'data_diproses' => $dataDiproses,
+            ]
+        ],200);
+
     }
 
     public function getListPengajuan($user_id){
