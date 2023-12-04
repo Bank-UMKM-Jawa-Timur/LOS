@@ -165,7 +165,7 @@
             <h2
               class="font-semibold tracking-tighter text-lg text-theme-text"
             >
-              Ranking Cabang - {{date('M')}}
+              Ranking Cabang - {{date('M Y')}}
             </h2>
           </div>
           <div class="legend-wrapper flex gap-5">
@@ -215,7 +215,7 @@
           <h2
             class="text-lg text-theme-text font-semibold tracking-tighter"
           >
-            Proses Skema Kredit - {{date('M').' '.date('Y')}}
+            Proses Skema Kredit - {{date('M Y')}}
           </h2>
         </div>
         <div class="flex justify-center lg:mt-0 mt-5">
@@ -227,7 +227,7 @@
           <h2
             class="text-lg text-theme-text font-semibold tracking-tighter"
           >
-            Skema Kredit - {{date('M').' '.date('Y')}}
+            Skema Kredit - {{date('M Y')}}
           </h2>
         </div>
         <div class="flex justify-center lg:mt-0 mt-5">
