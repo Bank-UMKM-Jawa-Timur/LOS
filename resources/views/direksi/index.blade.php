@@ -258,9 +258,8 @@
     });
 
     run();
-
+    
     function run(){
-
       function yearChartPengajuan(disetujui, ditolak, diproses, keseluruhan) {
         var options = {
           series: [
@@ -398,11 +397,15 @@
               height: 400,
           },
           title: {
-              verticalAlign: "middle",
-              floating: true,
-              text: `<span class="font-bold font-poppins text-5xl flex">
-                          <p class="mt-20 left-14"><br /> <br />${total}<br><br></p>
-                  </span>`,
+            align: 'center',
+            verticalAlign: 'middle',
+            y: 50,
+            x: 0,
+              text: `
+                <span class="font-bold font-poppins text-5xl absolute">
+                        <p>${total}</p>
+                </span>
+              `,
           },
           tooltip: {
               headerFormat: "",
@@ -487,13 +490,15 @@
               height: 400,
           },
           title: {
-            floating: true,
-            verticalAlign: "middle",
-            y: 60,
-            x: -5,
-              text: `<span class="font-bold font-poppins text-5xl flex">
-                        <p class="mt-[80%]">${total}</p>
-                  </span>`,
+            align: 'center',
+            verticalAlign: 'middle',
+            y: 50,
+            x: 0,
+              text: `
+                <span class="font-bold font-poppins text-5xl absolute">
+                        <p>${total}</p>
+                </span>
+              `,
           },
           tooltip: {
               headerFormat: "",
@@ -521,7 +526,7 @@
               },
           series: [
               {
-                  minPointSize: 50,
+                  minPointSize: 20,
                   innerSize: "70%",
                   zMin: 0,
                   name: "countries",
@@ -570,14 +575,13 @@
           title: {
             align: 'center',
             verticalAlign: 'middle',
-            y: 60,
-            x: -5,
+            y: 50,
+            x: -12,
               text: `
                 <span class="font-bold font-poppins text-5xl absolute">
-                        <p class="mt-[80%]">${total}</p>
+                        <p>${total}</p>
                 </span>
-              `
-              ,
+              `,
           },
           tooltip: {
               headerFormat: "",
@@ -666,10 +670,10 @@
       }
 
       var staticToken = "gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFVaNj";
-      var base_url = "https://pincetar.bankumkm.id";
-      var url_sum_cabang = `api/v1/get-sum-cabang?tanggal_awal=${firstDate}-01&tanggal_akhir=${formattedLastDay}`;
+      var base_url = "https://pincetar.bankumkm.id/";
+      var url_sum_cabang = `${base_url}api/v1/get-sum-cabang?tanggal_awal=${firstDate}-01&tanggal_akhir=${formattedLastDay}`;
       var url_count_year_pengajuan = "api/v1/get-count-year-pengajuan";
-      var url_sum_skema = `api/v1/get-sum-skema?tanggal_awal=${formattedFirstDay}&tanggal_akhir=${formattedLastDay}`;
+      var url_sum_skema = `${base_url}api/v1/get-sum-skema?tanggal_awal=${formattedFirstDay}&tanggal_akhir=${formattedLastDay}`;
       var url_count_pengajuan = "api/v1/get-count-pengajuan?tAwal="+firstDateOfYear+"&tAkhir="+lastDateOfYear
 
       $('#btnFilter').on('click', function () { 
@@ -757,15 +761,6 @@
           $(".modal-layout").trigger('click'); 
         }
       })
-
-      getDataPengajuan()
-      getDataPengajuanYear();
-      pengajuanRanking();
-      getSkema();
-      getProses()
-      // getDataPengajuanYear();
-      // pengajuanRanking();
-      // getSkema();
       $('#proses-layout').addClass('hidden')
 
       // get data pengajuan 1 year
@@ -872,10 +867,10 @@
           },
           success: function (response) {
             // console.log(response);
-            // $('#totalPengajuan').append(response.total_disetujui + response.total_ditolak + response.total_diproses);
-            // $('#disetujui').append(response.total_disetujui);
-            // $('#ditolak').append(response.total_ditolak);
-            // $('#diproses').append(response.total_diproses);
+            //$('#totalPengajuan').append(response.total_disetujui + response.total_ditolak + response.total_diproses);
+            //$('#disetujui').append(response.total_disetujui);
+            //$('#ditolak').append(response.total_ditolak);
+            //$('#diproses').append(response.total_diproses);
 
             var dataTertinggi = response.data.tertinggi;
             var dataTerendah = response.data.terendah;
@@ -1080,7 +1075,11 @@
         `);
       }
 
-      
+      getDataPengajuan()
+      getDataPengajuanYear();
+      pengajuanRanking();
+      getSkema();
+      getProses()
     }
 </script>
 

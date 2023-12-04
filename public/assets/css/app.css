@@ -1138,14 +1138,8 @@ video {
 .mt-\[2px\] {
   margin-top: 2px;
 }
-.mt-\[50\%\] {
-  margin-top: 50%;
-}
 .mt-\[8px\] {
   margin-top: 8px;
-}
-.mt-\[80\%\] {
-  margin-top: 80%;
 }
 .box-border {
   box-sizing: border-box;
@@ -1564,10 +1558,6 @@ video {
 }
 .text-5xl {
   font-size: 3rem;
-  line-height: 1;
-}
-.text-6xl {
-  font-size: 3.75rem;
   line-height: 1;
 }
 .text-base {
