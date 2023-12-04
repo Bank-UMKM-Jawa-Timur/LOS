@@ -22,7 +22,7 @@
             <div class="mt-5 text-sm text-theme-text">
               <ul class="space-y-3">
                 <li class="menu-item">
-                  <a href="index.html">
+                  <a href="{{ url('/dashboard') }}"">
                     <button
                       class="item-link active-menu w-full flex gap-3 font-medium text-left px-4 py-3 rounded-md"
                     >
@@ -43,7 +43,7 @@
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="analisa-kredit.html">
+                  <a href="{{ url('pengajuan-kredit') }}">
                     <button
                       class="item-link w-full flex gap-2 font-medium text-left px-4 py-3 rounded-md"
                     >
@@ -111,54 +111,54 @@
                 <div class="dropdown-menu-link hidden absolute z-40 w-[240px]">
                   <ul class="space-y-1 p-2 mt-3 bg-gray-50">
                     <li>
-                      <a href="master-cabang.html">
+                      <a href="{{ route('cabang.index') }}"">
                         <button class="item-dp-link">
                           Master kantor cabang
                         </button>
                       </a>
                     </li>
                     <li>
-                      <a href="master-kabupaten.html">
+                      <a href="{{ route('kabupaten.index') }}">
                         <button class="item-dp-link">Master Kabupaten</button>
                       </a>
                     </li>
                     <li>
-                      <a href="master-kecamatan.html">
+                      <a href="{{ route('kecamatan.index') }}">
                         <button class="item-dp-link">Master Kecamatan</button>
                       </a>
                     </li>
                     <li>
-                      <a href="master-desa.html">
+                      <a href="{{ route('desa.index') }}">
                         <button class="item-dp-link">Master Desa</button>
                       </a>
                     </li>
                     <li>
-                      <a href="master-user.html">
+                      <a href="{{ route('user.index') }}">
                         <button class="item-dp-link">Master User</button>
                       </a>
                     </li>
                     <li>
-                      <a href="master-item.html">
+                      <a href="{{ route('master-item.index') }}">
                         <button class="item-dp-link">Master Item</button>
                       </a>
                     </li>
                     <li>
-                      <a href="master-merk.html">
+                      <a href="{{ route('merk.index') }}l">
                         <button class="item-dp-link">Master Merk</button>
                       </a>
                     </li>
                     <li>
-                      <a href="master-tipe.html">
+                      <a href="{{ route('tipe.index') }}l">
                         <button class="item-dp-link">Master Tipe</button>
                       </a>
                     </li>
                     <li>
-                      <a href="master-session.html">
+                      <a href="{{ route('index-session') }}">
                         <button class="item-dp-link">Master Session</button>
                       </a>
                     </li>
                     <li>
-                      <a href="master-api-session.html">
+                      <a href="{{ route('index-api-session') }}">
                         <button class="item-dp-link">Master API Session</button>
                       </a>
                     </li>
@@ -166,11 +166,14 @@
                 </div>
               </ul>
             </div>
+            <form method="POST" action="{{ route('logout') }}">
+              @csrf
             <ul class="absolute bottom-5">
               <li class="menu-item">
                 <a
-                  href="#"
-                  class="toggle-dp-menu"
+                href="{{route('logout')}}"
+                onclick="event.preventDefault();
+                        this.closest('form').submit();"
                 >
                   <button
                     class="item-link relative   w-full flex gap-2 font-medium text-left px-4 py-3 rounded-md"
@@ -182,6 +185,7 @@
                 </a>
               </li>
             </ul>
+            </form>
           </div>
           <!-- end menu -->
         </nav>

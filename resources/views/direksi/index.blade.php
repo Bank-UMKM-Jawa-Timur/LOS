@@ -80,7 +80,7 @@
               class="text-theme-text text-2xl font-bold tracking-tighter" id="totalPengajuan">
             </h2>
             <p class="text-gray-500 text-sm tracking-tighter">
-              Total Pengajuan
+              Total Pengajuan pada bulan ini
             </p>
           </div>
         </div>
@@ -101,7 +101,7 @@
               id="disetujui">
             </h2>
             <p class="text-gray-500 text-sm tracking-tighter">
-              Disetujui
+              Disetujui pada bulan ini
             </p>
           </div>
         </div>
@@ -121,7 +121,7 @@
               class="text-theme-text text-2xl font-bold tracking-tighter"
               id="ditolak">
             </h2>
-            <p class="text-gray-500 text-sm tracking-tighter">Ditolak</p>
+            <p class="text-gray-500 text-sm tracking-tighter">Ditolak pada bulan ini</p>
           </div>
         </div>
       </div>
@@ -140,7 +140,7 @@
               class="text-theme-text text-2xl font-bold tracking-tighter"
               id="diproses">
             </h2>
-            <p class="text-gray-500 text-sm tracking-tighter">Diproses</p>
+            <p class="text-gray-500 text-sm tracking-tighter">Diproses pada bulan ini</p>
           </div>
         </div>
       </div>
@@ -165,7 +165,7 @@
             <h2
               class="font-semibold tracking-tighter text-lg text-theme-text"
             >
-              Ranking Cabang - {{date('Y')}}
+              Ranking Cabang - {{date('M Y')}}
             </h2>
           </div>
           <div class="legend-wrapper flex gap-5">
@@ -215,7 +215,7 @@
           <h2
             class="text-lg text-theme-text font-semibold tracking-tighter"
           >
-            Proses Skema Kredit - {{date('M').' '.date('Y')}}
+            Proses Skema Kredit - {{date('M Y')}}
           </h2>
         </div>
         <div class="flex justify-center lg:mt-0 mt-5">
@@ -227,7 +227,7 @@
           <h2
             class="text-lg text-theme-text font-semibold tracking-tighter"
           >
-            Skema Kredit - {{date('M').' '.date('Y')}}
+            Skema Kredit - {{date('M Y')}}
           </h2>
         </div>
         <div class="flex justify-center lg:mt-0 mt-5">
@@ -269,7 +269,7 @@
 
     function run(){
 
-      function yearChartPengajuan(disetujui, ditolak, diproses) {
+      function yearChartPengajuan(disetujui, ditolak, diproses, keseluruhan) {
         var options = {
           series: [
               {
@@ -323,8 +323,25 @@
                     diproses.December
                   ],
               },
+              {
+                  name: "Total Pengajuan",
+                  data: [
+                    keseluruhan.January, 
+                    keseluruhan.February, 
+                    keseluruhan.March, 
+                    keseluruhan.April, 
+                    keseluruhan.May, 
+                    keseluruhan.June, 
+                    keseluruhan.July, 
+                    keseluruhan.August, 
+                    keseluruhan.September, 
+                    keseluruhan.October, 
+                    keseluruhan.November, 
+                    keseluruhan.December
+                  ],
+              },
           ],
-          colors: ["#00FF61", "#DC3545", "#F7C35C"],
+          colors: ["#00FF61", "#DC3545", "#F7C35C", "#9334EA"],
           chart: {
               width: "100%",
               height: 380,
@@ -412,6 +429,13 @@ function chartProses(pincab, pbp, pbo, penyelia, staf, total) {
             },
         },
     },
+    exporting: {
+     	 buttons: {
+            contextButton: {
+              enabled: false
+            },
+          }
+        },
     series: [
         {
             minPointSize: 50,
@@ -461,10 +485,11 @@ function chartProsesSkemaKredit(pincab, pbp, pbo, penyelia, staf, total) {
         height: 400,
     },
     title: {
-        verticalAlign: "middle",
-        floating: true,
+      floating: true,
+      verticalAlign: "middle",
+      y: 60,
         text: `<span class="font-bold font-poppins text-5xl flex">
-                    <p class="mt-20 left-14"><br /> <br />${total}<br><br></p>
+                  <p class="mt-[80%]">${total}</p>
             </span>`,
     },
     tooltip: {
@@ -484,6 +509,13 @@ function chartProsesSkemaKredit(pincab, pbp, pbo, penyelia, staf, total) {
             },
         },
     },
+    exporting: {
+     		buttons: {
+            contextButton: {
+              enabled: false
+            },
+          }
+        },
     series: [
         {
             minPointSize: 50,
@@ -535,12 +567,11 @@ function chartSkemaKredit(kusuma, pkpj, kkb, talangan, prokesra, total){
     title: {
       align: 'center',
       verticalAlign: 'middle',
+      y: 60,
         text: `
-        <br /><br />
-        <span class="font-bold font-poppins text-6xl absolute">
-                <p class="mt-[50%]"><br /><br />${total} <br /><br></p>
-        </span>
-        <br />
+          <span class="font-bold font-poppins text-5xl absolute">
+                  <p class="mt-[80%]">${total}</p>
+          </span>
         `
         ,
     },
@@ -561,6 +592,13 @@ function chartSkemaKredit(kusuma, pkpj, kkb, talangan, prokesra, total){
             },
         },
     },
+    exporting: {
+     		buttons: {
+            contextButton: {
+              enabled: false
+            },
+          }
+        },
     series: [
         {
             minPointSize: 20,
@@ -602,6 +640,12 @@ function chartSkemaKredit(kusuma, pkpj, kkb, talangan, prokesra, total){
 });
 }
 
+  var currentDate = new Date();
+  var firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+  var lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+  var formattedFirstDay = firstDayOfMonth.toISOString().split('T')[0]; 
+  var formattedLastDay = lastDayOfMonth.toISOString().split('T')[0];
+  
 function alertMessage(element, visible){
   if(visible == true){
     $(element).removeClass('alert');
@@ -615,19 +659,12 @@ function alertMessage(element, visible){
 
   var staticToken = "gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFVaNj";
   var base_url = "https://pincetar.bankumkm.id";
-  var url_sum_cabang = "api/v1/get-sum-cabang";
+  var url_sum_cabang = `api/v1/get-sum-cabang?tanggal_awal=${formattedFirstDay}&tanggal_akhir=${formattedLastDay}`;
   var url_count_year_pengajuan = "api/v1/get-count-year-pengajuan";
   var url_sum_skema = "api/v1/get-sum-skema";
   var url_count_pengajuan = "api/v1/get-count-pengajuan";
 
   $('#btnFilter').on('click', function () { 
-    $('#ranking_tertinggi').empty()
-    $('#ranking_terendah').empty()
-    $('#totalPengajuan').empty()
-    $('#disetujui').empty()
-    $('#ditolak').empty()
-    $('#diproses').empty()
-
     let tAwal = document.getElementById("tgl_awal");
     let tAkhir = document.getElementById("tgl_akhir");
     let fSkemaKredit = document.getElementById('skema-kredit-filter');
@@ -643,7 +680,7 @@ function alertMessage(element, visible){
     }else{
       alertMessage('#tgl_awal', true)
       alertMessage('#tgl_akhir', true)
-  
+
     if (tAwal.value != "" && tAkhir.value != "") {
       url_sum_cabang = `api/v1/get-sum-cabang?tanggal_awal=${tAwal.value}&tanggal_akhir=${tAkhir.value}`;
 
@@ -688,7 +725,7 @@ function alertMessage(element, visible){
       }
 
     }else{
-      url_sum_cabang = "api/v1/get-sum-cabang";
+      url_sum_cabang = `api/v1/get-sum-cabang?tanggal_awal=${formattedFirstDay}&tanggal_akhir=${formattedLastDay}`;
       url_count_year_pengajuan = "api/v1/get-count-year-pengajuan";
       url_sum_skema = "api/v1/get-sum-skema";
       url_count_pengajuan = "api/v1/get-count-pengajuan";
@@ -706,9 +743,9 @@ function alertMessage(element, visible){
 
   })
   
-    getDataPengajuanYear();
-    pengajuanRanking();
-    getSkema();
+
+
+
     $('#proses-layout').addClass('hidden')
 
     // get data pengajuan 1 year
@@ -722,8 +759,9 @@ function alertMessage(element, visible){
           "token": staticToken
         },
         success: function (response) {
+          console.log(response)
           $('#chart-total-pengajuan').empty();
-          yearChartPengajuan(response.data.data_disetujui, response.data.data_ditolak, response.data.data_diproses)
+          yearChartPengajuan(response.data.data_disetujui, response.data.data_ditolak, response.data.data_diproses, response.data.data_keseluruhan)
         }
       });
     }
@@ -792,8 +830,9 @@ function alertMessage(element, visible){
           var dataTertinggi = response.data.tertinggi;
           var dataTerendah = response.data.terendah;
           
-          // Data ranking tertinggi
-          $.map(dataTertinggi, function (item, index) {
+          if(dataTertinggi.length > 0 && dataTerendah.length > 0) {
+               // Data ranking tertinggi
+            $.map(dataTertinggi, function (item, index) {
             rankingTertinggi(index, item.cabang, item.kode_cabang, item.total);
           });
 
@@ -801,6 +840,10 @@ function alertMessage(element, visible){
           $.map(dataTerendah, function (item, index) {
             rankingTerendah(index, item.cabang, item.kode_cabang, item.total);
           });
+          }else{
+            emptyRanking('#ranking_tertinggi')
+            emptyRanking('#ranking_terendah')
+          }
         }
       });
     }
@@ -882,7 +925,6 @@ function alertMessage(element, visible){
             if(fSkemaKredit.value != "all_skema" && fCabang.value == "00"){
               let rankTertinggi = response.ranking.tertinggi;
               let rankTerendah = response.ranking.terendah;
-
               $.map(rankTertinggi, function (item, index) {
                 rankingTertinggi(index, item.cabang, item.kode_cabang, item.total);
               });
@@ -890,16 +932,16 @@ function alertMessage(element, visible){
                 rankingTerendah(index, item.cabang, item.kode_cabang, item.total);
               });
 
-              console.log(rankTertinggi.length)
-              console.log(rankTerendah.length)
-            // if(rankTinggi.length < 0 || rankRendah.length < 0){
-            //     emptyRanking('#ranking_terendah');
-            //     emptyRanking('#ranking_tertinggi');
-            // }else if(rankTinggi.length < 0){
-            //     emptyRanking('#ranking_tertinggi');
-            // }else if(rankTinggi.length < 0){
-            //     emptyRanking('#ranking_terendah');
-            // }
+              // rankTertinggi.every(function (item, index) {
+              //   if (item.total == 0) {
+              //    emptyRanking('#ranking_tertinggi')
+              //   }
+              // });
+              // rankTerendah.every(function (item, index) {
+              //   if (item.total == 0) {
+              //     emptyRanking('#ranking_terendah')
+              //   }
+              // });
 
               // Total pengajuan
               $('#totalPengajuan').append(tDisetujui + tDitolak + totalProses);
@@ -928,7 +970,7 @@ function alertMessage(element, visible){
             });
 
             var totalProses = prosesPincab + prosesPbp + prosesPbo + prosesPenyelia + prosesStaf;
-            chartSkemaKredit(dataTotal.Kusuma, dataTotal.PKPJ, dataTotal.KKB, dataTotal.Umroh, dataTotal.Prokesra, total);
+            chartSkemaKredit(dataTotal.Kusuma != null ? dataTotal.Kusuma : 0, dataTotal.PKPJ != null ? dataTotal.PKPJ : 0, dataTotal.KKB != null ? dataTotal.KKB : 0, dataTotal.Umroh != null ? dataTotal.Umroh : 0, dataTotal.Prokesra != null ? dataTotal.Prokesra : 0, dataTotal.Prokesra != null ? total : 0);
             chartProsesSkemaKredit(prosesPincab, prosesPbp, prosesPbo, prosesPenyelia, prosesStaf, totalProses);
           }
         }
@@ -952,7 +994,7 @@ function alertMessage(element, visible){
             <h2 class="text-lg font-semibold text-theme-secondary">
               ${cabang}
             </h2>
-            <p class="text-sm font-semibold text-gray-400">${kode}</p>
+            <p class="text-lg font-semibold text-gray-400">${kode}</p>
           </div>
           <div class="total pr-3">
             <h2 class="text-theme-secondary font-bold mt-3">${total}</h2>
@@ -971,7 +1013,7 @@ function alertMessage(element, visible){
             <h2 class="text-lg font-semibold text-theme-secondary">
               ${cabang}
             </h2>
-            <p class="text-sm font-semibold text-gray-400">${kode}</p>
+            <p class="text-lg font-semibold text-gray-400">${kode}</p>
           </div>
           <div class="total pr-3">
             <h2 class="text-theme-secondary font-bold mt-3">${total}</h2>
@@ -979,9 +1021,10 @@ function alertMessage(element, visible){
         </div>
       `);
     }
+
+    getDataPengajuanYear();
+    pengajuanRanking();
+    getSkema();
 }
 </script>
 @endpush
-
-
-      
