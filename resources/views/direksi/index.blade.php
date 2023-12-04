@@ -1000,13 +1000,12 @@ function alertMessage(element, visible){
       return $('#ranking_tertinggi').append(`
         <div class="card border flex gap-4 p-2 w-full">
           <button class="px-5 py-2 rounded bg-green-400">
-            <h2 class="text-lg font-bold text-white">${no + 1 }</h2>
+            <h2 class="text-lg font-bold text-white">${kode}</h2>
           </button>
           <div class="content w-full">
             <h2 class="text-lg font-semibold text-theme-secondary">
               ${cabang}
             </h2>
-            <p class="text-lg font-semibold text-gray-400">${kode}</p>
           </div>
           <div class="total pr-3">
             <h2 class="text-theme-secondary font-bold mt-3">${total}</h2>
@@ -1019,13 +1018,12 @@ function alertMessage(element, visible){
       return $('#ranking_terendah').append(`
         <div class="card border flex gap-4 p-2 w-full">
           <button class="px-5 py-2 rounded bg-red-500">
-            <h2 class="text-lg font-bold text-white">${no + 1 }</h2>
+            <h2 class="text-lg font-bold text-white">${kode}</h2>
           </button>
           <div class="content w-full">
             <h2 class="text-lg font-semibold text-theme-secondary">
               ${cabang}
             </h2>
-            <p class="text-lg font-semibold text-gray-400">${kode}</p>
           </div>
           <div class="total pr-3">
             <h2 class="text-theme-secondary font-bold mt-3">${total}</h2>
