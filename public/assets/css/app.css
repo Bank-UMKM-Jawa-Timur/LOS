@@ -1144,6 +1144,9 @@ video {
 .mt-\[8px\] {
   margin-top: 8px;
 }
+.mt-\[80\%\] {
+  margin-top: 80%;
+}
 .box-border {
   box-sizing: border-box;
 }

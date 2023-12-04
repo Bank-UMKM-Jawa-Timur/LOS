@@ -485,10 +485,11 @@ function chartProsesSkemaKredit(pincab, pbp, pbo, penyelia, staf, total) {
         height: 400,
     },
     title: {
-        verticalAlign: "middle",
-        floating: true,
+      floating: true,
+      verticalAlign: "middle",
+      y: 60,
         text: `<span class="font-bold font-poppins text-5xl flex">
-                    <p class="mt-20 left-14"><br /> <br />${total}<br><br></p>
+                  <p class="mt-[80%]">${total}</p>
             </span>`,
     },
     tooltip: {
@@ -566,12 +567,11 @@ function chartSkemaKredit(kusuma, pkpj, kkb, talangan, prokesra, total){
     title: {
       align: 'center',
       verticalAlign: 'middle',
+      y: 60,
         text: `
-        <br /><br />
-        <span class="font-bold font-poppins text-6xl absolute">
-                <p class="mt-[50%]"><br /><br />${total} <br /><br></p>
-        </span>
-        <br />
+          <span class="font-bold font-poppins text-5xl absolute">
+                  <p class="mt-[80%]">${total}</p>
+          </span>
         `
         ,
     },
@@ -665,13 +665,6 @@ function alertMessage(element, visible){
   var url_count_pengajuan = "api/v1/get-count-pengajuan";
 
   $('#btnFilter').on('click', function () { 
-    $('#ranking_tertinggi').empty()
-    $('#ranking_terendah').empty()
-    $('#totalPengajuan').empty()
-    $('#disetujui').empty()
-    $('#ditolak').empty()
-    $('#diproses').empty()
-
     let tAwal = document.getElementById("tgl_awal");
     let tAkhir = document.getElementById("tgl_akhir");
     let fSkemaKredit = document.getElementById('skema-kredit-filter');
