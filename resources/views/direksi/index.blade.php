@@ -80,7 +80,7 @@
               class="text-theme-text text-2xl font-bold tracking-tighter" id="totalPengajuan">
             </h2>
             <p class="text-gray-500 text-sm tracking-tighter">
-              Total Pengajuan
+              Total Pengajuan pada bulan ini
             </p>
           </div>
         </div>
@@ -101,7 +101,7 @@
               id="disetujui">
             </h2>
             <p class="text-gray-500 text-sm tracking-tighter">
-              Disetujui
+              Disetujui pada bulan ini
             </p>
           </div>
         </div>
@@ -121,7 +121,7 @@
               class="text-theme-text text-2xl font-bold tracking-tighter"
               id="ditolak">
             </h2>
-            <p class="text-gray-500 text-sm tracking-tighter">Ditolak</p>
+            <p class="text-gray-500 text-sm tracking-tighter">Ditolak pada bulan ini</p>
           </div>
         </div>
       </div>
@@ -140,7 +140,7 @@
               class="text-theme-text text-2xl font-bold tracking-tighter"
               id="diproses">
             </h2>
-            <p class="text-gray-500 text-sm tracking-tighter">Diproses</p>
+            <p class="text-gray-500 text-sm tracking-tighter">Diproses pada bulan ini</p>
           </div>
         </div>
       </div>
