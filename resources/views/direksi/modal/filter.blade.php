@@ -27,6 +27,7 @@ id="modal-filter"
             class="form-input"
             id="tgl_awal"
           />
+          <small class="alert-message text-red-500 hidden">Tanggal Awal tidak boleh kosong</small>
         </div>
         <div class="input-box">
           <label for="">Tanggal Akhir</label>
@@ -36,6 +37,7 @@ id="modal-filter"
             class="form-input"
             id="tgl_akhir"
           />
+          <small class="alert-message text-red-500 hidden">Tanggal Akhir tidak boleh kosong</small>
         </div>
       </div>
       <div class="form-group-2 mb-4">

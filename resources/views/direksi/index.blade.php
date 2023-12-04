@@ -264,12 +264,12 @@
     channel.bind('los-event', function(data) {
       run();
     });
+
     run();
 
     function run(){
 
       function yearChartPengajuan(disetujui, ditolak, diproses) {
-        
         var options = {
           series: [
               {
@@ -380,10 +380,9 @@
         var chartTotalPengajuan = new ApexCharts(document.querySelector("#chart-total-pengajuan"), options);
         chartTotalPengajuan.render();
       }
-// ====================================================================
-
+      // ====================================================================
 function chartProses(pincab, pbp, pbo, penyelia, staf, total) { 
-  return Highcharts.chart("proses", {
+  Highcharts.chart("proses", {
     chart: {
         type: "pie",
         width: 500,
@@ -455,7 +454,7 @@ function chartProses(pincab, pbp, pbo, penyelia, staf, total) {
 
 function chartProsesSkemaKredit(pincab, pbp, pbo, penyelia, staf, total) { 
   $('#posisi-pengajuan').empty();
-  return Highcharts.chart("posisi-pengajuan", {
+  Highcharts.chart("posisi-pengajuan", {
     chart: {
         type: "pie",
         width: 500,
@@ -603,6 +602,17 @@ function chartSkemaKredit(kusuma, pkpj, kkb, talangan, prokesra, total){
 });
 }
 
+function alertMessage(element, visible){
+  if(visible == true){
+    $(element).removeClass('alert');
+    $(element).next('.alert-message').addClass('hidden');
+  }else{
+    $(element).addClass('alert');
+    $(element).next('.alert-message').removeClass('hidden');
+  }
+
+}
+
   var staticToken = "gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFVaNj";
   var base_url = "https://pincetar.bankumkm.id";
   var url_sum_cabang = "api/v1/get-sum-cabang";
@@ -621,8 +631,19 @@ function chartSkemaKredit(kusuma, pkpj, kkb, talangan, prokesra, total){
     let tAwal = document.getElementById("tgl_awal");
     let tAkhir = document.getElementById("tgl_akhir");
     let fSkemaKredit = document.getElementById('skema-kredit-filter');
-    let fCabang = document.getElementById("cabang-filter");
+    let fCabang = document.getElementById("cabang-filter")
 
+    if(tAwal.value.trim(" ") == "" || tAkhir.value.trim(" ") == ""){
+      alertMessage('#tgl_awal', false)
+      alertMessage('#tgl_akhir', false)
+    }else if(tAwal.value.trim(" ") == ""){
+      alertMessage('#tgl_awal', false)
+    }else if(tAkhir.value.trim(" ") == ""){
+      alertMessage('#tgl_akhir', false)
+    }else{
+      alertMessage('#tgl_awal', true)
+      alertMessage('#tgl_akhir', true)
+  
     if (tAwal.value != "" && tAkhir.value != "") {
       url_sum_cabang = `api/v1/get-sum-cabang?tanggal_awal=${tAwal.value}&tanggal_akhir=${tAkhir.value}`;
 
@@ -679,8 +700,10 @@ function chartSkemaKredit(kusuma, pkpj, kkb, talangan, prokesra, total){
 
     getDataPengajuanYear();
     getSkema();
-
     $(".modal-layout").trigger('click');
+    
+  }
+
   })
   
     getDataPengajuanYear();
@@ -859,12 +882,24 @@ function chartSkemaKredit(kusuma, pkpj, kkb, talangan, prokesra, total){
             if(fSkemaKredit.value != "all_skema" && fCabang.value == "00"){
               let rankTertinggi = response.ranking.tertinggi;
               let rankTerendah = response.ranking.terendah;
+
               $.map(rankTertinggi, function (item, index) {
                 rankingTertinggi(index, item.cabang, item.kode_cabang, item.total);
               });
               $.map(rankTerendah, function (item, index) {
                 rankingTerendah(index, item.cabang, item.kode_cabang, item.total);
               });
+
+              console.log(rankTertinggi.length)
+              console.log(rankTerendah.length)
+            // if(rankTinggi.length < 0 || rankRendah.length < 0){
+            //     emptyRanking('#ranking_terendah');
+            //     emptyRanking('#ranking_tertinggi');
+            // }else if(rankTinggi.length < 0){
+            //     emptyRanking('#ranking_tertinggi');
+            // }else if(rankTinggi.length < 0){
+            //     emptyRanking('#ranking_terendah');
+            // }
 
               // Total pengajuan
               $('#totalPengajuan').append(tDisetujui + tDitolak + totalProses);
@@ -883,7 +918,7 @@ function chartSkemaKredit(kusuma, pkpj, kkb, talangan, prokesra, total){
             var dataTotal = response.data.total[0];
             var dataPosisi = response.data.posisi;
             var total = parseInt(dataTotal.Kusuma) + parseInt(dataTotal.PKPJ) + parseInt(dataTotal.KKB) + parseInt(dataTotal.Umroh) + parseInt(dataTotal.Prokesra);
-  
+
             $.map(dataPosisi, function (item, i) {
               prosesPincab += parseInt(item.posisi_pincab);
               prosesPbp += parseInt(item.posisi_pbp);
@@ -891,7 +926,7 @@ function chartSkemaKredit(kusuma, pkpj, kkb, talangan, prokesra, total){
               prosesPenyelia += parseInt(item.posisi_penyelia);
               prosesStaf += parseInt(item.posisi_staf);
             });
-  
+
             var totalProses = prosesPincab + prosesPbp + prosesPbo + prosesPenyelia + prosesStaf;
             chartSkemaKredit(dataTotal.Kusuma, dataTotal.PKPJ, dataTotal.KKB, dataTotal.Umroh, dataTotal.Prokesra, total);
             chartProsesSkemaKredit(prosesPincab, prosesPbp, prosesPbo, prosesPenyelia, prosesStaf, totalProses);
@@ -900,6 +935,13 @@ function chartSkemaKredit(kusuma, pkpj, kkb, talangan, prokesra, total){
       });
     }
 
+    function emptyRanking(element) {
+      $(element).append(`
+        <div class="card border flex gap-4 p-2 w-full">
+          <h2 class="">Data kosong.</h2>
+        </div>
+      `);
+    }
     function rankingTertinggi(no, cabang, kode, total) { 
       return $('#ranking_tertinggi').append(`
         <div class="card border flex gap-4 p-2 w-full">
