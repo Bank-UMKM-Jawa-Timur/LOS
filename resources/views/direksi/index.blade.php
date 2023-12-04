@@ -151,7 +151,7 @@
           <h2
             class="font-poppins font-semibold tracking-tighter text-lg text-theme-text"
           >
-            Data Pengajuan - {{date('Y')}}
+          <span>Data Pengajuan - <span class="date-pengajuan">{{date('Y')}}</span></span>
           </h2>
         </div>
         <div
@@ -165,7 +165,7 @@
             <h2
               class="font-semibold tracking-tighter text-lg text-theme-text"
             >
-              Ranking Cabang - {{date('M Y')}}
+              <span class="date-rank">Ranking Cabang - <span class="date-ranking-cabang">{{date('M Y')}}</span></span>
             </h2>
           </div>
           <div class="legend-wrapper flex gap-5">
@@ -215,7 +215,7 @@
           <h2
             class="text-lg text-theme-text font-semibold tracking-tighter"
           >
-            Proses Skema Kredit - {{date('M Y')}}
+            Proses Skema Kredit - <span class="date-proses-skema-kredit">{{date('M Y')}}</span>
           </h2>
         </div>
         <div class="flex justify-center lg:mt-0 mt-5">
@@ -227,7 +227,7 @@
           <h2
             class="text-lg text-theme-text font-semibold tracking-tighter"
           >
-            Skema Kredit - {{date('M Y')}}
+            Skema Kredit - <span class="date-skema-kredit">{{date('M Y')}}</span>
           </h2>
         </div>
         <div class="flex justify-center lg:mt-0 mt-5">
@@ -252,7 +252,9 @@
   
 @endsection
 @push('script-injection')
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
   <script>
+ 
 
     Pusher.logToConsole = true;
 
@@ -488,6 +490,7 @@ function chartProsesSkemaKredit(pincab, pbp, pbo, penyelia, staf, total) {
       floating: true,
       verticalAlign: "middle",
       y: 60,
+      x: -5,
         text: `<span class="font-bold font-poppins text-5xl flex">
                   <p class="mt-[80%]">${total}</p>
             </span>`,
@@ -568,6 +571,7 @@ function chartSkemaKredit(kusuma, pkpj, kkb, talangan, prokesra, total){
       align: 'center',
       verticalAlign: 'middle',
       y: 60,
+      x: -5,
         text: `
           <span class="font-bold font-poppins text-5xl absolute">
                   <p class="mt-[80%]">${total}</p>
@@ -664,11 +668,22 @@ function alertMessage(element, visible){
   var url_sum_skema = "api/v1/get-sum-skema";
   var url_count_pengajuan = "api/v1/get-count-pengajuan";
 
+
   $('#btnFilter').on('click', function () { 
     let tAwal = document.getElementById("tgl_awal");
     let tAkhir = document.getElementById("tgl_akhir");
     let fSkemaKredit = document.getElementById('skema-kredit-filter');
-    let fCabang = document.getElementById("cabang-filter")
+    let fCabang = document.getElementById("cabang-filter");
+    console.log(tAwal);
+    var dateAwal = dayjs(tAwal.value).format('MMM');
+    var dateAkhir = dayjs(tAkhir.value).format('MMM');
+    var dateTahun = dayjs(tAwal.value).format('YYYY')
+
+    $('.date-pengajuan').html(`(${dateAwal} - ${dateAkhir} ${dateTahun})`);
+    $('.date-proses-skema-kredit').html(`(${dateAwal} - ${dateAkhir} ${dateTahun})`);
+    $('.date-skema-kredit').html(`(${dateAwal} - ${dateAkhir}  ${dateTahun})`);
+    $('.date-ranking-cabang').html(`(${dateAwal} - ${dateAkhir} ${dateTahun})`);
+
 
     if(tAwal.value.trim(" ") == "" || tAkhir.value.trim(" ") == ""){
       alertMessage('#tgl_awal', false)
@@ -737,15 +752,9 @@ function alertMessage(element, visible){
 
     getDataPengajuanYear();
     getSkema();
-    $(".modal-layout").trigger('click');
-    
+    $(".modal-layout").trigger('click'); 
   }
-
   })
-  
-
-
-
     $('#proses-layout').addClass('hidden')
 
     // get data pengajuan 1 year
@@ -1027,4 +1036,5 @@ function alertMessage(element, visible){
     getSkema();
 }
 </script>
+
 @endpush
