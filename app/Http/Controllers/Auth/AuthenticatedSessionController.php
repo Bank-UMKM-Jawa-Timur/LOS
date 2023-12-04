@@ -49,6 +49,10 @@ class AuthenticatedSessionController extends Controller
 
                     $request->session()->regenerate();
 
+                    if ($user->role == 'Direksi') {
+                        return redirect()->route('dashboard_direksi');
+                    }
+
                     return redirect()->intended(RouteServiceProvider::HOME);
                 } else {
                     return back()->withError("Password yang anda masukan salah");

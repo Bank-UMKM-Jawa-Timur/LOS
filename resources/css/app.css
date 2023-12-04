@@ -134,6 +134,9 @@
     .form-input {
         @apply border focus:ring ring-blue-300  w-full px-4 py-2 rounded text-theme-text bg-white outline-none hover:bg-gray-50 focus:bg-gray-50;
     }
+    .form-input.alert {
+        @apply border border-red-500;
+    }
     .form-select {
         @apply border focus:ring ring-blue-300 accent-theme-primary w-full px-4 py-2 rounded text-theme-text bg-white outline-none hover:bg-gray-50 focus:bg-gray-50;
     }
