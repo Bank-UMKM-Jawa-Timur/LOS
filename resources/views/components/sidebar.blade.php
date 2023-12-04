@@ -170,7 +170,6 @@
               <li class="menu-item">
                 <a
                   href="#"
-                  class="toggle-dp-menu"
                 >
                   <button
                     class="item-link relative   w-full flex gap-2 font-medium text-left px-4 py-3 rounded-md"
