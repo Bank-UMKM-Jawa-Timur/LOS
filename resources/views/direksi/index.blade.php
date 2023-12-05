@@ -258,8 +258,9 @@
     });
 
     run();
-    
+
     function run(){
+
       function yearChartPengajuan(disetujui, ditolak, diproses, keseluruhan) {
         var options = {
           series: [
@@ -390,22 +391,20 @@
       }
       // ====================================================================
       function chartProses(pincab, pbp, pbo, penyelia, staf, disetujui, ditolak, total) {
+
+        let positionY = total > 100 ? 30 : 30;
+
         Highcharts.chart("posisi-pengajuan", {
           chart: {
               type: "pie",
-              width: 500,
-              height: 400,
           },
           title: {
-            align: 'center',
-            verticalAlign: 'middle',
-            y: 50,
-            x: 0,
-              text: `
-                <span class="font-bold font-poppins text-5xl absolute">
-                        <p>${total}</p>
-                </span>
-              `,
+              verticalAlign: "middle",
+              align: "center",
+              y: positionY,
+              text: `<span class="font-bold font-poppins text-5xl flex">
+                          <p class="mt-20 left-14"><br /> <br />${total}<br><br></p>
+                  </span>`,
           },
           tooltip: {
               headerFormat: "",
@@ -482,23 +481,22 @@
       }
 
       function chartProsesSkemaKredit(pincab, pbp, pbo, penyelia, staf, total) { 
+
         $('#posisi-pengajuan').empty();
+
+        let positionY = total > 100 ? 30 : 30;
+        
         Highcharts.chart("posisi-pengajuan", {
           chart: {
               type: "pie",
-              width: 500,
-              height: 400,
           },
           title: {
-            align: 'center',
-            verticalAlign: 'middle',
-            y: 50,
-            x: 0,
-              text: `
-                <span class="font-bold font-poppins text-5xl absolute">
-                        <p>${total}</p>
-                </span>
-              `,
+            verticalAlign: "middle",
+            align: "center",
+            y: positionY,
+              text: `<span class="font-bold font-poppins text-5xl flex">
+                        <p class="mt-[80%]">${total}</p>
+                  </span>`,
           },
           tooltip: {
               headerFormat: "",
@@ -526,7 +524,7 @@
               },
           series: [
               {
-                  minPointSize: 20,
+                  minPointSize: 50,
                   innerSize: "70%",
                   zMin: 0,
                   name: "countries",
@@ -566,22 +564,20 @@
 
       function chartSkemaKredit(kusuma, pkpj, kkb, talangan, prokesra, total){
         $('#skema-kredit').empty();
+
+        let positionY = total > 100 ? 40 : 55;
+
         return Highcharts.chart("skema-kredit", {
           chart: {
               type: "pie",
-              width: 500,
-              height: 400,
           },
           title: {
-            align: 'center',
-            verticalAlign: 'middle',
-            y: 50,
-            x: -12,
-              text: `
-                <span class="font-bold font-poppins text-5xl absolute">
-                        <p>${total}</p>
-                </span>
-              `,
+            verticalAlign: "middle",
+            align: "center",
+            y: positionY,
+              text: `<span class="font-bold font-poppins text-5xl flex">
+                        <p class="mt-[80%]">${total}</p>
+                  </span>`,
           },
           tooltip: {
               headerFormat: "",
@@ -670,10 +666,10 @@
       }
 
       var staticToken = "gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFVaNj";
-      var base_url = "https://pincetar.bankumkm.id/";
-      var url_sum_cabang = `${base_url}api/v1/get-sum-cabang?tanggal_awal=${firstDate}-01&tanggal_akhir=${formattedLastDay}`;
+      var base_url = "https://pincetar.bankumkm.id";
+      var url_sum_cabang = `${base_url}/api/v1/get-sum-cabang?tanggal_awal=${formattedFirstDay}&tanggal_akhir=${formattedLastDay}`;
       var url_count_year_pengajuan = "api/v1/get-count-year-pengajuan";
-      var url_sum_skema = `${base_url}api/v1/get-sum-skema?tanggal_awal=${formattedFirstDay}&tanggal_akhir=${formattedLastDay}`;
+      var url_sum_skema = `${base_url}/api/v1/get-sum-skema?tanggal_awal=${formattedFirstDay}&tanggal_akhir=${formattedLastDay}`;
       var url_count_pengajuan = "api/v1/get-count-pengajuan?tAwal="+firstDateOfYear+"&tAkhir="+lastDateOfYear
 
       $('#btnFilter').on('click', function () { 
@@ -709,24 +705,24 @@
           url_sum_cabang = `api/v1/get-sum-cabang?tanggal_awal=${tAwal.value}&tanggal_akhir=${tAkhir.value}`;
           getDataPengajuan();
 
-            if(fSkemaKredit.value != "all_skema" && fCabang.value != "00"){
-              // Pilih skeme & pilih cabang
+            if(fSkemaKredit.value != "all_skema" && fCabang.value != ""){
+              // Pilih skema & pilih cabang
               url_sum_skema = `api/v1/get-sum-skema?tanggal_awal=${tAwal.value}&tanggal_akhir=${tAkhir.value}&skema=${fSkemaKredit.value}&cabang=${fCabang.value}`;
 
               $('#proses-skema-kredit').removeClass('hidden')
               $('#skema-kredit-layout').addClass('hidden')
               $('#ranking-cabang').addClass('hidden')
               $('#proses-layout').addClass('hidden')
-            }else if(fSkemaKredit.value != "all_skema" && fCabang.value == "00"){
-              // Pilih skeme & semua cabang
+            }else if(fSkemaKredit.value != "all_skema" && fCabang.value == ""){
+              // Pilih skema & semua cabang
               url_sum_skema = `api/v1/get-sum-skema?tanggal_awal=${tAwal.value}&tanggal_akhir=${tAkhir.value}&skema=${fSkemaKredit.value}`;
 
               $('#proses-skema-kredit').removeClass('hidden')
               $('#skema-kredit-layout').addClass('hidden')
               $('#ranking-cabang').removeClass('hidden')
               $('#proses-layout').addClass('hidden')
-            }else if(fSkemaKredit.value == "all_skema" && fCabang.value != "00"){
-              // semua skeme & pilih cabang
+            }else if(fSkemaKredit.value == "all_skema" && fCabang.value != ""){
+              // semua skema & pilih cabang
               url_sum_skema = `api/v1/get-sum-skema?tanggal_awal=${tAwal.value}&tanggal_akhir=${tAkhir.value}&cabang=${fCabang.value}`;
 
               $('#skema-kredit-layout').removeClass('hidden')
@@ -735,8 +731,8 @@
               $('#proses-layout').removeClass('hidden')
               // di proses
               getProses();
-            }else if(fSkemaKredit.value == "all_skema" && fCabang.value == "00"){
-              // semua skeme & semua cabang
+            }else if(fSkemaKredit.value == "all_skema" && fCabang.value == ""){
+              // semua skema & semua cabang
               url_sum_skema = `api/v1/get-sum-skema?tanggal_awal=${tAwal.value}&tanggal_akhir=${tAkhir.value}`;
               url_count_pengajuan = `api/v1/get-count-pengajuan?tAwal=${tAwal.value}&tAkhir=${tAkhir.value}`;
               $('#skema-kredit-layout').removeClass('hidden')
@@ -761,6 +757,15 @@
           $(".modal-layout").trigger('click'); 
         }
       })
+
+      getDataPengajuan()
+      getDataPengajuanYear();
+      pengajuanRanking();
+      getSkema();
+      getProses()
+      // getDataPengajuanYear();
+      // pengajuanRanking();
+      // getSkema();
       $('#proses-layout').addClass('hidden')
 
       // get data pengajuan 1 year
@@ -792,7 +797,7 @@
         var skemaParam = skema && skema != 'all_skema' ? `&skema=${skema}` : ''
         let fCabang = document.getElementById("cabang-filter");
         var cabangParam = fCabang.value ? `&cabang=${fCabang.value}` : ''
-        url_count_pengajuan = "api/v1/get-count-pengajuan?tAwal="+firstDateOfYear+"&tAkhir="+lastDateOfYear+skemaParam+cabangParam
+        url_count_pengajuan = "api/v1/get-count-pengajuan?tAwal="+firstDateOfYear+"&tAkhir="+lastDateOfYear+skemaParam+cabangParam;
 
         console.log(`url_count_pengajuan : ${url_count_pengajuan}`)
         $.ajax({
@@ -857,23 +862,23 @@
       }
 
       function pengajuanRanking() {
+        let tAwal = $('#tgl_awal').val() ? $('#tgl_awal').val() : formattedFirstDay;
+        let tAkhir = $('#tgl_akhir').val() ? $('#tgl_akhir').val() : formattedLastDay;
+        var url = `api/v1/get-ranking-cabang?tanggal_awal=${tAwal}&tanggal_akhir=${tAkhir}`
+        
         $.ajax({
           type: "GET",
-          url: url_sum_cabang,
+          url: url,
           dataType: "json",
           headers: {
             "Content-Type": "application/json",
             "token": staticToken
           },
           success: function (response) {
-            // console.log(response);
-            //$('#totalPengajuan').append(response.total_disetujui + response.total_ditolak + response.total_diproses);
-            //$('#disetujui').append(response.total_disetujui);
-            //$('#ditolak').append(response.total_ditolak);
-            //$('#diproses').append(response.total_diproses);
-
-            var dataTertinggi = response.data.tertinggi;
-            var dataTerendah = response.data.terendah;
+            var dataTertinggi = response.tertinggi;
+            var dataTerendah = response.terendah;
+            var totalCabang = response.total_cabang;
+            var numberTerendah = parseInt(totalCabang) - 5
             
             if(dataTertinggi.length === 0 && dataTerendah.length === 0) {
               $('.alert-empty').removeClass('hidden')
@@ -886,7 +891,8 @@
 
             // Data ranking terendah
             $.map(dataTerendah, function (item, index) {
-              rankingTerendah(index, item.cabang, item.kode_cabang, item.total);
+              rankingTerendah(numberTerendah, item.cabang, item.kode_cabang, item.total);
+              numberTerendah++;
             });
             }
           }
@@ -931,7 +937,7 @@
               var data = response.data;
 
               $.map(data, function (item, i) {
-                if(fSkemaKredit.value != "all_skema" && fCabang.value != "00"){
+                if(fSkemaKredit.value != "all_skema" && fCabang.value != ""){
                   prosesPincab += parseInt(item.posisi_pincab);
                   prosesPbp += parseInt(item.posisi_pbp);
                   prosesPbo += parseInt(item.posisi_pbo);
@@ -939,7 +945,7 @@
                   prosesStaf += parseInt(item.posisi_staf);
                   tDisetujui += parseInt(item.total_disetujui);
                   tDitolak += parseInt(item.total_ditolak);
-                }else if(fSkemaKredit.value != "all_skema" && fCabang.value == "00"){
+                }else if(fSkemaKredit.value != "all_skema" && fCabang.value == ""){
                   prosesPincab += parseInt(item.posisi_pincab);
                   prosesPbp += parseInt(item.posisi_pbp);
                   prosesPbo += parseInt(item.posisi_pbo);
@@ -947,13 +953,13 @@
                   prosesStaf += parseInt(item.posisi_staf);
                   tDisetujui += parseInt(item.total_disetujui);
                   tDitolak += parseInt(item.total_ditolak);
-                }else if(fSkemaKredit.value == "all_skema" && fCabang.value != "00"){
+                }else if(fSkemaKredit.value == "all_skema" && fCabang.value != ""){
                   totalKusuma += parseInt(item.Kusuma)
                   totalPkpj += parseInt(item.PKPJ)
                   totalKkb += parseInt(item.KKB)
                   totalTalangan += parseInt(item.Umroh)
                   totalProkesra += parseInt(item.Prokesra)
-                }else if(fSkemaKredit.value == "all_skema" && fCabang.value == "00"){
+                }else if(fSkemaKredit.value == "all_skema" && fCabang.value == ""){
                   totalKusuma += parseInt(item.Kusuma)
                   totalPkpj += parseInt(item.PKPJ)
                   totalKkb += parseInt(item.KKB)
@@ -970,7 +976,7 @@
 
               // jika memilih skema dan semua cabang 
               // mengambil ranking dari sum skema
-              if(fSkemaKredit.value != "all_skema" && fCabang.value == "00"){
+              if(fSkemaKredit.value != "all_skema" && fCabang.value == ""){
                 let rankTertinggi = response.ranking.tertinggi;
                 let rankTerendah = response.ranking.terendah;
                 $.map(rankTertinggi, function (item, index) {
@@ -992,16 +998,16 @@
                 // });
 
                 // Total pengajuan
-                {{--  $('#totalPengajuan').append(tDisetujui + tDitolak + totalProses);
+              $('#totalPengajuan').append(tDisetujui + tDitolak + totalProses);
                 $('#disetujui').append(tDisetujui);
                 $('#ditolak').append(tDitolak);
-                $('#diproses').append(totalProses);  --}}
-              }else if(fSkemaKredit.value != "all_skema" && fCabang.value != "00"){
+                $('#diproses').append(totalProses);   
+              }else if(fSkemaKredit.value != "all_skema" && fCabang.value != ""){
                 // Total pengajuan
-                {{--  $('#totalPengajuan').append(tDisetujui + tDitolak + totalProses);
+                $('#totalPengajuan').append(tDisetujui + tDitolak + totalProses);
                 $('#disetujui').append(tDisetujui);
                 $('#ditolak').append(tDitolak);
-                $('#diproses').append(totalProses);  --}}
+                $('#diproses').append(totalProses); 
               }
 
             }else{
@@ -1075,11 +1081,7 @@
         `);
       }
 
-      getDataPengajuan()
-      getDataPengajuanYear();
-      pengajuanRanking();
-      getSkema();
-      getProses()
+      
     }
 </script>
 
