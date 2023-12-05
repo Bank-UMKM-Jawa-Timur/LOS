@@ -80,3 +80,5 @@ Route::prefix('v1')->group(function(){
     });
 });
 
+// Pemprove API
+require __DIR__ . '/pemprov.php';
