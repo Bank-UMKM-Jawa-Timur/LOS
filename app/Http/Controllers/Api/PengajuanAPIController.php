@@ -566,38 +566,60 @@ class PengajuanAPIController extends Controller
                 ->whereIn('posisi', ['Pincab','PBP','PBO','Review Penyelia','Proses Input Data'])
                 ->whereNull('pengajuan.deleted_at')
                 ->count();
+
             // $dataTertinggi = DB::table('pengajuan')
-            //     // ->whereBetween('tanggal', [$request->get('tanggal_awal'), $request->get('tanggal_akhir') != null ? $request->get('tanggal_akhir') : now()])
-            //     ->selectRaw('IF((SELECT COUNT(pengajuan.id) FROM pengajuan WHERE pengajuan.tanggal BETWEEN ' . $request->get('tanggal_awal') . ' AND ' . $request->get('tanggal_akhir') . '), COUNT(pengajuan.id), 0) as total, cabang.kode_cabang, cabang.cabang')
-            //     ->rightJoin('cabang', 'cabang.id', 'pengajuan.id_cabang')
+            //     ->rightJoin('cabang', function ($join) use ($request) {
+            //         $join->on('cabang.id', '=', 'pengajuan.id_cabang')
+            //         ->whereBetween('pengajuan.tanggal', [$request->tanggal_awal, $request->tanggal_akhir]);
+            //     })
+            //     ->selectRaw('IFNULL(COUNT(pengajuan.id), 0) AS total, cabang.kode_cabang, cabang.cabang')
             //     ->where('cabang.kode_cabang', '!=', '000')
-            //     ->groupBy('cabang.kode_cabang');
-            $dataTertinggi = DB::table('pengajuan')
-                ->rightJoin('cabang', function ($join) use ($request) {
+            //     ->where('pengajuan.posisi', 'Selesai')
+            //     ->whereNull('pengajuan.deleted_at')
+            //     ->groupBy('cabang.kode_cabang', 'cabang.cabang')
+            //     ->orderByRaw('total DESC')
+            //     ->limit(5)
+            //     ->get();
+
+            $dataTertinggi = DB::table('cabang')
+                ->leftJoin('pengajuan', function ($join) use ($request) {
                     $join->on('cabang.id', '=', 'pengajuan.id_cabang')
-                    ->whereBetween('pengajuan.tanggal', [$request->tanggal_awal, $request->tanggal_akhir]);
+                        ->whereBetween('pengajuan.tanggal', [$request->tanggal_awal, $request->tanggal_akhir]);
                 })
                 ->selectRaw('IFNULL(COUNT(pengajuan.id), 0) AS total, cabang.kode_cabang, cabang.cabang')
                 ->where('cabang.kode_cabang', '!=', '000')
-                ->where('pengajuan.posisi', 'Selesai')
-                ->whereNull('pengajuan.deleted_at')
                 ->groupBy('cabang.kode_cabang', 'cabang.cabang')
-                ->orderByRaw('total DESC')
+                ->orderByRaw('total DESC, cabang.kode_cabang ASC')
                 ->limit(5)
                 ->get();
-            $dataTerendah = DB::table('pengajuan')
-                ->rightJoin('cabang', function ($join) use ($request) {
-                    $join->on('cabang.id', '=', 'pengajuan.id_cabang')
-                    ->whereBetween('pengajuan.tanggal', [$request->tanggal_awal, $request->tanggal_akhir]);
-                })
-                ->selectRaw('IFNULL(COUNT(pengajuan.id), 0) AS total, cabang.kode_cabang, cabang.cabang')
-                ->where('cabang.kode_cabang', '!=', '000')
-                ->where('pengajuan.posisi', 'Selesai')
-                ->whereNull('pengajuan.deleted_at')
-                ->groupBy('cabang.kode_cabang', 'cabang.cabang')
-                ->orderByRaw('total asc')
-                ->limit(5)
-                ->get();
+
+            // $dataTerendah = DB::table('pengajuan')
+            //     ->rightJoin('cabang', function ($join) use ($request) {
+            //         $join->on('cabang.id', '=', 'pengajuan.id_cabang')
+            //         ->whereBetween('pengajuan.tanggal', [$request->tanggal_awal, $request->tanggal_akhir]);
+            //     })
+            //     ->selectRaw('IFNULL(COUNT(pengajuan.id), 0) AS total, cabang.kode_cabang, cabang.cabang')
+            //     ->where('cabang.kode_cabang', '!=', '000')
+            //     // ->where('pengajuan.posisi', 'Selesai')
+            //     ->whereNull('pengajuan.deleted_at')
+            //     ->groupBy('cabang.kode_cabang', 'cabang.cabang')
+            //     ->orderByRaw('total asc')
+            //     ->limit(5)
+            //     ->get();
+                $dataTerendah = DB::table('cabang')
+                    ->leftJoin('pengajuan', function ($join) use ($request) {
+                        $join->on('cabang.id', '=', 'pengajuan.id_cabang')
+                            ->whereBetween('pengajuan.tanggal', [$request->tanggal_awal, $request->tanggal_akhir]);
+                    })
+                    ->selectRaw('IFNULL(COUNT(pengajuan.id), 0) AS total, cabang.kode_cabang, cabang.cabang')
+                    ->where('cabang.kode_cabang', '!=', '000')
+                    // ->where('pengajuan.posisi', 'Selesai')
+                    ->whereNull('pengajuan.deleted_at')
+                    ->groupBy('cabang.kode_cabang', 'cabang.cabang')
+                    ->orderByRaw('total ASC, cabang.kode_cabang ASC') // Ubah ke ASC untuk mengambil data terendah
+                    ->limit(5)
+                    ->get();
+
             $message = 'berhasil menampilkan data pengajuan berdasarkan tanggal.';
         } else {
             $total_disetujui = DB::table('pengajuan')
@@ -1452,31 +1474,28 @@ class PengajuanAPIController extends Controller
         $total_cabang = DB::table('cabang')->where('kode_cabang', '!=', '000')->count();
 
         $dataTertinggi = DB::table('cabang')
-                ->leftJoin('pengajuan', function ($join) use ($tAwal, $tAkhir) {
-                    $join->on('cabang.id', 'pengajuan.id_cabang')
-                    ->whereBetween('pengajuan.tanggal', [$tAwal, $tAkhir])
-                    ->where('pengajuan.posisi', 'Selesai')
-                    ->whereNull('pengajuan.deleted_at');
-                })
-                ->selectRaw('IFNULL(COUNT(pengajuan.id), 0) AS total, cabang.kode_cabang, cabang.cabang')
-                ->where('cabang.kode_cabang', '!=', '000')
-                ->groupBy('cabang.kode_cabang', 'cabang.cabang')
-                ->orderByRaw('total DESC')
-                ->orderBy('cabang.kode_cabang')
-                ->limit(5)
-                ->get();
-        $dataTerendah = DB::table('cabang')
-            ->leftJoin('pengajuan', function ($join) use ($tAwal, $tAkhir) {
-                $join->on('cabang.id', 'pengajuan.id_cabang')
-                ->whereBetween('pengajuan.tanggal', [$tAwal, $tAkhir])
-                ->where('pengajuan.posisi', 'Selesai')
-                ->whereNull('pengajuan.deleted_at');
+            ->leftJoin('pengajuan', function ($join) use ($request) {
+                $join->on('cabang.id', '=', 'pengajuan.id_cabang')
+                    ->whereBetween('pengajuan.tanggal', [$request->tanggal_awal, $request->tanggal_akhir]);
             })
             ->selectRaw('IFNULL(COUNT(pengajuan.id), 0) AS total, cabang.kode_cabang, cabang.cabang')
             ->where('cabang.kode_cabang', '!=', '000')
             ->groupBy('cabang.kode_cabang', 'cabang.cabang')
-            ->orderBy('total')
-            ->orderBy('cabang.kode_cabang', 'DESC')
+            ->orderByRaw('total DESC, cabang.kode_cabang ASC')
+            ->limit(5)
+            ->get();
+            
+        $dataTerendah = DB::table('cabang')
+            ->leftJoin('pengajuan', function ($join) use ($request) {
+                $join->on('cabang.id', '=', 'pengajuan.id_cabang')
+                    ->whereBetween('pengajuan.tanggal', [$request->tanggal_awal, $request->tanggal_akhir]);
+            })
+            ->selectRaw('IFNULL(COUNT(pengajuan.id), 0) AS total, cabang.kode_cabang, cabang.cabang')
+            ->where('cabang.kode_cabang', '!=', '000')
+            // ->where('pengajuan.posisi', 'Selesai')
+            ->whereNull('pengajuan.deleted_at')
+            ->groupBy('cabang.kode_cabang', 'cabang.cabang')
+            ->orderByRaw('total ASC, cabang.kode_cabang ASC') // Ubah ke ASC untuk mengambil data terendah
             ->limit(5)
             ->get();
 
