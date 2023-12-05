@@ -667,9 +667,9 @@
 
       var staticToken = "gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFVaNj";
       var base_url = "https://pincetar.bankumkm.id";
-      var url_sum_cabang = `${base_url}/api/v1/get-sum-cabang?tanggal_awal=${formattedFirstDay}&tanggal_akhir=${formattedLastDay}`;
-      var url_count_year_pengajuan = "api/v1/get-count-year-pengajuan";
-      var url_sum_skema = `${base_url}/api/v1/get-sum-skema?tanggal_awal=${formattedFirstDay}&tanggal_akhir=${formattedLastDay}`;
+      var url_sum_cabang = `api/v1/get-sum-cabang?tanggal_awal=${firstDate}-01&tanggal_akhir=${formattedLastDay}`;
+      var url_count_year_pengajuan = `api/v1/get-count-year-pengajuan`;
+      var url_sum_skema = `api/v1/get-sum-skema?tanggal_awal=${formattedFirstDay}&tanggal_akhir=${formattedLastDay}`;
       var url_count_pengajuan = "api/v1/get-count-pengajuan?tAwal="+firstDateOfYear+"&tAkhir="+lastDateOfYear
 
       $('#btnFilter').on('click', function () { 
@@ -702,11 +702,11 @@
             getProses()
 
         if (tAwal.value != "" && tAkhir.value != "") {
-          url_sum_cabang = `api/v1/get-sum-cabang?tanggal_awal=${tAwal.value}&tanggal_akhir=${tAkhir.value}`;
-          getDataPengajuan();
+            url_sum_cabang = `api/v1/get-sum-cabang?tanggal_awal=${tAwal.value}&tanggal_akhir=${tAkhir.value}`;
+            getDataPengajuan();
 
             if(fSkemaKredit.value != "all_skema" && fCabang.value != ""){
-              // Pilih skema & pilih cabang
+              // Pilih skeme & pilih cabang
               url_sum_skema = `api/v1/get-sum-skema?tanggal_awal=${tAwal.value}&tanggal_akhir=${tAkhir.value}&skema=${fSkemaKredit.value}&cabang=${fCabang.value}`;
 
               $('#proses-skema-kredit').removeClass('hidden')
@@ -714,7 +714,7 @@
               $('#ranking-cabang').addClass('hidden')
               $('#proses-layout').addClass('hidden')
             }else if(fSkemaKredit.value != "all_skema" && fCabang.value == ""){
-              // Pilih skema & semua cabang
+              // Pilih skeme & semua cabang
               url_sum_skema = `api/v1/get-sum-skema?tanggal_awal=${tAwal.value}&tanggal_akhir=${tAkhir.value}&skema=${fSkemaKredit.value}`;
 
               $('#proses-skema-kredit').removeClass('hidden')
@@ -722,7 +722,7 @@
               $('#ranking-cabang').removeClass('hidden')
               $('#proses-layout').addClass('hidden')
             }else if(fSkemaKredit.value == "all_skema" && fCabang.value != ""){
-              // semua skema & pilih cabang
+              // semua skeme & pilih cabang
               url_sum_skema = `api/v1/get-sum-skema?tanggal_awal=${tAwal.value}&tanggal_akhir=${tAkhir.value}&cabang=${fCabang.value}`;
 
               $('#skema-kredit-layout').removeClass('hidden')
@@ -732,7 +732,7 @@
               // di proses
               getProses();
             }else if(fSkemaKredit.value == "all_skema" && fCabang.value == ""){
-              // semua skema & semua cabang
+              // semua skeme & semua cabang
               url_sum_skema = `api/v1/get-sum-skema?tanggal_awal=${tAwal.value}&tanggal_akhir=${tAkhir.value}`;
               url_count_pengajuan = `api/v1/get-count-pengajuan?tAwal=${tAwal.value}&tAkhir=${tAkhir.value}`;
               $('#skema-kredit-layout').removeClass('hidden')
@@ -1001,7 +1001,7 @@
               $('#totalPengajuan').append(tDisetujui + tDitolak + totalProses);
                 $('#disetujui').append(tDisetujui);
                 $('#ditolak').append(tDitolak);
-                $('#diproses').append(totalProses);   
+                $('#diproses').append(totalProses);  --}}
               }else if(fSkemaKredit.value != "all_skema" && fCabang.value != ""){
                 // Total pengajuan
                 $('#totalPengajuan').append(tDisetujui + tDitolak + totalProses);

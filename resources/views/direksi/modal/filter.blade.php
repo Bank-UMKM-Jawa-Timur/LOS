@@ -72,8 +72,7 @@ id="modal-filter"
       </div>
       <div class="modal-info">
         <p>
-          isi form berikut untuk memfilter sebagian data untuk ditampilkan
-          tiap perbulan, pertahun atau perhari di setiap cabang.
+          Lengkapi form di atas ini untuk melakukan penyaringan data.
         </p>
       </div>
     </form>
