@@ -809,10 +809,10 @@
             "token": staticToken
           },
           success: function (response) {
-            $('#totalPengajuan').append(parseInt(response.total_disetujui) + parseInt(response.total_ditolak) + parseInt(response.total_diproses));
-            $('#disetujui').append(response.total_disetujui);
-            $('#ditolak').append(response.total_ditolak);
-            $('#diproses').append(response.total_diproses);
+            $('#totalPengajuan').html(parseInt(response.total_disetujui) + parseInt(response.total_ditolak) + parseInt(response.total_diproses));
+            $('#disetujui').html(response.total_disetujui);
+            $('#ditolak').html(response.total_ditolak);
+            $('#diproses').html(response.total_diproses);
           }
         });
       }
@@ -998,16 +998,16 @@
                 // });
 
                 // Total pengajuan
-              $('#totalPengajuan').append(tDisetujui + tDitolak + totalProses);
-                $('#disetujui').append(tDisetujui);
-                $('#ditolak').append(tDitolak);
-                $('#diproses').append(totalProses); 
+              $('#totalPengajuan').html(tDisetujui + tDitolak + totalProses);
+                $('#disetujui').html(tDisetujui);
+                $('#ditolak').html(tDitolak);
+                $('#diproses').html(totalProses); 
               }else if(fSkemaKredit.value != "all_skema" && fCabang.value != ""){
                 // Total pengajuan
-                $('#totalPengajuan').append(tDisetujui + tDitolak + totalProses);
-                $('#disetujui').append(tDisetujui);
-                $('#ditolak').append(tDitolak);
-                $('#diproses').append(totalProses); 
+                $('#totalPengajuan').html(tDisetujui + tDitolak + totalProses);
+                $('#disetujui').html(tDisetujui);
+                $('#ditolak').html(tDitolak);
+                $('#diproses').html(totalProses); 
               }
 
             }else{
