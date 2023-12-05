@@ -1001,7 +1001,7 @@
               $('#totalPengajuan').append(tDisetujui + tDitolak + totalProses);
                 $('#disetujui').append(tDisetujui);
                 $('#ditolak').append(tDitolak);
-                $('#diproses').append(totalProses);  --}}
+                $('#diproses').append(totalProses); 
               }else if(fSkemaKredit.value != "all_skema" && fCabang.value != ""){
                 // Total pengajuan
                 $('#totalPengajuan').append(tDisetujui + tDitolak + totalProses);
