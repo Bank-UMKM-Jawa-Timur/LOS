@@ -703,6 +703,16 @@ video {
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(252 165 165 / var(--tw-ring-opacity));
 }
+    .total-chart {
+  position: absolute;
+  left: %;
+  right: %;
+  top: 11rem;
+  z-index: 40;
+  font-size: 6rem;
+  line-height: 1;
+  font-weight: 700;
+}
     select {
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(147 197 253 / var(--tw-ring-opacity));
@@ -1037,9 +1047,6 @@ video {
 .left-0 {
   left: 0px;
 }
-.left-14 {
-  left: 3.5rem;
-}
 .right-0 {
   right: 0px;
 }
@@ -1048,6 +1055,9 @@ video {
 }
 .top-2 {
   top: 0.5rem;
+}
+.left-14 {
+  left: 3.5rem;
 }
 .z-30 {
   z-index: 30;
@@ -1120,9 +1130,6 @@ video {
 .mt-2 {
   margin-top: 0.5rem;
 }
-.mt-20 {
-  margin-top: 5rem;
-}
 .mt-3 {
   margin-top: 0.75rem;
 }
@@ -1138,11 +1145,11 @@ video {
 .mt-\[2px\] {
   margin-top: 2px;
 }
-.mt-\[50\%\] {
-  margin-top: 50%;
-}
 .mt-\[8px\] {
   margin-top: 8px;
+}
+.mt-20 {
+  margin-top: 5rem;
 }
 .mt-\[80\%\] {
   margin-top: 80%;
@@ -1562,14 +1569,6 @@ video {
   font-size: 1.5rem;
   line-height: 2rem;
 }
-.text-5xl {
-  font-size: 3rem;
-  line-height: 1;
-}
-.text-6xl {
-  font-size: 3.75rem;
-  line-height: 1;
-}
 .text-base {
   font-size: 1rem;
   line-height: 1.5rem;
@@ -1585,6 +1584,10 @@ video {
 .text-xs {
   font-size: 0.75rem;
   line-height: 1rem;
+}
+.text-5xl {
+  font-size: 3rem;
+  line-height: 1;
 }
 .font-bold {
   font-weight: 700;

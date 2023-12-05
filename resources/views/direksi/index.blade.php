@@ -391,15 +391,17 @@
       }
       // ====================================================================
       function chartProses(pincab, pbp, pbo, penyelia, staf, disetujui, ditolak, total) {
+
+        let positionY = total > 100 ? 30 : 30;
+
         Highcharts.chart("posisi-pengajuan", {
           chart: {
               type: "pie",
-              width: 500,
-              height: 400,
           },
           title: {
               verticalAlign: "middle",
-              floating: true,
+              align: "center",
+              y: positionY,
               text: `<span class="font-bold font-poppins text-5xl flex">
                           <p class="mt-20 left-14"><br /> <br />${total}<br><br></p>
                   </span>`,
@@ -479,18 +481,19 @@
       }
 
       function chartProsesSkemaKredit(pincab, pbp, pbo, penyelia, staf, total) { 
+
         $('#posisi-pengajuan').empty();
+
+        let positionY = total > 100 ? 30 : 30;
+        
         Highcharts.chart("posisi-pengajuan", {
           chart: {
               type: "pie",
-              width: 500,
-              height: 400,
           },
           title: {
-            floating: true,
             verticalAlign: "middle",
-            y: 60,
-            x: -5,
+            align: "center",
+            y: positionY,
               text: `<span class="font-bold font-poppins text-5xl flex">
                         <p class="mt-[80%]">${total}</p>
                   </span>`,
@@ -561,23 +564,20 @@
 
       function chartSkemaKredit(kusuma, pkpj, kkb, talangan, prokesra, total){
         $('#skema-kredit').empty();
+
+        let positionY = total > 100 ? 40 : 55;
+
         return Highcharts.chart("skema-kredit", {
           chart: {
               type: "pie",
-              width: 500,
-              height: 400,
           },
           title: {
-            align: 'center',
-            verticalAlign: 'middle',
-            y: 60,
-            x: -5,
-              text: `
-                <span class="font-bold font-poppins text-5xl absolute">
+            verticalAlign: "middle",
+            align: "center",
+            y: positionY,
+              text: `<span class="font-bold font-poppins text-5xl flex">
                         <p class="mt-[80%]">${total}</p>
-                </span>
-              `
-              ,
+                  </span>`,
           },
           tooltip: {
               headerFormat: "",
@@ -797,7 +797,7 @@
         var skemaParam = skema && skema != 'all_skema' ? `&skema=${skema}` : ''
         let fCabang = document.getElementById("cabang-filter");
         var cabangParam = fCabang.value ? `&cabang=${fCabang.value}` : ''
-        url_count_pengajuan = "api/v1/get-count-pengajuan?tAwal="+firstDateOfYear+"&tAkhir="+lastDateOfYear+skemaParam+cabangParam
+        url_count_pengajuan = "api/v1/get-count-pengajuan?tAwal="+firstDateOfYear+"&tAkhir="+lastDateOfYear+skemaParam+cabangParam;
 
         console.log(`url_count_pengajuan : ${url_count_pengajuan}`)
         $.ajax({
@@ -809,10 +809,10 @@
             "token": staticToken
           },
           success: function (response) {
-            $('#totalPengajuan').append(parseInt(response.total_disetujui) + parseInt(response.total_ditolak) + parseInt(response.total_diproses));
-            $('#disetujui').append(response.total_disetujui);
-            $('#ditolak').append(response.total_ditolak);
-            $('#diproses').append(response.total_diproses);
+            $('#totalPengajuan').html(parseInt(response.total_disetujui) + parseInt(response.total_ditolak) + parseInt(response.total_diproses));
+            $('#disetujui').html(response.total_disetujui);
+            $('#ditolak').html(response.total_ditolak);
+            $('#diproses').html(response.total_diproses);
           }
         });
       }
@@ -998,16 +998,16 @@
                 // });
 
                 // Total pengajuan
-                {{--  $('#totalPengajuan').append(tDisetujui + tDitolak + totalProses);
-                $('#disetujui').append(tDisetujui);
-                $('#ditolak').append(tDitolak);
-                $('#diproses').append(totalProses);  --}}
+              $('#totalPengajuan').html(tDisetujui + tDitolak + totalProses);
+                $('#disetujui').html(tDisetujui);
+                $('#ditolak').html(tDitolak);
+                $('#diproses').html(totalProses); 
               }else if(fSkemaKredit.value != "all_skema" && fCabang.value != ""){
                 // Total pengajuan
-                {{--  $('#totalPengajuan').append(tDisetujui + tDitolak + totalProses);
-                $('#disetujui').append(tDisetujui);
-                $('#ditolak').append(tDitolak);
-                $('#diproses').append(totalProses);  --}}
+                $('#totalPengajuan').html(tDisetujui + tDitolak + totalProses);
+                $('#disetujui').html(tDisetujui);
+                $('#ditolak').html(tDitolak);
+                $('#diproses').html(totalProses); 
               }
 
             }else{

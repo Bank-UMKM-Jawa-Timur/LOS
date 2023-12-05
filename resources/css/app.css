@@ -146,6 +146,9 @@
     .form-check {
         @apply w-5 h-5 mt-[0px] mr-1 focus:ring ring-red-300 active:ring-red-300 checked:ring-red-300  accent-theme-primary;
     }
+    .total-chart {
+        @apply absolute left-[%] z-40 right-[%] top-44 text-8xl font-bold;
+    }
     select {
         @apply focus:ring ring-blue-300;
     }
