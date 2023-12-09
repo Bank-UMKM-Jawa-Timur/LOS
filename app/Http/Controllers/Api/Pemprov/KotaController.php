@@ -3,21 +3,22 @@
 namespace App\Http\Controllers\Api\Pemprov;
 
 use App\Http\Controllers\Controller;
-use App\Models\Cabang;
-use Doctrine\DBAL\Query\QueryException;
+use App\Models\Kabupaten;
 use Exception;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
-class CabangController extends Controller
+class KotaController extends Controller
 {
-    public function listCabang(){
+    public function listKota(){
         try{
-            $data = Cabang::select('id', 'cabang')
+            $data = Kabupaten::select('id', 'kabupaten')
                 ->orderBy('id', 'asc')
                 ->get();
+
             return response()->json([
                 'data' => $data
-            ], 200);
+            ]);
         } catch(Exception $e){
             return response()->json([
                 'message' => $e->getMessage()
@@ -29,10 +30,10 @@ class CabangController extends Controller
         }
     }
 
-    public function getCabangById(Request $request){
+    public function getKotaById(Request $request){
         try{
             $id = $request->get('id');
-            $data = Cabang::select('id', 'cabang')
+            $data = Kabupaten::select('id', 'kabupaten')
                 ->where('id', $id)
                 ->orderBy('id', 'asc')
                 ->get();
