@@ -14,6 +14,8 @@ use \App\Http\Controllers\TipeController;
 use \App\Http\Controllers\CetakSuratController;
 use App\Http\Controllers\DashboardDireksiController;
 use \App\Http\Controllers\LogPengajuanController;
+use \App\Http\Controllers\Dagulir\DagulirController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -36,14 +38,19 @@ Route::post('tes-skor', [PengajuanKreditController::class, 'countScore'])->name(
 //     return view('dashboard');
 // })->middleware(['auth'])->name('dashboard');
 
-
-
-
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/print-data-nominatif', [DashboardController::class, 'cetak'])->name('print_data_nominatif');
 
     Route::get('/direksi', [DashboardDireksiController::class, 'index'])->name('dashboard_direksi');
+
+
+    Route::prefix('dagulir')->group(function () {
+        Route::get('/', [DagulirController::class, 'index'])->name('dagulir.index');
+        Route::get('/review', function(){
+            return view('dagulir.review');   
+        })->name('dagulir.review');
+    });
 
     // check Pincab
     Route::post('pengajuan-kredit/pincabStatusDetailPost', [PengajuanKreditController::class, "checkPincabStatusDetailPost"])->name('pengajuan.check.pincab.status.detail.post');

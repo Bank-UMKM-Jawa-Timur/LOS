@@ -165,6 +165,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
+        Irsyadulibad\LaravelActivehelper\ActiveHelperServiceProvider::class,
 
         /*
          * Package Service Providers...
