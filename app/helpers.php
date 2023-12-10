@@ -2,6 +2,7 @@
 
 use App\Models\JawabanTemp;
 use App\Models\JawabanTempModel;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 if(!function_exists('temporary')) {
@@ -33,5 +34,26 @@ if(!function_exists('temporary_usulan')){
             ->orderBy('id', 'desc');
 
         return $temp->first();
+    }
+}
+
+if (!function_exists('sipde_token')) {
+    function sipde_token() {
+        $filePath = storage_path('app/response.json');
+        $json = json_decode(file_get_contents($filePath), true);
+        $date = Carbon::now()->toDateTimeString();
+        if ($date >= $json['exp']) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Token expired silahkan login kembali.',
+                    'token' => null,
+                ]);
+            }else{
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Berhasil mendapatkan token.',
+                    'token' => $json['token'],
+                ]);
+        }
     }
 }

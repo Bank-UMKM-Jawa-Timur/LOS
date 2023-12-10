@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -40,15 +42,15 @@ class AuthenticatedSessionController extends Controller
                 if (\Hash::check($request->password, $user->password)) {
                     $request->authenticate();
                     // Get Response API
-                    $response = Http::post('https://sipde.appdev.web.id/api/login', [
+                    $response = Http::post(env('SIPDE_HOST'), [
                         // 'username' => $request->get('email'),
                         // 'password' => $request->get('password'),
-                        'username' => 'bankpusat_bpr',
-                        'password' => 'admin123',
+                        'username' => env('SIPDE_USERNAME'),
+                        'password' => env('SIPDE_PASSWORD'),
                     ])->json();
-
-                    $filePath = storage_path('app/response.txt');
+                    $filePath = storage_path('app/response.json');
                     file_put_contents($filePath, json_encode($response));
+                    $filePath = storage_path('app/response.json');
                     // Get Response API
 
                     if (DB::table('sessions')->where('user_id', auth()->user()->id)->count() > 0) {
