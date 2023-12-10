@@ -50,6 +50,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/review', function(){
             return view('dagulir.review');   
         })->name('dagulir.review');
+        Route::get('/create', function(){
+            return view('dagulir.form.create');   
+        })->name('dagulir.form.create');
     });
 
     // check Pincab

@@ -218,6 +218,36 @@
     .highcharts text {
         @apply ml-[2rem];
     }
+    .tab-button.active-tab {
+        @apply bg-white text-gray-600;
+    }
+    .tab-button.non-active-tab {
+        @apply bg-gray-100 text-gray-600;
+    }
+    .tab-button {
+        @apply bg-gray-100 text-gray-600;
+    }
+    .btn {
+        @apply px-5 py-2 rounded-md text-slate-700;
+    }
+    .btn-tab {
+        @apply bg-white border text-slate-700;
+    }
+    .btn-tab.active-tab {
+        @apply bg-theme-primary border-theme-primary text-white border;
+    }
+    .btn-tab.disabled-tab {
+        @apply bg-white border text-slate-700;
+    }
+    .btn-owl {
+        @apply bg-white border rounded-full p-2 w-12 h-12;
+    }
+    .is-tab-content {
+        @apply hidden;
+    }
+    .is-tab-content.active {
+        @apply block;
+    }
 }
 
 @keyframes scale-in {

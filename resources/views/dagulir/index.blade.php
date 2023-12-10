@@ -87,7 +87,7 @@
             <div class="input-search flex gap-2">
               <input
                 type="search"
-                placeholder="Cari nama nasabah... "
+                placeholder="Cari nama usaha... "
                 class="w-full px-8 outline-none text-sm p-3 border"
               />
               <button
@@ -133,22 +133,24 @@
                   </span>
                 </td>
                 <td>
+                  <a href="{{ route('dagulir.review') }}">
                     <button class="btn  text-white bg-theme-secondary border-theme-secondary border">
-                    <div class="flex gap-3">
+                      <div class="flex gap-3">
                         <span>
-                            <iconify-icon icon="uil:edit" class="mt-[3px]"></iconify-icon>
+                          <iconify-icon icon="uil:edit" class="mt-[3px]"></iconify-icon>
                         </span>
                         <p class="text-sm">Review</p>
-                    </div>
+                      </div>
                     </button>
+                  </a>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
-        <div class="footer-table p-4">
+        <div class="footer-table p-2">
           <div class="flex justify-between">
-            <div class="mt-3 mr-5 text-sm font-medium text-gray-500">
+            <div class="mt-5 ml-5 text-sm font-medium text-gray-500">
               <p>Showing 1 - 10 from 2000 entries</p>
             </div>
             <div class="pagination">

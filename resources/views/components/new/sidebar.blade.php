@@ -26,7 +26,7 @@
                     </a>
                 </li>
                 <li class="menu-item">
-                    <a href="analisa-kredit.html">
+                    <a href="{{ url('pengajuan-kredit') }}">
                         <button class="item-link @active('pengajuan-kredit,pengajuan-kredit.*', 'active-menu')  w-full flex gap-2 font-medium text-left px-4 py-3 rounded-md">
                             <span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -52,6 +52,7 @@
                         </button>
                     </a>
                 </li>
+                @if (auth()->user()->role == 'Administrator')
                 <li class="menu-item">
                     <a href="#" class="toggle-dp-menu">
                         <button class="item-link relative w-full flex gap-2 font-medium text-left px-4 py-3 rounded-md">
@@ -130,6 +131,7 @@
                         </li>
                     </ul>
                 </div>
+                @endif
             </ul>
         </div>
     </div>
