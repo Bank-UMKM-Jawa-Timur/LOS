@@ -1,4 +1,4 @@
-@extends('layouts.template')
+@extends('layouts.tailwind-template')
 @section('modal')
 @endsection
 @section('content')
