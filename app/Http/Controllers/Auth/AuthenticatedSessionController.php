@@ -9,6 +9,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -30,14 +31,26 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request)
     {
-        $user = User::select('email','nip', 'password', 'role')
+        $user = User::select('email','nip', 'password', 'role','user_dagulir')
                     ->where('email', $request->email)
                     ->orWhere('nip', $request->email)
                     ->first();
         if ($user) {
-            if ($user->role == 'Administrator' || $user->role == 'Direksi') {
+            if ($user->role == 'Administrator' || $user->role == 'Direksi' || $user->user_dagulir == 1) {
                 if (\Hash::check($request->password, $user->password)) {
                     $request->authenticate();
+                    // Get Response API
+                    $response = Http::post('https://sipde.appdev.web.id/api/login', [
+                        // 'username' => $request->get('email'),
+                        // 'password' => $request->get('password'),
+                        'username' => 'bankpusat_bpr',
+                        'password' => 'admin123',
+                    ])->json();
+
+                    $filePath = storage_path('app/response.txt');
+                    file_put_contents($filePath, json_encode($response));
+                    // Get Response API
+
                     if (DB::table('sessions')->where('user_id', auth()->user()->id)->count() > 0) {
                         Auth::guard('web')->logout();
 

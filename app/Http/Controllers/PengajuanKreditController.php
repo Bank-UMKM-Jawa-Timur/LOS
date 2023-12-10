@@ -1197,6 +1197,7 @@ class PengajuanKreditController extends Controller
         $find = array('Rp ', '.', ',');
         $request->validate([
             'name' => 'required',
+            'no_telp' => 'required',
             'alamat_rumah' => 'required',
             'alamat_usaha' => 'required',
             'no_ktp' => 'required',
@@ -1243,6 +1244,7 @@ class PengajuanKreditController extends Controller
             $addData->alamat_rumah = $request->alamat_rumah;
             $addData->alamat_usaha = $request->alamat_usaha;
             $addData->no_ktp = $request->no_ktp;
+            $addData->no_telp = $request->get('no_telp');
             $addData->tempat_lahir = $request->tempat_lahir;
             $addData->tanggal_lahir = $this->formatDate($request->tanggal_lahir);
             $addData->status = $request->status;
@@ -1599,6 +1601,7 @@ class PengajuanKreditController extends Controller
             'calon_nasabah.alamat_rumah',
             'calon_nasabah.alamat_usaha',
             'calon_nasabah.no_ktp',
+            'calon_nasabah.no_telp',
             'calon_nasabah.tempat_lahir',
             'calon_nasabah.tanggal_lahir',
             'calon_nasabah.status',
@@ -1684,6 +1687,7 @@ class PengajuanKreditController extends Controller
             'alamat_rumah' => 'required',
             'alamat_usaha' => 'required',
             'no_ktp' => 'required|max:16',
+            'no_telp' => 'required|max:13',
             'kabupaten' => 'required|not_in:0',
             'kec' => 'required|not_in:0',
             'desa' => 'required|not_in:0',
@@ -1717,6 +1721,7 @@ class PengajuanKreditController extends Controller
             $updateData->alamat_rumah = $request->alamat_rumah;
             $updateData->alamat_usaha = $request->alamat_usaha;
             $updateData->no_ktp = $request->no_ktp;
+            $updateData->no_telp = $request->no_telp;
             $updateData->tempat_lahir = $request->tempat_lahir;
             $updateData->tanggal_lahir = $this->formatDate($request->tanggal_lahir);
             $updateData->status = $request->status;
@@ -3850,7 +3855,7 @@ class PengajuanKreditController extends Controller
         if ($data) {
             $data->restore();
             event(new EventMonitoring('restore pengajuan'));
-            
+
             return redirect()->route('pengajuan-kredit.index')->withStatus('Data '.$data->nama.' berhasil direstore.');
         } else {
             return redirect()->route('pengajuan-kredit.index')->withErrors('Data dengan ID tersebut tidak ditemukan.');
@@ -3868,7 +3873,7 @@ class PengajuanKreditController extends Controller
             if($dataPengajuan->posisi == 'Pincab'){
                 $dari = 'Pincab';
 
-                //If data pengajuan di pincab 
+                //If data pengajuan di pincab
                 if($dataPengajuan->id_pbp != null){
                     // If cabang ada pbp
                     $dataPengajuan->posisi = 'PBP';
@@ -3898,7 +3903,7 @@ class PengajuanKreditController extends Controller
             } else if($dataPengajuan->posisi == 'PBO'){
                 $dari = 'PBO';
                 $ke = 'Review Penyelia';
-                
+
                 // If data pengajuan di PBO
                 $dataPengajuan->posisi = 'Review Penyelia';
             } else{
