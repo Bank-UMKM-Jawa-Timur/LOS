@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c6debe6b0aecb3c230bcc5d8687248ce",
+    "content-hash": "5f6ef8bea3ff7efdeee8c07cc22a604d",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1663,6 +1663,57 @@
                 }
             ],
             "time": "2022-05-21T17:30:32+00:00"
+        },
+        {
+            "name": "irsyadulibad/laravel-activehelper",
+            "version": "0.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/irsyadulibad/laravel-activehelper.git",
+                "reference": "a61ad00bdc2b60b2785222025625fdff6fd621ea"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/irsyadulibad/laravel-activehelper/zipball/a61ad00bdc2b60b2785222025625fdff6fd621ea",
+                "reference": "a61ad00bdc2b60b2785222025625fdff6fd621ea",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": ">=8"
+            },
+            "type": "project",
+            "extra": {
+                "laravel": {
+                    "providers": "Irsyadulibad\\LaravelActivehelper\\ActiveHelperServiceProvider"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Irsyadulibad\\LaravelActivehelper\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "irsyadulibad",
+                    "email": "ahmadirsyadulibad7@gmail.com"
+                }
+            ],
+            "description": "Active State Helper for Laravel Blade",
+            "keywords": [
+                "active",
+                "active state",
+                "blade",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/irsyadulibad/laravel-activehelper/issues",
+                "source": "https://github.com/irsyadulibad/laravel-activehelper/tree/0.0.1"
+            },
+            "time": "2023-01-31T05:24:30+00:00"
         },
         {
             "name": "laravel/framework",
