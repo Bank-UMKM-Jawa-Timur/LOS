@@ -8,11 +8,9 @@ use App\Http\Controllers\Api\Pemprov\PengajuanController;
 
 Route::prefix('pemprov')->group(function() {
     Route::post('/store', [PengajuanController::class, 'store']);
-    Route::get('/list-cabang', [CabangController::class, 'listCabang']);
-    Route::get('/get-cabang-by-id', [CabangController::class, 'getCabangById']);
-    Route::get('/list-kotakab', [KotaController::class, 'listKota']);
-    Route::get('/get-kotakab-by-id', [KotaController::class, 'getKotaById']);
-    Route::get('/get-kecamatan', [KecamatanController::class, 'getKecamatan']);
-    Route::get('/get-desa', [DesaController::class, 'getDesa']);
+    Route::post('/list-cabang', [CabangController::class, 'listCabang']);
+    Route::post('/list-kotakab', [KotaController::class, 'listKota']);
+    Route::post('/list-kecamatan', [KecamatanController::class, 'listKecamatan']);
+    Route::post('/list-desa', [DesaController::class, 'listDesa']);
 });
 

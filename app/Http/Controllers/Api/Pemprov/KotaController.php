@@ -7,48 +7,36 @@ use App\Models\Kabupaten;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class KotaController extends Controller
 {
     public function listKota(){
+        $message = '';
+        $status = '';
+        $req_status = Response::HTTP_OK;
+        $data = [];
         try{
+            $message = 'Berhasil menampilkan list kabupaten';
+            $status = 'berhasil';
+
             $data = Kabupaten::select('id', 'kabupaten')
                 ->orderBy('id', 'asc')
                 ->get();
-
-            return response()->json([
-                'data' => $data
-            ]);
         } catch(Exception $e){
-            return response()->json([
-                'message' => $e->getMessage()
-            ], 500);
+            $message = $e->getMessage();
+            $status = 'gagal';
+            $req_status = Response::HTTP_BAD_REQUEST;
         } catch(QueryException $e){
+            $message = $e->getMessage();
+            $status = 'gagal';
+            $req_status = Response::HTTP_BAD_REQUEST;
+        } finally{
             return response()->json([
-                'message' => $e->getMessage()
-            ], 500);
-        }
-    }
-
-    public function getKotaById(Request $request){
-        try{
-            $id = $request->get('id');
-            $data = Kabupaten::select('id', 'kabupaten')
-                ->where('id', $id)
-                ->orderBy('id', 'asc')
-                ->get();
-
-            return response()->json([
+                'status' => $status,
+                'message' => $message,
                 'data' => $data
-            ]);
-        } catch(Exception $e){
-            return response()->json([
-                'message' => $e->getMessage()
-            ], 500);
-        } catch(QueryException $e){
-            return response()->json([
-                'message' => $e->getMessage()
-            ], 500);
+            ], $req_status);
         }
     }
 }

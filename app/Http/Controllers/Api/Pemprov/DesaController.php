@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DesaController extends Controller
 {
-    public function getDesa(Request $request){
+    public function listDesa(Request $request){
         $status = '';
         $req_status = Response::HTTP_OK;
         $message = '';
@@ -28,23 +28,23 @@ class DesaController extends Controller
 
             if($validator->fails()){
                 $req_status = Response::HTTP_UNPROCESSABLE_ENTITY;
-                $status = 'failed';
-                $message = $validator->errors();
+                $status = 'gagal';
+                $message = $validator->errors()->all();
             } else{
                 $data = Desa::select('id', 'id_kabupaten', 'id_kecamatan', 'desa')
                     ->where('id_kecamatan', $request->get('id_kecamatan'))
                     ->orderBy('id', 'asc')
                     ->get();
-                $status = 'success';
+                $status = 'berhasil';
                 $message = 'Berhasil menampilkan data desa.';
             }
         } catch(Exception $e){
             $req_status = Response::HTTP_BAD_REQUEST;
-            $status = 'failed';
+            $status = 'gagal';
             $message = $e->getMessage();
         } catch(QueryException $e){
             $req_status = Response::HTTP_BAD_REQUEST;
-            $status = 'failed';
+            $status = 'gagal';
             $message = $e->getMessage();
         } finally{
             return response()->json([

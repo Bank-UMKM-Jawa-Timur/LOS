@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class KecamatanController extends Controller
 {
-    public function getKecamatan(Request $request){
+    public function listKecamatan(Request $request){
         $status = '';
         $req_status = Response::HTTP_OK;
         $message = '';
@@ -28,23 +28,23 @@ class KecamatanController extends Controller
 
             if($validator->fails()){
                 $req_status = Response::HTTP_UNPROCESSABLE_ENTITY;
-                $status = 'failed';
-                $message = $validator->errors();
+                $status = 'gagal';
+                $message = $validator->errors()->all();
             } else{
                 $data = Kecamatan::select('id', 'id_kabupaten', 'kecamatan')
                     ->where('id_kabupaten', $request->get('id_kabupaten'))
                     ->orderBy('id', 'asc')
                     ->get();
-                $status = 'success';
+                $status = 'berhasil';
                 $message = 'Berhasil menampilkan data kecamatan.';
             }
         } catch(Exception $e){
             $req_status = Response::HTTP_BAD_REQUEST;
-            $status = 'failed';
+            $status = 'gagal';
             $message = $e->getMessage();
         } catch(QueryException $e){
             $req_status = Response::HTTP_BAD_REQUEST;
-            $status = 'failed';
+            $status = 'gagal';
             $message = $e->getMessage();
         } finally{
             return response()->json([
