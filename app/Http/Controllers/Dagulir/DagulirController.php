@@ -3,12 +3,29 @@
 namespace App\Http\Controllers\Dagulir;
 
 use App\Http\Controllers\Controller;
+use App\Models\PengajuanDagulir;
+use App\Repository\PengajuanDegulirRepository;
 use Illuminate\Http\Request;
 
 class DagulirController extends Controller
 {
-    public function index()
+
+    private $repo;
+    public function __construct()
     {
-        return view('dagulir.index');
+        $this->repo = new PengajuanDegulirRepository;
+    }
+    public function index(Request $request)
+    {
+        // paginate
+        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+        $page = $request->has('page') ? $request->get('page') : 1;
+        // search
+        $search = $request->get('q');
+        $pengajuan_degulir = $this->repo->get($search,$limit,$page);
+
+        return view('dagulir.index',[
+            'data' => $pengajuan_degulir
+        ]);
     }
 }

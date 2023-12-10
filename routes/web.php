@@ -48,10 +48,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('dagulir')->group(function () {
         Route::get('/', [DagulirController::class, 'index'])->name('dagulir.index');
         Route::get('/review', function(){
-            return view('dagulir.review');   
+            return view('dagulir.review');
         })->name('dagulir.review');
         Route::get('/create', function(){
-            return view('dagulir.form.create');   
+            return view('dagulir.form.create');
         })->name('dagulir.form.create');
     });
 
@@ -153,7 +153,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/get-merk-kendaraan', [PengajuanKreditController::class, 'getMerkKendaraan'])->name('get-merk-kendaraan');
     Route::get('/get-tipe-kendaraan', [PengajuanKreditController::class, 'getTipeByMerk'])->name('get-tipe-kendaraan');
-    
+
     Route::post('/pengajuan-kredit/kembalikan-ke-posisi-sebelumnya', [PengajuanKreditController::class, 'kembalikanDataKePosisiSebelumnya'])->name('pengajuan-kredit.kembalikan-ke-posisi-sebelumnya');
 });
 

@@ -114,46 +114,99 @@
                 <th>Telp</th>
                 <th>Tipe Registrasi</th>
                 <th>Status</th>
+                <th>Status Penyelia</th>
                 <th>Aksi</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>1</td>
-                <td>BK0165728e22552ce</td>
-                <td>17-11-2023</td>
-                <td>3201112200112211</td>
-                <td class="font-semibold uppercase">Muhammad Fisal Afianto</td>
-                <td>Sektor Pertanian</td>
-                <td>086888111222</td>
-                <td>Perorangan</td>
-                <td>
-                  <span class="status bg-green-100 text-green-500 border border-green-300">
-                    <span>Disetujui</span>
-                  </span>
-                </td>
-                <td>
-                  <a href="{{ route('dagulir.review') }}">
-                    <button class="btn  text-white bg-theme-secondary border-theme-secondary border">
-                      <div class="flex gap-3">
-                        <span>
-                          <iconify-icon icon="uil:edit" class="mt-[3px]"></iconify-icon>
+                @php
+                    $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                    $page_length = isset($_GET['page_length']) ? $_GET['page_length'] : 10;
+                    $start = $page == 1 ? 1 : $page * $page_length - $page_length + 1;
+                    $end = $page == 1 ? $page_length : $start + $page_length - 1;
+                    $i = $page == 1 ? 1 : $start;
+                @endphp
+                @foreach ($data as $item)
+                <tr>
+
+                    <td>{{ $i++ }}</td>
+                    <td>{{ $item->kode_pendaftaran }}</td>
+                    <td>{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d F Y') }}</td>
+                    <td>{{ $item->npwp }}</td>
+                    <td class="font-semibold uppercase">{{ ucwords($item->nama) }}</td>
+                    <td>
+                        @if ($item->jenis_usaha == '1')
+                            Sektor Pertanian
+                        @elseif ($item->jenis_usaha == '2')
+                            Sektor Peternakan
+                        @elseif ($item->jenis_usaha == '3')
+                            Sektor Kelautan dan Perikanan
+                        @elseif ($item->jenis_usaha == '4')
+                            Sektor Perkebunan
+                        @elseif ($item->jenis_usaha == '5')
+                        Sektor industri
+                        @elseif ($item->jenis_usaha == '6')
+                        Sektor Perdagangan
+                        @elseif ($item->jenis_usaha == '7')
+                        Sektor Makanan dan Minuman
+                        @elseif ($item->jenis_usaha == '8')
+                        Koperasi
+                        @elseif ($item->jenis_usaha == '9')
+                        Sektor jasa dan lainnya
+                        @elseif ($item->jenis_usaha == '10')
+                        Lainnya
+                        @else
+                        Tidak ada
+                        @endif
+                    </td>
+                    <td>{{ $item->telp }}</td>
+                    <td>
+                        @if ($item->tipe == '1')
+                            Sektor Pertanian
+                        @elseif ($item->tipe == '2')
+                            Sektor Peternakan
+                        @elseif ($item->tipe == '3')
+                            Sektor Kelautan dan Perikanan
+                        @elseif ($item->tipe == '4')
+                        @else
+                        Tidak ada
+                        @endif
+                    </td>
+                    <td>
+                    <span class="status bg-green-100 text-green-500 border border-green-300">
+                        <span>Disetujui</span>
+                    </span>
+                    </td>
+                    <td>
+                        <span class="status bg-green-100 text-green-500 border border-green-300">
+                        <span>Disetujui</span>
                         </span>
-                        <p class="text-sm">Review</p>
-                      </div>
-                    </button>
-                  </a>
-                </td>
-              </tr>
+                    </td>
+                    <td>
+                    <a href="{{ route('dagulir.review') }}">
+                        <button class="btn  text-white bg-theme-secondary border-theme-secondary border">
+                        <div class="flex gap-3">
+                            <span>
+                            <iconify-icon icon="uil:edit" class="mt-[3px]"></iconify-icon>
+                            </span>
+                            <p class="text-sm">Review</p>
+                        </div>
+                        </button>
+                    </a>
+                    </td>
+                </tr>
+              @endforeach
+
             </tbody>
           </table>
         </div>
         <div class="footer-table p-2">
           <div class="flex justify-between">
             <div class="mt-5 ml-5 text-sm font-medium text-gray-500">
-              <p>Showing 1 - 10 from 2000 entries</p>
+              <p>Showing {{ $start }} - {{ $end }} from {{ $data->total() }} entries</p>
             </div>
-            <div class="pagination">
+            {{ $data->links() }}
+            {{-- <div class="pagination">
               <a
                 href=""
                 class="item-pg item-pg-prev"
@@ -196,7 +249,7 @@
               >
                 Next
               </a>
-            </div>
+            </div> --}}
           </div>
         </div>
       </div>
