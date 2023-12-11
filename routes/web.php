@@ -47,7 +47,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('dagulir')->group(function () {
         Route::get('/', [DagulirController::class, 'index'])->name('dagulir.index');
+        // Review
         Route::get('review/{id}',[DagulirController::class,'review'])->name('dagulir.review');
+        // Update Review
+        Route::post('review/post',[DagulirController::class,'updateReview'])->name('dagulir.review-post');
         // Route::get('/review', function(){
         //     return view('dagulir.review');
         // })->name('dagulir.review');

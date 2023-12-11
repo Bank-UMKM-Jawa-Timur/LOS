@@ -4,6 +4,7 @@ use App\Models\JawabanTemp;
 use App\Models\JawabanTempModel;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 if(!function_exists('temporary')) {
     function temporary($nId, $id, bool $multiple = false) {
@@ -43,11 +44,7 @@ if (!function_exists('sipde_token')) {
         $json = json_decode(file_get_contents($filePath), true);
         $date = Carbon::now()->toDateTimeString();
         if ($date >= $json['exp']) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Token expired silahkan login kembali.',
-                    'token' => null,
-                ]);
+                return ['token' => null];
             }else{
                 return [
                     'token' => $json['token'],
@@ -60,5 +57,40 @@ if (!function_exists('jenis_usaha_dagulir')) {
     function jenis_usaha_dagulir() {
         $data = sipde_token();
         return $data['token'];
+
+    }
+}
+
+if (!function_exists('list_status')) {
+    function list_status() {
+        $data = sipde_token();
+        if ($data['token'] != null) {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' .$data['token'],
+            ])
+            ->post(env('SIPDE_HOST').'/list_status.json');
+            return json_encode($response);
+        }else{
+            return 'Silahkan login kembali';
+        }
+    }
+}
+
+if (!function_exists('update_status')) {
+    function update_status($kode, $status, $lampiran, $jangka_waktu, $realisasi_waktu ) {
+        $data = sipde_token();
+        if ($data['token'] != null) {
+            Http::withHeaders([
+                'Authorization' => 'Bearer ' .$data['token'],
+            ])->post(env('SIPDE_HOST'),[
+                "kode_pendaftaran" => $kode,
+                "status" => $status,
+                "lampiran_analisa" => $lampiran,
+                "jangka_waktu" => $jangka_waktu,
+                "realisasi_dana" => $realisasi_waktu,
+            ]);
+        }else{
+            return 'Silahkan login kembali';
+        }
     }
 }
