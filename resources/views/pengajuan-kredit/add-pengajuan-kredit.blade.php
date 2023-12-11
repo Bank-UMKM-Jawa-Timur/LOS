@@ -141,6 +141,16 @@ null => 1,
                 @enderror
             </div>
             <div class="form-group col-md-12">
+                <label for="">No Telp</label>
+                <input type="text" name="no_telp" id="nama" class="form-control @error('no_telp') is-invalid @enderror"
+                    placeholder="No Telp" value="" required maxlength="255">
+                @error('no_telp')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+                @enderror
+            </div>
+            <div class="form-group col-md-12">
                 <label for="">Alamat Rumah</label>
                 <textarea name="alamat_rumah" class="form-control @error('alamat_rumah') is-invalid @enderror"
                     maxlength="255" id="alamat_rumah" cols="30" rows="4"
@@ -2168,7 +2178,7 @@ null => 1,
                 // cek input files
                 var inputFiles = $('input[type=file]')
                 var fileEmpty = [];
-                
+
                 $.each(inputFiles, function(i, v) {
                     var ids = $(this).attr("id");
                     var inputId = ids != '' || ids != null || ids != 'undefined' ? ids.toString() : ''
@@ -2197,7 +2207,7 @@ null => 1,
                                             }
                                         }
                                     }
-        
+
                                     if (inputId == "surat keterangan usaha file") {
                                         if ((v.value == '' || v.value == null) && (filename == '' || filename == null)) {
                                             if (!fileEmpty.includes(inputId))

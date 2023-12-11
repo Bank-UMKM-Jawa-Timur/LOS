@@ -81,4 +81,9 @@ Route::prefix('v1')->group(function(){
 });
 
 // Pemprove API
+Route::get('cek-token', function () {
+    $data = sipde_token();
+    return $data;
+});
+
 require __DIR__ . '/pemprov.php';

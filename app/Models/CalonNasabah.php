@@ -31,6 +31,7 @@ class CalonNasabah extends Model
         'id_desa',
         'id_pengajuan',
         'tenor_yang_diminta',
+        'no_telp',
     ];
 
     public function users()

@@ -6,9 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -30,14 +33,26 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request)
     {
-        $user = User::select('email','nip', 'password', 'role')
+        $user = User::select('email','nip', 'password', 'role','user_dagulir')
                     ->where('email', $request->email)
                     ->orWhere('nip', $request->email)
                     ->first();
         if ($user) {
-            if ($user->role == 'Administrator' || $user->role == 'Direksi') {
+            if ($user->role == 'Administrator' || $user->role == 'Direksi' || $user->user_dagulir == 1) {
                 if (\Hash::check($request->password, $user->password)) {
                     $request->authenticate();
+                    // Get Response API
+                    $response = Http::post(env('SIPDE_HOST'), [
+                        // 'username' => $request->get('email'),
+                        // 'password' => $request->get('password'),
+                        'username' => env('SIPDE_USERNAME'),
+                        'password' => env('SIPDE_PASSWORD'),
+                    ])->json();
+                    $filePath = storage_path('app/response.json');
+                    file_put_contents($filePath, json_encode($response));
+                    $filePath = storage_path('app/response.json');
+                    // Get Response API
+
                     if (DB::table('sessions')->where('user_id', auth()->user()->id)->count() > 0) {
                         Auth::guard('web')->logout();
 
