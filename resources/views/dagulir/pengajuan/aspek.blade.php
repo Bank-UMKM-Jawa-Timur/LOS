@@ -10,6 +10,7 @@
     $prev_key = 0;
     $open_tab = false;
   @endphp
+    {{--  Level 2  --}}
     @foreach ($childs as $key => $item)
       @if ($item->opsi_jawaban == 'kosong')
         <div>
@@ -23,86 +24,42 @@
             </h2>
           </div>
         </div>
+        {{--  Level 3  --}}
         @if ($item->childs)
           <div class="form-group-2">
             @foreach ($item->childs as $child)
               <div class="input-box">
                 <label for="">{{$child->nama}}</label>
-                @if ($child->opsi_jawaban == 'input text')
-                
-                @elseif ($child->opsi_jawaban == 'option')
-                  <select
-                    name="input[{{$child->id}}][{{$child->skor}}]"
-                    class="form-select"
-                    id=""
-                  >
-                    <option value="">-- Pilih Opsi --</option>
-                    @foreach ($child->option as $opt)
-                      <option value="">-- Pilih Opsi --</option>
-                    @endforeach
-                  </select>
-                @elseif ($child->opsi_jawaban == 'number')
-                  <input
-                    name="input[$child->id][$child->status_skor]"
-                    type="number"
-                    class="form-input"
-                    placeholder="Masukan informasi Modal (Awal)"
-                  />
-                @elseif ($child->opsi_jawaban == 'persen')
-                @elseif ($child->opsi_jawaban == 'long text')
-                @elseif ($child->opsi_jawaban == 'file')
-                    
-                @endif
+                @include('dagulir.components.input', ['item' => $child])
               </div>
             @endforeach
           </div>
         @endif
       @else
         @if (isset($childs[$key+1]) && !$open_tab)
-          // buka
           <div class="form-group-2">
         @endif
         <div class="input-box">
           <label for="">{{$item->nama}}</label>
-          @if ($item->opsi_jawaban == 'input text')
-            <input
-              name="input[{{$item->id}}][{{$item->skor}}]"
-              type="text"
-              class="form-input"
-              placeholder="Masukan informasi jumlah orang"
-            />
-          @elseif ($item->opsi_jawaban == 'option')
-            <select
-              name="input[{{$item->id}}][{{$item->skor}}]"
-              class="form-select"
-              id=""
-            >
-              <option value="">-- Pilih Opsi --</option>
-              @foreach ($item->option as $opt)
-                <option value="input[{{$opt->id}}][{{$opt->skor}}]">{{$opt->option}}</option>
-              @endforeach
-            </select>
-          @elseif ($item->opsi_jawaban == 'number')
-          @elseif ($item->opsi_jawaban == 'persen')
-          @elseif ($item->opsi_jawaban == 'long text')
-          @elseif ($item->opsi_jawaban == 'file')
-              
-          @endif
+          @include('dagulir.components.input', ['item' => $item])
         </div>
         @if (isset($childs[$key+1]))
           @if ($childs[$key+1]->opsi_jawaban == 'kosong')
-            // tutup1
             </div>
           @endif
         @endif
         @if (($key + 1) == count($childs) && $open_tab)
-            // tutup2
           </div>
         @endif
         @php
           if (isset($childs[$key+1])) {
             $open_tab = true;
             $prev_key = $key;
+          }
+          if (isset($childs[$key+1])) {
+            if (($childs[$key+1]->opsi_jawaban == 'kosong')) {
+              $open_tab = false;
+            }
           }
         @endphp
       @endif

@@ -3,7 +3,7 @@ namespace App\Repository;
 
 use App\Models\PengajuanDagulir;
 
-class PengajuanDegulirRepository
+class PengajuanDagulirRepository
 {
     function get($search, $limit=10, $page=1) {
         $data = PengajuanDagulir::with('pengajuan')->where(function($query) use ($search) {
@@ -21,4 +21,3 @@ class PengajuanDegulirRepository
         return $data;
     }
 }
-?>

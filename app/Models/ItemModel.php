@@ -25,4 +25,8 @@ class ItemModel extends Model
     {
         return $this->hasMany('\App\Models\DetailPendapatPerAspek', 'id_aspek');
     }
+
+    public function childs() {
+        return $this->hasMany(ItemModel::class, 'id_parent', 'id');
+    }
 }

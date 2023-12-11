@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Dagulir;
 use App\Http\Controllers\Controller;
 use App\Models\PengajuanDagulir;
 use App\Models\PengajuanModel;
-use App\Repository\PengajuanDegulirRepository;
 use App\Services\TemporaryService;
 use Exception;
+use App\Repository\MasterItemRepository;
+use App\Repository\PengajuanDagulirRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -18,8 +19,9 @@ class DagulirController extends Controller
     private $repo;
     public function __construct()
     {
-        $this->repo = new PengajuanDegulirRepository;
+        $this->repo = new PengajuanDagulirRepository;
     }
+
     public function index(Request $request)
     {
         // paginate
@@ -35,11 +37,14 @@ class DagulirController extends Controller
     }
 
     public function review($id)  {
-        return list_status();
         $pengajuan_degulir = $this->repo->detail($id);
+        $itemRepo = new MasterItemRepository;
+        $item = $itemRepo->get([13]);
+        // return $item;
 
         return view('dagulir.form.review',[
-            'data' => $pengajuan_degulir
+            'data' => $pengajuan_degulir,
+            'items' => $item,
         ]);
     }
 
