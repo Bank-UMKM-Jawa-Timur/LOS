@@ -2948,6 +2948,9 @@ class PengajuanKreditController extends Controller
 
             // Log Pengajuan review
             $nasabah = CalonNasabah::select('id', 'nama')->where('id_pengajuan', $request->id_pengajuan)->first();
+            $nasabah->nominal_realisasi = $request->get('nominal_realisasi');
+            $nasabah->update();
+
             $namaNasabah = 'undifined';
 
             if ($nasabah)
