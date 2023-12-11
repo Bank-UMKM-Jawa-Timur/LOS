@@ -133,17 +133,14 @@ class PengajuanController extends Controller
                         'user_id' => $userId->id,
                         'created_at' => now(),
                     ];
-    
+
                     $pengajuanDagulirId = PengajuanDagulir::insertGetId($insertDagulir);
-                    $dagulirId = DB::table('mst_produk_kredit')
-                        ->where('name', 'like', "%dagulir%")
-                        ->first();
+
                     $addPengajuan = new PengajuanModel();
                     $addPengajuan->id_staf = $userId->id;
                     $addPengajuan->tanggal = date(now());
                     $addPengajuan->id_cabang = $request->get('kode_bank_cabang');
                     $addPengajuan->skema_kredit = 'Dagulir';
-                    $addPengajuan->produk_kredit_id = $dagulirId->id;
                     $addPengajuan->dagulir_id = $pengajuanDagulirId;
                     $addPengajuan->save();
     
