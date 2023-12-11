@@ -2249,6 +2249,33 @@ function getKaryawan($nip){
                             </div>
                         </div>
                     </div>
+                    <div class="alert alert-success ">
+                        <div class="form-group row">
+                            <label for="komentar_pincab" class="col-sm-3 col-form-label">Nominal Realisasi</label>
+                            <label for="komentar_pincab" class="col-sm-1 col-form-label px-0">
+                                <div class="d-flex justify-content-end">
+                                    <div style="width: 20px">
+                                        :
+                                    </div>
+                                </div>
+                            </label>
+                            <div class="col">
+                                @if (Auth::user()->role == 'Pincab')
+                                    <input type="hidden" name="id_pengajuan" id="" value="{{ $dataUmum->id }}">
+                                    <input type="number" class="form-control" id="nominal_realisasi" name="nominal_realisasi" placeholder="Nominal Normalisasi">
+                                    {{-- <textarea name="komentar_pincab" class="form-control" id="komentar_pincab" cols="5" rows="3"
+                                        placeholder="Masukkan Pendapat Pemimpin Cabang">{{ $pendapatDanUsulan->komentar_pincab }}</textarea> --}}
+                                @endif
+                                @if (Auth::user()->role == 'SPI' || Auth::user()->role == 'Kredit Umum' || auth()->user()->role == 'Direksi')
+                                    {{--  <input type="text" readonly class="form-control-plaintext" id="staticEmail"
+                                    value="{{ $pendapatDanUsulan->komentar_pincab }}">  --}}
+                                    <input type="hidden" class="form-control-plaintext" id="staticEmail"
+                                    value="{{ $pendapatDanUsulan->komentar_pincab }}">
+                                    <p class="form-control-plaintext text-justify">{{ $pendapatDanUsulan->komentar_pincab }}</p>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -2265,11 +2292,12 @@ function getKaryawan($nip){
             const role = "{{auth()->user()->role}}"
             if (role == 'Pincab') {
                 const komentarPincabVal = $("#komentar_pincab").val()
-                if (!komentarPincabVal) {
+                const nominal = $('#nominal_realisasi').val()
+                if (!komentarPincabVal && !nominal) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
-                        text: "Field Pendapat dan usulan harus diisi"
+                        text: "Field Nominal Realisasi dan Pendapat dan usulan  harus diisi"
                     })
                     e.preventDefault()
                 }
