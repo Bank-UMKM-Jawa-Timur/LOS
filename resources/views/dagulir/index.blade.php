@@ -139,11 +139,11 @@
                 <tr>
                     <th>No.</th>
                     <th>Kode Pendaftaran</th>
-                    <th>Tanggal Pengajuan</th>
-                    <th>No Ktp/Npwp</th>
-                    <th>Nama Usaha</th>
-                    <th>Jenis Usaha</th>
+                    <th>No Ktp</th>
+                    <th>Nama</th>
                     <th>Telp</th>
+                    <th>Tanggal Pengajuan</th>
+                    <th>Jenis Usaha</th>
                     <th>Tipe Registrasi</th>
                     <th>Status</th>
                     <th>Aksi</th>
@@ -156,59 +156,37 @@
                         $start = $page == 1 ? 1 : $page * $page_length - $page_length + 1;
                         $end = $page == 1 ? $page_length : $start + $page_length - 1;
                         $i = $page == 1 ? 1 : $start;
+                        $status = config('dagulir.status');
+                        $jenis_usaha = config('dagulir.jenis_usaha');
+                        $tipe_pengajuan = config('dagulir.tipe_pengajuan');
                     @endphp
                     @foreach ($data as $item)
                     <tr>
-
                         <td>{{ $i++ }}</td>
                         <td>{{ $item->kode_pendaftaran }}</td>
-                        <td>{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d F Y') }}</td>
-                        <td>{{ $item->npwp }}</td>
+                        <td>{{ $item->nik }}</td>
                         <td class="font-semibold uppercase">{{ ucwords($item->nama) }}</td>
+                        <td>{{ $item->telp }}</td>
+                        <td>{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d F Y') }}</td>
                         <td>
-                            @if ($item->jenis_usaha == '1')
-                                Sektor Pertanian
-                            @elseif ($item->jenis_usaha == '2')
-                                Sektor Peternakan
-                            @elseif ($item->jenis_usaha == '3')
-                                Sektor Kelautan dan Perikanan
-                            @elseif ($item->jenis_usaha == '4')
-                                Sektor Perkebunan
-                            @elseif ($item->jenis_usaha == '5')
-                            Sektor industri
-                            @elseif ($item->jenis_usaha == '6')
-                            Sektor Perdagangan
-                            @elseif ($item->jenis_usaha == '7')
-                            Sektor Makanan dan Minuman
-                            @elseif ($item->jenis_usaha == '8')
-                            Koperasi
-                            @elseif ($item->jenis_usaha == '9')
-                            Sektor jasa dan lainnya
-                            @elseif ($item->jenis_usaha == '10')
-                            Lainnya
+                            @if ($item->jenis_usaha)
+                                {{array_key_exists(intval($item->jenis_usaha), $jenis_usaha) ? $jenis_usaha[intval($item->jenis_usaha)] : 'Tidak ditemukan'}}
                             @else
-                            Tidak ada
+                                Tidak ada
                             @endif
                         </td>
-                        <td>{{ $item->telp }}</td>
                         <td>
-                            @if ($item->tipe == '1')
-                                Sektor Pertanian
-                            @elseif ($item->tipe == '2')
-                                Sektor Peternakan
-                            @elseif ($item->tipe == '3')
-                                Sektor Kelautan dan Perikanan
-                            @elseif ($item->tipe == '4')
+                            @if ($item->tipe)
+                            {{array_key_exists(intval($item->tipe), $tipe_pengajuan) ? $tipe_pengajuan[intval($item->tipe)] : 'Tidak ditemukan'}}
                             @else
-                            Tidak ada
+                                Tidak ada
                             @endif
                         </td>
                         <td>
                         <span class="status bg-green-100 text-green-500 border border-green-300">
-                            <span>Disetujui</span>
+                            <span>{{ array_key_exists(intval($item->status), $status) ? $status[intval($item->status)] : 'Tidak ditemukan' }}</span>
                         </span>
                         </td>
-
                         <td>
                             <div class="flex">
                                 <a href="{{ route('dagulir.review',$item->id) }}">
