@@ -28,7 +28,7 @@ class DagulirController extends Controller
         // search
         $search = $request->get('q');
         $pengajuan_degulir = $this->repo->get($search,$limit,$page);
-        // return $pengajuan_degulir;
+
         return view('dagulir.index',[
             'data' => $pengajuan_degulir
         ]);
@@ -37,6 +37,7 @@ class DagulirController extends Controller
     public function review($id)  {
         return list_status();
         $pengajuan_degulir = $this->repo->detail($id);
+
         return view('dagulir.form.review',[
             'data' => $pengajuan_degulir
         ]);
