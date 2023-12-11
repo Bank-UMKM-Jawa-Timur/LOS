@@ -5,58 +5,41 @@
         <nav class="w-full bg-white p-3  top-[4rem] border sticky">
             <div class="owl-carousel owl-theme tab-wrapper">
                 <button data-toggle="tab" data-tab="dagulir" class="btn btn-tab active-tab font-semibold">0% Dagulir</button>
-                <button data-toggle="tab" data-tab="data-umum" class="btn btn-tab font-semibold">0% Data Umum</button>
-                <button data-toggle="tab" data-tab="data-po" class="btn btn-tab font-semibold">0% Data PO</button>
-                <button data-toggle="tab" data-tab="aspek-management" class="btn btn-tab  font-semibold">0% Aspek Management</button>
-                <button data-toggle="tab" data-tab="aspek-hukum" class="btn btn-tab  font-semibold">0% Aspek Hukum</button>
-                <button data-toggle="tab" data-tab="aspek-jaminan" class="btn btn-tab  font-semibold">0% Aspek Jaminan</button>
-                <button data-toggle="tab" data-tab="aspek-teknis-dan-produksi" class="btn btn-tab  font-semibold">0% Aspek Teknis & Produksi</button>
-                <button data-toggle="tab" data-tab="aspek-pemasaran" class="btn btn-tab  font-semibold">0% Aspek Pemasaran</button>
-                <button data-toggle="tab" data-tab="aspek-keuangan" class="btn btn-tab  font-semibold">0% Aspek Keuangan</button>
-                <button data-toggle="tab" data-tab="pendapat-dan-usulan" class="btn btn-tab  font-semibold">0% Pendapat dan usulan</button>
+                @foreach ($items as $item)
+                    @php
+                        $title = str_replace('&', 'dan', strtolower($item->nama));
+                        $title = str_replace(' ', '-', strtolower($title));
+                    @endphp
+                    <button data-toggle="tab" data-tab="{{$title}}" class="btn btn-tab font-semibold">0% {{$item->nama}}</button>
+                @endforeach
             </div>
-            {{-- <button class="lg:hidden block absolute left-0 btn-owl top-2 bg-white z-40">
-        <iconify-icon icon="uil:angle-left" class="transform mt-1 text-2xl"></iconify-icon>
-    </button>
-    <button class="lg:hidden block absolute right-5 btn-owl top-2 bg-white z-40">
-        <iconify-icon icon="uil:angle-left" class="transform mt-1 rotate-180 text-2xl"></iconify-icon>
-    </button> --}}
         </nav>
         <div class="p-3">
             <div class="body-pages">
+                <form action="{{ route('dagulir.post') }}" method="POST">
+                @csrf
+                    <div class="mt-3 container mx-auto ">
+                        <div id="dagulir-tab" class="is-tab-content active">
+                            @include('dagulir.pengajuan.create-dagulir')
+                        </div>
+                        @foreach ($items as $item)
+                            @php
+                                $title_id = str_replace('&', 'dan', strtolower($item->nama));
+                                $title_id = str_replace(' ', '-', strtolower($title_id));
+                                $title_tab = "$title_id-tab";
+                                $title_page = "dagulir.pengajuan.$title_id";
+                            @endphp
+                            <div id="{{$title_tab}}" class="is-tab-content">
+                                @include('dagulir.pengajuan.create-aspek', [
+                                    'id_tab' => $title_id,
+                                    'title' => $item->nama,
+                                    'childs' => $item->childs
+                                ])
+                            </div>
+                        @endforeach
 
-                <div class="mt-3 container mx-auto ">
-                    <div id="dagulir-tab" class="is-tab-content active">
-                        @include('dagulir.pengajuan.dagulir')
                     </div>
-                    <div id="data-umum-tab" class="is-tab-content">
-                        @include('dagulir.pengajuan.data-umum')
-                    </div>
-                    <div id="data-po-tab" class="is-tab-content">
-                        @include('dagulir.pengajuan.data-po')
-                    </div>
-                    <div id="aspek-management-tab" class="is-tab-content">
-                        @include('dagulir.pengajuan.aspek-management')
-                    </div>
-                    <div id="aspek-hukum-tab" class="is-tab-content">
-                        @include('dagulir.pengajuan.aspek-hukum')
-                    </div>
-                    <div id="aspek-jaminan-tab" class="is-tab-content">
-                        @include('dagulir.pengajuan.aspek-jaminan')
-                    </div>
-                    <div id="aspek-teknis-dan-produksi-tab" class="is-tab-content">
-                        @include('dagulir.pengajuan.aspek-teknis-dan-produksi')
-                    </div>
-                    <div id="aspek-pemasaran-tab" class="is-tab-content">
-                        @include('dagulir.pengajuan.aspek-pemasaran')
-                    </div>
-                    <div id="aspek-keuangan-tab" class="is-tab-content">
-                        @include('dagulir.pengajuan.aspek-keuangan')
-                    </div>
-                    <div id="pendapat-dan-usulan-tab" class="is-tab-content">
-                        @include('dagulir.pengajuan.pendapat-dan-usulan')
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
     </section>
@@ -64,10 +47,127 @@
 
 @push('script-inject')
     <script>
+        $('#kabupaten').change(function() {
+            var kabID = $(this).val();
+            if (kabID) {
+                $.ajax({
+                    type: "GET",
+                    url: "/getkecamatan?kabID=" + kabID,
+                    dataType: 'JSON',
+                    success: function(res) {
+                           console.log(res);
+                        if (res) {
+                            $("#kecamatan").empty();
+                            $("#kecamatan").append('<option>---Pilih Kecamatan---</option>');
+                            $.each(res, function(nama, kode) {
+                                $('#kecamatan').append(`
+                                    <option value="${kode}">${nama}</option>
+                                `);
+                            });
+
+                            $('#kecamatan').trigger('change');
+                        } else {
+                            $("#kecamatan").empty();
+                        }
+                    }
+                });
+            } else {
+                $("#kecamatan").empty();
+            }
+        });
+
+        $('#kabupaten_domisili').change(function() {
+            var kabID = $(this).val();
+            if (kabID) {
+                $.ajax({
+                    type: "GET",
+                    url: "/getkecamatan?kabID=" + kabID,
+                    dataType: 'JSON',
+                    success: function(res) {
+                           console.log(res);
+                        if (res) {
+                            $("#kecamatan_domisili").empty();
+                            $("#kecamatan_domisili").append('<option>---Pilih Kecamatan---</option>');
+                            $.each(res, function(nama, kode) {
+                                $('#kecamatan_domisili').append(`
+                                    <option value="${kode}">${nama}</option>
+                                `);
+                            });
+
+                            $('#kecamatan_domisili').trigger('change');
+                        } else {
+                            $("#kecamatan_domisili").empty();
+                        }
+                    }
+                });
+            } else {
+                $("#kecamatan_domisili").empty();
+            }
+        });
+        $('#kabupaten_usaha').change(function() {
+            var kabID = $(this).val();
+            if (kabID) {
+                $.ajax({
+                    type: "GET",
+                    url: "/getkecamatan?kabID=" + kabID,
+                    dataType: 'JSON',
+                    success: function(res) {
+                           console.log(res);
+                        if (res) {
+                            $("#kecamatan_usaha").empty();
+                            $("#kecamatan_usaha").append('<option>---Pilih Kecamatan---</option>');
+                            $.each(res, function(nama, kode) {
+                                $('#kecamatan_usaha').append(`
+                                    <option value="${kode}">${nama}</option>
+                                `);
+                            });
+
+                            $('#kecamatan_usaha').trigger('change');
+                        } else {
+                            $("#kecamatan_usaha").empty();
+                        }
+                    }
+                });
+            } else {
+                $("#kecamatan_usaha").empty();
+            }
+        });
+
+
+        $('#tipe').on('change',function(e) {
+            var tipe = $(this).val();
+            console.log(typeof(tipe));
+            if (tipe == '2' || tipe == "0" ) {
+                $('#nama_pj').addClass('hidden');
+            }else{
+                $('#nama_pj').removeClass('hidden');
+            }
+        })
+        $('.rupiah').keyup(function(e) {
+            var input = $(this).val()
+            $(this).val(formatrupiah(input))
+        });
+        function formatrupiah(angka, prefix) {
+            var number_string = angka.replace(/[^,\d]/g, '').toString(),
+                split = number_string.split(','),
+                sisa = split[0].length % 3,
+                rupiah = split[0].substr(0, sisa),
+                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+            // tambahkan titik jika yang di input sudah menjadi angka ribuan
+            if (ribuan) {
+                separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+
+            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+            return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
+        }
         // tab
         $(".tab-wrapper .btn-tab").click(function(e) {
             e.preventDefault();
             var tabId = $(this).data("tab");
+            // console.log(tabId);
 
             $(".is-tab-content").removeClass("active");
             $(".tab-wrapper .btn-tab").removeClass(
@@ -94,10 +194,15 @@
             const $activeContent = $(".is-tab-content.active");
             const $nextContent = $activeContent.next();
 
+            console.log($nextContent.length);
             if ($nextContent.length) {
                 $activeContent.removeClass("active");
                 $nextContent.addClass("active");
+            }else{
+                $(".next-tab").addClass('hidden');
+                $('.btn-simpan').removeClass('hidden')
             }
+
         });
 
         $(".prev-tab").on("click", function() {
@@ -107,6 +212,8 @@
             if ($prevContent.length) {
                 $activeContent.removeClass("active");
                 $prevContent.addClass("active");
+                $(".next-tab").rem('hidden');
+                $('.btn-simpan').addClass('hidden')
             }
         });
 

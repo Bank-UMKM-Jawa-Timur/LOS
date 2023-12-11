@@ -42,7 +42,7 @@ class AuthenticatedSessionController extends Controller
                 if (\Hash::check($request->password, $user->password)) {
                     $request->authenticate();
                     // Get Response API
-                    $response = Http::post(config('dagulir.host'), [
+                    $response = Http::post(config('dagulir.host').'/login', [
                         'username' => config('dagulir.username'),
                         'password' => config('dagulir.password'),
                     ])->json();
