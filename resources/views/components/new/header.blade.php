@@ -1,3 +1,4 @@
+
 <header
 class="sticky top-0 border-b z-30 p-3 font-poppins w-full bg-white"
 >
@@ -56,7 +57,7 @@ class="sticky top-0 border-b z-30 p-3 font-poppins w-full bg-white"
         </li>
         <li>
           <a href="#">
-            <button class="item-dropdown border-t flex gap-3">
+            <button  data-modal-id="modal-logout" class="open-modal item-dropdown border-t flex gap-3">
               <span class="mt-[2px]"
                 ><iconify-icon icon="tabler:logout"></iconify-icon
               ></span>

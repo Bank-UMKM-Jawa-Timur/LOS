@@ -32,6 +32,7 @@
             @yield('content')
         </div>
     </div>
+    @include('components.new.modal.logout');
 </body>
     {{-- javascript plugins --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
