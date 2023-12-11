@@ -34,25 +34,27 @@ class="sticky top-0 border-b z-30 p-3 font-poppins w-full bg-white"
         <h2
           class="font-poppins font-semibold tracking-tighter text-sm"
         >
-          Arsyad Arthan N.
+          @php
+            $name_karyawan = App\Http\Controllers\DashboardController::getKaryawan();
+          @endphp
+          @if (auth()->user()->nip)
+            {{ $name_karyawan ? $name_karyawan : auth()->user()->name }}
+          @else
+            {{auth()->user()->name}}
+          @endif
         </h2>
         <p
           class="font-poppins font-semibold text-xs text-gray-400 tracking-tighter"
         >
-          administrator
+          {{auth()->user()->role}}
         </p>
       </div>
     </div>
     <div class="dropdown-account-menu hidden">
       <ul class="">
         <li>
-          <a href="#">
-            <button class="item-dropdown">Profile</button>
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <button class="item-dropdown">Reset Password</button>
+          <a href="{{ route('change_password') }}">
+            <button class="item-dropdown">Ganti Password</button>
           </a>
         </li>
         <li>

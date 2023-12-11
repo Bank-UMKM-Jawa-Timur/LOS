@@ -19,8 +19,7 @@ id="modal-logout"
   </div>
   <div class="modal-body space-y-5">
     <div class="space-y-3">
-        <p class="font-semibold text-neutral-500">Pastikan semua data telah disimpan</p>
-        <p>Data tidak akan tersimpan jika anda keluar sekarang, Apakah yakin ingin keluar?</p>
+      <p>Anda yakin akan keluar?</p>
     </div>
   </div>
   <div class="modal-footer justify-end">
@@ -30,7 +29,10 @@ id="modal-logout"
     >
       Batal
     </button>
-    <button class="btn-submit">Logout</button>
+    <form id="logout-form" action="{{ route('logout') }}" method="POST">
+        @csrf
+        <button type="submit" class="btn-submit">Logout</button>
+    </form>
   </div>
 </div>
 </div>
