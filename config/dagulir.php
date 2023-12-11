@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'host' => env('SIPDE_HOST', ''),
+    'username' => env('SIPDE_USERNAME', ''),
+    'password' => env('SIPDE_PASSWORD', ''),
     'status' => [
         1 => 'Survey',
         2 => 'Analisa',

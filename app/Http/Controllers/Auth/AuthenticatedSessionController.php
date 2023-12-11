@@ -42,11 +42,9 @@ class AuthenticatedSessionController extends Controller
                 if (\Hash::check($request->password, $user->password)) {
                     $request->authenticate();
                     // Get Response API
-                    $response = Http::post(env('SIPDE_HOST'), [
-                        // 'username' => $request->get('email'),
-                        // 'password' => $request->get('password'),
-                        'username' => env('SIPDE_USERNAME'),
-                        'password' => env('SIPDE_PASSWORD'),
+                    $response = Http::post(config('dagulir.host'), [
+                        'username' => config('dagulir.username'),
+                        'password' => config('dagulir.password'),
                     ])->json();
                     $filePath = storage_path('app/response.json');
                     file_put_contents($filePath, json_encode($response));
