@@ -49,7 +49,7 @@
           </a>
         </div>
         <div class="right-button gap-2 flex lg:justify-start">
-          <a
+          {{-- <a
             href="form/pengajuan-form/data-umum.html"
             class="px-7 py-2 rounded flex justify-center items-center font-semibold bg-theme-primary border text-white"
           >
@@ -57,7 +57,7 @@
               <iconify-icon icon="fa6-solid:plus"></iconify-icon>
             </span>
             <span class="ml-1 text-sm"> Tambah pengajuan </span>
-          </a>
+          </a> --}}
         </div>
       </div>
     </div>
