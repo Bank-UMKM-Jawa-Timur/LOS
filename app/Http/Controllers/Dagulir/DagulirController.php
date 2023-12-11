@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dagulir;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\DagulirRequestForm;
 use App\Models\Cabang;
 use App\Models\Desa;
 use App\Models\Kabupaten;
@@ -13,6 +14,7 @@ use App\Services\TemporaryService;
 use Exception;
 use App\Repository\MasterItemRepository;
 use App\Repository\PengajuanDagulirRepository;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -61,8 +63,8 @@ class DagulirController extends Controller
     }
 
     function store(Request $request) {
-        $data = sipde_token();
-        if ($data['token'] != null) {
+        try {
+            $data = sipde_token();
             DB::beginTransaction();
             $pengajuan_degulir = Http::withHeaders([
                 'Authorization' => 'Bearer ' .$data['token'],
@@ -96,6 +98,9 @@ class DagulirController extends Controller
                 "email" =>  $request->get('email'),
                 "nama_pj" => $request->has('nama_pj') ? $request->has('nama_pj') : null,
             ])->json();
+            if ($pengajuan_degulir['data']['status_code'] == 400) {
+                return redirect()->route('dagulir.index')->withError('Terjadi kesalahan data.');
+            }
             $pengajuan = new PengajuanDagulir;
             $pengajuan->kode_pendaftaran = $pengajuan_degulir['data']['kode_pendaftaran'];
             $pengajuan->nama = $request->get('nama_lengkap');
@@ -131,10 +136,23 @@ class DagulirController extends Controller
             $pengajuan->from_apps = 'pincetar';
             $pengajuan->save();
 
-            DB::commit();
-            return redirect()->route('dagulir.index');
-        }else{
+            $addPengajuan = new PengajuanModel();
+            $addPengajuan->id_staf = Auth::user()->id;
+            $addPengajuan->tanggal = date(now());
+            $addPengajuan->id_cabang = $request->get('kode_bank_cabang');
+            $addPengajuan->skema_kredit = 'Dagulir';
+            $addPengajuan->dagulir_id = $pengajuan->id;
+            $addPengajuan->save();
 
+            DB::commit();
+            return redirect()->route('dagulir.index')->withStatus('Berhasil menambahkan pengajuan! dengan Kode Pendaftaran : '.$pengajuan_degulir['data']['kode_pendaftaran']);
+
+        } catch (Exception $th) {
+            return $th;
+            DB::rollback();
+        } catch (QueryException $e){
+            return $e;
+            DB::rollBack();
         }
     }
 
