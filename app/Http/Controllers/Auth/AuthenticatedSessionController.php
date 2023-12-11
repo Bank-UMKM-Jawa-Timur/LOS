@@ -42,7 +42,7 @@ class AuthenticatedSessionController extends Controller
                 if (\Hash::check($request->password, $user->password)) {
                     $request->authenticate();
                     // Get Response API
-                    $response = Http::post(env('SIPDE_HOST'), [
+                    $response = Http::post(env('SIPDE_HOST').'/login', [
                         // 'username' => $request->get('email'),
                         // 'password' => $request->get('password'),
                         'username' => env('SIPDE_USERNAME'),
