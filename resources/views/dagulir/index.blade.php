@@ -205,7 +205,7 @@
             <div class="mt-5 ml-5 text-sm font-medium text-gray-500">
               <p>Showing {{ $start }} - {{ $end }} from {{ $data->total() }} entries</p>
             </div>
-            {{ $data->links() }}
+            {{ $data->links('pagination::tailwind') }}
             {{-- <div class="pagination">
               <a
                 href=""
