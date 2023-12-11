@@ -91,7 +91,7 @@ class PengajuanController extends Controller
             if($validator->fails()){
                 $req_status = Response::HTTP_UNPROCESSABLE_ENTITY;
                 $message = $validator->errors()->all();
-                $status = 'failed';
+                $status = 'gagal';
             } else{
                 $userId = User::where('user_dagulir', 1)
                     ->where('id_cabang', $request->get('kode_bank_cabang'))
@@ -99,7 +99,7 @@ class PengajuanController extends Controller
                 if($userId == null){
                     $req_status = Response::HTTP_UNPROCESSABLE_ENTITY;
                     $message = 'User tidak dapat ditemukan pada bank cabang dengan kode '. $request->get('kode_bank_cabang');
-                    $status = 'failed';
+                    $status = 'gagal';
                 } else{
                     $insertDagulir = [
                         'kode_pendaftaran' => $request->get('kode_pendaftaran'),
@@ -148,18 +148,18 @@ class PengajuanController extends Controller
                     $addPengajuan->save();
     
                     DB::commit();
-                    $status = 'success';
+                    $status = 'berhasil';
                     $message = 'Berhasil menambahkan data pengajuan dagulir.';
                 }
             }
         } catch (\Exception $e) {
             DB::rollback();
-            $status = 'failed';
+            $status = 'gagal';
             $message = $e->getMessage();
             $req_status = Response::HTTP_BAD_REQUEST;
         } catch(QueryException $e){
             DB::rollBack();
-            $status = 'failed';
+            $status = 'gagal';
             $message = $e->getMessage();
             $req_status = Response::HTTP_BAD_REQUEST;
         } finally {
