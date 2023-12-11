@@ -6,6 +6,25 @@
 
 @endsection
 
+@push('script-inject')
+<script>
+    $('#page_length').on('change', function() {
+        $('#form').submit()
+    })
+    // Adjust pagination url
+    var btn_pagination = $(.pagination).find('a')
+    var page_url = window.location.href
+    $(.pagination).find('a').each(function(i, obj) {
+        if (page_url.includes('page_length')) {
+            btn_pagination[i].href += &page_length=${$('#page_length').val()}
+        }
+        if (page_url.includes('q')) {
+            btn_pagination[i].href += &q=${$('#q').val()}
+        }
+    })
+</script>
+@endpush
+
 @section('content')
 <section class="p-5 overflow-y-auto mt-5">
     <div class="head space-y-5 w-full font-poppins">
@@ -22,6 +41,7 @@
       >
         <div class="left-button gap-2 flex lg:justify-end">
           <a
+            href="{{ route('dagulir.index') }}"
             class="px-7 py-2 cursor-pointer  rounded flex justify-center items-center font-semibold bg-theme-primary border text-white"
           >
             <span class="mt-1 mr-3">
@@ -63,195 +83,205 @@
     </div>
     <div class="body-pages">
       <div class="table-wrapper border bg-white mt-3">
-        <div
-          class="layout-wrapping p-3 lg:flex grid grid-cols-1 justify-center lg:justify-between"
-        >
-          <div
-            class="left-layout lg:w-auto w-full lg:block flex justify-center"
-          >
-            <div class="flex gap-5 p-2">
-              <span class="mt-[10px] text-sm">Show</span>
-              <select
-                name=""
-                class="border border-gray-300 rounded appearance-none text-center px-4 py-2 outline-none"
-                id=""
-              >
-                <option value="">10</option>
-                <option value="">15</option>
-                <option value="">20</option>
-              </select>
-              <span class="mt-[10px] text-sm">Entries</span>
+        <form id="form" method="get">
+            <div
+            class="layout-wrapping p-3 lg:flex grid grid-cols-1 justify-center lg:justify-between"
+            >
+            <div
+                class="left-layout lg:w-auto w-full lg:block flex justify-center"
+            >
+                <div class="flex gap-5 p-2">
+                <span class="mt-[10px] text-sm">Show</span>
+                <select
+                    name="page_length"
+                    class="border border-gray-300 rounded appearance-none text-center px-4 py-2 outline-none"
+                    id="page_length"
+                >
+                    <option value="1"
+                        @isset($_GET['page_length']) {{ $_GET['page_length'] == 1 ? 'selected' : '' }} @endisset>
+                        1</option>
+                    <option value="20"
+                        @isset($_GET['page_length']) {{ $_GET['page_length'] == 20 ? 'selected' : '' }} @endisset>
+                        20</option>
+                    <option value="50"
+                        @isset($_GET['page_length']) {{ $_GET['page_length'] == 50 ? 'selected' : '' }} @endisset>
+                        50</option>
+                    <option value="100"
+                        @isset($_GET['page_length']) {{ $_GET['page_length'] == 100 ? 'selected' : '' }} @endisset>
+                        100</option>
+                </select>
+                <span class="mt-[10px] text-sm">Entries</span>
+                </div>
             </div>
-          </div>
-          <div class="right-layout lg:w-auto w-full">
-            <div class="input-search flex gap-2">
-              <input
-                type="search"
-                placeholder="Cari nama usaha... "
-                class="w-full px-8 outline-none text-sm p-3 border"
-              />
-              <button
-                class="px-5 py-2 bg-theme-primary rounded text-white text-lg"
-              >
-                <iconify-icon
-                  icon="ic:sharp-search"
-                  class="mt-2 text-lg"
-                ></iconify-icon>
-              </button>
+            <div class="right-layout lg:w-auto w-full">
+                <div class="input-search flex gap-2">
+                <input
+                    type="search"
+                    placeholder="Cari nama usaha... "
+                    name="q" id="q"
+                    class="w-full px-8 outline-none text-sm p-3 border"
+                    value="{{ isset($_GET['q']) ? $_GET['q'] : '' }}"
+                />
+                <button
+                    class="px-5 py-2 bg-theme-primary rounded text-white text-lg"
+                >
+                    <iconify-icon
+                    icon="ic:sharp-search"
+                    class="mt-2 text-lg"
+                    ></iconify-icon>
+                </button>
+                </div>
             </div>
-          </div>
-        </div>
-        <div class="table-responsive">
-          <table class="tables">
-            <thead>
-              <tr>
-                <th>No.</th>
-                <th>Kode Pendaftaran</th>
-                <th>Tanggal Pengajuan</th>
-                <th>No Ktp/Npwp</th>
-                <th>Nama Usaha</th>
-                <th>Jenis Usaha</th>
-                <th>Telp</th>
-                <th>Tipe Registrasi</th>
-                <th>Status</th>
-                <th>Status Penyelia</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
-            <tbody>
-                @php
-                    $page = isset($_GET['page']) ? $_GET['page'] : 1;
-                    $page_length = isset($_GET['page_length']) ? $_GET['page_length'] : 10;
-                    $start = $page == 1 ? 1 : $page * $page_length - $page_length + 1;
-                    $end = $page == 1 ? $page_length : $start + $page_length - 1;
-                    $i = $page == 1 ? 1 : $start;
-                @endphp
-                @foreach ($data as $item)
+            </div>
+            <div class="table-responsive">
+            <table class="tables">
+                <thead>
                 <tr>
-
-                    <td>{{ $i++ }}</td>
-                    <td>{{ $item->kode_pendaftaran }}</td>
-                    <td>{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d F Y') }}</td>
-                    <td>{{ $item->npwp }}</td>
-                    <td class="font-semibold uppercase">{{ ucwords($item->nama) }}</td>
-                    <td>
-                        @if ($item->jenis_usaha == '1')
-                            Sektor Pertanian
-                        @elseif ($item->jenis_usaha == '2')
-                            Sektor Peternakan
-                        @elseif ($item->jenis_usaha == '3')
-                            Sektor Kelautan dan Perikanan
-                        @elseif ($item->jenis_usaha == '4')
-                            Sektor Perkebunan
-                        @elseif ($item->jenis_usaha == '5')
-                        Sektor industri
-                        @elseif ($item->jenis_usaha == '6')
-                        Sektor Perdagangan
-                        @elseif ($item->jenis_usaha == '7')
-                        Sektor Makanan dan Minuman
-                        @elseif ($item->jenis_usaha == '8')
-                        Koperasi
-                        @elseif ($item->jenis_usaha == '9')
-                        Sektor jasa dan lainnya
-                        @elseif ($item->jenis_usaha == '10')
-                        Lainnya
-                        @else
-                        Tidak ada
-                        @endif
-                    </td>
-                    <td>{{ $item->telp }}</td>
-                    <td>
-                        @if ($item->tipe == '1')
-                            Sektor Pertanian
-                        @elseif ($item->tipe == '2')
-                            Sektor Peternakan
-                        @elseif ($item->tipe == '3')
-                            Sektor Kelautan dan Perikanan
-                        @elseif ($item->tipe == '4')
-                        @else
-                        Tidak ada
-                        @endif
-                    </td>
-                    <td>
-                    <span class="status bg-green-100 text-green-500 border border-green-300">
-                        <span>Disetujui</span>
-                    </span>
-                    </td>
-                    <td>
-                        <span class="status bg-green-100 text-green-500 border border-green-300">
-                        <span>Disetujui</span>
-                        </span>
-                    </td>
-                    <td>
-                    <a href="{{ route('dagulir.review') }}">
-                        <button class="btn  text-white bg-theme-secondary border-theme-secondary border">
-                        <div class="flex gap-3">
-                            <span>
-                            <iconify-icon icon="uil:edit" class="mt-[3px]"></iconify-icon>
-                            </span>
-                            <p class="text-sm">Review</p>
-                        </div>
-                        </button>
-                    </a>
-                    </td>
+                    <th>No.</th>
+                    <th>Kode Pendaftaran</th>
+                    <th>Tanggal Pengajuan</th>
+                    <th>No Ktp/Npwp</th>
+                    <th>Nama Usaha</th>
+                    <th>Jenis Usaha</th>
+                    <th>Telp</th>
+                    <th>Tipe Registrasi</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
                 </tr>
-              @endforeach
+                </thead>
+                <tbody>
+                    @php
+                        $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                        $page_length = isset($_GET['page_length']) ? $_GET['page_length'] : 10;
+                        $start = $page == 1 ? 1 : $page * $page_length - $page_length + 1;
+                        $end = $page == 1 ? $page_length : $start + $page_length - 1;
+                        $i = $page == 1 ? 1 : $start;
+                    @endphp
+                    @foreach ($data as $item)
+                    <tr>
 
-            </tbody>
-          </table>
-        </div>
-        <div class="footer-table p-2">
-          <div class="flex justify-between">
-            <div class="mt-5 ml-5 text-sm font-medium text-gray-500">
-              <p>Showing {{ $start }} - {{ $end }} from {{ $data->total() }} entries</p>
+                        <td>{{ $i++ }}</td>
+                        <td>{{ $item->kode_pendaftaran }}</td>
+                        <td>{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d F Y') }}</td>
+                        <td>{{ $item->npwp }}</td>
+                        <td class="font-semibold uppercase">{{ ucwords($item->nama) }}</td>
+                        <td>
+                            @if ($item->jenis_usaha == '1')
+                                Sektor Pertanian
+                            @elseif ($item->jenis_usaha == '2')
+                                Sektor Peternakan
+                            @elseif ($item->jenis_usaha == '3')
+                                Sektor Kelautan dan Perikanan
+                            @elseif ($item->jenis_usaha == '4')
+                                Sektor Perkebunan
+                            @elseif ($item->jenis_usaha == '5')
+                            Sektor industri
+                            @elseif ($item->jenis_usaha == '6')
+                            Sektor Perdagangan
+                            @elseif ($item->jenis_usaha == '7')
+                            Sektor Makanan dan Minuman
+                            @elseif ($item->jenis_usaha == '8')
+                            Koperasi
+                            @elseif ($item->jenis_usaha == '9')
+                            Sektor jasa dan lainnya
+                            @elseif ($item->jenis_usaha == '10')
+                            Lainnya
+                            @else
+                            Tidak ada
+                            @endif
+                        </td>
+                        <td>{{ $item->telp }}</td>
+                        <td>
+                            @if ($item->tipe == '1')
+                                Sektor Pertanian
+                            @elseif ($item->tipe == '2')
+                                Sektor Peternakan
+                            @elseif ($item->tipe == '3')
+                                Sektor Kelautan dan Perikanan
+                            @elseif ($item->tipe == '4')
+                            @else
+                            Tidak ada
+                            @endif
+                        </td>
+                        <td>
+                        <span class="status bg-green-100 text-green-500 border border-green-300">
+                            <span>Disetujui</span>
+                        </span>
+                        </td>
+
+                        <td>
+                            <div class="flex">
+                                <a href="{{ route('dagulir.review',$item->id) }}">
+                                    <button type="button" class="btn  text-white bg-theme-secondary border-theme-secondary border">
+                                    <div class="flex gap-3">
+                                        <span>
+                                        <iconify-icon icon="uil:edit" class="mt-[3px]"></iconify-icon>
+                                        </span>
+                                        <p class="text-sm">Review</p>
+                                    </div>
+                                    </button>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                @endforeach
+
+                </tbody>
+            </table>
             </div>
-            {{ $data->links('pagination::tailwind') }}
-            {{-- <div class="pagination">
-              <a
-                href=""
-                class="item-pg item-pg-prev"
-              >
-                Prev
-              </a>
-              <a
-                href="#"
-                class="item-pg active-pg"
-              >
-                1
-              </a>
-              <a
-                href="#"
-                class="item-pg"
-              >
-                2
-              </a>
-              <a
-                href="#"
-                class="item-pg"
-              >
-                3
-              </a>
-              <a
-                href="#"
-                class="item-pg"
-              >
-                4
-              </a>
-              <a
-                href="#"
-                class="item-pg of-the-data"
-              >
-                of 100
-              </a>
-              <a
-                href=""
-                class="item-pg item-pg-next"
-              >
-                Next
-              </a>
-            </div> --}}
-          </div>
-        </div>
+            <div class="footer-table p-2">
+            <div class="flex justify-between">
+                <div class="mt-5 ml-5 text-sm font-medium text-gray-500">
+                <p>Showing {{ $start }} - {{ $end }} from {{ $data->total() }} entries</p>
+                </div>
+                {{ $data->links('pagination::tailwind') }}
+                {{-- <div class="pagination">
+                <a
+                    href=""
+                    class="item-pg item-pg-prev"
+                >
+                    Prev
+                </a>
+                <a
+                    href="#"
+                    class="item-pg active-pg"
+                >
+                    1
+                </a>
+                <a
+                    href="#"
+                    class="item-pg"
+                >
+                    2
+                </a>
+                <a
+                    href="#"
+                    class="item-pg"
+                >
+                    3
+                </a>
+                <a
+                    href="#"
+                    class="item-pg"
+                >
+                    4
+                </a>
+                <a
+                    href="#"
+                    class="item-pg of-the-data"
+                >
+                    of 100
+                </a>
+                <a
+                    href=""
+                    class="item-pg item-pg-next"
+                >
+                    Next
+                </a>
+                </div> --}}
+            </div>
+            </div>
+        </form>
       </div>
     </div>
   </section>

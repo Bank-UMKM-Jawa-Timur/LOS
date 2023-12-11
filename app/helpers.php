@@ -49,11 +49,16 @@ if (!function_exists('sipde_token')) {
                     'token' => null,
                 ]);
             }else{
-                return response()->json([
-                    'status' => true,
-                    'message' => 'Berhasil mendapatkan token.',
+                return [
                     'token' => $json['token'],
-                ]);
+                ];
         }
+    }
+}
+
+if (!function_exists('jenis_usaha_dagulir')) {
+    function jenis_usaha_dagulir() {
+        $data = sipde_token();
+        return $data['token'];
     }
 }

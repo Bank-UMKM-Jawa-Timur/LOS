@@ -21,7 +21,8 @@
             type="text"
             class="form-input"
             placeholder="Masukan Nama"
-            name=""
+            name="nama_pendaftar_dagulir"
+            value="{{ $data->nama }}"
           />
         </div>
         <div class="input-box">
@@ -30,7 +31,8 @@
             type="text"
             class="form-input"
             placeholder="Masukan Nama PJ Ketua"
-            name=""
+            name="nama_pj_dagulir"
+            value="{{ $data->nama_pj_ketua == null ? '-' : $data->nama_pj_ketua }}"
           />
         </div>
         <div class="input-box">
@@ -39,7 +41,9 @@
             type="text"
             class="form-input"
             placeholder="Masukan NIK"
-            name=""
+            name="nik_dagulir"
+            value="{{ $data->nik }}"
+
           />
         </div>
         <div class="input-box">
@@ -47,8 +51,9 @@
           <input
             type="text"
             class="form-input"
-            placeholder="Masukan NIK"
-            name=""
+            placeholder="Masukan Tempat Lahir"
+            name="tempat_lahir_dagulir"
+            value="{{ $data->tempat_lahir }}"
           />
         </div>
         <div class="input-box">
@@ -56,8 +61,9 @@
           <input
             type="date"
             class="form-input"
-            placeholder="Masukan NIK"
-            name=""
+            placeholder="Masukan Tanggal Lahir"
+            name="tanggal_lahir_dagulir"
+            value="{{ $data->tanggal_lahir }}"
           />
         </div>
         <div class="input-box">
@@ -66,7 +72,8 @@
             type="text"
             class="form-input"
             placeholder="Masukan Nomor Telepon"
-            name=""
+            name="telp_dagulir"
+            value="{{ $data->telp }}"
           />
         </div>
         <div class="input-box">
@@ -123,7 +130,7 @@
             name=""
           />
         </div>
- 
+
       </div>
       <div class="form-group-3">
         <div class="input-box">
