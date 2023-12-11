@@ -19,6 +19,7 @@ class CabangController extends Controller
 
         try{
             $data = Cabang::select('id', 'cabang')
+                ->where('kode_cabang','!=','000')
                 ->orderBy('id', 'asc')
                 ->get();
             $status = 'berhasil';
