@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddTelpToCalonNasabahTable extends Migration
+class AddStatusToPengajuanDagulirTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,9 @@ class AddTelpToCalonNasabahTable extends Migration
      */
     public function up()
     {
-        Schema::table('calon_nasabah', function (Blueprint $table) {
-            $table->string('no_telp', 15)->nullable()->after('no_ktp');
+        Schema::table('pengajuan_dagulir', function (Blueprint $table) {
+            $table->enum('status', [1,2,3,4,5,6,7,8])->after('user_id');
+
         });
     }
 
@@ -25,8 +26,8 @@ class AddTelpToCalonNasabahTable extends Migration
      */
     public function down()
     {
-        Schema::table('calon_nasabah', function (Blueprint $table) {
-            $table->dropColumn('no_telp');
+        Schema::table('pengajuan_dagulir', function (Blueprint $table) {
+            $table->dropColumn('status');
         });
     }
 }

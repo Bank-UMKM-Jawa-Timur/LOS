@@ -99,6 +99,7 @@ class TemporaryService
             'alamat_rumah' => $request->alamat_rumah,
             'alamat_usaha' => $request->alamat_usaha,
             'no_ktp' => $request->no_ktp,
+            'no_telp' => $request->no_telp,
             'tempat_lahir' => $request->tempat_lahir,
             'tanggal_lahir' => $controller->formatDate($request->tanggal_lahir),
             'status' => $request->status,

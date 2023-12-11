@@ -107,7 +107,7 @@ class PengajuanController extends Controller
                         'nik' => $request->get('nik'),
                         'nama_pj_ketua' => $request->get('nama_pj_ketua') ?? null,
                         'tempat_lahir' => $request->get('tempat_lahir'),
-                        'tanggal_lahir' => $request->get('tanggal_lahir'),
+                        'tanggal_lahir' => date('Y-m-d', strtotime($request->get('tanggal_lahir'))),
                         'telp' => $request->get('telp'),
                         'jenis_usaha' => $request->get('jenis_usaha'),
                         'nominal' => $request->get('nominal'),
@@ -128,22 +128,19 @@ class PengajuanController extends Controller
                         'npwp' => $request->get('npwp'),
                         'jenis_badan_hukum' => $request->get('jenis_badan_hukum'),
                         'tempat_berdiri' => $request->get('tempat_berdiri'),
-                        'tanggal_berdiri' => $request->get('tanggal_berdiri'),
-                        'tanggal' => $request->get('tanggal'),
+                        'tanggal_berdiri' => date('Y-m-d', strtotime($request->get('tanggal_berdiri'))),
+                        'tanggal' => date('Y-m-d', strtotime($request->get('tanggal'))),
                         'user_id' => $userId->id,
                         'created_at' => now(),
                     ];
-    
+
                     $pengajuanDagulirId = PengajuanDagulir::insertGetId($insertDagulir);
-                    $dagulirId = DB::table('mst_produk_kredit')
-                        ->where('name', 'like', "%dagulir%")
-                        ->first();
+
                     $addPengajuan = new PengajuanModel();
                     $addPengajuan->id_staf = $userId->id;
                     $addPengajuan->tanggal = date(now());
                     $addPengajuan->id_cabang = $request->get('kode_bank_cabang');
                     $addPengajuan->skema_kredit = 'Dagulir';
-                    $addPengajuan->produk_kredit_id = $dagulirId->id;
                     $addPengajuan->dagulir_id = $pengajuanDagulirId;
                     $addPengajuan->save();
     

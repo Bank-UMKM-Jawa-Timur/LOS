@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddTelpToCalonNasabahTable extends Migration
+class AddNominalTanggalRealisasiToCalonNasabahTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,12 @@ class AddTelpToCalonNasabahTable extends Migration
     public function up()
     {
         Schema::table('calon_nasabah', function (Blueprint $table) {
-            $table->string('no_telp', 15)->nullable()->after('no_ktp');
+            $table->string('nominal_realisasi')
+                ->nullable()
+                ->after('jumlah_kredit');
+            $table->integer('jangka_waktu_realisasi', false, true)
+                ->nullable()
+                ->after('nominal_realisasi');
         });
     }
 
@@ -26,7 +31,8 @@ class AddTelpToCalonNasabahTable extends Migration
     public function down()
     {
         Schema::table('calon_nasabah', function (Blueprint $table) {
-            $table->dropColumn('no_telp');
+            $table->dropColumn('nominal_realisasi');
+            $table->dropColumn('jangka_waktu_realisasi');
         });
     }
 }
