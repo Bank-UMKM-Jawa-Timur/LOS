@@ -42,9 +42,24 @@ if (!function_exists('sipde_token')) {
     function sipde_token() {
         $filePath = storage_path('app/response.json');
         $json = json_decode(file_get_contents($filePath), true);
+        if ($json['token'] == "") {
+            $response = Http::post(config('dagulir.host').'/login', [
+                'username' => config('dagulir.username'),
+                'password' => config('dagulir.password'),
+            ])->json();
+            $filePath = storage_path('app/response.json');
+            file_put_contents($filePath, json_encode($response));
+            $filePath = storage_path('app/response.json');
+            $json = json_decode(file_get_contents($filePath), true);
+            return [
+                'token' => $json['token'],
+            ];
+        }
+        $filePath = storage_path('app/response.json');
+        $json = json_decode(file_get_contents($filePath), true);
         $date = Carbon::now()->toDateTimeString();
         if ($date >= $json['exp']) {
-            $response = Http::post(config('dagulir.host'), [
+            $response = Http::post(config('dagulir.host').'/login', [
                 'username' => config('dagulir.username'),
                 'password' => config('dagulir.password'),
             ])->json();
@@ -52,6 +67,8 @@ if (!function_exists('sipde_token')) {
             file_put_contents($filePath, json_encode($response));
             $filePath = storage_path('app/response.json');
         }else{
+            $filePath = storage_path('app/response.json');
+            $json = json_decode(file_get_contents($filePath), true);
             return [
                 'token' => $json['token'],
             ];
