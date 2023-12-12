@@ -24,7 +24,7 @@ class DagulirRequestForm extends FormRequest
     public function rules()
     {
         return [
-            'nama' => 'required',
+            'nama_lengkap' => 'required',
             'nik' => 'required',
             'tempat_lahir' => 'required',
             'tanggal_lahir' => 'required',
@@ -34,7 +34,6 @@ class DagulirRequestForm extends FormRequest
             'tujuan_penggunaan' => 'required',
             'jangka_waktu' => 'required',
             'ket_agunan' => 'required',
-            'kode_bank_pusat' => 'required',
             'kode_bank_cabang' => 'required',
             'kecamatan_sesuai_ktp' => 'required',
             'kode_kotakab_ktp' => 'required',

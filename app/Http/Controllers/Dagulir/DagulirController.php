@@ -62,7 +62,7 @@ class DagulirController extends Controller
         ]);
     }
 
-    function store(Request $request) {
+    function store(DagulirRequestForm $request) {
         try {
             $data = sipde_token();
             DB::beginTransaction();
