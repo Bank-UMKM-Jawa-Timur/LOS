@@ -22,16 +22,17 @@
     />
     <link
       rel="stylesheet"
-      href="{{asset('css/theme.bankumkm.css')}}"
+      href="{{asset('css/app.css')}}"
     />
   </head>
   <body>
     <section
-      class="w-full font-poppins h-screen bg-[url('{{asset('img/background.jpg')}}')] bg-center bg-cover"
+    style="background-image: url('{{ asset('img/background.jpg')}} ')"
+      class="w-full font-poppins h-screen  bg-center bg-cover"
     >
       <div class="overlay bg-theme-secondary/90 w-full h-screen">
         <br />
-        <div class="container max-w-2xl mx-auto mt-36 lg:p-0 p-10">
+        <div class="container max-w-2xl mx-auto mt-20 lg:p-0 p-10">
           <form
             method="post" id="login" action="{{ route('login') }}"
           >
@@ -44,7 +45,7 @@
                   class=""
                 />
               </div>
-              <div class="bg-white w-full p-10 rounded-[10px]">
+              <div class="bg-white w-full p-8 rounded-[10px]">
                 <div class="head text-center">
                   <h2
                     class="font-semibold text-theme-secondary tracking-tighter text-xl"
@@ -70,15 +71,15 @@
                       <div class="input-box space-y-4">
                         <label
                           for="emailnip"
-                          class="block tracking-tighter text-gray-500 font-semibold"
+                          class="block tracking-tighter text-lg text-gray-500 font-semibold"
                         >
                           Email atau NIP
                         </label>
                         <div
-                          class="form-input border-2 rounded-md bg-gray-50 focus-within:bg-gray-100 flex"
+                          class="form-input focus:ring-0 ring-offset-transparent border-2 rounded-md bg-gray-50 focus-within:bg-gray-100 flex"
                         >
                           <!-- icon -->
-                          <div class="text-center ml-1 mt-0 p-2 text-gray-400">
+                          <div class="text-center ml-0 mt-0 p-2 text-gray-400">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               class="w-8"
@@ -102,15 +103,15 @@
                       <div class="input-box space-y-4">
                         <label
                           for="password"
-                          class="block tracking-tighter text-gray-500 font-semibold"
+                          class="block tracking-tighter text-lg text-gray-500 font-semibold"
                         >
                           Password
                         </label>
                         <div
-                          class="form-input border-2 rounded-md bg-gray-50 focus-within:bg-gray-100 flex gap-2"
+                          class="form-input focus:ring-0 ring-offset-transparent  border-2 rounded-md bg-gray-50 focus-within:bg-gray-100 flex gap-2"
                         >
                           <!-- icon -->
-                          <div class="text-center ml-1 mt-0 p-2 text-gray-400">
+                          <div class="text-center ml-0 mt-0 p-2 text-gray-400">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               class="w-8"
@@ -127,7 +128,7 @@
                             autocomplete="off"
                             name="password"
                             value="{{ old('password') }}"
-                            class="w-full p-3 bg-gray-50 rounded-md font-medium focus:bg-gray-100 outline-none"
+                            class="w-full p-2 bg-gray-50 rounded-md font-medium focus:bg-gray-100 outline-none"
                           />
                           <div class="text-center mr-2 mt-0 p-2 text-gray-400">
                             <svg
