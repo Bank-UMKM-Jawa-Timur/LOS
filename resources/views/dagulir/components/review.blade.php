@@ -1,28 +1,29 @@
 @if ($item->opsi_jawaban == 'input text')
     <input name="input_text[{{ $item->id }}][{{ $item->skor }}]" type="text"
         class="form-input {{$item->is_rupiah ? 'rupiah' : ''}}"
-        placeholder="Masukan informasi disini" />
+        placeholder="Masukan informasi disini"
+        value="{{ $item->jawaban ? $item->jawaban->opsi_text : '' }}" />
 @elseif ($item->opsi_jawaban == 'option')
-    <select name="option[{{ $item->id }}][{{ $item->skor }}]" class="form-select" id="">
+    <select name="input_option[{{ $item->id }}][{{ $item->skor }}]" class="form-select" id="">
         <option value="">-- Pilih Opsi --</option>
         @foreach ($item->option as $opt)
-            <option value="{{ $opt->id }}-{{ $opt->skor }}">{{ $opt->option }}</option>
+            <option value="{{ $opt->id }}-{{ $opt->skor }}" @if($opt->jawaban) @if($opt->jawaban->id_jawaban == $opt->id) selected @endif @endif>{{ $opt->option }}</option>
         @endforeach
     </select>
 @elseif ($item->opsi_jawaban == 'number')
     <input name="input_number[{{ $item->id }}][{{ $item->skor }}]" type="number" class="form-input {{$item->is_rupiah ? 'rupiah' : ''}}"
-        placeholder="Masukan informasi disini" />
+        placeholder="Masukan informasi disini" value="{{ $item->jawaban ? $item->jawaban->opsi_text : '' }}" />
 @elseif ($item->opsi_jawaban == 'persen')
     <div class="input-grouped">
         <input type="number" name="input_number[{{ $item->id }}][{{ $item->skor }}]" class="form-input"
-            placeholder="Masukan informasi disini" id="" />
+            placeholder="Masukan informasi disini" id="" value="{{ $item->jawaban ? $item->jawaban->opsi_text : '' }}" />
         <span class="group-text">
             <p>%</p>
         </span>
     </div>
 @elseif ($item->opsi_jawaban == 'long text')
-    <textarea name="input_text[{{ $item->id }}][{{ $item->skor }}]" class="form-textarea"
-        placeholder="Masukan informasi disini" id=""></textarea>
+    <textarea name="input_text_long[{{ $item->id }}][{{ $item->skor }}]" class="form-textarea"
+        placeholder="Masukan informasi disini" id="">{{ $item->jawaban ? $item->jawaban->opsi_text : '' }}</textarea>
 @elseif ($item->opsi_jawaban == 'file')
     <div class="flex gap-4">
         <input type="file" name="file[{{ $item->id }}]" class="form-input" />
@@ -38,10 +39,10 @@
         @endif
     </div>
 @elseif ($item->opsi_jawaban == 'kosong' && count($item->childs) > 0 && $item->level == 3)
-<select name="input[{{ $item->id }}][{{ $item->skor }}]" class="form-select" id="">
+<select name="input_option[{{ $item->id }}][{{ $item->skor }}]" class="form-select" id="">
     <option value="">-- Pilih Opsi --</option>
     @foreach ($item->childs as $opt)
-        <option value="{{ $opt->id }}-{{ $opt->status_skor }}">{{ $opt->nama }}</option>
+        <option value="{{ $opt->id }}-{{ $opt->status_skor }}" @if($opt->jawaban) @if($opt->jawaban->id_jawaban == $opt->id) selected @endif @endif>{{ $opt->nama }}</option>
     @endforeach
 </select>
 @else

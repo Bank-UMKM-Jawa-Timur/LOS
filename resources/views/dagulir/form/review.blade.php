@@ -16,26 +16,32 @@
         </nav>
         <div class="p-3">
             <div class="body-pages">
-                <div class="mt-3 container mx-auto ">
-                    <div id="dagulir-tab" class="is-tab-content active">
-                        @include('dagulir.pengajuan.dagulir')
-                    </div>
-                    @foreach ($items as $item)
-                        @php
-                            $title_id = str_replace('&', 'dan', strtolower($item->nama));
-                            $title_id = str_replace(' ', '-', strtolower($title_id));
-                            $title_tab = "$title_id-tab";
-                            $title_page = "dagulir.pengajuan.$title_id";
-                        @endphp
-                        <div id="{{$title_tab}}" class="is-tab-content">
-                            @include('dagulir.pengajuan.aspek', [
-                                'id_tab' => $title_id,
-                                'title' => $item->nama,
-                                'childs' => $item->childs
-                            ])
+                <form action="{{ route('dagulir.updatePenyelia',$dagulir->id) }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                    <div class="mt-3 container mx-auto ">
+                        <div id="dagulir-tab" class="is-tab-content active">
+                            @include('dagulir.pengajuan.review-dagulir', ['data' => $dagulir])
                         </div>
-                    @endforeach
-                </div>
+                        @foreach ($items as $item)
+                            @php
+                                $title_id = str_replace('&', 'dan', strtolower($item->nama));
+                                $title_id = str_replace(' ', '-', strtolower($title_id));
+                                $title_tab = "$title_id-tab";
+                                $title_page = "dagulir.pengajuan.$title_id";
+                                $id = $item->id;
+                            @endphp
+                            <div id="{{$title_tab}}" class="is-tab-content">
+                                @include('dagulir.pengajuan.review-aspek', [
+                                    'id_tab' => $title_id,
+                                    'title' => $item->nama,
+                                    'childs' => $item->childs,
+                                    'id' => $id
+                                ])
+                            </div>
+                        @endforeach
+
+                    </div>
+                </form>
             </div>
         </div>
     </section>
@@ -43,6 +49,102 @@
 
 @push('script-inject')
     <script>
+        $('#kabupaten').change(function() {
+            var kabID = $(this).val();
+            if (kabID) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('') }}/getkecamatan?kabID=" + kabID,
+                    dataType: 'JSON',
+                    success: function(res) {
+                           console.log(res);
+                        if (res) {
+                            $("#kecamatan").empty();
+                            $("#kecamatan").append('<option>---Pilih Kecamatan---</option>');
+                            $.each(res, function(nama, kode) {
+                                $('#kecamatan').append(`
+                                    <option value="${kode}">${nama}</option>
+                                `);
+                            });
+
+                            $('#kecamatan').trigger('change');
+                        } else {
+                            $("#kecamatan").empty();
+                        }
+                    }
+                });
+            } else {
+                $("#kecamatan").empty();
+            }
+        });
+
+        $('#kabupaten_domisili').change(function() {
+            var kabID = $(this).val();
+            if (kabID) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('') }}/getkecamatan?kabID=" + kabID,
+                    dataType: 'JSON',
+                    success: function(res) {
+                           console.log(res);
+                        if (res) {
+                            $("#kecamatan_domisili").empty();
+                            $("#kecamatan_domisili").append('<option>---Pilih Kecamatan---</option>');
+                            $.each(res, function(nama, kode) {
+                                $('#kecamatan_domisili').append(`
+                                    <option value="${kode}">${nama}</option>
+                                `);
+                            });
+
+                            $('#kecamatan_domisili').trigger('change');
+                        } else {
+                            $("#kecamatan_domisili").empty();
+                        }
+                    }
+                });
+            } else {
+                $("#kecamatan_domisili").empty();
+            }
+        });
+        $('#kabupaten_usaha').change(function() {
+            var kabID = $(this).val();
+            if (kabID) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('') }}/getkecamatan?kabID=" + kabID,
+                    dataType: 'JSON',
+                    success: function(res) {
+                           console.log(res);
+                        if (res) {
+                            $("#kecamatan_usaha").empty();
+                            $("#kecamatan_usaha").append('<option>---Pilih Kecamatan---</option>');
+                            $.each(res, function(nama, kode) {
+                                $('#kecamatan_usaha').append(`
+                                    <option value="${kode}">${nama}</option>
+                                `);
+                            });
+
+                            $('#kecamatan_usaha').trigger('change');
+                        } else {
+                            $("#kecamatan_usaha").empty();
+                        }
+                    }
+                });
+            } else {
+                $("#kecamatan_usaha").empty();
+            }
+        });
+
+
+        $('#tipe').on('change',function(e) {
+            var tipe = $(this).val();
+            console.log(typeof(tipe));
+            if (tipe == '2' || tipe == "0" ) {
+                $('#nama_pj').addClass('hidden');
+            }else{
+                $('#nama_pj').removeClass('hidden');
+            }
+        })
         $('.rupiah').keyup(function(e) {
             var input = $(this).val()
             $(this).val(formatrupiah(input))
@@ -67,6 +169,7 @@
         $(".tab-wrapper .btn-tab").click(function(e) {
             e.preventDefault();
             var tabId = $(this).data("tab");
+            // console.log(tabId);
 
             $(".is-tab-content").removeClass("active");
             $(".tab-wrapper .btn-tab").removeClass(
@@ -93,10 +196,15 @@
             const $activeContent = $(".is-tab-content.active");
             const $nextContent = $activeContent.next();
 
+            console.log($nextContent.length);
             if ($nextContent.length) {
                 $activeContent.removeClass("active");
                 $nextContent.addClass("active");
+            }else{
+                $(".next-tab").addClass('hidden');
+                $('.btn-simpan').removeClass('hidden')
             }
+
         });
 
         $(".prev-tab").on("click", function() {
@@ -106,6 +214,8 @@
             if ($prevContent.length) {
                 $activeContent.removeClass("active");
                 $prevContent.addClass("active");
+                $(".next-tab").rem('hidden');
+                $('.btn-simpan').addClass('hidden')
             }
         });
 

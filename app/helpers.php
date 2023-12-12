@@ -79,11 +79,13 @@ if (!function_exists('sipde_token')) {
 if (!function_exists('list_tipe_pengajuan')) {
     function list_tipe_pengajuan() {
         $data = sipde_token();
+
         if ($data['token'] != null) {
+            $host = config('dagulir.host');
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' .$data['token'],
             ])
-            ->post(env('SIPDE_HOST').'/list_tipe_pengajuan.json')->json();
+            ->post($host.'/list_tipe_pengajuan.json')->json();
             return $response['data'];
         }else{
             return 'Silahkan login kembali';
@@ -96,10 +98,11 @@ if (!function_exists('list_jenis_usaha')) {
     function list_jenis_usaha() {
         $data = sipde_token();
         if ($data['token'] != null) {
+            $host = config('dagulir.host');
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' .$data['token'],
             ])
-            ->post(env('SIPDE_HOST').'/list_jenis_usaha.json')->json();
+            ->post($host.'/list_jenis_usaha.json')->json();
             return $response['data'];
         }else{
             return 'Silahkan login kembali';
@@ -112,10 +115,11 @@ if (!function_exists('list_status')) {
     function list_status() {
         $data = sipde_token();
         if ($data['token'] != null) {
+            $host = config('dagulir.host');
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' .$data['token'],
             ])
-            ->post(env('SIPDE_HOST').'/list_status.json')->json();
+            ->post($host.'/list_status.json')->json();
             return json_encode($response);
         }else{
             return 'Silahkan login kembali';
@@ -127,9 +131,10 @@ if (!function_exists('update_status')) {
     function update_status($kode, $status, $lampiran, $jangka_waktu, $realisasi_waktu ) {
         $data = sipde_token();
         if ($data['token'] != null) {
+            $host = config('dagulir.host');
             Http::withHeaders([
                 'Authorization' => 'Bearer ' .$data['token'],
-            ])->post(env('SIPDE_HOST'),[
+            ])->post($host,[
                 "kode_pendaftaran" => $kode,
                 "status" => $status,
                 "lampiran_analisa" => $lampiran,

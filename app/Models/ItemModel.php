@@ -29,4 +29,8 @@ class ItemModel extends Model
     public function childs() {
         return $this->hasMany(ItemModel::class, 'id_parent', 'id');
     }
+
+    public function jawabanOption() {
+        return $this->belongsTo(OptionModel::class, 'id', 'id');
+    }
 }

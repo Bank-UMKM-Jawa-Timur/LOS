@@ -10,6 +10,7 @@ use App\Models\JawabanPengajuanModel;
 use App\Models\JawabanTextModel;
 use App\Models\Kabupaten;
 use App\Models\Kecamatan;
+use App\Models\PendapatPerAspek;
 use App\Models\PengajuanDagulir;
 use App\Models\PengajuanModel;
 use App\Services\TemporaryService;
@@ -34,6 +35,15 @@ class DagulirController extends Controller
 
     public function index(Request $request)
     {
+        // $id_cabang = Auth::user()->id_cabang;
+        // $param['cabang'] = DB::table('cabang')
+        //     ->get();
+        // $role = auth()->user()->role;
+        // if ($role == 'Staf Analis Kredit') {
+        // } elseif ($role == 'Penyelia Kredit') {
+        // } elseif ($role == 'PBO' || $role == 'PBP') {
+        // } elseif ($role == 'Pincab') {
+        // } else {
         // paginate
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
@@ -79,7 +89,7 @@ class DagulirController extends Controller
             $pengajuan->nama = $request->get('nama_lengkap');
             $pengajuan->nik = $request->get('nik');
             $pengajuan->nama_pj_ketua = $request->has('nama_pj') ? $request->has('nama_pj') : null;
-            $pengajuan->tempat_lahir = $request->get('tempat_lahir');
+            $pengajuan->tempat_lahir =  $request->get('tempat_lahir');
             $pengajuan->tanggal_lahir = $request->get('tanggal_lahir');
             $pengajuan->telp = $request->get('telp');
             $pengajuan->jenis_usaha = $request->get('jenis_usaha');
@@ -174,6 +184,93 @@ class DagulirController extends Controller
             DB::commit();
             return redirect()->route('dagulir.index')->withStatus('Berhasil menambahkan pengajuan!');
 
+        } catch (Exception $th) {
+            return $th;
+            DB::rollback();
+        } catch (QueryException $e){
+            return $e;
+            DB::rollBack();
+        }
+    }
+
+     // check status penyelia data pengajuan
+     public function checkPenyeliaKreditDagulir(Request $request)
+     {
+         try {
+             $statusPenyelia = PengajuanModel::find($request->id_pengajuan);
+             if ($statusPenyelia) {
+                 $statusPenyelia->posisi = "Review Penyelia";
+                 $statusPenyelia->id_penyelia = $request->select_penyelia;
+                 if ($statusPenyelia->tanggal_review_penyelia == null) {
+                     $statusPenyelia->tanggal_review_penyelia = date(now());
+                 }
+                 $statusPenyelia->update();
+
+                 // Log Pengajuan melanjutkan dan mendapatkan
+                //  $nasabah = CalonNasabah::select('id', 'nama')->where('id_pengajuan', $request->id_pengajuan)->first();
+                //  $namaNasabah = 'undifined';
+                //  if ($nasabah)
+                //      $namaNasabah = $nasabah->nama;
+
+                //  $penyelia = User::find($request->select_penyelia);
+                //  $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan atas nama ' . $namaNasabah . ' ke penyelia dengan NIP ' . $penyelia->nip . ' atas nama ' . $this->getNameKaryawan($penyelia->nip) . ' .', $statusPenyelia->id, Auth::user()->id, Auth::user()->nip);
+                //  $this->logPengajuan->store('Penyelia dengan NIP ' . $penyelia->nip . ' atas nama ' . $this->getNameKaryawan($penyelia->nip) . ' menerima data pengajuan atas nama ' . $namaNasabah . ' dari staf dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $statusPenyelia->id, $penyelia->id, $penyelia->nip);
+                 return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+             } else {
+                 return back()->withError('Data pengajuan tidak ditemukan.');
+             }
+         } catch (Exception $e) {
+             return redirect()->back()->withError('Terjadi kesalahan.');
+         } catch (QueryException $e) {
+             return redirect()->back()->withError('Terjadi kesalahan');
+         }
+     }
+
+    public function getDetailJawaban($id)
+    {
+        $pengajuan = PengajuanModel::find($id);
+        $pengajuan_dagulir = PengajuanDagulir::find($pengajuan->dagulir_id);
+        $itemRepo = new MasterItemRepository;
+        $item = $itemRepo->getWithJawaban($id, [13]);
+
+        $list = list_tipe_pengajuan();
+        $jenis_usaha = list_jenis_usaha();
+        $list_cabang = Cabang::select('id', 'cabang')
+                    ->where('cabang','!=','Kantor Pusat')
+                    ->orderBy('id', 'asc')
+                    ->get();
+        $dataKabupaten = Kabupaten::all();
+
+        // return [
+        //     'items' => $item,
+        //     'tipe' => $list,
+        //     'list_cabang' => $list_cabang,
+        //     'dataKabupaten' => $dataKabupaten,
+        //     'jenis_usaha' => $jenis_usaha,
+        //     'dagulir' => $pengajuan_dagulir,
+        // ];
+        return view('dagulir.form.review',[
+            'items' => $item,
+            'tipe' => $list,
+            'list_cabang' => $list_cabang,
+            'dataKabupaten' => $dataKabupaten,
+            'jenis_usaha' => $jenis_usaha,
+            'dagulir' => $pengajuan_dagulir,
+        ]);
+    }
+
+    public function updateReviewPenyelia(Request $request, $id) {
+        try {
+            for ($i=0; $i <  count($request->get('id_aspek')); $i++) {
+                $updateKomentar = new PendapatPerAspek();
+                $updateKomentar->id_pengajuan = $id;
+                $updateKomentar->id_penyelia = auth()->user()->id;
+                $updateKomentar->id_aspek = $_POST['id_aspek'][$i];
+                $updateKomentar->pendapat_per_aspek = $_POST['pendapat_usulan'][$i];
+                $updateKomentar->save();
+            }
+            DB::commit();
+            return redirect()->route('dagulir.index')->withStatus('Berhasil menambahkan pendapat penyelia!');
         } catch (Exception $th) {
             return $th;
             DB::rollback();

@@ -26,6 +26,7 @@ class DagulirRequestForm extends FormRequest
         return [
             'nama_lengkap' => 'required',
             'nik' => 'required',
+            'nama_pj' => 'required',
             'tempat_lahir' => 'required',
             'tanggal_lahir' => 'required',
             'telp' => 'required',
@@ -33,8 +34,6 @@ class DagulirRequestForm extends FormRequest
             'nominal_pengajuan' => 'required',
             'tujuan_penggunaan' => 'required',
             'jangka_waktu' => 'required',
-            'ket_agunan' => 'required',
-            'kode_bank_cabang' => 'required',
             'kecamatan_sesuai_ktp' => 'required',
             'kode_kotakab_ktp' => 'required',
             'alamat_sesuai_ktp' => 'required',
@@ -45,11 +44,10 @@ class DagulirRequestForm extends FormRequest
             'kode_kotakab_usaha' => 'required',
             'alamat_usaha' => 'required',
             'tipe_pengajuan' => 'required',
-            'npwp' => 'required',
             'jenis_badan_hukum' => 'required',
             'tempat_berdiri' => 'required',
             'tanggal_berdiri' => 'required',
-            'email' => 'required',
+            'tanggal_pengajuan' => 'required',
         ];
     }
 }

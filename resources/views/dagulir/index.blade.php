@@ -5,6 +5,7 @@
 @include('dagulir.modal.filter')
 
 @endsection
+@include('dagulir.modal.pilih-penyelia')
 
 @push('script-inject')
 <script>
@@ -12,16 +13,16 @@
         $('#form').submit()
     })
     // Adjust pagination url
-    var btn_pagination = $(.pagination).find('a')
-    var page_url = window.location.href
-    $(.pagination).find('a').each(function(i, obj) {
-        if (page_url.includes('page_length')) {
-            btn_pagination[i].href += &page_length=${$('#page_length').val()}
-        }
-        if (page_url.includes('q')) {
-            btn_pagination[i].href += &q=${$('#q').val()}
-        }
-    })
+    // var btn_pagination = $('.pagination').find('a')
+    // var page_url = window.location.href
+    // $('.pagination').find('a').each(function(i, obj) {
+    //     if (page_url.includes('page_length')) {
+    //         btn_pagination[i].href += &page_length=${$('#page_length').val()}
+    //     }
+    //     if (page_url.includes('q')) {
+    //         btn_pagination[i].href += &q=${$('#q').val()}
+    //     }
+    // })
 </script>
 @endpush
 
@@ -230,8 +231,13 @@
                                     ></iconify-icon>
                                     </button>
                                     <ul class="dropdown-tb-menu hidden">
-                                    <li class="item-tb-dropdown">
-                                        <a href="{{ route('dagulir.review',$item->id) }}" class="cursor-pointer">
+                                        <li class="item-tb-dropdown">
+                                            <a href="#"
+                                            onclick="showTindakLanjut({{ $item->pengajuan->id }},'penyelia kredit')"
+                                            class="cursor-pointer">Tindak lanjut Review Penyelia</a>
+                                        {{-- <a target="_blank" href="{{ route('cetak', $item->pengajuan->id_pengajuan) }}"
+                                            class="cursor-pointer">Cetak</a> --}}
+                                        {{-- <a href="{{ route('dagulir.review',$item->id) }}" class="cursor-pointer">
                                             <div class="flex gap-3">
                                                 <span>
                                                 <iconify-icon icon="uil:edit" class="mt-[3px]"></iconify-icon>
@@ -240,7 +246,11 @@
                                                     Review
                                                 </span>
                                             </div>
-                                        </a>
+                                        </a> --}}
+                                        </li>
+                                        <li class="item-tb-dropdown">
+                                            <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
+                                                class="cursor-pointer">Review</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -364,50 +374,6 @@
                 <p>Showing {{ $start }} - {{ $end }} from {{ $data->total() }} entries</p>
                 </div>
                 {{ $data->links('pagination::tailwind') }}
-                {{-- <div class="pagination">
-                <a
-                    href=""
-                    class="item-pg item-pg-prev"
-                >
-                    Prev
-                </a>
-                <a
-                    href="#"
-                    class="item-pg active-pg"
-                >
-                    1
-                </a>
-                <a
-                    href="#"
-                    class="item-pg"
-                >
-                    2
-                </a>
-                <a
-                    href="#"
-                    class="item-pg"
-                >
-                    3
-                </a>
-                <a
-                    href="#"
-                    class="item-pg"
-                >
-                    4
-                </a>
-                <a
-                    href="#"
-                    class="item-pg of-the-data"
-                >
-                    of 100
-                </a>
-                <a
-                    href=""
-                    class="item-pg item-pg-next"
-                >
-                    Next
-                </a>
-                </div> --}}
             </div>
             </div>
         </form>
