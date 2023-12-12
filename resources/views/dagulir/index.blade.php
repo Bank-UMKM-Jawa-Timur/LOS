@@ -207,28 +207,43 @@
                             @if ($item->pengajuan->posisi == 'Selesai')
                             <span class="status bg-green-100 text-green-500 border border-green-300">Selesai</span>
                             @elseif ($item->pengajuan->posisi == 'Ditolak')
-                            <span class="status bg-green-100 text-green-500 border border-green-300">Ditolak</span>
+                            <span class="status bg-red-100 text-red-500 border border-red-300">Ditolak</span>
                             @else
-                                <span class="status bg-green-100 text-green-500 border border-green-300">OnProgress</span>
+                                <span class="status bg-yellow-100 text-yellow-600 border border-yellow-300">OnProgress</span>
                             @endif
                         </td>
                         <td>
-                        <span class="status bg-green-100 text-green-500 border border-green-300">
+                        <span class="status bg-theme-secondary/5 text-theme-secondary border border-theme-secondary">
                             <span>{{ array_key_exists(intval($item->status), $status) ? $status[intval($item->status)] : 'Tidak ditemukan' }}</span>
                         </span>
                         </td>
                         <td>
                             <div class="flex">
-                                <a href="{{ route('dagulir.review',$item->id) }}">
-                                    <button type="button" class="btn  text-white bg-theme-secondary border-theme-secondary border">
-                                    <div class="flex gap-3">
-                                        <span>
-                                        <iconify-icon icon="uil:edit" class="mt-[3px]"></iconify-icon>
-                                        </span>
-                                        <p class="text-sm">Review</p>
-                                    </div>
+                                <div class="dropdown-tb">
+                                    <button
+                                    type="button"
+                                    class="dropdown-tb-toggle border rounded px-4 py-2 hover:bg-gray-100 hover:text-gray-500"
+                                    >
+                                    <iconify-icon
+                                        icon="ph:dots-three-outline-vertical-fill"
+                                        class="mt-2"
+                                    ></iconify-icon>
                                     </button>
-                                </a>
+                                    <ul class="dropdown-tb-menu hidden">
+                                    <li class="item-tb-dropdown">
+                                        <a href="{{ route('dagulir.review',$item->id) }}" class="cursor-pointer">
+                                            <div class="flex gap-3">
+                                                <span>
+                                                <iconify-icon icon="uil:edit" class="mt-[3px]"></iconify-icon>
+                                                </span>
+                                                <span class="font-semibold">
+                                                    Review
+                                                </span>
+                                            </div>
+                                        </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                             {{-- <div class="d-flex">
                                 @php
