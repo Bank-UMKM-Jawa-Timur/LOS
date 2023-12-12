@@ -52,7 +52,7 @@
             if (kabID) {
                 $.ajax({
                     type: "GET",
-                    url: "/getkecamatan?kabID=" + kabID,
+                    url: "{{ url('') }}/getkecamatan?kabID=" + kabID,
                     dataType: 'JSON',
                     success: function(res) {
                            console.log(res);
@@ -81,7 +81,7 @@
             if (kabID) {
                 $.ajax({
                     type: "GET",
-                    url: "/getkecamatan?kabID=" + kabID,
+                    url: "{{ url('') }}/getkecamatan?kabID=" + kabID,
                     dataType: 'JSON',
                     success: function(res) {
                            console.log(res);
@@ -109,7 +109,7 @@
             if (kabID) {
                 $.ajax({
                     type: "GET",
-                    url: "/getkecamatan?kabID=" + kabID,
+                    url: "{{ url('') }}/getkecamatan?kabID=" + kabID,
                     dataType: 'JSON',
                     success: function(res) {
                            console.log(res);
