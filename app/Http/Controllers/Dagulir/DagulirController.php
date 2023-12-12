@@ -99,7 +99,7 @@ class DagulirController extends Controller
                 "nama_pj" => $request->has('nama_pj') ? $request->has('nama_pj') : null,
             ])->json();
             if ($pengajuan_degulir['data']['status_code'] == 400) {
-                return redirect()->route('dagulir.index')->withError('Terjadi kesalahan data.');
+                return redirect()->route('dagulir.index')->withStatus('Terjadi kesalahan data.');
             }
             $pengajuan = new PengajuanDagulir;
             $pengajuan->kode_pendaftaran = $pengajuan_degulir['data']['kode_pendaftaran'];
