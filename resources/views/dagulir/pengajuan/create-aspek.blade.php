@@ -70,7 +70,7 @@
             >Pendapat dan usulan {{$title}}</label
           >
           <textarea
-            name=""
+            name="pendapat_usulan"
             class="form-textarea"
             placeholder="Pendapat per aspek"
             id=""

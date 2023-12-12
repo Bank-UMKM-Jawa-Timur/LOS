@@ -11,7 +11,7 @@ class PengajuanDagulir extends Model
     protected $table = 'pengajuan_dagulir';
 
     public function pengajuan() {
-        return $this->hasOne(PengajuanModel::class,'dagulir_id');
+        return $this->hasOne(PengajuanModel::class,'dagulir_id','id');
     }
     function kec_ktp() {
         return $this->belongsTo(Kecamatan::class,'kec_ktp');

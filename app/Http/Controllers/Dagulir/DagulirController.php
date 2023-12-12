@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\DagulirRequestForm;
 use App\Models\Cabang;
 use App\Models\Desa;
+use App\Models\JawabanPengajuanModel;
+use App\Models\JawabanTextModel;
 use App\Models\Kabupaten;
 use App\Models\Kecamatan;
 use App\Models\PengajuanDagulir;
@@ -18,6 +20,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 
 class DagulirController extends Controller
@@ -38,6 +41,7 @@ class DagulirController extends Controller
         $search = $request->get('q');
         $pengajuan_degulir = $this->repo->get($search,$limit,$page);
 
+        // return $pengajuan_degulir;
         return view('dagulir.index',[
             'data' => $pengajuan_degulir
         ]);
@@ -46,6 +50,7 @@ class DagulirController extends Controller
     public function create() {
         $itemRepo = new MasterItemRepository;
         $item = $itemRepo->get([13]);
+        // return $item;
         $list = list_tipe_pengajuan();
         $jenis_usaha = list_jenis_usaha();
         $list_cabang = Cabang::select('id', 'cabang')
@@ -62,47 +67,15 @@ class DagulirController extends Controller
         ]);
     }
 
-    function store(DagulirRequestForm $request) {
+    // function store(DagulirRequestForm $request) {
+    public function store(Request $request) {
         try {
-            $data = sipde_token();
+            $find = array('Rp.', '.', ',');
+
+            // Jawaban untuk file
             DB::beginTransaction();
-            $pengajuan_degulir = Http::withHeaders([
-                'Authorization' => 'Bearer ' .$data['token'],
-            ])->post(env('SIPDE_HOST').'/pengajuan.json',[
-                "nama" => $request->get('nama_lengkap'),
-                "nik" => $request->get('nik'),
-                "tempat_lahir" => $request->get('tempat_lahir'),
-                "tanggal_lahir" => $request->get('tanggal_lahir'),
-                "telp" =>  $request->get('telp'),
-                "jenis_usaha" =>  $request->get('jenis_usaha'),
-                "nominal_pengajuan" => $request->get('nominal_pengajuan'),
-                "tujuan_penggunaan" => $request->get('tujuan_penggunaan'),
-                "jangka_waktu" =>  $request->get('jangka_waktu'),
-                "ket_agunan" =>  $request->get('ket_agunan'),
-                "kode_bank_pusat" =>  '01-BPR',
-                "kode_bank_cabang" =>  $request->get('kode_bank_cabang'),
-                "kecamatan_sesuai_ktp" => $request->get('kecamatan_sesuai_ktp'),
-                "kode_kotakab_ktp" => $request->get('kode_kotakab_ktp'),
-                "alamat_sesuai_ktp" => $request->get('alamat_sesuai_ktp'),
-                "kecamatan_domisili" => $request->get('kecamatan_domisili'),
-                "kode_kotakab_domisili" => $request->get('kode_kotakab_domisili'),
-                "alamat_domisili" =>  $request->get('alamat_domisili'),
-                "kecamatan_usaha" =>  $request->get('kecamatan_usaha'),
-                "kode_kotakab_usaha" =>  $request->get('kode_kotakab_usaha'),
-                "alamat_usaha" =>  $request->get('alamat_usaha'),
-                "tipe_pengajuan" =>  $request->get('tipe_pengajuan'),
-                "npwp" =>  $request->get('npwp'),
-                "jenis_badan_hukum" =>  $request->get('jenis_badan_hukum'),
-                "tempat_berdiri" =>  $request->get('tempat_berdiri'),
-                "tanggal_berdiri" =>  $request->get('tanggal_berdiri'),
-                "email" =>  $request->get('email'),
-                "nama_pj" => $request->has('nama_pj') ? $request->has('nama_pj') : null,
-            ])->json();
-            if ($pengajuan_degulir['data']['status_code'] == 400) {
-                return redirect()->route('dagulir.index')->withStatus('Terjadi kesalahan data.');
-            }
             $pengajuan = new PengajuanDagulir;
-            $pengajuan->kode_pendaftaran = $pengajuan_degulir['data']['kode_pendaftaran'];
+            $pengajuan->kode_pendaftaran = null;
             $pengajuan->nama = $request->get('nama_lengkap');
             $pengajuan->nik = $request->get('nik');
             $pengajuan->nama_pj_ketua = $request->has('nama_pj') ? $request->has('nama_pj') : null;
@@ -114,7 +87,7 @@ class DagulirController extends Controller
             $pengajuan->tujuan_penggunaan = $request->get('tujuan_penggunaan');
             $pengajuan->jangka_waktu = $request->get('jangka_waktu');
             $pengajuan->kode_bank_pusat = 1;
-            $pengajuan->kode_bank_cabang = $request->get('kode_bank_cabang');
+            $pengajuan->kode_bank_cabang = auth()->user()->id_cabang;
             $pengajuan->kec_ktp = $request->get('kecamatan_sesuai_ktp');
             $pengajuan->kotakab_ktp = $request->get('kode_kotakab_ktp');
             $pengajuan->alamat_ktp = $request->get('alamat_sesuai_ktp');
@@ -125,11 +98,11 @@ class DagulirController extends Controller
             $pengajuan->kotakab_usaha = $request->get('kode_kotakab_usaha');
             $pengajuan->alamat_usaha = $request->get('alamat_usaha');
             $pengajuan->tipe = $request->get('tipe_pengajuan');
-            $pengajuan->npwp = $request->get('npwp');
+            $pengajuan->npwp = $request->input_text[79][0];
             $pengajuan->jenis_badan_hukum = $request->get('jenis_badan_hukum');
             $pengajuan->tempat_berdiri = $request->get('tempat_berdiri');
             $pengajuan->tanggal_berdiri = $request->get('tanggal_berdiri');
-            $pengajuan->tanggal = now();
+            $pengajuan->tanggal = $request->get('tanggal_pengajuan');
             $pengajuan->user_id = Auth::user()->id;
             $pengajuan->status = 8;
             $pengajuan->created_at = now();
@@ -139,13 +112,67 @@ class DagulirController extends Controller
             $addPengajuan = new PengajuanModel();
             $addPengajuan->id_staf = Auth::user()->id;
             $addPengajuan->tanggal = date(now());
-            $addPengajuan->id_cabang = $request->get('kode_bank_cabang');
+            $addPengajuan->posisi = 'Proses Input Data';
+            $addPengajuan->id_cabang = auth()->user()->id_cabang;
             $addPengajuan->skema_kredit = 'Dagulir';
             $addPengajuan->dagulir_id = $pengajuan->id;
             $addPengajuan->save();
 
+            // Jawaban input option
+            foreach ($request->input_option as $key => $value) {
+                $JawabanOption = new JawabanPengajuanModel;
+                $JawabanOption->id_pengajuan = $addPengajuan->id;
+                $JawabanOption->id_jawaban = $this->getDataLevel($value[0])[0];
+                $JawabanOption->skor = $this->getDataLevel($value[0])[1];
+                $JawabanOption->save();
+            }
+            // Jawaban input text, long text, number
+            foreach ($request->input_text as $key => $value) {
+                $jawabanText = new JawabanTextModel;
+                $jawabanText->id_pengajuan = $addPengajuan->id;
+                $jawabanText->id_jawaban = $key;
+                $jawabanText->opsi_text = str_replace($find, "", $value)[0];
+                $jawabanText->save();
+            }
+            foreach ($request->input_number as $key => $value) {
+                $jawabanText = new JawabanTextModel;
+                $jawabanText->id_pengajuan = $addPengajuan->id;
+                $jawabanText->id_jawaban = $key;
+                $jawabanText->opsi_text = str_replace($find, "", $value)[0];
+                $jawabanText->save();
+            }
+            foreach ($request->input_text_long as $key => $value) {
+                $jawabanText = new JawabanTextModel;
+                $jawabanText->id_pengajuan = $addPengajuan->id;
+                $jawabanText->id_jawaban = $key;
+                $jawabanText->opsi_text = str_replace($find, "", $value)[0];
+                $jawabanText->save();
+            }
+            // end Jawaban input text, long text, number
+            if ($request->has('file')) {
+                foreach ($request->file('file') as $key => $value) {
+                    $image = $request->file('file')[$key];
+                    $imageName = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
+
+                    $filePath = public_path() . '/upload/' . $addPengajuan->id . '/' .$key;
+
+                    if (!File::isDirectory($filePath)) {
+                        File::makeDirectory($filePath, 493, true);
+                    }
+
+                    $image->move($filePath, $imageName);
+
+                    $dataJawabanText = new JawabanTextModel;
+                    $dataJawabanText->id_pengajuan = $addPengajuan->id;
+                    $dataJawabanText->id_jawaban =  $key;
+                    $dataJawabanText->opsi_text = $imageName;
+                    $dataJawabanText->save();
+                }
+            }
+
+
             DB::commit();
-            return redirect()->route('dagulir.index')->withStatus('Berhasil menambahkan pengajuan! dengan Kode Pendaftaran : '.$pengajuan_degulir['data']['kode_pendaftaran']);
+            return redirect()->route('dagulir.index')->withStatus('Berhasil menambahkan pengajuan!');
 
         } catch (Exception $th) {
             return $th;
@@ -154,6 +181,12 @@ class DagulirController extends Controller
             return $e;
             DB::rollBack();
         }
+    }
+
+    public function getDataLevel($data)
+    {
+        $data_level = explode('-', $data);
+        return $data_level;
     }
 
     public function review($id)  {

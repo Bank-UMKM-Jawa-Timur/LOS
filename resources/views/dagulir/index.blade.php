@@ -157,13 +157,14 @@
                 <tr>
                     <th>No.</th>
                     <th>Kode Pendaftaran</th>
-                    <th>No Ktp</th>
                     <th>Nama</th>
                     <th>Telp</th>
                     <th>Tanggal Pengajuan</th>
                     <th>Jenis Usaha</th>
                     <th>Tipe Registrasi</th>
-                    <th>Status</th>
+                    <th>Nominal Pengajuan</th>
+                    <th>Status Pincetar</th>
+                    <th>Status SIPDE</th>
                     <th>Aksi</th>
                 </tr>
                 </thead>
@@ -181,11 +182,10 @@
                     @foreach ($data as $item)
                     <tr>
                         <td>{{ $i++ }}</td>
-                        <td>{{ $item->kode_pendaftaran }}</td>
-                        <td>{{ $item->nik }}</td>
+                        <td>{{ $item->kode_pendaftaran != null ? $item->kode_pendaftaran : '-' }}</td>
                         <td class="font-semibold uppercase">{{ ucwords($item->nama) }}</td>
                         <td>{{ $item->telp }}</td>
-                        <td>{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d F Y') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d-m-Y') }}</td>
                         <td>
                             @if ($item->jenis_usaha)
                                 {{array_key_exists(intval($item->jenis_usaha), $jenis_usaha) ? $jenis_usaha[intval($item->jenis_usaha)] : 'Tidak ditemukan'}}
@@ -198,6 +198,18 @@
                             {{array_key_exists(intval($item->tipe), $tipe_pengajuan) ? $tipe_pengajuan[intval($item->tipe)] : 'Tidak ditemukan'}}
                             @else
                                 Tidak ada
+                            @endif
+                        </td>
+                        <td>
+                            {{ number_format($item->nominal,0,',','.') }}
+                        </td>
+                        <td>
+                            @if ($item->pengajuan->posisi == 'Selesai')
+                            <span class="status bg-green-100 text-green-500 border border-green-300">Selesai</span>
+                            @elseif ($item->pengajuan->posisi == 'Ditolak')
+                            <span class="status bg-green-100 text-green-500 border border-green-300">Ditolak</span>
+                            @else
+                                <span class="status bg-green-100 text-green-500 border border-green-300">OnProgress</span>
                             @endif
                         </td>
                         <td>
@@ -218,6 +230,112 @@
                                     </button>
                                 </a>
                             </div>
+                            {{-- <div class="d-flex">
+                                @php
+                                    $userPBO = \App\Models\User::select('id')
+                                        ->where('id_cabang', $item->id_cabang)
+                                        ->where('role', 'PBO')
+                                        ->whereNotNull('nip')
+                                        ->first();
+
+                                    $userPBP = \App\Models\User::select('id')
+                                        ->where('id_cabang', $item->id_cabang)
+                                        ->where('role', 'PBP')
+                                        ->whereNotNull('nip')
+                                        ->first();
+                                @endphp
+                                @if ($item->posisi == 'Review Penyelia')
+                                    <div class="btn-group">
+                                        @if (auth()->user()->id_cabang == '1')
+                                            <button type="button" data-toggle="dropdown" class="btn btn-link">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-three-dots-vertical"
+                                                    viewBox="0 0 16 16" style="color: black">
+                                                    <path
+                                                        d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
+                                                </svg>
+                                            </button>
+                                            <div class="dropdown-menu">
+                                                <a href="{{ route('pengajuan.detailjawaban', $item->pengajuan->id) }}"
+                                                    class="dropdown-item">Review</a>
+                                                <a href="#" class="dropdown-item btn-kembalikan" data-toggle="modal"
+                                                    data-target="#modalKembalikan-{{ $item->id }}" data-backto="Staff"
+                                                    id="btnKembalikan">Kembalikan Ke Staff</a>
+                                                @if ($userPBO)
+                                                    <a href="{{ route('pengajuan.check.pincab', $item->pengajuan->id) }}?to=pbo"
+                                                        class="dropdown-item">Lanjutkan Ke PBO</a>
+                                                @else
+                                                    @if ($userPBP)
+                                                        <a href="{{ route('pengajuan.check.pincab', $item->pengajuan->id) }}?to=pbp"
+                                                            class="dropdown-item">Lanjutkan Ke PBP</a>
+                                                    @else
+                                                        <a href="{{ route('pengajuan.check.pincab', $item->pengajuan->id) }}?to=pincab"
+                                                            class="dropdown-item">Lanjutkan Ke Pincab</a>
+                                                    @endif
+                                                @endif
+                                                <a target="_blank" href="{{ route('cetak', $item->pengajuan->id) }}"
+                                                    class="dropdown-item">Cetak</a>
+                                            </div>
+                                        @else
+                                            <button type="button" class="btn btn-link" data-toggle="dropdown"
+                                                aria-haspopup="true" aria-expanded="false">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-three-dots-vertical"
+                                                    viewBox="0 0 16 16" style="color: black">
+                                                    <path
+                                                        d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
+                                                </svg>
+                                            </button>
+                                            <div class="dropdown-menu">
+                                                <a href="{{ route('pengajuan.detailjawaban', $item->pengajuan->id) }}"
+                                                    class="dropdown-item">Review</a>
+                                                <a href="#" class="dropdown-item btn-kembalikan" data-toggle="modal"
+                                                    data-target="#modalKembalikan-{{ $item->id }}" data-backto="Staff"
+                                                    id="btnKembalikan">Kembalikan Ke Staff</a>
+                                                @if ($userPBO)
+                                                    <a href="{{ route('pengajuan.check.pincab', $item->pengajuan->id) }}?to=pbo"
+                                                        class="dropdown-item">Lanjutkan Ke PBO</a>
+                                                @else
+                                                    <a href="{{ route('pengajuan.check.pincab', $item->pengajuan->id) }}?to=pincab"
+                                                        class="dropdown-item">Lanjutkan Ke Pincab</a>
+                                                @endif
+                                                <a target="_blank" href="{{ route('cetak', $item->pengajuan->id) }}"
+                                                    class="dropdown-item">Cetak</a>
+                                            </div>
+                                        @endif
+                                    </div>
+                                @else
+                                    <div class="btn-group">
+                                        <button type="button" data-toggle="dropdown" class="btn btn-link">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16"
+                                                style="color: black">
+                                                <path
+                                                    d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
+                                            </svg>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a target="_blank" href="{{ route('cetak', $item->pengajuan->id) }}"
+                                                class="dropdown-item">Cetak</a>
+                                            @if ($item->posisi == "PBP")
+                                                @if ($item->pengajuan->id_pbo != null)
+                                                    <a href="#" class="dropdown-item btn-kembalikan" data-toggle="modal"
+                                                        data-target="#modalKembalikan-{{ $item->id }}" data-backto="PBO"
+                                                        id="btnKembalikan">Kembalikan Ke PBO</a>
+                                                @else
+                                                    <a href="#" class="dropdown-item btn-kembalikan" data-toggle="modal"
+                                                        data-target="#modalKembalikan-{{ $item->id }}" data-backto="Penyelia"
+                                                        id="btnKembalikan">Kembalikan Ke Penyelia</a>
+                                                @endif
+                                            @elseif ($item->posisi == "PBO")
+                                                <a href="#" class="dropdown-item btn-kembalikan" data-toggle="modal"
+                                                    data-target="#modalKembalikan-{{ $item->id }}" data-backto="Penyelia"
+                                                    id="btnKembalikan">Kembalikan Ke Penyelia</a>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endif
+                            </div> --}}
                         </td>
                     </tr>
                 @endforeach

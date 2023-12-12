@@ -14,136 +14,26 @@
         class="p-5 w-full space-y-5 "
         id="data-umum"
         >
-        <div class="form-group-1">
+        <div class="form-group-2">
             <div class="input-box">
-                <label for="">Tipe Pengajuan</label>
-                <select name="tipe_pengajuan" id="tipe" class="form-select">
-                    <option value="0">Tipe Pengajuan</option>
-                    @foreach ($tipe as $key => $value)
-                    <option value="{{ $tipe[$key]['id'] }}">{{ $tipe[$key]['nama'] }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div id="nama_pj" class="input-box hidden">
-            <label for="">Nama PJ Ketua</label>
-            <input
-                type="text"
-                class="form-input"
-                placeholder="Masukan Nama PJ Ketua"
-                name="nama_pj"
-            />
-            </div>
-            <div class="input-box">
-            <label for="">Nama Lengkap</label>
-            <input
-                type="text"
-                class="form-input"
-                placeholder="Masukan Nama"
-                name="nama_lengkap"
-            />
-            </div>
-            <div class="input-box">
-                <label for="">Email</label>
+                <label for="">Nama Lengkap</label>
                 <input
-                type="text"
-                class="form-input"
-                placeholder="Masukan Nama"
-                name="email"
+                    type="text"
+                    class="form-input"
+                    placeholder="Masukan Nama"
+                    name="nama_lengkap"
                 />
             </div>
             <div class="input-box">
-            <label for="">NIK</label>
-            <input
-                type="text"
-                class="form-input"
-                placeholder="Masukan NIK"
-                name="nik"
-            />
+                <label for="">Surat Permohonan </label>
+                <input
+                  type="file"
+                  class="form-input"
+                  name="surat_permohonan"
+                />
             </div>
-            <div class="input-box">
-            <label for="">Tempat lahir</label>
-            <input
-                type="text"
-                class="form-input"
-                placeholder="Masukan Tempat Lahir"
-                name="tempat_lahir"
-            />
-            </div>
-            <div class="input-box">
-            <label for="">Tanggal lahir</label>
-            <input
-                type="date"
-                class="form-input"
-                placeholder="Masukan Tanggal Lahir"
-                name="tanggal_lahir"
-            />
-            </div>
-            <div class="input-box">
-            <label for="">Telp</label>
-            <input
-                type="text"
-                class="form-input"
-                placeholder="Masukan Nomor Telepon"
-                name="telp"
-            />
-            </div>
-            <div class="input-box">
-            <label for="">Jenis Usaha</label>
-            <select name="jenis_usaha" id="" class="form-select">
-                <option value="">Pilih Jenis Usaha</option>
-                @foreach ($jenis_usaha as $key => $value)
-                    <option value="{{ $jenis_usaha[$key]['kode'] }}">{{ $jenis_usaha[$key]['jenis_usaha'] }}</option>
-                @endforeach
-            </select>
-            </div>
-            <div class="input-box">
-            <label for="">Nominal Pengajuan</label>
-            <input
-                type="number"
-                class="form-input"
-                placeholder="Masukan Jenis Usaha"
-                name="nominal_pengajuan"
-            />
-            </div>
-            <div class="input-box">
-            <label for="">Tujuan Penggunaan</label>
-            <input
-                type="text"
-                class="form-input"
-                placeholder="Masukan Tujuan Penggunaan"
-                name="tujuan_penggunaan"
-            />
-            </div>
-            <div class="input-box">
-            <label for="">Jangka Waktu</label>
-            <input
-                type="number"
-                class="form-input"
-                placeholder="Masukan Jangka Waktu"
-                name="jangka_waktu"
-            />
-            </div>
-            <div class="input-box">
-            <label for="">Keterangan Agunan</label>
-            <input
-                type="text"
-                class="form-input"
-                placeholder="Isi disini..."
-                name="ket_agunan"
-            />
-            </div>
-
         </div>
-        <div class="form-group-3">
-                <div class="input-box">
-                    <label for="">Kode List Cabang</label>
-                    <select name="kode_bank_cabang" id="" class="form-select">
-                        <option value="">Pilih List Cabang</option>
-                        @foreach ($list_cabang as $item)
-                            <option value="{{ $item->id }}">{{ $item->cabang }}</option>
-                        @endforeach
-                    </select>
-                </div>
+        <div class="form-group-2">
                 <div class="input-box">
                     <label for="">Kota / Kabupaten KTP</label>
                     <select name="kode_kotakab_ktp" class="form-select @error('kabupaten') is-invalid @enderror select2"
@@ -163,16 +53,14 @@
         </div>
         <div class="form-group-1">
             <div class="input-box">
-            <label for="">Alamat KTP</label>
-                <input
-                    type="text"
-                    class="form-input"
-                    placeholder="Isi disini..."
+                <label for="">Alamat KTP</label>
+                <textarea
                     name="alamat_sesuai_ktp"
-
-                />
+                    class="form-textarea"
+                    placeholder="Alamat Domisili"
+                    id=""
+                ></textarea>
             </div>
-
         </div>
         <div class="form-group-2">
             <div class="input-box">
@@ -233,14 +121,118 @@
             ></textarea>
             </div>
         </div>
-        <div class="form-group-1">
+        <div class="form-group-2">
             <div class="input-box">
-                <label for="">NPWP</label>
+                <label for="">Email</label>
                 <input
                 type="text"
                 class="form-input"
-                name="npwp"
+                placeholder="Masukan Nama"
+                name="email"
+                />
+            </div>
+            <div class="input-box">
+                <label for="">NIK</label>
+                <input
+                    type="text"
+                    class="form-input"
+                    placeholder="Masukan NIK"
+                    name="nik"
+                />
+            </div>
+            <div class="input-box">
+                <label for="">Telp</label>
+                <input
+                    type="text"
+                    class="form-input"
+                    placeholder="Masukan Nomor Telepon"
+                    name="telp"
+                />
+            </div>
+            <div class="input-box">
+                <label for="">Tempat lahir</label>
+                <input
+                    type="text"
+                    class="form-input"
+                    placeholder="Masukan Tempat Lahir"
+                    name="tempat_lahir"
+                />
+            </div>
+            <div class="input-box">
+                <label for="">Tanggal lahir</label>
+                <input
+                    type="date"
+                    class="form-input"
+                    placeholder="Masukan Tanggal Lahir"
+                    name="tanggal_lahir"
+                />
+            </div>
+            <div class="input-box">
+                <label for="">Jenis Usaha</label>
+                <select name="jenis_usaha" id="" class="form-select">
+                    <option value="">Pilih Jenis Usaha</option>
+                    @foreach ($jenis_usaha as $key => $value)
+                        <option value="{{ $jenis_usaha[$key]['kode'] }}">{{ $jenis_usaha[$key]['jenis_usaha'] }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="input-box">
+                <label for="">Nominal Pengajuan</label>
+                <input
+                    type="number"
+                    class="form-input"
+                    placeholder="Masukan Jenis Usaha"
+                    name="nominal_pengajuan"
+                />
+            </div>
+            <div class="input-box">
+                <label for="">Jangka Waktu</label>
+                <input
+                    type="number"
+                    class="form-input"
+                    placeholder="Masukan Jangka Waktu"
+                    name="jangka_waktu"
+                />
+            </div>
+        </div>
+        <div class="form-group-2">
+            <div class="input-box">
+                <label for="">Tujuan Penggunaan</label>
+                <input
+                    type="text"
+                    class="form-input"
+                    placeholder="Masukan Tujuan Penggunaan"
+                    name="tujuan_penggunaan"
+                />
+            </div>
+            <div class="input-box">
+                <label for="">Keterangan Agunan</label>
+                <input
+                    type="text"
+                    class="form-input"
+                    placeholder="Isi disini..."
+                    name="ket_agunan"
+                />
+            </div>
+        </div>
 
+        <div class="form-group-1">
+            <div class="input-box">
+                <label for="">Tipe Pengajuan</label>
+                <select name="tipe_pengajuan" id="tipe" class="form-select">
+                    <option value="0">Tipe Pengajuan</option>
+                    @foreach ($tipe as $key => $value)
+                    <option value="{{ $tipe[$key]['id'] }}">{{ $tipe[$key]['nama'] }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div id="nama_pj" class="input-box hidden">
+            <label for="">Nama PJ Ketua</label>
+                <input
+                    type="text"
+                    class="form-input"
+                    placeholder="Masukan Nama PJ Ketua"
+                    name="nama_pj"
                 />
             </div>
         </div>
@@ -281,19 +273,19 @@
                 <input
                 type="date"
                 class="form-input"
-                name="email"
+                name="tanggal_pengajuan"
 
                 />
             </div>
             </div>
         </div>
         <div class="flex justify-between">
-            <button
+            <button type="button"
             class="px-5 py-2 border rounded bg-white text-gray-500"
             >
             Kembali
             </button>
-            <button
+            <button type="button"
             class="px-5 py-2 next-tab border rounded bg-theme-primary text-white"
             >
             Selanjutnya
