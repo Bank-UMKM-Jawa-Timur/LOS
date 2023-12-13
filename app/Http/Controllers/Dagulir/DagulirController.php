@@ -50,18 +50,21 @@ class DagulirController extends Controller
         $param['cabang'] = DB::table('cabang')
             ->get();
         $role = auth()->user()->role;
-        if ($role == 'Staf Analis Kredit') {
-        } elseif ($role == 'Penyelia Kredit') {
-        } elseif ($role == 'PBO' || $role == 'PBP') {
-        } elseif ($role == 'Pincab') {
-        } else {
-        }
         // paginate
+        $search = $request->get('q');
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
+        if ($role == 'Staf Analis Kredit') {
+            $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit');
+        } elseif ($role == 'Penyelia Kredit') {
+            $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Penyelia Kredit');
+        } elseif ($role == 'Pincab') {
+            $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Pincab');
+        } else {
+            $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit');
+        }
+
         // search
-        $search = $request->get('q');
-        $pengajuan_dagulir = $this->repo->get($search,$limit,$page);
 
         // return $pengajuan_dagulir;
         return view('dagulir.index',[
@@ -244,7 +247,7 @@ class DagulirController extends Controller
                     $pengajuan->posisi = "Pincab";
                     $pengajuan->id_pincab = $pincab->id;
                     $pengajuan->update();
-    
+
                     return redirect()->back()->withStatus('Berhasil mengganti posisi.');
                 } else {
                     return back()->withError('User pincab tidak ditemukan pada cabang ini.');
@@ -484,23 +487,6 @@ class DagulirController extends Controller
         }
     }
 
-    public function getDataLevel($data)
-    {
-        $data_level = explode('-', $data);
-        return $data_level;
-    }
-
-    public function review($id)  {
-        $pengajuan_dagulir = $this->repo->detail($id);
-
-        $itemRepo = new MasterItemRepository;
-        $item = $itemRepo->get([13]);
-        return view('dagulir.form.review',[
-            'data' => $pengajuan_dagulir,
-            'items' => $item,
-        ]);
-    }
-
     public function updateReview(Request $request) {
         $statusSlik = false;
         $findRupiah = array('Rp ', '.', ',') ;
@@ -582,5 +568,89 @@ class DagulirController extends Controller
         } else {
             return redirect()->back()->withError('Tidak memiliki hak akses.');
         }
+    }
+
+    public function storeSipde(
+        $nama,
+        $nik,
+        $tempat_lahir,
+        $tanggal_lahir,
+        $telp,
+        $jenis_usaha,
+        $nominal_pengajuan,
+        $tujuan_penggunaan,
+        $jangka_waktu,
+        $ket_agunan,
+        $kode_bank_pusat,
+        $kode_bank_cabang,
+        $kecamatan_sesuai_ktp,
+        $kode_kotakab_ktp,
+        $alamat_sesuai_ktp,
+        $kecamatan_domisili,
+        $kode_kotakab_domisili,
+        $alamat_domisili,
+        $kecamatan_usaha,
+        $kode_kotakab_usaha,
+        $alamat_usaha,
+        $tipe_pengajuan,
+        $npwp,
+        $jenis_badan_hukum,
+        $tempat_berdiri,
+        $tanggal_berdiri,
+        $email,
+        $nama_pj,
+    ) {
+        $data = sipde_token();
+        $pengajuan_dagulir = Http::withHeaders([
+            'Authorization' => 'Bearer ' .$data['token'],
+        ])->post(env('SIPDE_HOST').'/pengajuan.json',[
+            "nama" => $nama,
+            "nik" => $nik,
+            "tempat_lahir" => $tempat_lahir,
+            "tanggal_lahir" => $tanggal_lahir,
+            "telp" => $telp,
+            "jenis_usaha" => $jenis_usaha,
+            "nominal_pengajuan" => $nominal_pengajuan,
+            "tujuan_penggunaan" => $tujuan_penggunaan,
+            "jangka_waktu" => $jangka_waktu,
+            "ket_agunan" => $ket_agunan,
+            "kode_bank_pusat" => '01-BPR',
+            "kode_bank_cabang" => $kode_bank_cabang,
+            "kecamatan_sesuai_ktp" => $kecamatan_sesuai_ktp,
+            "kode_kotakab_ktp" => $kode_kotakab_ktp,
+            "alamat_sesuai_ktp" => $alamat_sesuai_ktp,
+            "kecamatan_domisili" => $kecamatan_domisili,
+            "kode_kotakab_domisili" => $kode_kotakab_domisili,
+            "alamat_domisili" => $alamat_domisili,
+            "kecamatan_usaha" => $kecamatan_usaha,
+            "kode_kotakab_usaha" => $kode_kotakab_usaha,
+            "alamat_usaha" => $alamat_usaha,
+            "tipe_pengajuan" => $tipe_pengajuan,
+            "npwp" => $npwp,
+            "jenis_badan_hukum" => $jenis_badan_hukum,
+            "tempat_berdiri" => $tempat_berdiri,
+            "tanggal_berdiri" => $tanggal_berdiri,
+            "email" => $email,
+            "nama_pj" => $nama_pj ??  null,
+        ])->json();
+        if ($pengajuan_dagulir['data']['status_code'] == 400) {
+            return $pengajuan_dagulir['data']['status_code'];
+        }
+
+        return $pengajuan_dagulir;
+    }
+
+    public function updateStatus($kode_pendaftaran, $status, $lampiran_analisa = null, $jangka_waktu, $realisasi_dana) {
+        $data = sipde_token();
+        $pengajuan_dagulir = Http::withHeaders([
+            'Authorization' => 'Bearer ' .$data['token'],
+        ])->post(env('SIPDE_HOST').'/update_status.json',[
+            "kode_pendaftaran" => $kode_pendaftaran,
+            "status" => $status,
+            "lampiran_analisa" => $lampiran_analisa,
+            "jangka_waktu" => $jangka_waktu,
+            "realisasi_dana" => $realisasi_dana
+        ])->json();
+        return $pengajuan_dagulir;
     }
 }
