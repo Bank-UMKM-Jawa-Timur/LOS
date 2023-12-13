@@ -331,29 +331,67 @@
         });
         // ijin usaha
         $("#ijin-usaha").on("change", function() {
+            console.log($(this).val());
             if ($(this).val() == "nib") {
                 $("#nib").removeClass("hidden");
+                $("#label-nib").removeClass("hidden");
+                $("#dokumen-nib").removeClass("hidden");
+                $("#label-dokumen-nib").removeClass("hidden");
                 $("#npwp").removeClass("hidden");
+                $("#label-npwp").removeClass("hidden");
+                $("#dokumen-npwp").removeClass("hidden");
+                $("#label-dokumen-npwp").removeClass("hidden");
                 $("#have-npwp").addClass("hidden");
                 $("#sku").addClass("hidden");
+                $("#label-sku").addClass("hidden");
+                $("#dokumen-sku").addClass("hidden");
+                $("#label-dokumen-sku").addClass("hidden");
             } else if ($(this).val() == "sku") {
-                $("#sku").removeClass("hidden");
+                $("#surat-keterangan-usaha").removeClass("hidden");
+                $("#label-surat-keterangan-usaha").removeClass("hidden");
+                $("#label-dokumen-surat-keterangan-usaha").removeClass("hidden");
+                $("#dokumen-surat-keterangan-usaha").removeClass("hidden");
                 $("#have-npwp").removeClass("hidden");
                 $("#npwp").addClass("hidden");
+                $("#label-npwp").addClass("hidden");
+                $("#label-dokumen-npwp").addClass("hidden");
+                $("#dokumen-npwp").addClass("hidden");
+                $("#label-nib").addClass("hidden");
                 $("#nib").addClass("hidden");
+                $("#label-dokumen-nib").addClass("hidden");
+                $("#dokumen-nib").addClass("hidden");
             } else {
+                $("#surat-keterangan-usaha").addClass("hidden");
+                $("#label-surat-keterangan-usaha").addClass("hidden");
+                $("#label-dokumen-surat-keterangan-usaha").addClass("hidden");
+                $("#dokumen-surat-keterangan-usaha").addClass("hidden");
                 $("#nib").addClass("hidden");
-                $("#sku").addClass("hidden");
+                $("#label-nib").addClass("hidden");
+                $("#dokumen-nib").addClass("hidden");
+                $("#label-dokumen-nib").addClass("hidden");
                 $("#npwp").addClass("hidden");
+                $("#label-npwp").addClass("hidden");
+                $("#dokumen-npwp").addClass("hidden");
+                $("#label-dokumen-npwp").addClass("hidden");
                 $("#have-npwp").addClass("hidden");
+                $("#sku").addClass("hidden");
+                $("#label-sku").addClass("hidden");
+                $("#dokumen-sku").addClass("hidden");
+                $("#label-dokumen-sku").addClass("hidden");
             }
         });
         // npwp
         $("#is-npwp").on("change", function() {
             if ($(this).is(":checked")) {
                 $("#npwp").removeClass("hidden");
+                $("#label-npwp").removeClass("hidden");
+                $("#dokumen-npwp").removeClass("hidden");
+                $("#label-dokumen-npwp").removeClass("hidden");
             } else {
                 $("#npwp").addClass("hidden");
+                $("#label-npwp").addClass("hidden");
+                $("#dokumen-npwp").addClass("hidden");
+                $("#label-dokumen-npwp").addClass("hidden");
             }
         });
     </script>

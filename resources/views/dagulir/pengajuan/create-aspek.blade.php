@@ -24,12 +24,56 @@
               </h2>
             </div>
           </div>
+          @if ($id_tab == 'aspek-hukum')
+            <div class="form-group-2">
+              <div class="input-box">
+                <label for="">Ijin Usaha </label>
+                <select
+                  name=""
+                  class="form-select"
+                  id="ijin-usaha"
+                >
+                  <option value="">-- Pilih Ijin Usaha --</option>
+                  <option value="nib">NIB</option>
+                  <option value="sku">Surat Keterangan Usaha</option>
+                  <option value="">Tidak ada legalitas usaha</option>
+                </select>
+              </div>
+              <div
+                class="input-box hidden"
+                id="have-npwp"
+              >
+                <label
+                  for="is-npwp"
+                  class="font-semibold text-theme-text"
+                  >Memiliki NPWP</label
+                >
+                <div class="flex gap-2 rounded p-2 w-full border">
+                  <input
+                    type="checkbox"
+                    name=""
+                    class="form-check cursor-pointer"
+                    id="is-npwp"
+                  />
+                  <label
+                    for="is-npwp"
+                    class="font-semibold cursor-pointer text-theme-text"
+                    >IYA</label
+                  >
+                </div>
+              </div>
+            </div>
+          @endif
           {{--  Level 3  --}}
           @if ($item->childs)
             <div class="form-group-2">
               @foreach ($item->childs as $child)
                 <div class="input-box">
-                  <label for="">{{$child->nama}}</label>
+                  @if ($child->nama == 'NPWP' || $child->nama == 'Surat Keterangan Usaha' || $child->nama == 'NIB' || $child->nama == 'Dokumen NPWP' || $child->nama == 'Dokumen Surat Keterangan Usaha' || $child->nama == 'Dokumen NIB')
+                    <label for="" class="hidden" id="label-{{ str_replace(' ', '-', strtolower($child->nama)) }}">{{$child->nama}}</label>
+                  @else
+                    <label for="">{{$child->nama}}</label>
+                  @endif
                   @include('dagulir.components.input', ['item' => $child])
                 </div>
               @endforeach
@@ -39,10 +83,20 @@
           @if (isset($childs[$key+1]) && !$open_tab)
             <div class="form-group-2">
           @endif
-          <div class="input-box">
-            <label for="">{{$item->nama}}</label>
-            @include('dagulir.components.input', ['item' => $item])
-          </div>
+          @if ($item->nama == 'NPWP')
+              <div class="form-group-2">
+                <div class="input-box">
+                  <label for="" class="hidden" id="label-npwp">{{$item->nama}}</label>
+                  @include('dagulir.components.input', ['item' => $item])
+                </div>
+              </div>
+          @else
+              {{$item->nama}}
+              <div class="input-box">
+                <label for="">{{$item->nama}}</label>
+                @include('dagulir.components.input', ['item' => $item])
+              </div>
+          @endif
           @if (isset($childs[$key+1]))
             @if ($childs[$key+1]->opsi_jawaban == 'kosong')
               </div>
