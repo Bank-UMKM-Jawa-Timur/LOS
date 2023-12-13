@@ -61,13 +61,13 @@ class DagulirController extends Controller
     public function create() {
         $itemRepo = new MasterItemRepository;
         $item = $itemRepo->get([13]);
-        $list = list_tipe_pengajuan();
-        $jenis_usaha = list_jenis_usaha();
+        $jenis_usaha = config('dagulir.jenis_usaha');
+        $tipe = config('dagulir.tipe_pengajuan');
 
         $dataKabupaten = Kabupaten::all();
         return view('dagulir.form.create',[
             'items' => $item,
-            'tipe' => $list,
+            'tipe' => $tipe,
             'dataKabupaten' => $dataKabupaten,
             'jenis_usaha' => $jenis_usaha
         ]);
@@ -231,13 +231,13 @@ class DagulirController extends Controller
         $itemRepo = new MasterItemRepository;
         $item = $itemRepo->getWithJawaban($id, [13]);
 
-        $list = list_tipe_pengajuan();
-        $jenis_usaha = list_jenis_usaha();
+        $jenis_usaha = config('dagulir.jenis_usaha');
+        $tipe = config('dagulir.tipe_pengajuan');
 
         $dataKabupaten = Kabupaten::all();
         return view('dagulir.form.review',[
             'items' => $item,
-            'tipe' => $list,
+            'tipe' => $tipe,
             'dataKabupaten' => $dataKabupaten,
             'jenis_usaha' => $jenis_usaha,
             'dagulir' => $pengajuan_dagulir,

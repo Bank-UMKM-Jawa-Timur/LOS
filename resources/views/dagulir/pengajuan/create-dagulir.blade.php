@@ -58,7 +58,7 @@
                     <select name="jenis_usaha" id="" class="form-select">
                         <option value="">Pilih Jenis Usaha</option>
                         @foreach ($jenis_usaha as $key => $value)
-                            <option value="{{ $jenis_usaha[$key]['kode'] }}">{{ $jenis_usaha[$key]['jenis_usaha'] }}</option>
+                            <option value="{{ $key }}">{{ $value }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -216,7 +216,7 @@
                     <select name="tipe_pengajuan" id="tipe" class="form-select">
                         <option value="0">Tipe Pengajuan</option>
                         @foreach ($tipe as $key => $value)
-                        <option value="{{ $tipe[$key]['id'] }}">{{ $tipe[$key]['nama'] }}</option>
+                        <option value="{{ $key }}">{{ $value }}</option>
                         @endforeach
                     </select>
                 </div>
