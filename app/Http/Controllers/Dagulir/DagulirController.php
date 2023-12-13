@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Dagulir;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\LogPengajuanController;
+use App\Http\Controllers\PengajuanKreditController;
 use App\Http\Requests\DagulirRequestForm;
 use App\Models\Cabang;
+use App\Models\CalonNasabah;
 use App\Models\Desa;
 use App\Models\DetailKomentarModel;
 use App\Models\JawabanPengajuanModel;
@@ -30,9 +33,13 @@ use Illuminate\Support\Facades\Http;
 class DagulirController extends Controller
 {
 
+    private $logPengajuan;
+    private $pengajuanKredit;
     private $repo;
     public function __construct()
     {
+        $this->logPengajuan = new LogPengajuanController;
+        $this->pengajuanKredit = new PengajuanKreditController;
         $this->repo = new PengajuanDagulirRepository;
     }
 
@@ -325,6 +332,8 @@ class DagulirController extends Controller
             }
 
             $updateData->status = $status;
+            $updateData->id_penyelia = auth()->user()->id;
+            $updateData->tanggal_review_penyelia = date('Y-m-d');
             if ($role == 'Penyelia Kredit'){
                 $updateData->average_by_penyelia = $result;
             }
@@ -389,7 +398,7 @@ class DagulirController extends Controller
 
     public function getDetailJawabanPincab($id)
     {
-        $pengajuan = PengajuanModel::find($id);
+        $pengajuan = PengajuanModel::with('pendapatPerAspek')->find($id);
         $pengajuan_dagulir = PengajuanDagulir::find($pengajuan->dagulir_id);
         $itemRepo = new MasterItemRepository;
         $item = $itemRepo->getWithJawaban($id, [13]);
@@ -397,34 +406,80 @@ class DagulirController extends Controller
         $jenis_usaha = config('dagulir.jenis_usaha');
         $tipe = config('dagulir.tipe_pengajuan');
 
+        $kabupaten_ktp = Kabupaten::select('id','kabupaten')->find($pengajuan_dagulir->kotakab_ktp);
+        $kecamatan_ktp = Kecamatan::select('id','kecamatan')->find($pengajuan_dagulir->kec_ktp );
+        $kabupaten_dom = Kabupaten::select('id','kabupaten')->find($pengajuan_dagulir->kotakab_dom);
+        $kecamatan_dom = Kecamatan::select('id','kecamatan')->find($pengajuan_dagulir->kec_dom );
+        $kabupaten_usaha = Kabupaten::select('id','kabupaten')->find($pengajuan_dagulir->kotakab_usaha);
+        $kecamatan_usaha = Kecamatan::select('id','kecamatan')->find($pengajuan_dagulir->kec_usaha);
+
         $dataKabupaten = Kabupaten::all();
+
         return view('dagulir.form.review-pincab',[
             'items' => $item,
             'tipe' => $tipe,
             'dataKabupaten' => $dataKabupaten,
             'jenis_usaha' => $jenis_usaha,
             'dagulir' => $pengajuan_dagulir,
+            'pengajuan' => $pengajuan,
+            'kabupaten_ktp' => $kabupaten_ktp,
+            'kecamatan_ktp' => $kecamatan_ktp,
+            'kabupaten_dom' => $kabupaten_dom,
+            'kecamatan_dom' => $kecamatan_dom,
+            'kabupaten_usaha' => $kabupaten_usaha,
+            'kecamatan_usaha' => $kecamatan_usaha,
         ]);
     }
 
     public function updateReviewPincab(Request $request, $id) {
+        DB::beginTransaction();
         try {
-            for ($i=0; $i <  count($request->get('id_aspek')); $i++) {
-                $updateKomentar = new PendapatPerAspek();
-                $updateKomentar->id_pengajuan = $id;
-                $updateKomentar->id_penyelia = auth()->user()->id;
-                $updateKomentar->id_aspek = $_POST['id_aspek'][$i];
-                $updateKomentar->pendapat_per_aspek = $_POST['pendapat_usulan'][$i];
-                $updateKomentar->save();
+            $dagulir = PengajuanDagulir::find($id);
+            if ($dagulir) {
+                $pengajuan = PengajuanModel::where('dagulir_id', $dagulir->id)->first();
+                if ($pengajuan) {
+                    $pengajuan->id_pincab = auth()->user()->id;
+                    $pengajuan->tanggal_review_pincab = date('Y-m-d');
+                    $pengajuan->save();
+
+                    $idKomentar = KomentarModel::where('id_pengajuan', $pengajuan->id)->first();
+                    KomentarModel::where('id', $idKomentar->id)->update(
+                        [
+                            'komentar_pincab' => $request->pendapat,
+                            'id_pincab' => Auth::user()->id,
+                            'updated_at' => date('Y-m-d H:i:s')
+                        ]
+                    );
+                    // Log Pengajuan review
+                    $nasabah = CalonNasabah::select('id', 'nama')->where('id_pengajuan', $request->id_pengajuan)->first();
+                    // $nasabah->nominal_realisasi = $request->get('nominal_realisasi');
+                    // $nasabah->update();
+
+                    $namaNasabah = 'undifined';
+
+                    if ($nasabah)
+                        $namaNasabah = $nasabah->nama;
+
+                    $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->pengajuanKredit->getNameKaryawan(Auth::user()->nip) . ' melakukan review terhadap pengajuan atas nama ' . $namaNasabah, $pengajuan->id, Auth::user()->id, Auth::user()->nip);
+
+                    DB::commit();
+                    return redirect()->route('dagulir.index')->withStatus('Berhasil mereview!');
+                }
+                else {
+                    return redirect()->route('dagulir.index')->withError('Data pengajuan tidak ditemukan');
+                }
             }
-            DB::commit();
-            return redirect()->route('dagulir.index')->withStatus('Berhasil mereview!');
-        } catch (Exception $th) {
-            return $th;
-            DB::rollback();
-        } catch (QueryException $e){
-            return $e;
+            else {
+                return redirect()->route('dagulir.index')->withError('Data pengajuan tidak ditemukan');
+            }
+        } catch (Exception $e) {
+            return $e->getMessage();
             DB::rollBack();
+            return redirect()->back()->withError('Terjadi kesalahan.');
+        } catch (QueryException $e) {
+            return $e->getMessage();
+            DB::rollBack();
+            return redirect()->back()->withError('Terjadi kesalahan');
         }
     }
 

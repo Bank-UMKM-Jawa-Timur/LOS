@@ -12,7 +12,7 @@
                     @endphp
                     <button data-toggle="tab" data-tab="{{$title}}" class="btn btn-tab font-semibold">{{$item->nama}}</button>
                 @endforeach
-                <button data-toggle="tab" data-tab="dagulir" class="btn btn-tab active-tab font-semibold">Pendapat dan Usulan</button>
+                <button data-toggle="tab" data-tab="pendapat-dan-usulan" class="btn btn-tab font-semibold">Pendapat dan Usulan</button>
             </div>
         </nav>
         <div class="p-3">
@@ -36,12 +36,56 @@
                                     'id_tab' => $title_id,
                                     'title' => $item->nama,
                                     'childs' => $item->childs,
-                                    'id' => $id
+                                    'id' => $id,
+                                    'pendapat_staf' => $item->pendapatan_staf,
                                 ])
                             </div>
                         @endforeach
-                        <div id="dagulir-tab" class="is-tab-content active">
-                            @include('dagulir.pengajuan.pendapat-dan-usulan')
+                        <div id="pendapat-dan-usulan-tab" class="is-tab-content">
+                            <div class="pb-10 space-y-3">
+                                <h2 class="text-4xl font-bold tracking-tighter text-theme-primary">Pendapat dan Usulan</h2>
+                            </div>
+                            <div class="self-start bg-white w-full border">
+                                <div class="p-5 border-b">
+                                  <h2 class="font-bold text-lg tracking-tighter">
+                                    Pendapat dan Usulan Pincab
+                                  </h2>
+                                </div>
+                                <!-- pendapat-dan-usulan -->
+                                <div class="p-5 space-y-5">
+                                  <div class="form-group-1">
+                                    <div class="input-box">
+                                      <label for="">Pendapat dan Usulan</label>
+                                      <textarea
+                                        name="pendapat"
+                                        class="form-textarea"
+                                        placeholder="Pendapat dan Usulan"
+                                        id=""
+                                      ></textarea>
+                                    </div>
+                                  </div>
+                                  <div class="flex justify-between">
+                                    <button
+                                      class="px-5 py-2 border rounded bg-white text-gray-500"
+                                    >
+                                      Kembali
+                                    </button>
+                                    <div>
+                                      <button
+                                        class="px-5 py-2 border rounded bg-theme-secondary text-white"
+                                      >
+                                        Sebelumnya
+                                      </button>
+                                      <button
+                                        class="px-5 py-2 border rounded bg-theme-primary text-white"
+                                        type="submit"
+                                      >
+                                        Simpan
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
                         </div>
                     </div>
                 </form>
