@@ -1,7 +1,18 @@
 @if ($item->opsi_jawaban == 'input text')
     <input name="input_text[{{ $item->id }}][{{ $item->skor }}]" type="text"
-        class="form-input {{$item->is_rupiah ? 'rupiah' : ''}}"
+        class="form-input {{$item->is_rupiah ? 'rupiah' : ''}} @if($item->nama == 'NPWP' || $item->nama == 'Surat Keterangan Usaha' || $item->nama == 'NIB')hidden" id="{{ str_replace(' ', '-', strtolower($item->nama)) }}" @endif
         placeholder="Masukan informasi disini" />
+    @if ($item->nama == 'NPWP')
+        </div>
+        <div class="input-box">
+            @php
+                $itemNPWP = DB::table('item')->where('nama', 'Dokumen NPWP')->first();
+            @endphp
+            <label for="" class="hidden" id="label-{{ str_replace(' ', '-', strtolower($itemNPWP->nama)) }}">{{$itemNPWP->nama}}</label>
+            <div class="flex gap-4">
+                <input type="file" name="file[{{ $itemNPWP->id }}]" class="form-input hidden" id="{{ str_replace(' ', '-', strtolower($itemNPWP->nama)) }}"/>
+            </div>
+    @endif
 @elseif ($item->opsi_jawaban == 'option')
     <select name="input_option[{{ $item->id }}][{{ $item->skor }}]" class="form-select" id="">
         <option value="">-- Pilih Opsi --</option>
@@ -25,7 +36,11 @@
         placeholder="Masukan informasi disini" id=""></textarea>
 @elseif ($item->opsi_jawaban == 'file')
     <div class="flex gap-4">
-        <input type="file" name="file[{{ $item->id }}]" class="form-input" />
+        @if ($item->nama == 'Dokumen NPWP' || $item->nama == 'Dokumen Surat Keterangan Usaha' || $item->nama == 'Dokumen NIB')
+            <input type="file" name="file[{{ $item->id }}]" class="form-input hidden" id="{{ str_replace(' ', '-', strtolower($item->nama)) }}"/>
+        @else
+            <input type="file" name="file[{{ $item->id }}]" class="form-input" />
+        @endif
         @if ($item->is_multiple)
             <div class="flex gap-2">
                 <button class="btn-add">
