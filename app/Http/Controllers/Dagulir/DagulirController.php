@@ -13,6 +13,7 @@ use App\Models\Kecamatan;
 use App\Models\PendapatPerAspek;
 use App\Models\PengajuanDagulir;
 use App\Models\PengajuanModel;
+use App\Models\User;
 use App\Services\TemporaryService;
 use Exception;
 use App\Repository\MasterItemRepository;
@@ -198,9 +199,6 @@ class DagulirController extends Controller
              if ($statusPenyelia) {
                  $statusPenyelia->posisi = "Review Penyelia";
                  $statusPenyelia->id_penyelia = $request->select_penyelia;
-                 if ($statusPenyelia->tanggal_review_penyelia == null) {
-                     $statusPenyelia->tanggal_review_penyelia = date(now());
-                 }
                  $statusPenyelia->update();
 
                  // Log Pengajuan melanjutkan dan mendapatkan
@@ -222,6 +220,34 @@ class DagulirController extends Controller
              return redirect()->back()->withError('Terjadi kesalahan');
          }
      }
+
+    // send to pincab
+    public function sendToPincab($id)
+    {
+        try {
+            $pengajuan = PengajuanModel::find($id);
+            if ($pengajuan) {
+                $pincab = User::select('id')
+                        ->where('id_cabang', $pengajuan->id_cabang)
+                        ->first();
+                if ($pincab) {
+                    $pengajuan->posisi = "Pincab";
+                    $pengajuan->id_pincab = $pincab->id;
+                    $pengajuan->update();
+    
+                    return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+                } else {
+                    return back()->withError('User pincab tidak ditemukan pada cabang ini.');
+                }
+            } else {
+                return back()->withError('Data pengajuan tidak ditemukan.');
+            }
+        } catch (Exception $e) {
+            return redirect()->back()->withError('Terjadi kesalahan.');
+        } catch (QueryException $e) {
+            return redirect()->back()->withError('Terjadi kesalahan');
+        }
+    }
 
     public function getDetailJawaban($id)
     {
@@ -265,6 +291,47 @@ class DagulirController extends Controller
         }
     }
 
+    public function getDetailJawabanPincab($id)
+    {
+        $pengajuan = PengajuanModel::find($id);
+        $pengajuan_dagulir = PengajuanDagulir::find($pengajuan->dagulir_id);
+        $itemRepo = new MasterItemRepository;
+        $item = $itemRepo->getWithJawaban($id, [13]);
+
+        $jenis_usaha = config('dagulir.jenis_usaha');
+        $tipe = config('dagulir.tipe_pengajuan');
+
+        $dataKabupaten = Kabupaten::all();
+        return view('dagulir.form.review-pincab',[
+            'items' => $item,
+            'tipe' => $tipe,
+            'dataKabupaten' => $dataKabupaten,
+            'jenis_usaha' => $jenis_usaha,
+            'dagulir' => $pengajuan_dagulir,
+        ]);
+    }
+
+    public function updateReviewPincab(Request $request, $id) {
+        try {
+            for ($i=0; $i <  count($request->get('id_aspek')); $i++) {
+                $updateKomentar = new PendapatPerAspek();
+                $updateKomentar->id_pengajuan = $id;
+                $updateKomentar->id_penyelia = auth()->user()->id;
+                $updateKomentar->id_aspek = $_POST['id_aspek'][$i];
+                $updateKomentar->pendapat_per_aspek = $_POST['pendapat_usulan'][$i];
+                $updateKomentar->save();
+            }
+            DB::commit();
+            return redirect()->route('dagulir.index')->withStatus('Berhasil mereview!');
+        } catch (Exception $th) {
+            return $th;
+            DB::rollback();
+        } catch (QueryException $e){
+            return $e;
+            DB::rollBack();
+        }
+    }
+
     public function getDataLevel($data)
     {
         $data_level = explode('-', $data);
@@ -273,7 +340,7 @@ class DagulirController extends Controller
 
     public function review($id)  {
         $pengajuan_dagulir = $this->repo->detail($id);
-        return $pengajuan_dagulir;
+
         $itemRepo = new MasterItemRepository;
         $item = $itemRepo->get([13]);
         return view('dagulir.form.review',[
@@ -292,6 +359,7 @@ class DagulirController extends Controller
             DB::beginTransaction();
             $updatePengajuan = PengajuanModel::where('dagulir_id',$request->get('dagulir_id'))->first();
             $updatePengajuan->progress_pengajuan_data = $request->progress;
+            $updatePengajuan->tanggal_review_penyelia = date(now());
             $updatePengajuan->update();
 
             // Tempory

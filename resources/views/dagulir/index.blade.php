@@ -164,6 +164,7 @@
                     <th>Jenis Usaha</th>
                     <th>Tipe Registrasi</th>
                     <th>Nominal Pengajuan</th>
+                    <th>Posisi</th>
                     <th>Status Pincetar</th>
                     <th>Status SIPDE</th>
                     <th>Aksi</th>
@@ -205,18 +206,21 @@
                             {{ number_format($item->nominal,0,',','.') }}
                         </td>
                         <td>
+                            {{$item->pengajuan->posisi}}
+                        </td>
+                        <td>
                             @if ($item->pengajuan->posisi == 'Selesai')
-                            <span class="status bg-green-100 text-green-500 border border-green-300">Selesai</span>
+                                <span class="status bg-green-100 text-green-500 border border-green-300">Selesai</span>
                             @elseif ($item->pengajuan->posisi == 'Ditolak')
-                            <span class="status bg-red-100 text-red-500 border border-red-300">Ditolak</span>
+                                <span class="status bg-red-100 text-red-500 border border-red-300">Ditolak</span>
                             @else
                                 <span class="status bg-yellow-100 text-yellow-600 border border-yellow-300">OnProgress</span>
                             @endif
                         </td>
                         <td>
-                        <span class="status bg-theme-secondary/5 text-theme-secondary border border-theme-secondary">
-                            <span>{{ array_key_exists(intval($item->status), $status) ? $status[intval($item->status)] : 'Tidak ditemukan' }}</span>
-                        </span>
+                            <span class="status bg-theme-secondary/5 text-theme-secondary border border-theme-secondary">
+                                <span>{{ array_key_exists(intval($item->status), $status) ? $status[intval($item->status)] : 'Tidak ditemukan' }}</span>
+                            </span>
                         </td>
                         <td>
                             <div class="flex">
@@ -248,6 +252,31 @@
                                             </div>
                                         </a> --}}
                                         </li>
+                                        @if ((Auth()->user()->role == 'Penyelia Kredit'))
+                                            @if ($item->pengajuan->posisi == 'Review Penyelia' && $item->pengajuan->tanggal_review_penyelia)
+                                                <li class="item-tb-dropdown">
+                                                    <a href="{{ route('dagulir.check.pincab', $item->pengajuan->id) }}"
+                                                        class="dropdown-item">Lanjutkan Ke Pincab</a>
+                                                </li>
+                                            @endif
+                                        @elseif ((Auth()->user()->role == 'PBO'))
+                                            @if ($item->pengajuan->posisi == 'Review Penyelia' && $item->pengajuan->tanggal_review_penyelia
+                                                && ($item->pengajuan->id_pbo && $item->pengajuan->tanggal_review_pbo))
+                                                <li class="item-tb-dropdown">
+                                                    <a href="{{ route('dagulir.check.pincab', $item->pengajuan->id) }}"
+                                                        class="dropdown-item">Lanjutkan Ke Pincab</a>
+                                                </li>
+                                            @endif
+                                        @elseif ((Auth()->user()->role == 'PBP'))
+                                            @if ($item->pengajuan->posisi == 'Review Penyelia' && $item->pengajuan->tanggal_review_penyelia
+                                                && ($item->pengajuan->id_pbo && $item->pengajuan->tanggal_review_pbo)
+                                                && ($item->pengajuan->id_pbp && $item->pengajuan->tanggal_review_pbp))
+                                                <li class="item-tb-dropdown">
+                                                    <a href="{{ route('dagulir.check.pincab', $item->pengajuan->id) }}"
+                                                        class="dropdown-item">Lanjutkan Ke Pincab</a>
+                                                </li>
+                                            @endif
+                                        @endif
                                         <li class="item-tb-dropdown">
                                             <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
                                                 class="cursor-pointer">Review</a>
