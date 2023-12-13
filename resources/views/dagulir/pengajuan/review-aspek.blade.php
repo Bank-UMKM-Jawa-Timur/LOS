@@ -32,8 +32,8 @@
                   <label for="">{{$child->nama}}</label>
                   @include('dagulir.components.review', [
                     'item' => $child,
-                    'id_pengajuan' => $pendapat_staf->id_pengajuan
-                ])
+                    'id_pengajuan' => $pendapat_staf ? $pendapat_staf->id_pengajuan : 0
+                    ])
                 </div>
               @endforeach
             </div>
@@ -46,7 +46,7 @@
             <label for="">{{$item->nama}}</label>
             @include('dagulir.components.review', [
                 'item' => $item,
-                'id_pengajuan' => $pendapat_staf->id_pengajuan
+                'id_pengajuan' => $pendapat_staf ? $pendapat_staf->id_pengajuan : 0
             ])
           </div>
           @if (isset($childs[$key+1]))
@@ -72,20 +72,22 @@
       @endforeach
       <hr>
 
-      <div class="form-group-1">
-        <div class="input-box">
-          <label for=""
-            >Pendapat dan usulan {{$title}}</label
-          >
-          <input type="text" name="id_aspek[]" value="{{ $id }}" hidden>
-          <textarea
-            name="pendapat_usulan[]"
-            class="form-textarea"
-            placeholder="Pendapat per aspek"
-            id=""
-          ></textarea>
+      @if (Auth::user()->role != 'Pincab')
+        <div class="form-group-1">
+          <div class="input-box">
+            <label for=""
+              >Pendapat dan usulan {{$title}}</label
+            >
+            <input type="text" name="id_aspek[]" value="{{ $id }}" hidden>
+            <textarea
+              name="pendapat_usulan[]"
+              class="form-textarea"
+              placeholder="Pendapat per aspek"
+              id=""
+            ></textarea>
+          </div>
         </div>
-      </div>
+      @endif
       <div class="form-group-1">
         <div class="input-box">
           <label for=""
@@ -98,7 +100,7 @@
             class="form-textarea"
             placeholder="Pendapat per aspek"
             id=""
-          >{{ $pendapat_staf->pendapat_per_aspek }}</textarea>
+          >{{ $pendapat_staf ? $pendapat_staf->pendapat_per_aspek : '' }}</textarea>
         </div>
       </div>
       <div class="flex justify-between">

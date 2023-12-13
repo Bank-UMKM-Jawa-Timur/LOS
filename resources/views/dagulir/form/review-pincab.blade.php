@@ -36,7 +36,8 @@
                                     'id_tab' => $title_id,
                                     'title' => $item->nama,
                                     'childs' => $item->childs,
-                                    'id' => $id
+                                    'id' => $id,
+                                    'pendapat_staf' => $item->pendapatan_staf,
                                 ])
                             </div>
                         @endforeach

@@ -332,6 +332,8 @@ class DagulirController extends Controller
             }
 
             $updateData->status = $status;
+            $updateData->id_penyelia = auth()->user()->id;
+            $updateData->tanggal_review_penyelia = date('Y-m-d');
             if ($role == 'Penyelia Kredit'){
                 $updateData->average_by_penyelia = $result;
             }
@@ -396,7 +398,7 @@ class DagulirController extends Controller
 
     public function getDetailJawabanPincab($id)
     {
-        $pengajuan = PengajuanModel::find($id);
+        $pengajuan = PengajuanModel::with('pendapatPerAspek')->find($id);
         $pengajuan_dagulir = PengajuanDagulir::find($pengajuan->dagulir_id);
         $itemRepo = new MasterItemRepository;
         $item = $itemRepo->getWithJawaban($id, [13]);
@@ -404,13 +406,28 @@ class DagulirController extends Controller
         $jenis_usaha = config('dagulir.jenis_usaha');
         $tipe = config('dagulir.tipe_pengajuan');
 
+        $kabupaten_ktp = Kabupaten::select('id','kabupaten')->find($pengajuan_dagulir->kotakab_ktp);
+        $kecamatan_ktp = Kecamatan::select('id','kecamatan')->find($pengajuan_dagulir->kec_ktp );
+        $kabupaten_dom = Kabupaten::select('id','kabupaten')->find($pengajuan_dagulir->kotakab_dom);
+        $kecamatan_dom = Kecamatan::select('id','kecamatan')->find($pengajuan_dagulir->kec_dom );
+        $kabupaten_usaha = Kabupaten::select('id','kabupaten')->find($pengajuan_dagulir->kotakab_usaha);
+        $kecamatan_usaha = Kecamatan::select('id','kecamatan')->find($pengajuan_dagulir->kec_usaha);
+
         $dataKabupaten = Kabupaten::all();
+
         return view('dagulir.form.review-pincab',[
             'items' => $item,
             'tipe' => $tipe,
             'dataKabupaten' => $dataKabupaten,
             'jenis_usaha' => $jenis_usaha,
             'dagulir' => $pengajuan_dagulir,
+            'pengajuan' => $pengajuan,
+            'kabupaten_ktp' => $kabupaten_ktp,
+            'kecamatan_ktp' => $kecamatan_ktp,
+            'kabupaten_dom' => $kabupaten_dom,
+            'kecamatan_dom' => $kecamatan_dom,
+            'kabupaten_usaha' => $kabupaten_usaha,
+            'kecamatan_usaha' => $kecamatan_usaha,
         ]);
     }
 
@@ -421,6 +438,10 @@ class DagulirController extends Controller
             if ($dagulir) {
                 $pengajuan = PengajuanModel::where('dagulir_id', $dagulir->id)->first();
                 if ($pengajuan) {
+                    $pengajuan->id_pincab = auth()->user()->id;
+                    $pengajuan->tanggal_review_pincab = date('Y-m-d');
+                    $pengajuan->save();
+
                     $idKomentar = KomentarModel::where('id_pengajuan', $pengajuan->id)->first();
                     KomentarModel::where('id', $idKomentar->id)->update(
                         [
