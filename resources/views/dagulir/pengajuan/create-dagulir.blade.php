@@ -181,12 +181,29 @@
                 </div>
                 <div class="input-box">
                     <label for="">Jangka Waktu</label>
-                    <input
+                    <div class="flex items-center">
+                        <div class="flex-1">
+                            <input
+                                type="number"
+                                class="w-full form-input"
+                                placeholder="Masukan Jangka Waktu"
+                                name="jangka_waktu"
+                                aria-label="Jangka Waktu"
+                                aria-describedby="basic-addon2"
+                            />
+                        </div>
+                        <div class="flex-shrink-0 mt-2.5rem">
+                            <span class="border border-gray-300 rounded px-3 py-2">Bulan</span>
+                        </div>
+                    </div>
+                    {{-- <input
                         type="number"
                         class="form-input"
                         placeholder="Masukan Jangka Waktu"
                         name="jangka_waktu"
+                        style="width: 80%; box-sizing: border-box; padding-right: 8px;"
                     />
+                    <span style="width: 20%; box-sizing: border-box; display: inline-block;">Bulan</span> --}}
                 </div>
             </div>
             <div class="form-group-2">
@@ -200,7 +217,7 @@
                     />
                 </div>
                 <div class="input-box">
-                    <label for="">Keterangan Agunan</label>
+                    <label for="">Jaminan yang disediakan</label>
                     <input
                         type="text"
                         class="form-input"
