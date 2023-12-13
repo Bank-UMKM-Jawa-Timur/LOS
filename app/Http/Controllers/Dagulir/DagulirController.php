@@ -143,8 +143,8 @@ class DagulirController extends Controller
             foreach ($request->input_option as $key => $value) {
                 $JawabanOption = new JawabanPengajuanModel;
                 $JawabanOption->id_pengajuan = $addPengajuan->id;
-                $JawabanOption->id_jawaban = $this->getDataLevel($value[0])[0];
-                $JawabanOption->skor = $this->getDataLevel($value[0])[1];
+                $JawabanOption->id_jawaban = $this->getDataLevel($value[0])[0] ?? null;
+                $JawabanOption->skor = $this->getDataLevel($value[0])[1] ?? null;
                 $JawabanOption->save();
             }
             // Jawaban input text, long text, number
