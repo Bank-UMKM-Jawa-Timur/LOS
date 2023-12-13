@@ -528,12 +528,12 @@ class DagulirController extends Controller
                 $statusPincab->tanggal_review_pincab = date(now());
                 $statusPincab->update();
 
-                $nasabah = CalonNasabah::select('id', 'nama')->where('id_pengajuan', $id)->first();
-                $namaNasabah = 'undifined';
-                if ($nasabah)
-                    $namaNasabah = $nasabah->nama;
+                // $nasabah = CalonNasabah::select('id', 'nama')->where('id_pengajuan', $id)->first();
+                // $namaNasabah = 'undifined';
+                // if ($nasabah)
+                //     $namaNasabah = $nasabah->nama;
 
-                $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menyetujui pengajuan atas nama ' . $namaNasabah . '.', $id, Auth::user()->id, Auth::user()->nip);
+                // $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->pengajuanKredit->getNameKaryawan(Auth::user()->nip) . ' menyetujui pengajuan atas nama ' . $namaNasabah . '.', $id, Auth::user()->id, Auth::user()->nip);
 
                 event(new EventMonitoring('menyetujui pengajuan'));
 
@@ -556,12 +556,12 @@ class DagulirController extends Controller
                 $statusPincab->tanggal_review_pincab = date(now());
                 $statusPincab->update();
 
-                $nasabah = CalonNasabah::select('id', 'nama')->where('id_pengajuan', $id)->first();
-                $namaNasabah = 'undifined';
-                if ($nasabah)
-                    $namaNasabah = $nasabah->nama;
+                // $nasabah = CalonNasabah::select('id', 'nama')->where('id_pengajuan', $id)->first();
+                // $namaNasabah = 'undifined';
+                // if ($nasabah)
+                //     $namaNasabah = $nasabah->nama;
 
-                $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->pengajuanKredit->getNameKaryawan(Auth::user()->nip) . ' menolak pengajuan atas nama ' . $namaNasabah . '.', $id, Auth::user()->id, Auth::user()->nip);
+                // $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->pengajuanKredit->getNameKaryawan(Auth::user()->nip) . ' menolak pengajuan atas nama ' . $namaNasabah . '.', $id, Auth::user()->id, Auth::user()->nip);
                 event(new EventMonitoring('tolak pengajuan'));
                 return redirect()->back()->withStatus('Berhasil mengganti posisi.');
             } else {
@@ -572,74 +572,61 @@ class DagulirController extends Controller
         }
     }
 
-    public function storeSipde(
-        $nama,
-        $nik,
-        $tempat_lahir,
-        $tanggal_lahir,
-        $telp,
-        $jenis_usaha,
-        $nominal_pengajuan,
-        $tujuan_penggunaan,
-        $jangka_waktu,
-        $ket_agunan,
-        $kode_bank_pusat,
-        $kode_bank_cabang,
-        $kecamatan_sesuai_ktp,
-        $kode_kotakab_ktp,
-        $alamat_sesuai_ktp,
-        $kecamatan_domisili,
-        $kode_kotakab_domisili,
-        $alamat_domisili,
-        $kecamatan_usaha,
-        $kode_kotakab_usaha,
-        $alamat_usaha,
-        $tipe_pengajuan,
-        $npwp,
-        $jenis_badan_hukum,
-        $tempat_berdiri,
-        $tanggal_berdiri,
-        $email,
-        $nama_pj,
-    ) {
+    public function storeSipde(Request $request) {
+        $pengajuan = PengajuanModel::with('pendapatPerAspek')->find($request->id_dagulir);
+        $pengajuan_dagulir = PengajuanDagulir::find($pengajuan->dagulir_id);
         $data = sipde_token();
+        $body = [
+            "nama" => $pengajuan_dagulir->nama,
+            "nik" => $pengajuan_dagulir->nik,
+            "tempat_lahir" => $pengajuan_dagulir->tempat_lahir,
+            "tanggal_lahir" => $pengajuan_dagulir->tanggal_lahir,
+            "telp" => $pengajuan_dagulir->telp,
+            "jenis_usaha" => $pengajuan_dagulir->jenis_usaha,
+            "nominal_pengajuan" => intval($request->nominal_realisasi),
+            "tujuan_penggunaan" => $pengajuan_dagulir->tujuan_penggunaan,
+            "jangka_waktu" => intval($request->get('jangka_waktu')),
+            "ket_agunan" => 'BPKB',
+            "kode_bank_pusat" => '01-BPR',
+            "kode_bank_cabang" => $pengajuan_dagulir->kode_bank_cabang,
+            "kecamatan_sesuai_ktp" => $pengajuan_dagulir->kec_ktp,
+            "kode_kotakab_ktp" => $pengajuan_dagulir->kotakab_ktp,
+            "alamat_sesuai_ktp" => $pengajuan_dagulir->alamat_ktp,
+            "kecamatan_domisili" => $pengajuan_dagulir->kec_dom ,
+            "kode_kotakab_domisili" => $pengajuan_dagulir->kotakab_dom,
+            "alamat_domisili" => $pengajuan_dagulir->alamat_dom,
+            "kecamatan_usaha" => $pengajuan_dagulir->kec_usaha,
+            "kode_kotakab_usaha" => $pengajuan_dagulir->kotakab_usaha ,
+            "alamat_usaha" => $pengajuan_dagulir->alamat_usaha,
+            "tipe_pengajuan" => $pengajuan_dagulir->tipe,
+            "npwp" => $pengajuan_dagulir->npwp,
+            // "jenis_badan_hukum" => $pengajuan_dagulir->jenis_badan_hukum,
+            "jenis_badan_hukum" => "Berbadan Hukum",
+            "tempat_berdiri" => $pengajuan_dagulir->tempat_berdiri,
+            "tanggal_berdiri" => $pengajuan_dagulir->tanggal_berdiri,
+            "email" => $pengajuan_dagulir->email,
+            "nama_pj" => $pengajuan_dagulir->nama_pj_ketua ??  null,
+        ];
         $pengajuan_dagulir = Http::withHeaders([
             'Authorization' => 'Bearer ' .$data['token'],
-        ])->post(env('SIPDE_HOST').'/pengajuan.json',[
-            "nama" => $nama,
-            "nik" => $nik,
-            "tempat_lahir" => $tempat_lahir,
-            "tanggal_lahir" => $tanggal_lahir,
-            "telp" => $telp,
-            "jenis_usaha" => $jenis_usaha,
-            "nominal_pengajuan" => $nominal_pengajuan,
-            "tujuan_penggunaan" => $tujuan_penggunaan,
-            "jangka_waktu" => $jangka_waktu,
-            "ket_agunan" => $ket_agunan,
-            "kode_bank_pusat" => '01-BPR',
-            "kode_bank_cabang" => $kode_bank_cabang,
-            "kecamatan_sesuai_ktp" => $kecamatan_sesuai_ktp,
-            "kode_kotakab_ktp" => $kode_kotakab_ktp,
-            "alamat_sesuai_ktp" => $alamat_sesuai_ktp,
-            "kecamatan_domisili" => $kecamatan_domisili,
-            "kode_kotakab_domisili" => $kode_kotakab_domisili,
-            "alamat_domisili" => $alamat_domisili,
-            "kecamatan_usaha" => $kecamatan_usaha,
-            "kode_kotakab_usaha" => $kode_kotakab_usaha,
-            "alamat_usaha" => $alamat_usaha,
-            "tipe_pengajuan" => $tipe_pengajuan,
-            "npwp" => $npwp,
-            "jenis_badan_hukum" => $jenis_badan_hukum,
-            "tempat_berdiri" => $tempat_berdiri,
-            "tanggal_berdiri" => $tanggal_berdiri,
-            "email" => $email,
-            "nama_pj" => $nama_pj ??  null,
-        ])->json();
-        if ($pengajuan_dagulir['data']['status_code'] == 400) {
-            return $pengajuan_dagulir['data']['status_code'];
-        }
+        ])->post(config('dagulir.host').'/pengajuan.json', $body)->json();
 
-        return $pengajuan_dagulir;
+        if (array_key_exists('data', $pengajuan_dagulir)) {
+            $update_pengajuan_dagulir = PengajuanDagulir::find($pengajuan->dagulir_id);
+            $update_pengajuan_dagulir->kode_pendaftaran = $pengajuan_dagulir['data']['kode_pendaftaran'];
+            $update_pengajuan_dagulir->nominal_realisasi = $request->nominal_realisasi;
+            $update_pengajuan_dagulir->jangka_waktu = $request->jangka_waktu;
+            $update_pengajuan_dagulir->status = 1;
+            $update_pengajuan_dagulir->update();
+
+            return redirect()->route('dagulir.index')->withStatus('Berhasil mengirimkan data.');
+        }
+        else {
+            $message = 'Terjadi kesalahan.';
+            if (array_key_exists('error', $pengajuan_dagulir)) $message .= ' '.$pengajuan_dagulir['error'];
+
+            return redirect()->route('dagulir.index')->withError($message);
+        }
     }
 
     public function updateStatus($kode_pendaftaran, $status, $lampiran_analisa = null, $jangka_waktu, $realisasi_dana) {

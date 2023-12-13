@@ -6,7 +6,7 @@ id="modal-approval"
   <div class="modal-head">
     <div class="title">
       <h2 class="font-bold text-2xl tracking-tighter text-theme-text">
-        Approval 
+        Approval
       </h2>
     </div>
     <button data-dismiss-id="modal-logout">
@@ -34,8 +34,8 @@ id="modal-approval"
             const id = $(this).data('id');
             const acc_url = $(this).data('acc-url');
             const dec_url = $(this).data('dec-url');
-            $('#modal-approval #btn-dec').attr("href", acc_url)
-            $('#modal-approval #btn-acc').attr("href", dec_url)
+            $('#modal-approval #btn-acc').attr("href", acc_url)
+            $('#modal-approval #btn-dec').attr("href", dec_url)
             $('#modal-approval').removeClass('hidden')
         })
     </script>
