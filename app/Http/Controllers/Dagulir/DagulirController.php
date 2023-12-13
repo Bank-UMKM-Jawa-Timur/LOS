@@ -97,13 +97,14 @@ class DagulirController extends Controller
             $pengajuan = new PengajuanDagulir;
             $pengajuan->kode_pendaftaran = null;
             $pengajuan->nama = $request->get('nama_lengkap');
+            $pengajuan->email = $request->get('email');
             $pengajuan->nik = $request->get('nik');
-            $pengajuan->nama_pj_ketua = $request->has('nama_pj') ? $request->has('nama_pj') : null;
+            $pengajuan->nama_pj_ketua = $request->has('nama_pj') ? $request->get('nama_pj') : null;
             $pengajuan->tempat_lahir =  $request->get('tempat_lahir');
             $pengajuan->tanggal_lahir = $request->get('tanggal_lahir');
             $pengajuan->telp = $request->get('telp');
             $pengajuan->jenis_usaha = $request->get('jenis_usaha');
-            $pengajuan->nominal =$this->formatNumber($request->get('nominal_pengajuan'));
+            $pengajuan->nominal =   $this->formatNumber($request->get('nominal_pengajuan'));
             $pengajuan->tujuan_penggunaan = $request->get('tujuan_penggunaan');
             $pengajuan->jangka_waktu = $request->get('jangka_waktu');
             $pengajuan->kode_bank_pusat = 1;
@@ -139,7 +140,6 @@ class DagulirController extends Controller
             $addPengajuan->save();
 
             // Jawaban input option
-
             foreach ($request->input_option as $key => $value) {
                 $JawabanOption = new JawabanPengajuanModel;
                 $JawabanOption->id_pengajuan = $addPengajuan->id;
