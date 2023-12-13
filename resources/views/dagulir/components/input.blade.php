@@ -37,16 +37,16 @@
 @elseif ($item->opsi_jawaban == 'file')
     <div class="flex gap-4">
         @if ($item->nama == 'Dokumen NPWP' || $item->nama == 'Dokumen Surat Keterangan Usaha' || $item->nama == 'Dokumen NIB')
-            <input type="file" name="file[{{ $item->id }}]" class="form-input hidden" id="{{ str_replace(' ', '-', strtolower($item->nama)) }}"/>
+            <input type="file" name="file[{{ $item->id }}][]" class="form-input hidden" id="{{ str_replace(' ', '-', strtolower($item->nama)) }}"/>
         @else
-            <input type="file" name="file[{{ $item->id }}]" class="form-input" />
+            <input type="file" name="file[{{ $item->id }}][]" class="form-input" id="{{$item->id}}-{{strtolower(str_replace(' ', '_', $item->nama))}}" />
         @endif
         @if ($item->is_multiple)
-            <div class="flex gap-2">
-                <button class="btn-add">
+            <div class="flex gap-2 multiple-action">
+                <button type="button" class="btn-add" data-item-id="{{$item->id}}-{{strtolower(str_replace(' ', '_', $item->nama))}}">
                     <iconify-icon icon="fluent:add-16-filled" class="mt-2"></iconify-icon>
                 </button>
-                <button class="btn-minus">
+                <button type="button" class="btn-minus" data-item-id="{{$item->id}}-{{strtolower(str_replace(' ', '_', $item->nama))}}">
                     <iconify-icon icon="lucide:minus" class="mt-2"></iconify-icon>
                 </button>
             </div>
