@@ -91,7 +91,7 @@ class DagulirController extends Controller
     }
 
     // function store(DagulirRequestForm $request) {
-    public function store(DagulirRequestForm $request) {
+    public function store(Request $request) {
         try {
             $find = array('Rp.', '.', ',');
 
@@ -101,7 +101,7 @@ class DagulirController extends Controller
             $pengajuan->kode_pendaftaran = null;
             $pengajuan->nama = $request->get('nama_lengkap');
             $pengajuan->email = $request->get('email');
-            $pengajuan->nik = $request->get('nik');
+            $pengajuan->nik = $request->get('nik_nasabah');
             $pengajuan->nama_pj_ketua = $request->has('nama_pj') ? $request->get('nama_pj') : null;
             $pengajuan->tempat_lahir =  $request->get('tempat_lahir');
             $pengajuan->tanggal_lahir = $request->get('tanggal_lahir');
@@ -132,20 +132,58 @@ class DagulirController extends Controller
             $pengajuan->tanggal = now();
             $pengajuan->user_id = Auth::user()->id;
             $pengajuan->status = 8;
+            $pengajuan->status_pernikahan = $request->get('status');
+            $pengajuan->nik_pasangan = $request->has('nik_pasangan') ? $request->get('nik_pasangan') : null;
             $pengajuan->created_at = now();
             $pengajuan->from_apps = 'pincetar';
             $pengajuan->save();
 
-            // Start File Slik
-            $image = $request->file('file_slik');
-            $fileName = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
-            $filePath = public_path() . '/upload/' . $pengajuan->id . '/' .$pengajuan->id_slik;
-            if (!File::isDirectory($filePath)) {
-                File::makeDirectory($filePath, 493, true);
-            }
-            $image->move($filePath, $fileName);
             $update_pengajuan = PengajuanDagulir::find($pengajuan->id);
-            $update_pengajuan->file_slik = $fileName;
+            // Start File Slik
+            if ($request->has('file_slik')) {
+                $image = $request->file('file_slik');
+                $fileNameSlik = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
+                $filePath = public_path() . '/upload/' . $pengajuan->id . '/' .$pengajuan->id_slik;
+                if (!File::isDirectory($filePath)) {
+                    File::makeDirectory($filePath, 493, true);
+                }
+                $image->move($filePath, $fileNameSlik);
+            }
+            // foto nasabah
+            if ($request->has('foto_nasabah')) {
+                $image = $request->file('foto_nasabah');
+                $fileNameNasabah = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
+                $filePath = public_path() . '/upload/' . $pengajuan->id;
+                if (!File::isDirectory($filePath)) {
+                    File::makeDirectory($filePath, 493, true);
+                }
+                $image->move($filePath, $fileNameNasabah);
+                $update_pengajuan->foto_nasabah = $fileNameNasabah;
+
+            }
+            if ($request->has('ktp_pasangan')) {
+                $image = $request->file('ktp_pasangan');
+                $fileNamePasangan = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
+                $filePath = public_path() . '/upload/' . $pengajuan->id;
+                if (!File::isDirectory($filePath)) {
+                    File::makeDirectory($filePath, 493, true);
+                }
+                $image->move($filePath, $fileNamePasangan);
+                $update_pengajuan->foto_pasangan = $fileNamePasangan;
+
+            }
+            if ($request->has('ktp_nasabah')) {
+                $image = $request->file('ktp_nasabah');
+                $fileNameKtpNasabah = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
+                $filePath = public_path() . '/upload/' . $pengajuan->id;
+                if (!File::isDirectory($filePath)) {
+                    File::makeDirectory($filePath, 493, true);
+                }
+                $image->move($filePath, $fileNameKtpNasabah);
+                $update_pengajuan->foto_ktp = $fileNameKtpNasabah;
+
+            }
+            // ktp nasabah
             $update_pengajuan->update();
             // End File Slik
 
@@ -317,6 +355,9 @@ class DagulirController extends Controller
         $kabupaten_usaha = Kabupaten::select('id','kabupaten')->find($pengajuan_dagulir->kotakab_usaha);
         $kecamatan_usaha = Kecamatan::select('id','kecamatan')->find($pengajuan_dagulir->kec_usaha);
 
+        $itemSlik = ItemModel::with('option')->where('nama', 'SLIK')->first();
+
+
         $dataKabupaten = Kabupaten::all();
         return view('dagulir.form.review',[
             'items' => $item,
@@ -331,6 +372,7 @@ class DagulirController extends Controller
             'kecamatan_dom' => $kecamatan_dom,
             'kabupaten_usaha' => $kabupaten_usaha,
             'kecamatan_usaha' => $kecamatan_usaha,
+            'itemSlik' => $itemSlik,
 
         ]);
     }

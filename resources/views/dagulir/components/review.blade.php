@@ -43,7 +43,7 @@
         </div>
     @endif
 @elseif ($item->opsi_jawaban == 'number')
-    <input name="input_number[{{ $item->id }}][{{ $item->skor }}]" type="number" class="form-input {{$item->is_rupiah ? 'rupiah' : ''}}"
+    <input  readonly name="input_number[{{ $item->id }}][{{ $item->skor }}]" type="number" class="form-input {{$item->is_rupiah ? 'rupiah' : ''}}"
         placeholder="Masukan informasi disini" value="{{ $item->jawaban ? $item->jawaban->opsi_text : '' }}" />
     @if ($item->is_commentable == 'Ya')
         <div class="flex">
@@ -63,7 +63,7 @@
     @endif
 @elseif ($item->opsi_jawaban == 'persen')
     <div class="input-grouped">
-        <input type="number" name="input_number[{{ $item->id }}][{{ $item->skor }}]" class="form-input"
+        <input readonly type="number" name="input_number[{{ $item->id }}][{{ $item->skor }}]" class="form-input"
             placeholder="Masukan informasi disini" id="" value="{{ $item->jawaban ? $item->jawaban->opsi_text : '' }}" />
         <span class="group-text">
             <p>%</p>
@@ -86,7 +86,7 @@
         </div>
     @endif
 @elseif ($item->opsi_jawaban == 'long text')
-    <textarea name="input_text_long[{{ $item->id }}][{{ $item->skor }}]" class="form-textarea"
+    <textarea readonly name="input_text_long[{{ $item->id }}][{{ $item->skor }}]" class="form-textarea"
         placeholder="Masukan informasi disini" id="">{{ $item->jawaban ? $item->jawaban->opsi_text : '' }}</textarea>
     @if ($item->is_commentable == 'Ya')
         <div class="flex">

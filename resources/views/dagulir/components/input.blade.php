@@ -76,6 +76,7 @@
                         class="form-input {{$c4->is_rupiah ? 'rupiah' : ''}} @if ($c4->readonly) bg-gray-100 @endif" placeholder="Masukan informasi disini"  @if ($c4->readonly) readonly @endif/>
                 </div>
             @elseif ($c4->opsi_jawaban == 'number')
+                <label for="">{{$c4->nama}}</label>
                 <input name="input_number[{{ $c4->id }}][{{ $c4->skor }}]" type="number" class="form-input {{$c4->is_rupiah ? 'rupiah' : ''}} @if ($c4->readonly) bg-gray-100 @endif"
                     placeholder="Masukan informasi disini"  @if ($c4->readonly) readonly @endif/>
             @elseif ($c4->opsi_jawaban == 'persen')
