@@ -529,4 +529,58 @@ class DagulirController extends Controller
     {
         return (int)str_replace('.', '', $param);
     }
+
+    public function accPengajuan($id)
+    {
+        $statusPincab = PengajuanModel::find($id);
+        $komentarPincab = KomentarModel::where('id_pengajuan', $id)->first();
+        if (auth()->user()->role == 'Pincab') {
+            if ($komentarPincab->komentar_pincab != null) {
+                $statusPincab->posisi = "Selesai";
+                $statusPincab->tanggal_review_pincab = date(now());
+                $statusPincab->update();
+
+                $nasabah = CalonNasabah::select('id', 'nama')->where('id_pengajuan', $id)->first();
+                $namaNasabah = 'undifined';
+                if ($nasabah)
+                    $namaNasabah = $nasabah->nama;
+
+                $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menyetujui pengajuan atas nama ' . $namaNasabah . '.', $id, Auth::user()->id, Auth::user()->nip);
+
+                event(new EventMonitoring('menyetujui pengajuan'));
+
+                return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+            } else {
+                return redirect()->back()->withError('Belum di review Pincab.');
+            }
+        } else {
+            return redirect()->back()->withError('Tidak memiliki hak akses.');
+        }
+    }
+
+    public function decPengajuan($id)
+    {
+        $statusPincab = PengajuanModel::find($id);
+        $komentarPincab = KomentarModel::where('id_pengajuan', $id)->first();
+        if (auth()->user()->role == 'Pincab') {
+            if ($komentarPincab->komentar_pincab != null) {
+                $statusPincab->posisi = "Ditolak";
+                $statusPincab->tanggal_review_pincab = date(now());
+                $statusPincab->update();
+
+                $nasabah = CalonNasabah::select('id', 'nama')->where('id_pengajuan', $id)->first();
+                $namaNasabah = 'undifined';
+                if ($nasabah)
+                    $namaNasabah = $nasabah->nama;
+
+                $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->pengajuanKredit->getNameKaryawan(Auth::user()->nip) . ' menolak pengajuan atas nama ' . $namaNasabah . '.', $id, Auth::user()->id, Auth::user()->nip);
+                event(new EventMonitoring('tolak pengajuan'));
+                return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+            } else {
+                return redirect()->back()->withError('Belum di review Pincab.');
+            }
+        } else {
+            return redirect()->back()->withError('Tidak memiliki hak akses.');
+        }
+    }
 }
