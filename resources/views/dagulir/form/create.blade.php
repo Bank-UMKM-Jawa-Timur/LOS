@@ -37,7 +37,6 @@
                                     'title' => $item->nama,
                                     'id' => $id,
                                     'childs' => $item->childs
-
                                 ])
                             </div>
                         @endforeach
@@ -433,5 +432,24 @@
                 $("#label-dokumen-npwp").addClass("hidden");
             }
         });
+
+        $(document).on('click', '.btn-add', function() {
+            const item_id = $(this).data('item-id');
+            var item_element = $(`.${item_id}`)
+            var iteration = item_element.length
+            var input = $(this).closest('.input-box')
+            var multiple = input.find('.multiple-action')
+            var new_multiple = multiple.html().replaceAll('hidden', '')
+            input = input.html().replaceAll(multiple.html(), new_multiple);
+            var parent = $(this).closest('.input-box').parent()
+            parent.append(`<div class="input-box">${input}`)
+        })
+
+        $(document).on('click', '.btn-minus', function() {
+            const item_id = $(this).data('item-id');
+            var item_element = $(`#${item_id}`)
+            var parent = $(this).closest('.input-box')
+            parent.remove()
+        })
     </script>
 @endpush
