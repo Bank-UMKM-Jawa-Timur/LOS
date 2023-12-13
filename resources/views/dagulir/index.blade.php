@@ -297,8 +297,8 @@
                                                 ($item->pengajuan->id_pincab && $item->pengajuan->tanggal_review_pincab))
                                             <li class="item-tb-dropdown">
                                                 <a href="#" data-id="{{$item->pengajuan->id}}"
-                                                    data-acc-url="{{ route('pengajuan.change.pincab.status.tolak',$item->pengajuan->id) }}"
-                                                    data-dec-url="{{ route('pengajuan.change.pincab.status',$item->pengajuan->id) }}"
+                                                    data-acc-url="{{ route('dagulir.acc_pincab',$item->pengajuan->id) }}"
+                                                    data-dec-url="{{ route('dagulir.dec_pincab',$item->pengajuan->id) }}"
                                                     class="cursor-pointer approval">Approval</a>
                                             </li>
                                         @endif
