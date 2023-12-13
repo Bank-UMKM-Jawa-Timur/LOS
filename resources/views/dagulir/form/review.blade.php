@@ -4,7 +4,7 @@
     <section class="">
         <nav class="w-full bg-white p-3  top-[4rem] border sticky">
             <div class="owl-carousel owl-theme tab-wrapper">
-                <button data-toggle="tab" data-tab="dagulir" class="btn btn-tab active-tab font-semibold">0% Dagulir</button>
+                <button data-toggle="tab" data-tab="dagulir" class="btn btn-tab active-tab font-semibold">0% Data Umum</button>
                 @foreach ($items as $item)
                     @php
                         $title = str_replace('&', 'dan', strtolower($item->nama));

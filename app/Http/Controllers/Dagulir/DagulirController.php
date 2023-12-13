@@ -35,43 +35,39 @@ class DagulirController extends Controller
 
     public function index(Request $request)
     {
-        // $id_cabang = Auth::user()->id_cabang;
-        // $param['cabang'] = DB::table('cabang')
-        //     ->get();
-        // $role = auth()->user()->role;
-        // if ($role == 'Staf Analis Kredit') {
-        // } elseif ($role == 'Penyelia Kredit') {
-        // } elseif ($role == 'PBO' || $role == 'PBP') {
-        // } elseif ($role == 'Pincab') {
-        // } else {
+        $id_cabang = Auth::user()->id_cabang;
+        $param['cabang'] = DB::table('cabang')
+            ->get();
+        $role = auth()->user()->role;
+        if ($role == 'Staf Analis Kredit') {
+        } elseif ($role == 'Penyelia Kredit') {
+        } elseif ($role == 'PBO' || $role == 'PBP') {
+        } elseif ($role == 'Pincab') {
+        } else {
+        }
         // paginate
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
         // search
         $search = $request->get('q');
-        $pengajuan_degulir = $this->repo->get($search,$limit,$page);
+        $pengajuan_dagulir = $this->repo->get($search,$limit,$page);
 
-        // return $pengajuan_degulir;
+        // return $pengajuan_dagulir;
         return view('dagulir.index',[
-            'data' => $pengajuan_degulir
+            'data' => $pengajuan_dagulir
         ]);
     }
 
     public function create() {
         $itemRepo = new MasterItemRepository;
         $item = $itemRepo->get([13]);
-        // return $item;
         $list = list_tipe_pengajuan();
         $jenis_usaha = list_jenis_usaha();
-        $list_cabang = Cabang::select('id', 'cabang')
-                    ->where('cabang','!=','Kantor Pusat')
-                    ->orderBy('id', 'asc')
-                    ->get();
+
         $dataKabupaten = Kabupaten::all();
         return view('dagulir.form.create',[
             'items' => $item,
             'tipe' => $list,
-            'list_cabang' => $list_cabang,
             'dataKabupaten' => $dataKabupaten,
             'jenis_usaha' => $jenis_usaha
         ]);
@@ -230,29 +226,17 @@ class DagulirController extends Controller
     {
         $pengajuan = PengajuanModel::find($id);
         $pengajuan_dagulir = PengajuanDagulir::find($pengajuan->dagulir_id);
+        // return $pengajuan_dagulir;
         $itemRepo = new MasterItemRepository;
         $item = $itemRepo->getWithJawaban($id, [13]);
 
         $list = list_tipe_pengajuan();
         $jenis_usaha = list_jenis_usaha();
-        $list_cabang = Cabang::select('id', 'cabang')
-                    ->where('cabang','!=','Kantor Pusat')
-                    ->orderBy('id', 'asc')
-                    ->get();
-        $dataKabupaten = Kabupaten::all();
 
-        // return [
-        //     'items' => $item,
-        //     'tipe' => $list,
-        //     'list_cabang' => $list_cabang,
-        //     'dataKabupaten' => $dataKabupaten,
-        //     'jenis_usaha' => $jenis_usaha,
-        //     'dagulir' => $pengajuan_dagulir,
-        // ];
+        $dataKabupaten = Kabupaten::all();
         return view('dagulir.form.review',[
             'items' => $item,
             'tipe' => $list,
-            'list_cabang' => $list_cabang,
             'dataKabupaten' => $dataKabupaten,
             'jenis_usaha' => $jenis_usaha,
             'dagulir' => $pengajuan_dagulir,
@@ -287,11 +271,12 @@ class DagulirController extends Controller
     }
 
     public function review($id)  {
-        $pengajuan_degulir = $this->repo->detail($id);
+        $pengajuan_dagulir = $this->repo->detail($id);
+        return $pengajuan_dagulir;
         $itemRepo = new MasterItemRepository;
         $item = $itemRepo->get([13]);
         return view('dagulir.form.review',[
-            'data' => $pengajuan_degulir,
+            'data' => $pengajuan_dagulir,
             'items' => $item,
         ]);
     }
