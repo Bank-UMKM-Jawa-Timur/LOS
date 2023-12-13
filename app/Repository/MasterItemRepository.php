@@ -4,6 +4,7 @@ namespace App\Repository;
 use App\Models\ItemModel;
 use App\Models\JawabanModel;
 use App\Models\JawabanTextModel;
+use App\Models\PendapatPerAspek;
 
 class MasterItemRepository
 {
@@ -75,6 +76,8 @@ class MasterItemRepository
                         ->get();
 
         foreach ($items as $key => $value) {
+            $pendapat = PendapatPerAspek::where('id_pengajuan',$pengajuan_id)->where('id_aspek',$value->id)->first();
+            $value->pendapatan_staf = $pendapat;
             if ($value->childs) {
                 // Lev 2
                 if ($value->opsi_jawaban != "kosong") {

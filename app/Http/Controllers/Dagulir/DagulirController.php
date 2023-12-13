@@ -9,6 +9,7 @@ use App\Http\Requests\DagulirRequestForm;
 use App\Models\Cabang;
 use App\Models\CalonNasabah;
 use App\Models\Desa;
+use App\Models\DetailKomentarModel;
 use App\Models\JawabanPengajuanModel;
 use App\Models\JawabanTextModel;
 use App\Models\Kabupaten;
@@ -259,14 +260,20 @@ class DagulirController extends Controller
 
     public function getDetailJawaban($id)
     {
-        $pengajuan = PengajuanModel::find($id);
+        $pengajuan = PengajuanModel::with('pendapatPerAspek')->find($id);
         $pengajuan_dagulir = PengajuanDagulir::find($pengajuan->dagulir_id);
-        // return $pengajuan_dagulir;
         $itemRepo = new MasterItemRepository;
         $item = $itemRepo->getWithJawaban($id, [13]);
 
         $jenis_usaha = config('dagulir.jenis_usaha');
         $tipe = config('dagulir.tipe_pengajuan');
+
+        $kabupaten_ktp = Kabupaten::select('id','kabupaten')->find($pengajuan_dagulir->kotakab_ktp);
+        $kecamatan_ktp = Kecamatan::select('id','kecamatan')->find($pengajuan_dagulir->kec_ktp );
+        $kabupaten_dom = Kabupaten::select('id','kabupaten')->find($pengajuan_dagulir->kotakab_dom);
+        $kecamatan_dom = Kecamatan::select('id','kecamatan')->find($pengajuan_dagulir->kec_dom );
+        $kabupaten_usaha = Kabupaten::select('id','kabupaten')->find($pengajuan_dagulir->kotakab_usaha);
+        $kecamatan_usaha = Kecamatan::select('id','kecamatan')->find($pengajuan_dagulir->kec_usaha);
 
         $dataKabupaten = Kabupaten::all();
         return view('dagulir.form.review',[
@@ -275,21 +282,109 @@ class DagulirController extends Controller
             'dataKabupaten' => $dataKabupaten,
             'jenis_usaha' => $jenis_usaha,
             'dagulir' => $pengajuan_dagulir,
+            'pengajuan' => $pengajuan,
+            'kabupaten_ktp' => $kabupaten_ktp,
+            'kecamatan_ktp' => $kecamatan_ktp,
+            'kabupaten_dom' => $kabupaten_dom,
+            'kecamatan_dom' => $kecamatan_dom,
+            'kabupaten_usaha' => $kabupaten_usaha,
+            'kecamatan_usaha' => $kecamatan_usaha,
         ]);
     }
 
     public function updateReviewPenyelia(Request $request, $id) {
+        $role = Auth::user()->role;
         try {
-            for ($i=0; $i <  count($request->get('id_aspek')); $i++) {
-                $updateKomentar = new PendapatPerAspek();
-                $updateKomentar->id_pengajuan = $id;
-                $updateKomentar->id_penyelia = auth()->user()->id;
-                $updateKomentar->id_aspek = $_POST['id_aspek'][$i];
-                $updateKomentar->pendapat_per_aspek = $_POST['pendapat_usulan'][$i];
-                $updateKomentar->save();
+            $finalArray = array();
+            $totalDataNull = 0;
+            $sum_select = 0;
+            foreach ($request->skor_penyelia as $key => $value) {
+                if (is_numeric($value)) {
+                    array_push($finalArray, [
+                        'skor_penyelia' => $value
+                    ]);
+                    $sum_select += $value;
+                } else
+                    $totalDataNull++;
+            }
+
+            $average = ($sum_select) / (count($request->skor_penyelia) - $totalDataNull);
+            $result = round($average, 2);
+            $status = "";
+            $updateData = PengajuanModel::find($id);
+            if ($result > 0 && $result <= 2) {
+                $status = "merah";
+            } elseif ($result >= 2 && $result <= 3) {
+                $status = "kuning";
+            } elseif ($result > 3) {
+                $status = "hijau";
+            } else {
+                $status = "merah";
+            }
+            // Hanya Penyelia saja
+            if ($role == 'Penyelia Kredit') {
+                foreach ($request->get('option') as $key => $value) {
+                    JawabanPengajuanModel::where('id_jawaban', $value)->where('id_pengajuan', $id)
+                        ->update([
+                            'skor_penyelia' => $request->get('skor_penyelia')[$key] ? $request->get('skor_penyelia')[$key] : null
+                        ]);
+                }
+            }
+
+            $updateData->status = $status;
+            if ($role == 'Penyelia Kredit'){
+                $updateData->average_by_penyelia = $result;
+            }
+            $updateData->update();
+
+            // Detail Komentar
+            $idKomentar = KomentarModel::where('id_pengajuan', $id)->first();
+            $countDK = DetailKomentarModel::where('id_komentar', $idKomentar->id)->count();
+            if ($countDK > 0) {
+                foreach ($request->option as $key => $value) {
+                    $dk = DetailKomentarModel::where('id_komentar', $idKomentar->id)->where('id_user', Auth::user()->id)->where('id_item', $value)->first();
+                    if ($dk) {
+                        $dk->komentar = $_POST['komentar_penyelia'][$key];
+                        $dk->save();
+                    }
+                }
+            } else {
+                foreach ($request->option as $key => $value) {
+                    if ($value) {
+                        $dk = new DetailKomentarModel;
+                        $dk->id_komentar = $idKomentar->id;
+                        $dk->id_user = Auth::user()->id;
+                        $dk->id_item = $value;
+                        $dk->komentar = $_POST['komentar_penyelia'][$key];
+                        $dk->save();
+                    }
+                }
+            }
+
+            // pendapat penyelia
+            // if ($role == 'Penyelia Kredit')
+            $countpendapat = PendapatPerAspek::where('id_pengajuan', $id)->where('id_penyelia', Auth::user()->id)->count();
+            if ($countpendapat > 0) {
+                if ($role == 'Penyelia Kredit') {
+                    foreach ($request->get('id_aspek') as $key => $value) {
+                        $pendapatperaspekpenyelia = PendapatPerAspek::where('id_pengajuan', $id)->where('id_aspek', $value)->where('id_penyelia', Auth::user()->id)->first();
+                        $pendapatperaspekpenyelia->pendapat_per_aspek = $_POST['pendapat_usulan'][$key];
+                        $pendapatperaspekpenyelia->save();
+                    }
+                }
+            }else{
+                for ($i=0; $i <  count($request->get('id_aspek')); $i++) {
+                    $updateKomentar = new PendapatPerAspek();
+                    $updateKomentar->id_pengajuan = $id;
+                    $updateKomentar->id_penyelia = auth()->user()->id;
+                    $updateKomentar->id_aspek = $_POST['id_aspek'][$i];
+                    $updateKomentar->pendapat_per_aspek = $_POST['pendapat_usulan'][$i];
+                    $updateKomentar->save();
+                }
+
             }
             DB::commit();
-            return redirect()->route('dagulir.index')->withStatus('Berhasil menambahkan pendapat penyelia!');
+            return redirect()->route('dagulir.index')->withStatus('Berhasil Review!');
         } catch (Exception $th) {
             return $th;
             DB::rollback();

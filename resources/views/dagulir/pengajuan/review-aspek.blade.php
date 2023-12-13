@@ -30,7 +30,10 @@
               @foreach ($item->childs as $child)
                 <div class="input-box">
                   <label for="">{{$child->nama}}</label>
-                  @include('dagulir.components.review', ['item' => $child])
+                  @include('dagulir.components.review', [
+                    'item' => $child,
+                    'id_pengajuan' => $pendapat_staf->id_pengajuan
+                ])
                 </div>
               @endforeach
             </div>
@@ -41,7 +44,10 @@
           @endif
           <div class="input-box">
             <label for="">{{$item->nama}}</label>
-            @include('dagulir.components.review', ['item' => $item])
+            @include('dagulir.components.review', [
+                'item' => $item,
+                'id_pengajuan' => $pendapat_staf->id_pengajuan
+            ])
           </div>
           @if (isset($childs[$key+1]))
             @if ($childs[$key+1]->opsi_jawaban == 'kosong')
@@ -64,18 +70,35 @@
           @endphp
         @endif
       @endforeach
+      <hr>
+
       <div class="form-group-1">
         <div class="input-box">
           <label for=""
             >Pendapat dan usulan {{$title}}</label
           >
-          <input type="text" name="id_aspek[]" value="{{ $id }}">
+          <input type="text" name="id_aspek[]" value="{{ $id }}" hidden>
           <textarea
             name="pendapat_usulan[]"
             class="form-textarea"
             placeholder="Pendapat per aspek"
             id=""
           ></textarea>
+        </div>
+      </div>
+      <div class="form-group-1">
+        <div class="input-box">
+          <label for=""
+            >Pendapat dan Usulan Staf Kredit</label
+          >
+          <input type="text" name="id_aspek[]" value="{{ $id }}" hidden>
+          <textarea
+            readonly
+            name="pendapat_usulan[]"
+            class="form-textarea"
+            placeholder="Pendapat per aspek"
+            id=""
+          >{{ $pendapat_staf->pendapat_per_aspek }}</textarea>
         </div>
       </div>
       <div class="flex justify-between">

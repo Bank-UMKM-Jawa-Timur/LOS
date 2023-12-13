@@ -16,7 +16,7 @@
         </nav>
         <div class="p-3">
             <div class="body-pages">
-                <form action="{{ route('dagulir.updatePenyelia',$dagulir->id) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('dagulir.updatePenyelia',$pengajuan->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                     <div class="mt-3 container mx-auto ">
                         <div id="dagulir-tab" class="is-tab-content active">
@@ -35,7 +35,8 @@
                                     'id_tab' => $title_id,
                                     'title' => $item->nama,
                                     'childs' => $item->childs,
-                                    'id' => $id
+                                    'id' => $id,
+                                    'pendapat_staf' => $item->pendapatan_staf,
                                 ])
                             </div>
                         @endforeach
