@@ -398,22 +398,23 @@
             }
         });
 
-        $('.btn-add').on('click', function() {
+        $(document).on('click', '.btn-add', function() {
+            const item_id = $(this).data('item-id');
+            var item_element = $(`.${item_id}`)
+            var iteration = item_element.length
             var input = $(this).closest('.input-box')
             var multiple = input.find('.multiple-action')
-            //input = input.html().replaceAll(multiple.html(), "");
+            var new_multiple = multiple.html().replaceAll('hidden', '')
+            input = input.html().replaceAll(multiple.html(), new_multiple);
             var parent = $(this).closest('.input-box').parent()
-            parent.append(`<div class="input-box">${input.html()}`)
+            parent.append(`<div class="input-box">${input}`)
         })
 
-        $('.btn-minus').on('click', function() {
+        $(document).on('click', '.btn-minus', function() {
             const item_id = $(this).data('item-id');
             var item_element = $(`#${item_id}`)
-            /*var input = $(this).closest('.input-box').remove()
-            var multiple = input.find('.multiple-action')
-            //input = input.html().replaceAll(multiple.html(), "");
-            var parent = $(this).closest('.input-box').parent()
-            parent.remove()*/
+            var parent = $(this).closest('.input-box')
+            parent.remove()
         })
     </script>
 @endpush
