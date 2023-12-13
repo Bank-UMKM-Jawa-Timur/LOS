@@ -104,6 +104,7 @@ class DagulirController extends Controller
             $pengajuan->tanggal_lahir = $request->get('tanggal_lahir');
             $pengajuan->telp = $request->get('telp');
             $pengajuan->jenis_usaha = $request->get('jenis_usaha');
+            $pengajuan->ket_agunan = $request->get('ket_agunan');
             $pengajuan->nominal =   $this->formatNumber($request->get('nominal_pengajuan'));
             $pengajuan->tujuan_penggunaan = $request->get('tujuan_penggunaan');
             $pengajuan->jangka_waktu = $request->get('jangka_waktu');
@@ -617,7 +618,7 @@ class DagulirController extends Controller
             "nominal_pengajuan" => $this->formatNumber($request->nominal_realisasi),
             "tujuan_penggunaan" => $pengajuan_dagulir->tujuan_penggunaan,
             "jangka_waktu" => intval($request->get('jangka_waktu')),
-            "ket_agunan" => 'BPKB',
+            "ket_agunan" => $pengajuan_dagulir->ket_agunan,
             "kode_bank_pusat" => '01-BPR',
             "kode_bank_cabang" => $pengajuan_dagulir->kode_bank_cabang,
             "kecamatan_sesuai_ktp" => $pengajuan_dagulir->kec_ktp,
