@@ -125,21 +125,36 @@
             </div>
             <div class="form-group-2">
                 <div class="input-box">
-                    <label for="">Kota / Kabupaten KTP</label>
-                    <select name="kode_kotakab_ktp" class="form-select @error('kabupaten') is-invalid @enderror select2"
-                        id="kabupaten">
-                        <option value="0"> --- Pilih Kabupaten --- </option>
-                        @foreach ($dataKabupaten as $item)
-                            <option value="{{ $item->id }}">{{ $item->kabupaten }}</option>
+                    <label for="">Slik</label>
+                    <select class="form-select" name="id_slik">
+                        <option value="">Pilih Slik</option>
+                        @foreach ($itemSlik->option as $itemJawaban)
+                            <option value="{{ $itemJawaban->id }}">{{ $itemJawaban->option }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="input-box">
-                    <label for="">Kecamatan KTP</label>
-                    <select name="kecamatan_sesuai_ktp" id="kecamatan" class="form-select @error('kec') is-invalid @enderror select2">
-                        <option value="0"> --- Pilih Kecamatan --- </option>
-                    </select>
+                    <label for="">File Slik</label>
+                    <input type="file" name="file_slik" class="form-input" />
                 </div>
+            </div>
+            <div class="form-group-2">
+                    <div class="input-box">
+                        <label for="">Kota / Kabupaten KTP</label>
+                        <select name="kode_kotakab_ktp" class="form-select @error('kabupaten') is-invalid @enderror select2"
+                            id="kabupaten">
+                            <option value="0"> --- Pilih Kabupaten --- </option>
+                            @foreach ($dataKabupaten as $item)
+                                <option value="{{ $item->id }}">{{ $item->kabupaten }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="input-box">
+                        <label for="">Kecamatan KTP</label>
+                        <select name="kecamatan_sesuai_ktp" id="kecamatan" class="form-select @error('kec') is-invalid @enderror select2">
+                            <option value="0"> --- Pilih Kecamatan --- </option>
+                        </select>
+                    </div>
             </div>
             <div class="form-group-1">
                 <div class="input-box">
@@ -211,6 +226,7 @@
                     ></textarea>
                 </div>
             </div>
+
             <div class="form-group-2">
                 <div class="input-box">
                     <label for="">Nominal Pengajuan</label>
@@ -317,6 +333,17 @@
 
                         />
                     </div>
+                </div>
+            </div>
+            <div class="form-group-1">
+                <div class="input-box">
+                    <label for="">Hubungan Bank</label>
+                    <textarea
+                        name="hub_bank"
+                        class="form-textarea"
+                        placeholder="Hubungan Bank"
+                        id=""
+                    ></textarea>
                 </div>
             </div>
             <div class="flex justify-between">
