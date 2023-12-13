@@ -28,12 +28,16 @@
                                 $title_id = str_replace(' ', '-', strtolower($title_id));
                                 $title_tab = "$title_id-tab";
                                 $title_page = "dagulir.pengajuan.$title_id";
+                                $id = $item->id;
                             @endphp
                             <div id="{{$title_tab}}" class="is-tab-content">
                                 @include('dagulir.pengajuan.create-aspek', [
                                     'id_tab' => $title_id,
+                                    'id_aspek' => $item->id,
                                     'title' => $item->nama,
+                                    'id' => $id,
                                     'childs' => $item->childs
+
                                 ])
                             </div>
                         @endforeach

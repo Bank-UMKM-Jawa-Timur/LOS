@@ -131,7 +131,7 @@ class PengajuanController extends Controller
                         'tanggal_berdiri' => date('Y-m-d', strtotime($request->get('tanggal_berdiri'))),
                         'tanggal' => date('Y-m-d', strtotime($request->get('tanggal'))),
                         'user_id' => $userId->id,
-                        'status' => 8, // Ditindaklanjuti
+                        'status' => 1,
                         'created_at' => now(),
                     ];
 
@@ -144,7 +144,7 @@ class PengajuanController extends Controller
                     $addPengajuan->skema_kredit = 'Dagulir';
                     $addPengajuan->dagulir_id = $pengajuanDagulirId;
                     $addPengajuan->save();
-    
+
                     DB::commit();
                     $status = 'berhasil';
                     $message = 'Berhasil menambahkan data pengajuan dagulir.';

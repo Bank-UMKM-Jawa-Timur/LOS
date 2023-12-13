@@ -123,8 +123,9 @@
           <label for=""
             >Pendapat dan usulan {{$title}}</label
           >
+          <input type="hidden" name="id_aspek[]" value="{{ $id }}">
           <textarea
-            name="pendapat_usulan"
+            name="pendapat_usulan[]"
             class="form-textarea"
             placeholder="Pendapat per aspek"
             id="pendapat_usulan"
