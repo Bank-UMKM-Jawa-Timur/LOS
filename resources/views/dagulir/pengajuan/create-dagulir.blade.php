@@ -5,14 +5,14 @@
     <div class="self-start bg-white w-full border">
 
         <div class="p-5 border-b">
-        <h2 class="font-bold text-lg tracking-tighter">
-            Pengajuan Masuk
-        </h2>
+            <h2 class="font-bold text-lg tracking-tighter">
+                Pengajuan Masuk
+            </h2>
         </div>
         <!-- data umum -->
         <div
-        class="p-5 w-full space-y-5 "
-        id="data-umum"
+            class="p-5 w-full space-y-5 "
+            id="data-umum"
         >
             <div class="form-group-1">
                 <div class="input-box">
