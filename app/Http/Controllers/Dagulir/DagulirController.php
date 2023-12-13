@@ -97,13 +97,14 @@ class DagulirController extends Controller
             $pengajuan = new PengajuanDagulir;
             $pengajuan->kode_pendaftaran = null;
             $pengajuan->nama = $request->get('nama_lengkap');
+            $pengajuan->email = $request->get('email');
             $pengajuan->nik = $request->get('nik');
-            $pengajuan->nama_pj_ketua = $request->has('nama_pj') ? $request->has('nama_pj') : null;
+            $pengajuan->nama_pj_ketua = $request->has('nama_pj') ? $request->get('nama_pj') : null;
             $pengajuan->tempat_lahir =  $request->get('tempat_lahir');
             $pengajuan->tanggal_lahir = $request->get('tanggal_lahir');
             $pengajuan->telp = $request->get('telp');
             $pengajuan->jenis_usaha = $request->get('jenis_usaha');
-            $pengajuan->nominal =$this->formatNumber($request->get('nominal_pengajuan'));
+            $pengajuan->nominal =   $this->formatNumber($request->get('nominal_pengajuan'));
             $pengajuan->tujuan_penggunaan = $request->get('tujuan_penggunaan');
             $pengajuan->jangka_waktu = $request->get('jangka_waktu');
             $pengajuan->kode_bank_pusat = 1;
@@ -139,12 +140,11 @@ class DagulirController extends Controller
             $addPengajuan->save();
 
             // Jawaban input option
-
             foreach ($request->input_option as $key => $value) {
                 $JawabanOption = new JawabanPengajuanModel;
                 $JawabanOption->id_pengajuan = $addPengajuan->id;
-                $JawabanOption->id_jawaban = $this->getDataLevel($value[0])[0];
-                $JawabanOption->skor = $this->getDataLevel($value[0])[1];
+                $JawabanOption->id_jawaban = $this->getDataLevel($value[0])[0] ?? null;
+                $JawabanOption->skor = $this->getDataLevel($value[0])[1] ?? null;
                 $JawabanOption->save();
             }
             // Jawaban input text, long text, number
@@ -532,6 +532,23 @@ class DagulirController extends Controller
         return (int)str_replace('.', '', $param);
     }
 
+    public function getPengajuanDagulir(Request $request){
+        $data = PengajuanDagulir::with([
+            'pengajuan',
+            'kec_ktp',
+            'kotakab_ktp',
+            'kec_dom',
+            'kotakab_dom',
+            'kec_usaha',
+            'kotakab_usaha'
+            ])
+            ->where('kode_pendaftaran', $request->kode_pendaftaran)
+            ->first();
+
+        return response()->json([
+            'data' => $data,
+        ]);
+    }
     public function accPengajuan($id)
     {
         $statusPincab = PengajuanModel::find($id);

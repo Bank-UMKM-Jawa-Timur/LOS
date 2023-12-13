@@ -56,11 +56,8 @@
     .pagination .active {
         @apply text-white px-5 py-3;
     }
-    .dropdown-tb {
-        @apply mx-auto relative;
-    }
     .dropdown-tb-menu {
-        @apply text-sm bg-white border text-left p-1 z-30 right-16 w-auto bottom-auto fixed;
+        @apply text-sm bg-white border text-left shadow z-[1000] will-change-transform top-auto right-14 transform-gpu translate-x-[16px]  translate-y-0 p-1  w-auto bottom-auto absolute;
     }
     .dropdown-tb-menu .item-tb-dropdown {
         @apply hover:bg-gray-100 w-full p-3  hover:text-gray-500;
@@ -158,6 +155,9 @@
     input {
         @apply focus:ring ring-blue-300;
     }
+    /* table {
+        @apply relative;
+    } */
     .input-box {
         @apply space-y-5;
     }
