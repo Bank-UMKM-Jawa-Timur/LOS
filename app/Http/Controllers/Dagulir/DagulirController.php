@@ -243,6 +243,7 @@ class DagulirController extends Controller
                 $pincab = User::select('id')
                         ->where('id_cabang', $pengajuan->id_cabang)
                         ->where('role', 'Pincab')
+                        ->where('user_dagulir', 1)
                         ->first();
                 if ($pincab) {
                     $pengajuan->posisi = "Pincab";
