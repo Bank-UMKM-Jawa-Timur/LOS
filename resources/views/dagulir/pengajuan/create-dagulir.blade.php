@@ -51,6 +51,7 @@
                         class="form-input"
                         placeholder="Masukan Nomor Telepon"
                         name="telp"
+                        oninput="validatePhoneNumber(this)"
                     />
                 </div>
                 <div class="input-box">
@@ -78,6 +79,7 @@
                         class="form-input"
                         placeholder="Masukan NIK"
                         name="nik"
+                        oninput="validateNIK(this)"
                     />
                 </div>
             </div>
@@ -181,12 +183,29 @@
                 </div>
                 <div class="input-box">
                     <label for="">Jangka Waktu</label>
-                    <input
+                    <div class="flex items-center">
+                        <div class="flex-1">
+                            <input
+                                type="number"
+                                class="w-full form-input"
+                                placeholder="Masukan Jangka Waktu"
+                                name="jangka_waktu"
+                                aria-label="Jangka Waktu"
+                                aria-describedby="basic-addon2"
+                            />
+                        </div>
+                        <div class="flex-shrink-0 mt-2.5rem">
+                            <span class="form-input bg-gray-100">Bulan</span>
+                        </div>
+                    </div>
+                    {{-- <input
                         type="number"
                         class="form-input"
                         placeholder="Masukan Jangka Waktu"
                         name="jangka_waktu"
+                        style="width: 80%; box-sizing: border-box; padding-right: 8px;"
                     />
+                    <span style="width: 20%; box-sizing: border-box; display: inline-block;">Bulan</span> --}}
                 </div>
             </div>
             <div class="form-group-2">
@@ -200,17 +219,18 @@
                     />
                 </div>
                 <div class="input-box">
-                    <label for="">Keterangan Agunan</label>
-                    <input
-                        type="text"
-                        class="form-input"
-                        placeholder="Isi disini..."
-                        name="ket_agunan"
-                    />
+                    <label for="">Jaminan yang disediakan</label>
+                    <select name="ket_agunan" id="" class="form-select">
+                        <option value="">Pilih Jaminan</option>
+                        <option value="shm">SHM</option>
+                        <option value="bpkb">BPKB</option>
+                        <option value="shgb">SHGB</option>
+                        <option value="lainnya">Lainnya</option>
+                    </select>
                 </div>
             </div>
 
-            <div class="form-group-1">
+            <div class="form-group-2" id="form_tipe_pengajuan">
                 <div class="input-box">
                     <label for="">Tipe Pengajuan</label>
                     <select name="tipe_pengajuan" id="tipe" class="form-select">
@@ -221,17 +241,14 @@
                     </select>
                 </div>
                 <div id="nama_pj" class="input-box hidden">
-                <label for="">Nama PJ Ketua</label>
+                <label for="" id="label_pj"></label>
                     <input
                         type="text"
                         class="form-input"
-                        placeholder="Masukan Nama PJ Ketua"
+                        placeholder="Masukan disini .."
                         name="nama_pj"
                     />
                 </div>
-            </div>
-
-            <div class="form-group-2">
                 <div class="input-box">
                     <label for="">Jenis badan hukum</label>
                     <input
@@ -241,7 +258,7 @@
 
                     />
                 </div>
-                <div class="input-box">
+                <div class="input-box hidden" id="tempat_berdiri">
                     <label for="">Tempat Berdiri</label>
                     <input
                         type="text"
@@ -250,7 +267,7 @@
 
                     />
                 </div>
-                <div class="input-box">
+                <div class="input-box hidden" id="tanggal_berdiri">
                     <label for="">Tanggal Berdiri</label>
                     <div class="input-grouped">
                         <input
@@ -261,7 +278,6 @@
                         />
                     </div>
                 </div>
-
             </div>
             <div class="flex justify-between">
                 <button type="button"

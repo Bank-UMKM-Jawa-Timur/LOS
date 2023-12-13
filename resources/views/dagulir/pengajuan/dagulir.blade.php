@@ -134,7 +134,7 @@
           />
         </div>
         <div class="input-box">
-          <label for="">Keterangan Agunan</label>
+          <label for="">Jaminan yang disediakan</label>
           <input
             type="text"
             class="form-input"

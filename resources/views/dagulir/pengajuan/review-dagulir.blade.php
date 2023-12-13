@@ -300,12 +300,13 @@
             </div>
             <div class="input-box">
                 <label for="">Keterangan Agunan</label>
-                {{-- <input
+                <input
                     readonly
                     type="text"
                     class="form-input-read-only"
                     placeholder="Isi disini..."
                     name="ket_agunan"
+                    value="{{ $dagulir->ket_agunan }}"
                 /> --}}
                 <div class="p-2 bg-white border-b">
                 </div>

@@ -97,13 +97,15 @@ class DagulirController extends Controller
             $pengajuan = new PengajuanDagulir;
             $pengajuan->kode_pendaftaran = null;
             $pengajuan->nama = $request->get('nama_lengkap');
+            $pengajuan->email = $request->get('email');
             $pengajuan->nik = $request->get('nik');
-            $pengajuan->nama_pj_ketua = $request->has('nama_pj') ? $request->has('nama_pj') : null;
+            $pengajuan->nama_pj_ketua = $request->has('nama_pj') ? $request->get('nama_pj') : null;
             $pengajuan->tempat_lahir =  $request->get('tempat_lahir');
             $pengajuan->tanggal_lahir = $request->get('tanggal_lahir');
             $pengajuan->telp = $request->get('telp');
             $pengajuan->jenis_usaha = $request->get('jenis_usaha');
-            $pengajuan->nominal =$this->formatNumber($request->get('nominal_pengajuan'));
+            $pengajuan->ket_agunan = $request->get('ket_agunan');
+            $pengajuan->nominal =   $this->formatNumber($request->get('nominal_pengajuan'));
             $pengajuan->tujuan_penggunaan = $request->get('tujuan_penggunaan');
             $pengajuan->jangka_waktu = $request->get('jangka_waktu');
             $pengajuan->kode_bank_pusat = 1;
@@ -139,12 +141,11 @@ class DagulirController extends Controller
             $addPengajuan->save();
 
             // Jawaban input option
-
             foreach ($request->input_option as $key => $value) {
                 $JawabanOption = new JawabanPengajuanModel;
                 $JawabanOption->id_pengajuan = $addPengajuan->id;
-                $JawabanOption->id_jawaban = $this->getDataLevel($value[0])[0];
-                $JawabanOption->skor = $this->getDataLevel($value[0])[1];
+                $JawabanOption->id_jawaban = $this->getDataLevel($value[0])[0] ?? null;
+                $JawabanOption->skor = $this->getDataLevel($value[0])[1] ?? null;
                 $JawabanOption->save();
             }
             // Jawaban input text, long text, number
@@ -617,7 +618,7 @@ class DagulirController extends Controller
             "nominal_pengajuan" => $this->formatNumber($request->nominal_realisasi),
             "tujuan_penggunaan" => $pengajuan_dagulir->tujuan_penggunaan,
             "jangka_waktu" => intval($request->get('jangka_waktu')),
-            "ket_agunan" => 'BPKB',
+            "ket_agunan" => $pengajuan_dagulir->ket_agunan,
             "kode_bank_pusat" => '01-BPR',
             "kode_bank_cabang" => $pengajuan_dagulir->kode_bank_cabang,
             "kecamatan_sesuai_ktp" => $pengajuan_dagulir->kec_ktp,
@@ -631,8 +632,8 @@ class DagulirController extends Controller
             "alamat_usaha" => $pengajuan_dagulir->alamat_usaha,
             "tipe_pengajuan" => $pengajuan_dagulir->tipe,
             "npwp" => $pengajuan_dagulir->npwp,
-            // "jenis_badan_hukum" => $pengajuan_dagulir->jenis_badan_hukum,
-            "jenis_badan_hukum" => "Berbadan Hukum",
+            "jenis_badan_hukum" => $pengajuan_dagulir->jenis_badan_hukum,
+            // "jenis_badan_hukum" => "Berbadan Hukum",
             "tempat_berdiri" => $pengajuan_dagulir->tempat_berdiri,
             "tanggal_berdiri" => $pengajuan_dagulir->tanggal_berdiri,
             "email" => $pengajuan_dagulir->email,
