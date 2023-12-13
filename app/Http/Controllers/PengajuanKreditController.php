@@ -257,6 +257,8 @@ class PengajuanKreditController extends Controller
         $param['cabang'] = DB::table('cabang')
             ->get();
         $role = auth()->user()->role;
+        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+        $page = $request->has('page') ? $request->get('page') : 1;
         if ($role == 'Staf Analis Kredit') {
             $id_staf = auth()->user()->id;
             $param['pageTitle'] = 'Tambah Pengajuan Kredit';
@@ -323,7 +325,7 @@ class PengajuanKreditController extends Controller
                 ->where('pengajuan.id_staf', $id_staf)
                 ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
                 ->where('pengajuan.id_cabang', $id_cabang)
-                ->paginate(5)
+                ->paginate($limit)
                 ->withQueryString();
             return view('pengajuan-kredit.list-edit-pengajuan-kredit', $param);
         } elseif ($role == 'Penyelia Kredit') {
