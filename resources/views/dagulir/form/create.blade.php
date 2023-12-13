@@ -169,13 +169,48 @@
 
         $('#tipe').on('change',function(e) {
             var tipe = $(this).val();
-            console.log(typeof(tipe));
+            console.log(tipe);
             if (tipe == '2' || tipe == "0" ) {
                 $('#nama_pj').addClass('hidden');
+                $('#tempat_berdiri').addClass('hidden');
+                $('#tanggal_berdiri').addClass('hidden');
             }else{
                 $('#nama_pj').removeClass('hidden');
+                $('#tempat_berdiri').removeClass('hidden');
+                $('#tanggal_berdiri').removeClass('hidden');
+                //badan usaha
+                if (tipe == '3') {
+                    $('#label_pj').html('Nama penanggung jawab');
+                    $('#input_pj').attr('placeholder', 'Masukkan Nama Penanggung Jawab');
+                }
+                // perorangan
+                else if (tipe == '4') {
+                    $('#label_pj').html('Nama ketua');
+                    $('#input_pj').attr('placeholder', 'Masukkan Nama Ketua');
+                }
             }
         })
+
+        function validatePhoneNumber(input) {
+            var phoneNumber = input.value.replace(/\D/g, '');
+
+            if (phoneNumber.length > 15) {
+                phoneNumber = phoneNumber.substring(0, 15);
+            }
+
+            input.value = phoneNumber;
+        }
+
+        function validateNIK(input) {
+            var nikNumber = input.value.replace(/\D/g, '');
+
+            if (nikNumber.length > 16) {
+                nikNumber = nikNumber.substring(0, 16);
+            }
+
+            input.value = nikNumber;
+        }
+
         $('.rupiah').keyup(function(e) {
             var input = $(this).val()
             $(this).val(formatrupiah(input))

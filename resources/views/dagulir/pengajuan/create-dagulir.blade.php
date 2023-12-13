@@ -51,6 +51,7 @@
                         class="form-input"
                         placeholder="Masukan Nomor Telepon"
                         name="telp"
+                        oninput="validatePhoneNumber(this)"
                     />
                 </div>
                 <div class="input-box">
@@ -78,6 +79,7 @@
                         class="form-input"
                         placeholder="Masukan NIK"
                         name="nik"
+                        oninput="validateNIK(this)"
                     />
                 </div>
             </div>
@@ -193,7 +195,7 @@
                             />
                         </div>
                         <div class="flex-shrink-0 mt-2.5rem">
-                            <span class="border border-gray-300 rounded px-3 py-2">Bulan</span>
+                            <span class="form-input bg-gray-100">Bulan</span>
                         </div>
                     </div>
                     {{-- <input
@@ -228,7 +230,7 @@
                 </div>
             </div>
 
-            <div class="form-group-1">
+            <div class="form-group-2" id="form_tipe_pengajuan">
                 <div class="input-box">
                     <label for="">Tipe Pengajuan</label>
                     <select name="tipe_pengajuan" id="tipe" class="form-select">
@@ -239,17 +241,14 @@
                     </select>
                 </div>
                 <div id="nama_pj" class="input-box hidden">
-                <label for="">Nama PJ Ketua</label>
+                <label for="" id="label_pj"></label>
                     <input
                         type="text"
                         class="form-input"
-                        placeholder="Masukan Nama PJ Ketua"
+                        placeholder="Masukan disini .."
                         name="nama_pj"
                     />
                 </div>
-            </div>
-
-            <div class="form-group-2">
                 <div class="input-box">
                     <label for="">Jenis badan hukum</label>
                     <input
@@ -259,7 +258,7 @@
 
                     />
                 </div>
-                <div class="input-box">
+                <div class="input-box hidden" id="tempat_berdiri">
                     <label for="">Tempat Berdiri</label>
                     <input
                         type="text"
@@ -268,7 +267,7 @@
 
                     />
                 </div>
-                <div class="input-box">
+                <div class="input-box hidden" id="tanggal_berdiri">
                     <label for="">Tanggal Berdiri</label>
                     <div class="input-grouped">
                         <input
@@ -279,7 +278,6 @@
                         />
                     </div>
                 </div>
-
             </div>
             <div class="flex justify-between">
                 <button type="button"
