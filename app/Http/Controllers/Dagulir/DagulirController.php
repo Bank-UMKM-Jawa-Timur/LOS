@@ -283,7 +283,6 @@ class DagulirController extends Controller
         $pengajuan_dagulir = PengajuanDagulir::find($pengajuan->dagulir_id);
         $itemRepo = new MasterItemRepository;
         $item = $itemRepo->getWithJawaban($id, [13]);
-        return $item;
 
         $jenis_usaha = config('dagulir.jenis_usaha');
         $tipe = config('dagulir.tipe_pengajuan');
