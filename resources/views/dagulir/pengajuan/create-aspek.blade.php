@@ -91,7 +91,6 @@
                 </div>
               </div>
           @else
-              {{$item->nama}}
               <div class="input-box">
                 <label for="">{{$item->nama}}</label>
                 @include('dagulir.components.input', ['item' => $item])
