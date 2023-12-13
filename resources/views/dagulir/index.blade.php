@@ -172,7 +172,6 @@
                     <th>Jenis Usaha</th>
                     <th>Tipe Pengajuan</th>
                     <th>Nominal Pengajuan</th>
-                    <th>Posisi</th>
                     <th>Status Pincetar</th>
                     <th>Status SIPDE</th>
                     <th>Aksi</th>
@@ -216,18 +215,7 @@
                             {{$item->pengajuan->posisi}}
                         </td>
                         <td>
-                            @if ($item->pengajuan->posisi == 'Selesai')
-                                <span class="px-2 bg-green-100 text-green-500 border border-green-300">Selesai</span>
-                            @elseif ($item->pengajuan->posisi == 'Ditolak')
-                                <span class="px-2 bg-red-100 text-red-500 border border-red-300">Ditolak</span>
-                            @else
-                                <span class="px-2 bg-yellow-100 text-yellow-600 border border-yellow-300">OnProgress</span>
-                            @endif
-                        </td>
-                        <td>
-                            <span class="px-2 bg-theme-secondary/5 text-theme-secondary border border-theme-secondary">
-                                <span>{{ array_key_exists(intval($item->status), $status) ? $status[intval($item->status)] : 'Tidak ditemukan' }}</span>
-                            </span>
+                            {{ array_key_exists(intval($item->status), $status) ? $status[intval($item->status)] : 'Tidak ditemukan' }}
                         </td>
                         <td>
                             <div class="flex">
@@ -242,13 +230,13 @@
                                     ></iconify-icon>
                                     </button>
                                     <ul class="dropdown-tb-menu hidden">
-                                        @if ($item->posisi == 'Proses Input Data')
+                                        @if (Auth::user()->role == 'Staf Analis Kredit' && $item->pengajuan->posisi == 'Proses Input Data')
                                             <a href="#"
                                                 class="dropdown-item">
                                                 Edit data
                                             </a>
                                         @else
-                                            @if (Auth::user()->role == 'Staf Analis Kredit')
+                                            @if (Auth::user()->role == 'Staf Analis Kredit' && $item->pengajuan->posisi == 'Proses Input Data')
                                                 <li class="item-tb-dropdown">
                                                     <a href="#"
                                                     onclick="showTindakLanjut({{ $item->pengajuan->id }},'penyelia kredit')"
