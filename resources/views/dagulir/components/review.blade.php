@@ -28,7 +28,7 @@
     </select>
     @if ($item->is_commentable == 'Ya')
         <div class="flex">
-            <input type="text" value="{{ $item->id }}" name="option[]">
+            <input type="hidden" value="{{ $item->id }}" name="option[]">
             <input type="text" name="komentar_penyelia[]" class="form-input" placeholder="Masukkan Komentar">
             <input
                 type="number"
@@ -47,7 +47,7 @@
         placeholder="Masukan informasi disini" value="{{ $item->jawaban ? $item->jawaban->opsi_text : '' }}" />
     @if ($item->is_commentable == 'Ya')
         <div class="flex">
-            <input type="text" value="{{ $item->id }}" name="option[]">
+            <input type="hidden" value="{{ $item->id }}" name="option[]">
             <input type="text" name="komentar_penyelia[]" class="form-input" placeholder="Masukkan Komentar">
             <input
                 type="number"
@@ -71,7 +71,7 @@
     </div>
     @if ($item->is_commentable == 'Ya')
         <div class="flex">
-            <input type="text" value="{{ $item->id }}" name="option[]">
+            <input type="hidden" value="{{ $item->id }}" name="option[]">
             <input type="text" name="komentar_penyelia[]" class="form-input" placeholder="Masukkan Komentar">
             <input
                 type="number"
@@ -90,7 +90,7 @@
         placeholder="Masukan informasi disini" id="">{{ $item->jawaban ? $item->jawaban->opsi_text : '' }}</textarea>
     @if ($item->is_commentable == 'Ya')
         <div class="flex">
-            <input type="text" value="{{ $item->id }}" name="option[]">
+            <input type="hidden" value="{{ $item->id }}" name="option[]">
             <input type="text" name="komentar_penyelia[]" class="form-input" placeholder="Masukkan Komentar">
             <input
                 type="number"
@@ -134,7 +134,7 @@
     </div>
     @if ($item->is_commentable == 'Ya')
         <div class="flex">
-            <input type="text" value="{{ $item->id }}" name="option[]">
+            <input type="hidden" value="{{ $item->id }}" name="option[]">
             <input type="text" name="komentar_penyelia[]" class="form-input" placeholder="Masukkan Komentar">
             <input
                 type="number"
@@ -157,7 +157,7 @@
 </select>
 @if ($item->is_commentable == 'Ya')
     <div class="flex">
-        <input type="text" value="{{ $item->id }}" name="option[]">
+        <input type="hidden" value="{{ $item->id }}" name="option[]">
         <input type="text" name="komentar_penyelia[]" class="form-input" placeholder="Masukkan Komentar">
         <input
             type="number"
@@ -173,7 +173,7 @@
 @endif
 @if ($item->is_commentable == 'Ya')
     <div class="flex">
-        <input type="text" value="{{ $item->id }}" name="option[]">
+        <input type="hidden" value="{{ $item->id }}" name="option[]">
         <input type="text" name="komentar_penyelia[]" class="form-input" placeholder="Masukkan Komentar">
         <input
             type="number"

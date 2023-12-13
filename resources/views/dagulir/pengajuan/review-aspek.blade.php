@@ -32,7 +32,7 @@
                   <label for="">{{$child->nama}}</label>
                   @include('dagulir.components.review', [
                     'item' => $child,
-                    'id_pengajuan' => $pendapat_staf ? $pendapat_staf->id_pengajuan : 0
+                    'id_pengajuan' => $pendapat_staf != null ? $pendapat_staf->id_pengajuan : 0
                     ])
                 </div>
               @endforeach
@@ -46,7 +46,7 @@
             <label for="">{{$item->nama}}</label>
             @include('dagulir.components.review', [
                 'item' => $item,
-                'id_pengajuan' => $pendapat_staf ? $pendapat_staf->id_pengajuan : 0
+                'id_pengajuan' => $pendapat_staf != null ? $pendapat_staf->id_pengajuan : 0
             ])
           </div>
           @if (isset($childs[$key+1]))

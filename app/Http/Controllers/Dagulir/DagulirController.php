@@ -191,6 +191,19 @@ class DagulirController extends Controller
                 }
             }
 
+            for ($i = 0; $i < count($request->pendapat_usulan); $i++) {
+                $data = DB::table('pendapat_dan_usulan_per_aspek');
+                $data->insert([
+                    'id_pengajuan' => $addPengajuan->id,
+                    'id_staf' => auth()->user()->id,
+                    'id_penyelia' => null,
+                    'id_pincab' => null,
+                    'id_aspek' => $request->get('id_aspek')[$i],
+                    'pendapat_per_aspek' => $request->get('pendapat_usulan')[$i],
+                    'created_at' => date('Y-m-d H:i:s')
+                ]);
+            }
+
 
             DB::commit();
             return redirect()->route('dagulir.index')->withStatus('Berhasil menambahkan pengajuan!');
@@ -270,6 +283,7 @@ class DagulirController extends Controller
         $pengajuan_dagulir = PengajuanDagulir::find($pengajuan->dagulir_id);
         $itemRepo = new MasterItemRepository;
         $item = $itemRepo->getWithJawaban($id, [13]);
+        return $item;
 
         $jenis_usaha = config('dagulir.jenis_usaha');
         $tipe = config('dagulir.tipe_pengajuan');
@@ -295,6 +309,7 @@ class DagulirController extends Controller
             'kecamatan_dom' => $kecamatan_dom,
             'kabupaten_usaha' => $kabupaten_usaha,
             'kecamatan_usaha' => $kecamatan_usaha,
+
         ]);
     }
 
