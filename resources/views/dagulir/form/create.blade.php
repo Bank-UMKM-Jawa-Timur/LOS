@@ -360,10 +360,10 @@
                 $("#dokumen-npwp").removeClass("hidden");
                 $("#label-dokumen-npwp").removeClass("hidden");
                 $("#have-npwp").addClass("hidden");
-                $("#sku").addClass("hidden");
-                $("#label-sku").addClass("hidden");
-                $("#dokumen-sku").addClass("hidden");
-                $("#label-dokumen-sku").addClass("hidden");
+                $("#surat-keterangan-usaha").addClass("hidden");
+                $("#label-surat-keterangan-usaha").addClass("hidden");
+                $("#dokumen-surat-keterangan-usaha").addClass("hidden");
+                $("#label-dokumen-surat-keterangan-usaha").addClass("hidden");
             } else if ($(this).val() == "sku") {
                 $("#surat-keterangan-usaha").removeClass("hidden");
                 $("#label-surat-keterangan-usaha").removeClass("hidden");

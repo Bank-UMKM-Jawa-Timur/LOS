@@ -218,12 +218,13 @@
                 </div>
                 <div class="input-box">
                     <label for="">Jaminan yang disediakan</label>
-                    <input
-                        type="text"
-                        class="form-input"
-                        placeholder="Isi disini..."
-                        name="ket_agunan"
-                    />
+                    <select name="ket_agunan" id="" class="form-select">
+                        <option value="">Pilih Jaminan</option>
+                        <option value="shm">SHM</option>
+                        <option value="bpkb">BPKB</option>
+                        <option value="shgb">SHGB</option>
+                        <option value="lainnya">Lainnya</option>
+                    </select>
                 </div>
             </div>
 
