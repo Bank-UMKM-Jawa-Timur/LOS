@@ -248,6 +248,7 @@
                     class="form-input"
                     placeholder="Isi disini..."
                     name="ket_agunan"
+                    value="{{ $dagulir->ket_agunan }}"
                 />
             </div>
         </div>
