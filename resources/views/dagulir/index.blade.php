@@ -6,6 +6,7 @@
 
 @endsection
 @include('dagulir.modal.pilih-penyelia')
+@include('dagulir.modal.approval')
 
 @push('script-inject')
 <script>
@@ -235,10 +236,12 @@
                                     ></iconify-icon>
                                     </button>
                                     <ul class="dropdown-tb-menu hidden">
-                                        <li class="item-tb-dropdown">
-                                            <a href="#"
-                                            onclick="showTindakLanjut({{ $item->pengajuan->id }},'penyelia kredit')"
-                                            class="cursor-pointer">Tindak lanjut Review Penyelia</a>
+                                        @if (Auth::user()->role == 'Staf Analis Kredit')
+                                            <li class="item-tb-dropdown">
+                                                <a href="#"
+                                                onclick="showTindakLanjut({{ $item->pengajuan->id }},'penyelia kredit')"
+                                                class="cursor-pointer">Tindak lanjut Review Penyelia</a>
+                                        @endif
                                         {{-- <a target="_blank" href="{{ route('cetak', $item->pengajuan->id_pengajuan) }}"
                                             class="cursor-pointer">Cetak</a> --}}
                                         {{-- <a href="{{ route('dagulir.review',$item->id) }}" class="cursor-pointer">
@@ -277,16 +280,26 @@
                                                 </li>
                                             @endif
                                         @endif
-                                        @if ((Auth()->user()->role == 'Staf Analis Kredit'))
+                                        @if ((Auth()->user()->role == 'Penyelia Kredit'))
                                             <li class="item-tb-dropdown">
                                                 <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
                                                     class="cursor-pointer">Review</a>
                                             </li>
                                         @endif
-                                        @if ((Auth()->user()->role == 'Penyelia Kredit'))
+                                        @if ((Auth()->user()->role == 'Pincab') && (!$item->pengajuan->id_pincab && !$item->pengajuan->tanggal_review_pincab))
                                             <li class="item-tb-dropdown">
                                                 <a href="{{ route('dagulir.detailjawaban_pincab', $item->pengajuan->id) }}"
                                                     class="cursor-pointer">Review</a>
+                                            </li>
+                                        @endif
+                                        @if ((Auth()->user()->role == 'Pincab') &&
+                                                $item->pengajuan->posisi == 'Pincab' &&
+                                                ($item->pengajuan->id_pincab && $item->pengajuan->tanggal_review_pincab))
+                                            <li class="item-tb-dropdown">
+                                                <a href="#" data-id="{{$item->pengajuan->id}}"
+                                                    data-acc-url="{{ route('pengajuan.change.pincab.status.tolak',$item->pengajuan->id) }}"
+                                                    data-dec-url="{{ route('pengajuan.change.pincab.status',$item->pengajuan->id) }}"
+                                                    class="cursor-pointer approval">Approval</a>
                                             </li>
                                         @endif
                                     </ul>
