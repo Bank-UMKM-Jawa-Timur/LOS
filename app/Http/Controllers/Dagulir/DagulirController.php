@@ -49,18 +49,21 @@ class DagulirController extends Controller
         $param['cabang'] = DB::table('cabang')
             ->get();
         $role = auth()->user()->role;
-        if ($role == 'Staf Analis Kredit') {
-        } elseif ($role == 'Penyelia Kredit') {
-        } elseif ($role == 'PBO' || $role == 'PBP') {
-        } elseif ($role == 'Pincab') {
-        } else {
-        }
         // paginate
+        $search = $request->get('q');
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
+        if ($role == 'Staf Analis Kredit') {
+            $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit');
+        } elseif ($role == 'Penyelia Kredit') {
+            $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Penyelia Kredit');
+        } elseif ($role == 'Pincab') {
+            $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Pincab');
+        } else {
+            $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit');
+        }
+
         // search
-        $search = $request->get('q');
-        $pengajuan_dagulir = $this->repo->get($search,$limit,$page);
 
         // return $pengajuan_dagulir;
         return view('dagulir.index',[
@@ -481,23 +484,6 @@ class DagulirController extends Controller
             DB::rollBack();
             return redirect()->back()->withError('Terjadi kesalahan');
         }
-    }
-
-    public function getDataLevel($data)
-    {
-        $data_level = explode('-', $data);
-        return $data_level;
-    }
-
-    public function review($id)  {
-        $pengajuan_dagulir = $this->repo->detail($id);
-
-        $itemRepo = new MasterItemRepository;
-        $item = $itemRepo->get([13]);
-        return view('dagulir.form.review',[
-            'data' => $pengajuan_dagulir,
-            'items' => $item,
-        ]);
     }
 
     public function updateReview(Request $request) {
