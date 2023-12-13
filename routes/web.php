@@ -49,6 +49,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [DagulirController::class, 'index'])->name('dagulir.index');
         // create
         Route::get('create',[DagulirController::class,'create'])->name('dagulir.create');
+        Route::get('get-data-dagulir/{kode_pendaftaran}',[DagulirController::class,'getPengajuanDagulir'])->name('dagulir.get-data-dagulir');
         Route::post('create/store',[DagulirController::class,'store'])->name('dagulir.post');
         // Review
         Route::get('review/{id}',[DagulirController::class,'review'])->name('dagulir.review');

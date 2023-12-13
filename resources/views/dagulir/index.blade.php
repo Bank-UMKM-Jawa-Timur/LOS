@@ -12,6 +12,13 @@
     $('#page_length').on('change', function() {
         $('#form').submit()
     })
+    // $.ajax({
+    //     type: "GET",
+    //     url: "{{ route('dagulir.get-data-dagulir', ['kode_pendaftaran' => 'BK02657767c715863']) }}",
+    //     success: function (response) {
+    //         console.log(response.data);
+    //     }
+    // });
     // Adjust pagination url
     // var btn_pagination = $('.pagination').find('a')
     // var page_url = window.location.href

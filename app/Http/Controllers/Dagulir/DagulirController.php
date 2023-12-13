@@ -310,4 +310,22 @@ class DagulirController extends Controller
         return (int)str_replace('.', '', $param);
     }
 
+    public function getPengajuanDagulir(Request $request){
+        $data = PengajuanDagulir::with([
+            'pengajuan',
+            'kec_ktp',
+            'kotakab_ktp',
+            'kec_dom',
+            'kotakab_dom',
+            'kec_usaha',
+            'kotakab_usaha'
+            ])
+            ->where('kode_pendaftaran', $request->kode_pendaftaran)
+            ->first();
+
+        return response()->json([
+            'data' => $data,
+        ]);
+    }
+
 }
