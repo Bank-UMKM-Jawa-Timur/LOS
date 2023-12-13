@@ -74,7 +74,7 @@ class DagulirController extends Controller
     }
 
     // function store(DagulirRequestForm $request) {
-    public function store(Request $request) {
+    public function store(DagulirRequestForm $request) {
         try {
             $find = array('Rp.', '.', ',');
 
@@ -89,7 +89,7 @@ class DagulirController extends Controller
             $pengajuan->tanggal_lahir = $request->get('tanggal_lahir');
             $pengajuan->telp = $request->get('telp');
             $pengajuan->jenis_usaha = $request->get('jenis_usaha');
-            $pengajuan->nominal = $request->get('nominal_pengajuan');
+            $pengajuan->nominal =$this->formatNumber($request->get('nominal_pengajuan'));
             $pengajuan->tujuan_penggunaan = $request->get('tujuan_penggunaan');
             $pengajuan->jangka_waktu = $request->get('jangka_waktu');
             $pengajuan->kode_bank_pusat = 1;
@@ -108,7 +108,7 @@ class DagulirController extends Controller
             $pengajuan->jenis_badan_hukum = $request->get('jenis_badan_hukum');
             $pengajuan->tempat_berdiri = $request->get('tempat_berdiri');
             $pengajuan->tanggal_berdiri = $request->get('tanggal_berdiri');
-            $pengajuan->tanggal = $request->get('tanggal_pengajuan');
+            $pengajuan->tanggal = now();
             $pengajuan->user_id = Auth::user()->id;
             $pengajuan->status = 8;
             $pengajuan->created_at = now();
@@ -125,6 +125,7 @@ class DagulirController extends Controller
             $addPengajuan->save();
 
             // Jawaban input option
+
             foreach ($request->input_option as $key => $value) {
                 $JawabanOption = new JawabanPengajuanModel;
                 $JawabanOption->id_pengajuan = $addPengajuan->id;
@@ -302,6 +303,11 @@ class DagulirController extends Controller
         } catch (Exception $e) {
             //throw $th;
         }
+    }
+
+    public function formatNumber($param)
+    {
+        return (int)str_replace('.', '', $param);
     }
 
 }

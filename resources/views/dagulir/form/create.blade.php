@@ -47,6 +47,37 @@
 
 @push('script-inject')
     <script>
+        // Start Validation
+         @if (count($errors->all()))
+            Swal.fire({
+                icon: 'error',
+                title: 'Error Validation',
+                html: `
+            <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                @foreach ($errors->all() as $error)
+                <ul>
+                    <li>{{ $error }}</li>
+                </ul>
+                @endforeach
+            </div>
+            `
+            });
+        @endif
+
+        $(".btn-simpan").on('click', function(e) {
+            if ($('#pendapat_usulan').val() == '') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: "Field Pendapat dan usulan harus diisi"
+                })
+                e.preventDefault()
+            }
+        })
+
+        // End Validation
+
+
         $('#kabupaten').change(function() {
             var kabID = $(this).val();
             if (kabID) {
@@ -75,7 +106,6 @@
                 $("#kecamatan").empty();
             }
         });
-
         $('#kabupaten_domisili').change(function() {
             var kabID = $(this).val();
             if (kabID) {

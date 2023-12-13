@@ -173,8 +173,8 @@
                 <div class="input-box">
                     <label for="">Nominal Pengajuan</label>
                     <input
-                        type="number"
-                        class="form-input"
+                        type="text"
+                        class="form-input rupiah"
                         placeholder="Nominal Pengajuan"
                         name="nominal_pengajuan"
                     />
@@ -261,17 +261,7 @@
                         />
                     </div>
                 </div>
-                <div class="input-box">
-                    <label for="">Tanggal Pengajuan</label>
-                    <div class="input-grouped">
-                        <input
-                        type="date"
-                        class="form-input"
-                        name="tanggal_pengajuan"
 
-                        />
-                    </div>
-                </div>
             </div>
             <div class="flex justify-between">
                 <button type="button"

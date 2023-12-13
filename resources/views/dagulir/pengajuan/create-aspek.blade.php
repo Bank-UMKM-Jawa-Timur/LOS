@@ -73,7 +73,7 @@
             name="pendapat_usulan"
             class="form-textarea"
             placeholder="Pendapat per aspek"
-            id=""
+            id="pendapat_usulan"
           ></textarea>
         </div>
       </div>

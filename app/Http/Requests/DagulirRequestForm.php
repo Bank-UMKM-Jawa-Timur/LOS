@@ -26,7 +26,6 @@ class DagulirRequestForm extends FormRequest
         return [
             'nama_lengkap' => 'required',
             'nik' => 'required',
-            'nama_pj' => 'required',
             'tempat_lahir' => 'required',
             'tanggal_lahir' => 'required',
             'telp' => 'required',
@@ -47,7 +46,6 @@ class DagulirRequestForm extends FormRequest
             'jenis_badan_hukum' => 'required',
             'tempat_berdiri' => 'required',
             'tanggal_berdiri' => 'required',
-            'tanggal_pengajuan' => 'required',
         ];
     }
 }
