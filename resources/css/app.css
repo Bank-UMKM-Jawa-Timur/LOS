@@ -134,6 +134,15 @@
     .form-input {
         @apply border focus:ring ring-blue-300  w-full px-4 py-2 rounded text-theme-text bg-white outline-none hover:bg-gray-50 focus:bg-gray-50;
     }
+    .form-input-read-only {
+        @apply border-l-4 border-theme-primary appearance-none w-full px-4 py-2 text-theme-text bg-gray-50 outline-none;
+    }
+    .form-select-read-only {
+        @apply border-l-4 border-theme-primary appearance-none accent-theme-primary w-full px-4 py-2 text-theme-text bg-gray-50 outline-none;
+    }
+    .form-textarea-read-only {
+        @apply border-l-4 border-theme-primary appearance-none w-full p-2 px-3 h-[130px] resize-none text-theme-text bg-gray-50 outline-none;
+    }
     .form-input.alert {
         @apply border border-red-500;
     }
@@ -152,9 +161,9 @@
     select {
         @apply focus:ring ring-blue-300;
     }
-    input {
+    /* input {
         @apply focus:ring ring-blue-300;
-    }
+    } */
     /* table {
         @apply relative;
     } */

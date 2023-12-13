@@ -14,7 +14,7 @@
             </div>
     @endif
 @elseif ($item->opsi_jawaban == 'option')
-    <select name="input_option[{{ $item->id }}][{{ $item->skor }}]" class="form-select" id="">
+    <select name="input_option[{{ $item->id }}][{{ $item->skor }}]" class="form-select ml-4" id="">
         <option value="">-- Pilih Opsi --</option>
         @foreach ($item->option as $opt)
             <option value="{{ $opt->id }}-{{ $opt->skor }}">{{ $opt->option }}</option>

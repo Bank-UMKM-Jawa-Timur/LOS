@@ -1,6 +1,7 @@
 @extends('layouts.tailwind-template')
 
 @section('modal')
+    @include('pengajuan-kredit.modal.new-modal-filter')
 @endsection
 
 @section('content')
@@ -25,7 +26,7 @@
                         <span class="ml-1 text-sm"> Reset </span>
                     </a>
                     @endif
-                        <a  data-modal-id="modal-filter" href="#"
+                        <a data-modal-id="modal-filter" href="#"
                         class="open-modal px-7 py-2 flex font-poppins justify-center items-center rounded font-semibold bg-white border text-theme-secondary">
                         <span class="">
                             <svg xmlns="http://www.w3.org/2000/svg" class="lg:w-[24px] w-[19px]" viewBox="-2 -2 24 24">
@@ -35,24 +36,7 @@
                         </span>
                         <span class="ml-3 text-sm"> Filter </span>
                     </a>
-                
                 </div>
-                {{-- <div class="right-button gap-2 flex lg:justify-start">
-                    <a data-modal-id="modal-filter"
-                        class="open-modal px-7 py-2 flex font-poppins justify-center items-center rounded font-semibold bg-white border text-theme-secondary">
-                        <span class="">
-                            <iconify-icon icon="fluent:drafts-16-regular"></iconify-icon>
-                        </span>
-                        <span class="ml-3 text-sm"> Draft </span>
-                    </a>
-                    <a href="form/pengajuan-form/data-umum.html"
-                        class="px-7 py-2 rounded flex justify-center items-center font-semibold bg-theme-primary border text-white">
-                        <span class="mt-1 mr-3">
-                            <iconify-icon icon="fa6-solid:plus"></iconify-icon>
-                        </span>
-                        <span class="ml-1 text-sm"> Tambah pengajuan </span>
-                    </a>
-                </div> --}}
             </div>
         </div>
         <div class="body-pages">
@@ -446,29 +430,7 @@
                                 Data
                             </p>
                         </div>
-                        <div class="pagination">
-                            <a href="" class="item-pg item-pg-prev">
-                                Prev
-                            </a>
-                            <a href="#" class="item-pg active-pg">
-                                1
-                            </a>
-                            <a href="#" class="item-pg">
-                                2
-                            </a>
-                            <a href="#" class="item-pg">
-                                3
-                            </a>
-                            <a href="#" class="item-pg">
-                                4
-                            </a>
-                            <a href="#" class="item-pg of-the-data">
-                                of 100
-                            </a>
-                            <a href="" class="item-pg item-pg-next">
-                                Next
-                            </a>
-                        </div>
+                        {{ $data_pengajuan->links('pagination::tailwind') }}
                     </div>
                 </div>
             </div>

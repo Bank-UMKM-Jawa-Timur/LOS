@@ -1,7 +1,4 @@
-<div
-class="modal-layout hidden"
-id="modal-filter"
->
+<div class="modal-layout hidden" id="modal-filter">
 <div class="modal modal-sm bg-white">
   <div class="modal-head">
     <div class="title">
