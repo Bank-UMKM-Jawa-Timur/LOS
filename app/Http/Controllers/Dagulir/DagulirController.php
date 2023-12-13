@@ -642,4 +642,10 @@ class DagulirController extends Controller
         ])->json();
         return $pengajuan_dagulir;
     }
+    public function getDataLevel($data)
+    {
+        $data_level = explode('-', $data);
+        return $data_level;
+    }
+
 }
