@@ -51,6 +51,7 @@
                         class="form-input"
                         placeholder="Masukan Nomor Telepon"
                         name="telp"
+                        oninput="validatePhoneNumber(this)"
                     />
                 </div>
                 <div class="input-box">
@@ -78,6 +79,7 @@
                         class="form-input"
                         placeholder="Masukan NIK"
                         name="nik"
+                        oninput="validateNIK(this)"
                     />
                 </div>
             </div>

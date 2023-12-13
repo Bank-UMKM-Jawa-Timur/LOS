@@ -191,6 +191,27 @@
                 }
             }
         })
+
+        function validatePhoneNumber(input) {
+            var phoneNumber = input.value.replace(/\D/g, '');
+
+            if (phoneNumber.length > 15) {
+                phoneNumber = phoneNumber.substring(0, 15);
+            }
+
+            input.value = phoneNumber;
+        }
+
+        function validateNIK(input) {
+            var nikNumber = input.value.replace(/\D/g, '');
+
+            if (nikNumber.length > 16) {
+                nikNumber = nikNumber.substring(0, 16);
+            }
+
+            input.value = nikNumber;
+        }
+
         $('.rupiah').keyup(function(e) {
             var input = $(this).val()
             $(this).val(formatrupiah(input))
