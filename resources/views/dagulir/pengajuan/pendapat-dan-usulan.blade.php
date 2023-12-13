@@ -1,5 +1,5 @@
 <div class="pb-10 space-y-3">
-    <h2 class="text-4xl font-bold tracking-tighter text-theme-primary">Pendapat dan Usalan</h2>
+    <h2 class="text-4xl font-bold tracking-tighter text-theme-primary">Pendapat dan Usulan</h2>
     <p class="font-semibold text-gray-400">Tambah Pengajuan Kredit</p>
 </div>
 <div class="self-start bg-white w-full border">
@@ -8,7 +8,7 @@
         Pengajuan Kredit
       </h2>
     </div>
-    <!-- aspek-keuangan -->
+    <!-- pendapat-dan-usulan -->
     <div class="p-5 space-y-5">
       <div class="form-group-1">
         <div class="input-box">

@@ -209,7 +209,7 @@ class PengajuanKreditController extends Controller
         }
     }
 
-    private function getNameKaryawan($nip)
+    public function getNameKaryawan($nip)
     {
         $host = env('HCS_HOST');
         $curl = curl_init();
@@ -2383,6 +2383,7 @@ class PengajuanKreditController extends Controller
     // insert komentar
     public function getInsertKomentar(Request $request)
     {
+        return $request;
         $role = Auth::user()->role;
         if ($role == 'Penyelia Kredit' || $role == 'PBO' || $role == 'PBP') {
             try {

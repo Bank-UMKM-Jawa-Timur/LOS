@@ -3,17 +3,43 @@ namespace App\Repository;
 
 use App\Models\Kecamatan;
 use App\Models\PengajuanDagulir;
+use Illuminate\Database\Eloquent\Builder;
 
 class PengajuanDagulirRepository
 {
-    function get($search, $limit=10, $page=1) {
-        $data = PengajuanDagulir::with('pengajuan')->where(function($query) use ($search) {
-            $query->where('kode_pendaftaran','like', "%$search%")
-                    ->orWhere('nama','like', "%$search%")
-                    ->orWhere('kode_pendaftaran','like', "%$search%");
-        })
-        ->latest()
-        ->paginate($limit);
+    function get($search, $limit=10, $page=1, $role) {
+        $data = null;
+        if ($role == 'Staf Analis Kredit') {
+            $data = PengajuanDagulir::with('pengajuan')->where(function($query) use ($search) {
+                $query->where('kode_pendaftaran','like', "%$search%")
+                        ->orWhere('nama','like', "%$search%")
+                        ->orWhere('kode_pendaftaran','like', "%$search%");
+            })
+            ->latest()
+            ->paginate($limit);
+        }else if ($role == 'Penyelia Kredit') {
+            $data = PengajuanDagulir::whereHas('pengajuan', function (Builder $query) {
+                        $query->where('pengajuan.id_penyelia', auth()->user()->id);
+               })
+                ->where(function($query) use ($search) {
+                    $query->where('kode_pendaftaran','like', "%$search%")
+                            ->orWhere('nama','like', "%$search%")
+                            ->orWhere('kode_pendaftaran','like', "%$search%");
+                })
+            ->latest()
+            ->paginate($limit);
+        }else if ($role == 'Pincab') {
+            $data = PengajuanDagulir::whereHas('pengajuan', function (Builder $query) {
+                        $query->where('pengajuan.id_pincab', auth()->user()->id);
+               })
+                ->where(function($query) use ($search) {
+                    $query->where('kode_pendaftaran','like', "%$search%")
+                            ->orWhere('nama','like', "%$search%")
+                            ->orWhere('kode_pendaftaran','like', "%$search%");
+                })
+            ->latest()
+            ->paginate($limit);
+        }
         return $data;
     }
 
