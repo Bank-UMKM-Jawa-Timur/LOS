@@ -166,6 +166,21 @@
             }
         });
 
+        $('#status_nasabah').on('change', function(e){
+            var status = $(this).val();
+            // console.log(status);
+            if (status == 2) {
+                $('#label-ktp-nasabah').empty();
+                $('#label-ktp-nasabah').html('Foto KTP Nasabah');
+                $('#nik_pasangan').removeClass('hidden');
+                $('#ktp-pasangan').removeClass('hidden');
+            } else {
+                $('#label-ktp-nasabah').empty();
+                $('#label-ktp-nasabah').html('Foto KTP Nasabah');
+                $('#nik_pasangan').addClass('hidden');
+                $('#ktp-pasangan').addClass('hidden');
+            }
+        })
 
         $('#tipe').on('change',function(e) {
             var tipe = $(this).val();

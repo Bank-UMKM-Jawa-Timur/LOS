@@ -14,7 +14,7 @@
             class="p-5 w-full space-y-5 "
             id="data-umum"
         >
-            <div class="form-group-1">
+            <div class="form-group-2">
                 <div class="input-box">
                     <label for="">Nama Lengkap</label>
                     <input
@@ -22,6 +22,15 @@
                         class="form-input"
                         placeholder="Masukan Nama"
                         name="nama_lengkap"
+                    />
+                </div>
+                <div class="input-box">
+                    <label for="">Email</label>
+                    <input
+                    type="text"
+                    class="form-input"
+                    placeholder="Masukan Email"
+                    name="email"
                     />
                 </div>
             </div>
@@ -63,14 +72,23 @@
                         @endforeach
                     </select>
                 </div>
+            </div>
+            <div class="form-group-2">
                 <div class="input-box">
-                    <label for="">Email</label>
-                    <input
-                    type="text"
-                    class="form-input"
-                    placeholder="Masukan Nama"
-                    name="email"
-                    />
+                    <label for="ktp_nasabah" id="foto-nasabah">Foto Nasabah</label>
+                    <div class="flex gap-4">
+                        <input type="file" name="foto_nasabah" class="form-input"" />
+                    </div>
+                </div>
+                <div class="input-box">
+                    <label for="">Status</label>
+                    <select name="status" id="status_nasabah" class="form-select">
+                        <option value="0">Pilih Status</option>
+                        <option value="1">Belum Menikah</option>
+                        <option value="2">Menikah</option>
+                        <option value="3">Duda</option>
+                        <option value="4">Janda</option>
+                    </select>
                 </div>
                 <div class="input-box">
                     <label for="">NIK</label>
@@ -78,9 +96,46 @@
                         type="text"
                         class="form-input"
                         placeholder="Masukan NIK"
-                        name="nik"
+                        name="nik_nasabah"
                         oninput="validateNIK(this)"
                     />
+                </div>
+                <div class="input-box" id="ktp-nasabah">
+                    <label for="ktp_nasabah" id="label-ktp-nasabah">Foto KTP Nasabah</label>
+                    <div class="flex gap-4">
+                        <input type="file" name="ktp_nasabah" class="form-input"" />
+                    </div>
+                </div>
+                <div class="input-box hidden" id="nik_pasangan">
+                    <label for="">NIK Pasangan</label>
+                    <input
+                        type="text"
+                        class="form-input"
+                        placeholder="Masukan NIK Pasangan"
+                        name="nik_pasangan"
+                        oninput="validateNIK(this)"
+                    />
+                </div>
+                <div class="input-box hidden" id="ktp-pasangan">
+                    <label for="ktp_pasangan" id="">Foto KTP Pasangan</label>
+                    <div class="flex gap-4">
+                        <input type="file" name="ktp_pasangan" class="form-input"" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group-2">
+                <div class="input-box">
+                    <label for="">Slik</label>
+                    <select class="form-select" name="id_slik">
+                        <option value="">Pilih Slik</option>
+                        @foreach ($itemSlik->option as $itemJawaban)
+                            <option value="{{ $itemJawaban->id }}">{{ $itemJawaban->option }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="input-box">
+                    <label for="">File Slik</label>
+                    <input type="file" name="file_slik" class="form-input" />
                 </div>
             </div>
             <div class="form-group-2">
@@ -171,6 +226,7 @@
                     ></textarea>
                 </div>
             </div>
+
             <div class="form-group-2">
                 <div class="input-box">
                     <label for="">Nominal Pengajuan</label>
@@ -277,6 +333,17 @@
 
                         />
                     </div>
+                </div>
+            </div>
+            <div class="form-group-1">
+                <div class="input-box">
+                    <label for="">Hubungan Bank</label>
+                    <textarea
+                        name="hub_bank"
+                        class="form-textarea"
+                        placeholder="Hubungan Bank"
+                        id=""
+                    ></textarea>
                 </div>
             </div>
             <div class="flex justify-between">

@@ -1,3 +1,4 @@
+<form id="form-filter" method="get">
 <div
 class="modal-layout hidden"
 id="modal-filter"
@@ -27,7 +28,6 @@ id="modal-filter"
             id="tAwal"
             class="form-input"
             value="{{ Request()->query('tAwal') }}">
-          />
         </div>
         <div class="input-box">
           <label for="tAkhir">Tanggal Akhir</label>
@@ -46,9 +46,9 @@ id="modal-filter"
         <div class="input-box">
           <label for="">Cabang</label>
           <select
-            name=""
+            name="cbg"
             class="form-select"
-            id=""
+            id="cabang"
           >
             <option value="">-- Pilih Cabang --</option>
           </select>
@@ -56,31 +56,47 @@ id="modal-filter"
         <div class="input-box">
           <label for="">Posisi</label>
           <select
-            name=""
+            name="pss"
             class="form-select"
-            id=""
+            id="pss"
           >
-            <option value="">-- Pilih Posisi --</option>
+            <option value="" selected>-- Pilih Posisi --</option>
+            <option value="Proses Input Data">Proses Input Data</option>
+            <option value="Review Penyelia">Review Penyelia</option>
+            <option value="PBO">PBO</option>
+            <option value="PBP">PBP</option>
+            <option value="Pincab">Pincab</option>
+            <option value="Selesai">Selesai</option>
+            <option value="Ditolak">Ditolak</option>
           </select>
         </div>
         <div class="input-box">
           <label for="">Score</label>
-          <select
-            name=""
-            class="form-select"
-            id=""
-          >
-            <option value="">-- Pilih Score --</option>
+          <select name="" class="form-select" id="">
+              @if (Request()->query('score') == null)
+                  <option value="" selected>-- Pilih Score --</option>
+              @else
+                  <option selected value="{{ Request()->query('score') }}">
+                      {{ Request()->query('score') }}</option>
+              @endif
+
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
           </select>
         </div>
         <div class="input-box">
           <label for="">Status</label>
           <select
-            name=""
+            name="sts"
             class="form-select"
-            id=""
+            id="sts"
           >
             <option value="">-- Pilih Status --</option>
+            <option value="hijau">Hijau</option>
+            <option value="kuning">Kuning</option>
+            <option value="merah">Merah</option>
           </select>
         </div>
       </div>
@@ -100,7 +116,8 @@ id="modal-filter"
     >
       Batal
     </button>
-    <button class="btn-submit">Filter</button>
+    <button type="submit" class="btn-submit" data-dismiss-id="modal-filter" id="btn_filter">Filter</button>
   </div>
 </div>
 </div>
+</form>

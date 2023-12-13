@@ -44,8 +44,6 @@ class DagulirRequestForm extends FormRequest
             'alamat_usaha' => 'required',
             'tipe_pengajuan' => 'required',
             'jenis_badan_hukum' => 'required',
-            'tempat_berdiri' => 'required',
-            'tanggal_berdiri' => 'required',
         ];
     }
 }
