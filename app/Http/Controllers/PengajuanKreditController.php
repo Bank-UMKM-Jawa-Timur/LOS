@@ -209,7 +209,7 @@ class PengajuanKreditController extends Controller
         }
     }
 
-    private function getNameKaryawan($nip)
+    public function getNameKaryawan($nip)
     {
         $host = env('HCS_HOST');
         $curl = curl_init();

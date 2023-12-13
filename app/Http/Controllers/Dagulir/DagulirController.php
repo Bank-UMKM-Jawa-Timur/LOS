@@ -3,13 +3,17 @@
 namespace App\Http\Controllers\Dagulir;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\LogPengajuanController;
+use App\Http\Controllers\PengajuanKreditController;
 use App\Http\Requests\DagulirRequestForm;
 use App\Models\Cabang;
+use App\Models\CalonNasabah;
 use App\Models\Desa;
 use App\Models\JawabanPengajuanModel;
 use App\Models\JawabanTextModel;
 use App\Models\Kabupaten;
 use App\Models\Kecamatan;
+use App\Models\KomentarModel;
 use App\Models\PendapatPerAspek;
 use App\Models\PengajuanDagulir;
 use App\Models\PengajuanModel;
@@ -28,9 +32,13 @@ use Illuminate\Support\Facades\Http;
 class DagulirController extends Controller
 {
 
+    private $logPengajuan;
+    private $pengajuanKredit;
     private $repo;
     public function __construct()
     {
+        $this->logPengajuan = new LogPengajuanController;
+        $this->pengajuanKredit = new PengajuanKreditController;
         $this->repo = new PengajuanDagulirRepository;
     }
 
@@ -312,23 +320,50 @@ class DagulirController extends Controller
     }
 
     public function updateReviewPincab(Request $request, $id) {
+        DB::beginTransaction();
         try {
-            for ($i=0; $i <  count($request->get('id_aspek')); $i++) {
-                $updateKomentar = new PendapatPerAspek();
-                $updateKomentar->id_pengajuan = $id;
-                $updateKomentar->id_penyelia = auth()->user()->id;
-                $updateKomentar->id_aspek = $_POST['id_aspek'][$i];
-                $updateKomentar->pendapat_per_aspek = $_POST['pendapat_usulan'][$i];
-                $updateKomentar->save();
+            $dagulir = PengajuanDagulir::find($id);
+            if ($dagulir) {
+                $pengajuan = PengajuanModel::where('dagulir_id', $dagulir->id)->first();
+                if ($pengajuan) {
+                    $idKomentar = KomentarModel::where('id_pengajuan', $pengajuan->id)->first();
+                    KomentarModel::where('id', $idKomentar->id)->update(
+                        [
+                            'komentar_pincab' => $request->pendapat,
+                            'id_pincab' => Auth::user()->id,
+                            'updated_at' => date('Y-m-d H:i:s')
+                        ]
+                    );
+                    // Log Pengajuan review
+                    $nasabah = CalonNasabah::select('id', 'nama')->where('id_pengajuan', $request->id_pengajuan)->first();
+                    // $nasabah->nominal_realisasi = $request->get('nominal_realisasi');
+                    // $nasabah->update();
+
+                    $namaNasabah = 'undifined';
+
+                    if ($nasabah)
+                        $namaNasabah = $nasabah->nama;
+
+                    $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->pengajuanKredit->getNameKaryawan(Auth::user()->nip) . ' melakukan review terhadap pengajuan atas nama ' . $namaNasabah, $pengajuan->id, Auth::user()->id, Auth::user()->nip);
+
+                    DB::commit();
+                    return redirect()->route('dagulir.index')->withStatus('Berhasil mereview!');
+                }
+                else {
+                    return redirect()->route('dagulir.index')->withError('Data pengajuan tidak ditemukan');
+                }
             }
-            DB::commit();
-            return redirect()->route('dagulir.index')->withStatus('Berhasil mereview!');
-        } catch (Exception $th) {
-            return $th;
-            DB::rollback();
-        } catch (QueryException $e){
-            return $e;
+            else {
+                return redirect()->route('dagulir.index')->withError('Data pengajuan tidak ditemukan');
+            }
+        } catch (Exception $e) {
+            return $e->getMessage();
             DB::rollBack();
+            return redirect()->back()->withError('Terjadi kesalahan.');
+        } catch (QueryException $e) {
+            return $e->getMessage();
+            DB::rollBack();
+            return redirect()->back()->withError('Terjadi kesalahan');
         }
     }
 

@@ -277,10 +277,18 @@
                                                 </li>
                                             @endif
                                         @endif
-                                        <li class="item-tb-dropdown">
-                                            <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
-                                                class="cursor-pointer">Review</a>
-                                        </li>
+                                        @if ((Auth()->user()->role == 'Staf Analis Kredit'))
+                                            <li class="item-tb-dropdown">
+                                                <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
+                                                    class="cursor-pointer">Review</a>
+                                            </li>
+                                        @endif
+                                        @if ((Auth()->user()->role == 'Penyelia Kredit'))
+                                            <li class="item-tb-dropdown">
+                                                <a href="{{ route('dagulir.detailjawaban_pincab', $item->pengajuan->id) }}"
+                                                    class="cursor-pointer">Review</a>
+                                            </li>
+                                        @endif
                                     </ul>
                                 </div>
                             </div>
