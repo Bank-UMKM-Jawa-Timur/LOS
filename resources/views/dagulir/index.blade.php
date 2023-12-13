@@ -294,7 +294,8 @@
                                         @endif
                                         @if ((Auth()->user()->role == 'Pincab') &&
                                             $item->pengajuan->posisi == 'Selesai' &&
-                                            ($item->pengajuan->id_pincab && $item->pengajuan->tanggal_review_pincab))
+                                            ($item->pengajuan->id_pincab && $item->pengajuan->tanggal_review_pincab) &&
+                                            !$item->kode_pendaftaran)
                                             <li class="item-tb-dropdown">
                                                 <a href="#"
                                                     data-id="{{$item->pengajuan->id}}"

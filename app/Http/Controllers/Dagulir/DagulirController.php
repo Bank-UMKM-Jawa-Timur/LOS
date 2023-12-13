@@ -583,7 +583,7 @@ class DagulirController extends Controller
             "tanggal_lahir" => $pengajuan_dagulir->tanggal_lahir,
             "telp" => $pengajuan_dagulir->telp,
             "jenis_usaha" => $pengajuan_dagulir->jenis_usaha,
-            "nominal_pengajuan" => intval($request->nominal_realisasi),
+            "nominal_pengajuan" => $this->formatNumber($request->nominal_realisasi),
             "tujuan_penggunaan" => $pengajuan_dagulir->tujuan_penggunaan,
             "jangka_waktu" => intval($request->get('jangka_waktu')),
             "ket_agunan" => 'BPKB',
@@ -614,7 +614,7 @@ class DagulirController extends Controller
         if (array_key_exists('data', $pengajuan_dagulir)) {
             $update_pengajuan_dagulir = PengajuanDagulir::find($pengajuan->dagulir_id);
             $update_pengajuan_dagulir->kode_pendaftaran = $pengajuan_dagulir['data']['kode_pendaftaran'];
-            $update_pengajuan_dagulir->nominal_realisasi = $request->nominal_realisasi;
+            $update_pengajuan_dagulir->nominal_realisasi = $this->formatNumber($request->nominal_realisasi);
             $update_pengajuan_dagulir->jangka_waktu = $request->jangka_waktu;
             $update_pengajuan_dagulir->status = 1;
             $update_pengajuan_dagulir->update();
