@@ -27,6 +27,9 @@
                     readonly
                     value="{{ $data->nama }}"
                 />
+                <div class="p-2 bg-white border-b">
+                    <span>{{ $dagulir->nama ? $dagulir->nama : '-' }}</span>
+                </div>
             </div>
             <div class="input-box">
                 <label for="">Email</label>
@@ -40,7 +43,7 @@
                 value="{{ $data->email }}"
                 />
                 <div class="p-2 bg-white border-b">
-                    <span>{{ $dagulir->nama ? $dagulir->nama : '-' }}</span>
+                    <span>{{ $dagulir->email ? $dagulir->email : '-' }}</span>
                 </div>
             </div>
         </div>
@@ -185,7 +188,7 @@
                 </select>
                 <div class="p-2 bg-white border-b">
                     @foreach ($itemSlik->option as $itemJawaban)
-                        <span>{{ $itemJawaban->id == $data->id_slik  ? {{ $itemJawaban->option }} : ''}}</span>
+                        <span>{{ $itemJawaban->id == $data->id_slik  ? $itemJawaban->option : ''}}</span>
                     @endforeach
                 </div>
             </div>
