@@ -62,13 +62,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('jawaban-pengajuan/{id}', [DagulirController::class, "getDetailJawaban"])->name('detailjawaban');
         Route::post('jawaban-pengajuan/update/{id}', [DagulirController::class, "updateReviewPenyelia"])->name('updatePenyelia');
         // Send to pincab
-        Route::get('pincab-kredit/{id}', [DagulirController::class, "sendToPincab"])->name('check.pincab');
+        // Route::get('pincab-kredit/{id}', [DagulirController::class, "sendToPincab"])->name('check.pincab');
+        Route::get('pincab-kredit/{id}', [NewDagulirController::class, "sendToPincab"])->name('check.pincab');
         // Review Pincab
         Route::get('jawaban-pengajuan-pincab/{id}', [DagulirController::class, "getDetailJawabanPincab"])->name('detailjawaban_pincab');
         Route::post('jawaban-pengajuan-pincab/update/{id}', [DagulirController::class, "updateReviewPincab"])->name('updateReviewPincab');
         // Approval Pincab
-        Route::get('acc-pincab/{id}', [DagulirController::class, "accPengajuan"])->name('acc_pincab');
-        Route::get('dec-pincab/update/{id}', [DagulirController::class, "decPengajuan"])->name('dec_pincab');
+        // Route::get('acc-pincab/{id}', [DagulirController::class, "accPengajuan"])->name('acc_pincab');
+        Route::get('acc-pincab/{id}', [NewDagulirController::class, "accPengajuan"])->name('acc_pincab');
+        // Route::get('dec-pincab/update/{id}', [DagulirController::class, "decPengajuan"])->name('dec_pincab');
+        Route::get('dec-pincab/update/{id}', [NewDagulirController::class, "decPengajuan"])->name('dec_pincab');
         // Kirim Dagulir
         Route::post('kirim-sipde', [DagulirController::class, "storeSipde"])->name('store-sipde');
 
