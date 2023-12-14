@@ -28,6 +28,7 @@ use App\Models\MerkModel;
 use App\Models\PengajuanDagulir;
 use App\Models\TipeModel;
 use App\Models\User;
+use App\Repository\PengajuanDagulirRepository;
 use App\Services\TemporaryService;
 use DateTime;
 use Exception;
@@ -47,6 +48,7 @@ class NewDagulirController extends Controller
 {
     private $isMultipleFiles = [];
     private $logPengajuan;
+    private $repo;
 
     public function __construct()
     {
@@ -54,6 +56,7 @@ class NewDagulirController extends Controller
         $this->isMultipleFiles = [
             'Foto Usaha'
         ];
+        $this->repo = new PengajuanDagulirRepository;
     }
 
     public function getUserJson($role)
@@ -1020,5 +1023,34 @@ class NewDagulirController extends Controller
             "realisasi_dana" => $realisasi_dana
         ])->json();
         return $pengajuan_dagulir;
+    }
+
+    public function index(Request $request)
+    {
+        $id_cabang = Auth::user()->id_cabang;
+        $id_user = Auth::user()->id;
+        $param['cabang'] = DB::table('cabang')
+            ->get();
+        $role = auth()->user()->role;
+        // paginate
+        $search = $request->get('q');
+        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+        $page = $request->has('page') ? $request->get('page') : 1;
+        if ($role == 'Staf Analis Kredit') {
+            $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user);
+        } elseif ($role == 'Penyelia Kredit') {
+            $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Penyelia Kredit', $id_user);
+        } elseif ($role == 'Pincab') {
+            $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Pincab', $id_user);
+        } else {
+            $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user);
+        }
+
+        // search
+
+        // return $pengajuan_dagulir;
+        return view('dagulir.index',[
+            'data' => $pengajuan_dagulir
+        ]);
     }
 }

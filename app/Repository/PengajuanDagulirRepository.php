@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class PengajuanDagulirRepository
 {
-    function get($search, $limit=10, $page=1, $role) {
+    function get($search, $limit=10, $page=1, $role, $id_user) {
         $data = null;
         if ($role == 'Staf Analis Kredit') {
             $data = PengajuanDagulir::with('pengajuan')->where(function($query) use ($search) {
@@ -16,6 +16,9 @@ class PengajuanDagulirRepository
                         ->orWhere('kode_pendaftaran','like', "%$search%");
             })
             ->latest()
+            ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
+            ->select('pengajuan_dagulir.*')
+            ->where('pengajuan.id_staf', $id_user)
             ->paginate($limit);
         }else if ($role == 'Penyelia Kredit') {
             $data = PengajuanDagulir::whereHas('pengajuan', function (Builder $query) {
@@ -26,6 +29,9 @@ class PengajuanDagulirRepository
                             ->orWhere('nama','like', "%$search%")
                             ->orWhere('kode_pendaftaran','like', "%$search%");
                 })
+            ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
+            ->select('pengajuan_dagulir.*')
+            ->where('pengajuan.id_penyelia', $id_user)
             ->latest()
             ->paginate($limit);
         }else if ($role == 'Pincab') {
@@ -37,6 +43,9 @@ class PengajuanDagulirRepository
                             ->orWhere('nama','like', "%$search%")
                             ->orWhere('kode_pendaftaran','like', "%$search%");
                 })
+            ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
+            ->select('pengajuan_dagulir.*')
+            ->where('pengajuan.id_pincab', $id_user)
             ->latest()
             ->paginate($limit);
         }

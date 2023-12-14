@@ -89,12 +89,20 @@ $dataIndex = match ($skema) {
                                                     </select>
                                                 </div>
                                                 <div class="form-group" id="npwpsku" style="display:none ">
-                                                    <label for="">Memiliki NPWP</label>
+                                                    <label for="">NPWP</label>
                                                     <br>
-                                                    <div class="row">
-                                                        <div class="col-md-3">
-                                                            <input type="checkbox" id="isNpwp" class="form-input">
-                                                        </div>
+                                                    <div class="flex gap-2 rounded p-2 w-full">
+                                                        <input
+                                                            type="checkbox"
+                                                            name="form-input"
+                                                            class="form-check cursor-pointer"
+                                                            id="isNpwp"
+                                                        />
+                                                        <label
+                                                            for="isNpwp"
+                                                            class="font-semibold cursor-pointer text-theme-text"
+                                                            >Memiliki NPWP</label
+                                                        >
                                                     </div>
                                                 </div>
                                             </div>
@@ -180,14 +188,25 @@ $dataIndex = match ($skema) {
                                         @else
                                             @if ($item->opsi_jawaban == 'input text')
                                                 <div class="form-group">
-                                                    <label for="">{{ $item->nama }}</label>
-                                                    <input type="hidden" name="opsi_jawaban[{{ $item->id }}]"
-                                                        value="{{ $item->opsi_jawaban }}" id="">
-                                                    <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}"
-                                                        id="">
-                                                    <input type="text" maxlength="255" name="informasi[{{ $item->id }}]"
-                                                        id="{{ $idLevelDua }}" placeholder="Masukkan informasi {{ $item->nama }}"
-                                                        class="form-input" value="">
+                                                    <div class="input-box">
+                                                        <label for="">{{ $item->nama }}</label>
+                                                        <div class="flex items-center">
+                                                            <div class="flex-1">
+                                                                <input type="hidden" name="opsi_jawaban[{{ $item->id }}]"
+                                                                    value="{{ $item->opsi_jawaban }}" id="">
+                                                                <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}"
+                                                                    id="">
+                                                                <input type="text" maxlength="255" name="informasi[{{ $item->id }}]"
+                                                                    id="{{ $idLevelDua }}" placeholder="Masukkan informasi {{ $item->nama }}" value=""
+                                                                    class="form-input {{$item->is_rupiah ? 'rupiah' : ''}}" >
+                                                            </div>
+                                                            @if ($item->suffix)
+                                                                <div class="flex-shrink-0  mt-2.5rem">
+                                                                    <span class="form-input bg-gray-100">{{$item->suffix}}</span>
+                                                                </div>
+                                                            @endif
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             @elseif ($item->opsi_jawaban == 'number')
                                                 @if ($item->nama == 'Repayment Capacity')
@@ -230,18 +249,24 @@ $dataIndex = match ($skema) {
                                                 @endif
                                             @elseif ($item->opsi_jawaban == 'persen')
                                                 <div class="form-group">
-                                                    <label for="">{{ $item->nama }}</label>
-                                                    <input type="hidden" name="opsi_jawaban[{{ $item->id }}]"
-                                                        value="{{ $item->opsi_jawaban }}" id="">
-                                                    <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}"
-                                                        id="">
-                                                    <div class="input-group mb-3">
-                                                        <input type="number" step="any" name="informasi[{{ $item->id }}]"
-                                                            id="{{ $idLevelDua }}" placeholder="Masukkan informasi {{ $item->nama }}"
-                                                            class="form-input" aria-label="Recipient's username" aria-describedby="basic-addon2"
-                                                            value="" onkeydown="return event.keyCode !== 69">
-                                                        <div class="input-group-append">
-                                                            <span class="input-group-text" id="basic-addon2">%</span>
+                                                    <div class="input-box">
+                                                        <label for="">{{ $item->nama }}</label>
+                                                        <div class="flex items-center">
+                                                            <div class="flex-1">
+                                                                <input type="hidden" name="opsi_jawaban[{{ $item->id }}]"
+                                                                    value="{{ $item->opsi_jawaban }}" id="">
+                                                                <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}"
+                                                                    id="">
+                                                                <input type="number" step="any" name="informasi[{{ $item->id }}]"
+                                                                    id="{{ $idLevelDua }}" placeholder="Masukkan informasi {{ $item->nama }}"
+                                                                    class="form-input" aria-label="Recipient's username" aria-describedby="basic-addon2"
+                                                                    value="" onkeydown="return event.keyCode !== 69">
+                                                            </div>
+                                                            @if ($item->suffix)
+                                                                <div class="flex-shrink-0  mt-2.5rem">
+                                                                    <span class="form-input bg-gray-100">{{$item->suffix}}</span>
+                                                                </div>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                 </div>
@@ -355,43 +380,72 @@ $dataIndex = match ($skema) {
                                                 @else
                                                     @if ($itemTiga->opsi_jawaban == 'input text')
                                                         <div class="form-group">
-                                                            <label for="">{{ $itemTiga->nama }}</label>
-                                                            <input type="hidden" name="id_level[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}"
-                                                                id="">
-                                                            <input type="hidden" name="opsi_jawaban[{{ $itemTiga->id }}]"
-                                                                value="{{ $itemTiga->opsi_jawaban }}" id="">
-                                                            <input type="text" maxlength="255" name="informasi[{{ $itemTiga->id }}]"
-                                                                placeholder="Masukkan informasi" id="{{ $idLevelTiga }}"
-                                                                value="" class="form-input {{$itemTiga->is_rupiah ? 'rupiah' : ''}}">
+                                                            <div class="input-box">
+                                                                <label for="">{{ $itemTiga->nama }}</label>
+                                                                <div class="flex items-center">
+                                                                    <div class="flex-1">
+                                                                        <input type="hidden" name="id_level[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}"
+                                                                            id="">
+                                                                        <input type="hidden" name="opsi_jawaban[{{ $itemTiga->id }}]"
+                                                                            value="{{ $itemTiga->opsi_jawaban }}" id="">
+                                                                        <input type="text" maxlength="255" name="informasi[{{ $itemTiga->id }}]"
+                                                                            placeholder="Masukkan informasi" id="{{ $idLevelTiga }}"
+                                                                            value="" class="form-input {{$itemTiga->is_rupiah ? 'rupiah' : ''}}">
+                                                                    </div>
+                                                                    @if ($itemTiga->suffix)
+                                                                        <div class="flex-shrink-0 mt-2.5rem">
+                                                                            <span class="form-input bg-gray-100">{{$itemTiga->suffix}}</span>
+                                                                        </div>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
                                                         </div>
+                                                        
                                                     @elseif ($itemTiga->opsi_jawaban == 'number')
                                                         <div class="form-group">
-                                                            <label for="">{{ $itemTiga->nama }}</label>
-                                                            <input type="hidden" name="opsi_jawaban[{{ $itemTiga->id }}]"
-                                                                value="{{ $itemTiga->opsi_jawaban }}" id="">
-                                                            <input type="hidden" name="id_level[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}"
-                                                                id="">
-                                                            <input type="text" step="any" name="informasi[{{ $itemTiga->id }}]"
-                                                                id="{{ $idLevelTiga }}" placeholder="Masukkan informasi {{ $itemTiga->nama }}"
-                                                                class="form-input rupiah" value="">
+                                                            <div class="input-box">
+                                                                <label for="">{{ $itemTiga->nama }}</label>
+                                                                <div class="flex items-center">
+                                                                    <div class="flex-1">
+                                                                        <input type="hidden" name="opsi_jawaban[{{ $itemTiga->id }}]"
+                                                                            value="{{ $itemTiga->opsi_jawaban }}" id="">
+                                                                        <input type="hidden" name="id_level[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}"
+                                                                            id="">
+                                                                        <input type="text" step="any" name="informasi[{{ $itemTiga->id }}]"
+                                                                            id="{{ $idLevelTiga }}" placeholder="Masukkan informasi {{ $itemTiga->nama }}"
+                                                                            class="form-input rupiah" value="">
+                                                                    </div>
+                                                                    @if ($itemTiga->suffix)
+                                                                        <div class="flex-shrink-0 mt-2.5rem">
+                                                                            <span class="form-input bg-gray-100">{{$itemTiga->suffix}}</span>
+                                                                        </div>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     @elseif ($itemTiga->opsi_jawaban == 'persen')
                                                         <div class="form-group">
                                                             @if ($itemTiga->nama == 'Ratio Tenor Asuransi')
                                                             @else
-                                                                <label for="">{{ $itemTiga->nama }}</label>
-                                                                <input type="hidden" name="opsi_jawaban[{{ $itemTiga->id }}]"
-                                                                    value="{{ $itemTiga->opsi_jawaban }}" id="">
-                                                                <input type="hidden" name="id_level[{{ $itemTiga->id }}]"
-                                                                    value="{{ $itemTiga->id }}" id="">
-                                                                <div class="input-group mb-3">
-                                                                    <input type="number" step="any" name="informasi[{{ $itemTiga->id }}]"
-                                                                        id="{{ $idLevelTiga }}"
-                                                                        placeholder="Masukkan informasi {{ $itemTiga->nama }}" class="form-input"
-                                                                        aria-label="Recipient's username" aria-describedby="basic-addon2"
-                                                                        value="">
-                                                                    <div class="input-group-append">
-                                                                        <span class="input-group-text" id="basic-addon2">%</span>
+                                                                <div class="input-box">
+                                                                    <label for="">{{ $itemTiga->nama }}</label>
+                                                                    <div class="flex items-center">
+                                                                        <div class="flex-1">
+                                                                            <input type="hidden" name="opsi_jawaban[{{ $itemTiga->id }}]"
+                                                                                value="{{ $itemTiga->opsi_jawaban }}" id="">
+                                                                            <input type="hidden" name="id_level[{{ $itemTiga->id }}]"
+                                                                                value="{{ $itemTiga->id }}" id="">
+                                                                                <input type="number" step="any" name="informasi[{{ $itemTiga->id }}]"
+                                                                                    id="{{ $idLevelTiga }}"
+                                                                                    placeholder="Masukkan informasi {{ $itemTiga->nama }}"
+                                                                                    class="form-input {{$itemTiga->readonly ? 'bg-gray-100' : ''}}"
+                                                                                    value="">
+                                                                        </div>
+                                                                        @if ($itemTiga->suffix)
+                                                                            <div class="flex-shrink-0 mt-2.5rem">
+                                                                                <span class="form-input bg-gray-100">{{$itemTiga->suffix}}</span>
+                                                                            </div>
+                                                                        @endif
                                                                     </div>
                                                                 </div>
                                                             @endif
@@ -399,8 +453,8 @@ $dataIndex = match ($skema) {
                                                     @elseif ($itemTiga->opsi_jawaban == 'file')
                                                         <div class="form-group file-wrapper item-{{ $itemTiga->id }}">
                                                             <label for="">{{ $itemTiga->nama }}</label>
-                                                            <div class="row file-input">
-                                                                <div class="col-md-9">
+                                                            <div class="input-box mb-4">
+                                                                <div class="flex gap-4">
                                                                     <input type="hidden" name="id_item_file[{{ $itemTiga->id }}][]"
                                                                         value="{{ $itemTiga->id }}" id="">
                                                                     <input type="file" name="upload_file[{{ $itemTiga->id }}][]"
@@ -410,18 +464,16 @@ $dataIndex = match ($skema) {
                                                                     <span class="invalid-tooltip" style="display: none">Maximum upload
                                                                         file size is 15 MB</span>
                                                                     <span class="filename" style="display: inline;"></span>
-                                                                </div>
-                                                                <div class="col-1">
-                                                                    <button class="btn btn-sm btn-success btn-add-file" type="button"
-                                                                        data-id="{{ $itemTiga->id }}">
-                                                                        <i class="fa fa-plus"></i>
-                                                                    </button>
-                                                                </div>
-                                                                <div class="col-1">
-                                                                    <button class="btn btn-sm btn-danger btn-del-file" type="button"
-                                                                        data-id="{{ $itemTiga->id }}">
-                                                                        <i class="fa fa-minus"></i>
-                                                                    </button>
+                                                                    @if ($itemTiga->is_multiple)
+                                                                        <div class="flex gap-2 multiple-action">
+                                                                            <button type="button" class="btn-add" data-item-id="{{$itemTiga->id}}-{{strtolower(str_replace(' ', '_', $itemTiga->nama))}}">
+                                                                                <iconify-icon icon="fluent:add-16-filled" class="mt-2"></iconify-icon>
+                                                                            </button>
+                                                                            <button type="button" class="btn-minus hidden" data-item-id="{{$itemTiga->id}}-{{strtolower(str_replace(' ', '_', $itemTiga->nama))}}">
+                                                                                <iconify-icon icon="lucide:minus" class="mt-2"></iconify-icon>
+                                                                            </button>
+                                                                        </div>
+                                                                    @endif
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -528,31 +580,48 @@ $dataIndex = match ($skema) {
                                                             </div>
                                                         @elseif ($itemEmpat->opsi_jawaban == 'number')
                                                             <div class="form-group">
-                                                                <label for="">{{ $itemEmpat->nama }}</label>
-                                                                <input type="hidden" name="opsi_jawaban[{{ $itemEmpat->id }}]"
-                                                                    value="{{ $itemEmpat->opsi_jawaban }}" id="">
-                                                                <input type="hidden" name="id_level[{{ $itemEmpat->id }}]"
-                                                                    value="{{ $itemEmpat->id }}" id="">
-                                                                <input type="text" step="any" name="informasi[{{ $itemEmpat->id }}]"
-                                                                    id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan_/_ht' ? 'nilai_asuransi_penjaminan' : $idLevelEmpat }}"
-                                                                    placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
-                                                                    class="form-input only-number" value="">
+                                                                <div class="input-box">
+                                                                    <label for="">{{ $itemEmpat->nama }}</label>
+                                                                    <div class="flex items-center">
+                                                                        <div class="flex-1">
+                                                                            <input type="hidden" name="opsi_jawaban[{{ $itemEmpat->id }}]"
+                                                                                value="{{ $itemEmpat->opsi_jawaban }}" id="">
+                                                                            <input type="hidden" name="id_level[{{ $itemEmpat->id }}]"
+                                                                                value="{{ $itemEmpat->id }}" id="">
+                                                                            <input type="text" step="any" name="informasi[{{ $itemEmpat->id }}]"
+                                                                                id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan_/_ht' ? 'nilai_asuransi_penjaminan' : $idLevelEmpat }}"
+                                                                                placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
+                                                                                class="form-input only-number" value="">
+                                                                        </div>
+                                                                        @if ($itemEmpat->suffix)
+                                                                            <div class="flex-shrink-0 mt-2.5rem">
+                                                                                <span class="form-input bg-gray-100">{{$itemEmpat->suffix}}</span>
+                                                                            </div>
+                                                                        @endif
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         @elseif ($itemEmpat->opsi_jawaban == 'persen')
                                                             <div class="form-group">
-                                                                <label for="">{{ $itemEmpat->nama }}</label>
-                                                                <input type="hidden" name="opsi_jawaban[{{ $itemEmpat->id }}]"
-                                                                    value="{{ $itemEmpat->opsi_jawaban }}" id="">
-                                                                <input type="hidden" name="id_level[{{ $itemEmpat->id }}]"
-                                                                    value="{{ $itemEmpat->id }}" id="">
-                                                                <div class="input-group mb-3">
-                                                                    <input type="number" step="any" name="informasi[{{ $itemEmpat->id }}]"
-                                                                        id="{{ $idLevelEmpat }}"
-                                                                        placeholder="Masukkan informasi {{ $itemEmpat->nama }}" class="form-input"
-                                                                        aria-label="Recipient's username" aria-describedby="basic-addon2"
-                                                                        value="">
-                                                                    <div class="input-group-append">
-                                                                        <span class="input-group-text" id="basic-addon2">%</span>
+                                                                <div class="input-box">
+                                                                    <label for="">{{ $itemEmpat->nama }}</label>
+                                                                    <div class="flex items-center">
+                                                                        <div class="flex-1">
+                                                                            <input type="hidden" name="opsi_jawaban[{{ $itemEmpat->id }}]"
+                                                                                value="{{ $itemEmpat->opsi_jawaban }}" id="">
+                                                                            <input type="hidden" name="id_level[{{ $itemEmpat->id }}]"
+                                                                                value="{{ $itemEmpat->id }}" id="">
+                                                                            <input type="number" step="any" name="informasi[{{ $itemEmpat->id }}]"
+                                                                                id="{{ $idLevelEmpat }}"
+                                                                                placeholder="Masukkan informasi {{ $itemEmpat->nama }}" class="form-input"
+                                                                                aria-label="Recipient's username" aria-describedby="basic-addon2"
+                                                                                value="">
+                                                                        </div>
+                                                                        @if ($itemEmpat->suffix)
+                                                                            <div class="flex-shrink-0 mt-2.5rem">
+                                                                                <span class="form-input bg-gray-100">{{$itemEmpat->suffix}}</span>
+                                                                            </div>
+                                                                        @endif
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -1080,31 +1149,33 @@ $dataIndex = match ($skema) {
                                     </div>
                                 `);
                             } else {
+                                var name_lowercase = valItem.nama.toLowerCase();
+                                name_lowercase = name_lowercase.replaceAll(' ', '_')
                                 if (valItem.nama == 'Foto') {
                                     $('#bukti_pemilikan_jaminan_tambahan').append(`
-                                    <div class="form-group file-wrapper item-${valItem.id}">
-                                        <label for="">${valItem.nama}</label>
-                                        <div class="row file-input">
-                                            <div class="col-md-9">
-                                                <input type="hidden" name="id_item_file[${valItem.id}][]" value="${valItem.id}" id="">
-                                                <input type="file" id="${valItem.nama.toString().replaceAll(" ", "_")}" name="upload_file[${valItem.id}][]" data-id=""
-                                                    placeholder="Masukkan informasi ${valItem.nama}"
-                                                    class="form-input limit-size">
-                                                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
-                                                <span class="filename" style="display: inline;"></span>
-                                            </div>
-                                            <div class="col-1">
-                                                <button class="btn btn-sm btn-success btn-add-file" type="button" data-id="${valItem.id}">
-                                                    <i class="fa fa-plus"></i>
-                                                </button>
-                                            </div>
-                                            <div class="col-1">
-                                                <button class="btn btn-sm btn-danger btn-del-file" type="button" data-id="${valItem.id}">
-                                                    <i class="fa fa-minus"></i>
-                                                </button>
+                                        <div class="form-group file-wrapper item-${valItem.id}">
+                                            <label for="">${valItem.nama}</label>
+                                            <div class="input-box mb-4">
+                                                <div class="flex gap-4">
+                                                    <input type="hidden" name="id_item_file[${valItem.id}][]"
+                                                        value="${valItem.id}" id="">
+                                                    <input type="file" id="${valItem.nama.toString().replaceAll(" ", "_")}"
+                                                        name="upload_file[${valItem.id}][]" data-id=""
+                                                        placeholder="Masukkan informasi ${valItem.nama}" class="form-input limit-size">
+                                                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                                                    <span class="filename" style="display: inline;"></span>
+                                                    <div class="flex gap-2 multiple-action">
+                                                        <button type="button" class="btn-add" data-item-id="${valItem.id}-${name_lowercase}">
+                                                            <iconify-icon icon="fluent:add-16-filled" class="mt-2"></iconify-icon>
+                                                        </button>
+                                                        <button type="button" class="btn-minus hidden" data-item-id="${valItem.id}-${name_lowercase}">
+                                                            <iconify-icon icon="lucide:minus" class="mt-2"></iconify-icon>
+                                                        </button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>`);
+                                    `);
                                 } else {
                                     if (response.dataJawaban[i] != null && response.dataJawaban[
                                             i] != "") {
@@ -2424,7 +2495,7 @@ $dataIndex = match ($skema) {
         var new_multiple = multiple.html().replaceAll('hidden', '')
         input = input.html().replaceAll(multiple.html(), new_multiple);
         var parent = $(this).closest('.input-box').parent()
-        parent.append(`<div class="input-box">${input}`)
+        parent.append(`<div class="input-box mb-4">${input}`)
     })
 
     $(document).on('click', '.btn-minus', function() {
