@@ -259,7 +259,8 @@ class NewDagulirController extends Controller
             $pengajuan->jenis_usaha = $request->get('jenis_usaha');
             $pengajuan->ket_agunan = $request->get('ket_agunan');
             $pengajuan->hubungan_bank = $request->get('hub_bank');
-            $pengajuan->nominal =   $this->formatNumber($request->get('nominal_pengajuan'));
+            $pengajuan->hasil_verifikasi = $request->get('hasil_verifikasi');
+            $pengajuan->nominal = $this->formatNumber($request->get('nominal_pengajuan'));
             $pengajuan->tujuan_penggunaan = $request->get('tujuan_penggunaan');
             $pengajuan->jangka_waktu = $request->get('jangka_waktu');
             $pengajuan->kode_bank_pusat = 1;
