@@ -15,6 +15,7 @@ use \App\Http\Controllers\CetakSuratController;
 use App\Http\Controllers\DashboardDireksiController;
 use \App\Http\Controllers\LogPengajuanController;
 use \App\Http\Controllers\Dagulir\DagulirController;
+use App\Http\Controllers\Dagulir\NewDagulirController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,38 +46,34 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/direksi', [DashboardDireksiController::class, 'index'])->name('dashboard_direksi');
 
 
-    Route::prefix('dagulir')->group(function () {
-        Route::get('/', [DagulirController::class, 'index'])->name('dagulir.index');
+    Route::prefix('dagulir')->name('dagulir.')->group(function () {
+        Route::get('/', [DagulirController::class, 'index'])->name('index');
         // create
-        Route::get('create',[DagulirController::class,'create'])->name('dagulir.create');
-        Route::get('get-data-dagulir/{kode_pendaftaran}',[DagulirController::class,'getPengajuanDagulir'])->name('dagulir.get-data-dagulir');
-        Route::post('create/store',[DagulirController::class,'store'])->name('dagulir.post');
+        Route::get('create',[DagulirController::class,'create'])->name('create');
+        Route::get('get-data-dagulir/{kode_pendaftaran}',[DagulirController::class,'getPengajuanDagulir'])->name('get-data-dagulir');
+        Route::post('create/store',[DagulirController::class,'store'])->name('post');
         // Review
-        Route::get('review/{id}',[DagulirController::class,'review'])->name('dagulir.review');
+        Route::get('review/{id}',[DagulirController::class,'review'])->name('review');
         // Update Review
-        Route::post('review/post',[DagulirController::class,'updateReview'])->name('dagulir.review-post');
+        Route::post('review/post',[DagulirController::class,'updateReview'])->name('review-post');
         // Cek Penyelia Dagulir
-        Route::post('penyelia-kredit', [DagulirController::class, "checkPenyeliaKreditDagulir"])->name('dagulir.check.penyeliakredit');
+        Route::post('penyelia-kredit', [DagulirController::class, "checkPenyeliaKreditDagulir"])->name('check.penyeliakredit');
         // Review Penyelia
-        Route::get('jawaban-pengajuan/{id}', [DagulirController::class, "getDetailJawaban"])->name('dagulir.detailjawaban');
-        Route::post('jawaban-pengajuan/update/{id}', [DagulirController::class, "updateReviewPenyelia"])->name('dagulir.updatePenyelia');
+        Route::get('jawaban-pengajuan/{id}', [DagulirController::class, "getDetailJawaban"])->name('detailjawaban');
+        Route::post('jawaban-pengajuan/update/{id}', [DagulirController::class, "updateReviewPenyelia"])->name('updatePenyelia');
         // Send to pincab
-        Route::get('pincab-kredit/{id}', [DagulirController::class, "sendToPincab"])->name('dagulir.check.pincab');
+        Route::get('pincab-kredit/{id}', [DagulirController::class, "sendToPincab"])->name('check.pincab');
         // Review Pincab
-        Route::get('jawaban-pengajuan-pincab/{id}', [DagulirController::class, "getDetailJawabanPincab"])->name('dagulir.detailjawaban_pincab');
-        Route::post('jawaban-pengajuan-pincab/update/{id}', [DagulirController::class, "updateReviewPincab"])->name('dagulir.updateReviewPincab');
+        Route::get('jawaban-pengajuan-pincab/{id}', [DagulirController::class, "getDetailJawabanPincab"])->name('detailjawaban_pincab');
+        Route::post('jawaban-pengajuan-pincab/update/{id}', [DagulirController::class, "updateReviewPincab"])->name('updateReviewPincab');
         // Approval Pincab
-        Route::get('acc-pincab/{id}', [DagulirController::class, "accPengajuan"])->name('dagulir.acc_pincab');
-        Route::get('dec-pincab/update/{id}', [DagulirController::class, "decPengajuan"])->name('dagulir.dec_pincab');
+        Route::get('acc-pincab/{id}', [DagulirController::class, "accPengajuan"])->name('acc_pincab');
+        Route::get('dec-pincab/update/{id}', [DagulirController::class, "decPengajuan"])->name('dec_pincab');
         // Kirim Dagulir
-        Route::post('kirim-sipde', [DagulirController::class, "storeSipde"])->name('dagulir.store-sipde');
+        Route::post('kirim-sipde', [DagulirController::class, "storeSipde"])->name('store-sipde');
 
-        // Route::get('/review', function(){
-        //     return view('dagulir.review');
-        // })->name('dagulir.review');
-        // Route::get('/create', function(){
-        //     return view('dagulir.form.create');
-        // })->name('dagulir.form.create');
+        // Pengajuan
+        Route::resource('pengajuan-kredit', NewDagulirController::class);
     });
 
     // check Pincab

@@ -235,6 +235,7 @@
                         class="form-input rupiah"
                         placeholder="Nominal Pengajuan"
                         name="nominal_pengajuan"
+                        id="jumlah_kredit"
                     />
                 </div>
                 <div class="input-box">
