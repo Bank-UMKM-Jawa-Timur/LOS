@@ -406,20 +406,22 @@
                                     <div class="input-group input-b-bottom">
                                         <input type="hidden" name="id_item[]" value="{{ $itemSlik?->id_item }}">
                                         <input type="hidden" name="id_option[]" value="{{ $itemSlik?->id_jawaban }}">
-                                        <input type="text" class="form-input komentar" name="komentar_penyelia[]"
-                                            placeholder="Masukkan Komentar"
-                                            value="{{ isset($komentarSlik->komentar) ? $komentarSlik->komentar : '' }}">
-                                        <div class="input-skor">
-                                            @php
-                                                $skorSlik = $itemSlik?->skor_penyelia ? $itemSlik?->skor_penyelia : $itemSlik?->skor;
-                                            @endphp
-                                            <input type="number" class="form-input" placeholder="" name="skor_penyelia[]"
-                                                onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
-                                                min="0"
-                                                max="4"
-                                                {{ $itemSlik?->status_skor == 0 ? 'readonly' : '' }}
-                                                value="{{ $skorSlik || $skorSlik > 0 ? $skorSlik : null }}">
-                                        </div>
+                                        @if (Auth::user()->role != 'Pincab')
+                                            <input type="text" class="form-input komentar" name="komentar_penyelia[]"
+                                                placeholder="Masukkan Komentar"
+                                                value="{{ isset($komentarSlik->komentar) ? $komentarSlik->komentar : '' }}">
+                                            <div class="input-skor">
+                                                @php
+                                                    $skorSlik = $itemSlik?->skor_penyelia ? $itemSlik?->skor_penyelia : $itemSlik?->skor;
+                                                @endphp
+                                                <input type="number" class="form-input" placeholder="" name="skor_penyelia[]"
+                                                    onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
+                                                    min="0"
+                                                    max="4"
+                                                    {{ $itemSlik?->status_skor == 0 ? 'readonly' : '' }}
+                                                    value="{{ $skorSlik || $skorSlik > 0 ? $skorSlik : null }}">
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                                 @php
@@ -638,21 +640,25 @@
                                                                         </div>
                                                                     @if ($itemTextDua->is_commentable)
                                                                         <input type="hidden" name="id_item[]" value="{{ $item->id }}">
-                                                                        <div class="input-k-bottom">
-                                                                            <input type="text" class="form-input komentar"
-                                                                                name="komentar_penyelia[]" placeholder="Masukkan Komentar">
-                                                                        </div>
+                                                                        @if (Auth::user()->role != 'Pincab')
+                                                                            <div class="input-k-bottom">
+                                                                                <input type="text" class="form-input komentar"
+                                                                                    name="komentar_penyelia[]" placeholder="Masukkan Komentar">
+                                                                            </div>
+                                                                        @endif
                                                                     @endif
                                                                 @else
                                                                     <div class="jawaban-responsive border-b p-2 font-medium">
                                                                         {{ str_replace('_', ' ', $itemTextDua->opsi_text) }} {{ $item->opsi_jawaban == 'persen' ? '%' : '' }}
                                                                     </div>
                                                                     @if ($itemTextDua->is_commentable)
-                                                                        <input type="hidden" name="id_item[]" value="{{ $item->id }}">
-                                                                        <div class="input-k-bottom">
-                                                                            <input type="text" class="form-input komentar"
-                                                                                name="komentar_penyelia[]" placeholder="Masukkan Komentar">
-                                                                        </div>
+                                                                        @if (Auth::user()->role != 'Pincab')
+                                                                            <input type="hidden" name="id_item[]" value="{{ $item->id }}">
+                                                                            <div class="input-k-bottom">
+                                                                                <input type="text" class="form-input komentar"
+                                                                                    name="komentar_penyelia[]" placeholder="Masukkan Komentar">
+                                                                            </div>
+                                                                        @endif
                                                                     @endif
                                                                 @endif
                                                         </div>
@@ -756,22 +762,24 @@
                                                                         <input type="hidden" name="id_option[]"
                                                                             value="{{ $itemJawaban->id }}">
                                                                         @if ($item->is_commentable == 'Ya')
-                                                                            <input type="text" class="form-input komentar"
-                                                                                name="komentar_penyelia[]" placeholder="Masukkan Komentar"
-                                                                                value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
-                                                                            <div class="input-skor">
-                                                                                @php
-                                                                                    $skorInput2 = null;
-                                                                                    $skorInput2 = $getSkorPenyelia->skor_penyelia ? $getSkorPenyelia->skor_penyelia : $itemJawaban->skor;
-                                                                                @endphp
-                                                                                <input type="number" class="form-input" placeholder=""
-                                                                                    name="skor_penyelia[]"
-                                                                                    min="0"
-                                                                                    max="4"
-                                                                                    onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
-                                                                                    {{ $item->status_skor == 0 ? 'readonly' : '' }}
-                                                                                    value="{{ $skorInput2 || $skorInput2 > 0 ? $skorInput2 : null }}">
-                                                                            </div>
+                                                                            @if (Auth::user()->role != 'Pincab')
+                                                                                <input type="text" class="form-input komentar"
+                                                                                    name="komentar_penyelia[]" placeholder="Masukkan Komentar"
+                                                                                    value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
+                                                                                <div class="input-skor">
+                                                                                    @php
+                                                                                        $skorInput2 = null;
+                                                                                        $skorInput2 = $getSkorPenyelia->skor_penyelia ? $getSkorPenyelia->skor_penyelia : $itemJawaban->skor;
+                                                                                    @endphp
+                                                                                    <input type="number" class="form-input" placeholder=""
+                                                                                        name="skor_penyelia[]"
+                                                                                        min="0"
+                                                                                        max="4"
+                                                                                        onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
+                                                                                        {{ $item->status_skor == 0 ? 'readonly' : '' }}
+                                                                                        value="{{ $skorInput2 || $skorInput2 > 0 ? $skorInput2 : null }}">
+                                                                                </div>
+                                                                            @endif
                                                                         @else
                                                                             <input type="hidden" name="komentar_penyelia[]"
                                                                                 value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
@@ -864,26 +872,30 @@
                                                                                 Rp.{{ number_format((int) $itemTextTiga->opsi_text, 2, ',', '.') }}
                                                                             </div>
                                                                             @if ($item->is_commentable == 'Ya')
-                                                                                <div class="input-k-bottom">
-                                                                                    <input type="hidden" name="id_item[]"
-                                                                                        value="{{ $item->id }}">
-                                                                                    <input type="text" class="form-input komentar"
-                                                                                        name="komentar_penyelia[]"
-                                                                                        placeholder="Masukkan Komentar">
-                                                                                </div>
+                                                                                @if (Auth::user()->role != 'Pincab')
+                                                                                    <div class="input-k-bottom">
+                                                                                        <input type="hidden" name="id_item[]"
+                                                                                            value="{{ $item->id }}">
+                                                                                        <input type="text" class="form-input komentar"
+                                                                                            name="komentar_penyelia[]"
+                                                                                            placeholder="Masukkan Komentar">
+                                                                                    </div>
+                                                                                @endif
                                                                             @endif
                                                                         @else
                                                                             <div class="jawaban-responsive border-b p-2 font-medium">
                                                                                 {{ $itemTextTiga->opsi_text }}{{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}
                                                                             </div>
                                                                             @if ($item->is_commentable == 'Ya')
-                                                                                <div class="input-k-bottom">
-                                                                                    <input type="hidden" name="id_item[]"
-                                                                                        value="{{ $item->id }}">
-                                                                                    <input type="text" class="form-input komentar"
-                                                                                        name="komentar_penyelia[]"
-                                                                                        placeholder="Masukkan Komentar">
-                                                                                </div>
+                                                                                @if (Auth::user()->role != 'Pincab')
+                                                                                    <div class="input-k-bottom">
+                                                                                        <input type="hidden" name="id_item[]"
+                                                                                            value="{{ $item->id }}">
+                                                                                        <input type="text" class="form-input komentar"
+                                                                                            name="komentar_penyelia[]"
+                                                                                            placeholder="Masukkan Komentar">
+                                                                                    </div>
+                                                                                @endif
                                                                             @endif
                                                                         @endif
                                                                 </div>
@@ -1000,19 +1012,21 @@
                                                                                         $skorInput3 = $getSkorPenyelia?->skor_penyelia ? $getSkorPenyelia?->skor_penyelia : $itemJawabanLevelTiga->skor;
                                                                                     @endphp
                                                                                     @if ($itemTiga->is_commentable == 'Ya')
-                                                                                        <input type="text" class="form-input komentar"
-                                                                                            name="komentar_penyelia[]"
-                                                                                            placeholder="Masukkan Komentar"
-                                                                                            value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
-                                                                                        <div class="input-skor">
-                                                                                            <input type="number" class="form-input"
-                                                                                                min="0"
-                                                                                                max="4"
-                                                                                                placeholder="" name="skor_penyelia[]"
-                                                                                                onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
-                                                                                                {{ $itemTiga->status_skor == 0 ? 'readonly' : '' }}
-                                                                                                value="{{ $skorInput3 || $skorInput3 > 0 ? $skorInput3 : null }}">
-                                                                                        </div>
+                                                                                        @if (Auth::user()->role != 'Pincab')
+                                                                                            <input type="text" class="form-input komentar"
+                                                                                                name="komentar_penyelia[]"
+                                                                                                placeholder="Masukkan Komentar"
+                                                                                                value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
+                                                                                            <div class="input-skor">
+                                                                                                <input type="number" class="form-input"
+                                                                                                    min="0"
+                                                                                                    max="4"
+                                                                                                    placeholder="" name="skor_penyelia[]"
+                                                                                                    onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
+                                                                                                    {{ $itemTiga->status_skor == 0 ? 'readonly' : '' }}
+                                                                                                    value="{{ $skorInput3 || $skorInput3 > 0 ? $skorInput3 : null }}">
+                                                                                            </div>
+                                                                                        @endif
                                                                                     @else
                                                                                         <input type="hidden" name="komentar_penyelia[]"
                                                                                             value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
@@ -1086,14 +1100,16 @@
                                                                                         Rp.{{ number_format((int) $itemTextEmpat->opsi_text, 2, ',', '.') }}
                                                                                     </div>
                                                                                     @if ($itemTextEmpat->is_commentable == 'Ya')
-                                                                                        <div class="input-k-bottom">
-                                                                                            <input type="hidden" name="id_item[]"
-                                                                                                value="{{ $item->id }}">
-                                                                                            <input type="text"
-                                                                                                class="form-input komentar"
-                                                                                                name="komentar_penyelia[]"
-                                                                                                placeholder="Masukkan Komentar">
-                                                                                        </div>
+                                                                                        @if (Auth::user()->role != 'Pincab')
+                                                                                            <div class="input-k-bottom">
+                                                                                                <input type="hidden" name="id_item[]"
+                                                                                                    value="{{ $item->id }}">
+                                                                                                <input type="text"
+                                                                                                    class="form-input komentar"
+                                                                                                    name="komentar_penyelia[]"
+                                                                                                    placeholder="Masukkan Komentar">
+                                                                                            </div>
+                                                                                        @endif
                                                                                     @endif
                                                                                 @else
                                                                                     <div class="jawaban-responsive border-b p-2 font-medium">
@@ -1106,14 +1122,16 @@
                                                                                             @endif
                                                                                     </div>
                                                                                     @if ($itemTextEmpat->is_commentable == 'Ya')
-                                                                                        <div class="input-k-bottom">
-                                                                                            <input type="hidden" name="id_item[]"
-                                                                                                value="{{ $item->id }}">
-                                                                                            <input type="text"
-                                                                                                class="form-input komentar"
-                                                                                                name="komentar_penyelia[]"
-                                                                                                placeholder="Masukkan Komentar">
-                                                                                        </div>
+                                                                                        @if (Auth::user()->role != 'Pincab')
+                                                                                            <div class="input-k-bottom">
+                                                                                                <input type="hidden" name="id_item[]"
+                                                                                                    value="{{ $item->id }}">
+                                                                                                <input type="text"
+                                                                                                    class="form-input komentar"
+                                                                                                    name="komentar_penyelia[]"
+                                                                                                    placeholder="Masukkan Komentar">
+                                                                                            </div>
+                                                                                        @endif
                                                                                     @endif
                                                                                 @endif
 
@@ -1199,23 +1217,25 @@
                                                                                     <input type="hidden" name="id_option[]"
                                                                                         value="{{ $itemJawabanLevelEmpat->id }}">
                                                                                     @if ($itemEmpat->is_commentable == 'Ya')
-                                                                                        <input type="text" class="form-input komentar"
-                                                                                            name="komentar_penyelia[]"
-                                                                                            placeholder="Masukkan Komentar"
-                                                                                            value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
-                                                                                        <div class="input-skor">
-                                                                                            @php
-                                                                                                $skorInput4 = null;
-                                                                                                $skorInput4 = $getSkorPenyelia?->skor_penyelia ? $getSkorPenyelia?->skor_penyelia : $itemJawabanLevelEmpat->skor;
-                                                                                            @endphp
-                                                                                            <input type="number" class="form-input"
-                                                                                                placeholder="" name="skor_penyelia[]"
-                                                                                                min="0"
-                                                                                                max="4"
-                                                                                                onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
-                                                                                                {{ $itemEmpat->status_skor == 0 ? 'readonly' : '' }}
-                                                                                                value="{{ $skorInput4 || $skorInput4 > 0 ? $skorInput4 : null }}">
-                                                                                        </div>
+                                                                                    @if (Auth::user()->role != 'Pincab')
+                                                                                            <input type="text" class="form-input komentar"
+                                                                                                name="komentar_penyelia[]"
+                                                                                                placeholder="Masukkan Komentar"
+                                                                                                value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
+                                                                                            <div class="input-skor">
+                                                                                                @php
+                                                                                                    $skorInput4 = null;
+                                                                                                    $skorInput4 = $getSkorPenyelia?->skor_penyelia ? $getSkorPenyelia?->skor_penyelia : $itemJawabanLevelEmpat->skor;
+                                                                                                @endphp
+                                                                                                <input type="number" class="form-input"
+                                                                                                    placeholder="" name="skor_penyelia[]"
+                                                                                                    min="0"
+                                                                                                    max="4"
+                                                                                                    onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
+                                                                                                    {{ $itemEmpat->status_skor == 0 ? 'readonly' : '' }}
+                                                                                                    value="{{ $skorInput4 || $skorInput4 > 0 ? $skorInput4 : null }}">
+                                                                                            </div>
+                                                                                        @endif
                                                                                     @endif
                                                                                 </div>
                                                                             </div>
@@ -1255,16 +1275,16 @@
                                         <hr>
                                         <div class="form-group-1">
                                             <label for="">Pendapat dan Usulan Staf Kredit</label>
-                                            <p>{{ $pendapatStafPerAspek->pendapat_per_aspek }}</p>
+                                            <p class="border-b p-2">{{ $pendapatStafPerAspek->pendapat_per_aspek }}</p>
                                         </div>
                                         <div class="form-group-1">
                                             <label for="">Pendapat dan Usulan Penyelia Kredit</label>
-                                            <p>{{ $pendapatPenyeliaPerAspek?->pendapat_per_aspek }}</p>
+                                            <p class="border-b p-2">{{ $pendapatPenyeliaPerAspek?->pendapat_per_aspek }}</p>
                                         </div>
                                         @if ($dataUmumNasabah->id_pbo)
                                             <div class="form-group-1">
                                                 <label for="">Pendapat dan Usulan PBO</label>
-                                                <p>{{ $pendapatDanUsulanPBO->komentar_pbo }}</p>
+                                                <p class="border-b p-2">{{ $pendapatDanUsulanPBO->komentar_pbo }}</p>
                                             </div>
                                         @endif
                                     @elseif (Auth::user()->role == 'PBO')
@@ -1289,12 +1309,33 @@
                                         <hr>
                                         <div class="form-group-1">
                                             <label for="">Pendapat dan Usulan Staf Kredit</label>
-                                            <p>{{ $pendapatStafPerAspek->pendapat_per_aspek }}</p>
+                                            <p class="border-b p-2">{{ $pendapatStafPerAspek->pendapat_per_aspek }}</p>
                                         </div>
                                         <div class="form-group-1">
                                             <label for="">Pendapat dan Usulan Penyelia Kredit</label>
-                                            <p>{{ $pendapatPenyeliaPerAspek->pendapat_per_aspek }}</p>
+                                            <p class="border-b p-2">{{ $pendapatPenyeliaPerAspek->pendapat_per_aspek }}</p>
                                         </div>
+                                    @elseif (Auth::user()->role == 'Pincab')
+                                        @php
+                                            $getPendapatPerAspek = \App\Models\PendapatPerAspek::where('id_pengajuan', $dataUmum->id)
+                                                ->where('id_aspek', $value->id)
+                                                ->where('id_pbp', Auth::user()->id)
+                                                ->first();
+                                        @endphp
+                                        <div class="form-group-1">
+                                            <label for="">Pendapat dan Usulan Staf Kredit</label>
+                                            <p class="border-b p-2">{{ $pendapatStafPerAspek->pendapat_per_aspek }}</p>
+                                        </div>
+                                        <div class="form-group-1">
+                                            <label for="">Pendapat dan Usulan Penyelia Kredit</label>
+                                            <p class="border-b p-2">{{ $pendapatPenyeliaPerAspek?->pendapat_per_aspek }}</p>
+                                        </div>
+                                        @if ($dataUmumNasabah->id_pbo)
+                                            <div class="form-group-1">
+                                                <label for="">Pendapat dan Usulan PBO</label>
+                                                <p class="border-b p-2">{{ $pendapatDanUsulanPBO->komentar_pbo }}</p>
+                                            </div>
+                                        @endif
                                     @else
                                         @php
                                             $getPendapatPerAspek = \App\Models\PendapatPerAspek::where('id_pengajuan', $dataUmum->id)
@@ -1316,7 +1357,7 @@
                                         <hr>
                                         <div class="form-group-1">
                                             <label for="">Pendapat dan Usulan Staf Kredit</label>
-                                            <p>{{ $pendapatStafPerAspek?->pendapat_per_aspek }}</p>
+                                            <p class="border-b p-2">{{ $pendapatStafPerAspek?->pendapat_per_aspek }}</p>
                                         </div>
                                     @endif
                                     <div class="flex justify-between">
@@ -1355,23 +1396,14 @@
                             </div>
                             <!-- pendapat-dan-usulan -->
                             <div class="p-5 space-y-5">
-                                <div class="form-group-1">
-                                    <div class="input-box">
-                                        <label for="">Pendapat dan Usulan</label>
-                                        <textarea name="pendapat" class="form-textarea"
-                                            placeholder="Pendapat dan Usulan" id="" required></textarea>
-                                    </div>
-                                </div>
                                 @if (Auth::user()->role == 'Penyelia Kredit')
                                     <div class="form-wizard" data-index='{{ $dataUmumNasabah->skema_kredit == 'KKB' ? count($dataAspek) + $dataIndex + 1 : count($dataAspek) + $dataIndex }}' data-done='true'>
                                         <div class="row">
                                             <div class="form-group-1">
                                                 <label for="">Pendapat dan Usulan Staf Kredit</label>
-                                                <br>
-                                                <span>
+                                                <span class="border-b p-2">
                                                     {{ $pendapatDanUsulanStaf?->komentar_staff }}
                                                 </span>
-                                                <hr>
                                             </div>
                                             <div class="form-group-1">
                                                 <label for="">Pendapat dan Usulan Penyelia</label>
@@ -1383,7 +1415,6 @@
                                                         {{ $message }}
                                                     </div>
                                                 @enderror
-                                                <hr>
                                             </div>
                                         </div>
                                     </div>
@@ -1392,19 +1423,16 @@
                                         <div class="row">
                                             <div class="form-group-1">
                                                 <label for="">Pendapat dan Usulan Staf Kredit</label>
-                                                <br>
-                                                <span>
+                                                <span class="border-b p-2">
                                                     {{ $pendapatDanUsulanStaf?->komentar_staff }}
                                                 </span>
                                                 <hr>
                                             </div>
                                             <div class="form-group-1">
                                                 <label for="">Pendapat dan Usulan Penyelia Kredit</label>
-                                                <br>
-                                                <span>
+                                                <span class="border-b p-2">
                                                     {{ $pendapatDanUsulanPenyelia?->komentar_penyelia }}
                                                 </span>
-                                                <hr>
                                             </div>
                                             <div class="form-group-1">
                                                 <label for="">Pendapat dan Usulan PBO</label>
@@ -1416,36 +1444,29 @@
                                                         {{ $message }}
                                                     </div>
                                                 @enderror
-                                                <hr>
                                             </div>
                                         </div>
                                     </div>
-                                @else
+                                @elseif (Auth::user()->role == 'PBP')
                                     <div class="form-wizard" data-index='{{ $dataUmumNasabah->skema_kredit == 'KKB' ? count($dataAspek) + $dataIndex + 1 : count($dataAspek) + $dataIndex }}' data-done='true'>
                                         <div class="form-group-1">
                                             <label for="">Pendapat dan Usulan Staf Kredit</label>
-                                            <br>
-                                            <span>
+                                            <span class="border-b p-2">
                                                 {{ $pendapatDanUsulanStaf?->komentar_staff }}
                                             </span>
-                                            <hr>
                                         </div>
                                         <div class="form-group-1">
                                             <label for="">Pendapat dan Usulan Penyelia Kredit</label>
-                                            <br>
-                                            <span>
+                                            <span class="border-b p-2">
                                                 {{ $pendapatDanUsulanPenyelia?->komentar_penyelia }}
                                             </span>
-                                            <hr>
                                         </div>
                                         @if ($dataUmumNasabah->id_pbo)
                                             <div class="form-group-1">
                                                 <label for="">Pendapat dan Usulan PBO</label>
-                                                <br>
-                                                <span>
+                                                <span class="border-b p-2">
                                                     {{ $pendapatDanUsulanPBO?->komentar_pbo }}
                                                 </span>
-                                                <hr>
                                             </div>
                                         @endif
                                         <div class="form-group-1">
@@ -1458,7 +1479,49 @@
                                                     {{ $message }}
                                                 </div>
                                             @enderror
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="form-wizard" data-index='{{ $dataUmumNasabah->skema_kredit == 'KKB' ? count($dataAspek) + $dataIndex + 1 : count($dataAspek) + $dataIndex }}' data-done='true'>
+                                        <div class="form-group-1">
+                                            <label for="">Pendapat dan Usulan Staf Kredit</label>
+                                            <span class="border-b p-2">
+                                                {{ $pendapatDanUsulanStaf?->komentar_staff }}
+                                            </span>
                                             <hr>
+                                        </div>
+                                        <div class="form-group-1">
+                                            <label for="">Pendapat dan Usulan Penyelia Kredit</label>
+                                            <span class="border-b p-2">
+                                                {{ $pendapatDanUsulanPenyelia?->komentar_penyelia }}
+                                            </span>
+                                        </div>
+                                        @if ($dataUmumNasabah->id_pbo)
+                                            <div class="form-group-1">
+                                                <label for="">Pendapat dan Usulan PBO</label>
+                                                <span class="border-b p-2">
+                                                    {{ $pendapatDanUsulanPBO?->komentar_pbo }}
+                                                </span>
+                                            </div>
+                                        @endif
+                                        @if ($dataUmumNasabah->id_pbp)
+                                            <div class="form-group-1">
+                                                <label for="">Pendapat dan Usulan PBP</label>
+                                                <span class="border-b p-2">
+                                                    {{ $pendapatDanUsulanPBP?->komentar_pbp }}
+                                                </span>
+                                            </div>
+                                        @endif
+                                        <div class="form-group-1 pt-4">
+                                            <label for="">Pendapat dan Usulan Pincab</label>
+                                            <textarea name="komentar_pincab_keseluruhan"
+                                                class="form-input @error('komentar_pincab_keseluruhan') is-invalid @enderror" id="komentar_pincab_keseluruhan" cols="30"
+                                                rows="4" placeholder="Pendapat dan Usulan Pincab" >{{ isset($pendapatDanUsulanPincab->komentar_pincab) ? $pendapatDanUsulanPincab->komentar_pincab : '' }}</textarea>
+                                            @error('komentar_pincab_keseluruhan')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
                                         </div>
                                     </div>
                                 @endif

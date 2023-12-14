@@ -24,7 +24,7 @@
                     $('#id_pengajuan').val(id)
 
                     if (tipe == 'penyelia kredit') {
-                        var url = "{{ route('dagulir.check.penyeliakredit') }}";
+                        var url = "{{ route('dagulir.pengajuan.check.penyeliakredit') }}";
                         $('#form-pilih-penyelia').attr("action", url);
                         swal.fire({
                             title: 'Tindak Lanjut Penyelia',

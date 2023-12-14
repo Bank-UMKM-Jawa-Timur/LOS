@@ -5,7 +5,7 @@
 @include('dagulir.modal.filter')
 
 @endsection
-@include('dagulir.modal.pilih-penyelia')
+@include('dagulir.pengajuan-kredit.modal.pilih-penyelia')
 @include('dagulir.modal.approval')
 @include('dagulir.modal.approvalSipde ')
 
@@ -240,6 +240,12 @@
                                             </li>
                                         @endif
                                         @if ((Auth()->user()->role == 'Penyelia Kredit'))
+                                            @if ($item->pengajuan->posisi == 'Proses Input Data')
+                                                <li class="item-tb-dropdown">
+                                                    <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
+                                                        class="cursor-pointer">Review</a>
+                                                </li>
+                                            @endif
                                             @if ($item->pengajuan->posisi == 'Review Penyelia' && $item->pengajuan->tanggal_review_penyelia)
                                                 <li class="item-tb-dropdown">
                                                     <a href="{{ route('dagulir.check.pincab', $item->pengajuan->id) }}"
@@ -263,22 +269,12 @@
                                                         class="dropdown-item">Lanjutkan Ke Pincab</a>
                                                 </li>
                                             @endif
-                                        @endif
-                                        @if ((Auth()->user()->role == 'Penyelia Kredit') && $item->pengajuan->posisi == 'Review Penyelia')
-                                            <li class="item-tb-dropdown">
-                                                <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
-                                                    class="cursor-pointer">Review</a>
-                                            </li>
-                                        @endif
-                                        @if ((Auth()->user()->role == 'Pincab') && ($item->pengajuan->id_pincab && !$item->pengajuan->tanggal_review_pincab))
-                                            <li class="item-tb-dropdown">
-                                                <a href="{{ route('dagulir.detailjawaban_pincab', $item->pengajuan->id) }}"
-                                                    class="cursor-pointer">Review</a>
-                                            </li>
-                                        @endif
-                                        @if ((Auth()->user()->role == 'Pincab') &&
-                                                $item->pengajuan->posisi == 'Pincab' &&
-                                                ($item->pengajuan->id_pincab && $item->pengajuan->tanggal_review_pincab))
+                                        @elseif ((Auth()->user()->role == 'Pincab'))
+                                            @if ($item->pengajuan->posisi == 'Pincab')
+                                                <li class="item-tb-dropdown">
+                                                    <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
+                                                        class="cursor-pointer">Review</a>
+                                                </li>
                                                 <li class="item-tb-dropdown">
                                                     <a href="#" data-id="{{$item->pengajuan->id}}"
                                                         data-acc-url="{{ route('dagulir.acc_pincab',$item->pengajuan->id) }}"
@@ -286,6 +282,7 @@
                                                         class="cursor-pointer approval">Approval</a>
 
                                                 </li>
+                                            @endif
                                         @endif
                                         @if ((Auth()->user()->role == 'Pincab') &&
                                             $item->pengajuan->posisi == 'Selesai' &&
