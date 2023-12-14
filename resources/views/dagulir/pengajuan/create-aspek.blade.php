@@ -29,7 +29,7 @@
               <div class="input-box">
                 <label for="">Ijin Usaha </label>
                 <select
-                  name=""
+                  name="ijin_usaha"
                   class="form-select"
                   id="ijin-usaha"
                 >
