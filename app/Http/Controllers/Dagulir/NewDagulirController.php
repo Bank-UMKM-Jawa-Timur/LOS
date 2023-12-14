@@ -509,9 +509,11 @@ class NewDagulirController extends Controller
                     array_push($arrTes, $data);
                     if (is_numeric($data[0])) {
                         if ($data[0] > 0) {
-                            if ($data[1] == 71 || $data[1] == 186) {
-                                if ($data[0] == '1') {
-                                    $statusSlik = true;
+                            if (array_key_exists(1, $data)) {
+                                if ($data[1] == 71 || $data[1] == 186) {
+                                    if ($data[0] == '1') {
+                                        $statusSlik = true;
+                                    }
                                 }
                             }
                             $totalScore += $data[0];
@@ -548,17 +550,21 @@ class NewDagulirController extends Controller
                     $data = getDataLevel($mergedDataLevel[$i]);
                     if (is_numeric($data[0])) {
                         if ($data[0] > 0) {
-                            JawabanPengajuanModel::insert([
-                                'id_pengajuan' => $id_pengajuan,
-                                'id_jawaban' => getDataLevel($mergedDataLevel[$i])[1],
-                                'skor' => getDataLevel($mergedDataLevel[$i])[0],
-                            ]);
+                            if (array_key_exists(1, $data)) {
+                                JawabanPengajuanModel::insert([
+                                    'id_pengajuan' => $id_pengajuan,
+                                    'id_jawaban' => $data[1],
+                                    'skor' => $data[0],
+                                ]);
+                            }
                         }
                     } else {
-                        JawabanPengajuanModel::insert([
-                            'id_pengajuan' => $id_pengajuan,
-                            'id_jawaban' => getDataLevel($mergedDataLevel[$i])[1]
-                        ]);
+                        if (array_key_exists(1, $data)) {
+                            JawabanPengajuanModel::insert([
+                                'id_pengajuan' => $id_pengajuan,
+                                'id_jawaban' => $data[1]
+                            ]);
+                        }
                     }
                 }
             }
