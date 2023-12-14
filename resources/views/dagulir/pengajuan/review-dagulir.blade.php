@@ -35,7 +35,7 @@
                 <label for="">Email</label>
                 <input
                 readonly
-                type="text"
+                type="hidden"
                 class="form-input"
                 placeholder="Masukan Email"
                 name="email"
@@ -119,18 +119,23 @@
                 <div class="p-2 bg-white border-b">
                     <span>{{ $dagulir->email ? $dagulir->email : '-' }}</span>
                 </div>
+                <br>
                 <label for="ktp_nasabah" id="foto-nasabah">Foto Nasabah</label>
-                <img src="{{ asset('..') . '/' . $pengajuan->id . '/' . $data->foto_nasabah }}" alt="">
+                @if($data->foto_nasabah)
+                    <img src="{{ asset('..') . '/' . $pengajuan->id . '/' . $data->foto_nasabah }}" alt="">
+                @else
+                    <div class="border-b p-2 w-full ">Tidak ada foto nasabah</div>
+                @endif
             </div>
             <div class="input-box">
                 <label for="">Status Pernikahan</label>
-                <select disabled name="status" id="status_nasabah" class="form-select" disabled>
+                {{-- <select disabled name="status" id="status_nasabah" class="form-select" disabled>
                     <option value="0" {{ $data->status_pernikahan == '0' ? 'selected' : '' }}>Pilih Status</option>
                     <option value="1" {{ $data->status_pernikahan == '1' ? 'selected' : '' }}>Belum Menikah</option>
                     <option value="2" {{ $data->status_pernikahan == '2' ? 'selected' : '' }}>Menikah</option>
                     <option value="3" {{ $data->status_pernikahan == '3' ? 'selected' : '' }}>Duda</option>
                     <option value="4" {{ $data->status_pernikahan == '4' ? 'selected' : '' }}>Janda</option>
-                </select>
+                </select> --}}
                 <input type="hidden" name="status" id="status_nasabah" value="{{$dagulir->status_pernikahan}}">
                 <div class="p-2 bg-white border-b">
                     <span>{{ $dagulir->status_pernikahan  ? $dagulir->status_pernikahan : '-' }}</span>
@@ -154,7 +159,11 @@
             <div class="input-box" id="ktp-nasabah">
                 <label for="ktp_nasabah" id="label-ktp-nasabah">Foto KTP Nasabah</label>
                 <div class="flex gap-4">
-                    <img src="{{ asset('..') . '/' . $pengajuan->id . '/' . $data->foto_ktp }}" alt="">
+                    @if($data->foto_ktp)
+                        <img src="{{ asset('..') . '/' . $pengajuan->id . '/' . $data->foto_ktp }}" alt="">
+                    @else
+                    <div class="border-b p-2 w-full ">Tidak ada foto KTP nasabah</div>
+                    @endif
                 </div>
             </div>
             <div class="input-box {{ $data->status_pernikahan == '2' ? '' : 'hidden' }}" id="nik_pasangan">
@@ -180,7 +189,7 @@
         <div class="form-group-2">
             <div class="input-box">
                 <label for="">Slik</label>
-                <select disabled class="form-select" name="id_slik">
+                <select disabled class="border-b p-2 w-full appearance-none" name="id_slik">
                     <option value="">Pilih Slik</option>
                     @foreach ($itemSlik->option as $itemJawaban)
                         <option value="{{ $itemJawaban->id }}" {{ $itemJawaban->id == $data->id_slik  ? 'selected' : ''}}>{{ $itemJawaban->option }}</option>
@@ -194,7 +203,8 @@
             </div>
             <div class="input-box">
                 <label for="">File Slik</label>
-                @php
+                @if($data->file_slik)
+                    @php
                     $file_parts = pathinfo(asset('..') . '/' . $dagulir->id . '/' . $data->id_slik.'/'.$data->file_slik);
                 @endphp
                 @if (array_key_exists('extension', $file_parts))
@@ -206,6 +216,9 @@
                         <img src="{{ asset('..') . '/upload/' . $dagulir->id . '/' . $data->id_slik.'/'.$data->file_slik }}"
                         alt="" width="800px">
                     @endif
+                @endif
+                @else
+                    <div class="border-b p-2 w-full ">Tidak ada file Slik</div>
                 @endif
             </div>
         </div>
@@ -353,10 +366,10 @@
             </div>
             <div class="input-box">
                 <label for="">Jangka Waktu</label>
-                <div class="flex items-center">
+                <div class="hidden items-center">
                     <div class="flex-1">
                         <input
-                            type="number"
+                            type="hidden"
                             class="w-full form-input"
                             placeholder="Masukan Jangka Waktu"
                             name="jangka_waktu"
@@ -364,13 +377,13 @@
                             aria-describedby="basic-addon2"
                             value="{{ $data->jangka_waktu }}"
                         />
-                        <div class="p-2 bg-white border-b">
-                            <span>{{ $dagulir->jangka_waktu ? $dagulir->jangka_waktu : '-' }}</span>
-                        </div>
                     </div>
                     <div class="flex-shrink-0 mt-2.5rem">
                         <span class="form-input bg-gray-100">Bulan</span>
                     </div>
+                </div>
+                <div class="p-2 bg-white border-b">
+                    <span>{{ $dagulir->jangka_waktu ? $dagulir->jangka_waktu : '-' }} Bulan</span>
                 </div>
                 {{-- <input
                     type="number"
@@ -415,23 +428,21 @@
                 </div>
             </div>
         </div>
-
-        <div class="form-group-2" id="form_tipe_pengajuan">
+  --}}
+        {{-- <div class="form-group-2" id="form_tipe_pengajuan"> --}}
             <div class="input-box">
                 <label for="">Tipe Pengajuan</label>
-                {{-- <select disabled name="tipe_pengajuan" id="tipe" class="form-select-read-only">
+                <br>
+                <select disabled name="tipe_pengajuan" id="tipe" class="border-b w-full p-2 appearance-none">
                     <option value="0">Tipe Pengajuan</option>
                     @foreach ($tipe as $key => $value)
-                    <option value="{{ $key }}" {{  $key  == $data->tipe ? 'selected' : '' }}>{{ $value }}</option>
+                        <option value="{{ $key }}" {{  $key  == $data->tipe ? 'selected' : '' }}>{{ $value }}</option>
                     @endforeach
-                </select> --}}
-                <div class="p-2 bg-white border-b">
-                    <span>{{ $dagulir->tipe ? $dagulir->tipe : '-' }}</span>
-                </div>
+                </select>
             </div>
             @if ($tipe != 2)
                 <div id="nama_pj" class="input-box hidden">
-                <label for="" id="label_pj"></label>
+                <label for="" id="label_pj">Nama</label>
                     <input
                         type="hidden"
                         class="form-input"
@@ -497,7 +508,7 @@
                     value="{{ date('Y-m-d',strtotime($dagulir->tanggal)) }}"
                     />
                     <br>
-                    <div class="p-2 bg-white border-b">
+                    <div class="p-2 bg-white border-b w-full">
                         <span>{{ date('Y-m-d',strtotime($dagulir->tanggal)) ? date('Y-m-d',strtotime($dagulir->tanggal)) : '-' }}</span>
                     </div>
                 </div>
@@ -511,18 +522,19 @@
                 </div>
             </div>
         </div>
-        <div class="flex justify-between">
-            <button type="button"
-            class="px-5 py-2 border rounded bg-white text-gray-500"
-            >
-            Kembali
-            </button>
-            <button type="button"
-            class="px-5 py-2 next-tab border rounded bg-theme-primary text-white"
-            >
-            Selanjutnya
-            </button>
-        </div>
+
+    </div>
+    <div class="flex justify-between">
+        <button type="button"
+        class="px-5 py-2 border rounded bg-white text-gray-500"
+        >
+        Kembali
+        </button>
+        <button type="button"
+        class="px-5 py-2 next-tab border rounded bg-theme-primary text-white"
+        >
+        Selanjutnya
+        </button>
     </div>
 </div>
 

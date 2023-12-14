@@ -12,7 +12,7 @@
                     Analisa Kredit
                 </p>
                 <h2 class="font-bold tracking-tighter text-2xl text-theme-text">
-                    Analisa Kredit TES
+                    Analisa Kredit 
                 </h2>
             </div>
             <div class="layout lg:flex grid grid-cols-1 lg:mt-0 justify-between w-full gap-5">
@@ -38,9 +38,9 @@
                         </a>
                         
                 </div>
-                    <button type="button" class="btn btn-sm btn-primary mb-2 ml-2" data-toggle="modal" data-target="#modal-filter">
+                    {{-- <button type="button" class="btn btn-sm btn-primary mb-2 ml-2" data-toggle="modal" data-target="#modal-filter">
                         <i class="fa fa-filter"></i> Filter
-                    </button>
+                    </button> --}}
                 {{-- <div class="right-button gap-2 flex lg:justify-start">
                     <a data-modal-id="modal-filter"
                         class="open-modal px-7 py-2 flex font-poppins justify-center items-center rounded font-semibold bg-white border text-theme-secondary">

@@ -503,7 +503,7 @@
     var token = "gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFVaNj";
 
     $(document).ready(function () {
-        console.log("TOSSS");
+        var cbgValue = '{{ Request()->query('cbg') }}';
         $.ajax({
             type: "GET",
             url: "/api/v1/get-cabang", 
@@ -513,7 +513,7 @@
             success: function (response) {
                 $.map(response.data, function (item, i) {
                     $('#cabang').append(
-                        `<option value="${item.kode_cabang}">${item.cabang}</option>`
+                        `<option value="${item.kode_cabang}" ${cbgValue == item.kode_cabang ? 'selected' : ''}>${item.cabang}</option>`
                     );
                 });
             }
