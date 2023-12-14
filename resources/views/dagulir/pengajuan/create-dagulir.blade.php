@@ -345,6 +345,17 @@
                     ></textarea>
                 </div>
             </div>
+            <div class="form-group-1">
+                <div class="input-box">
+                    <label for="">Hasil Verifikasi</label>
+                    <textarea
+                        name="hasil_verifikasi"
+                        class="form-textarea"
+                        placeholder="Hasil Verifikasi Karakter Umum"
+                        id=""
+                    ></textarea>
+                </div>
+            </div>
             <div class="flex justify-between">
                 <button type="button"
                 class="px-5 py-2 border rounded bg-white text-gray-500"
