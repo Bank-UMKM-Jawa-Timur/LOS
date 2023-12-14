@@ -1,3 +1,4 @@
+@include('components.new.modal.loading')
 @extends('layouts.tailwind-template')
 
 @php
@@ -106,7 +107,7 @@ $dataIndex = match ($skema) {
                                                     </div>
                                                 </div>
                                             </div>
-                                
+
                                             <div class="form-group-2">
                                                 <div class="form-group" id="nib">
                                                     <label for="">NIB</label>
@@ -115,7 +116,7 @@ $dataIndex = match ($skema) {
                                                     <input type="text" maxlength="255" name="informasi[77]" id="nib_text"
                                                         placeholder="Masukkan informasi" class="form-input" value="">
                                                 </div>
-                                
+
                                                 <div class="form-group" id="docNIB">
                                                     <label for="">{{ $itemNIB->nama }}</label>
                                                     <input type="hidden" name="id_item_file[{{ $itemNIB->id }}]" value="{{ $itemNIB->id }}"
@@ -132,7 +133,7 @@ $dataIndex = match ($skema) {
                                                     @endif
                                                     <span class="filename" style="display: inline;"></span>
                                                 </div>
-                                
+
                                                 <div class="form-group" id="surat_keterangan_usaha">
                                                     <label for="">Surat Keterangan Usaha</label>
                                                     <input type="hidden" name="id_level[78]" value="78" id="surat_keterangan_usaha_id">
@@ -141,7 +142,7 @@ $dataIndex = match ($skema) {
                                                     <input type="text" maxlength="255" name="informasi[78]" id="surat_keterangan_usaha_text"
                                                         placeholder="Masukkan informasi" class="form-input">
                                                 </div>
-                                
+
                                                 <div class="form-group" id="docSKU">
                                                     <label for="">{{ $itemSKU->nama }}</label>
                                                     <input type="hidden" name="id_item_file[{{ $itemSKU->id }}]" value="{{ $itemSKU->id }}"
@@ -168,7 +169,7 @@ $dataIndex = match ($skema) {
                                                     <input type="text" maxlength="255" name="informasi[79]" id="npwp_text"
                                                         placeholder="Masukkan informasi" class="form-input" value="">
                                                 </div>
-                                
+
                                                 <div class="form-group" id="docNPWP">
                                                     <label for="">{{ $itemNPWP->nama }}</label>
                                                     <input type="hidden" name="id_item_file[{{ $itemNPWP->id }}]" value="{{ $itemNPWP->id }}"
@@ -295,7 +296,7 @@ $dataIndex = match ($skema) {
                                                         class="form-input" placeholder="Masukkan informasi {{ $item->nama }}"></textarea>
                                                 </div>
                                             @endif
-                                
+
                                             @php
                                                 $dataJawaban = \App\Models\OptionModel::where('option', '!=', '-')
                                                     ->where('id_item', $item->id)
@@ -308,7 +309,7 @@ $dataIndex = match ($skema) {
                                                     ->where('id_parent', $item->id)
                                                     ->get();
                                             @endphp
-                                
+
                                             @foreach ($dataOption as $itemOption)
                                                 @if ($itemOption->option == '-')
                                                     <div class="form-group-1">
@@ -322,12 +323,12 @@ $dataIndex = match ($skema) {
                                                     </div>
                                                 @endif
                                             @endforeach
-                                
+
                                             @if (count($dataJawaban) != 0)
                                                 <div
                                                     class="{{ $idLevelDua == 'persentase_kebutuhan_kredit_opsi' || $idLevelDua == 'repayment_capacity_opsi' ? '' : 'form-group' }}">
                                                     <label for="" id="{{ $idLevelDua . '_label' }}">{{ $item->nama }}</label>
-                                
+
                                                     <select name="dataLevelDua[{{ $item->id }}]" id="{{ $idLevelDua }}"
                                                         class="form-select cek-sub-column" data-id_item={{ $item->id }}>
                                                         <option value=""> --Pilih Opsi-- </option>
@@ -338,11 +339,11 @@ $dataIndex = match ($skema) {
                                                         @endforeach
                                                     </select>
                                                     <div id="item{{ $item->id }}">
-                                
+
                                                     </div>
                                                 </div>
                                             @endif
-                                
+
                                             @foreach ($dataLevelTiga as $keyTiga => $itemTiga)
                                                 @php
                                                     $idLevelTiga = str_replace(' ', '_', strtolower($itemTiga->nama));
@@ -363,7 +364,7 @@ $dataIndex = match ($skema) {
                                                     </div>
                                                     <div class="form-group" id="select_kategori_jaminan_tambahan"></div>
                                                 @elseif ($itemTiga->nama == 'Bukti Pemilikan Jaminan Utama')
-                                
+
                                                 @elseif ($itemTiga->nama == 'Bukti Pemilikan Jaminan Tambahan')
                                                     <div class="form-group-1" id="jaminan_tambahan">
                                                         <div>
@@ -375,7 +376,7 @@ $dataIndex = match ($skema) {
                                                         </div>
                                                     </div>
                                                     <div id="bukti_pemilikan_jaminan_tambahan" class="form-group-1 row">
-                                
+
                                                     </div>
                                                 @else
                                                     @if ($itemTiga->opsi_jawaban == 'input text')
@@ -400,7 +401,7 @@ $dataIndex = match ($skema) {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        
+
                                                     @elseif ($itemTiga->opsi_jawaban == 'number')
                                                         <div class="form-group">
                                                             <div class="input-box">
@@ -488,7 +489,7 @@ $dataIndex = match ($skema) {
                                                                 class="form-input" placeholder="Masukkan informasi {{ $itemTiga->nama }}"></textarea>
                                                         </div>
                                                     @endif
-                                
+
                                                     @php
                                                         // check jawaban level tiga
                                                         $dataJawabanLevelTiga = \App\Models\OptionModel::where('option', '!=', '-')
@@ -502,7 +503,7 @@ $dataIndex = match ($skema) {
                                                             ->where('id_parent', $itemTiga->id)
                                                             ->get();
                                                     @endphp
-                                
+
                                                     @foreach ($dataOptionTiga as $itemOptionTiga)
                                                         @if ($itemOptionTiga->option == '-')
                                                             <div class="form-group-1">
@@ -529,7 +530,7 @@ $dataIndex = match ($skema) {
                                                                 class="{{ $idLevelTiga == 'ratio_tenor_asuransi_opsi' || $idLevelTiga == 'ratio_coverage_opsi' ? '' : 'form-group' }}">
                                                                 <label for=""
                                                                     id="{{ $idLevelTiga . '_label' }}">{{ $itemTiga->nama }}</label>
-                                
+
                                                                 <select name="dataLevelTiga[{{ $itemTiga->id }}]" id="{{ $idLevelTiga }}"
                                                                     class="form-input cek-sub-column" data-id_item={{ $itemTiga->id }}>
                                                                     <option value=""> --Pilih Opsi-- </option>
@@ -540,17 +541,17 @@ $dataIndex = match ($skema) {
                                                                     @endforeach
                                                                 </select>
                                                                 <div id="item{{ $itemTiga->id }}">
-                                
+
                                                                 </div>
                                                             </div>
                                                         @endif
                                                     @endif
-                                
+
                                                     @foreach ($dataLevelEmpat as $keyEmpat => $itemEmpat)
                                                         @php
                                                             $idLevelEmpat = str_replace(' ', '_', strtolower($itemEmpat->nama));
                                                         @endphp
-                                
+
                                                         @if ($itemEmpat->opsi_jawaban == 'input text')
                                                             <div class="form-group">
                                                                 <label for="">{{ $itemEmpat->nama }}</label>
@@ -659,7 +660,7 @@ $dataIndex = match ($skema) {
                                                                 ->where('id_item', $itemEmpat->id)
                                                                 ->get();
                                                         @endphp
-                                
+
                                                         @foreach ($dataOptionEmpat as $itemOptionEmpat)
                                                             @if ($itemOptionEmpat->option == '-')
                                                                 <div class="form-group-1">
@@ -667,7 +668,7 @@ $dataIndex = match ($skema) {
                                                                 </div>
                                                             @endif
                                                         @endforeach
-                                
+
                                                         @if (count($dataJawabanLevelEmpat) != 0)
                                                             <div class="form-group">
                                                                 <label for="">{{ $itemEmpat->nama }}</label>
@@ -681,7 +682,7 @@ $dataIndex = match ($skema) {
                                                                     @endforeach
                                                                 </select>
                                                                 <div id="item{{ $itemEmpat->id }}">
-                                
+
                                                                 </div>
                                                             </div>
                                                         @endif
@@ -1968,10 +1969,10 @@ $dataIndex = match ($skema) {
                     fileEmpty = [];
                     e.preventDefault()
                 } else {
-                    $("#loadingModal").modal({
+                    $("#preload-data").modal({
                         keyboard: false
                     });
-                    $("#loadingModal").modal("show");
+                    $("#preload-data").modal("show");
                 }
             }
         })
