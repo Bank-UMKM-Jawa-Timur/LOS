@@ -230,6 +230,7 @@ class NewDagulirController extends Controller
             'tujuan_penggunaan' => 'required',
             'jangka_waktu' => 'required',
             'status' => 'required|not_in:0',
+            'desa_id' => 'required|not_ind:0',
             'kecamatan_sesuai_ktp' => 'required|not_in:0',
             'kode_kotakab_ktp' => 'required|not_in:0',
             'alamat_sesuai_ktp' => 'required',
@@ -270,6 +271,7 @@ class NewDagulirController extends Controller
             $pengajuan->kode_bank_pusat = 1;
             $pengajuan->id_slik = (int)$request->get('id_slik');
             $pengajuan->kode_bank_cabang = auth()->user()->id_cabang;
+            $pengajuan->desa_ktp = $request->get('desa_id');
             $pengajuan->kec_ktp = $request->get('kecamatan_sesuai_ktp');
             $pengajuan->kotakab_ktp = $request->get('kode_kotakab_ktp');
             $pengajuan->alamat_ktp = $request->get('alamat_sesuai_ktp');
@@ -706,7 +708,7 @@ class NewDagulirController extends Controller
                     $result = round($average, 2);
                     $status = "";
                     $updateData = PengajuanModel::find($request->id_pengajuan);
-    
+
                     if ($result > 0 && $result <= 2) {
                         $status = "merah";
                     } elseif ($result >= 2 && $result <= 3) {
@@ -716,7 +718,7 @@ class NewDagulirController extends Controller
                     } else {
                         $status = "merah";
                     }
-    
+
                     if ($role == 'Penyelia Kredit') {
                         foreach ($request->get('id_option') as $key => $value) {
                             JawabanPengajuanModel::where('id_jawaban', $value)->where('id_pengajuan', $request->get('id_pengajuan'))
@@ -739,7 +741,7 @@ class NewDagulirController extends Controller
                                 ]);
                         }
                     }
-    
+
                     $updateData->status = $status;
                     if ($role == 'Penyelia Kredit')
                         $updateData->average_by_penyelia = $result;
@@ -747,9 +749,9 @@ class NewDagulirController extends Controller
                         $updateData->average_by_pbo = $result;
                     else
                         $updateData->average_by_pbp = $result;
-    
+
                     $updateData->update();
-    
+
                     $idKomentar = KomentarModel::where('id_pengajuan', $request->id_pengajuan)->first();
                     if ($role == 'Penyelia Kredit') {
                         KomentarModel::where('id', $idKomentar->id)->update(
@@ -776,7 +778,7 @@ class NewDagulirController extends Controller
                             ]
                         );
                     }
-    
+
                     $countDK = DetailKomentarModel::where('id_komentar', $idKomentar->id)->count();
                     if ($countDK > 0) {
                         foreach ($request->id_item as $key => $value) {
@@ -798,7 +800,7 @@ class NewDagulirController extends Controller
                             }
                         }
                     }
-    
+
                     // pendapat penyelia
                     if ($role == 'Penyelia Kredit')
                         $countpendapat = PendapatPerAspek::where('id_pengajuan', $request->get('id_pengajuan'))->where('id_penyelia', Auth::user()->id)->count();
@@ -806,7 +808,7 @@ class NewDagulirController extends Controller
                         $countpendapat = PendapatPerAspek::where('id_pengajuan', $request->get('id_pengajuan'))->where('id_pbo', Auth::user()->id)->count();
                     else
                         $countpendapat = PendapatPerAspek::where('id_pengajuan', $request->get('id_pengajuan'))->where('id_pbp', Auth::user()->id)->count();
-    
+
                     if ($countpendapat > 0) {
                         if ($role == 'Penyelia Kredit') {
                             foreach ($request->get('id_aspek') as $key => $value) {
@@ -950,7 +952,7 @@ class NewDagulirController extends Controller
                 ->get();
             $param['jenis_usaha'] = config('dagulir.jenis_usaha');
             $param['tipe'] = config('dagulir.tipe_pengajuan');
-            
+
             $param['itemSlik'] = ItemModel::join('option as o', 'o.id_item', 'item.id')
                 ->join('jawaban as j', 'j.id_jawaban', 'o.id')
                 ->join('pengajuan as p', 'p.id', 'j.id_pengajuan')
@@ -1102,7 +1104,7 @@ class NewDagulirController extends Controller
             return redirect()->back()->withError('Terjadi kesalahan');
         }
     }
-    
+
     public function accPengajuan($id)
     {
         $statusPincab = PengajuanModel::find($id);
