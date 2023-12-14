@@ -1417,58 +1417,7 @@
                             <!-- pendapat-dan-usulan -->
                             <div class="p-5 space-y-5">
                                 @if (Auth::user()->role == 'Penyelia Kredit')
-                                    <div class="form-wizard" data-index='{{ $dataUmumNasabah->skema_kredit == 'KKB' ? count($dataAspek) + $dataIndex + 1 : count($dataAspek) + $dataIndex }}' data-done='true'>
-                                        <div class="row">
-                                            <div class="form-group-1">
-                                                <label for="">Pendapat dan Usulan Staf Kredit</label>
-                                                <span class="border-b p-2">
-                                                    {{ $pendapatDanUsulanStaf?->komentar_staff }}
-                                                </span>
-                                            </div>
-                                            <div class="form-group-1">
-                                                <label for="">Pendapat dan Usulan Penyelia</label>
-                                                <textarea name="komentar_penyelia_keseluruhan"
-                                                    class="form-input @error('komentar_penyelia_keseluruhan') is-invalid @enderror" id="komentar_penyelia_keseluruhan" cols="30"
-                                                    rows="4" placeholder="Pendapat dan Usulan Penyelia">{{ isset($pendapatDanUsulanPenyelia->komentar_penyelia) ? $pendapatDanUsulanPenyelia->komentar_penyelia : '' }}</textarea>
-                                                @error('komentar_penyelia_keseluruhan')
-                                                    <div class="invalid-feedback">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                    </div>
-                                @elseif (Auth::user()->role == 'PBO')
-                                    <div class="form-wizard" data-index='{{ $dataUmumNasabah->skema_kredit == 'KKB' ? count($dataAspek) + $dataIndex + 1 : count($dataAspek) + $dataIndex }}' data-done='true'>
-                                        <div class="row">
-                                            <div class="form-group-1">
-                                                <label for="">Pendapat dan Usulan Staf Kredit</label>
-                                                <span class="border-b p-2">
-                                                    {{ $pendapatDanUsulanStaf?->komentar_staff }}
-                                                </span>
-                                                <hr>
-                                            </div>
-                                            <div class="form-group-1">
-                                                <label for="">Pendapat dan Usulan Penyelia Kredit</label>
-                                                <span class="border-b p-2">
-                                                    {{ $pendapatDanUsulanPenyelia?->komentar_penyelia }}
-                                                </span>
-                                            </div>
-                                            <div class="form-group-1">
-                                                <label for="">Pendapat dan Usulan PBO</label>
-                                                <textarea name="komentar_pbo_keseluruhan"
-                                                    class="form-input @error('komentar_pbo_keseluruhan') is-invalid @enderror" id="komentar_pbo_keseluruhan" cols="30"
-                                                    rows="4" placeholder="Pendapat dan Usulan Penyelia Kredit" >{{ isset($pendapatDanUsulanPBO->komentar_pbO) ? $pendapatDanUsulanPBO->komentar_pbO : '' }}</textarea>
-                                                @error('komentar_pbo_keseluruhan')
-                                                    <div class="invalid-feedback">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                    </div>
-                                @elseif (Auth::user()->role == 'PBP')
-                                    <div class="form-wizard" data-index='{{ $dataUmumNasabah->skema_kredit == 'KKB' ? count($dataAspek) + $dataIndex + 1 : count($dataAspek) + $dataIndex }}' data-done='true'>
+                                    <div class="row">
                                         <div class="form-group-1">
                                             <label for="">Pendapat dan Usulan Staf Kredit</label>
                                             <span class="border-b p-2">
@@ -1476,33 +1425,19 @@
                                             </span>
                                         </div>
                                         <div class="form-group-1">
-                                            <label for="">Pendapat dan Usulan Penyelia Kredit</label>
-                                            <span class="border-b p-2">
-                                                {{ $pendapatDanUsulanPenyelia?->komentar_penyelia }}
-                                            </span>
-                                        </div>
-                                        @if ($dataUmumNasabah->id_pbo)
-                                            <div class="form-group-1">
-                                                <label for="">Pendapat dan Usulan PBO</label>
-                                                <span class="border-b p-2">
-                                                    {{ $pendapatDanUsulanPBO?->komentar_pbo }}
-                                                </span>
-                                            </div>
-                                        @endif
-                                        <div class="form-group-1">
-                                            <label for="">Pendapat dan Usulan PBP</label>
-                                            <textarea name="komentar_pbp_keseluruhan"
-                                                class="form-input @error('komentar_pbp_keseluruhan') is-invalid @enderror" id="komentar_pbp_keseluruhan" cols="30"
-                                                rows="4" placeholder="Pendapat dan Usulan Penyelia Kredit" >{{ isset($pendapatDanUsulanPBP->komentar_pbp) ? $pendapatDanUsulanPBP->komentar_pbp : '' }}</textarea>
-                                            @error('komentar_pbp_keseluruhan')
+                                            <label for="">Pendapat dan Usulan Penyelia</label>
+                                            <textarea name="komentar_penyelia_keseluruhan"
+                                                class="form-input @error('komentar_penyelia_keseluruhan') is-invalid @enderror" id="komentar_penyelia_keseluruhan" cols="30"
+                                                rows="4" placeholder="Pendapat dan Usulan Penyelia">{{ isset($pendapatDanUsulanPenyelia->komentar_penyelia) ? $pendapatDanUsulanPenyelia->komentar_penyelia : '' }}</textarea>
+                                            @error('komentar_penyelia_keseluruhan')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
                                                 </div>
                                             @enderror
                                         </div>
                                     </div>
-                                @else
-                                    <div class="form-wizard" data-index='{{ $dataUmumNasabah->skema_kredit == 'KKB' ? count($dataAspek) + $dataIndex + 1 : count($dataAspek) + $dataIndex }}' data-done='true'>
+                                @elseif (Auth::user()->role == 'PBO')
+                                    <div class="row">
                                         <div class="form-group-1">
                                             <label for="">Pendapat dan Usulan Staf Kredit</label>
                                             <span class="border-b p-2">
@@ -1516,33 +1451,90 @@
                                                 {{ $pendapatDanUsulanPenyelia?->komentar_penyelia }}
                                             </span>
                                         </div>
-                                        @if ($dataUmumNasabah->id_pbo)
-                                            <div class="form-group-1">
-                                                <label for="">Pendapat dan Usulan PBO</label>
-                                                <span class="border-b p-2">
-                                                    {{ $pendapatDanUsulanPBO?->komentar_pbo }}
-                                                </span>
-                                            </div>
-                                        @endif
-                                        @if ($dataUmumNasabah->id_pbp)
-                                            <div class="form-group-1">
-                                                <label for="">Pendapat dan Usulan PBP</label>
-                                                <span class="border-b p-2">
-                                                    {{ $pendapatDanUsulanPBP?->komentar_pbp }}
-                                                </span>
-                                            </div>
-                                        @endif
-                                        <div class="form-group-1 pt-4">
-                                            <label for="">Pendapat dan Usulan Pincab</label>
-                                            <textarea name="komentar_pincab_keseluruhan"
-                                                class="form-input @error('komentar_pincab_keseluruhan') is-invalid @enderror" id="komentar_pincab_keseluruhan" cols="30"
-                                                rows="4" placeholder="Pendapat dan Usulan Pincab" >{{ isset($pendapatDanUsulanPincab->komentar_pincab) ? $pendapatDanUsulanPincab->komentar_pincab : '' }}</textarea>
-                                            @error('komentar_pincab_keseluruhan')
+                                        <div class="form-group-1">
+                                            <label for="">Pendapat dan Usulan PBO</label>
+                                            <textarea name="komentar_pbo_keseluruhan"
+                                                class="form-input @error('komentar_pbo_keseluruhan') is-invalid @enderror" id="komentar_pbo_keseluruhan" cols="30"
+                                                rows="4" placeholder="Pendapat dan Usulan Penyelia Kredit" >{{ isset($pendapatDanUsulanPBO->komentar_pbO) ? $pendapatDanUsulanPBO->komentar_pbO : '' }}</textarea>
+                                            @error('komentar_pbo_keseluruhan')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
                                                 </div>
                                             @enderror
                                         </div>
+                                    </div>
+                                @elseif (Auth::user()->role == 'PBP')
+                                    <div class="form-group-1">
+                                        <label for="">Pendapat dan Usulan Staf Kredit</label>
+                                        <span class="border-b p-2">
+                                            {{ $pendapatDanUsulanStaf?->komentar_staff }}
+                                        </span>
+                                    </div>
+                                    <div class="form-group-1">
+                                        <label for="">Pendapat dan Usulan Penyelia Kredit</label>
+                                        <span class="border-b p-2">
+                                            {{ $pendapatDanUsulanPenyelia?->komentar_penyelia }}
+                                        </span>
+                                    </div>
+                                    @if ($dataUmumNasabah->id_pbo)
+                                        <div class="form-group-1">
+                                            <label for="">Pendapat dan Usulan PBO</label>
+                                            <span class="border-b p-2">
+                                                {{ $pendapatDanUsulanPBO?->komentar_pbo }}
+                                            </span>
+                                        </div>
+                                    @endif
+                                    <div class="form-group-1">
+                                        <label for="">Pendapat dan Usulan PBP</label>
+                                        <textarea name="komentar_pbp_keseluruhan"
+                                            class="form-input @error('komentar_pbp_keseluruhan') is-invalid @enderror" id="komentar_pbp_keseluruhan" cols="30"
+                                            rows="4" placeholder="Pendapat dan Usulan Penyelia Kredit" >{{ isset($pendapatDanUsulanPBP->komentar_pbp) ? $pendapatDanUsulanPBP->komentar_pbp : '' }}</textarea>
+                                        @error('komentar_pbp_keseluruhan')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                @else
+                                    <div class="form-group-1">
+                                        <label for="">Pendapat dan Usulan Staf Kredit</label>
+                                        <span class="border-b p-2">
+                                            {{ $pendapatDanUsulanStaf?->komentar_staff }}
+                                        </span>
+                                        <hr>
+                                    </div>
+                                    <div class="form-group-1">
+                                        <label for="">Pendapat dan Usulan Penyelia Kredit</label>
+                                        <span class="border-b p-2">
+                                            {{ $pendapatDanUsulanPenyelia?->komentar_penyelia }}
+                                        </span>
+                                    </div>
+                                    @if ($dataUmumNasabah->id_pbo)
+                                        <div class="form-group-1">
+                                            <label for="">Pendapat dan Usulan PBO</label>
+                                            <span class="border-b p-2">
+                                                {{ $pendapatDanUsulanPBO?->komentar_pbo }}
+                                            </span>
+                                        </div>
+                                    @endif
+                                    @if ($dataUmumNasabah->id_pbp)
+                                        <div class="form-group-1">
+                                            <label for="">Pendapat dan Usulan PBP</label>
+                                            <span class="border-b p-2">
+                                                {{ $pendapatDanUsulanPBP?->komentar_pbp }}
+                                            </span>
+                                        </div>
+                                    @endif
+                                    <div class="form-group-1 pt-4">
+                                        <label for="">Pendapat dan Usulan Pincab</label>
+                                        <textarea name="komentar_pincab_keseluruhan"
+                                            class="form-input @error('komentar_pincab_keseluruhan') is-invalid @enderror" id="komentar_pincab_keseluruhan" cols="30"
+                                            rows="4" placeholder="Pendapat dan Usulan Pincab" >{{ isset($pendapatDanUsulanPincab->komentar_pincab) ? $pendapatDanUsulanPincab->komentar_pincab : '' }}</textarea>
+                                        @error('komentar_pincab_keseluruhan')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
                                     </div>
                                 @endif
                                 <div class="flex justify-between">

@@ -1993,7 +1993,9 @@ $dataIndex = match ($skema) {
         var slik = document.getElementById("file_slik");
         var selectedFile;
 
-        slik.addEventListener('change', updateImageDisplaySlik);
+        if (slik) {
+            slik.addEventListener('change', updateImageDisplaySlik);
+        }
 
         function updateImageDisplaySlik() {
             if (slik.files.length == 0) {
