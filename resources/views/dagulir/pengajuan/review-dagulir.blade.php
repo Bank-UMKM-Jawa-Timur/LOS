@@ -83,7 +83,7 @@
                     placeholder="Masukan Nomor Telepon"
                     name="telp"
                     readonly
-                    value="{{ $data->telps }}"
+                    value="{{ $data->telp }}"
                 />
                 <div class="p-2 bg-white border-b">
                     <span>{{ $dagulir->telp ?   $dagulir->telp : '-' }}</span>
