@@ -186,7 +186,7 @@ class NewDagulirController extends Controller
         }
     }
 
-    public function create(Request $request) {
+    public function create() {
         $param['pageTitle'] = "Dashboard";
         $param['multipleFiles'] = $this->isMultipleFiles;
 
@@ -241,12 +241,11 @@ class NewDagulirController extends Controller
         //     'not_in' => 'kolom harus dipilih.',
         // ]);
 
+        DB::beginTransaction();
         try {
-            DB::beginTransaction();
             $find = array('Rp.', '.', ',');
 
             // Jawaban untuk file
-            DB::beginTransaction();
             $pengajuan = new PengajuanDagulir();
             $pengajuan->kode_pendaftaran = null;
             $pengajuan->nama = $request->get('nama_lengkap');
@@ -259,7 +258,7 @@ class NewDagulirController extends Controller
             $pengajuan->jenis_usaha = $request->get('jenis_usaha');
             $pengajuan->ket_agunan = $request->get('ket_agunan');
             $pengajuan->hubungan_bank = $request->get('hub_bank');
-            $pengajuan->nominal =   $this->formatNumber($request->get('nominal_pengajuan'));
+            $pengajuan->nominal = formatNumber($request->get('nominal_pengajuan'));
             $pengajuan->tujuan_penggunaan = $request->get('tujuan_penggunaan');
             $pengajuan->jangka_waktu = $request->get('jangka_waktu');
             $pengajuan->kode_bank_pusat = 1;
@@ -275,7 +274,13 @@ class NewDagulirController extends Controller
             $pengajuan->kotakab_usaha = $request->get('kode_kotakab_usaha');
             $pengajuan->alamat_usaha = $request->get('alamat_usaha');
             $pengajuan->tipe = $request->get('tipe_pengajuan');
-            $pengajuan->npwp = $request->input_text[79][0];
+            $npwp = null;
+            if ($request->upload_file) {
+                if (array_key_exists('153', $request->upload_file)) {
+                    $npwp = auth()->user()->id . '-' . time() . '-' . $request->upload_file[153]->getClientOriginalName();
+                }
+            }
+            $pengajuan->npwp = $npwp;
             $pengajuan->jenis_badan_hukum = $request->get('jenis_badan_hukum');
             $pengajuan->tempat_berdiri = $request->get('tempat_berdiri');
             $pengajuan->tanggal_berdiri = $request->get('tanggal_berdiri');
@@ -346,39 +351,10 @@ class NewDagulirController extends Controller
             $addPengajuan->dagulir_id = $pengajuan->id;
             $addPengajuan->save();
             $id_pengajuan = $addPengajuan->id;
-
             $tempNasabah = TemporaryService::getNasabahData($request->idCalonNasabah);
-            $idTempNasabah = DB::table('temporary_calon_nasabah')
-                ->where('id_user', $request->user()->id)
-                ->first('id_user');
 
             $dataNasabah = $tempNasabah->toArray();
             $dataNasabah['id_pengajuan'] = $id_pengajuan;
-
-            // $addData = new CalonNasabah;
-            // $addData->nama = $request->name;
-            // $addData->alamat_rumah = $request->alamat_rumah;
-            // $addData->alamat_usaha = $request->alamat_usaha;
-            // $addData->no_ktp = $request->no_ktp;
-            // $addData->no_telp = $request->get('no_telp');
-            // $addData->tempat_lahir = $request->tempat_lahir;
-            // $addData->tanggal_lahir = $this->formatDate($request->tanggal_lahir);
-            // $addData->status = $request->status;
-            // $addData->sektor_kredit = $request->sektor_kredit;
-            // $addData->jenis_usaha = $request->jenis_usaha;
-            // $addData->jumlah_kredit = str_replace($find, "", $request->jumlah_kredit);
-            // $addData->tenor_yang_diminta = $request->tenor_yang_diminta;
-            // $addData->tujuan_kredit = $request->tujuan_kredit;
-            // $addData->jaminan_kredit = $request->jaminan;
-            // $addData->hubungan_bank = $request->hubungan_bank;
-            // $addData->verifikasi_umum = $request->hasil_verifikasi;
-            // $addData->id_user = auth()->user()->id;
-            // $addData->id_pengajuan = $id_pengajuan;
-            // $addData->id_desa = $request->desa;
-            // $addData->id_kecamatan = $request->kec;
-            // $addData->id_kabupaten = $request->kabupaten;
-            // $addData->save();
-            // $id_calon_nasabah = $addData->id;
 
             // jawaban ijin usaha
             JawabanTextModel::create([
@@ -523,7 +499,7 @@ class NewDagulirController extends Controller
             for ($i = 0; $i < count($mergedDataLevel); $i++) {
                 if ($mergedDataLevel[$i]) {
                     // jika data tersedia
-                    $data = $this->getDataLevel($mergedDataLevel[$i]);
+                    $data = getDataLevel($mergedDataLevel[$i]);
                     array_push($arrTes, $data);
                     if (is_numeric($data[0])) {
                         if ($data[0] > 0) {
@@ -563,19 +539,19 @@ class NewDagulirController extends Controller
 
             for ($i = 0; $i < count($mergedDataLevel); $i++) {
                 if ($mergedDataLevel[$i] != null) {
-                    $data = $this->getDataLevel($mergedDataLevel[$i]);
+                    $data = getDataLevel($mergedDataLevel[$i]);
                     if (is_numeric($data[0])) {
                         if ($data[0] > 0) {
                             JawabanPengajuanModel::insert([
                                 'id_pengajuan' => $id_pengajuan,
-                                'id_jawaban' => $this->getDataLevel($mergedDataLevel[$i])[1],
-                                'skor' => $this->getDataLevel($mergedDataLevel[$i])[0],
+                                'id_jawaban' => getDataLevel($mergedDataLevel[$i])[1],
+                                'skor' => getDataLevel($mergedDataLevel[$i])[0],
                             ]);
                         }
                     } else {
                         JawabanPengajuanModel::insert([
                             'id_pengajuan' => $id_pengajuan,
-                            'id_jawaban' => $this->getDataLevel($mergedDataLevel[$i])[1]
+                            'id_jawaban' => getDataLevel($mergedDataLevel[$i])[1]
                         ]);
                     }
                 }
@@ -639,17 +615,17 @@ class NewDagulirController extends Controller
             event(new EventMonitoring('store pengajuan'));
 
             if (!$statusSlik)
-                return redirect()->route('pengajuan-kredit.index')->withStatus('Data berhasil disimpan.');
+                return redirect()->route('dagulir.pengajuan-kredit.index')->withStatus('Data berhasil disimpan.');
             else
-                return redirect()->route('pengajuan-kredit.index')->withError('Pengajuan ditolak');
+                return redirect()->route('dagulir.pengajuan-kredit.index')->withError('Pengajuan ditolak');
         } catch (Exception $e) {
             DB::rollBack();
-            // return $e->getMessage();
-            return redirect()->route('pengajuan-kredit.index')->withError('Terjadi kesalahan.' . $e->getMessage());
+            return $e->getMessage();
+            return redirect()->route('dagulir.pengajuan-kredit.index')->withError('Terjadi kesalahan.' . $e->getMessage());
         } catch (QueryException $e) {
             DB::rollBack();
-            // return $e->getMessage();
-            return redirect()->route('pengajuan-kredit.index')->withError('Terjadi kesalahan' . $e->getMessage());
+            return $e->getMessage();
+            return redirect()->route('dagulir.pengajuan-kredit.index')->withError('Terjadi kesalahan' . $e->getMessage());
         }
     }
 
@@ -664,7 +640,7 @@ class NewDagulirController extends Controller
             "tanggal_lahir" => $pengajuan_dagulir->tanggal_lahir,
             "telp" => $pengajuan_dagulir->telp,
             "jenis_usaha" => $pengajuan_dagulir->jenis_usaha,
-            "nominal_pengajuan" => $this->formatNumber($request->nominal_realisasi),
+            "nominal_pengajuan" => formatNumber($request->nominal_realisasi),
             "tujuan_penggunaan" => $pengajuan_dagulir->tujuan_penggunaan,
             "jangka_waktu" => intval($request->get('jangka_waktu')),
             "ket_agunan" => $pengajuan_dagulir->ket_agunan,
