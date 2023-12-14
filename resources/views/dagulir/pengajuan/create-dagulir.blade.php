@@ -125,8 +125,8 @@
             </div>
             <div class="form-group-2">
                 <div class="input-box">
-                    <label for="">Slik</label>
-                    <select class="form-select" name="id_slik">
+                    <label for="">{{ $itemSlik->nama }}</label>
+                    <select class="form-select" name="dataLevelDua[{{ $itemSlik->id }}]" id="dataLevelDua">
                         <option value="">Pilih Slik</option>
                         @foreach ($itemSlik->option as $itemJawaban)
                             <option value="{{ $itemJawaban->id }}">{{ $itemJawaban->option }}</option>

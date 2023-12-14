@@ -59,7 +59,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Cek Penyelia Dagulir
         Route::post('penyelia-kredit', [NewDagulirController::class, "checkPenyeliaKreditDagulir"])->name('check.penyeliakredit');
         // Review Penyelia
-        Route::get('jawaban-pengajuan/{id}', [DagulirController::class, "getDetailJawaban"])->name('detailjawaban');
+        Route::get('jawaban-pengajuan/{id}', [NewDagulirController::class, "getDetailJawaban"])->name('detailjawaban');
         Route::post('jawaban-pengajuan/update/{id}', [DagulirController::class, "updateReviewPenyelia"])->name('updatePenyelia');
         // Send to pincab
         Route::get('pincab-kredit/{id}', [DagulirController::class, "sendToPincab"])->name('check.pincab');

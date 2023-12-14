@@ -1,4 +1,4 @@
-@extends('layouts.template')
+@extends('layouts.tailwind-template')
 @php
     $dataIndex = match ($dataUmum->skema_kredit) {
         'PKPJ' => 1,
@@ -6,6 +6,7 @@
         'Talangan Umroh' => 1,
         'Prokesra' => 1,
         'Kusuma' => 1,
+        'Dagulir' => 1,
         null => 1,
     };
 
@@ -35,550 +36,603 @@
     }
 @endphp
 @section('content')
-    @include('components.notification')
+<section class="">
+    <nav class="w-full bg-white p-3  top-[4rem] border sticky">
+        <div class="owl-carousel owl-theme tab-wrapper">
+            <button data-toggle="tab" data-tab="dagulir" class="btn btn-tab active-tab font-semibold">0% Data Umum</button>
+            @foreach ($dataAspek as $item)
+                @php
+                    $title = str_replace('&', 'dan', strtolower($item->nama));
+                    $title = str_replace(' ', '-', strtolower($title));
+                @endphp
+                <button data-toggle="tab" data-tab="{{$title}}" class="btn btn-tab font-semibold">0% {{$item->nama}}</button>
+            @endforeach
+            <button data-toggle="tab" data-tab="pendapat-dan-usulan" class="btn btn-tab font-semibold">Pendapat dan Usulan</button>
+        </div>
+    </nav>
+    <div class="p-3">
+        <div class="body-pages">
+            <form id="pengajuan_kredit" action="{{ route('dagulir.pengajuan.insertkomentar') }}" method="post">
+                @csrf
+                <div class="mt-3 container mx-auto">
+                    <div id="dagulir-tab" class="is-tab-content active">
+                        <div class="pb-10 space-y-3">
+                            <h2 class="text-4xl font-bold tracking-tighter text-theme-primary">Dagulir</h2>
+                            <p class="font-semibold text-gray-400">Review Pengajuan</p>
+                        </div>
+                        <div class="self-start bg-white w-full border">
+                            <div class="p-5 border-b">
+                                <h2 class="font-bold text-lg tracking-tighter">
+                                    Pengajuan Masuk
+                                </h2>
+                            </div>
+                            <div class="p-5 w-full space-y-5" id="data-umum">
+                                @php
+                                    $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide')
+                                        ->where('level', 2)
+                                        ->where('id_parent', $itemSP->id)
+                                        ->where('nama', 'Surat Permohonan')
+                                        ->get();
+                                @endphp
+                                @foreach ($dataLevelDua as $item)
+                                    @if ($item->opsi_jawaban == 'file')
+                                        @php
+                                            $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
+                                                ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                                ->where('jawaban_text.id_pengajuan', $dataUmum->id)
+                                                ->where('jawaban_text.id_jawaban', $item->id)
+                                                ->get();
+                                        @endphp
+                                        @foreach ($dataDetailJawabanText as $itemTextDua)
+                                            @php
+                                                $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                                            @endphp
+                                            <div class="form-group-1">
+                                                <div class="form-group-1 mb-0">
+                                                    <label for="">{{ $item->nama }}</label>
+                                                </div>
+                                                <div class="form-group-1">
+                                                    <b>Jawaban:</b>
+                                                    <div class="mt-2">
+                                                        @if ($file_parts['extension'] == 'pdf')
+                                                            <iframe
+                                                                src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                width="100%" height="800px"></iframe>
+                                                        @else
+                                                            <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                alt="" width="800px">
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @endif
+                                @endforeach
+                                <div class="form-group-1">
+                                    <label for="">Nama Lengkap</label>
+                                    <input type="text" disabled name="name" id="nama"
+                                        class="form-input @error('name') is-invalid @enderror"
+                                        value="{{ old('name', $dataUmumNasabah->nama) }}" placeholder="Nama sesuai dengan KTP">
+                                    @error('name')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="">Kabupaten</label>
+                                    <select name="kabupaten" disabled class="form-input @error('name') is-invalid @enderror select2"
+                                        id="kabupaten">
+                                        <option value="">---Pilih Kabupaten----</option>
+                                        @foreach ($allKab as $item)
+                                            <option value="{{ old('id', $item->id) }}"
+                                                {{ old('id', $item->id) == $dataUmumNasabah->kotakab_ktp ? 'selected' : '' }}>
+                                                {{ $item->kabupaten }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('kabupaten')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="">Kecamatan</label>
+                                    <select name="kec" disabled id="kecamatan"
+                                        class="form-input @error('kec') is-invalid @enderror">
+                                        <option value="">---Pilih Kecamatan----</option>
+                                        @foreach ($allKec as $kec)
+                                            <option value="{{ $kec->id }}"
+                                                {{ $kec->id == $dataUmumNasabah->kec_ktp ? 'selected' : '' }}>{{ $kec->kecamatan }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('kec')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="">Desa</label>
+                                    <select disabled name="desa" id="desa"
+                                        class="form-input @error('desa') is-invalid @enderror select2">
+                                        <option value="">---Pilih Desa----</option>
+                                        @foreach ($allDesa as $desa)
+                                            <option value="{{ $desa->id }}"
+                                                {{ $desa->id == $dataUmumNasabah->id_desa ? 'selected' : '' }}>{{ $desa->desa }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('desa')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group-1">
+                                    <label for="">Alamat Rumah</label>
+                                    <textarea disabled name="alamat_rumah" class="form-input @error('alamat_rumah') is-invalid @enderror" id=""
+                                        cols="30" rows="4" placeholder="Alamat Rumah disesuaikan dengan KTP">{{ old('alamat_rumah', $dataUmumNasabah->alamat_rumah) }}</textarea>
+                                    @error('alamat_rumah')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                    <hr>
+                                </div>
+                                <div class="form-group-1">
+                                    <label for="">Alamat Usaha</label>
+                                    <textarea disabled name="alamat_usaha" class="form-input @error('alamat_usaha') is-invalid @enderror" id=""
+                                        cols="30" rows="4" placeholder="Alamat Usaha disesuaikan dengan KTP">{{ old('alamat_usaha', $dataUmumNasabah->alamat_usaha) }}</textarea>
+                                    @error('alamat_usaha')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="">Tempat</label>
+                                    <input disabled type="text" name="tempat_lahir" id=""
+                                        class="form-input @error('tempat_lahir') is-invalid @enderror"
+                                        value="{{ old('tempat_lahir', $dataUmumNasabah->tempat_lahir) }}" placeholder="Tempat Lahir">
+                                    @error('tempat_lahir')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="">Tanggal Lahir</label>
+                                    <input disabled type="date" name="tanggal_lahir" id=""
+                                        class="form-input @error('tanggal_lahir') is-invalid @enderror"
+                                        value="{{ old('tanggal_lahir', $dataUmumNasabah->tanggal_lahir) }}" placeholder="Tempat Lahir">
+                                    @error('tanggal_lahir')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="">Status</label>
+                                    <select disabled name="status" id=""
+                                        class="form-input @error('status') is-invalid @enderror select2">
+                                        <option value=""> --Pilih Status --</option>
+                                        <option value="menikah"
+                                            {{ old('status', $dataUmumNasabah->status) == 'menikah' ? 'selected' : '' }}>
+                                            Menikah</option>
+                                        <option value="belum menikah"
+                                            {{ old('status', $dataUmumNasabah->status) == 'belum menikah' ? 'selected' : '' }}>Belum
+                                            Menikah
+                                        </option>
+                                        <option value="duda" {{ old('status', $dataUmumNasabah->status) == 'duda' ? 'selected' : '' }}>
+                                            Duda
+                                        </option>
+                                        <option value="janda" {{ old('status', $dataUmumNasabah->status) == 'janda' ? 'selected' : '' }}>
+                                            Janda
+                                        </option>
+                                    </select>
+                                    @error('status')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group-1">
+                                    <label for="">No. KTP</label>
+                                    <input disabled type="text" name="no_ktp"
+                                        class="form-input @error('no_ktp') is-invalid @enderror" id=""
+                                        value="{{ old('no_ktp', $dataUmumNasabah->no_ktp) }}" placeholder="Masukkan 16 digit No. KTP">
+                                    @error('no_ktp')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                @if ($dataUmumNasabah->status == 'menikah')
+                                    @php
+                                        $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+                                            ->where('level', 2)
+                                            ->where('id_parent', $itemKTPSu->id)
+                                            ->where('nama', 'Foto KTP Suami')
+                                            ->get();
+                                    @endphp
+                                    @foreach ($dataLevelDua as $item)
+                                        @if ($item->opsi_jawaban == 'file')
+                                            @php
+                                                $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
+                                                    ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                                    ->where('jawaban_text.id_pengajuan', $dataUmum->id)
+                                                    ->where('jawaban_text.id_jawaban', $item->id)
+                                                    ->get();
+                                            @endphp
+                                            @foreach ($dataDetailJawabanText as $itemTextDua)
+                                                @php
+                                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                                                @endphp
+                                                <div class="form-group-1">
+                                                    <label for="">{{ $item->nama }}</label>
+                                                    <div class="form-group-1">
+                                                        <b>Jawaban:</b>
+                                                        <div class="mt-2">
+                                                            @if ($file_parts['extension'] == 'pdf')
+                                                                <iframe
+                                                                    src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                    width="100%" height="400px"></iframe>
+                                                            @else
+                                                                <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                    alt="" width="400px">
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        @endif
+                                    @endforeach
+                                    @php
+                                        $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+                                            ->where('level', 2)
+                                            ->where('id_parent', $itemKTPSu->id)
+                                            ->where('nama', 'Foto KTP Istri')
+                                            ->get();
+                                    @endphp
+                                    @foreach ($dataLevelDua as $item)
+                                        @if ($item->opsi_jawaban == 'file')
+                                            @php
+                                                $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
+                                                    ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                                    ->where('jawaban_text.id_pengajuan', $dataUmum->id)
+                                                    ->where('jawaban_text.id_jawaban', $item->id)
+                                                    ->get();
+                                            @endphp
+                                            @foreach ($dataDetailJawabanText as $itemTextDua)
+                                                @php
+                                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                                                @endphp
+                                                <div class="form-group-1">
+                                                    <label for="">{{ $item->nama }}</label>
+                                                    <div class="form-group">
+                                                        <b>Jawaban:</b>
+                                                        <div class="mt-2">
+                                                            @if ($file_parts['extension'] == 'pdf')
+                                                                <iframe
+                                                                    src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                    width="100%" height="400px"></iframe>
+                                                            @else
+                                                                <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                    alt="" width="400px">
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        @endif
+                                    @endforeach
+                                @else
+                                    @php
+                                        $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+                                            ->where('level', 2)
+                                            ->where('id_parent', $itemKTPSu->id)
+                                            ->where('nama', 'Foto KTP Nasabah')
+                                            ->get();
+                                    @endphp
+                                    @foreach ($dataLevelDua as $item)
+                                        @if ($item->opsi_jawaban == 'file')
+                                            @php
+                                                $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
+                                                    ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                                    ->where('jawaban_text.id_pengajuan', $dataUmum->id)
+                                                    ->where('jawaban_text.id_jawaban', $item->id)
+                                                    ->get();
+                                            @endphp
+                                            @foreach ($dataDetailJawabanText as $itemTextDua)
+                                                @php
+                                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                                                @endphp
+                                                <div class="form-group-1">
+                                                    <label for="">{{ $item->nama }}</label>
+                                                    <div class="form-group-1">
+                                                        <b>Jawaban:</b>
+                                                        <div class="mt-2">
+                                                            @if ($file_parts['extension'] == 'pdf')
+                                                                <iframe
+                                                                    src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                    width="100%" height="400px"></iframe>
+                                                            @else
+                                                                <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                    alt="" width="400px">
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        @endif
+                                    @endforeach
+                                @endif
+                                <div class="form-group-1">
+                                    <label for="">Sektor Kredit</label>
+                                    <select disabled name="sektor_kredit" id=""
+                                        class="form-input @error('sektor_kredit') is-invalid @enderror select2">
+                                        <option value=""> --Pilih Sektor Kredit -- </option>
+                                        <option value="perdagangan"
+                                            {{ old('sektor_kredit', $dataUmumNasabah->sektor_kredit) == 'perdagangan' ? 'selected' : '' }}>
+                                            Perdagangan</option>
+                                        <option value="perindustrian"
+                                            {{ old('sektor_kredit', $dataUmumNasabah->sektor_kredit) == 'perindustrian' ? 'selected' : '' }}>
+                                            Perindustrian</option>
+                                        <option value="dll"
+                                            {{ old('sektor_kredit', $dataUmumNasabah->sektor_kredit) == 'dll' ? 'selected' : '' }}>dll
+                                        </option>
+                                    </select>
+                                    @error('sektor_kredit')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group-1">
+                                    <label for="">{{ $itemSlik?->nama }}</label>
+                                    <br>
+                                    <b>Jawaban : </b>
+                                    <div class="jawaban-responsive">
+                                        {{ $itemSlik?->option }}
+                                    </div>
+                                    @php
+                                        $komentarSlik = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', '=', 'detail_komentar.id_komentar')
+                                            ->where('id_pengajuan', $dataUmum->id)
+                                            ->where('id_item', $itemSlik?->id_item)
+                                            ->first();
+                                    @endphp
+                                    <div class="input-group input-b-bottom">
+                                        <input type="hidden" name="id_item[]" value="{{ $itemSlik?->id_item }}">
+                                        <input type="hidden" name="id_option[]" value="{{ $itemSlik?->id_jawaban }}">
+                                        <input type="text" class="form-input komentar" name="komentar_penyelia[]"
+                                            placeholder="Masukkan Komentar"
+                                            value="{{ isset($komentarSlik->komentar) ? $komentarSlik->komentar : '' }}">
+                                        <div class="input-skor">
+                                            @php
+                                                $skorSlik = $itemSlik?->skor_penyelia ? $itemSlik?->skor_penyelia : $itemSlik?->skor;
+                                            @endphp
+                                            <input type="number" class="form-input" placeholder="" name="skor_penyelia[]"
+                                                onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
+                                                min="0"
+                                                max="4"
+                                                {{ $itemSlik?->status_skor == 0 ? 'readonly' : '' }}
+                                                value="{{ $skorSlik || $skorSlik > 0 ? $skorSlik : null }}">
+                                        </div>
+                                    </div>
+                                </div>
+                                @php
+                                    // $key += 1;
+                                    // check level 2
+                                    $dataLS = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+                                        ->where('level', 2)
+                                        ->where('id_parent', $itemSP->id)
+                                        ->where('nama', 'Laporan SLIK')
+                                        ->get();
+                                @endphp
+                                @foreach ($dataLS as $item)
+                                    @if ($item->opsi_jawaban == 'file')
+                                        @php
+                                            $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
+                                                ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                                ->where('jawaban_text.id_pengajuan', $dataUmum->id)
+                                                ->where('jawaban_text.id_jawaban', $item->id)
+                                                ->get();
+                                        @endphp
+                                        @foreach ($dataDetailJawabanText as $itemTextDua)
+                                            @php
+                                                $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                                            @endphp
+                                            <div class="form-group-1">
+                                                <label for="">{{ $item->nama }}</label>
+                                            </div>
+                                            <div class="form-group-1">
+                                                <b>Jawaban:</b>
+                                                <div class="mt-2 pl-3">
+                                                    @if ($file_parts['extension'] == 'pdf')
+                                                        <iframe
+                                                            src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                            width="100%" height="800px"></iframe>
+                                                    @else
+                                                        <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                            alt="" width="800px">
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @endif
+                                @endforeach
+                                <div class="form-group-1">
+                                    <label for="">Jenis Usaha</label>
+                                    <textarea disabled name="jenis_usaha" class="form-input @error('jenis_usaha') is-invalid @enderror" id=""
+                                        cols="30" rows="4" placeholder="Jenis Usaha secara spesifik">{{ old('jenis_usaha', $dataUmumNasabah->jenis_usaha) }}</textarea>
+                                    @error('jenis_usaha')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group-1">
+                                    <label for="">Nominal Pengajuan</label>
+                                    <input type="text" disabled name="jumlah_kredit"
+                                        class="form-input @error('jumlah_kredit') is-invalid @enderror"
+                                        placeholder="Jumlah Kredit"
+                                        value="{{ old('jumlah_kredit', 'Rp ' . number_format($dataUmumNasabah->jumlah_kredit ? $dataUmumNasabah->jumlah_kredit : 0, 2, ',', '.')) }}">
+                                    @error('jumlah_kredit')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group-1">
+                                    <label for="">Jangka Waktu</label>
+                                    <input type="text" disabled name="tenor_yang_diminta"
+                                        class="form-input @error('tenor_yang_diminta') is-invalid @enderror"
+                                        placeholder="Tenor Yang Diminta"
+                                        value="{{ old('tenor_yang_diminta', $dataUmumNasabah->tenor_yang_diminta) }} Bulan">
+                                    @error('tenor_yang_diminta')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group-1">
+                                    <label for="">Tujuan Kredit</label>
+                                    <textarea disabled name="tujuan_kredit" class="form-input @error('tujuan_kredit') is-invalid @enderror"
+                                        id="" cols="30" rows="4" placeholder="Tujuan Kredit">{{ old('tujuan_kredit', $dataUmumNasabah->tujuan_kredit) }}</textarea>
+                                    @error('tujuan_kredit')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group-1">
+                                    <label for="">Jaminan yang disediakan</label>
+                                    <textarea disabled name="jaminan" class="form-input @error('jaminan') is-invalid @enderror" id=""
+                                        cols="30" rows="4" placeholder="Jaminan yang disediakan">{{ old('jaminan', $dataUmumNasabah->jaminan_kredit) }}</textarea>
+                                    @error('jaminan')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group-1">
+                                    <label for="">Hubungan Bank</label>
+                                    <textarea disabled name="hubungan_bank" class="form-input @error('hubungan_bank') is-invalid @enderror"
+                                        id="" cols="30" rows="4" placeholder="Hubungan dengan Bank">{{ old('hubungan_bank', $dataUmumNasabah->hubungan_bank) }}</textarea>
+                                    @error('hubungan_bank')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                <div class="form-group-1">
+                                    <label for="">Hasil Verifikasi</label>
+                                    <textarea disabled name="hasil_verifikasi" class="form-input @error('hasil_verifikasi') is-invalid @enderror"
+                                        id="" cols="30" rows="4" placeholder="Hasil Verifikasi Karakter Umum">{{ old('hasil_verifikasi', $dataUmumNasabah->verifikasi_umum) }}</textarea>
+                                    @error('hasil_verifikasi')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                    <hr>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @foreach ($dataAspek as $key => $value)
+                        @php
+                            $title_id = str_replace('&', 'dan', strtolower($value->nama));
+                            $title_id = str_replace(' ', '-', strtolower($title_id));
+                            $title_tab = "$title_id-tab";
+                            $key += $dataIndex;
+                            // check level 2
+                            $dataLevelDua = \App\Models\ItemModel::where('level', 2)
+                            ->where('id_parent', $value->id)
+                            ->get();
+                            // check level 4
+                            $dataLevelEmpat = \App\Models\ItemModel::where('level', 4)
+                            ->where('id_parent', $value->id)
+                            ->get();
+                        @endphp
 
-    <style>
-        .sub label:not(.info) {
-            font-weight: 400;
-        }
-
-        h4 {
-            color: #1f1d62;
-            font-weight: 600 !important;
-            font-size: 20px;
-            /* border-bottom: 1px solid #dc3545; */
-        }
-
-        h5 {
-            color: #1f1d62;
-            font-weight: 600 !important;
-            font-size: 18px;
-            /* border-bottom: 1px solid #dc3545; */
-        }
-
-        .form-wizard h6 {
-            color: #c2c7cf;
-            font-weight: 600 !important;
-            font-size: 16px;
-            /* border-bottom: 1px solid #dc3545; */
-        }
-    </style>
-
+                        <div id="{{ $title_tab }}" class="is-tab-content">
+                            <div class="pb-10 space-y-3">
+                                <h2 class="text-4xl font-bold tracking-tighter text-theme-primary">{{$value->nama}}</h2>
+                            </div>
+                            <div class="self-start bg-white w-full border">
+                                <div
+                                    class="p-5 w-full space-y-5"
+                                    id="{{$title_id}}">
+                                        
+                                        <button type="button"
+                                          class="px-5 py-2 border rounded bg-white text-gray-500"
+                                        >
+                                          Kembali
+                                        </button>
+                                        <div>
+                                          <button type="button"
+                                          class="px-5 prev-tab py-2 border rounded bg-theme-secondary text-white"
+                                        >
+                                          Sebelumnya
+                                        </button>
+                                        <button type="button"
+                                          class="px-5 next-tab py-2 border rounded bg-theme-primary text-white"
+                                        >
+                                          Selanjutnya
+                                        </button>
+                                        <button type="submit" class="px-5 py-2 border rounded bg-green-600 text-white btn-simpan hidden" id="submit">Simpan </button>
+                                        </div>
+                                      </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                    <div id="pendapat-dan-usulan-tab" class="is-tab-content">
+                        <div class="pb-10 space-y-3">
+                            <h2 class="text-4xl font-bold tracking-tighter text-theme-primary">Pendapat dan Usulan</h2>
+                        </div>
+                        <div class="self-start bg-white w-full border">
+                            <div class="p-5 border-b">
+                                <h2 class="font-bold text-lg tracking-tighter">
+                                    Pendapat dan Usulan
+                                </h2>
+                            </div>
+                            <!-- pendapat-dan-usulan -->
+                            <div class="p-5 space-y-5">
+                                <div class="form-group-1">
+                                    <div class="input-box">
+                                        <label for="">Pendapat dan Usulan</label>
+                                        <textarea name="pendapat" class="form-textarea"
+                                            placeholder="Pendapat dan Usulan" id="" required></textarea>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between">
+                                    <button class="px-5 py-2 border rounded bg-white text-gray-500">
+                                        Kembali
+                                    </button>
+                                    <div>
+                                        <button class="px-5 py-2 border rounded bg-theme-secondary text-white">
+                                            Sebelumnya
+                                        </button>
+                                        <button class="px-5 py-2 border rounded bg-theme-primary text-white" type="submit">
+                                            Simpan
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
     <form id="pengajuan_kredit" action="{{ route('pengajuan.insertkomentar') }}" method="post">
         @csrf
-        {{-- <div class="form-wizard active" data-index='0' data-done='true'>
-            <div class="row col-md-12 table-responsive mb-3">
-                <label for="">Riwayat Pengembalian Data</label>
-                <div class="col-md-12">
-                    <table style="width: 100%" class="table table-borderless">
-                        <thead>
-                            <tr>
-                                <th>No.</th>
-                                <th>Alasan Pengembalian</th>
-                                <th>Dari</th>
-                                <th>Ke</th>
-                                <th>Tanggal</th>
-                                <th>User</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($alasanPengembalian as $key => $itemPengembalian)
-                                <input type="hidden" id="val_pengembalian" value="1">
-                                <tr>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $itemPengembalian->alasan }}</td>
-                                    <td>{{ $itemPengembalian->dari }}</td>
-                                    <td>{{ $itemPengembalian->ke }}</td>
-                                    <td>{{ date_format($itemPengembalian->created_at, 'd M Y') }}</td>
-                                    <td>{{ getKaryawan($itemPengembalian->nip) }}</td>
-                                </tr>
-                            @empty
-                                <input type="hidden" id="val_pengembalian" value="0">
-                                <tr>
-                                    <td colspan="6" class="text-center">Tidak Ada Riwayat Pengembalian Data</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div> --}}
         <div class="form-wizard active" data-index='0' data-done='true'>
-            <div class="row">
-                @php
-                    $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide')
-                        ->where('level', 2)
-                        ->where('id_parent', $itemSP->id)
-                        ->where('nama', 'Surat Permohonan')
-                        ->get();
-                    //dd($dataLevelDua);
-                @endphp
-                @foreach ($dataLevelDua as $item)
-                    @if ($item->opsi_jawaban == 'file')
-                        @php
-                            $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
-                                ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-                                ->where('jawaban_text.id_pengajuan', $dataUmum->id)
-                                ->where('jawaban_text.id_jawaban', $item->id)
-                                ->get();
-                            //dd($dataDetailJawabanText);
-                        @endphp
-                        @foreach ($dataDetailJawabanText as $itemTextDua)
-                            @php
-                                $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
-                            @endphp
-                            <div class="row col-md-12">
-                                <div class="form-group col-md-12 mb-0">
-                                    <label for="">{{ $item->nama }}</label>
-                                </div>
-                                <div class="col-md-12 form-group">
-                                    <b>Jawaban:</b>
-                                    <div class="mt-2">
-                                        @if ($file_parts['extension'] == 'pdf')
-                                            <iframe
-                                                src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
-                                                width="100%" height="800px"></iframe>
-                                        @else
-                                            <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
-                                                alt="" width="800px">
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    @endif
-                @endforeach
-                <div class="form-group col-md-12">
-                    <label for="">Nama Lengkap</label>
-                    <input type="text" disabled name="name" id="nama"
-                        class="form-control @error('name') is-invalid @enderror"
-                        value="{{ old('name', $dataUmumNasabah->nama) }}" placeholder="Nama sesuai dengan KTP">
-                    @error('name')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="">Kabupaten</label>
-                    <select name="kabupaten" disabled class="form-control @error('name') is-invalid @enderror select2"
-                        id="kabupaten">
-                        <option value="">---Pilih Kabupaten----</option>
-                        @foreach ($allKab as $item)
-                            <option value="{{ old('id', $item->id) }}"
-                                {{ old('id', $item->id) == $dataUmumNasabah->id_kabupaten ? 'selected' : '' }}>
-                                {{ $item->kabupaten }}</option>
-                        @endforeach
-                    </select>
-                    @error('kabupaten')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="">Kecamatan</label>
-                    <select name="kec" disabled id="kecamatan"
-                        class="form-control @error('kec') is-invalid @enderror  select2">
-                        <option value="">---Pilih Kecamatan----</option>
-                        @foreach ($allKec as $kec)
-                            <option value="{{ $kec->id }}"
-                                {{ $kec->id == $dataUmumNasabah->id_kecamatan ? 'selected' : '' }}>{{ $kec->kecamatan }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('kec')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="">Desa</label>
-                    <select disabled name="desa" id="desa"
-                        class="form-control @error('desa') is-invalid @enderror select2">
-                        <option value="">---Pilih Desa----</option>
-                        @foreach ($allDesa as $desa)
-                            <option value="{{ $desa->id }}"
-                                {{ $desa->id == $dataUmumNasabah->id_desa ? 'selected' : '' }}>{{ $desa->desa }}
-                            </option>
-                        @endforeach
-                    </select>
-                    @error('desa')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-12">
-                    <label for="">Alamat Rumah</label>
-                    <textarea disabled name="alamat_rumah" class="form-control @error('alamat_rumah') is-invalid @enderror" id=""
-                        cols="30" rows="4" placeholder="Alamat Rumah disesuaikan dengan KTP">{{ old('alamat_rumah', $dataUmumNasabah->alamat_rumah) }}</textarea>
-                    @error('alamat_rumah')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                    <hr>
-                </div>
-                <div class="form-group col-md-12">
-                    <label for="">Alamat Usaha</label>
-                    <textarea disabled name="alamat_usaha" class="form-control @error('alamat_usaha') is-invalid @enderror" id=""
-                        cols="30" rows="4" placeholder="Alamat Usaha disesuaikan dengan KTP">{{ old('alamat_usaha', $dataUmumNasabah->alamat_usaha) }}</textarea>
-                    @error('alamat_usaha')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="">Tempat</label>
-                    <input disabled type="text" name="tempat_lahir" id=""
-                        class="form-control @error('tempat_lahir') is-invalid @enderror"
-                        value="{{ old('tempat_lahir', $dataUmumNasabah->tempat_lahir) }}" placeholder="Tempat Lahir">
-                    @error('tempat_lahir')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="">Tanggal Lahir</label>
-                    <input disabled type="date" name="tanggal_lahir" id=""
-                        class="form-control @error('tanggal_lahir') is-invalid @enderror"
-                        value="{{ old('tanggal_lahir', $dataUmumNasabah->tanggal_lahir) }}" placeholder="Tempat Lahir">
-                    @error('tanggal_lahir')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-4">
-                    <label for="">Status</label>
-                    <select disabled name="status" id=""
-                        class="form-control @error('status') is-invalid @enderror select2">
-                        <option value=""> --Pilih Status --</option>
-                        <option value="menikah"
-                            {{ old('status', $dataUmumNasabah->status) == 'menikah' ? 'selected' : '' }}>
-                            Menikah</option>
-                        <option value="belum menikah"
-                            {{ old('status', $dataUmumNasabah->status) == 'belum menikah' ? 'selected' : '' }}>Belum
-                            Menikah
-                        </option>
-                        <option value="duda" {{ old('status', $dataUmumNasabah->status) == 'duda' ? 'selected' : '' }}>
-                            Duda
-                        </option>
-                        <option value="janda" {{ old('status', $dataUmumNasabah->status) == 'janda' ? 'selected' : '' }}>
-                            Janda
-                        </option>
-                    </select>
-                    @error('status')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-12">
-                    <label for="">No. KTP</label>
-                    <input disabled type="text" name="no_ktp"
-                        class="form-control @error('no_ktp') is-invalid @enderror" id=""
-                        value="{{ old('no_ktp', $dataUmumNasabah->no_ktp) }}" placeholder="Masukkan 16 digit No. KTP">
-                    @error('no_ktp')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                @if ($dataUmumNasabah->status == 'menikah')
-                    @php
-                        $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
-                            ->where('level', 2)
-                            ->where('id_parent', $itemKTPSu->id)
-                            ->where('nama', 'Foto KTP Suami')
-                            ->get();
-                    @endphp
-                    @foreach ($dataLevelDua as $item)
-                        @if ($item->opsi_jawaban == 'file')
-                            @php
-                                $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
-                                    ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-                                    ->where('jawaban_text.id_pengajuan', $dataUmum->id)
-                                    ->where('jawaban_text.id_jawaban', $item->id)
-                                    ->get();
-                            @endphp
-                            @foreach ($dataDetailJawabanText as $itemTextDua)
-                                @php
-                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
-                                @endphp
-                                <div class="form-group col-md-12">
-                                    <label for="">{{ $item->nama }}</label>
-                                    <div class="col-md-12 form-group">
-                                        <b>Jawaban:</b>
-                                        <div class="mt-2">
-                                            @if ($file_parts['extension'] == 'pdf')
-                                                <iframe
-                                                    src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
-                                                    width="100%" height="400px"></iframe>
-                                            @else
-                                                <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
-                                                    alt="" width="400px">
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        @endif
-                    @endforeach
-                    @php
-                        $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
-                            ->where('level', 2)
-                            ->where('id_parent', $itemKTPSu->id)
-                            ->where('nama', 'Foto KTP Istri')
-                            ->get();
-                    @endphp
-                    @foreach ($dataLevelDua as $item)
-                        @if ($item->opsi_jawaban == 'file')
-                            @php
-                                $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
-                                    ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-                                    ->where('jawaban_text.id_pengajuan', $dataUmum->id)
-                                    ->where('jawaban_text.id_jawaban', $item->id)
-                                    ->get();
-                            @endphp
-                            @foreach ($dataDetailJawabanText as $itemTextDua)
-                                @php
-                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
-                                @endphp
-                                <div class="form-group col-md-12">
-                                    <label for="">{{ $item->nama }}</label>
-                                    <div class="form-group">
-                                        <b>Jawaban:</b>
-                                        <div class="mt-2">
-                                            @if ($file_parts['extension'] == 'pdf')
-                                                <iframe
-                                                    src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
-                                                    width="100%" height="400px"></iframe>
-                                            @else
-                                                <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
-                                                    alt="" width="400px">
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        @endif
-                    @endforeach
-                @else
-                    @php
-                        $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
-                            ->where('level', 2)
-                            ->where('id_parent', $itemKTPSu->id)
-                            ->where('nama', 'Foto KTP Nasabah')
-                            ->get();
-                    @endphp
-                    @foreach ($dataLevelDua as $item)
-                        @if ($item->opsi_jawaban == 'file')
-                            @php
-                                $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
-                                    ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-                                    ->where('jawaban_text.id_pengajuan', $dataUmum->id)
-                                    ->where('jawaban_text.id_jawaban', $item->id)
-                                    ->get();
-                            @endphp
-                            @foreach ($dataDetailJawabanText as $itemTextDua)
-                                @php
-                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
-                                @endphp
-                                <div class="form-group col-md-12">
-                                    <label for="">{{ $item->nama }}</label>
-                                    <div class="form-group col-md-12">
-                                        <b>Jawaban:</b>
-                                        <div class="mt-2">
-                                            @if ($file_parts['extension'] == 'pdf')
-                                                <iframe
-                                                    src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
-                                                    width="100%" height="400px"></iframe>
-                                            @else
-                                                <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
-                                                    alt="" width="400px">
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                        @endif
-                    @endforeach
-                @endif
-                <div class="form-group col-md-12">
-                    <label for="">Sektor Kredit</label>
-                    <select disabled name="sektor_kredit" id=""
-                        class="form-control @error('sektor_kredit') is-invalid @enderror select2">
-                        <option value=""> --Pilih Sektor Kredit -- </option>
-                        <option value="perdagangan"
-                            {{ old('sektor_kredit', $dataUmumNasabah->sektor_kredit) == 'perdagangan' ? 'selected' : '' }}>
-                            Perdagangan</option>
-                        <option value="perindustrian"
-                            {{ old('sektor_kredit', $dataUmumNasabah->sektor_kredit) == 'perindustrian' ? 'selected' : '' }}>
-                            Perindustrian</option>
-                        <option value="dll"
-                            {{ old('sektor_kredit', $dataUmumNasabah->sektor_kredit) == 'dll' ? 'selected' : '' }}>dll
-                        </option>
-                    </select>
-                    @error('sektor_kredit')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-12">
-                    <label for="">{{ $itemSlik?->nama }}</label>
-                    <br>
-                    <b>Jawaban : </b>
-                    <div class="jawaban-responsive">
-                        {{ $itemSlik?->option }}
-                    </div>
-                    @php
-                        $komentarSlik = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', '=', 'detail_komentar.id_komentar')
-                            ->where('id_pengajuan', $dataUmum->id)
-                            ->where('id_item', $itemSlik?->id_item)
-                            ->first();
-                    @endphp
-                    <div class="input-group input-b-bottom">
-                        <input type="hidden" name="id_item[]" value="{{ $itemSlik?->id_item }}">
-                        <input type="hidden" name="id_option[]" value="{{ $itemSlik?->id_jawaban }}">
-                        <input type="text" class="form-control komentar" name="komentar_penyelia[]"
-                            placeholder="Masukkan Komentar"
-                            value="{{ isset($komentarSlik->komentar) ? $komentarSlik->komentar : '' }}">
-                        <div class="input-skor">
-                            @php
-                                $skorSlik = $itemSlik?->skor_penyelia ? $itemSlik?->skor_penyelia : $itemSlik?->skor;
-                            @endphp
-                            <input type="number" class="form-control" placeholder="" name="skor_penyelia[]"
-                                onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
-                                min="0"
-                                max="4"
-                                {{ $itemSlik?->status_skor == 0 ? 'readonly' : '' }}
-                                value="{{ $skorSlik || $skorSlik > 0 ? $skorSlik : null }}">
-                        </div>
-                    </div>
-                </div>
-                @php
-                    // $key += 1;
-                    // check level 2
-                    $dataLS = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
-                        ->where('level', 2)
-                        ->where('id_parent', $itemSP->id)
-                        ->where('nama', 'Laporan SLIK')
-                        ->get();
-                @endphp
-                @foreach ($dataLS as $item)
-                    @if ($item->opsi_jawaban == 'file')
-                        @php
-                            $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
-                                ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-                                ->where('jawaban_text.id_pengajuan', $dataUmum->id)
-                                ->where('jawaban_text.id_jawaban', $item->id)
-                                ->get();
-                        @endphp
-                        @foreach ($dataDetailJawabanText as $itemTextDua)
-                            @php
-                                $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
-                            @endphp
-                            <div class="form-group col-md-12">
-                                <label for="">{{ $item->nama }}</label>
-                            </div>
-                            <div class="col-md-12 form-group">
-                                <b>Jawaban:</b>
-                                <div class="mt-2 pl-3">
-                                    @if ($file_parts['extension'] == 'pdf')
-                                        <iframe
-                                            src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
-                                            width="100%" height="800px"></iframe>
-                                    @else
-                                        <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
-                                            alt="" width="800px">
-                                    @endif
-                                </div>
-                            </div>
-                        @endforeach
-                    @endif
-                @endforeach
-                <div class="form-group col-md-12">
-                    <label for="">Jenis Usaha</label>
-                    <textarea disabled name="jenis_usaha" class="form-control @error('jenis_usaha') is-invalid @enderror" id=""
-                        cols="30" rows="4" placeholder="Jenis Usaha secara spesifik">{{ old('jenis_usaha', $dataUmumNasabah->jenis_usaha) }}</textarea>
-                    @error('jenis_usaha')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-12">
-                    <label for="">Jumlah Kredit yang diminta</label>
-                    <input type="text" disabled name="jumlah_kredit"
-                        class="form-control @error('jumlah_kredit') is-invalid @enderror"
-                        placeholder="Jumlah Kredit"
-                        value="{{ old('jumlah_kredit', 'Rp ' . number_format($dataUmumNasabah->jumlah_kredit ? $dataUmumNasabah->jumlah_kredit : 0, 2, ',', '.')) }}">
-                    @error('jumlah_kredit')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-12">
-                    <label for="">Tenor Yang Diminta</label>
-                    <input type="text" disabled name="tenor_yang_diminta"
-                        class="form-control @error('tenor_yang_diminta') is-invalid @enderror"
-                        placeholder="Tenor Yang Diminta"
-                        value="{{ old('tenor_yang_diminta', $dataUmumNasabah->tenor_yang_diminta) }} Bulan">
-                    @error('tenor_yang_diminta')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-12">
-                    <label for="">Tujuan Kredit</label>
-                    <textarea disabled name="tujuan_kredit" class="form-control @error('tujuan_kredit') is-invalid @enderror"
-                        id="" cols="30" rows="4" placeholder="Tujuan Kredit">{{ old('tujuan_kredit', $dataUmumNasabah->tujuan_kredit) }}</textarea>
-                    @error('tujuan_kredit')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-12">
-                    <label for="">Jaminan yang disediakan</label>
-                    <textarea disabled name="jaminan" class="form-control @error('jaminan') is-invalid @enderror" id=""
-                        cols="30" rows="4" placeholder="Jaminan yang disediakan">{{ old('jaminan', $dataUmumNasabah->jaminan_kredit) }}</textarea>
-                    @error('jaminan')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-12">
-                    <label for="">Hubungan Bank</label>
-                    <textarea disabled name="hubungan_bank" class="form-control @error('hubungan_bank') is-invalid @enderror"
-                        id="" cols="30" rows="4" placeholder="Hubungan dengan Bank">{{ old('hubungan_bank', $dataUmumNasabah->hubungan_bank) }}</textarea>
-                    @error('hubungan_bank')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="form-group col-md-12">
-                    <label for="">Hasil Verifikasi</label>
-                    <textarea disabled name="hasil_verifikasi" class="form-control @error('hasil_verifikasi') is-invalid @enderror"
-                        id="" cols="30" rows="4" placeholder="Hasil Verifikasi Karakter Umum">{{ old('hasil_verifikasi', $dataUmumNasabah->verifikasi_umum) }}</textarea>
-                    @error('hasil_verifikasi')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                    <hr>
-                </div>
-            </div>
+            
         </div>
 
         @if ($dataUmumNasabah->skema_kredit == 'KKB')
@@ -588,31 +642,31 @@
             @endphp
             <div class="form-wizard" data-index='1' data-done='true' id="data-po">
             {{--  <div class="row" id="data-po">  --}}
-                <div class="form-group col-md-12">
+                <div class="form-group-1">
                     <span style="color: black; font-weight: bold; font-size: 18px;">Jenis Kendaraan Roda 2 :</span>
                 </div>
-                <div class="form-group col-md-12">
+                <div class="form-group-1">
                     <label>Merk Kendaraan</label>
-                    <input type="text" name="merk" id="merk" class="form-control @error('merk') is-invalid @enderror" value="{{ $dataPO->merk }}" placeholder="Merk kendaraan" readonly>
+                    <input type="text" name="merk" id="merk" class="form-input @error('merk') is-invalid @enderror" value="{{ $dataPO->merk }}" placeholder="Merk kendaraan" readonly>
                     @error('merk')
                         <div class="invalid-feedback">
                             {{ $message }}
                         </div>
                     @enderror
                 </div>
-                <div class="form-group col-md-12">
+                <div class="form-group-1">
                     <label>Tipe Kendaraan</label>
-                    <input type="text" name="tipe_kendaraan" id="tipe_kendaraan" class="form-control @error('tipe_kendaraan') is-invalid @enderror" value="{{ $dataPO->tipe }}" placeholder="Tipe kendaraan" readonly>
+                    <input type="text" name="tipe_kendaraan" id="tipe_kendaraan" class="form-input @error('tipe_kendaraan') is-invalid @enderror" value="{{ $dataPO->tipe }}" placeholder="Tipe kendaraan" readonly>
                     @error('tipe_kendaraan')
                         <div class="invalid-feedback">
                             {{ $message }}
                         </div>
                     @enderror
                 </div>
-                <div class="form-group col-md-12">
+                <div class="form-group-1">
                     <label for="">Tahun</label>
                     <input type="number" name="tahun" id="tahun"
-                        class="form-control @error('tahun') is-invalid @enderror" placeholder="Tahun Kendaraan"
+                        class="form-input @error('tahun') is-invalid @enderror" placeholder="Tahun Kendaraan"
                         value="{{ $dataPO?->tahun_kendaraan ?? '' }}" min="2000" disabled>
                     @error('tahun')
                         <div class="invalid-feedback">
@@ -620,10 +674,10 @@
                         </div>
                     @enderror
                 </div>
-                <div class="form-group col-md-12">
+                <div class="form-group-1">
                     <label for="">Warna</label>
                     <input type="text" name="warna" id="warna"
-                        class="form-control @error('warna') is-invalid @enderror" placeholder="Warna Kendaraan"
+                        class="form-input @error('warna') is-invalid @enderror" placeholder="Warna Kendaraan"
                         value="{{ $dataPO?->warna ?? '' }}" disabled>
                     @error('warna')
                         <div class="invalid-feedback">
@@ -631,13 +685,13 @@
                         </div>
                     @enderror
                 </div>
-                <div class="form-group col-md-12">
+                <div class="form-group-1">
                     <span style="color: black">Keterangan :</span>
                 </div>
-                <div class="form-group col-md-12">
+                <div class="form-group-1">
                     <label for="">Pemesanan</label>
                     <input type="text" name="pemesanan" id="pemesanan"
-                        class="form-control @error('pemesanan') is-invalid @enderror"
+                        class="form-input @error('pemesanan') is-invalid @enderror"
                         placeholder="Pemesanan Kendaraan" value="{{ $pemesanan ?? '' }}" disabled>
                     @error('pemesanan')
                         <div class="invalid-feedback">
@@ -645,10 +699,10 @@
                         </div>
                     @enderror
                 </div>
-                <div class="form-group col-md-12">
+                <div class="form-group-1">
                     <label for="">Sejumlah</label>
                     <input type="number" name="sejumlah" id="sejumlah"
-                        class="form-control @error('sejumlah') is-invalid @enderror" placeholder="Jumlah Kendaraan"
+                        class="form-input @error('sejumlah') is-invalid @enderror" placeholder="Jumlah Kendaraan"
                         value="{{ $dataPO?->jumlah ?? '' }}" disabled>
                     @error('sejumlah')
                         <div class="invalid-feedback">
@@ -656,10 +710,10 @@
                         </div>
                     @enderror
                 </div>
-                <div class="form-group col-md-12">
+                <div class="form-group-1">
                     <label for="">Harga</label>
                     <input type="text" name="harga" id="harga"
-                        class="form-control rupiah @error('harga') is-invalid @enderror"
+                        class="form-input rupiah @error('harga') is-invalid @enderror"
                         placeholder="Harga Kendaraan" value="{{ 'Rp ' . number_format($dataPO?->harga ?? '', 2, ',', '.') }}" disabled>
                     @error('harga')
                         <div class="invalid-feedback">
@@ -723,10 +777,10 @@
                                 @endphp
                                 @foreach ($dataDetailJawabanText as $itemTextDua)
                                     <div class="row">
-                                        <div class="form-group col-md-12 mb-0">
+                                        <div class="form-group-1 mb-0">
                                             <label for="">{{ $item->nama }}</label>
                                         </div>
-                                        <div class="col-md-12 form-group">
+                                        <div class="form-group-1">
                                             <b>Jawaban: </b>
                                                 @if ($item->opsi_jawaban == 'file')
                                                     @php
@@ -748,7 +802,7 @@
                                                     @if ($itemTextDua->is_commentable)
                                                         <input type="hidden" name="id_item[]" value="{{ $item->id }}">
                                                         <div class="input-k-bottom">
-                                                            <input type="text" class="form-control komentar"
+                                                            <input type="text" class="form-input komentar"
                                                                 name="komentar_penyelia[]" placeholder="Masukkan Komentar">
                                                         </div>
                                                     @endif
@@ -759,7 +813,7 @@
                                                     @if ($itemTextDua->is_commentable)
                                                         <input type="hidden" name="id_item[]" value="{{ $item->id }}">
                                                         <div class="input-k-bottom">
-                                                            <input type="text" class="form-control komentar"
+                                                            <input type="text" class="form-input komentar"
                                                                 name="komentar_penyelia[]" placeholder="Masukkan Komentar">
                                                         </div>
                                                     @endif
@@ -767,9 +821,9 @@
                                         </div>
                                     </div>
 
-                                    <input type="text" hidden class="form-control mb-3" placeholder="Masukkan komentar"
+                                    <input type="text" hidden class="form-input mb-3" placeholder="Masukkan komentar"
                                         name="komentar_penyelia" value="{{ $itemTextDua->nama }}" disabled>
-                                    <input type="text" hidden class="form-control mb-3" placeholder="Masukkan komentar"
+                                    <input type="text" hidden class="form-input mb-3" placeholder="Masukkan komentar"
                                         name="komentar_penyelia" value="{{ $itemTextDua->opsi_text }}" disabled>
                                     <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextDua->id }}">
                                     <input type="hidden" name="id[]" value="{{ $itemTextDua->id_item }}">
@@ -801,12 +855,12 @@
                                 @if (!$item->is_hide)
                                     @if ($item->nama != "Ijin Usaha")
                                         <div class="row">
-                                            <div class="form-group col-md-12">
+                                            <div class="form-group-1">
                                                 <h4>{{ $item->nama }}</h4>
                                             </div>
                                             @if ($item->nama == 'Ijin Usaha' && $countIjin == 0)
-                                                <div class="row col-md-12 mb-0 ml-1">
-                                                    <div class="col-md-12 form-group">
+                                                <div class="form-group-1 mb-0 ml-1">
+                                                    <div class="form-group-1">
                                                         <b>Jawaban: </b>
                                                         <div class="jawaban-responsive">
                                                             Tidak Ada Legalitas Usaha
@@ -823,7 +877,7 @@
                         @if (count($dataJawaban) != 0)
                             @if (!$item->is_hide)
                                 <div class="row">
-                                    <div class="form-group col-md-12">
+                                    <div class="form-group-1">
                                         <label for="">{{ $item->nama }}</label>
                                     </div>
                                 </div>
@@ -845,7 +899,7 @@
                                     @endphp
                                     @if (in_array($itemJawaban->id, $data))
                                         @if (isset($data))
-                                            <div class="col-md-12 form-group">
+                                            <div class="form-group-1">
                                                 @if (!$item->is_hide)
                                                     @if ($item->nama)
                                                         <div class="row">
@@ -863,7 +917,7 @@
                                                         <input type="hidden" name="id_option[]"
                                                             value="{{ $itemJawaban->id }}">
                                                         @if ($item->is_commentable == 'Ya')
-                                                            <input type="text" class="form-control komentar"
+                                                            <input type="text" class="form-input komentar"
                                                                 name="komentar_penyelia[]" placeholder="Masukkan Komentar"
                                                                 value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                             <div class="input-skor">
@@ -871,7 +925,7 @@
                                                                     $skorInput2 = null;
                                                                     $skorInput2 = $getSkorPenyelia->skor_penyelia ? $getSkorPenyelia->skor_penyelia : $itemJawaban->skor;
                                                                 @endphp
-                                                                <input type="number" class="form-control" placeholder=""
+                                                                <input type="number" class="form-input" placeholder=""
                                                                     name="skor_penyelia[]"
                                                                     min="0"
                                                                     max="4"
@@ -912,10 +966,10 @@
                                                     </div>
                                                 @endif
                                             </div>
-                                            <input type="text" hidden class="form-control mb-3"
+                                            <input type="text" hidden class="form-input mb-3"
                                                 placeholder="Masukkan komentar" name="komentar_penyelia"
                                                 value="{{ $itemJawaban->option }}" disabled>
-                                            <input type="text" hidden class="form-control mb-3"
+                                            <input type="text" hidden class="form-input mb-3"
                                                 placeholder="Masukkan komentar" name="komentar_penyelia"
                                                 value="{{ $itemJawaban->skor }}" disabled>
                                             <input type="hidden" name="id[]" value="{{ $item->id }}">
@@ -939,7 +993,7 @@
                                     @foreach ($dataDetailJawabanText as $itemTextTiga)
                                         @if ($itemTextTiga->nama != 'Ratio Tenor Asuransi')
                                             <div class="row">
-                                                <div class="form-group col-md-12 mb-0">
+                                                <div class="form-group-1 mb-0">
                                                     @if ($itemTiga->opsi_jawaban == 'file')
                                                         @if ($jumlahDataDetailJawabanText > 1)
                                                             <label for="">{{ $itemTextTiga->nama }} {{$loop->iteration}}</label>
@@ -974,7 +1028,7 @@
                                                                 <div class="input-k-bottom">
                                                                     <input type="hidden" name="id_item[]"
                                                                         value="{{ $item->id }}">
-                                                                    <input type="text" class="form-control komentar"
+                                                                    <input type="text" class="form-input komentar"
                                                                         name="komentar_penyelia[]"
                                                                         placeholder="Masukkan Komentar">
                                                                 </div>
@@ -987,7 +1041,7 @@
                                                                 <div class="input-k-bottom">
                                                                     <input type="hidden" name="id_item[]"
                                                                         value="{{ $item->id }}">
-                                                                    <input type="text" class="form-control komentar"
+                                                                    <input type="text" class="form-input komentar"
                                                                         name="komentar_penyelia[]"
                                                                         placeholder="Masukkan Komentar">
                                                                 </div>
@@ -996,9 +1050,9 @@
                                                 </div>
                                             </div>
 
-                                            <input type="hidden" class="form-control mb-3" placeholder="Masukkan komentar"
+                                            <input type="hidden" class="form-input mb-3" placeholder="Masukkan komentar"
                                                 name="komentar_penyelia" value="{{ $itemTextTiga->nama }}" disabled>
-                                            <input type="hidden" class="form-control mb-3" placeholder="Masukkan komentar"
+                                            <input type="hidden" class="form-input mb-3" placeholder="Masukkan komentar"
                                                 name="komentar_penyelia" value="{{ $itemTextTiga->opsi_text }}" disabled>
 
                                             <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextTiga->id }}">
@@ -1036,7 +1090,7 @@
                                             @if (isset($checkJawabanKelayakan))
                                             @else
                                                 <div class="row">
-                                                    <div class="form-group col-md-12">
+                                                    <div class="form-group-1">
                                                         <h5> {{ $itemTiga->nama }}</h5>
                                                     </div>
                                                 </div>
@@ -1052,7 +1106,7 @@
                                             @if ($itemTiga->nama != 'Kelayakan Usaha')
                                             {{-- @else --}}
                                                 <div class="row">
-                                                    <div class="form-group col-md-12">
+                                                    <div class="form-group-1">
                                                         <label for="">{{ $itemTiga->nama }}</label>
                                                     </div>
                                                 </div>
@@ -1060,7 +1114,7 @@
                                         @else
                                             @if ($itemTiga->nama != 'Kelayakan Usaha')
                                                 <div class="row">
-                                                    <div class="form-group col-md-12">
+                                                    <div class="form-group-1">
                                                         <label for="">{{ $itemTiga->nama }}</label>
                                                     </div>
                                                 </div>
@@ -1086,7 +1140,7 @@
                                                     @endphp
                                                     @if (in_array($itemJawabanLevelTiga->id, $data))
                                                         @if (isset($data))
-                                                            <div class="col-md-12 form-group">
+                                                            <div class="form-group-1">
                                                                 @if ($itemTiga->nama != 'Ratio Coverage Opsi')
                                                                     <div class="row">
                                                                         <div class="col-md-12">
@@ -1107,12 +1161,12 @@
                                                                         $skorInput3 = $getSkorPenyelia?->skor_penyelia ? $getSkorPenyelia?->skor_penyelia : $itemJawabanLevelTiga->skor;
                                                                     @endphp
                                                                     @if ($itemTiga->is_commentable == 'Ya')
-                                                                        <input type="text" class="form-control komentar"
+                                                                        <input type="text" class="form-input komentar"
                                                                             name="komentar_penyelia[]"
                                                                             placeholder="Masukkan Komentar"
                                                                             value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                         <div class="input-skor">
-                                                                            <input type="number" class="form-control"
+                                                                            <input type="number" class="form-input"
                                                                                 min="0"
                                                                                 max="4"
                                                                                 placeholder="" name="skor_penyelia[]"
@@ -1128,10 +1182,10 @@
                                                                     @endif
                                                                 </div>
                                                             </div>
-                                                            <input type="text" hidden class="form-control mb-3"
+                                                            <input type="text" hidden class="form-input mb-3"
                                                                 placeholder="Masukkan komentar" name="komentar_penyelia"
                                                                 value="{{ $itemJawabanLevelTiga->option }}" disabled>
-                                                            <input type="text" hidden class="form-control mb-3"
+                                                            <input type="text" hidden class="form-input mb-3"
                                                                 placeholder="Masukkan komentar" name="skor_penyelia"
                                                                 value="{{ $itemJawabanLevelTiga->skor }}" disabled>
                                                             <input type="hidden" name="id[]"
@@ -1155,7 +1209,7 @@
                                             @endphp
                                             @foreach ($dataDetailJawabanTextEmpat as $itemTextEmpat)
                                                 <div class="row">
-                                                    <div class="form-group col-md-12 mb-0">
+                                                    <div class="form-group-1 mb-0">
                                                         <label for="">{{ $itemTextEmpat->nama }}</label>
                                                         <br>
                                                         <b>Jawaban:</b>
@@ -1197,7 +1251,7 @@
                                                                             <input type="hidden" name="id_item[]"
                                                                                 value="{{ $item->id }}">
                                                                             <input type="text"
-                                                                                class="form-control komentar"
+                                                                                class="form-input komentar"
                                                                                 name="komentar_penyelia[]"
                                                                                 placeholder="Masukkan Komentar">
                                                                         </div>
@@ -1217,7 +1271,7 @@
                                                                             <input type="hidden" name="id_item[]"
                                                                                 value="{{ $item->id }}">
                                                                             <input type="text"
-                                                                                class="form-control komentar"
+                                                                                class="form-input komentar"
                                                                                 name="komentar_penyelia[]"
                                                                                 placeholder="Masukkan Komentar">
                                                                         </div>
@@ -1227,10 +1281,10 @@
                                                     </div>
                                                 </div>
 
-                                                <input type="hidden" class="form-control mb-3"
+                                                <input type="hidden" class="form-input mb-3"
                                                     placeholder="Masukkan komentar" name="komentar_penyelia"
                                                     value="{{ $itemTextEmpat->nama }}" disabled>
-                                                <input type="hidden" class="form-control mb-3"
+                                                <input type="hidden" class="form-input mb-3"
                                                     placeholder="Masukkan komentar" name="komentar_penyelia"
                                                     value="{{ $itemTextEmpat->opsi_text }}" disabled>
                                                 <input type="hidden" name="id_jawaban_text[]"
@@ -1263,7 +1317,7 @@
                                         @if ($itemEmpat->opsi_jawaban == 'option' && $isJawabanExist > 0)
                                             @if ($itemEmpat->nama != "Tidak Memiliki Jaminan Tambahan")
                                                 <div class="row">
-                                                    <div class="form-group col-md-12 mb-0">
+                                                    <div class="form-group-1 mb-0">
                                                         <label for="">{{ $itemEmpat->nama }}</label>
                                                     </div>
                                                 </div> 
@@ -1289,7 +1343,7 @@
                                                     @endphp
                                                     @if (in_array($itemJawabanLevelEmpat->id, $data))
                                                         @if (isset($data))
-                                                            <div class="col-md-12 form-group">
+                                                            <div class="form-group-1">
                                                                 @if ($itemEmpat->nama != "Tidak Memiliki Jaminan Tambahan")
                                                                     <div class="row">
                                                                         <div class="col-md-12">
@@ -1306,7 +1360,7 @@
                                                                     <input type="hidden" name="id_option[]"
                                                                         value="{{ $itemJawabanLevelEmpat->id }}">
                                                                     @if ($itemEmpat->is_commentable == 'Ya')
-                                                                        <input type="text" class="form-control komentar"
+                                                                        <input type="text" class="form-input komentar"
                                                                             name="komentar_penyelia[]"
                                                                             placeholder="Masukkan Komentar"
                                                                             value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
@@ -1315,7 +1369,7 @@
                                                                                 $skorInput4 = null;
                                                                                 $skorInput4 = $getSkorPenyelia?->skor_penyelia ? $getSkorPenyelia?->skor_penyelia : $itemJawabanLevelEmpat->skor;
                                                                             @endphp
-                                                                            <input type="number" class="form-control"
+                                                                            <input type="number" class="form-input"
                                                                                 placeholder="" name="skor_penyelia[]"
                                                                                 min="0"
                                                                                 max="4"
@@ -1326,7 +1380,7 @@
                                                                     @endif
                                                                 </div>
                                                             </div>
-                                                            <input type="hidden" class="form-control mb-3"
+                                                            <input type="hidden" class="form-input mb-3"
                                                                 placeholder="Masukkan komentar" name="komentar_penyelia"
                                                                 value="{{ $itemJawabanLevelEmpat->option }}" disabled>
                                                             <input type="hidden" name="id[]"
@@ -1348,10 +1402,10 @@
                                 ->where('id_pbp', Auth::user()->id)
                                 ->first();
                         @endphp
-                        <div class="form-group col-md-12">
+                        <div class="form-group-1">
                             <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
                             <input type="hidden" name="id_aspek[]" value="{{ $value->id }}">
-                            <textarea name="pendapat_per_aspek[]" class="form-control @error('pendapat_per_aspek') is-invalid @enderror"
+                            <textarea name="pendapat_per_aspek[]" class="form-input @error('pendapat_per_aspek') is-invalid @enderror"
                                 id="pendapat_per_aspek[]" cols="30" rows="4" placeholder="Pendapat Per Aspek">{{ isset($getPendapatPerAspek->pendapat_per_aspek) ? $getPendapatPerAspek->pendapat_per_aspek : '' }}</textarea>
                             @error('pendapat_per_aspek')
                                 <div class="invalid-feedback">
@@ -1362,16 +1416,16 @@
                 </div>
                 <hr>
                 <hr>
-                <div class="form-group col-md-12">
+                <div class="form-group-1">
                     <label for="">Pendapat dan Usulan Staf Kredit</label>
                     <p>{{ $pendapatStafPerAspek->pendapat_per_aspek }}</p>
                 </div>
-                <div class="form-group col-md-12">
+                <div class="form-group-1">
                     <label for="">Pendapat dan Usulan Penyelia Kredit</label>
                     <p>{{ $pendapatPenyeliaPerAspek?->pendapat_per_aspek }}</p>
                 </div>
                 @if ($dataUmumNasabah->id_pbo)
-                    <div class="form-group col-md-12">
+                    <div class="form-group-1">
                         <label for="">Pendapat dan Usulan PBO</label>
                         <p>{{ $pendapatDanUsulanPBO->komentar_pbo }}</p>
                     </div>
@@ -1383,10 +1437,10 @@
                             ->where('id_pbo', Auth::user()->id)
                             ->first();
                     @endphp
-                    <div class="form-group col-md-12">
+                    <div class="form-group-1">
                         <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
                         <input type="hidden" name="id_aspek[]" value="{{ $value->id }}">
-                        <textarea name="pendapat_per_aspek[]" class="form-control @error('pendapat_per_aspek') is-invalid @enderror"
+                        <textarea name="pendapat_per_aspek[]" class="form-input @error('pendapat_per_aspek') is-invalid @enderror"
                             id="pendapat_per_aspek[]" cols="30" rows="4" placeholder="Pendapat Per Aspek">{{ isset($getPendapatPerAspek->pendapat_per_aspek) ? $getPendapatPerAspek->pendapat_per_aspek : '' }}</textarea>
                         @error('pendapat_per_aspek')
                             <div class="invalid-feedback">
@@ -1397,11 +1451,11 @@
             </div>
             <hr>
             <hr>
-            <div class="form-group col-md-12">
+            <div class="form-group-1">
                 <label for="">Pendapat dan Usulan Staf Kredit</label>
                 <p>{{ $pendapatStafPerAspek->pendapat_per_aspek }}</p>
             </div>
-            <div class="form-group col-md-12">
+            <div class="form-group-1">
                 <label for="">Pendapat dan Usulan Penyelia Kredit</label>
                 <p>{{ $pendapatPenyeliaPerAspek->pendapat_per_aspek }}</p>
             </div>
@@ -1412,10 +1466,10 @@
                         ->where('id_penyelia', Auth::user()->id)
                         ->first();
                 @endphp
-                <div class="form-group col-md-12">
+                <div class="form-group-1">
                     <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
                     <input type="hidden" name="id_aspek[]" value="{{ $value->id }}">
-                    <textarea name="pendapat_per_aspek[]" class="form-control @error('pendapat_per_aspek') is-invalid @enderror"
+                    <textarea name="pendapat_per_aspek[]" class="form-input @error('pendapat_per_aspek') is-invalid @enderror"
                         id="pendapat_per_aspek[]" cols="30" rows="4" placeholder="Pendapat Per Aspek">{{ isset($getPendapatPerAspek->pendapat_per_aspek) ? $getPendapatPerAspek->pendapat_per_aspek : '' }}</textarea>
                     @error('pendapat_per_aspek')
                         <div class="invalid-feedback">
@@ -1425,7 +1479,7 @@
                 </div>
             </div>
             <hr>
-            <div class="form-group col-md-12">
+            <div class="form-group-1">
                 <label for="">Pendapat dan Usulan Staf Kredit</label>
                 <p>{{ $pendapatStafPerAspek?->pendapat_per_aspek }}</p>
             </div>
@@ -1433,7 +1487,7 @@
         </div>
         @endforeach
         {{-- pendapat dan usulan --}}
-        {{-- <div class="row col-md-12 table-responsive mb-3">
+        {{-- <div class="form-group-1 table-responsive mb-3">
             <label for="">Riwayat Pengembalian Data</label>
             <div class="col-md-12">
                 <table style="width: 100%" class="table table-borderless">
@@ -1469,7 +1523,7 @@
         @if (Auth::user()->role == 'Penyelia Kredit')
             <div class="form-wizard" data-index='{{ $dataUmumNasabah->skema_kredit == 'KKB' ? count($dataAspek) + $dataIndex + 1 : count($dataAspek) + $dataIndex }}' data-done='true'>
                 <div class="row">
-                    <div class="form-group col-md-12">
+                    <div class="form-group-1">
                         <label for="">Pendapat dan Usulan Staf Kredit</label>
                         <br>
                         <span>
@@ -1477,10 +1531,10 @@
                         </span>
                         <hr>
                     </div>
-                    <div class="form-group col-md-12">
+                    <div class="form-group-1">
                         <label for="">Pendapat dan Usulan Penyelia</label>
                         <textarea name="komentar_penyelia_keseluruhan"
-                            class="form-control @error('komentar_penyelia_keseluruhan') is-invalid @enderror" id="komentar_penyelia_keseluruhan" cols="30"
+                            class="form-input @error('komentar_penyelia_keseluruhan') is-invalid @enderror" id="komentar_penyelia_keseluruhan" cols="30"
                             rows="4" placeholder="Pendapat dan Usulan Penyelia">{{ isset($pendapatDanUsulanPenyelia->komentar_penyelia) ? $pendapatDanUsulanPenyelia->komentar_penyelia : '' }}</textarea>
                         @error('komentar_penyelia_keseluruhan')
                             <div class="invalid-feedback">
@@ -1494,7 +1548,7 @@
         @elseif (Auth::user()->role == 'PBO')
             <div class="form-wizard" data-index='{{ $dataUmumNasabah->skema_kredit == 'KKB' ? count($dataAspek) + $dataIndex + 1 : count($dataAspek) + $dataIndex }}' data-done='true'>
                 <div class="row">
-                    <div class="form-group col-md-12">
+                    <div class="form-group-1">
                         <label for="">Pendapat dan Usulan Staf Kredit</label>
                         <br>
                         <span>
@@ -1502,7 +1556,7 @@
                         </span>
                         <hr>
                     </div>
-                    <div class="form-group col-md-12">
+                    <div class="form-group-1">
                         <label for="">Pendapat dan Usulan Penyelia Kredit</label>
                         <br>
                         <span>
@@ -1510,10 +1564,10 @@
                         </span>
                         <hr>
                     </div>
-                    <div class="form-group col-md-12">
+                    <div class="form-group-1">
                         <label for="">Pendapat dan Usulan PBO</label>
                         <textarea name="komentar_pbo_keseluruhan"
-                            class="form-control @error('komentar_pbo_keseluruhan') is-invalid @enderror" id="komentar_pbo_keseluruhan" cols="30"
+                            class="form-input @error('komentar_pbo_keseluruhan') is-invalid @enderror" id="komentar_pbo_keseluruhan" cols="30"
                             rows="4" placeholder="Pendapat dan Usulan Penyelia Kredit" >{{ isset($pendapatDanUsulanPBO->komentar_pbO) ? $pendapatDanUsulanPBO->komentar_pbO : '' }}</textarea>
                         @error('komentar_pbo_keseluruhan')
                             <div class="invalid-feedback">
@@ -1527,7 +1581,7 @@
         @else
             <div class="form-wizard" data-index='{{ $dataUmumNasabah->skema_kredit == 'KKB' ? count($dataAspek) + $dataIndex + 1 : count($dataAspek) + $dataIndex }}' data-done='true'>
                 <div class="row">
-                    <div class="form-group col-md-12">
+                    <div class="form-group-1">
                         <label for="">Pendapat dan Usulan Staf Kredit</label>
                         <br>
                         <span>
@@ -1535,7 +1589,7 @@
                         </span>
                         <hr>
                     </div>
-                    <div class="form-group col-md-12">
+                    <div class="form-group-1">
                         <label for="">Pendapat dan Usulan Penyelia Kredit</label>
                         <br>
                         <span>
@@ -1544,7 +1598,7 @@
                         <hr>
                     </div>
                     @if ($dataUmumNasabah->id_pbo)
-                    <div class="form-group col-md-12">
+                    <div class="form-group-1">
                         <label for="">Pendapat dan Usulan PBO</label>
                         <br>
                         <span>
@@ -1553,10 +1607,10 @@
                         <hr>
                     </div>
                     @endif
-                    <div class="form-group col-md-12">
+                    <div class="form-group-1">
                         <label for="">Pendapat dan Usulan PBP</label>
                         <textarea name="komentar_pbp_keseluruhan"
-                            class="form-control @error('komentar_pbp_keseluruhan') is-invalid @enderror" id="komentar_pbp_keseluruhan" cols="30"
+                            class="form-input @error('komentar_pbp_keseluruhan') is-invalid @enderror" id="komentar_pbp_keseluruhan" cols="30"
                             rows="4" placeholder="Pendapat dan Usulan Penyelia Kredit" >{{ isset($pendapatDanUsulanPBP->komentar_pbp) ? $pendapatDanUsulanPBP->komentar_pbp : '' }}</textarea>
                         @error('komentar_pbp_keseluruhan')
                             <div class="invalid-feedback">
@@ -1581,7 +1635,7 @@
     </form>
 @endsection
 
-@push('custom-script')
+@push('script-inject')
     <script>
         // disabled scrol on input type number
         $(document).on("wheel", "input[type=number]", function (e) {
@@ -2142,5 +2196,423 @@
         }
 
 
+    </script>
+    <script>
+        // Start Validation
+         @if (count($errors->all()))
+            Swal.fire({
+                icon: 'error',
+                title: 'Error Validation',
+                html: `
+            <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                @foreach ($errors->all() as $error)
+                <ul>
+                    <li>{{ $error }}</li>
+                </ul>
+                @endforeach
+            </div>
+            `
+            });
+        @endif
+    
+        $(".btn-simpan").on('click', function(e) {
+            if ($('#pendapat_usulan').val() == '') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: "Field Pendapat dan usulan harus diisi"
+                })
+                e.preventDefault()
+            }
+        })
+    
+        // End Validation
+    
+    
+        $('#kabupaten').change(function() {
+            var kabID = $(this).val();
+            if (kabID) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('') }}/getkecamatan?kabID=" + kabID,
+                    dataType: 'JSON',
+                    success: function(res) {
+                           console.log(res);
+                        if (res) {
+                            $("#kecamatan").empty();
+                            $("#kecamatan").append('<option>---Pilih Kecamatan---</option>');
+                            $.each(res, function(nama, kode) {
+                                $('#kecamatan').append(`
+                                    <option value="${kode}">${nama}</option>
+                                `);
+                            });
+    
+                            $('#kecamatan').trigger('change');
+                        } else {
+                            $("#kecamatan").empty();
+                        }
+                    }
+                });
+            } else {
+                $("#kecamatan").empty();
+            }
+        });
+        $('#kabupaten_domisili').change(function() {
+            var kabID = $(this).val();
+            if (kabID) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('') }}/getkecamatan?kabID=" + kabID,
+                    dataType: 'JSON',
+                    success: function(res) {
+                           console.log(res);
+                        if (res) {
+                            $("#kecamatan_domisili").empty();
+                            $("#kecamatan_domisili").append('<option>---Pilih Kecamatan---</option>');
+                            $.each(res, function(nama, kode) {
+                                $('#kecamatan_domisili').append(`
+                                    <option value="${kode}">${nama}</option>
+                                `);
+                            });
+    
+                            $('#kecamatan_domisili').trigger('change');
+                        } else {
+                            $("#kecamatan_domisili").empty();
+                        }
+                    }
+                });
+            } else {
+                $("#kecamatan_domisili").empty();
+            }
+        });
+        $('#kabupaten_usaha').change(function() {
+            var kabID = $(this).val();
+            if (kabID) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('') }}/getkecamatan?kabID=" + kabID,
+                    dataType: 'JSON',
+                    success: function(res) {
+                           console.log(res);
+                        if (res) {
+                            $("#kecamatan_usaha").empty();
+                            $("#kecamatan_usaha").append('<option>---Pilih Kecamatan---</option>');
+                            $.each(res, function(nama, kode) {
+                                $('#kecamatan_usaha').append(`
+                                    <option value="${kode}">${nama}</option>
+                                `);
+                            });
+    
+                            $('#kecamatan_usaha').trigger('change');
+                        } else {
+                            $("#kecamatan_usaha").empty();
+                        }
+                    }
+                });
+            } else {
+                $("#kecamatan_usaha").empty();
+            }
+        });
+    
+        $('#status_nasabah').on('change', function(e){
+            var status = $(this).val();
+            // console.log(status);
+            if (status == 2) {
+                $('#label-ktp-nasabah').empty();
+                $('#label-ktp-nasabah').html('Foto KTP Nasabah');
+                $('#nik_pasangan').removeClass('hidden');
+                $('#ktp-pasangan').removeClass('hidden');
+            } else {
+                $('#label-ktp-nasabah').empty();
+                $('#label-ktp-nasabah').html('Foto KTP Nasabah');
+                $('#nik_pasangan').addClass('hidden');
+                $('#ktp-pasangan').addClass('hidden');
+            }
+        })
+    
+        $('#tipe').on('change',function(e) {
+            var tipe = $(this).val();
+            console.log(tipe);
+            if (tipe == '2' || tipe == "0" ) {
+                $('#nama_pj').addClass('hidden');
+                $('#tempat_berdiri').addClass('hidden');
+                $('#tanggal_berdiri').addClass('hidden');
+            }else{
+                $('#nama_pj').removeClass('hidden');
+                $('#tempat_berdiri').removeClass('hidden');
+                $('#tanggal_berdiri').removeClass('hidden');
+                //badan usaha
+                if (tipe == '3') {
+                    $('#label_pj').html('Nama penanggung jawab');
+                    $('#input_pj').attr('placeholder', 'Masukkan Nama Penanggung Jawab');
+                }
+                // perorangan
+                else if (tipe == '4') {
+                    $('#label_pj').html('Nama ketua');
+                    $('#input_pj').attr('placeholder', 'Masukkan Nama Ketua');
+                }
+            }
+        })
+    
+        function validatePhoneNumber(input) {
+            var phoneNumber = input.value.replace(/\D/g, '');
+    
+            if (phoneNumber.length > 15) {
+                phoneNumber = phoneNumber.substring(0, 15);
+            }
+    
+            input.value = phoneNumber;
+        }
+    
+        function validateNIK(input) {
+            var nikNumber = input.value.replace(/\D/g, '');
+    
+            if (nikNumber.length > 16) {
+                nikNumber = nikNumber.substring(0, 16);
+            }
+    
+            input.value = nikNumber;
+        }
+    
+        $('.rupiah').keyup(function(e) {
+            var input = $(this).val()
+            $(this).val(formatrupiah(input))
+        });
+        function formatrupiah(angka, prefix) {
+            var number_string = angka.replace(/[^,\d]/g, '').toString(),
+                split = number_string.split(','),
+                sisa = split[0].length % 3,
+                rupiah = split[0].substr(0, sisa),
+                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+    
+            // tambahkan titik jika yang di input sudah menjadi angka ribuan
+            if (ribuan) {
+                separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+    
+            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+            return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
+        }
+        // tab
+        $(".tab-wrapper .btn-tab").click(function(e) {
+            e.preventDefault();
+            var tabId = $(this).data("tab");
+            console.log(tabId);
+    
+            $(".is-tab-content").removeClass("active");
+            $(".tab-wrapper .btn-tab").removeClass(
+                "active-tab"
+            );
+            $(".tab-wrapper .btn-tab").removeClass("active-tab");
+            $(".tab-wrapper .btn-tab").removeClass("active-tab");
+            $(".tab-wrapper .btn-tab").addClass("disable-tab");
+    
+            $(this).addClass("active-tab");
+            // $(this).addClass("text-gray-600");
+    
+            if (tabId) {
+                // $(this).removeClass("text-gray-400");
+                // $(this).removeClass("text-gray-400");
+                $(this).removeClass("disable-tab");
+                $(this).removeClass("disable-tab");
+            }
+    
+            $("#" + tabId + "-tab").addClass("active");
+        });
+    
+        $(".next-tab").on("click", function(e) {
+            const $activeContent = $(".is-tab-content.active");
+            const $nextContent = $activeContent.next();
+    
+            console.log($nextContent.length);
+            if ($nextContent.length) {
+                $activeContent.removeClass("active");
+                $nextContent.addClass("active");
+            }else{
+                $(".next-tab").addClass('hidden');
+                $('.btn-simpan').removeClass('hidden')
+            }
+    
+        });
+    
+        $(".prev-tab").on("click", function() {
+            const $activeContent = $(".is-tab-content.active");
+            const $prevContent = $activeContent.prev();
+    
+            if ($prevContent.length) {
+                $activeContent.removeClass("active");
+                $prevContent.addClass("active");
+                $(".next-tab").rem('hidden');
+                $('.btn-simpan').addClass('hidden')
+            }
+        });
+    
+        $(".toggle-side").click(function(e) {
+            $('.sidenav').toggleClass('hidden')
+        })
+        $('.owl-carousel').owlCarousel({
+            margin: 10,
+            autoWidth: true,
+            dots: false,
+            responsive: {
+                0: {
+                    items: 3
+                },
+                600: {
+                    items: 5
+                },
+                1000: {
+                    items: 10
+                }
+            }
+        })
+    
+        $("#usaha").on("change", function() {
+            if ($(this).val() == "tanah") {
+                $("#tanah").removeClass("hidden");
+                $("#kendaraan").addClass("hidden");
+                $("#tanah-dan-bangunan").addClass("hidden");
+                $("#form-tanah").removeClass("hidden");
+                $("#form-kendaraan").addClass("hidden");
+            } else if ($(this).val() == "kendaraan") {
+                $("#tanah").addClass("hidden");
+                $("#kendaraan").removeClass("hidden");
+                $("#tanah-dan-bangunan").addClass("hidden");
+                $("#form-tanah").addClass("hidden");
+                $("#form-kendaraan").removeClass("hidden");
+            } else if ($(this).val() == "tanah-dan-bangunan") {
+                $("#tanah").addClass("hidden");
+                $("#kendaraan").addClass("hidden");
+                $("#tanah-dan-bangunan").removeClass("hidden");
+                $("#form-tanah").removeClass("hidden");
+                $("#form-kendaraan").addClass("hidden");
+            } else {
+                $("#form-tanah").addClass("hidden");
+                $("#form-kendaraan").addClass("hidden");
+                $("#tanah").addClass("hidden");
+                $("#tanah-dan-bangunan").addClass("hidden");
+                $("#kendaraan").addClass("hidden");
+            }
+        });
+        $("#is-npwp").on("change", function() {
+            if ($(this).is(":checked")) {
+                $("#npwp").removeClass("hidden");
+            } else {
+                $("#npwp").addClass("hidden");
+            }
+        });
+        $("#shm-check").on("change", function() {
+            if ($(this).is(":checked")) {
+                $("#no-shm-input").removeClass("disabled");
+                $("#no-shm-input").prop("disabled", false);
+            } else {
+                $("#no-shm-input").addClass("disabled");
+                $("#no-shm-input").prop("disabled", true);
+            }
+        });
+        $("#shgb-check").on("change", function() {
+            if ($(this).is(":checked")) {
+                $("#no-shgb-input").removeClass("disabled");
+                $("#no-shgb-input").prop("disabled", false);
+            } else {
+                $("#no-shgb-input").addClass("disabled");
+                $("#no-shgb-input").prop("disabled", true);
+            }
+        });
+        // petak
+        $("#petak-check").on("change", function() {
+            if ($(this).is(":checked")) {
+                $("#no-petak-input").removeClass("disabled");
+                $("#no-petak-input").prop("disabled", false);
+            } else {
+                $("#no-petak-input").addClass("disabled");
+                $("#no-petak-input").prop("disabled", true);
+            }
+        });
+        // ijin usaha
+        $("#ijin-usaha").on("change", function() {
+            console.log($(this).val());
+            if ($(this).val() == "nib") {
+                $("#nib").removeClass("hidden");
+                $("#label-nib").removeClass("hidden");
+                $("#dokumen-nib").removeClass("hidden");
+                $("#label-dokumen-nib").removeClass("hidden");
+                $("#npwp").removeClass("hidden");
+                $("#label-npwp").removeClass("hidden");
+                $("#dokumen-npwp").removeClass("hidden");
+                $("#label-dokumen-npwp").removeClass("hidden");
+                $("#have-npwp").addClass("hidden");
+                $("#surat-keterangan-usaha").addClass("hidden");
+                $("#label-surat-keterangan-usaha").addClass("hidden");
+                $("#dokumen-surat-keterangan-usaha").addClass("hidden");
+                $("#label-dokumen-surat-keterangan-usaha").addClass("hidden");
+            } else if ($(this).val() == "sku") {
+                $("#surat-keterangan-usaha").removeClass("hidden");
+                $("#label-surat-keterangan-usaha").removeClass("hidden");
+                $("#label-dokumen-surat-keterangan-usaha").removeClass("hidden");
+                $("#dokumen-surat-keterangan-usaha").removeClass("hidden");
+                $("#have-npwp").removeClass("hidden");
+                $("#npwp").addClass("hidden");
+                $("#label-npwp").addClass("hidden");
+                $("#label-dokumen-npwp").addClass("hidden");
+                $("#dokumen-npwp").addClass("hidden");
+                $("#label-nib").addClass("hidden");
+                $("#nib").addClass("hidden");
+                $("#label-dokumen-nib").addClass("hidden");
+                $("#dokumen-nib").addClass("hidden");
+            } else {
+                $("#surat-keterangan-usaha").addClass("hidden");
+                $("#label-surat-keterangan-usaha").addClass("hidden");
+                $("#label-dokumen-surat-keterangan-usaha").addClass("hidden");
+                $("#dokumen-surat-keterangan-usaha").addClass("hidden");
+                $("#nib").addClass("hidden");
+                $("#label-nib").addClass("hidden");
+                $("#dokumen-nib").addClass("hidden");
+                $("#label-dokumen-nib").addClass("hidden");
+                $("#npwp").addClass("hidden");
+                $("#label-npwp").addClass("hidden");
+                $("#dokumen-npwp").addClass("hidden");
+                $("#label-dokumen-npwp").addClass("hidden");
+                $("#have-npwp").addClass("hidden");
+                $("#sku").addClass("hidden");
+                $("#label-sku").addClass("hidden");
+                $("#dokumen-sku").addClass("hidden");
+                $("#label-dokumen-sku").addClass("hidden");
+            }
+        });
+        // npwp
+        $("#is-npwp").on("change", function() {
+            if ($(this).is(":checked")) {
+                $("#npwp").removeClass("hidden");
+                $("#label-npwp").removeClass("hidden");
+                $("#dokumen-npwp").removeClass("hidden");
+                $("#label-dokumen-npwp").removeClass("hidden");
+            } else {
+                $("#npwp").addClass("hidden");
+                $("#label-npwp").addClass("hidden");
+                $("#dokumen-npwp").addClass("hidden");
+                $("#label-dokumen-npwp").addClass("hidden");
+            }
+        });
+    
+        $(document).on('click', '.btn-add', function() {
+            const item_id = $(this).data('item-id');
+            var item_element = $(`.${item_id}`)
+            var iteration = item_element.length
+            var input = $(this).closest('.input-box')
+            var multiple = input.find('.multiple-action')
+            var new_multiple = multiple.html().replaceAll('hidden', '')
+            input = input.html().replaceAll(multiple.html(), new_multiple);
+            var parent = $(this).closest('.input-box').parent()
+            parent.append(`<div class="input-box mb-4">${input}`)
+        })
+    
+        $(document).on('click', '.btn-minus', function() {
+            const item_id = $(this).data('item-id');
+            var item_element = $(`#${item_id}`)
+            var parent = $(this).closest('.input-box')
+            parent.remove()
+        })
     </script>
 @endpush
