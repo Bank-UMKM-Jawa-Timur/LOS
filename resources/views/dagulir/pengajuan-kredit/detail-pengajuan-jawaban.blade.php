@@ -620,51 +620,56 @@
                                                         </div>
                                                         <div class="form-group-1">
                                                             @if ($item->opsi_jawaban == 'file')
-                                                                    <b>Jawaban: </b>
-                                                                    @php
-                                                                        $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
-                                                                    @endphp
-                                                                    @if ($file_parts['extension'] == 'pdf')
-                                                                        <iframe
-                                                                            src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
-                                                                            width="100%" height="800px"></iframe>
-                                                                    @else
-                                                                        <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
-                                                                            alt="" width="800px">
-                                                                    @endif
-                                                                    {{-- Rupiah data dua --}}
-                                                                @elseif ($item->opsi_jawaban == 'number' && $item->id != 143)
-                                                                        <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
-                                                                            <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
-                                                                            <h4 class="font-bold">Rp. {{ number_format((int) $itemTextDua->opsi_text, 2, ',', '.') }}</h4>
-                                                                        </div>
-                                                                    @if ($itemTextDua->is_commentable)
-                                                                        <input type="hidden" name="id_item[]" value="{{ $item->id }}">
-                                                                        @if (Auth::user()->role != 'Pincab')
-                                                                            <div class="input-k-bottom">
-                                                                                <input type="text" class="form-input komentar"
-                                                                                    name="komentar_penyelia[]" placeholder="Masukkan Komentar">
-                                                                            </div>
-                                                                        @endif
-                                                                    @endif
+                                                                <b>Jawaban: </b>
+                                                                @php
+                                                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                                                                @endphp
+                                                                @if ($file_parts['extension'] == 'pdf')
+                                                                    <iframe
+                                                                        src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                        width="100%" height="800px"></iframe>
                                                                 @else
-                                                                    <div class="jawaban-responsive p-2 font-medium">
-                                                                        <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
-                                                                            <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
-                                                                            <h4 class="font-bold"> {{ str_replace('_', ' ', $itemTextDua->opsi_text) }} {{ $item->opsi_jawaban == 'persen' ? '%' : '' }}</h4>
-                                                                        </div>
-
+                                                                    <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                        alt="" width="800px">
+                                                                @endif
+                                                                {{-- Rupiah data dua --}}
+                                                            @elseif ($item->opsi_jawaban == 'number' && $item->id != 143)
+                                                                    <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
+                                                                        <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
+                                                                        <h4 class="font-bold">Rp. {{ number_format((int) $itemTextDua->opsi_text, 2, ',', '.') }}</h4>
                                                                     </div>
-                                                                    @if ($itemTextDua->is_commentable)
-                                                                        @if (Auth::user()->role != 'Pincab')
-                                                                            <input type="hidden" name="id_item[]" value="{{ $item->id }}">
-                                                                            <div class="input-k-bottom">
-                                                                                <input type="text" class="form-input komentar"
-                                                                                    name="komentar_penyelia[]" placeholder="Masukkan Komentar">
-                                                                            </div>
-                                                                        @endif
+                                                                @if ($itemTextDua->is_commentable)
+                                                                    <input type="hidden" name="id_item[]" value="{{ $item->id }}">
+                                                                    @if (Auth::user()->role != 'Pincab')
+                                                                        <div class="input-k-bottom">
+                                                                            <input type="text" class="form-input komentar"
+                                                                                name="komentar_penyelia[]" placeholder="Masukkan Komentar">
+                                                                        </div>
                                                                     @endif
                                                                 @endif
+                                                            @else
+                                                                <div class="jawaban-responsive p-2 font-medium">
+                                                                    <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
+                                                                        <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
+                                                                        @if ($item->id == 79)
+                                                                            {{--  NPWP  --}}
+                                                                            <h4 class="font-bold npwp">{{$itemTextDua->opsi_text}}</h4>
+                                                                        @else
+                                                                        <h4 class="font-bold"> {{ str_replace('_', ' ', $itemTextDua->opsi_text) }} {{ $item->opsi_jawaban == 'persen' ? '%' : '' }}</h4>
+                                                                        @endif
+                                                                    </div>
+
+                                                                </div>
+                                                                @if ($itemTextDua->is_commentable)
+                                                                    @if (Auth::user()->role != 'Pincab')
+                                                                        <input type="hidden" name="id_item[]" value="{{ $item->id }}">
+                                                                        <div class="input-k-bottom">
+                                                                            <input type="text" class="form-input komentar"
+                                                                                name="komentar_penyelia[]" placeholder="Masukkan Komentar">
+                                                                        </div>
+                                                                    @endif
+                                                                @endif
+                                                            @endif
                                                         </div>
                                                     </div>
 
@@ -1573,7 +1578,17 @@
             aspekArr = <?php echo json_encode($dataAspek); ?>;
         });
 
+        function formatNpwp() {
+            var value = $('.npwp').html()
+            if (typeof value === 'string') {
+                return value.replace(/(\d{2})(\d{3})(\d{3})(\d{1})(\d{3})(\d{3})/, '$1.$2.$3.$4-$5.$6');
+            }
+        }
+
         $(document).ready(function() {
+            // Format NPWP
+            var npwp = formatNpwp($('.npwp').html())
+            $('.npwp').html(npwp)
             const nullValue = []
 
             function cekValueKosong(formIndex) {
