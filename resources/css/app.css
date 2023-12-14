@@ -258,7 +258,7 @@
         @apply block;
     }
     .alert {
-        @apply bg-theme-primary/5 border-theme-primary text-theme-primary;
+        @apply bg-theme-primary/5 p-3 border text-lg border-theme-primary text-theme-primary;
     }
 }
 

@@ -108,7 +108,11 @@
         <div class="form-group-2">
             <div class="input-box">
                 <label for="ktp_nasabah" id="foto-nasabah">Foto Nasabah</label>
-                <img src="{{ asset('..') . '/' . $pengajuan->id . '/' . $data->foto_nasabah }}" alt="">
+                @if($data->foto_nasabah)
+                    <img src="{{ asset('..') . '/' . $pengajuan->id . '/' . $data->foto_nasabah }}" alt="">
+                @else
+                    <div class="border-b p-2 w-full ">Tidak ada foto nasabah</div>
+                @endif
             </div>
             <div class="input-box">
                 <label for="">Status Pernikahan</label>
@@ -155,8 +159,14 @@
                 </div>
             </div>
             <div class="input-box" id="ktp-nasabah">
-                <label for="ktp_Nasabah" id="">Foto KTP Nasabah</label>
-                <img src="{{ asset('..') . '/' . $pengajuan->id . '/' . $data->foto_pasangan }}" alt="">
+                <label for="ktp_nasabah" id="label-ktp-nasabah">Foto KTP Nasabah</label>
+                <div class="flex gap-4">
+                    @if($data->foto_ktp)
+                        <img src="{{ asset('..') . '/' . $pengajuan->id . '/' . $data->foto_ktp }}" alt="">
+                    @else
+                    <div class="border-b p-2 w-full ">Tidak ada foto KTP nasabah</div>
+                    @endif
+                </div>
             </div>
             <div class="input-box {{$data->status_pernikahan == '2' ? '' : 'hidden'}}" id="nik_pasangan">
                 <label for="">NIK Pasangan</label>
@@ -195,7 +205,8 @@
             </div>
             <div class="input-box">
                 <label for="">File Slik</label>
-                @php
+                @if($data->file_slik)
+                    @php
                     $file_parts = pathinfo(asset('..') . '/' . $dagulir->id . '/' . $data->id_slik.'/'.$data->file_slik);
                 @endphp
                 @if (array_key_exists('extension', $file_parts))
@@ -207,6 +218,9 @@
                         <img src="{{ asset('..') . '/upload/' . $dagulir->id . '/' . $data->id_slik.'/'.$data->file_slik }}"
                         alt="" width="800px">
                     @endif
+                @endif
+                @else
+                    <div class="border-b p-2 w-full ">Tidak ada file Slik</div>
                 @endif
             </div>
         </div>
@@ -354,7 +368,7 @@
             </div>
             <div class="input-box">
                 <label for="">Jangka Waktu</label>
-                <div class="flex items-center">
+                <div class="hidden items-center">
                     <div class="flex-1">
                         <input
                             type="hidden"
@@ -365,9 +379,6 @@
                             aria-describedby="basic-addon2"
                             value="{{ $data->jangka_waktu }}"
                         />
-                        <div class="p-2 bg-white border-b">
-                            <span>{{ $dagulir->jangka_waktu ? $dagulir->jangka_waktu : '-' }}</span>
-                        </div>
                     </div>
                     <div class="flex-shrink-0 mt-2.5rem">
                         <span class="form-input bg-gray-100">Bulan</span>
@@ -465,7 +476,7 @@
                     value="{{ date('Y-m-d',strtotime($dagulir->tanggal)) }}"
                     />
                     <br>
-                    <div class="p-2 bg-white border-b">
+                    <div class="p-2 bg-white border-b w-full">
                         <span>{{ date('Y-m-d',strtotime($dagulir->tanggal)) ? date('Y-m-d',strtotime($dagulir->tanggal)) : '-' }}</span>
                     </div>
                 </div>
@@ -479,18 +490,19 @@
                 </div>
             </div>
         </div>
-        <div class="flex justify-between">
-            <button type="button"
-            class="px-5 py-2 border rounded bg-white text-gray-500"
-            >
-            Kembali
-            </button>
-            <button type="button"
-            class="px-5 py-2 next-tab border rounded bg-theme-primary text-white"
-            >
-            Selanjutnya
-            </button>
-        </div>
+
+    </div>
+    <div class="flex justify-between">
+        <button type="button"
+        class="px-5 py-2 border rounded bg-white text-gray-500"
+        >
+        Kembali
+        </button>
+        <button type="button"
+        class="px-5 py-2 next-tab border rounded bg-theme-primary text-white"
+        >
+        Selanjutnya
+        </button>
     </div>
 </div>
 

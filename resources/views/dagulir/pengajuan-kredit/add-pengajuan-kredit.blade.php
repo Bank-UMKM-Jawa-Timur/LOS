@@ -724,7 +724,7 @@ $dataIndex = match ($skema) {
                                         </button>
                                         <button type="submit" class="px-5 py-2 border rounded bg-green-600 text-white btn-simpan hidden" id="submit">Simpan </button>
                                         </div>
-                                      </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

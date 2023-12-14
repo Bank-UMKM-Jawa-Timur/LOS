@@ -96,17 +96,19 @@
             <span class="ml-3 text-sm"> Filter </span>
           </a>
         </div>
-        <div class="right-button gap-2 flex lg:justify-start">
-          <a
-            href="{{ route('dagulir.pengajuan-kredit.create') }}"
-            class="px-7 py-2 rounded flex justify-center items-center font-semibold bg-theme-primary border text-white"
-          >
-            <span class="mt-1 mr-3">
-              <iconify-icon icon="fa6-solid:plus"></iconify-icon>
-            </span>
-            <span class="ml-1 text-sm"> Tambah pengajuan </span>
-          </a>
-        </div>
+        @if (Auth()->user()->role == 'Staf Analis Kredit')
+            <div class="right-button gap-2 flex lg:justify-start">
+            <a
+                href="{{ route('dagulir.pengajuan-kredit.create') }}"
+                class="px-7 py-2 rounded flex justify-center items-center font-semibold bg-theme-primary border text-white"
+            >
+                <span class="mt-1 mr-3">
+                <iconify-icon icon="fa6-solid:plus"></iconify-icon>
+                </span>
+                <span class="ml-1 text-sm"> Tambah pengajuan </span>
+            </a>
+            </div>
+        @endif
       </div>
     </div>
     <div class="body-pages">
@@ -126,7 +128,7 @@
                     id="page_length"
                 >
                     <option value="1"
-                        @isset($_GET['page_length']) {{ $_GET['page_length'] == 1 ? 'selected' : '' }} @endisset>
+                        @isset($_GET['page_length']) {{ $_GET['page_length'] == 10 ? 'selected' : '' }} @endisset>
                         1</option>
                     <option value="20"
                         @isset($_GET['page_length']) {{ $_GET['page_length'] == 20 ? 'selected' : '' }} @endisset>

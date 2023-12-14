@@ -172,7 +172,6 @@
                                     <option value="${kode}">${nama}</option>
                                 `);
                             });
-
                             $('#kecamatan_domisili').trigger('change');
                         } else {
                             $("#kecamatan_domisili").empty();
