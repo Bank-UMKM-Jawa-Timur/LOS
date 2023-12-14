@@ -116,7 +116,7 @@
             </div>
             <div class="input-box">
                 <label for="">Status Pernikahan</label>
-                {{-- <select disabled name="status" id="status_nasabah" class="form-select" >
+                {{-- <select disabled name="status" id="status_nasabah" class="form-select" disabled>
                     <option value="0" {{ $data->status_pernikahan == '0' ? 'selected' : '' }}>Pilih Status</option>
                     <option value="1" {{ $data->status_pernikahan == '1' ? 'selected' : '' }}>Belum Menikah</option>
                     <option value="2" {{ $data->status_pernikahan == '2' ? 'selected' : '' }}>Menikah</option>
@@ -503,6 +503,3 @@
         >
         Selanjutnya
         </button>
-    </div>
-</div>
-
