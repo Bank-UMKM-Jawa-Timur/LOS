@@ -394,7 +394,7 @@
                                     <label for="">{{ $itemSlik?->nama }}</label>
                                     <br>
                                     <b>Jawaban : </b>
-                                    <div class="jawaban-responsive">
+                                    <div class="jawaban-responsive border-b p-2 font-medium">
                                         {{ $itemSlik?->option }}
                                     </div>
                                     @php
@@ -613,7 +613,7 @@
                                                         ->get();
                                                 @endphp
                                                 @foreach ($dataDetailJawabanText as $itemTextDua)
-                                                    <div class="row">
+                                                    <div class="">
                                                         <div class="form-group-1 mb-0">
                                                             <label for="">{{ $item->nama }}</label>
                                                         </div>
@@ -633,7 +633,7 @@
                                                                     @endif
                                                                     {{-- Rupiah data dua --}}
                                                                 @elseif ($item->opsi_jawaban == 'number' && $item->id != 143)
-                                                                        <div class="jawaban-responsive">
+                                                                        <div class="jawaban-responsive border-b p-2 font-medium">
                                                                             Rp. {{ number_format((int) $itemTextDua->opsi_text, 2, ',', '.') }}
                                                                         </div>
                                                                     @if ($itemTextDua->is_commentable)
@@ -644,7 +644,7 @@
                                                                         </div>
                                                                     @endif
                                                                 @else
-                                                                    <div class="jawaban-responsive">
+                                                                    <div class="jawaban-responsive border-b p-2 font-medium">
                                                                         {{ str_replace('_', ' ', $itemTextDua->opsi_text) }} {{ $item->opsi_jawaban == 'persen' ? '%' : '' }}
                                                                     </div>
                                                                     @if ($itemTextDua->is_commentable)
@@ -699,7 +699,7 @@
                                                                 <div class="form-group-1 mb-0 ml-1">
                                                                     <div class="form-group-1">
                                                                         <b>Jawaban: </b>
-                                                                        <div class="jawaban-responsive">
+                                                                        <div class="jawaban-responsive border-b p-2 font-medium">
                                                                             Tidak Ada Legalitas Usaha
                                                                         </div>
                                                                     </div>
@@ -713,9 +713,11 @@
 
                                         @if (count($dataJawaban) != 0)
                                             @if (!$item->is_hide)
-                                                <div class="row">
-                                                    <div class="form-group-1">
-                                                        <label for="">{{ $item->nama }}</label>
+                                                <div>
+                                                    <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                                                        <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
+                                                            {{$item->nama}} :
+                                                        </h2>
                                                     </div>
                                                 </div>
                                             @endif
@@ -742,7 +744,7 @@
                                                                         <div class="row">
                                                                             <div class="col-md-12">
                                                                                 <b>Jawaban : </b>
-                                                                                <div class="jawaban-responsive">
+                                                                                <div class="jawaban-responsive border-b p-2 font-medium">
                                                                                     {{ $itemJawaban->option }}
                                                                                 </div>
                                                                             </div>
@@ -858,7 +860,7 @@
                                                                             @endif
                                                                             {{-- Rupiah data tiga --}}
                                                                         @elseif ($itemTiga->opsi_jawaban == 'number')
-                                                                            <div class="jawaban-responsive">
+                                                                            <div class="jawaban-responsive border-b p-2 font-medium">
                                                                                 Rp.{{ number_format((int) $itemTextTiga->opsi_text, 2, ',', '.') }}
                                                                             </div>
                                                                             @if ($item->is_commentable == 'Ya')
@@ -871,7 +873,7 @@
                                                                                 </div>
                                                                             @endif
                                                                         @else
-                                                                            <div class="jawaban-responsive">
+                                                                            <div class="jawaban-responsive border-b p-2 font-medium">
                                                                                 {{ $itemTextTiga->opsi_text }}{{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}
                                                                             </div>
                                                                             @if ($item->is_commentable == 'Ya')
@@ -928,7 +930,7 @@
                                                             @else
                                                                 <div class="row">
                                                                     <div class="form-group-1">
-                                                                        <h5> {{ $itemTiga->nama }}</h5>
+                                                                        <h5> {{ $itemTiga->nama }}lev3</h5>
                                                                     </div>
                                                                 </div>
                                                             @endif
@@ -982,7 +984,7 @@
                                                                                     <div class="row">
                                                                                         <div class="col-md-12">
                                                                                             <b>Jawaban : </b>
-                                                                                            <div class="jawaban-responsive">
+                                                                                            <div class="jawaban-responsive border-b p-2 font-medium">
                                                                                                 {{ $itemJawabanLevelTiga->option }}
                                                                                             </div>
                                                                                         </div>
@@ -1080,7 +1082,7 @@
                                                                                     @endif
                                                                                     {{-- Rupiah data empat --}}
                                                                                 @elseif ($itemEmpat->opsi_jawaban == 'number' && $itemEmpat->id != 130)
-                                                                                    <div class="jawaban-responsive">
+                                                                                    <div class="jawaban-responsive border-b p-2 font-medium">
                                                                                         Rp.{{ number_format((int) $itemTextEmpat->opsi_text, 2, ',', '.') }}
                                                                                     </div>
                                                                                     @if ($itemTextEmpat->is_commentable == 'Ya')
@@ -1094,7 +1096,7 @@
                                                                                         </div>
                                                                                     @endif
                                                                                 @else
-                                                                                    <div class="jawaban-responsive">
+                                                                                    <div class="jawaban-responsive border-b p-2 font-medium">
                                                                                         {{ $itemTextEmpat->opsi_text }}
                                                                                             @if ($itemEmpat->opsi_jawaban == 'persen')
                                                                                                 %
@@ -1185,7 +1187,7 @@
                                                                                     <div class="row">
                                                                                         <div class="col-md-12">
                                                                                             <b>Jawaban : </b>
-                                                                                            <div class="jawaban-responsive">
+                                                                                            <div class="jawaban-responsive border-b p-2 font-medium">
                                                                                                 {{ $itemJawabanLevelEmpat->option }}
                                                                                             </div>
                                                                                         </div>
