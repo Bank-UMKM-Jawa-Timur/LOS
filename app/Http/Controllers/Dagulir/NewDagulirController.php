@@ -281,9 +281,9 @@ class NewDagulirController extends Controller
             $pengajuan->alamat_usaha = $request->get('alamat_usaha');
             $pengajuan->tipe = $request->get('tipe_pengajuan');
             $npwp = null;
-            if ($request->upload_file) {
-                if (array_key_exists('153', $request->upload_file)) {
-                    $npwp = auth()->user()->id . '-' . time() . '-' . $request->upload_file[153]->getClientOriginalName();
+            if ($request->informasi) {
+                if (array_key_exists('79', $request->informasi)) {
+                    $npwp = str_replace(['.','-'], '', $request->informasi[79]);
                 }
             }
             $pengajuan->npwp = $npwp;

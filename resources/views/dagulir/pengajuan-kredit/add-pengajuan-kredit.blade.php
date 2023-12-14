@@ -166,7 +166,7 @@ $dataIndex = match ($skema) {
                                                     <label for="">NPWP</label>
                                                     <input type="hidden" name="id_level[79]" value="79" id="npwp_id">
                                                     <input type="hidden" name="opsi_jawaban[79]" value="input text" id="npwp_opsi_jawaban">
-                                                    <input type="text" maxlength="255" name="informasi[79]" id="npwp_text"
+                                                    <input type="text" maxlength="20" name="informasi[79]" id="npwp_text"
                                                         placeholder="Masukkan informasi" class="form-input" value="">
                                                 </div>
 
@@ -1446,6 +1446,16 @@ $dataIndex = match ($skema) {
             }
         });
 
+        function formatNpwp(value) {
+            if (typeof value === 'string') {
+                return value.replace(/(\d{2})(\d{3})(\d{3})(\d{1})(\d{3})(\d{3})/, '$1.$2.$3.$4-$5.$6');
+            }
+        }
+        // NPWP format
+        $(document).on('keyup', '#npwp_text', function() {
+            var input = $(this).val()
+            $(this).val(formatNpwp(input))
+        })
 
         //triger hitung ratio coverage
         $('#thls').change(function(e) {
