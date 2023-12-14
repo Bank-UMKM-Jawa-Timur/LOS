@@ -172,7 +172,6 @@
                     <th>Jenis Usaha</th>
                     <th>Tipe Pengajuan</th>
                     <th>Nominal Pengajuan</th>
-                    <th>Posisi</th>
                     <th>Status Pincetar</th>
                     <th>Status SIPDE</th>
                     <th>Aksi</th>
@@ -216,18 +215,7 @@
                             {{$item->pengajuan->posisi}}
                         </td>
                         <td>
-                            @if ($item->pengajuan->posisi == 'Selesai')
-                                <span class="px-2 bg-green-100 text-green-500 border border-green-300">Selesai</span>
-                            @elseif ($item->pengajuan->posisi == 'Ditolak')
-                                <span class="px-2 bg-red-100 text-red-500 border border-red-300">Ditolak</span>
-                            @else
-                                <span class="px-2 bg-yellow-100 text-yellow-600 border border-yellow-300">OnProgress</span>
-                            @endif
-                        </td>
-                        <td>
-                            <span class="px-2 bg-theme-secondary/5 text-theme-secondary border border-theme-secondary">
-                                <span>{{ array_key_exists(intval($item->status), $status) ? $status[intval($item->status)] : 'Tidak ditemukan' }}</span>
-                            </span>
+                            {{ array_key_exists(intval($item->status), $status) ? $status[intval($item->status)] : 'Tidak ditemukan' }}
                         </td>
                         <td>
                             <div class="flex">
@@ -242,77 +230,70 @@
                                     ></iconify-icon>
                                     </button>
                                     <ul class="dropdown-tb-menu hidden">
-                                        @if ($item->posisi == 'Proses Input Data')
-                                            <a href="#"
-                                                class="dropdown-item">
-                                                Edit data
-                                            </a>
-                                        @else
-                                            @if (Auth::user()->role == 'Staf Analis Kredit')
+                                        @if (Auth::user()->role == 'Staf Analis Kredit' && $item->pengajuan->posisi == 'Proses Input Data')
+                                            <li class="item-tb-dropdown">
+                                                <a href="#"
+                                                onclick="showTindakLanjut({{ $item->pengajuan->id }},'penyelia kredit')"
+                                                class="cursor-pointer">Tindak lanjut Review Penyelia</a>
+                                            </li>
+                                        @endif
+                                        @if ((Auth()->user()->role == 'Penyelia Kredit'))
+                                            @if ($item->pengajuan->posisi == 'Review Penyelia' && $item->pengajuan->tanggal_review_penyelia)
                                                 <li class="item-tb-dropdown">
-                                                    <a href="#"
-                                                    onclick="showTindakLanjut({{ $item->pengajuan->id }},'penyelia kredit')"
-                                                    class="cursor-pointer">Tindak lanjut Review Penyelia</a>
+                                                    <a href="{{ route('dagulir.check.pincab', $item->pengajuan->id) }}"
+                                                        class="dropdown-item">Lanjutkan Ke Pincab</a>
                                                 </li>
                                             @endif
-                                            @if ((Auth()->user()->role == 'Penyelia Kredit'))
-                                                @if ($item->pengajuan->posisi == 'Review Penyelia' && $item->pengajuan->tanggal_review_penyelia)
-                                                    <li class="item-tb-dropdown">
-                                                        <a href="{{ route('dagulir.check.pincab', $item->pengajuan->id) }}"
-                                                            class="dropdown-item">Lanjutkan Ke Pincab</a>
-                                                    </li>
-                                                @endif
-                                            @elseif ((Auth()->user()->role == 'PBO'))
-                                                @if ($item->pengajuan->posisi == 'Review Penyelia' && $item->pengajuan->tanggal_review_penyelia
-                                                    && ($item->pengajuan->id_pbo && $item->pengajuan->tanggal_review_pbo))
-                                                    <li class="item-tb-dropdown">
-                                                        <a href="{{ route('dagulir.check.pincab', $item->pengajuan->id) }}"
-                                                            class="dropdown-item">Lanjutkan Ke Pincab</a>
-                                                    </li>
-                                                @endif
-                                            @elseif ((Auth()->user()->role == 'PBP'))
-                                                @if ($item->pengajuan->posisi == 'Review Penyelia' && $item->pengajuan->tanggal_review_penyelia
-                                                    && ($item->pengajuan->id_pbo && $item->pengajuan->tanggal_review_pbo)
-                                                    && ($item->pengajuan->id_pbp && $item->pengajuan->tanggal_review_pbp))
-                                                    <li class="item-tb-dropdown">
-                                                        <a href="{{ route('dagulir.check.pincab', $item->pengajuan->id) }}"
-                                                            class="dropdown-item">Lanjutkan Ke Pincab</a>
-                                                    </li>
-                                                @endif
-                                            @endif
-                                            @if ((Auth()->user()->role == 'Penyelia Kredit'))
+                                        @elseif ((Auth()->user()->role == 'PBO'))
+                                            @if ($item->pengajuan->posisi == 'Review Penyelia' && $item->pengajuan->tanggal_review_penyelia
+                                                && ($item->pengajuan->id_pbo && $item->pengajuan->tanggal_review_pbo))
                                                 <li class="item-tb-dropdown">
-                                                    <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
-                                                        class="cursor-pointer">Review</a>
+                                                    <a href="{{ route('dagulir.check.pincab', $item->pengajuan->id) }}"
+                                                        class="dropdown-item">Lanjutkan Ke Pincab</a>
                                                 </li>
                                             @endif
-                                            @if ((Auth()->user()->role == 'Pincab') && ($item->pengajuan->id_pincab && !$item->pengajuan->tanggal_review_pincab))
+                                        @elseif ((Auth()->user()->role == 'PBP'))
+                                            @if ($item->pengajuan->posisi == 'Review Penyelia' && $item->pengajuan->tanggal_review_penyelia
+                                                && ($item->pengajuan->id_pbo && $item->pengajuan->tanggal_review_pbo)
+                                                && ($item->pengajuan->id_pbp && $item->pengajuan->tanggal_review_pbp))
                                                 <li class="item-tb-dropdown">
-                                                    <a href="{{ route('dagulir.detailjawaban_pincab', $item->pengajuan->id) }}"
-                                                        class="cursor-pointer">Review</a>
+                                                    <a href="{{ route('dagulir.check.pincab', $item->pengajuan->id) }}"
+                                                        class="dropdown-item">Lanjutkan Ke Pincab</a>
                                                 </li>
                                             @endif
-                                            @if ((Auth()->user()->role == 'Pincab') &&
-                                                    $item->pengajuan->posisi == 'Pincab' &&
-                                                    ($item->pengajuan->id_pincab && $item->pengajuan->tanggal_review_pincab))
-                                                    <li class="item-tb-dropdown">
-                                                        <a href="#" data-id="{{$item->pengajuan->id}}"
-                                                            data-acc-url="{{ route('dagulir.acc_pincab',$item->pengajuan->id) }}"
-                                                            data-dec-url="{{ route('dagulir.dec_pincab',$item->pengajuan->id) }}"
-                                                            class="cursor-pointer approval">Approval</a>
+                                        @endif
+                                        @if ((Auth()->user()->role == 'Penyelia Kredit'))
+                                            <li class="item-tb-dropdown">
+                                                <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
+                                                    class="cursor-pointer">Review</a>
+                                            </li>
+                                        @endif
+                                        @if ((Auth()->user()->role == 'Pincab') && ($item->pengajuan->id_pincab && !$item->pengajuan->tanggal_review_pincab))
+                                            <li class="item-tb-dropdown">
+                                                <a href="{{ route('dagulir.detailjawaban_pincab', $item->pengajuan->id) }}"
+                                                    class="cursor-pointer">Review</a>
+                                            </li>
+                                        @endif
+                                        @if ((Auth()->user()->role == 'Pincab') &&
+                                                $item->pengajuan->posisi == 'Pincab' &&
+                                                ($item->pengajuan->id_pincab && $item->pengajuan->tanggal_review_pincab))
+                                                <li class="item-tb-dropdown">
+                                                    <a href="#" data-id="{{$item->pengajuan->id}}"
+                                                        data-acc-url="{{ route('dagulir.acc_pincab',$item->pengajuan->id) }}"
+                                                        data-dec-url="{{ route('dagulir.dec_pincab',$item->pengajuan->id) }}"
+                                                        class="cursor-pointer approval">Approval</a>
 
-                                                    </li>
-                                            @endif
-                                            @if ((Auth()->user()->role == 'Pincab') &&
-                                                $item->pengajuan->posisi == 'Selesai' &&
-                                                ($item->pengajuan->id_pincab && $item->pengajuan->tanggal_review_pincab) &&
-                                                !$item->kode_pendaftaran)
-                                                <li class="item-tb-dropdown">
-                                                    <a href="#"
-                                                        data-id="{{$item->pengajuan->id}}"
-                                                        class="cursor-pointer kirimSipde">Kirim</a>
                                                 </li>
-                                            @endif
+                                        @endif
+                                        @if ((Auth()->user()->role == 'Pincab') &&
+                                            $item->pengajuan->posisi == 'Selesai' &&
+                                            ($item->pengajuan->id_pincab && $item->pengajuan->tanggal_review_pincab) &&
+                                            !$item->kode_pendaftaran)
+                                            <li class="item-tb-dropdown">
+                                                <a href="#"
+                                                    data-id="{{$item->pengajuan->id}}"
+                                                    class="cursor-pointer kirimSipde">Kirim</a>
+                                            </li>
                                         @endif
                                     </ul>
                                 </div>

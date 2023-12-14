@@ -20,7 +20,7 @@
                 @csrf
                     <div class="mt-3 container mx-auto ">
                         <div id="dagulir-tab" class="is-tab-content active">
-                            @include('dagulir.pengajuan.review-dagulir', ['data' => $dagulir])
+                            @include('dagulir.pengajuan.review-dagulir', ['data' => $dagulir,'pengajuan' => $pengajuan])
                         </div>
                         @foreach ($items as $item)
                             @php

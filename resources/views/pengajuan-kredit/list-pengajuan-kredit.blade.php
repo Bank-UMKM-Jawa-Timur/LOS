@@ -12,7 +12,7 @@
                     Analisa Kredit
                 </p>
                 <h2 class="font-bold tracking-tighter text-2xl text-theme-text">
-                    Analisa Kredit
+                    Analisa Kredit TES
                 </h2>
             </div>
             <div class="layout lg:flex grid grid-cols-1 lg:mt-0 justify-between w-full gap-5">
@@ -26,17 +26,37 @@
                         <span class="ml-1 text-sm"> Reset </span>
                     </a>
                     @endif
-                        <a data-modal-id="modal-filter" href="#"
+                        <a  data-modal-id="modal-filter" href="#"
+                            class="open-modal px-7 py-2 flex font-poppins justify-center items-center rounded font-semibold bg-white border text-theme-secondary">
+                            <span class="">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="lg:w-[24px] w-[19px]" viewBox="-2 -2 24 24">
+                                    <path fill="currentColor"
+                                        d="m2.08 2l6.482 8.101A2 2 0 0 1 9 11.351V18l2-1.5v-5.15a2 2 0 0 1 .438-1.249L17.92 2H2.081zm0-2h15.84a2 2 0 0 1 1.561 3.25L13 11.35v5.15a2 2 0 0 1-.8 1.6l-2 1.5A2 2 0 0 1 7 18v-6.65L.519 3.25A2 2 0 0 1 2.08 0z" />
+                                </svg>
+                            </span>
+                            <span class="ml-3 text-sm"> Filter </span>
+                        </a>
+                        
+                </div>
+                    <button type="button" class="btn btn-sm btn-primary mb-2 ml-2" data-toggle="modal" data-target="#modal-filter">
+                        <i class="fa fa-filter"></i> Filter
+                    </button>
+                {{-- <div class="right-button gap-2 flex lg:justify-start">
+                    <a data-modal-id="modal-filter"
                         class="open-modal px-7 py-2 flex font-poppins justify-center items-center rounded font-semibold bg-white border text-theme-secondary">
                         <span class="">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="lg:w-[24px] w-[19px]" viewBox="-2 -2 24 24">
-                                <path fill="currentColor"
-                                    d="m2.08 2l6.482 8.101A2 2 0 0 1 9 11.351V18l2-1.5v-5.15a2 2 0 0 1 .438-1.249L17.92 2H2.081zm0-2h15.84a2 2 0 0 1 1.561 3.25L13 11.35v5.15a2 2 0 0 1-.8 1.6l-2 1.5A2 2 0 0 1 7 18v-6.65L.519 3.25A2 2 0 0 1 2.08 0z" />
-                            </svg>
+                            <iconify-icon icon="fluent:drafts-16-regular"></iconify-icon>
                         </span>
-                        <span class="ml-3 text-sm"> Filter </span>
+                        <span class="ml-3 text-sm"> Draft </span>
                     </a>
-                </div>
+                    <a href="form/pengajuan-form/data-umum.html"
+                        class="px-7 py-2 rounded flex justify-center items-center font-semibold bg-theme-primary border text-white">
+                        <span class="mt-1 mr-3">
+                            <iconify-icon icon="fa6-solid:plus"></iconify-icon>
+                        </span>
+                        <span class="ml-1 text-sm"> Tambah pengajuan </span>
+                    </a>
+                </div> --}}
             </div>
         </div>
         <div class="body-pages">

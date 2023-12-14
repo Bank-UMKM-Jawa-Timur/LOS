@@ -11,6 +11,7 @@ use App\Models\Cabang;
 use App\Models\CalonNasabah;
 use App\Models\Desa;
 use App\Models\DetailKomentarModel;
+use App\Models\ItemModel;
 use App\Models\JawabanPengajuanModel;
 use App\Models\JawabanTextModel;
 use App\Models\Kabupaten;
@@ -78,17 +79,19 @@ class DagulirController extends Controller
         $jenis_usaha = config('dagulir.jenis_usaha');
         $tipe = config('dagulir.tipe_pengajuan');
 
+        $itemSlik = ItemModel::with('option')->where('nama', 'SLIK')->first();
         $dataKabupaten = Kabupaten::all();
         return view('dagulir.form.create',[
             'items' => $item,
             'tipe' => $tipe,
             'dataKabupaten' => $dataKabupaten,
-            'jenis_usaha' => $jenis_usaha
+            'jenis_usaha' => $jenis_usaha,
+            'itemSlik' => $itemSlik
         ]);
     }
 
     // function store(DagulirRequestForm $request) {
-    public function store(DagulirRequestForm $request) {
+    public function store(Request $request) {
         try {
             $find = array('Rp.', '.', ',');
 
@@ -98,17 +101,19 @@ class DagulirController extends Controller
             $pengajuan->kode_pendaftaran = null;
             $pengajuan->nama = $request->get('nama_lengkap');
             $pengajuan->email = $request->get('email');
-            $pengajuan->nik = $request->get('nik');
+            $pengajuan->nik = $request->get('nik_nasabah');
             $pengajuan->nama_pj_ketua = $request->has('nama_pj') ? $request->get('nama_pj') : null;
             $pengajuan->tempat_lahir =  $request->get('tempat_lahir');
             $pengajuan->tanggal_lahir = $request->get('tanggal_lahir');
             $pengajuan->telp = $request->get('telp');
             $pengajuan->jenis_usaha = $request->get('jenis_usaha');
             $pengajuan->ket_agunan = $request->get('ket_agunan');
+            $pengajuan->hubungan_bank = $request->get('hub_bank');
             $pengajuan->nominal =   $this->formatNumber($request->get('nominal_pengajuan'));
             $pengajuan->tujuan_penggunaan = $request->get('tujuan_penggunaan');
             $pengajuan->jangka_waktu = $request->get('jangka_waktu');
             $pengajuan->kode_bank_pusat = 1;
+            $pengajuan->id_slik = (int)$request->get('id_slik');
             $pengajuan->kode_bank_cabang = auth()->user()->id_cabang;
             $pengajuan->kec_ktp = $request->get('kecamatan_sesuai_ktp');
             $pengajuan->kotakab_ktp = $request->get('kode_kotakab_ktp');
@@ -127,9 +132,60 @@ class DagulirController extends Controller
             $pengajuan->tanggal = now();
             $pengajuan->user_id = Auth::user()->id;
             $pengajuan->status = 8;
+            $pengajuan->status_pernikahan = $request->get('status');
+            $pengajuan->nik_pasangan = $request->has('nik_pasangan') ? $request->get('nik_pasangan') : null;
             $pengajuan->created_at = now();
             $pengajuan->from_apps = 'pincetar';
             $pengajuan->save();
+
+            $update_pengajuan = PengajuanDagulir::find($pengajuan->id);
+            // Start File Slik
+            if ($request->has('file_slik')) {
+                $image = $request->file('file_slik');
+                $fileNameSlik = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
+                $filePath = public_path() . '/upload/' . $pengajuan->id . '/' .$pengajuan->id_slik;
+                if (!File::isDirectory($filePath)) {
+                    File::makeDirectory($filePath, 493, true);
+                }
+                $image->move($filePath, $fileNameSlik);
+            }
+            // foto nasabah
+            if ($request->has('foto_nasabah')) {
+                $image = $request->file('foto_nasabah');
+                $fileNameNasabah = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
+                $filePath = public_path() . '/upload/' . $pengajuan->id;
+                if (!File::isDirectory($filePath)) {
+                    File::makeDirectory($filePath, 493, true);
+                }
+                $image->move($filePath, $fileNameNasabah);
+                $update_pengajuan->foto_nasabah = $fileNameNasabah;
+
+            }
+            if ($request->has('ktp_pasangan')) {
+                $image = $request->file('ktp_pasangan');
+                $fileNamePasangan = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
+                $filePath = public_path() . '/upload/' . $pengajuan->id;
+                if (!File::isDirectory($filePath)) {
+                    File::makeDirectory($filePath, 493, true);
+                }
+                $image->move($filePath, $fileNamePasangan);
+                $update_pengajuan->foto_pasangan = $fileNamePasangan;
+
+            }
+            if ($request->has('ktp_nasabah')) {
+                $image = $request->file('ktp_nasabah');
+                $fileNameKtpNasabah = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
+                $filePath = public_path() . '/upload/' . $pengajuan->id;
+                if (!File::isDirectory($filePath)) {
+                    File::makeDirectory($filePath, 493, true);
+                }
+                $image->move($filePath, $fileNameKtpNasabah);
+                $update_pengajuan->foto_ktp = $fileNameKtpNasabah;
+
+            }
+            // ktp nasabah
+            $update_pengajuan->update();
+            // End File Slik
 
             $addPengajuan = new PengajuanModel();
             $addPengajuan->id_staf = Auth::user()->id;
@@ -171,24 +227,28 @@ class DagulirController extends Controller
                 $jawabanText->save();
             }
             // end Jawaban input text, long text, number
+
             if ($request->has('file')) {
                 foreach ($request->file('file') as $key => $value) {
-                    $image = $request->file('file')[$key];
-                    $imageName = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
+                    if (is_array($value)) {
+                        for ($i = 0; $i < count($value); $i++) {
+                            $filename = auth()->user()->id . '-' . time() . '-' . $value[$i]->getClientOriginalName();
+                            $relPath = "upload/{$addPengajuan->id}/{$key}";
+                            $path = public_path("upload/{$addPengajuan->id}/{$key}/");
 
-                    $filePath = public_path() . '/upload/' . $addPengajuan->id . '/' .$key;
+                            File::isDirectory(public_path($relPath)) or File::makeDirectory(public_path($relPath), recursive: true);
+                            $value[$i]->move($path, $filename);
 
-                    if (!File::isDirectory($filePath)) {
-                        File::makeDirectory($filePath, 493, true);
+                            JawabanTextModel::create([
+                                'id_pengajuan' => $addPengajuan->id,
+                                'id_jawaban' => $key,
+                                'opsi_text' => $filename,
+                                'skor_penyelia' => null,
+                                'skor_pbp' => null,
+                                'skor' => null,
+                            ]);
+                        }
                     }
-
-                    $image->move($filePath, $imageName);
-
-                    $dataJawabanText = new JawabanTextModel;
-                    $dataJawabanText->id_pengajuan = $addPengajuan->id;
-                    $dataJawabanText->id_jawaban =  $key;
-                    $dataJawabanText->opsi_text = $imageName;
-                    $dataJawabanText->save();
                 }
             }
 
@@ -295,6 +355,9 @@ class DagulirController extends Controller
         $kabupaten_usaha = Kabupaten::select('id','kabupaten')->find($pengajuan_dagulir->kotakab_usaha);
         $kecamatan_usaha = Kecamatan::select('id','kecamatan')->find($pengajuan_dagulir->kec_usaha);
 
+        $itemSlik = ItemModel::with('option')->where('nama', 'SLIK')->first();
+
+
         $dataKabupaten = Kabupaten::all();
         return view('dagulir.form.review',[
             'items' => $item,
@@ -309,6 +372,7 @@ class DagulirController extends Controller
             'kecamatan_dom' => $kecamatan_dom,
             'kabupaten_usaha' => $kabupaten_usaha,
             'kecamatan_usaha' => $kecamatan_usaha,
+            'itemSlik' => $itemSlik,
 
         ]);
     }
