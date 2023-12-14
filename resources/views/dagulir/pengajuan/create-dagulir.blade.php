@@ -172,7 +172,7 @@
                 <input type="file" name="file_slik" class="form-input" />
             </div>
         </div>
-        <div class="form-group-2">
+        <div class="form-group-3">
                 <div class="input-box">
                     <label for="">Kota / Kabupaten KTP</label>
                     <select name="kode_kotakab_ktp" class="form-select @error('kabupaten') is-invalid @enderror select2"
@@ -187,6 +187,12 @@
                     <label for="">Kecamatan KTP</label>
                     <select name="kecamatan_sesuai_ktp" id="kecamatan" class="form-select @error('kec') is-invalid @enderror select2">
                         <option value="0"> --- Pilih Kecamatan --- </option>
+                    </select>
+                </div>
+                <div class="input-box">
+                    <label for="">Desa KTP</label>
+                    <select name="desa" id="desa" class="form-select @error('desa') is-invalid @enderror select2">
+                        <option value="0"> --- Pilih Desa --- </option>
                     </select>
                 </div>
         </div>
