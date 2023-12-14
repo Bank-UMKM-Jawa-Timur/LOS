@@ -10,7 +10,7 @@ id="modal-filter"
         Filter data
       </h2>
     </div>
-    <button data-dismiss-id="modal-filter">
+    <button type="button" data-dismiss-id="modal-filter">
       <iconify-icon
         icon="iconamoon:close-bold"
         class="text-2xl"
@@ -38,7 +38,7 @@ id="modal-filter"
             class="form-input"
             value="{{ Request()->query('tAkhir') }}"
           />
-          <small id="errorAkhir" class="form-text text-danger">Tanggal akhir tidak boleh kurang
+          <small id="errorAkhir" class="form-text text-danger hidden">Tanggal akhir tidak boleh kurang
             dari tanggal awal</small>
         </div>
       </div>
@@ -112,6 +112,7 @@ id="modal-filter"
   <div class="modal-footer justify-end">
     <button
       class="btn-cancel"
+      type="button"
       data-dismiss-id="modal-filter"
     >
       Batal
