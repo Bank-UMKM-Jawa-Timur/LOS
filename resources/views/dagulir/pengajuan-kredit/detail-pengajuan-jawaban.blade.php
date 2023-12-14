@@ -392,10 +392,9 @@
                                 </div>
                                 <div class="form-group-1">
                                     <label for="">{{ $itemSlik?->nama }}</label>
-                                    <br>
-                                    <b>Jawaban : </b>
-                                    <div class="jawaban-responsive border-b p-2 font-medium">
-                                        {{ $itemSlik?->option }}
+                                    <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
+                                        <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
+                                        <h4 class="font-bold"> {{ $itemSlik?->option }}</h4>
                                     </div>
                                     @php
                                         $komentarSlik = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', '=', 'detail_komentar.id_komentar')
@@ -403,17 +402,19 @@
                                             ->where('id_item', $itemSlik?->id_item)
                                             ->first();
                                     @endphp
-                                    <div class="input-group input-b-bottom">
+                                    <div class="grid grid-cols-2 gap-2">
                                         <input type="hidden" name="id_item[]" value="{{ $itemSlik?->id_item }}">
                                         <input type="hidden" name="id_option[]" value="{{ $itemSlik?->id_jawaban }}">
-                                        <input type="text" class="form-input komentar" name="komentar_penyelia[]"
+                                        <div class="">
+                                            <input type="text" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400 komentar" name="komentar_penyelia[]"
                                             placeholder="Masukkan Komentar"
                                             value="{{ isset($komentarSlik->komentar) ? $komentarSlik->komentar : '' }}">
+                                        </div>
                                         <div class="input-skor">
                                             @php
                                                 $skorSlik = $itemSlik?->skor_penyelia ? $itemSlik?->skor_penyelia : $itemSlik?->skor;
                                             @endphp
-                                            <input type="number" class="form-input" placeholder="" name="skor_penyelia[]"
+                                            <input type="number" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400" placeholder="" name="skor_penyelia[]"
                                                 onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
                                                 min="0"
                                                 max="4"
@@ -615,11 +616,11 @@
                                                 @foreach ($dataDetailJawabanText as $itemTextDua)
                                                     <div class="">
                                                         <div class="form-group-1 mb-0">
-                                                            <label for="">{{ $item->nama }}</label>
+                                                            <h6 class="font-semibold text-sm mb-2" for="">{{ $item->nama }}</h6>
                                                         </div>
                                                         <div class="form-group-1">
-                                                            <b>Jawaban: </b>
-                                                                @if ($item->opsi_jawaban == 'file')
+                                                            @if ($item->opsi_jawaban == 'file')
+                                                                    <b>Jawaban: </b>
                                                                     @php
                                                                         $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
                                                                     @endphp
@@ -633,8 +634,9 @@
                                                                     @endif
                                                                     {{-- Rupiah data dua --}}
                                                                 @elseif ($item->opsi_jawaban == 'number' && $item->id != 143)
-                                                                        <div class="jawaban-responsive border-b p-2 font-medium">
-                                                                            Rp. {{ number_format((int) $itemTextDua->opsi_text, 2, ',', '.') }}
+                                                                        <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
+                                                                            <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
+                                                                            <h4 class="font-bold">Rp. {{ number_format((int) $itemTextDua->opsi_text, 2, ',', '.') }}</h4>
                                                                         </div>
                                                                     @if ($itemTextDua->is_commentable)
                                                                         <input type="hidden" name="id_item[]" value="{{ $item->id }}">
@@ -644,8 +646,12 @@
                                                                         </div>
                                                                     @endif
                                                                 @else
-                                                                    <div class="jawaban-responsive border-b p-2 font-medium">
-                                                                        {{ str_replace('_', ' ', $itemTextDua->opsi_text) }} {{ $item->opsi_jawaban == 'persen' ? '%' : '' }}
+                                                                    <div class="jawaban-responsive p-2 font-medium">
+                                                                        <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
+                                                                            <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
+                                                                            <h4 class="font-bold"> {{ str_replace('_', ' ', $itemTextDua->opsi_text) }} {{ $item->opsi_jawaban == 'persen' ? '%' : '' }}</h4>
+                                                                        </div>
+
                                                                     </div>
                                                                     @if ($itemTextDua->is_commentable)
                                                                         <input type="hidden" name="id_item[]" value="{{ $item->id }}">
@@ -693,19 +699,18 @@
                                                     @if ($item->nama != "Ijin Usaha")
                                                         <div class="row">
                                                             <div class="form-group-1">
-                                                                <h4>{{ $item->nama }}</h4>
+                                                                <h2 class="font-semibold text-lg tracking-tighter ">
+                                                                    {{$item->nama}} :
+                                                                </h2>
                                                             </div>
                                                             @if ($item->nama == 'Ijin Usaha' && $countIjin == 0)
-                                                                <div class="form-group-1 mb-0 ml-1">
-                                                                    <div class="form-group-1">
-                                                                        <b>Jawaban: </b>
-                                                                        <div class="jawaban-responsive border-b p-2 font-medium">
-                                                                            Tidak Ada Legalitas Usaha
-                                                                        </div>
-                                                                    </div>
+                                                                <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
+                                                                    <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
+                                                                    <h4 class="font-bold">Tidak ada legalitas usaha</h4>
                                                                 </div>
+
                                                             @endif
-                                                        </div> 
+                                                        </div>
                                                     @endif
                                                 @endif
                                             @endif
@@ -714,11 +719,9 @@
                                         @if (count($dataJawaban) != 0)
                                             @if (!$item->is_hide)
                                                 <div>
-                                                    <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
-                                                        <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
-                                                            {{$item->nama}} :
-                                                        </h2>
-                                                    </div>
+                                                    <h2 class="font-semibold text-lg tracking-tighter ">
+                                                        {{$item->nama}} :
+                                                    </h2>
                                                 </div>
                                             @endif
                                             <div class="row">
@@ -743,9 +746,9 @@
                                                                     @if ($item->nama)
                                                                         <div class="row">
                                                                             <div class="col-md-12">
-                                                                                <b>Jawaban : </b>
-                                                                                <div class="jawaban-responsive border-b p-2 font-medium">
-                                                                                    {{ $itemJawaban->option }}
+                                                                                <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
+                                                                                    <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
+                                                                                    <h4 class="font-bold">{{ $itemJawaban->option }}</h4>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -756,21 +759,25 @@
                                                                         <input type="hidden" name="id_option[]"
                                                                             value="{{ $itemJawaban->id }}">
                                                                         @if ($item->is_commentable == 'Ya')
-                                                                            <input type="text" class="form-input komentar"
-                                                                                name="komentar_penyelia[]" placeholder="Masukkan Komentar"
-                                                                                value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
-                                                                            <div class="input-skor">
-                                                                                @php
-                                                                                    $skorInput2 = null;
-                                                                                    $skorInput2 = $getSkorPenyelia->skor_penyelia ? $getSkorPenyelia->skor_penyelia : $itemJawaban->skor;
-                                                                                @endphp
-                                                                                <input type="number" class="form-input" placeholder=""
-                                                                                    name="skor_penyelia[]"
-                                                                                    min="0"
-                                                                                    max="4"
-                                                                                    onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
-                                                                                    {{ $item->status_skor == 0 ? 'readonly' : '' }}
-                                                                                    value="{{ $skorInput2 || $skorInput2 > 0 ? $skorInput2 : null }}">
+                                                                            <div class="grid grid-cols-2 gap-2">
+                                                                                <div class="">
+                                                                                    <input type="text" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400 komentar"
+                                                                                        name="komentar_penyelia[]" placeholder="Masukkan Komentar"
+                                                                                        value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
+                                                                                </div>
+                                                                                <div class="input-skor">
+                                                                                    @php
+                                                                                        $skorInput2 = null;
+                                                                                        $skorInput2 = $getSkorPenyelia->skor_penyelia ? $getSkorPenyelia->skor_penyelia : $itemJawaban->skor;
+                                                                                    @endphp
+                                                                                    <input type="number" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400" placeholder=""
+                                                                                        name="skor_penyelia[]"
+                                                                                        min="0"
+                                                                                        max="4"
+                                                                                        onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
+                                                                                        {{ $item->status_skor == 0 ? 'readonly' : '' }}
+                                                                                        value="{{ $skorInput2 || $skorInput2 > 0 ? $skorInput2 : null }}">
+                                                                                </div>
                                                                             </div>
                                                                         @else
                                                                             <input type="hidden" name="komentar_penyelia[]"
@@ -835,17 +842,17 @@
                                                                 <div class="form-group-1 mb-0">
                                                                     @if ($itemTiga->opsi_jawaban == 'file')
                                                                         @if ($jumlahDataDetailJawabanText > 1)
-                                                                            <label for="">{{ $itemTextTiga->nama }} {{$loop->iteration}}</label>
+                                                                            <h6 class="font-medium text-sm" for="">{{ $itemTextTiga->nama }} {{$loop->iteration}}</h6>
                                                                         @else
-                                                                            <label for="">{{ $itemTextTiga->nama }}</label>
+                                                                            <h6 class="font-medium text-sm" for="">{{ $itemTextTiga->nama }}</h6>
                                                                         @endif
                                                                     @else
-                                                                            <label for="">{{ $itemTextTiga->nama }}</label>
+                                                                            <h6 class="font-medium text-sm" for="">{{ $itemTextTiga->nama }}</h6>
                                                                     @endif
                                                                 </div>
                                                                 <div class="col-md-12">
-                                                                    <b>Jawaban: </b>
                                                                         @if ($itemTiga->opsi_jawaban == 'file')
+                                                                        <b>Jawaban: </b>
                                                                             @php
                                                                                 $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text);
                                                                             @endphp
@@ -860,9 +867,11 @@
                                                                             @endif
                                                                             {{-- Rupiah data tiga --}}
                                                                         @elseif ($itemTiga->opsi_jawaban == 'number')
-                                                                            <div class="jawaban-responsive border-b p-2 font-medium">
-                                                                                Rp.{{ number_format((int) $itemTextTiga->opsi_text, 2, ',', '.') }}
+                                                                            <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
+                                                                                <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
+                                                                                <h4 class="font-bold">Rp.{{ number_format((int) $itemTextTiga->opsi_text, 2, ',', '.') }}</h4>
                                                                             </div>
+
                                                                             @if ($item->is_commentable == 'Ya')
                                                                                 <div class="input-k-bottom">
                                                                                     <input type="hidden" name="id_item[]"
@@ -873,8 +882,12 @@
                                                                                 </div>
                                                                             @endif
                                                                         @else
-                                                                            <div class="jawaban-responsive border-b p-2 font-medium">
-                                                                                {{ $itemTextTiga->opsi_text }}{{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}
+                                                                            <div class="jawaban-responsive p-2 font-medium">
+                                                                                <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
+                                                                                    <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
+                                                                                    <h4 class="font-bold">{{ $itemTiga->opsi_jawaban == 'persen' ? $itemTextTiga->opsi_text : 'RP '.number_format((int) $itemTextTiga->opsi_text, 2, ',', '.')  }}{{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</h4>
+                                                                                </div>
+
                                                                             </div>
                                                                             @if ($item->is_commentable == 'Ya')
                                                                                 <div class="input-k-bottom">
@@ -946,7 +959,7 @@
                                                             {{-- @else --}}
                                                                 <div class="row">
                                                                     <div class="form-group-1">
-                                                                        <label for="">{{ $itemTiga->nama }}</label>
+                                                                        <h6 class="font-medium text-sm" for="">{{ $itemTiga->nama }}</h6>
                                                                     </div>
                                                                 </div>
                                                             @endif
@@ -954,7 +967,7 @@
                                                             @if ($itemTiga->nama != 'Kelayakan Usaha')
                                                                 <div class="row">
                                                                     <div class="form-group-1">
-                                                                        <label for="">{{ $itemTiga->nama }}</label>
+                                                                        <h6 class="font-medium text-sm" for="">{{ $itemTiga->nama }}</h6>
                                                                     </div>
                                                                 </div>
                                                             @else
@@ -983,9 +996,9 @@
                                                                                 @if ($itemTiga->nama != 'Ratio Coverage Opsi')
                                                                                     <div class="row">
                                                                                         <div class="col-md-12">
-                                                                                            <b>Jawaban : </b>
-                                                                                            <div class="jawaban-responsive border-b p-2 font-medium">
-                                                                                                {{ $itemJawabanLevelTiga->option }}
+                                                                                            <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
+                                                                                                <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
+                                                                                                <h4 class="font-bold">{{ $itemJawabanLevelTiga->option }}</h4>
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
@@ -1000,18 +1013,21 @@
                                                                                         $skorInput3 = $getSkorPenyelia?->skor_penyelia ? $getSkorPenyelia?->skor_penyelia : $itemJawabanLevelTiga->skor;
                                                                                     @endphp
                                                                                     @if ($itemTiga->is_commentable == 'Ya')
-                                                                                        <input type="text" class="form-input komentar"
-                                                                                            name="komentar_penyelia[]"
-                                                                                            placeholder="Masukkan Komentar"
-                                                                                            value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
-                                                                                        <div class="input-skor">
-                                                                                            <input type="number" class="form-input"
-                                                                                                min="0"
-                                                                                                max="4"
-                                                                                                placeholder="" name="skor_penyelia[]"
-                                                                                                onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
-                                                                                                {{ $itemTiga->status_skor == 0 ? 'readonly' : '' }}
-                                                                                                value="{{ $skorInput3 || $skorInput3 > 0 ? $skorInput3 : null }}">
+                                                                                        <div class="grid grid-cols-2 gap-2">
+                                                                                            <div class="">
+                                                                                                <input type="text" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400 komentar"
+                                                                                                    name="komentar_penyelia[]" placeholder="Masukkan Komentar"
+                                                                                                    value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
+                                                                                            </div>
+                                                                                            <div class="input-skor">
+                                                                                                <input type="number" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400"
+                                                                                                    min="0"
+                                                                                                    max="4"
+                                                                                                    placeholder="" name="skor_penyelia[]"
+                                                                                                    onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
+                                                                                                    {{ $itemTiga->status_skor == 0 ? 'readonly' : '' }}
+                                                                                                    value="{{ $skorInput3 || $skorInput3 > 0 ? $skorInput3 : null }}">
+                                                                                            </div>
                                                                                         </div>
                                                                                     @else
                                                                                         <input type="hidden" name="komentar_penyelia[]"
@@ -1049,11 +1065,10 @@
                                                             @foreach ($dataDetailJawabanTextEmpat as $itemTextEmpat)
                                                                 <div class="row">
                                                                     <div class="form-group-1 mb-0">
-                                                                        <label for="">{{ $itemTextEmpat->nama }}</label>
-                                                                        <br>
-                                                                        <b>Jawaban:</b>
-                                                                                @if ($itemEmpat->opsi_jawaban == 'file')
+                                                                        <h6 class="font-medium text-sm" for="">{{ $itemTextEmpat->nama }}</h6>
+                                                                        @if ($itemEmpat->opsi_jawaban == 'file')
                                                                                     @if (intval($itemTextEmpat->opsi_text) > 1)
+                                                                                        <b>Jawaban:</b>
                                                                                         @php
                                                                                             $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text);
                                                                                         @endphp
@@ -1083,7 +1098,10 @@
                                                                                     {{-- Rupiah data empat --}}
                                                                                 @elseif ($itemEmpat->opsi_jawaban == 'number' && $itemEmpat->id != 130)
                                                                                     <div class="jawaban-responsive border-b p-2 font-medium">
-                                                                                        Rp.{{ number_format((int) $itemTextEmpat->opsi_text, 2, ',', '.') }}
+                                                                                        <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
+                                                                                            <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
+                                                                                            <h4 class="font-bold"> Rp.{{ number_format((int) $itemTextEmpat->opsi_text, 2, ',', '.') }}</h4>
+                                                                                        </div>
                                                                                     </div>
                                                                                     @if ($itemTextEmpat->is_commentable == 'Ya')
                                                                                         <div class="input-k-bottom">
@@ -1096,14 +1114,19 @@
                                                                                         </div>
                                                                                     @endif
                                                                                 @else
-                                                                                    <div class="jawaban-responsive border-b p-2 font-medium">
-                                                                                        {{ $itemTextEmpat->opsi_text }}
-                                                                                            @if ($itemEmpat->opsi_jawaban == 'persen')
-                                                                                                %
-                                                                                            @elseif($itemEmpat->id == 130)
-                                                                                                Bulan
-                                                                                            @else
-                                                                                            @endif
+                                                                                    <div class="jawaban-responsive p-2 font-medium">
+                                                                                        <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
+                                                                                            <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
+                                                                                            <h4 class="font-bold">
+                                                                                                {{ $itemTextEmpat->opsi_text }}
+                                                                                                    @if ($itemEmpat->opsi_jawaban == 'persen')
+                                                                                                        %
+                                                                                                    @elseif($itemEmpat->id == 130)
+                                                                                                        Bulan
+                                                                                                    @else
+                                                                                                    @endif
+                                                                                            </h4>
+                                                                                        </div>
                                                                                     </div>
                                                                                     @if ($itemTextEmpat->is_commentable == 'Ya')
                                                                                         <div class="input-k-bottom">
@@ -1159,7 +1182,7 @@
                                                                     <div class="form-group-1 mb-0">
                                                                         <label for="">{{ $itemEmpat->nama }}</label>
                                                                     </div>
-                                                                </div> 
+                                                                </div>
                                                             @endif
                                                         @endif
 
@@ -1186,10 +1209,11 @@
                                                                                 @if ($itemEmpat->nama != "Tidak Memiliki Jaminan Tambahan")
                                                                                     <div class="row">
                                                                                         <div class="col-md-12">
-                                                                                            <b>Jawaban : </b>
-                                                                                            <div class="jawaban-responsive border-b p-2 font-medium">
-                                                                                                {{ $itemJawabanLevelEmpat->option }}
+                                                                                            <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
+                                                                                                <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
+                                                                                                <h4 class="font-bold"> {{ $itemJawabanLevelEmpat->option }}</h4>
                                                                                             </div>
+
                                                                                         </div>
                                                                                     </div>
                                                                                 @endif
@@ -1199,23 +1223,27 @@
                                                                                     <input type="hidden" name="id_option[]"
                                                                                         value="{{ $itemJawabanLevelEmpat->id }}">
                                                                                     @if ($itemEmpat->is_commentable == 'Ya')
-                                                                                        <input type="text" class="form-input komentar"
-                                                                                            name="komentar_penyelia[]"
-                                                                                            placeholder="Masukkan Komentar"
-                                                                                            value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
-                                                                                        <div class="input-skor">
-                                                                                            @php
-                                                                                                $skorInput4 = null;
-                                                                                                $skorInput4 = $getSkorPenyelia?->skor_penyelia ? $getSkorPenyelia?->skor_penyelia : $itemJawabanLevelEmpat->skor;
-                                                                                            @endphp
-                                                                                            <input type="number" class="form-input"
-                                                                                                placeholder="" name="skor_penyelia[]"
-                                                                                                min="0"
-                                                                                                max="4"
-                                                                                                onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
-                                                                                                {{ $itemEmpat->status_skor == 0 ? 'readonly' : '' }}
-                                                                                                value="{{ $skorInput4 || $skorInput4 > 0 ? $skorInput4 : null }}">
+                                                                                        <div class="grid grid-cols-2 gap-2">
+                                                                                            <div class="">
+                                                                                                <input type="text" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400 komentar"
+                                                                                                    name="komentar_penyelia[]" placeholder="Masukkan Komentar"
+                                                                                                    value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
+                                                                                            </div>
+                                                                                            <div class="input-skor">
+                                                                                                @php
+                                                                                                    $skorInput4 = null;
+                                                                                                    $skorInput4 = $getSkorPenyelia?->skor_penyelia ? $getSkorPenyelia?->skor_penyelia : $itemJawabanLevelEmpat->skor;
+                                                                                                @endphp
+                                                                                                <input type="number" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400"
+                                                                                                    placeholder="" name="skor_penyelia[]"
+                                                                                                    min="0"
+                                                                                                    max="4"
+                                                                                                    onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
+                                                                                                    {{ $itemEmpat->status_skor == 0 ? 'readonly' : '' }}
+                                                                                                    value="{{ $skorInput4 || $skorInput4 > 0 ? $skorInput4 : null }}">
+                                                                                            </div>
                                                                                         </div>
+
                                                                                     @endif
                                                                                 </div>
                                                                             </div>
@@ -1242,7 +1270,7 @@
                                                 ->first();
                                         @endphp
                                         <div class="form-group-1">
-                                            <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
+                                            <h4 class="font-semibold text-base" for="">Pendapat dan Usulan {{ $value->nama }}</h4>
                                             <input type="hidden" name="id_aspek[]" value="{{ $value->id }}">
                                             <textarea name="pendapat_per_aspek[]" class="form-input @error('pendapat_per_aspek') is-invalid @enderror"
                                                 id="pendapat_per_aspek[]" cols="30" rows="4" placeholder="Pendapat Per Aspek">{{ isset($getPendapatPerAspek->pendapat_per_aspek) ? $getPendapatPerAspek->pendapat_per_aspek : '' }}</textarea>
@@ -1254,16 +1282,16 @@
                                         </div>
                                         <hr>
                                         <div class="form-group-1">
-                                            <label for="">Pendapat dan Usulan Staf Kredit</label>
+                                            <h4 class="font-semibold text-base" for="">Pendapat dan Usulan Staf Kredit</h4>
                                             <p>{{ $pendapatStafPerAspek->pendapat_per_aspek }}</p>
                                         </div>
                                         <div class="form-group-1">
-                                            <label for="">Pendapat dan Usulan Penyelia Kredit</label>
+                                            <h4 class="font-semibold text-base" for="">Pendapat dan Usulan Penyelia Kredit</h4>
                                             <p>{{ $pendapatPenyeliaPerAspek?->pendapat_per_aspek }}</p>
                                         </div>
                                         @if ($dataUmumNasabah->id_pbo)
                                             <div class="form-group-1">
-                                                <label for="">Pendapat dan Usulan PBO</label>
+                                                <h4 class="font-semibold text-base" for="">Pendapat dan Usulan PBO</h4>
                                                 <p>{{ $pendapatDanUsulanPBO->komentar_pbo }}</p>
                                             </div>
                                         @endif
@@ -1275,7 +1303,7 @@
                                                 ->first();
                                         @endphp
                                         <div class="form-group-1">
-                                            <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
+                                            <h4 class="font-semibold text-base" for="">Pendapat dan Usulan {{ $value->nama }}</h4>
                                             <input type="hidden" name="id_aspek[]" value="{{ $value->id }}">
                                             <textarea name="pendapat_per_aspek[]" class="form-input @error('pendapat_per_aspek') is-invalid @enderror"
                                                 id="pendapat_per_aspek[]" cols="30" rows="4" placeholder="Pendapat Per Aspek">{{ isset($getPendapatPerAspek->pendapat_per_aspek) ? $getPendapatPerAspek->pendapat_per_aspek : '' }}</textarea>
@@ -1288,11 +1316,11 @@
                                         <hr>
                                         <hr>
                                         <div class="form-group-1">
-                                            <label for="">Pendapat dan Usulan Staf Kredit</label>
+                                            <h4 class="font-semibold text-base" for=""> Pendapat dan Usulan Staf Kredit</h4>
                                             <p>{{ $pendapatStafPerAspek->pendapat_per_aspek }}</p>
                                         </div>
                                         <div class="form-group-1">
-                                            <label for="">Pendapat dan Usulan Penyelia Kredit</label>
+                                            <h4 class="font-semibold text-base" for=""> Pendapat dan Usulan Penyelia Kredit</h4>
                                             <p>{{ $pendapatPenyeliaPerAspek->pendapat_per_aspek }}</p>
                                         </div>
                                     @else
@@ -1303,7 +1331,7 @@
                                                 ->first();
                                         @endphp
                                         <div class="form-group-1">
-                                            <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
+                                            <h4 class="font-semibold text-base" for="">Pendapat dan Usulan {{ $value->nama }}</h4>
                                             <input type="hidden" name="id_aspek[]" value="{{ $value->id }}">
                                             <textarea name="pendapat_per_aspek[]" class="form-input @error('pendapat_per_aspek') is-invalid @enderror"
                                                 id="pendapat_per_aspek[]" cols="30" rows="4" placeholder="Pendapat Per Aspek">{{ isset($getPendapatPerAspek->pendapat_per_aspek) ? $getPendapatPerAspek->pendapat_per_aspek : '' }}</textarea>
@@ -1315,7 +1343,7 @@
                                         </div>
                                         <hr>
                                         <div class="form-group-1">
-                                            <label for="">Pendapat dan Usulan Staf Kredit</label>
+                                            <h4 class="font-semibold text-base" for="">Pendapat dan Usulan Staf Kredit</h4>
                                             <p>{{ $pendapatStafPerAspek?->pendapat_per_aspek }}</p>
                                         </div>
                                     @endif
@@ -2064,7 +2092,7 @@
             `
             });
         @endif
-    
+
         $(".btn-simpan").on('click', function(e) {
             if ($('#pendapat_usulan').val() == '') {
                 Swal.fire({
@@ -2075,10 +2103,10 @@
                 e.preventDefault()
             }
         })
-    
+
         // End Validation
-    
-    
+
+
         $('#kabupaten').change(function() {
             var kabID = $(this).val();
             if (kabID) {
@@ -2096,7 +2124,7 @@
                                     <option value="${kode}">${nama}</option>
                                 `);
                             });
-    
+
                             $('#kecamatan').trigger('change');
                         } else {
                             $("#kecamatan").empty();
@@ -2124,7 +2152,7 @@
                                     <option value="${kode}">${nama}</option>
                                 `);
                             });
-    
+
                             $('#kecamatan_domisili').trigger('change');
                         } else {
                             $("#kecamatan_domisili").empty();
@@ -2152,7 +2180,7 @@
                                     <option value="${kode}">${nama}</option>
                                 `);
                             });
-    
+
                             $('#kecamatan_usaha').trigger('change');
                         } else {
                             $("#kecamatan_usaha").empty();
@@ -2163,7 +2191,7 @@
                 $("#kecamatan_usaha").empty();
             }
         });
-    
+
         $('#status_nasabah').on('change', function(e){
             var status = $(this).val();
             // console.log(status);
@@ -2179,7 +2207,7 @@
                 $('#ktp-pasangan').addClass('hidden');
             }
         })
-    
+
         $('#tipe').on('change',function(e) {
             var tipe = $(this).val();
             console.log(tipe);
@@ -2203,27 +2231,27 @@
                 }
             }
         })
-    
+
         function validatePhoneNumber(input) {
             var phoneNumber = input.value.replace(/\D/g, '');
-    
+
             if (phoneNumber.length > 15) {
                 phoneNumber = phoneNumber.substring(0, 15);
             }
-    
+
             input.value = phoneNumber;
         }
-    
+
         function validateNIK(input) {
             var nikNumber = input.value.replace(/\D/g, '');
-    
+
             if (nikNumber.length > 16) {
                 nikNumber = nikNumber.substring(0, 16);
             }
-    
+
             input.value = nikNumber;
         }
-    
+
         $('.rupiah').keyup(function(e) {
             var input = $(this).val()
             $(this).val(formatrupiah(input))
@@ -2234,13 +2262,13 @@
                 sisa = split[0].length % 3,
                 rupiah = split[0].substr(0, sisa),
                 ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-    
+
             // tambahkan titik jika yang di input sudah menjadi angka ribuan
             if (ribuan) {
                 separator = sisa ? '.' : '';
                 rupiah += separator + ribuan.join('.');
             }
-    
+
             rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
             return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
         }
@@ -2249,7 +2277,7 @@
             e.preventDefault();
             var tabId = $(this).data("tab");
             console.log(tabId);
-    
+
             $(".is-tab-content").removeClass("active");
             $(".tab-wrapper .btn-tab").removeClass(
                 "active-tab"
@@ -2257,24 +2285,24 @@
             $(".tab-wrapper .btn-tab").removeClass("active-tab");
             $(".tab-wrapper .btn-tab").removeClass("active-tab");
             $(".tab-wrapper .btn-tab").addClass("disable-tab");
-    
+
             $(this).addClass("active-tab");
             // $(this).addClass("text-gray-600");
-    
+
             if (tabId) {
                 // $(this).removeClass("text-gray-400");
                 // $(this).removeClass("text-gray-400");
                 $(this).removeClass("disable-tab");
                 $(this).removeClass("disable-tab");
             }
-    
+
             $("#" + tabId + "-tab").addClass("active");
         });
-    
+
         $(".next-tab").on("click", function(e) {
             const $activeContent = $(".is-tab-content.active");
             const $nextContent = $activeContent.next();
-    
+
             console.log($nextContent.length);
             if ($nextContent.length) {
                 $activeContent.removeClass("active");
@@ -2283,13 +2311,13 @@
                 $(".next-tab").addClass('hidden');
                 $('.btn-simpan').removeClass('hidden')
             }
-    
+
         });
-    
+
         $(".prev-tab").on("click", function() {
             const $activeContent = $(".is-tab-content.active");
             const $prevContent = $activeContent.prev();
-    
+
             if ($prevContent.length) {
                 $activeContent.removeClass("active");
                 $prevContent.addClass("active");
@@ -2297,7 +2325,7 @@
                 $('.btn-simpan').addClass('hidden')
             }
         });
-    
+
         $(".toggle-side").click(function(e) {
             $('.sidenav').toggleClass('hidden')
         })
@@ -2317,7 +2345,7 @@
                 }
             }
         })
-    
+
         $("#usaha").on("change", function() {
             if ($(this).val() == "tanah") {
                 $("#tanah").removeClass("hidden");
@@ -2445,7 +2473,7 @@
                 $("#label-dokumen-npwp").addClass("hidden");
             }
         });
-    
+
         $(document).on('click', '.btn-add', function() {
             const item_id = $(this).data('item-id');
             var item_element = $(`.${item_id}`)
@@ -2457,7 +2485,7 @@
             var parent = $(this).closest('.input-box').parent()
             parent.append(`<div class="input-box mb-4">${input}`)
         })
-    
+
         $(document).on('click', '.btn-minus', function() {
             const item_id = $(this).data('item-id');
             var item_element = $(`#${item_id}`)
