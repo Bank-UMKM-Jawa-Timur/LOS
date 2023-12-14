@@ -47,7 +47,7 @@
                         </span>
                         <span class="ml-3 text-sm"> Draft </span>
                     </a>
-                    <a href="form/pengajuan-form/data-umum.html"
+                    <a href="{{ route('pengajuan-kredit.create') }}"
                         class="px-7 py-2 rounded flex justify-center items-center font-semibold bg-theme-primary border text-white">
                         <span class="mt-1 mr-3">
                             <iconify-icon icon="fa6-solid:plus"></iconify-icon>
