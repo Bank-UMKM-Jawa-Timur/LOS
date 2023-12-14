@@ -43,6 +43,7 @@ use Illuminate\Support\Facades\Session;
 use Image;
 use Carbon\Carbon;
 use PhpParser\Node\Expr;
+use RealRashid\SweetAlert\Facades\Alert;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 
 class NewDagulirController extends Controller
@@ -604,10 +605,14 @@ class NewDagulirController extends Controller
             DB::commit();
             event(new EventMonitoring('store pengajuan'));
 
-            if (!$statusSlik)
+            if (!$statusSlik){
+                Alert::success('success', 'Data berhasil disimpan');
                 return redirect()->route('dagulir.pengajuan-kredit.index')->withStatus('Data berhasil disimpan.');
-            else
+            }
+            else {
+                Alert::error('error', 'Pengajuan ditolak');
                 return redirect()->route('dagulir.pengajuan-kredit.index')->withError('Pengajuan ditolak');
+            }
         } catch (Exception $e) {
             DB::rollBack();
             return $e->getMessage();
@@ -641,6 +646,7 @@ class NewDagulirController extends Controller
                 $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan atas nama ' . $namaNasabah . ' ke penyelia dengan NIP ' . $penyelia->nip . ' atas nama ' . $this->getNameKaryawan($penyelia->nip) . ' .', $statusPenyelia->id, Auth::user()->id, Auth::user()->nip);
 
                 DB::commit();
+                Alert::success('success', 'Berhasil mengganti posisi');
                 return redirect()->back()->withStatus('Berhasil mengganti posisi.');
             } else {
                 return back()->withError('Data pengajuan tidak ditemukan.');
@@ -689,7 +695,7 @@ class NewDagulirController extends Controller
                     $result = round($average, 2);
                     $status = "";
                     $updateData = PengajuanModel::find($request->id_pengajuan);
-    
+
                     if ($result > 0 && $result <= 2) {
                         $status = "merah";
                     } elseif ($result >= 2 && $result <= 3) {
@@ -699,7 +705,7 @@ class NewDagulirController extends Controller
                     } else {
                         $status = "merah";
                     }
-    
+
                     if ($role == 'Penyelia Kredit') {
                         foreach ($request->get('id_option') as $key => $value) {
                             JawabanPengajuanModel::where('id_jawaban', $value)->where('id_pengajuan', $request->get('id_pengajuan'))
@@ -722,7 +728,7 @@ class NewDagulirController extends Controller
                                 ]);
                         }
                     }
-    
+
                     $updateData->status = $status;
                     if ($role == 'Penyelia Kredit')
                         $updateData->average_by_penyelia = $result;
@@ -730,9 +736,9 @@ class NewDagulirController extends Controller
                         $updateData->average_by_pbo = $result;
                     else
                         $updateData->average_by_pbp = $result;
-    
+
                     $updateData->update();
-    
+
                     $idKomentar = KomentarModel::where('id_pengajuan', $request->id_pengajuan)->first();
                     if ($role == 'Penyelia Kredit') {
                         KomentarModel::where('id', $idKomentar->id)->update(
@@ -759,7 +765,7 @@ class NewDagulirController extends Controller
                             ]
                         );
                     }
-    
+
                     $countDK = DetailKomentarModel::where('id_komentar', $idKomentar->id)->count();
                     if ($countDK > 0) {
                         foreach ($request->id_item as $key => $value) {
@@ -781,7 +787,7 @@ class NewDagulirController extends Controller
                             }
                         }
                     }
-    
+
                     // pendapat penyelia
                     if ($role == 'Penyelia Kredit')
                         $countpendapat = PendapatPerAspek::where('id_pengajuan', $request->get('id_pengajuan'))->where('id_penyelia', Auth::user()->id)->count();
@@ -789,7 +795,7 @@ class NewDagulirController extends Controller
                         $countpendapat = PendapatPerAspek::where('id_pengajuan', $request->get('id_pengajuan'))->where('id_pbo', Auth::user()->id)->count();
                     else
                         $countpendapat = PendapatPerAspek::where('id_pengajuan', $request->get('id_pengajuan'))->where('id_pbp', Auth::user()->id)->count();
-    
+
                     if ($countpendapat > 0) {
                         if ($role == 'Penyelia Kredit') {
                             foreach ($request->get('id_aspek') as $key => $value) {
@@ -854,6 +860,7 @@ class NewDagulirController extends Controller
                 DB::commit();
                 event(new EventMonitoring('review pengajuan'));
 
+                Alert::success('success', 'Berhasil Mereview');
                 return redirect()->route('dagulir.pengajuan-kredit.index')->withStatus('Berhasil Mereview');
             } catch (Exception $e) {
                 DB::rollBack();
@@ -933,7 +940,7 @@ class NewDagulirController extends Controller
                 ->get();
             $param['jenis_usaha'] = config('dagulir.jenis_usaha');
             $param['tipe'] = config('dagulir.tipe_pengajuan');
-            
+
             $param['itemSlik'] = ItemModel::join('option as o', 'o.id_item', 'item.id')
                 ->join('jawaban as j', 'j.id_jawaban', 'o.id')
                 ->join('pengajuan as p', 'p.id', 'j.id_pengajuan')
@@ -956,6 +963,7 @@ class NewDagulirController extends Controller
 
             return view('dagulir.pengajuan-kredit.detail-pengajuan-jawaban', $param);
         } else {
+            Alert::error('error', 'Tidak memiliki hak akses');
             return redirect()->back()->withError('Tidak memiliki hak akses.');
         }
     }
@@ -1020,13 +1028,13 @@ class NewDagulirController extends Controller
                 $this->logPengajuan->store($role . ' dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' mengirimkan data dagulir dengan pengajuan atas nama ' . $namaNasabah, $pengajuan->id, Auth::user()->id, Auth::user()->nip);
 
                 DB::commit();
-
+                Alert::success('success', 'Berhasil mengirim data');
                 return redirect()->route('dagulir.index')->withStatus('Berhasil mengirimkan data.');
             }
             else {
                 $message = 'Terjadi kesalahan.';
                 if (array_key_exists('error', $pengajuan_dagulir)) $message .= ' '.$pengajuan_dagulir['error'];
-
+                Alert::error('error', $message);
                 return redirect()->route('dagulir.index')->withError($message);
             }
         } catch (\Exception $e) {
@@ -1106,11 +1114,14 @@ class NewDagulirController extends Controller
                     $pengajuan->tanggal_review_pincab = date('Y-m-d');
                     $pengajuan->update();
 
+                    Alert::success('success', 'Berhasil mengganti posisi');
                     return redirect()->back()->withStatus('Berhasil mengganti posisi.');
                 } else {
+                    Alert::error('error', 'User pincab tidak ditemukan pada cabang ini');
                     return back()->withError('User pincab tidak ditemukan pada cabang ini.');
                 }
             } else {
+                Alert::error('error', 'Data pengajuan tidak ditemukan');
                 return back()->withError('Data pengajuan tidak ditemukan.');
             }
         } catch (Exception $e) {
@@ -1119,7 +1130,7 @@ class NewDagulirController extends Controller
             return redirect()->back()->withError('Terjadi kesalahan');
         }
     }
-    
+
     public function accPengajuan($id)
     {
         DB::beginTransaction();
@@ -1145,11 +1156,14 @@ class NewDagulirController extends Controller
                     DB::commit();
                     event(new EventMonitoring('menyetujui pengajuan'));
 
+                    Alert::success('success', 'Berhasil mengganti posisi');
                     return redirect()->back()->withStatus('Berhasil mengganti posisi.');
                 } else {
+                    Alert::error('error', 'Belum di review pincab');
                     return redirect()->back()->withError('Belum di review Pincab.');
                 }
             } else {
+                Alert::error('error', 'Tidak memiliki hak akses');
                 return redirect()->back()->withError('Tidak memiliki hak akses.');
             }
         } catch (\Exception $e) {
@@ -1180,11 +1194,14 @@ class NewDagulirController extends Controller
                     DB::commit();
 
                     event(new EventMonitoring('tolak pengajuan'));
+                    Alert::success('success', 'Berhasil mengganti posisi');
                     return redirect()->back()->withStatus('Berhasil mengganti posisi.');
                 } else {
+                    Alert::error('error', 'Belum di review Pincab');
                     return redirect()->back()->withError('Belum di review Pincab.');
                 }
             } else {
+                Alert::error('error', 'Tidak memiliki hak akses');
                 return redirect()->back()->withError('Tidak memiliki hak akses.');
             }
         } catch (\Exception $e) {

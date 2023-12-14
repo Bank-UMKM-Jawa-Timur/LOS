@@ -263,11 +263,11 @@
 
         <div class="form-group-2">
             <div class="input-box">
-                <label for="">Nominal Pengajuan</label>
+                <label for="">Plafon</label>
                 <input
                     type="text"
                     class="form-input rupiah"
-                    placeholder="Nominal Pengajuan"
+                    placeholder="Plafon"
                     name="nominal_pengajuan"
                     id="jumlah_kredit"
                 />
