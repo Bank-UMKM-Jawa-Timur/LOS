@@ -5,7 +5,7 @@
 @include('dagulir.modal.filter')
 
 @endsection
-@include('dagulir.modal.pilih-penyelia')
+@include('dagulir.pengajuan-kredit.modal.pilih-penyelia')
 @include('dagulir.modal.approval')
 @include('dagulir.modal.approvalSipde ')
 
@@ -240,6 +240,12 @@
                                             </li>
                                         @endif
                                         @if ((Auth()->user()->role == 'Penyelia Kredit'))
+                                            @if ($item->pengajuan->posisi == 'Proses Input Data')
+                                                <li class="item-tb-dropdown">
+                                                    <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
+                                                        class="cursor-pointer">Review</a>
+                                                </li>
+                                            @endif
                                             @if ($item->pengajuan->posisi == 'Review Penyelia' && $item->pengajuan->tanggal_review_penyelia)
                                                 <li class="item-tb-dropdown">
                                                     <a href="{{ route('dagulir.check.pincab', $item->pengajuan->id) }}"
@@ -286,6 +292,7 @@
                                                         class="cursor-pointer approval">Approval</a>
 
                                                 </li>
+                                            @endif
                                         @endif
                                         @if ((Auth()->user()->role == 'Pincab') &&
                                             $item->pengajuan->posisi == 'Selesai' &&

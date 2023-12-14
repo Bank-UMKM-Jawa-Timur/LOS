@@ -744,7 +744,7 @@ $dataIndex = match ($skema) {
                                 <div class="form-group-1">
                                     <div class="input-box">
                                         <label for="">Pendapat dan Usulan</label>
-                                        <textarea name="pendapat" class="form-textarea"
+                                        <textarea name="komentar_staff" class="form-textarea"
                                             placeholder="Pendapat dan Usulan" id="" required></textarea>
                                     </div>
                                 </div>
