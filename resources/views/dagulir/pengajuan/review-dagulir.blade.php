@@ -35,7 +35,7 @@
                 <label for="">Email</label>
                 <input
                 readonly
-                type="text"
+                type="hidden"
                 class="form-input"
                 placeholder="Masukan Email"
                 name="email"
@@ -107,33 +107,36 @@
         </div>
         <div class="form-group-2">
             <div class="input-box">
-                <label for="">Email</label>
-                <input
-                    type="hidden"
-                    class="form-input-read-only"
-                    placeholder="Masukan Nama"
-                    name="email"
-                    value="{{ $dagulir->email }}"
-                    readonly
-                />
-                <div class="p-2 bg-white border-b">
-                    <span>{{ $dagulir->email ? $dagulir->email : '-' }}</span>
-                </div>
                 <label for="ktp_nasabah" id="foto-nasabah">Foto Nasabah</label>
                 <img src="{{ asset('..') . '/' . $pengajuan->id . '/' . $data->foto_nasabah }}" alt="">
             </div>
             <div class="input-box">
                 <label for="">Status Pernikahan</label>
-                <select disabled name="status" id="status_nasabah" class="form-select" disabled>
+                {{-- <select disabled name="status" id="status_nasabah" class="form-select" >
                     <option value="0" {{ $data->status_pernikahan == '0' ? 'selected' : '' }}>Pilih Status</option>
                     <option value="1" {{ $data->status_pernikahan == '1' ? 'selected' : '' }}>Belum Menikah</option>
                     <option value="2" {{ $data->status_pernikahan == '2' ? 'selected' : '' }}>Menikah</option>
                     <option value="3" {{ $data->status_pernikahan == '3' ? 'selected' : '' }}>Duda</option>
                     <option value="4" {{ $data->status_pernikahan == '4' ? 'selected' : '' }}>Janda</option>
-                </select>
+                </select> --}}
+                @php
+                    $text_status = "";
+                    if ($data->status_pernikahan == '1') {
+                        $text_status = "Belum Menikah";
+                    } else if ($data->status_pernikahan == '2') {
+                        $text_status = "Menikah";
+                    } else if ($data->status_pernikahan == '3') {
+                        $text_status = "Duda";
+                    } else if ($data->status_pernikahan == '4') {
+                        $text_status = "Janda";
+                    } else {
+                        $text_status = "-";
+                    }
+
+                @endphp
                 <input type="hidden" name="status" id="status_nasabah" value="{{$dagulir->status_pernikahan}}">
                 <div class="p-2 bg-white border-b">
-                    <span>{{ $dagulir->status_pernikahan  ? $dagulir->status_pernikahan : '-' }}</span>
+                    <span>{{ $text_status }}</span>
                 </div>
             </div>
             <div class="input-box">
@@ -152,12 +155,10 @@
                 </div>
             </div>
             <div class="input-box" id="ktp-nasabah">
-                <label for="ktp_nasabah" id="label-ktp-nasabah">Foto KTP Nasabah</label>
-                <div class="flex gap-4">
-                    <img src="{{ asset('..') . '/' . $pengajuan->id . '/' . $data->foto_ktp }}" alt="">
-                </div>
+                <label for="ktp_Nasabah" id="">Foto KTP Nasabah</label>
+                <img src="{{ asset('..') . '/' . $pengajuan->id . '/' . $data->foto_pasangan }}" alt="">
             </div>
-            <div class="input-box {{ $data->status_pernikahan == '2' ? '' : 'hidden' }}" id="nik_pasangan">
+            <div class="input-box {{$data->status_pernikahan == '2' ? '' : 'hidden'}}" id="nik_pasangan">
                 <label for="">NIK Pasangan</label>
                 <input
                     type="hidden"
@@ -169,7 +170,7 @@
                     oninput="validateNIK(this)"
                 />
                 <div class="p-2 bg-white border-b">
-                    <span>{{ $dagulir->nik_pasangan  ? $dagulir->nik_pasangan : '-' }}</span>
+                    <span>{{ $dagulir->nik_pasangan ? $dagulir->nik_pasangan : '-' }}</span>
                 </div>
             </div>
             <div class="input-box {{ $data->status_pernikahan == '2' ? '' : 'hidden' }}" id="ktp-pasangan">
@@ -180,7 +181,7 @@
         <div class="form-group-2">
             <div class="input-box">
                 <label for="">Slik</label>
-                <select disabled class="form-select" name="id_slik">
+                <select disabled class="form-select" name="id_slik" hidden>
                     <option value="">Pilih Slik</option>
                     @foreach ($itemSlik->option as $itemJawaban)
                         <option value="{{ $itemJawaban->id }}" {{ $itemJawaban->id == $data->id_slik  ? 'selected' : ''}}>{{ $itemJawaban->option }}</option>
@@ -356,7 +357,7 @@
                 <div class="flex items-center">
                     <div class="flex-1">
                         <input
-                            type="number"
+                            type="hidden"
                             class="w-full form-input"
                             placeholder="Masukan Jangka Waktu"
                             name="jangka_waktu"
@@ -372,78 +373,45 @@
                         <span class="form-input bg-gray-100">Bulan</span>
                     </div>
                 </div>
-                {{-- <input
-                    type="number"
-                    class="form-input"
-                    placeholder="Masukan Jangka Waktu"
-                    name="jangka_waktu"
-                    style="width: 80%; box-sizing: border-box; padding-right: 8px;"
-                />
-                <div class="p-2 bg-white border-b">
-                    <span>{{ $dagulir->jangka_waktu ? $dagulir->jangka_waktu : '-' }}"</span>
-                </div>
-            </div>
-        </div>
-        <div class="form-group-2">
-            <div class="input-box">
-                <label for="">Tujuan Penggunaan</label>
-                <input
-                    readonly
-                    type="hidden"
-                    class="form-input-read-only"
-                    placeholder="Masukan Tujuan Penggunaan"
-                    name="tujuan_penggunaan"
-                    value="{{ $dagulir->tujuan_penggunaan }}"
-                    
-                />
-                <div class="p-2 bg-white border-b">
-                    <span>{{ $dagulir->tujuan_penggunaan ? $dagulir->tujuan_penggunaan : '-' }}</span>
-                </div>
             </div>
             <div class="input-box">
-                <label for="">Keterangan Agunan</label>
-                <input
-                    readonly
-                    type="hidden"
-                    class="form-input-read-only"
-                    placeholder="Isi disini..."
-                    name="ket_agunan"
-                    value="{{ $dagulir->ket_agunan }}"
-                /> 
-                <div class="p-2 bg-white border-b">
-                    {{ $dagulir->ket_agunan }}
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group-2" id="form_tipe_pengajuan">
-            <div class="input-box">
+                @php
+                    $textTipe = "";
+                    $nama_pj = "";
+                    if ($dagulir->tipe == 2) {
+                        $textTipe = "Perorangan";
+                    }
+                    elseif ($dagulir->tipe == 3) {
+                        $textTipe = "Badan Usaha";
+                        $nama_pj = "Nama penanggung jawab";
+                    }
+                    elseif ($dagulir->tipe == 3) {
+                        $textTipe = "Kelompok Usaha";
+                        $nama_pj = "Nama ketua";
+                    }
+                    else {
+                        $textTipe = "-";
+                        $nama_pj = "-";
+                    }
+                @endphp
                 <label for="">Tipe Pengajuan</label>
-                {{-- <select disabled name="tipe_pengajuan" id="tipe" class="form-select-read-only">
-                    <option value="0">Tipe Pengajuan</option>
-                    @foreach ($tipe as $key => $value)
-                    <option value="{{ $key }}" {{  $key  == $data->tipe ? 'selected' : '' }}>{{ $value }}</option>
-                    @endforeach
-                </select> --}}
                 <div class="p-2 bg-white border-b">
-                    <span>{{ $dagulir->tipe ? $dagulir->tipe : '-' }}</span>
+                    <span>{{ $textTipe }}</span>
                 </div>
             </div>
-            @if ($tipe != 2)
-                <div id="nama_pj" class="input-box hidden">
-                <label for="" id="label_pj"></label>
-                    <input
-                        type="hidden"
-                        class="form-input"
-                        placeholder="Masukan disini .."
-                        name="nama_pj"
-                        value="{{ $data->nama_pj }}"
-                    />
-                </div>
+            <div id="nama_pj" class="input-box" {{$dagulir->tipe == 2 ? 'hidden' : ''}}>
+                <label for="" id="label_pj">{{$nama_pj}}</label>
+                <input
+                    type="hidden"
+                    class="form-input"
+                    placeholder="Masukan disini .."
+                    name="nama_pj"
+                    value="{{ $data->nama_pj }}"
+                />
                 <div class="p-2 bg-white border-b">
                     <span>{{ $dagulir->nama_pj ? $dagulir->nama_pj : '-' }}</span>
                 </div>
-            @endif
+            </div>
             <div class="input-box">
                 <label for="">Jenis badan hukum</label>
                 <input
