@@ -104,3 +104,24 @@ id="modal-filter"
 </div>
 </div>
 </form>
+@push('script-inject')
+<script>
+    var token = "gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFVaNj";
+
+    var cbgValue = '{{ Request()->query('cbg') }}';
+    $.ajax({
+        type: "GET",
+        url: "/api/v1/get-cabang", 
+        headers: {
+            'token': token,
+        },
+        success: function (response) {
+            $.map(response.data, function (item, i) {
+                $('#cabang').append(
+                    `<option value="${item.kode_cabang}" ${cbgValue == item.kode_cabang ? 'selected' : ''}>${item.cabang}</option>`
+                );
+            });
+        }
+    });
+</script>
+@endpush

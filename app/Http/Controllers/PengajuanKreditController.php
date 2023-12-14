@@ -390,7 +390,7 @@ class PengajuanKreditController extends Controller
                 ->where('pengajuan.id_penyelia', $id_penyelia)
                 ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
                 ->where('pengajuan.id_cabang', $id_cabang)
-                ->paginate(5)
+                ->paginate($limit)
                 ->withQueryString();
             return view('pengajuan-kredit.list-pengajuan-kredit', $param);
         } elseif ($role == 'PBO' || $role == 'PBP') {
