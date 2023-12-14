@@ -652,4 +652,75 @@ class NewDagulirController extends Controller
             return redirect()->route('pengajuan-kredit.index')->withError('Terjadi kesalahan' . $e->getMessage());
         }
     }
+
+    public function storeSipde(Request $request) {
+        $pengajuan = PengajuanModel::with('pendapatPerAspek')->find($request->id_dagulir);
+        $pengajuan_dagulir = PengajuanDagulir::find($pengajuan->dagulir_id);
+        $data = sipde_token();
+        $body = [
+            "nama" => $pengajuan_dagulir->nama,
+            "nik" => $pengajuan_dagulir->nik,
+            "tempat_lahir" => $pengajuan_dagulir->tempat_lahir,
+            "tanggal_lahir" => $pengajuan_dagulir->tanggal_lahir,
+            "telp" => $pengajuan_dagulir->telp,
+            "jenis_usaha" => $pengajuan_dagulir->jenis_usaha,
+            "nominal_pengajuan" => $this->formatNumber($request->nominal_realisasi),
+            "tujuan_penggunaan" => $pengajuan_dagulir->tujuan_penggunaan,
+            "jangka_waktu" => intval($request->get('jangka_waktu')),
+            "ket_agunan" => $pengajuan_dagulir->ket_agunan,
+            "kode_bank_pusat" => '01-BPR',
+            "kode_bank_cabang" => $pengajuan_dagulir->kode_bank_cabang,
+            "kecamatan_sesuai_ktp" => $pengajuan_dagulir->kec_ktp,
+            "kode_kotakab_ktp" => $pengajuan_dagulir->kotakab_ktp,
+            "alamat_sesuai_ktp" => $pengajuan_dagulir->alamat_ktp,
+            "kecamatan_domisili" => $pengajuan_dagulir->kec_dom ,
+            "kode_kotakab_domisili" => $pengajuan_dagulir->kotakab_dom,
+            "alamat_domisili" => $pengajuan_dagulir->alamat_dom,
+            "kecamatan_usaha" => $pengajuan_dagulir->kec_usaha,
+            "kode_kotakab_usaha" => $pengajuan_dagulir->kotakab_usaha ,
+            "alamat_usaha" => $pengajuan_dagulir->alamat_usaha,
+            "tipe_pengajuan" => $pengajuan_dagulir->tipe,
+            "npwp" => $pengajuan_dagulir->npwp,
+            "jenis_badan_hukum" => $pengajuan_dagulir->jenis_badan_hukum,
+            // "jenis_badan_hukum" => "Berbadan Hukum",
+            "tempat_berdiri" => $pengajuan_dagulir->tempat_berdiri,
+            "tanggal_berdiri" => $pengajuan_dagulir->tanggal_berdiri,
+            "email" => $pengajuan_dagulir->email,
+            "nama_pj" => $pengajuan_dagulir->nama_pj_ketua ??  null,
+        ];
+        $pengajuan_dagulir = Http::withHeaders([
+            'Authorization' => 'Bearer ' .$data['token'],
+        ])->post(config('dagulir.host').'/pengajuan.json', $body)->json();
+
+        if (array_key_exists('data', $pengajuan_dagulir)) {
+            $update_pengajuan_dagulir = PengajuanDagulir::find($pengajuan->dagulir_id);
+            $update_pengajuan_dagulir->kode_pendaftaran = $pengajuan_dagulir['data']['kode_pendaftaran'];
+            $update_pengajuan_dagulir->nominal_realisasi = $this->formatNumber($request->nominal_realisasi);
+            $update_pengajuan_dagulir->jangka_waktu = $request->jangka_waktu;
+            $update_pengajuan_dagulir->status = 1;
+            $update_pengajuan_dagulir->update();
+
+            return redirect()->route('dagulir.index')->withStatus('Berhasil mengirimkan data.');
+        }
+        else {
+            $message = 'Terjadi kesalahan.';
+            if (array_key_exists('error', $pengajuan_dagulir)) $message .= ' '.$pengajuan_dagulir['error'];
+
+            return redirect()->route('dagulir.index')->withError($message);
+        }
+    }
+
+    public function updateStatus($kode_pendaftaran, $status, $lampiran_analisa = null, $jangka_waktu, $realisasi_dana) {
+        $data = sipde_token();
+        $pengajuan_dagulir = Http::withHeaders([
+            'Authorization' => 'Bearer ' .$data['token'],
+        ])->post(env('SIPDE_HOST').'/update_status.json',[
+            "kode_pendaftaran" => $kode_pendaftaran,
+            "status" => $status,
+            "lampiran_analisa" => $lampiran_analisa,
+            "jangka_waktu" => $jangka_waktu,
+            "realisasi_dana" => $realisasi_dana
+        ])->json();
+        return $pengajuan_dagulir;
+    }
 }
