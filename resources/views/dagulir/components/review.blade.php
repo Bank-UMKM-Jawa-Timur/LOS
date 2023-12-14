@@ -10,7 +10,7 @@
     @if ($item->is_commentable == 'Ya')
         <div class="flex gap-4">
             <input type="hidden" name="komentar_penyelia[]" class="form-input" placeholder="Masukkan Komentar">
-            @php
+            {{--  @php
                 $role = auth()->user()->role;
                 $skor = null;
                 if ($role == 'Penyelia Kredit') {
@@ -25,7 +25,7 @@
                 if ($role == 'Pincab') {
                     $skor = $item->jawaban->skor_pbp;
                 }
-            @endphp
+            @endphp  --}}
             <input
                 type="hidden"
                 name="skor_penyelia[]"
@@ -35,7 +35,7 @@
                 min="0"
                 max="4"
                 onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
-                value="{{$skor}}"
+                {{--  value="{{$skor}}"  --}}
             >
         </div>
     @endif
@@ -57,7 +57,7 @@
         <div class="flex gap-4">
             <input type="hidden" value="{{ $item->id }}" name="option[]">
             <input type="hidden" name="komentar_penyelia[]" class="form-input" placeholder="Masukkan Komentar">
-            @php
+            {{--  @php
                 $role = auth()->user()->role;
                 $skor = null;
                 if ($role == 'Penyelia Kredit') {
@@ -72,7 +72,7 @@
                 if ($role == 'Pincab') {
                     $skor = $item->jawaban->skor_pbp;
                 }
-            @endphp
+            @endphp  --}}
             <input
                 type="hidden"
                 name="skor_penyelia[]"
@@ -82,7 +82,7 @@
                 min="0"
                 max="4"
                 onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
-                value="{{$skor}}"
+                {{--  value="{{$skor}}"  --}}
             >
         </div>
     @endif
@@ -96,7 +96,7 @@
         <div class="flex">
             <input type="hidden" value="{{ $item->id }}" name="option[]">
             <input type="hidden" name="komentar_penyelia[]" class="form-input" placeholder="Masukkan Komentar">
-            @php
+            {{--  @php
                 $role = auth()->user()->role;
                 $skor = null;
                 if ($role == 'Penyelia Kredit') {
@@ -111,7 +111,7 @@
                 if ($role == 'Pincab') {
                     $skor = $item->jawaban->skor_pbp;
                 }
-            @endphp
+            @endphp  --}}
             <input
                 type="hidden"
                 name="skor_penyelia[]"
@@ -121,7 +121,7 @@
                 min="0"
                 max="4"
                 onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
-                value="{{$skor}}"
+                {{--  value="{{$skor}}"  --}}
             >
         </div>
     @endif
@@ -137,7 +137,7 @@
         <div class="flex">
             <input type="hidden" value="{{ $item->id }}" name="option[]">
             <input type="hidden" name="komentar_penyelia[]" class="form-input" placeholder="Masukkan Komentar">
-            @php
+            {{--  @php
                 $role = auth()->user()->role;
                 $skor = null;
                 if ($role == 'Penyelia Kredit') {
@@ -152,7 +152,7 @@
                 if ($role == 'Pincab') {
                     $skor = $item->jawaban->skor_pbp;
                 }
-            @endphp
+            @endphp  --}}
             <input
                 type="hidden"
                 name="skor_penyelia[]"
@@ -162,7 +162,7 @@
                 min="0"
                 max="4"
                 onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
-                value="{{$skor}}"
+                {{--  value="{{$skor}}"  --}}
             >
         </div>
     @endif
@@ -176,7 +176,7 @@
         <div class="flex">
             <input type="hidden" value="{{ $item->id }}" name="option[]">
             <input type="hidden" name="komentar_penyelia[]" class="form-input" placeholder="Masukkan Komentar">
-            @php
+            {{--  @php
                 $role = auth()->user()->role;
                 $skor = null;
                 if ($role == 'Penyelia Kredit') {
@@ -191,7 +191,7 @@
                 if ($role == 'Pincab') {
                     $skor = $item->jawaban->skor_pbp;
                 }
-            @endphp
+            @endphp  --}}
             <input
                 type="hidden"
                 name="skor_penyelia[]"
@@ -201,7 +201,7 @@
                 min="0"
                 max="4"
                 onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
-                value="{{$skor}}"
+                {{--  value="{{$skor}}"  --}}
             >
         </div>
     @endif
@@ -237,7 +237,7 @@
         <div class="flex">
             <input type="hidden" value="{{ $item->id }}" name="option[]">
             <input type="hidden" name="komentar_penyelia[]" class="form-input" placeholder="Masukkan Komentar">
-            @php
+            {{--  @php
                 $role = auth()->user()->role;
                 $skor = null;
                 if ($role == 'Penyelia Kredit') {
@@ -252,7 +252,7 @@
                 if ($role == 'Pincab') {
                     $skor = $item->jawaban->skor_pbp;
                 }
-            @endphp
+            @endphp  --}}
             <input
                 type="hidden"
                 name="skor_penyelia[]"
@@ -262,7 +262,7 @@
                 min="0"
                 max="4"
                 onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
-                value="{{$skor}}"
+                {{--  value="{{$skor}}"  --}}
             >
         </div>
     @endif
@@ -301,7 +301,7 @@
             min="0"
             max="4"
             onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
-            value="{{$skor}}"
+            {{--  value="{{$skor}}"  --}}
         >
     </div>
 @endif
@@ -334,7 +334,7 @@
             min="0"
             max="4"
             onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
-            value="{{$skor}}"
+            {{--  value="{{$skor}}"  --}}
         >
     </div>
 @endif
