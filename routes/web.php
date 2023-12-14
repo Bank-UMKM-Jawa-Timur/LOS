@@ -77,6 +77,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // Pengajuan
         Route::resource('pengajuan-kredit', NewDagulirController::class);
+        // check penyelia
+        Route::post('pengajuan-kredit/penyelia-kredit', [NewDagulirController::class, "checkPenyeliaKredit"])->name('pengajuan.check.penyeliakredit');
+        Route::post('pengajuan-kredit/jawaban-pengajuan', [NewDagulirController::class, "getInsertKomentar"])->name('pengajuan.insertkomentar');
+        Route::get('pengajuan-kredit/jawaban-pengajuan/{id}', [NewDagulirController::class, "getDetailJawaban"])->name('pengajuan.detailjawaban');
     });
 
     // check Pincab

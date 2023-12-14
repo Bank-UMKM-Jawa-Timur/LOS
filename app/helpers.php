@@ -216,3 +216,14 @@ if (!function_exists('tambah_pengajuan')) {
         }
     }
 }
+
+function formatNumber($param)
+{
+    return (int)str_replace('.', '', $param);
+}
+
+function getDataLevel($data)
+{
+    $data_level = explode('-', $data);
+    return $data_level;
+}
