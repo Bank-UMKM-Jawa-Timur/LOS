@@ -57,7 +57,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Update Review
         Route::post('review/post',[DagulirController::class,'updateReview'])->name('review-post');
         // Cek Penyelia Dagulir
-        Route::post('penyelia-kredit', [DagulirController::class, "checkPenyeliaKreditDagulir"])->name('check.penyeliakredit');
+        Route::post('penyelia-kredit', [NewDagulirController::class, "checkPenyeliaKreditDagulir"])->name('check.penyeliakredit');
         // Review Penyelia
         Route::get('jawaban-pengajuan/{id}', [DagulirController::class, "getDetailJawaban"])->name('detailjawaban');
         Route::post('jawaban-pengajuan/update/{id}', [DagulirController::class, "updateReviewPenyelia"])->name('updatePenyelia');

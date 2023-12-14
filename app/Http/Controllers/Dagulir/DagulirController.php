@@ -48,6 +48,7 @@ class DagulirController extends Controller
     public function index(Request $request)
     {
         $id_cabang = Auth::user()->id_cabang;
+        $id_user = Auth::user()->id;
         $param['cabang'] = DB::table('cabang')
             ->get();
         $role = auth()->user()->role;
@@ -56,13 +57,13 @@ class DagulirController extends Controller
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
         if ($role == 'Staf Analis Kredit') {
-            $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit');
+            $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user);
         } elseif ($role == 'Penyelia Kredit') {
-            $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Penyelia Kredit');
+            $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Penyelia Kredit', $id_user);
         } elseif ($role == 'Pincab') {
-            $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Pincab');
+            $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Pincab', $id_user);
         } else {
-            $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit');
+            $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user);
         }
 
         // search

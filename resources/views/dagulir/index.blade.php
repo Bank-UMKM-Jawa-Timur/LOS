@@ -98,7 +98,7 @@
         </div>
         <div class="right-button gap-2 flex lg:justify-start">
           <a
-            href="{{ route('dagulir.create') }}"
+            href="{{ route('dagulir.pengajuan-kredit.create') }}"
             class="px-7 py-2 rounded flex justify-center items-center font-semibold bg-theme-primary border text-white"
           >
             <span class="mt-1 mr-3">
