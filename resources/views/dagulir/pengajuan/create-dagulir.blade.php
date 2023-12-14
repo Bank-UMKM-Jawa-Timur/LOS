@@ -278,7 +278,7 @@
                 <div class="input-box">
                     <label for="">Jaminan yang disediakan</label>
                     <select name="ket_agunan" id="" class="form-select">
-                        <option value="">Pilih Jaminan</option>
+                        <option value="0">Pilih Jaminan</option>
                         <option value="shm">SHM</option>
                         <option value="bpkb">BPKB</option>
                         <option value="shgb">SHGB</option>

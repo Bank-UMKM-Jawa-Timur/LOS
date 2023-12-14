@@ -217,32 +217,33 @@ class NewDagulirController extends Controller
 
     public function store(Request $request)
     {
+
+        $request->validate([
+            'nama_lengkap' => 'required',
+            'nik_nasabah' => 'required',
+            'tempat_lahir' => 'required',
+            'tanggal_lahir' => 'required',
+            'telp' => 'required',
+            'jenis_usaha' => 'required',
+            'nominal_pengajuan' => 'required',
+            'tujuan_penggunaan' => 'required',
+            'jangka_waktu' => 'required',
+            'status' => 'required|not_in:0',
+            'kecamatan_sesuai_ktp' => 'required|not_in:0',
+            'kode_kotakab_ktp' => 'required|not_in:0',
+            'alamat_sesuai_ktp' => 'required',
+            'kecamatan_domisili' => 'required|not_in:0',
+            'kode_kotakab_domisili' => 'required|not_in:0',
+            'alamat_domisili' => 'required',
+            'kecamatan_usaha' => 'required|not_in:0',
+            'kode_kotakab_usaha' => 'required|not_in:0',
+            'alamat_usaha' => 'required',
+            'tipe_pengajuan' => 'required|not_in:0',
+            'jenis_badan_hukum' => 'required|not_in:0',
+            'ket_agunan' => 'required|not_in:0'
+        ]);
         $statusSlik = false;
         $find = array('Rp ', '.', ',');
-        // $request->validate([
-        //     'name' => 'required',
-        //     'no_telp' => 'required',
-        //     'alamat_rumah' => 'required',
-        //     'alamat_usaha' => 'required',
-        //     'no_ktp' => 'required',
-        //     'kabupaten' => 'required|not_in:0',
-        //     'kec' => 'required|not_in:0',
-        //     'desa' => 'required|not_in:0',
-        //     'tempat_lahir' => 'required',
-        //     'tanggal_lahir' => 'required',
-        //     'status' => 'required',
-        //     'sektor_kredit' => 'required',
-        //     'jenis_usaha' => 'required',
-        //     'jumlah_kredit' => 'required',
-        //     'tenor_yang_diminta' => 'required',
-        //     'tujuan_kredit' => 'required',
-        //     'jaminan' => 'required',
-        //     'hubungan_bank' => 'required',
-        //     'hasil_verifikasi' => 'required',
-        // ], [
-        //     'required' => 'Data :attribute harus terisi.',
-        //     'not_in' => 'kolom harus dipilih.',
-        // ]);
 
         DB::beginTransaction();
         try {
