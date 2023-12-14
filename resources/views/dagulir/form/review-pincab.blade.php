@@ -240,10 +240,19 @@
         });
 
         $(".next-tab").on("click", function(e) {
+            const activeElement = $('.tab-wrapper .btn-tab.active');
+            const nextElement = activeElement.next();
             const $activeContent = $(".is-tab-content.active");
             const $nextContent = $activeContent.next();
 
-            console.log($nextContent.length);
+            if(nextElement.length){
+                activeElement.removeClass('active-tab');
+                nextElement.addClass('active-tab');
+            }else{
+                activeElement.addClass('active-tab');
+                nextElement.removeClass('active-tab');
+            }
+
             if ($nextContent.length) {
                 $activeContent.removeClass("active");
                 $nextContent.addClass("active");

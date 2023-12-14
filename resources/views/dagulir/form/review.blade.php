@@ -194,10 +194,19 @@
         });
 
         $(".next-tab").on("click", function(e) {
+            const activeElement = $('.out-stage .owl-item');
+            const nextElement = activeElement.next().children('.btn-tab');
             const $activeContent = $(".is-tab-content.active");
             const $nextContent = $activeContent.next();
 
-            console.log($nextContent.length);
+            if(nextElement.length){
+                activeElement.removeClass('active-tab');
+                nextElement.addClass('active-tab');
+            }else{
+                activeElement.addClass('active-tab');
+                nextElement.removeClass('active-tab');
+            }
+
             if ($nextContent.length) {
                 $activeContent.removeClass("active");
                 $nextContent.addClass("active");
