@@ -473,11 +473,6 @@ class NewDagulirController extends Controller
             $dataLev2 = [];
             if ($request->dataLevelDua != null) {
                 $dataLev2 = $request->dataLevelDua;
-                // remove key 80, 86, 93 & 142 from array
-                // unset($dataLev2[80]);
-                // unset($dataLev2[86]);
-                // unset($dataLev2[93]);
-                // unset($dataLev2[142]);
             }
 
             // item level 3
@@ -485,10 +480,7 @@ class NewDagulirController extends Controller
             if ($request->dataLevelTiga != null) {
                 // item level 3
                 $dataLev3 = $request->dataLevelTiga;
-                // remove key 121, 134 & 149 from array
-                // unset($dataLev3[121]);
                 unset($dataLev3[134]);
-                // unset($dataLev3[149]);
             }
 
             // item level 4
@@ -528,8 +520,6 @@ class NewDagulirController extends Controller
             }
             // find avg
             $avgResult = round($totalScore / (count($mergedDataLevel) - $totalDataNull), 2);
-            // dd($mergedDataLevel, $totalScore, count($mergedDataLevel), $totalDataNull, count($mergedDataLevel) - $totalDataNull, $avgResult);
-            // return $request;
             $status = "";
             $updateData = PengajuanModel::find($id_pengajuan);
             if ($avgResult > 0 && $avgResult <= 2) {
@@ -542,8 +532,6 @@ class NewDagulirController extends Controller
             } else {
                 $status = "merah";
             }
-
-            // dd($mergedDataLevel, $totalDataNull, $totalScore, count($mergedDataLevel) - $totalDataNull, $avgResult);
 
             for ($i = 0; $i < count($mergedDataLevel); $i++) {
                 if ($mergedDataLevel[$i] != null) {
@@ -608,20 +596,10 @@ class NewDagulirController extends Controller
                 $addKomentar->save();
             }
 
-            // JawabanTemp::where('id_temporary_calon_nasabah', $tempNasabah->id)->delete();
-            // JawabanTempModel::where('id_temporary_calon_nasabah', $tempNasabah->id)->delete();
-            // $tempNasabah->delete();
-            // DB::table('temporary_usulan_dan_pendapat')
-            //     ->where('id_temp', $tempNasabah->id)
-            //     ->delete();
-            // DB::table('data_po_temp')->where('id_calon_nasabah_temp', $tempNasabah->id)->delete();
-
             // Log Pengajuan Baru
-            // $namaNasabah = 'undifined';
-            // if ($addData)
-            //     $namaNasabah = $addData->nama;
+            $namaNasabah = $pengajuan->nama;
 
-            // $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan proses pembuatan data pengajuan atas nama ' . $namaNasabah . '.', $id_pengajuan, Auth::user()->id, Auth::user()->nip);
+            $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan proses pembuatan data pengajuan atas nama ' . $namaNasabah . '.', $id_pengajuan, Auth::user()->id, Auth::user()->nip);
 
             DB::commit();
             event(new EventMonitoring('store pengajuan'));
@@ -653,15 +631,14 @@ class NewDagulirController extends Controller
                 }
                 $statusPenyelia->update();
 
-                // // Log Pengajuan melanjutkan dan mendapatkan
-                // $nasabah = PengajuanDagulir::find($statusPenyelia->dagulir_id)->first();
-                // $namaNasabah = 'undifined';
-                // if ($nasabah)
-                //     $namaNasabah = $nasabah->nama;
+                // Log Pengajuan melanjutkan dan mendapatkan
+                $dagulir = PengajuanDagulir::select('nama')->find($statusPenyelia->dagulir_id);
+                $namaNasabah = 'undifined';
+                if ($dagulir)
+                    $namaNasabah = $dagulir->nama;
 
-                // $penyelia = User::find($request->select_penyelia);
-                // $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan atas nama ' . $namaNasabah . ' ke penyelia dengan NIP ' . $penyelia->nip . ' atas nama ' . $this->getNameKaryawan($penyelia->nip) . ' .', $statusPenyelia->id, Auth::user()->id, Auth::user()->nip);
-                // $this->logPengajuan->store('Penyelia dengan NIP ' . $penyelia->nip . ' atas nama ' . $this->getNameKaryawan($penyelia->nip) . ' menerima data pengajuan atas nama ' . $namaNasabah . ' dari staf dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $statusPenyelia->id, $penyelia->id, $penyelia->nip);
+                $penyelia = User::find($request->select_penyelia);
+                $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan atas nama ' . $namaNasabah . ' ke penyelia dengan NIP ' . $penyelia->nip . ' atas nama ' . $this->getNameKaryawan($penyelia->nip) . ' .', $statusPenyelia->id, Auth::user()->id, Auth::user()->nip);
 
                 DB::commit();
                 return redirect()->back()->withStatus('Berhasil mengganti posisi.');
@@ -865,14 +842,14 @@ class NewDagulirController extends Controller
                     }
                 }
 
-                // // Log Pengajuan review
-                // $nasabah = PengajuanDagulir::find($request->id_pengajuan)->first();
-                // $namaNasabah = 'undifined';
+                // Log Pengajuan review
+                $dagulir = PengajuanDagulir::find($updateData->dagulir_id);
+                $namaNasabah = 'undifined';
 
-                // if ($nasabah)
-                //     $namaNasabah = $nasabah->nama;
+                if ($dagulir)
+                    $namaNasabah = $dagulir->nama;
 
-                // $this->logPengajuan->store($role . ' dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan review terhadap pengajuan atas nama ' . $namaNasabah, $updateData->id, Auth::user()->id, Auth::user()->nip);
+                $this->logPengajuan->store($role . ' dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan review terhadap pengajuan atas nama ' . $namaNasabah, $updateData->id, Auth::user()->id, Auth::user()->nip);
 
                 DB::commit();
                 event(new EventMonitoring('review pengajuan'));
@@ -983,60 +960,78 @@ class NewDagulirController extends Controller
         }
     }
 
-    public function storeSipde(Request $request) {
-        $pengajuan = PengajuanModel::with('pendapatPerAspek')->find($request->id_dagulir);
-        $pengajuan_dagulir = PengajuanDagulir::find($pengajuan->dagulir_id);
-        $data = sipde_token();
-        $body = [
-            "nama" => $pengajuan_dagulir->nama,
-            "nik" => $pengajuan_dagulir->nik,
-            "tempat_lahir" => $pengajuan_dagulir->tempat_lahir,
-            "tanggal_lahir" => $pengajuan_dagulir->tanggal_lahir,
-            "telp" => $pengajuan_dagulir->telp,
-            "jenis_usaha" => $pengajuan_dagulir->jenis_usaha,
-            "nominal_pengajuan" => formatNumber($request->nominal_realisasi),
-            "tujuan_penggunaan" => $pengajuan_dagulir->tujuan_penggunaan,
-            "jangka_waktu" => intval($request->get('jangka_waktu')),
-            "ket_agunan" => $pengajuan_dagulir->ket_agunan,
-            "kode_bank_pusat" => '01-BPR',
-            "kode_bank_cabang" => $pengajuan_dagulir->kode_bank_cabang,
-            "kecamatan_sesuai_ktp" => $pengajuan_dagulir->kec_ktp,
-            "kode_kotakab_ktp" => $pengajuan_dagulir->kotakab_ktp,
-            "alamat_sesuai_ktp" => $pengajuan_dagulir->alamat_ktp,
-            "kecamatan_domisili" => $pengajuan_dagulir->kec_dom ,
-            "kode_kotakab_domisili" => $pengajuan_dagulir->kotakab_dom,
-            "alamat_domisili" => $pengajuan_dagulir->alamat_dom,
-            "kecamatan_usaha" => $pengajuan_dagulir->kec_usaha,
-            "kode_kotakab_usaha" => $pengajuan_dagulir->kotakab_usaha ,
-            "alamat_usaha" => $pengajuan_dagulir->alamat_usaha,
-            "tipe_pengajuan" => $pengajuan_dagulir->tipe,
-            "npwp" => $pengajuan_dagulir->npwp,
-            "jenis_badan_hukum" => $pengajuan_dagulir->jenis_badan_hukum,
-            // "jenis_badan_hukum" => "Berbadan Hukum",
-            "tempat_berdiri" => $pengajuan_dagulir->tempat_berdiri,
-            "tanggal_berdiri" => $pengajuan_dagulir->tanggal_berdiri,
-            "email" => $pengajuan_dagulir->email,
-            "nama_pj" => $pengajuan_dagulir->nama_pj_ketua ??  null,
-        ];
-        $pengajuan_dagulir = Http::withHeaders([
-            'Authorization' => 'Bearer ' .$data['token'],
-        ])->post(config('dagulir.host').'/pengajuan.json', $body)->json();
+    public function storeSipde($id_pengajuan) {
+        DB::beginTransaction();
+        try {
+            $pengajuan = PengajuanModel::with('pendapatPerAspek')->find($id_pengajuan);
+            $pengajuan_dagulir = PengajuanDagulir::find($pengajuan->dagulir_id);
+            $data = sipde_token();
+            $body = [
+                "nama" => $pengajuan_dagulir->nama,
+                "nik" => $pengajuan_dagulir->nik,
+                "tempat_lahir" => $pengajuan_dagulir->tempat_lahir,
+                "tanggal_lahir" => $pengajuan_dagulir->tanggal_lahir,
+                "telp" => $pengajuan_dagulir->telp,
+                "jenis_usaha" => $pengajuan_dagulir->jenis_usaha,
+                // "nominal_pengajuan" => formatNumber($request->nominal_realisasi),
+                "tujuan_penggunaan" => $pengajuan_dagulir->tujuan_penggunaan,
+                // "jangka_waktu" => intval($request->get('jangka_waktu')),
+                "ket_agunan" => $pengajuan_dagulir->ket_agunan,
+                "kode_bank_pusat" => '01-BPR',
+                "kode_bank_cabang" => $pengajuan_dagulir->kode_bank_cabang,
+                "kecamatan_sesuai_ktp" => $pengajuan_dagulir->kec_ktp,
+                "kode_kotakab_ktp" => $pengajuan_dagulir->kotakab_ktp,
+                "alamat_sesuai_ktp" => $pengajuan_dagulir->alamat_ktp,
+                "kecamatan_domisili" => $pengajuan_dagulir->kec_dom ,
+                "kode_kotakab_domisili" => $pengajuan_dagulir->kotakab_dom,
+                "alamat_domisili" => $pengajuan_dagulir->alamat_dom,
+                "kecamatan_usaha" => $pengajuan_dagulir->kec_usaha,
+                "kode_kotakab_usaha" => $pengajuan_dagulir->kotakab_usaha ,
+                "alamat_usaha" => $pengajuan_dagulir->alamat_usaha,
+                "tipe_pengajuan" => $pengajuan_dagulir->tipe,
+                "npwp" => $pengajuan_dagulir->npwp,
+                "jenis_badan_hukum" => $pengajuan_dagulir->jenis_badan_hukum,
+                // "jenis_badan_hukum" => "Berbadan Hukum",
+                "tempat_berdiri" => $pengajuan_dagulir->tempat_berdiri,
+                "tanggal_berdiri" => $pengajuan_dagulir->tanggal_berdiri,
+                "email" => $pengajuan_dagulir->email,
+                "nama_pj" => $pengajuan_dagulir->nama_pj_ketua ??  null,
+            ];
+            $pengajuan_dagulir = Http::withHeaders([
+                'Authorization' => 'Bearer ' .$data['token'],
+            ])->post(config('dagulir.host').'/pengajuan.json', $body)->json();
 
-        if (array_key_exists('data', $pengajuan_dagulir)) {
-            $update_pengajuan_dagulir = PengajuanDagulir::find($pengajuan->dagulir_id);
-            $update_pengajuan_dagulir->kode_pendaftaran = $pengajuan_dagulir['data']['kode_pendaftaran'];
-            $update_pengajuan_dagulir->nominal_realisasi = $this->formatNumber($request->nominal_realisasi);
-            $update_pengajuan_dagulir->jangka_waktu = $request->jangka_waktu;
-            $update_pengajuan_dagulir->status = 1;
-            $update_pengajuan_dagulir->update();
+            if (array_key_exists('data', $pengajuan_dagulir)) {
+                $update_pengajuan_dagulir = PengajuanDagulir::find($pengajuan->dagulir_id);
+                $update_pengajuan_dagulir->kode_pendaftaran = $pengajuan_dagulir['data']['kode_pendaftaran'];
+                // $update_pengajuan_dagulir->nominal_realisasi = $this->formatNumber($request->nominal_realisasi);
+                // $update_pengajuan_dagulir->jangka_waktu = $request->jangka_waktu;
+                $update_pengajuan_dagulir->status = 1;
+                $update_pengajuan_dagulir->update();
 
-            return redirect()->route('dagulir.index')->withStatus('Berhasil mengirimkan data.');
-        }
-        else {
-            $message = 'Terjadi kesalahan.';
-            if (array_key_exists('error', $pengajuan_dagulir)) $message .= ' '.$pengajuan_dagulir['error'];
+                // Log Pengajuan review
+                $dagulir = PengajuanDagulir::find($update_pengajuan_dagulir->dagulir_id);
+                $namaNasabah = 'undifined';
 
-            return redirect()->route('dagulir.index')->withError($message);
+                if ($dagulir)
+                    $namaNasabah = $dagulir->nama;
+
+                $role = Auth::user()->role;
+                $this->logPengajuan->store($role . ' dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' mengirimkan data dagulir dengan pengajuan atas nama ' . $namaNasabah, $pengajuan->id, Auth::user()->id, Auth::user()->nip);
+
+                DB::commit();
+
+                return redirect()->route('dagulir.index')->withStatus('Berhasil mengirimkan data.');
+            }
+            else {
+                $message = 'Terjadi kesalahan.';
+                if (array_key_exists('error', $pengajuan_dagulir)) $message .= ' '.$pengajuan_dagulir['error'];
+
+                return redirect()->route('dagulir.index')->withError($message);
+            }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->route('dagulir.index')->withError($e->getMessage());
         }
     }
 
@@ -1051,6 +1046,22 @@ class NewDagulirController extends Controller
             "jangka_waktu" => $jangka_waktu,
             "realisasi_dana" => $realisasi_dana
         ])->json();
+
+        // Log Pengajuan review
+        $dagulir = PengajuanDagulir::select('id', 'nama')
+                                    ->where('kode_pendaftaran', $kode_pendaftaran)
+                                    ->first();
+        $pengajuan = PengajuanModel::select('id')
+                                    ->where('dagulir_id', $dagulir->id)
+                                    ->first();
+        $namaNasabah = 'undifined';
+
+        if ($dagulir)
+            $namaNasabah = $dagulir->nama;
+
+        $role = Auth::user()->role;
+        $this->logPengajuan->store($role . ' dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan update status terhadap pengajuan atas nama ' . $namaNasabah, $pengajuan->id, Auth::user()->id, Auth::user()->nip);
+
         return $pengajuan_dagulir;
     }
 
@@ -1111,55 +1122,74 @@ class NewDagulirController extends Controller
     
     public function accPengajuan($id)
     {
-        $statusPincab = PengajuanModel::find($id);
-        $komentarPincab = KomentarModel::where('id_pengajuan', $id)->first();
-        if (auth()->user()->role == 'Pincab') {
-            if ($komentarPincab->komentar_pincab != null) {
-                $statusPincab->posisi = "Selesai";
-                $statusPincab->tanggal_review_pincab = date(now());
-                $statusPincab->update();
+        DB::beginTransaction();
+        try {
+            $statusPincab = PengajuanModel::find($id);
+            $komentarPincab = KomentarModel::where('id_pengajuan', $id)->first();
+            if (auth()->user()->role == 'Pincab') {
+                if ($komentarPincab->komentar_pincab != null) {
+                    $statusPincab->posisi = "Selesai";
+                    $statusPincab->tanggal_review_pincab = date(now());
+                    $statusPincab->update();
 
-                // $nasabah = CalonNasabah::select('id', 'nama')->where('id_pengajuan', $id)->first();
-                // $namaNasabah = 'undifined';
-                // if ($nasabah)
-                //     $namaNasabah = $nasabah->nama;
+                    $nasabah = PengajuanDagulir::select('nama')->find($statusPincab->dagulir_id);
+                    $namaNasabah = 'undifined';
+                    if ($nasabah)
+                        $namaNasabah = $nasabah->nama;
 
-                // $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->pengajuanKredit->getNameKaryawan(Auth::user()->nip) . ' menyetujui pengajuan atas nama ' . $namaNasabah . '.', $id, Auth::user()->id, Auth::user()->nip);
+                    $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menyetujui pengajuan atas nama ' . $namaNasabah . '.', $id, Auth::user()->id, Auth::user()->nip);
 
-                event(new EventMonitoring('menyetujui pengajuan'));
+                    // HIT Pengajuan endpoint dagulir
+                    $this->storeSipde($id);
 
-                return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+                    DB::commit();
+                    event(new EventMonitoring('menyetujui pengajuan'));
+
+                    return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+                } else {
+                    return redirect()->back()->withError('Belum di review Pincab.');
+                }
             } else {
-                return redirect()->back()->withError('Belum di review Pincab.');
+                return redirect()->back()->withError('Tidak memiliki hak akses.');
             }
-        } else {
-            return redirect()->back()->withError('Tidak memiliki hak akses.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withError($e->getMessage());
         }
     }
 
     public function decPengajuan($id)
     {
-        $statusPincab = PengajuanModel::find($id);
-        $komentarPincab = KomentarModel::where('id_pengajuan', $id)->first();
-        if (auth()->user()->role == 'Pincab') {
-            if ($komentarPincab->komentar_pincab != null) {
-                $statusPincab->posisi = "Ditolak";
-                $statusPincab->tanggal_review_pincab = date(now());
-                $statusPincab->update();
+        DB::beginTransaction();
+        try {
+            $statusPincab = PengajuanModel::find($id);
+            $komentarPincab = KomentarModel::where('id_pengajuan', $id)->first();
+            if (auth()->user()->role == 'Pincab') {
+                if ($komentarPincab->komentar_pincab != null) {
+                    $statusPincab->posisi = "Ditolak";
+                    $statusPincab->tanggal_review_pincab = date(now());
+                    $statusPincab->update();
 
-                // $nasabah = CalonNasabah::select('id', 'nama')->where('id_pengajuan', $id)->first();
-                // $namaNasabah = 'undifined';
-                // if ($nasabah)
-                //     $namaNasabah = $nasabah->nama;
+                    $nasabah = PengajuanDagulir::select('nama')->find($statusPincab->dagulir_id);
+                    $namaNasabah = 'undifined';
+                    if ($nasabah)
+                        $namaNasabah = $nasabah->nama;
 
-                // $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->pengajuanKredit->getNameKaryawan(Auth::user()->nip) . ' menolak pengajuan atas nama ' . $namaNasabah . '.', $id, Auth::user()->id, Auth::user()->nip);
-                event(new EventMonitoring('tolak pengajuan'));
-                return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+                    $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menolak pengajuan atas nama ' . $namaNasabah . '.', $id, Auth::user()->id, Auth::user()->nip);
+
+                    DB::commit();
+
+                    event(new EventMonitoring('tolak pengajuan'));
+                    return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+                } else {
+                    return redirect()->back()->withError('Belum di review Pincab.');
+                }
             } else {
-                return redirect()->back()->withError('Belum di review Pincab.');
+                return redirect()->back()->withError('Tidak memiliki hak akses.');
             }
-        } else {
-            return redirect()->back()->withError('Tidak memiliki hak akses.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withError($e->getMessage());
         }
     }
 }
