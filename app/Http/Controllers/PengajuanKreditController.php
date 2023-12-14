@@ -511,7 +511,7 @@ class PengajuanKreditController extends Controller
                     ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
                     ->where('pengajuan.id_cabang', Auth::user()->id_cabang)
                     ->where('pengajuan.posisi', $request->pss)
-                    ->paginate(5)
+                    ->paginate($limit)
                     ->withQueryString();
             } else {
                 $param['data_pengajuan'] = PengajuanModel::select(
