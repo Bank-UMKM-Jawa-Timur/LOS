@@ -5,15 +5,16 @@ id="modal-filter"
 >
 <div class="modal modal-sm bg-white">
   <div class="modal-head">
-    <div class="title">
+    <div class="title mt-1">
       <h2 class="font-bold text-lg tracking-tighter text-theme-text">
         Filter data
       </h2>
     </div>
-    <button type="button" data-dismiss-id="modal-filter">
+    <button type="button" class="p-2 gap-2 flex justify-center" data-dismiss-id="modal-filter">
+      <span class="text-gray-500 flex gap-2 "><iconify-icon icon="mdi:keyboard-esc" class="text-2xl"></iconify-icon> to close</span>
       <iconify-icon
         icon="iconamoon:close-bold"
-        class="text-2xl"
+        class="text-2xl text-gray-500"
       ></iconify-icon>
     </button>
   </div>

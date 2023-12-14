@@ -341,6 +341,7 @@
                                 @if ($item->posisi == 'Review Penyelia')
                                     @if (auth()->user()->id_cabang == '1')
                                         <button
+                                            data-dropdown="dropdown-tb"
                                             class="dropdown-tb-toggle border rounded px-4 py-2 hover:bg-gray-100 hover:text-gray-500">
                                             <iconify-icon icon="ph:dots-three-outline-vertical-fill" class="mt-2">
                                             </iconify-icon>
@@ -373,7 +374,7 @@
                                             </li>
                                         </ul>
                                     @else
-                                        <button class="dropdown-tb-toggle border rounded px-4 py-2 hover:bg-gray-100 hover:text-gray-500">
+                                        <button data-dropdown="dropdown-tb" class="dropdown-tb-toggle border rounded px-4 py-2 hover:bg-gray-100 hover:text-gray-500">
                                             <iconify-icon icon="ph:dots-three-outline-vertical-fill" class="mt-2">
                                             </iconify-icon>
                                         </button>

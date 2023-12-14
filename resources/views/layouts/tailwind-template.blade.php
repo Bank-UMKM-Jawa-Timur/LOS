@@ -41,9 +41,11 @@
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="https://unpkg.com/popper.js@1.12.8/dist/umd/popper.min.js"></script>
     <script src="{{ asset('plugins/owl-carousel/owl.carousel.js') }}"></script>
     <script src="{{ asset('plugins/owl-carousel/owl.carousel.min.js') }}"></script>
     <script src="{{ asset('') }}vendor/sweetalert-master/dist/sweetalert.min.js"></script>
+    <script src="{{ asset('plugins/perfect-scrollbar.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.12/dist/sweetalert2.all.min.js"></script>
 
     {{-- app.js is custom global js --}}

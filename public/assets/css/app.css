@@ -1089,11 +1089,10 @@ video {
   display: block;
 }
     .alert {
-  border-width: 1px;
   --tw-border-opacity: 1;
   border-color: rgb(220 53 69 / var(--tw-border-opacity));
   background-color: rgb(220 53 69 / 0.05);
-  padding: 0.75rem;
+  padding: 1.25rem;
   font-size: 1.125rem;
   line-height: 1.75rem;
   --tw-text-opacity: 1;
@@ -1338,6 +1337,9 @@ video {
 .mb-6 {
   margin-bottom: 1.5rem;
 }
+.me-3 {
+  margin-inline-end: 0.75rem;
+}
 .ml-0 {
   margin-left: 0px;
 }
@@ -1404,20 +1406,14 @@ video {
 .mt-\[3px\] {
   margin-top: 3px;
 }
+.mt-\[5vh\] {
+  margin-top: 5vh;
+}
 .mt-\[80\%\] {
   margin-top: 80%;
 }
 .mt-\[8px\] {
   margin-top: 8px;
-}
-.me-3 {
-  margin-inline-end: 0.75rem;
-}
-.mt-\[10vh\] {
-  margin-top: 10vh;
-}
-.mt-\[5vh\] {
-  margin-top: 5vh;
 }
 .box-border {
   box-sizing: border-box;
@@ -1506,6 +1502,9 @@ video {
 .w-\[100px\] {
   width: 100px;
 }
+.w-\[1500px\] {
+  width: 1500px;
+}
 .w-\[19px\] {
   width: 19px;
 }
@@ -1582,11 +1581,11 @@ video {
 .cursor-default {
   cursor: default;
 }
-.cursor-pointer {
-  cursor: pointer;
-}
 .cursor-not-allowed {
   cursor: not-allowed;
+}
+.cursor-pointer {
+  cursor: pointer;
 }
 .appearance-none {
   -webkit-appearance: none;
@@ -1601,6 +1600,9 @@ video {
 }
 .items-center {
   align-items: center;
+}
+.justify-start {
+  justify-content: flex-start;
 }
 .justify-end {
   justify-content: flex-end;
@@ -1672,6 +1674,9 @@ video {
 .overflow-hidden {
   overflow: hidden;
 }
+.overflow-x-auto {
+  overflow-x: auto;
+}
 .overflow-y-auto {
   overflow-y: auto;
 }
@@ -1740,10 +1745,6 @@ video {
 }
 .border-transparent {
   border-color: transparent;
-}
-.border-red-500 {
-  --tw-border-opacity: 1;
-  border-color: rgb(239 68 68 / var(--tw-border-opacity));
 }
 .bg-\[\#39B568\]\/20 {
   background-color: rgb(57 181 104 / 0.2);
@@ -2285,11 +2286,6 @@ video {
   background-color: rgb(249 250 251 / var(--tw-bg-opacity));
 }
 
-.hover\:bg-red-400:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(248 113 113 / var(--tw-bg-opacity));
-}
-
 .hover\:bg-red-700:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(185 28 28 / var(--tw-bg-opacity));
@@ -2577,6 +2573,10 @@ video {
   .lg\:px-8 {
     padding-left: 2rem;
     padding-right: 2rem;
+  }
+
+  .lg\:text-center {
+    text-align: center;
   }
 }
 

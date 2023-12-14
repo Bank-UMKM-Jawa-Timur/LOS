@@ -3,16 +3,20 @@
 @section('content')
     <section class="">
         <nav class="w-full bg-white p-3  top-[4rem] border sticky">
-            <div class="owl-carousel owl-theme tab-wrapper">
-                <button data-toggle="tab" data-tab="dagulir" class="btn btn-tab active-tab font-semibold">0% Data Umum</button>
-                @foreach ($items as $item)
-                    @php
-                        $title = str_replace('&', 'dan', strtolower($item->nama));
-                        $title = str_replace(' ', '-', strtolower($title));
-                    @endphp
-                    <button data-toggle="tab" data-tab="{{$title}}" class="btn btn-tab font-semibold">0% {{$item->nama}}</button>
-                @endforeach
-                <button data-toggle="tab" data-tab="pendapat-dan-usulan" class="btn btn-tab font-semibold">Pendapat dan Usulan</button>
+            <div class="lg:flex grid grid-cols-1 gap-3 lg:text-center overflow-hidden relative text-left text-xs tab-wrapper">
+             <div class="overflow-x-auto">
+                <div class="w-[1500px] flex gap-3 justify-start">
+                    <button data-toggle="tab" data-tab="dagulir" class="btn btn-tab active-tab font-semibold">0% Data Umum</button>
+                    @foreach ($items as $item)
+                        @php
+                            $title = str_replace('&', 'dan', strtolower($item->nama));
+                            $title = str_replace(' ', '-', strtolower($title));
+                        @endphp
+                        <button data-toggle="tab" data-tab="{{$title}}" class="btn btn-tab font-semibold">0% {{$item->nama}}</button>
+                    @endforeach
+                    <button data-toggle="tab" data-tab="pendapat-dan-usulan" class="btn btn-tab font-semibold ">Pendapat dan Usulan</button>
+                </div>
+             </div>
             </div>
         </nav>
         <div class="p-3">
@@ -47,9 +51,9 @@
                             </div>
                             <div class="self-start bg-white w-full border">
                                 <div class="p-5 border-b">
-                                  <h2 class="font-bold text-lg tracking-tighter">
-                                    Pendapat dan Usulan
-                                  </h2>
+                                    <h2 class="font-bold text-lg tracking-tighter">
+                                        Pendapat dan Usulan
+                                    </h2>
                                 </div>
                                 <!-- pendapat-dan-usulan -->
                                 <div class="p-5 space-y-5">
@@ -97,7 +101,7 @@
 @push('script-inject')
     <script>
         // Start Validation
-         @if (count($errors->all()))
+        @if (count($errors->all()))
             Swal.fire({
                 icon: 'error',
                 title: 'Error Validation',
@@ -319,10 +323,20 @@
         });
 
         $(".next-tab").on("click", function(e) {
+            const activeTab = $(".tab-wrapper .btn-tab.active-tab");
+            const nextTab = activeTab.next();
+
             const $activeContent = $(".is-tab-content.active");
             const $nextContent = $activeContent.next();
+            
+            if(nextTab.length){
+                activeTab.removeClass('active-tab');
+                nextTab.addClass('active-tab');
+            }else{
+                activeTab.addClass('active-tab');
+                nextTab.removeClass('active-tab');
+            }
 
-            console.log($nextContent.length);
             if ($nextContent.length) {
                 $activeContent.removeClass("active");
                 $nextContent.addClass("active");
@@ -334,8 +348,18 @@
         });
 
         $(".prev-tab").on("click", function() {
+            const activeTab = $(".tab-wrapper .btn-tab.active-tab");
+            const prevTab = activeTab.prev();
             const $activeContent = $(".is-tab-content.active");
             const $prevContent = $activeContent.prev();
+
+            if(prevTab.length){
+                activeTab.removeClass('active-tab');
+                prevTab.addClass('active-tab');
+            }else{
+                activeTab.addClass('active-tab');
+                prevTab.removeClass('active-tab');
+            }
 
             if ($prevContent.length) {
                 $activeContent.removeClass("active");
