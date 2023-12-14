@@ -61,48 +61,59 @@
         </div>
         <div class="body-pages">
             <div class="table-wrapper border bg-white mt-3">
-                <div class="layout-wrapping p-3 lg:flex grid grid-cols-1 justify-center lg:justify-between">
-                    <div class="left-layout lg:w-auto w-full lg:block flex justify-center">
-                        <div class="flex gap-5 p-2">
-                            <span class="mt-[10px] text-sm">Show</span>
-                            <select name=""
-                                class="border border-gray-300 rounded appearance-none text-center px-4 py-2 outline-none"
-                                id="">
-                                <option value="">10</option>
-                                <option value="">15</option>
-                                <option value="">20</option>
-                            </select>
-                            <span class="mt-[10px] text-sm">Entries</span>
+                <form id="form" method="get">
+                    <div class="layout-wrapping p-3 lg:flex grid grid-cols-1 justify-center lg:justify-between">
+                        <div class="left-layout lg:w-auto w-full lg:block flex justify-center">
+                            <div class="flex gap-5 p-2">
+                                <span class="mt-[10px] text-sm">Show</span>
+                                <select name="page_length"
+                                    class="border border-gray-300 rounded appearance-none text-center px-4 py-2 outline-none"
+                                    id="page_length">
+                                    <option value="10"
+                                        @isset($_GET['page_length']) {{ $_GET['page_length'] == 1 ? 'selected' : '' }} @endisset>
+                                        10</option>
+                                    <option value="20"
+                                        @isset($_GET['page_length']) {{ $_GET['page_length'] == 20 ? 'selected' : '' }} @endisset>
+                                        20</option>
+                                    <option value="50"
+                                        @isset($_GET['page_length']) {{ $_GET['page_length'] == 50 ? 'selected' : '' }} @endisset>
+                                        50</option>
+                                    <option value="100"
+                                        @isset($_GET['page_length']) {{ $_GET['page_length'] == 100 ? 'selected' : '' }} @endisset>
+                                        100</option>
+                                </select>
+                                <span class="mt-[10px] text-sm">Entries</span>
+                            </div>
+                        </div>
+                        <div class="right-layout lg:w-auto w-full">
+                        @if (Request()->tAwal != null)
+                            <input type="text" name="tAwal" value="{{ Request()->tAwal }}" hidden>
+                        @endif
+                        @if (Request()->tAkhir != null)
+                            <input type="text" name="tAkhir" value="{{ Request()->tAkhir }}" hidden>
+                        @endif
+                        @if (Request()->cbg != null)
+                            <input type="text" name="cbg" value="{{ Request()->cbg }}" hidden>
+                        @endif
+                        @if (Request()->pss != null)
+                            <input type="text" name="pss" value="{{ Request()->pss }}" hidden>
+                        @endif
+                        @if (Request()->score != null)
+                            <input type="text" name="score" value="{{ Request()->score }}" hidden>
+                        @endif
+                        @if (Request()->sts != null)
+                            <input type="text" name="sts" value="{{ Request()->sts }}" hidden>
+                        @endif
+                            <div class="input-search flex gap-2">
+                                <input type="search" name="search" value="{{ Request()->query('search') }}"  placeholder="Cari nama nasabah... "
+                                    class="w-full px-8 outline-none text-sm p-3 border" />
+                                <button class="px-5 py-2 bg-theme-primary rounded text-white text-lg">
+                                    <iconify-icon icon="ic:sharp-search" class="mt-2 text-lg"></iconify-icon>
+                                </button>
+                            </div>
                         </div>
                     </div>
-                    <div class="right-layout lg:w-auto w-full">
-                    @if (Request()->tAwal != null)
-                        <input type="text" name="tAwal" value="{{ Request()->tAwal }}" hidden>
-                    @endif
-                    @if (Request()->tAkhir != null)
-                        <input type="text" name="tAkhir" value="{{ Request()->tAkhir }}" hidden>
-                    @endif
-                    @if (Request()->cbg != null)
-                        <input type="text" name="cbg" value="{{ Request()->cbg }}" hidden>
-                    @endif
-                    @if (Request()->pss != null)
-                        <input type="text" name="pss" value="{{ Request()->pss }}" hidden>
-                    @endif
-                    @if (Request()->score != null)
-                        <input type="text" name="score" value="{{ Request()->score }}" hidden>
-                    @endif
-                    @if (Request()->sts != null)
-                        <input type="text" name="sts" value="{{ Request()->sts }}" hidden>
-                    @endif
-                        <div class="input-search flex gap-2">
-                            <input type="search"  value="{{ Request()->query('search') }}"  placeholder="Cari nama nasabah... "
-                                class="w-full px-8 outline-none text-sm p-3 border" />
-                            <button class="px-5 py-2 bg-theme-primary rounded text-white text-lg">
-                                <iconify-icon icon="ic:sharp-search" class="mt-2 text-lg"></iconify-icon>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                </form>
                 <div class="table-responsive">
                     <table class="tables">
                         <thead>
@@ -458,3 +469,14 @@
         </div>
     </section>
 @endsection
+@push('script-inject')
+<script>
+    $('#page_length').on('change', function() {
+        $('#form').submit()
+    })
+
+    $('#btn_filter').on('click', function () { 
+        $('#form-filter').submit()
+    })
+</script>
+@endpush
