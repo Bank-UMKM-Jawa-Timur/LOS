@@ -29,7 +29,7 @@
               <div class="input-box">
                 <label for="">Ijin Usaha </label>
                 <select
-                  name=""
+                  name="ijin_usaha"
                   class="form-select"
                   id="ijin-usaha"
                 >
@@ -83,7 +83,6 @@
           @if (isset($childs[$key+1]) && !$open_tab)
             <div class="form-group-2">
           @endif
-          {{ $item->nama }}
           @if ($item->nama == 'NPWP')
               <div class="form-group-2">
                 <div class="input-box">
@@ -91,8 +90,6 @@
                   @include('dagulir.components.input', ['item' => $item])
                 </div>
               </div>
-
-          @elseif ($item->nama)
           @else
               <div class="input-box">
                 <label for="">{{$item->nama}}</label>

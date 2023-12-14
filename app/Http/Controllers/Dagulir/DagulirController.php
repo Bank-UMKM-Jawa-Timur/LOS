@@ -265,6 +265,19 @@ class DagulirController extends Controller
                 ]);
             }
 
+            // Pendapat usulan
+            if ($request->has('pendapat')) {
+                DB::table('komentar')->insert([
+                    'id_pengajuan' => $addPengajuan->id,
+                    'id_staff' => auth()->user()->id,
+                    'komentar_staff' => $request->get('pendapat'),
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ]);
+            }
+            else {
+                return redirect()->back()->withError('Harap isi pendapat dan usulan');
+            }
 
             DB::commit();
             return redirect()->route('dagulir.index')->withStatus('Berhasil menambahkan pengajuan!');

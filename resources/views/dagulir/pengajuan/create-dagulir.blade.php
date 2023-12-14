@@ -307,12 +307,11 @@
                 </div>
                 <div class="input-box">
                     <label for="">Jenis badan hukum</label>
-                    <input
-                        type="text"
-                        class="form-input"
-                        name="jenis_badan_hukum"
-
-                    />
+                    <select name="jenis_badan_hukum" id="jenis_badan_hukum" class="form-select">
+                        <option value="0">Tipe Pengajuan</option>
+                        <option value="Berbadan Hukum">Berbadan Hukum</option>
+                        <option value="Tidak Berbadan Hukum">Tidak Berbadan Hukum</option>
+                    </select>
                 </div>
                 <div class="input-box hidden" id="tempat_berdiri">
                     <label for="">Tempat Berdiri</label>

@@ -194,14 +194,15 @@
                 @php
                     $file_parts = pathinfo(asset('..') . '/' . $dagulir->id . '/' . $data->id_slik.'/'.$data->file_slik);
                 @endphp
-                @if ($file_parts['extension'] == 'pdf')
-                <iframe
-                src="{{ asset('..') . '/upload/'. $dagulir->id . '/' .$data->id_slik.'/'.$data->file_slik }}"
-                width="100%" height="800px"></iframe>
-                @else
-                <img src="{{ asset('..') . '/upload/' . $dagulir->id . '/' . $data->id_slik.'/'.$data->file_slik }}"
-                alt="" width="800px">
-
+                @if (array_key_exists('extension', $file_parts))
+                    @if ($file_parts['extension'] == 'pdf')
+                        <iframe
+                        src="{{ asset('..') . '/upload/'. $dagulir->id . '/' .$data->id_slik.'/'.$data->file_slik }}"
+                        width="100%" height="800px"></iframe>
+                    @else
+                        <img src="{{ asset('..') . '/upload/' . $dagulir->id . '/' . $data->id_slik.'/'.$data->file_slik }}"
+                        alt="" width="800px">
+                    @endif
                 @endif
             </div>
         </div>
