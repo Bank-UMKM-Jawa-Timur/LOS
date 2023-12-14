@@ -43,7 +43,7 @@
 @elseif ($item->opsi_jawaban == 'file')
     <div class="flex gap-4">
         @if ($item->nama == 'Dokumen NPWP' || $item->nama == 'Dokumen Surat Keterangan Usaha' || $item->nama == 'Dokumen NIB')
-            <input type="file" name="file[{{ $item->id }}][]" class="form-input hidden" id="{{ str_replace(' ', '-', strtolower($item->nama)) }} @if ($item->readonly) bg-gray-100 @endif"
+            <input type="file" name="file[{{ $item->id }}][]" class="form-input hidden  @if ($item->readonly) bg-gray-100 @endif" id="{{str_replace(' ', '-', strtolower($item->nama))}}"
                 @if ($item->readonly) readonly @endif/>
         @else
             <input type="file" name="file[{{ $item->id }}][]" class="form-input {{$item->id}}-{{strtolower(str_replace(' ', '-', $item->nama))}} @if ($item->readonly) bg-gray-100 @endif"
