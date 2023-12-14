@@ -278,7 +278,7 @@
                 <div class="input-box">
                     <label for="">Jaminan yang disediakan</label>
                     <select name="ket_agunan" id="" class="form-select">
-                        <option value="">Pilih Jaminan</option>
+                        <option value="0">Pilih Jaminan</option>
                         <option value="shm">SHM</option>
                         <option value="bpkb">BPKB</option>
                         <option value="shgb">SHGB</option>
@@ -309,7 +309,7 @@
                 <div class="input-box">
                     <label for="">Jenis badan hukum</label>
                     <select name="jenis_badan_hukum" id="jenis_badan_hukum" class="form-select">
-                        <option value="0">Tipe Pengajuan</option>
+                        <option value="0">Jenis Badan Hukum</option>
                         <option value="Berbadan Hukum">Berbadan Hukum</option>
                         <option value="Tidak Berbadan Hukum">Tidak Berbadan Hukum</option>
                     </select>
@@ -342,6 +342,17 @@
                         name="hub_bank"
                         class="form-textarea"
                         placeholder="Hubungan Bank"
+                        id=""
+                    ></textarea>
+                </div>
+            </div>
+            <div class="form-group-1">
+                <div class="input-box">
+                    <label for="">Hasil Verifikasi</label>
+                    <textarea
+                        name="hasil_verifikasi"
+                        class="form-textarea"
+                        placeholder="Hasil Verikasi"
                         id=""
                     ></textarea>
                 </div>

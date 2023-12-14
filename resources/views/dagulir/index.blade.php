@@ -264,7 +264,7 @@
                                                 </li>
                                             @endif
                                         @endif
-                                        @if ((Auth()->user()->role == 'Penyelia Kredit'))
+                                        @if ((Auth()->user()->role == 'Penyelia Kredit') && $item->pengajuan->posisi == 'Review Penyelia')
                                             <li class="item-tb-dropdown">
                                                 <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
                                                     class="cursor-pointer">Review</a>

@@ -218,32 +218,33 @@ class NewDagulirController extends Controller
 
     public function store(Request $request)
     {
+
+        $request->validate([
+            'nama_lengkap' => 'required',
+            'nik_nasabah' => 'required',
+            'tempat_lahir' => 'required',
+            'tanggal_lahir' => 'required',
+            'telp' => 'required',
+            'jenis_usaha' => 'required',
+            'nominal_pengajuan' => 'required',
+            'tujuan_penggunaan' => 'required',
+            'jangka_waktu' => 'required',
+            'status' => 'required|not_in:0',
+            'kecamatan_sesuai_ktp' => 'required|not_in:0',
+            'kode_kotakab_ktp' => 'required|not_in:0',
+            'alamat_sesuai_ktp' => 'required',
+            'kecamatan_domisili' => 'required|not_in:0',
+            'kode_kotakab_domisili' => 'required|not_in:0',
+            'alamat_domisili' => 'required',
+            'kecamatan_usaha' => 'required|not_in:0',
+            'kode_kotakab_usaha' => 'required|not_in:0',
+            'alamat_usaha' => 'required',
+            'tipe_pengajuan' => 'required|not_in:0',
+            'jenis_badan_hukum' => 'required|not_in:0',
+            'ket_agunan' => 'required|not_in:0'
+        ]);
         $statusSlik = false;
         $find = array('Rp ', '.', ',');
-        // $request->validate([
-        //     'name' => 'required',
-        //     'no_telp' => 'required',
-        //     'alamat_rumah' => 'required',
-        //     'alamat_usaha' => 'required',
-        //     'no_ktp' => 'required',
-        //     'kabupaten' => 'required|not_in:0',
-        //     'kec' => 'required|not_in:0',
-        //     'desa' => 'required|not_in:0',
-        //     'tempat_lahir' => 'required',
-        //     'tanggal_lahir' => 'required',
-        //     'status' => 'required',
-        //     'sektor_kredit' => 'required',
-        //     'jenis_usaha' => 'required',
-        //     'jumlah_kredit' => 'required',
-        //     'tenor_yang_diminta' => 'required',
-        //     'tujuan_kredit' => 'required',
-        //     'jaminan' => 'required',
-        //     'hubungan_bank' => 'required',
-        //     'hasil_verifikasi' => 'required',
-        // ], [
-        //     'required' => 'Data :attribute harus terisi.',
-        //     'not_in' => 'kolom harus dipilih.',
-        // ]);
 
         DB::beginTransaction();
         try {
@@ -262,6 +263,7 @@ class NewDagulirController extends Controller
             $pengajuan->jenis_usaha = $request->get('jenis_usaha');
             $pengajuan->ket_agunan = $request->get('ket_agunan');
             $pengajuan->hubungan_bank = $request->get('hub_bank');
+            $pengajuan->hasil_verifikasi = $request->get('hasil_verifikasi');
             $pengajuan->nominal = formatNumber($request->get('nominal_pengajuan'));
             $pengajuan->tujuan_penggunaan = $request->get('tujuan_penggunaan');
             $pengajuan->jangka_waktu = $request->get('jangka_waktu');
@@ -1078,6 +1080,88 @@ class NewDagulirController extends Controller
             return redirect()->back()->withError('Terjadi kesalahan.');
         } catch (QueryException $e) {
             return redirect()->back()->withError('Terjadi kesalahan');
+        }
+    }
+
+    public function sendToPincab($id)
+    {
+        try {
+            $pengajuan = PengajuanModel::find($id);
+            if ($pengajuan) {
+                $pincab = User::select('id')
+                        ->where('id_cabang', $pengajuan->id_cabang)
+                        ->where('role', 'Pincab')
+                        ->first();
+                if ($pincab) {
+                    $pengajuan->posisi = "Pincab";
+                    $pengajuan->id_pincab = $pincab->id;
+                    $pengajuan->update();
+
+                    return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+                } else {
+                    return back()->withError('User pincab tidak ditemukan pada cabang ini.');
+                }
+            } else {
+                return back()->withError('Data pengajuan tidak ditemukan.');
+            }
+        } catch (Exception $e) {
+            return redirect()->back()->withError('Terjadi kesalahan.');
+        } catch (QueryException $e) {
+            return redirect()->back()->withError('Terjadi kesalahan');
+        }
+    }
+    
+    public function accPengajuan($id)
+    {
+        $statusPincab = PengajuanModel::find($id);
+        $komentarPincab = KomentarModel::where('id_pengajuan', $id)->first();
+        if (auth()->user()->role == 'Pincab') {
+            if ($komentarPincab->komentar_pincab != null) {
+                $statusPincab->posisi = "Selesai";
+                $statusPincab->tanggal_review_pincab = date(now());
+                $statusPincab->update();
+
+                // $nasabah = CalonNasabah::select('id', 'nama')->where('id_pengajuan', $id)->first();
+                // $namaNasabah = 'undifined';
+                // if ($nasabah)
+                //     $namaNasabah = $nasabah->nama;
+
+                // $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->pengajuanKredit->getNameKaryawan(Auth::user()->nip) . ' menyetujui pengajuan atas nama ' . $namaNasabah . '.', $id, Auth::user()->id, Auth::user()->nip);
+
+                event(new EventMonitoring('menyetujui pengajuan'));
+
+                return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+            } else {
+                return redirect()->back()->withError('Belum di review Pincab.');
+            }
+        } else {
+            return redirect()->back()->withError('Tidak memiliki hak akses.');
+        }
+    }
+
+    public function decPengajuan($id)
+    {
+        $statusPincab = PengajuanModel::find($id);
+        $komentarPincab = KomentarModel::where('id_pengajuan', $id)->first();
+        if (auth()->user()->role == 'Pincab') {
+            if ($komentarPincab->komentar_pincab != null) {
+                $statusPincab->posisi = "Ditolak";
+                $statusPincab->tanggal_review_pincab = date(now());
+                $statusPincab->update();
+
+                // $nasabah = CalonNasabah::select('id', 'nama')->where('id_pengajuan', $id)->first();
+                // $namaNasabah = 'undifined';
+                // if ($nasabah)
+                //     $namaNasabah = $nasabah->nama;
+
+                // $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->pengajuanKredit->getNameKaryawan(Auth::user()->nip) . ' menolak pengajuan atas nama ' . $namaNasabah . '.', $id, Auth::user()->id, Auth::user()->nip);
+                event(new EventMonitoring('tolak pengajuan'));
+                return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+            } else {
+                return redirect()->back()->withError('Belum di review Pincab.');
+            }
+        } else {
+            return redirect()->back()->withError('Tidak memiliki hak akses.');
         }
     }
 }
