@@ -1,14 +1,33 @@
 @if ($item->opsi_jawaban == 'input text')
-    <input name="input_text[{{ $item->id }}][{{ $item->skor }}]" type="text"
+    <input name="input_text[{{ $item->id }}][{{ $item->skor }}]" type="hidden"
         class="form-input {{$item->is_rupiah ? 'rupiah' : ''}}"
         placeholder="Masukan informasi disini"
         readonly
         value="{{ $item->jawaban ? $item->jawaban->opsi_text : '' }}" />
+        <div class="p-2 bg-white border-b">
+            <span>{{ $item->jawaban ? $item->jawaban : '-' }}</span>
+        </div>
     @if ($item->is_commentable == 'Ya')
         <div class="flex gap-4">
-            <input type="text" name="komentar_penyelia[]" class="form-input" placeholder="Masukkan Komentar">
+            <input type="hidden" name="komentar_penyelia[]" class="form-input" placeholder="Masukkan Komentar">
+            @php
+                $role = auth()->user()->role;
+                $skor = null;
+                if ($role == 'Penyelia Kredit') {
+                    $skor = $item->jawaban->skor;
+                }
+                if ($role == 'PBO') {
+                    $skor = $item->jawaban->skor_penyelia;
+                }
+                if ($role == 'PBP') {
+                    $skor = $item->jawaban->skor_pbo;
+                }
+                if ($role == 'Pincab') {
+                    $skor = $item->jawaban->skor_pbp;
+                }
+            @endphp
             <input
-                type="number"
+                type="hidden"
                 name="skor_penyelia[]"
                 class="form-input"
                 id=""
@@ -16,6 +35,7 @@
                 min="0"
                 max="4"
                 onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
+                value="{{$skor}}"
             >
         </div>
     @endif
@@ -26,12 +46,35 @@
             <option value="{{ $opt->id }}-{{ $opt->skor }}" @if($opt->jawaban) @if($opt->jawaban->id_jawaban == $opt->id) selected @endif @endif>{{ $opt->option }}</option>
         @endforeach
     </select>
+    @foreach ($item->option as $opt)
+        <div class="p-2 bg-white border-b">
+            <span>
+                @if($opt->jawaban) @if($opt->jawaban->id_jawaban == $opt->id) {{$opt->option}} @endif @endif
+            </span>
+        </div>
+    @endforeach
     @if ($item->is_commentable == 'Ya')
         <div class="flex gap-4">
             <input type="hidden" value="{{ $item->id }}" name="option[]">
-            <input type="text" name="komentar_penyelia[]" class="form-input" placeholder="Masukkan Komentar">
+            <input type="hidden" name="komentar_penyelia[]" class="form-input" placeholder="Masukkan Komentar">
+            @php
+                $role = auth()->user()->role;
+                $skor = null;
+                if ($role == 'Penyelia Kredit') {
+                    $skor = $item->jawaban->skor;
+                }
+                if ($role == 'PBO') {
+                    $skor = $item->jawaban->skor_penyelia;
+                }
+                if ($role == 'PBP') {
+                    $skor = $item->jawaban->skor_pbo;
+                }
+                if ($role == 'Pincab') {
+                    $skor = $item->jawaban->skor_pbp;
+                }
+            @endphp
             <input
-                type="number"
+                type="hidden"
                 name="skor_penyelia[]"
                 class="form-input"
                 id=""
@@ -39,18 +82,38 @@
                 min="0"
                 max="4"
                 onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
+                value="{{$skor}}"
             >
         </div>
     @endif
 @elseif ($item->opsi_jawaban == 'number')
-    <input  readonly name="input_number[{{ $item->id }}][{{ $item->skor }}]" type="number" class="form-input {{$item->is_rupiah ? 'rupiah' : ''}}"
+    <input readonly name="input_number[{{ $item->id }}][{{ $item->skor }}]" type="hidden" class="form-input {{$item->is_rupiah ? 'rupiah' : ''}}"
         placeholder="Masukan informasi disini" value="{{ $item->jawaban ? $item->jawaban->opsi_text : '' }}" />
+    <div class="p-2 bg-white border-b">
+        <span>{{ $item->jawaban ? $item->jawaban->opsi_text : '-' }}</span>
+    </div>
     @if ($item->is_commentable == 'Ya')
         <div class="flex">
             <input type="hidden" value="{{ $item->id }}" name="option[]">
-            <input type="text" name="komentar_penyelia[]" class="form-input" placeholder="Masukkan Komentar">
+            <input type="hidden" name="komentar_penyelia[]" class="form-input" placeholder="Masukkan Komentar">
+            @php
+                $role = auth()->user()->role;
+                $skor = null;
+                if ($role == 'Penyelia Kredit') {
+                    $skor = $item->jawaban->skor;
+                }
+                if ($role == 'PBO') {
+                    $skor = $item->jawaban->skor_penyelia;
+                }
+                if ($role == 'PBP') {
+                    $skor = $item->jawaban->skor_pbo;
+                }
+                if ($role == 'Pincab') {
+                    $skor = $item->jawaban->skor_pbp;
+                }
+            @endphp
             <input
-                type="number"
+                type="hidden"
                 name="skor_penyelia[]"
                 class="form-input"
                 id=""
@@ -58,23 +121,40 @@
                 min="0"
                 max="4"
                 onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
+                value="{{$skor}}"
             >
         </div>
     @endif
 @elseif ($item->opsi_jawaban == 'persen')
     <div class="input-grouped">
-        <input readonly type="number" name="input_number[{{ $item->id }}][{{ $item->skor }}]" class="form-input"
+        <input readonly type="hidden" name="input_number[{{ $item->id }}][{{ $item->skor }}]" class="form-input"
             placeholder="Masukan informasi disini" id="" value="{{ $item->jawaban ? $item->jawaban->opsi_text : '' }}" />
-        <span class="group-text">
-            <p>%</p>
-        </span>
+        <div class="p-2 bg-white border-b">
+            <span>{{ $item->jawaban ? $item->jawaban->opsi_text.'%' : '-' }}</span>
+        </div>
     </div>
     @if ($item->is_commentable == 'Ya')
         <div class="flex">
             <input type="hidden" value="{{ $item->id }}" name="option[]">
-            <input type="text" name="komentar_penyelia[]" class="form-input" placeholder="Masukkan Komentar">
+            <input type="hidden" name="komentar_penyelia[]" class="form-input" placeholder="Masukkan Komentar">
+            @php
+                $role = auth()->user()->role;
+                $skor = null;
+                if ($role == 'Penyelia Kredit') {
+                    $skor = $item->jawaban->skor;
+                }
+                if ($role == 'PBO') {
+                    $skor = $item->jawaban->skor_penyelia;
+                }
+                if ($role == 'PBP') {
+                    $skor = $item->jawaban->skor_pbo;
+                }
+                if ($role == 'Pincab') {
+                    $skor = $item->jawaban->skor_pbp;
+                }
+            @endphp
             <input
-                type="number"
+                type="hidden"
                 name="skor_penyelia[]"
                 class="form-input"
                 id=""
@@ -82,18 +162,38 @@
                 min="0"
                 max="4"
                 onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
+                value="{{$skor}}"
             >
         </div>
     @endif
 @elseif ($item->opsi_jawaban == 'long text')
     <textarea readonly name="input_text_long[{{ $item->id }}][{{ $item->skor }}]" class="form-textarea"
         placeholder="Masukan informasi disini" id="">{{ $item->jawaban ? $item->jawaban->opsi_text : '' }}</textarea>
+    <div class="p-2 bg-white border-b">
+        <span>{{ $item->jawaban ? $item->jawaban->opsi_text : '-' }}</span>
+    </div>
     @if ($item->is_commentable == 'Ya')
         <div class="flex">
             <input type="hidden" value="{{ $item->id }}" name="option[]">
-            <input type="text" name="komentar_penyelia[]" class="form-input" placeholder="Masukkan Komentar">
+            <input type="hidden" name="komentar_penyelia[]" class="form-input" placeholder="Masukkan Komentar">
+            @php
+                $role = auth()->user()->role;
+                $skor = null;
+                if ($role == 'Penyelia Kredit') {
+                    $skor = $item->jawaban->skor;
+                }
+                if ($role == 'PBO') {
+                    $skor = $item->jawaban->skor_penyelia;
+                }
+                if ($role == 'PBP') {
+                    $skor = $item->jawaban->skor_pbo;
+                }
+                if ($role == 'Pincab') {
+                    $skor = $item->jawaban->skor_pbp;
+                }
+            @endphp
             <input
-                type="number"
+                type="hidden"
                 name="skor_penyelia[]"
                 class="form-input"
                 id=""
@@ -101,6 +201,7 @@
                 min="0"
                 max="4"
                 onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
+                value="{{$skor}}"
             >
         </div>
     @endif
@@ -135,9 +236,25 @@
     @if ($item->is_commentable == 'Ya')
         <div class="flex">
             <input type="hidden" value="{{ $item->id }}" name="option[]">
-            <input type="text" name="komentar_penyelia[]" class="form-input" placeholder="Masukkan Komentar">
+            <input type="hidden" name="komentar_penyelia[]" class="form-input" placeholder="Masukkan Komentar">
+            @php
+                $role = auth()->user()->role;
+                $skor = null;
+                if ($role == 'Penyelia Kredit') {
+                    $skor = $item->jawaban->skor;
+                }
+                if ($role == 'PBO') {
+                    $skor = $item->jawaban->skor_penyelia;
+                }
+                if ($role == 'PBP') {
+                    $skor = $item->jawaban->skor_pbo;
+                }
+                if ($role == 'Pincab') {
+                    $skor = $item->jawaban->skor_pbp;
+                }
+            @endphp
             <input
-                type="number"
+                type="hidden"
                 name="skor_penyelia[]"
                 class="form-input"
                 id=""
@@ -145,22 +262,38 @@
                 min="0"
                 max="4"
                 onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
+                value="{{$skor}}"
             >
         </div>
     @endif
 @elseif ($item->opsi_jawaban == 'kosong' && count($item->childs) > 0 && $item->level == 3)
-<select name="input_option[{{ $item->id }}][{{ $item->skor }}]" class="form-select" id="">
-    <option value="">-- Pilih Opsi --</option>
     @foreach ($item->childs as $opt)
-        <option value="{{ $opt->id }}-{{ $opt->status_skor }}" @if($opt->jawaban) @if($opt->jawaban->id_jawaban == $opt->id) selected @endif @endif>{{ $opt->nama }}</option>
+        <div class="p-2 bg-white border-b">
+            <span>@if($opt->jawaban) @if($opt->jawaban->id_jawaban == $opt->id) {{$opt->nama}} @endif @endif</span>
+        </div>
     @endforeach
-</select>
 @if ($item->is_commentable == 'Ya')
     <div class="flex">
         <input type="hidden" value="{{ $item->id }}" name="option[]">
-        <input type="text" name="komentar_penyelia[]" class="form-input" placeholder="Masukkan Komentar">
+        <input type="hidden" name="komentar_penyelia[]" class="form-input" placeholder="Masukkan Komentar">
+        @php
+            $role = auth()->user()->role;
+            $skor = null;
+            if ($role == 'Penyelia Kredit') {
+                $skor = $item->jawaban->skor;
+            }
+            if ($role == 'PBO') {
+                $skor = $item->jawaban->skor_penyelia;
+            }
+            if ($role == 'PBP') {
+                $skor = $item->jawaban->skor_pbo;
+            }
+            if ($role == 'Pincab') {
+                $skor = $item->jawaban->skor_pbp;
+            }
+        @endphp
         <input
-            type="number"
+            type="hidden"
             name="skor_penyelia[]"
             class="form-input"
             id=""
@@ -168,15 +301,32 @@
             min="0"
             max="4"
             onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
+            value="{{$skor}}"
         >
     </div>
 @endif
 @if ($item->is_commentable == 'Ya')
     <div class="flex">
         <input type="hidden" value="{{ $item->id }}" name="option[]">
-        <input type="text" name="komentar_penyelia[]" class="form-input" placeholder="Masukkan Komentar">
+        <input type="hidden" name="komentar_penyelia[]" class="form-input" placeholder="Masukkan Komentar">
+        @php
+            $role = auth()->user()->role;
+            $skor = null;
+            if ($role == 'Penyelia Kredit') {
+                $skor = $item->jawaban->skor;
+            }
+            if ($role == 'PBO') {
+                $skor = $item->jawaban->skor_penyelia;
+            }
+            if ($role == 'PBP') {
+                $skor = $item->jawaban->skor_pbo;
+            }
+            if ($role == 'Pincab') {
+                $skor = $item->jawaban->skor_pbp;
+            }
+        @endphp
         <input
-            type="number"
+            type="hidden"
             name="skor_penyelia[]"
             class="form-input"
             id=""
@@ -184,6 +334,7 @@
             min="0"
             max="4"
             onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
+            value="{{$skor}}"
         >
     </div>
 @endif

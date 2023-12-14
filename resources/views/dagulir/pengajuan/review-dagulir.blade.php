@@ -185,7 +185,7 @@
                 </select>
                 <div class="p-2 bg-white border-b">
                     @foreach ($itemSlik->option as $itemJawaban)
-                        <span>{{ $itemJawaban->id == $data->id_slik  ? {{ $itemJawaban->option }} : ''}}</span>
+                        <span>{{ $itemJawaban->id == $data->id_slik  ? $itemJawaban->option : ''}}</span>
                     @endforeach
                 </div>
             </div>
