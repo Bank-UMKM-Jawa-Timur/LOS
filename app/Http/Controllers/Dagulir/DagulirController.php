@@ -109,7 +109,8 @@ class DagulirController extends Controller
             $pengajuan->jenis_usaha = $request->get('jenis_usaha');
             $pengajuan->ket_agunan = $request->get('ket_agunan');
             $pengajuan->hubungan_bank = $request->get('hub_bank');
-            $pengajuan->nominal =   $this->formatNumber($request->get('nominal_pengajuan'));
+            $pengajuan->hasil_verifikasi = $request->get('hasil_verifikasi');
+            $pengajuan->nominal = $this->formatNumber($request->get('nominal_pengajuan'));
             $pengajuan->tujuan_penggunaan = $request->get('tujuan_penggunaan');
             $pengajuan->jangka_waktu = $request->get('jangka_waktu');
             $pengajuan->kode_bank_pusat = 1;
@@ -265,6 +266,19 @@ class DagulirController extends Controller
                 ]);
             }
 
+            // Pendapat usulan
+            if ($request->has('pendapat')) {
+                DB::table('komentar')->insert([
+                    'id_pengajuan' => $addPengajuan->id,
+                    'id_staff' => auth()->user()->id,
+                    'komentar_staff' => $request->get('pendapat'),
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ]);
+            }
+            else {
+                return redirect()->back()->withError('Harap isi pendapat dan usulan');
+            }
 
             DB::commit();
             return redirect()->route('dagulir.index')->withStatus('Berhasil menambahkan pengajuan!');

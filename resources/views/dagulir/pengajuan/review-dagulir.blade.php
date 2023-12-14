@@ -27,6 +27,9 @@
                     readonly
                     value="{{ $data->nama }}"
                 />
+                <div class="p-2 bg-white border-b">
+                    <span>{{ $dagulir->nama ? $dagulir->nama : '-' }}</span>
+                </div>
             </div>
             <div class="input-box">
                 <label for="">Email</label>
@@ -40,7 +43,7 @@
                 value="{{ $data->email }}"
                 />
                 <div class="p-2 bg-white border-b">
-                    <span>{{ $dagulir->nama ? $dagulir->nama : '-' }}</span>
+                    <span>{{ $dagulir->email ? $dagulir->email : '-' }}</span>
                 </div>
             </div>
         </div>
@@ -83,7 +86,7 @@
                     placeholder="Masukan Nomor Telepon"
                     name="telp"
                     readonly
-                    value="{{ $data->telps }}"
+                    value="{{ $data->telp }}"
                 />
                 <div class="p-2 bg-white border-b">
                     <span>{{ $dagulir->telp ?   $dagulir->telp : '-' }}</span>
@@ -185,7 +188,7 @@
                 </select>
                 <div class="p-2 bg-white border-b">
                     @foreach ($itemSlik->option as $itemJawaban)
-                        <span>{{ $itemJawaban->id == $data->id_slik  ? {{ $itemJawaban->option }} : ''}}</span>
+                        <span>{{ $itemJawaban->id == $data->id_slik  ? $itemJawaban->option : ''}}</span>
                     @endforeach
                 </div>
             </div>
@@ -194,14 +197,15 @@
                 @php
                     $file_parts = pathinfo(asset('..') . '/' . $dagulir->id . '/' . $data->id_slik.'/'.$data->file_slik);
                 @endphp
-                @if ($file_parts['extension'] == 'pdf')
-                <iframe
-                src="{{ asset('..') . '/upload/'. $dagulir->id . '/' .$data->id_slik.'/'.$data->file_slik }}"
-                width="100%" height="800px"></iframe>
-                @else
-                <img src="{{ asset('..') . '/upload/' . $dagulir->id . '/' . $data->id_slik.'/'.$data->file_slik }}"
-                alt="" width="800px">
-
+                @if (array_key_exists('extension', $file_parts))
+                    @if ($file_parts['extension'] == 'pdf')
+                        <iframe
+                        src="{{ asset('..') . '/upload/'. $dagulir->id . '/' .$data->id_slik.'/'.$data->file_slik }}"
+                        width="100%" height="800px"></iframe>
+                    @else
+                        <img src="{{ asset('..') . '/upload/' . $dagulir->id . '/' . $data->id_slik.'/'.$data->file_slik }}"
+                        alt="" width="800px">
+                    @endif
                 @endif
             </div>
         </div>
