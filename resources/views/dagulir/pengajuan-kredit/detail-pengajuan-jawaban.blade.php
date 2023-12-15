@@ -102,19 +102,30 @@
                                     <div class="input-box">
                                         <label for="">Jenis Usaha</label>
                                         <div class="p-2 bg-white border-b">
-                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                            @foreach ($jenis_usaha as $key => $value)
+                                                {{-- <option value="{{ $key }}">{{ $value }}</option> --}}
+                                                <span>{{ $dataUmumNasabah->jenis_usaha == $key ? $value : '' }}</span>
+                                            @endforeach
                                         </div>
                                     </div>
                                     <div class="input-box">
                                         <label for="">Foto Nasabah</label>
                                         <div class="p-2 bg-white border-b">
-                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                            {{-- <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span> --}}
                                         </div>
                                     </div>
                                     <div class="input-box">
                                         <label for="">Status</label>
                                         <div class="p-2 bg-white border-b">
-                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                            @if ($dataUmumNasabah->status_pernikahan == "1")
+                                            <span value="1">Belum Menikah</span>
+                                            @elseif ($dataUmumNasabah->status_pernikahan == "2")
+                                            <span value="2">Menikah</span>
+                                            @elseif ($dataUmumNasabah->status_pernikahan == "3")
+                                            <span value="3">Duda</span>
+                                            @elseif ($dataUmumNasabah->status_pernikahan == "4")
+                                            <span value="4">Janda</span>
+                                            @endif
                                         </div>
                                     </div>
                                     <div class="input-box">
@@ -126,24 +137,24 @@
                                     <div class="input-box">
                                         <label for="">Foto KTP Nasabah</label>
                                         <div class="p-2 bg-white border-b">
-                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                            {{-- <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span> --}}
                                         </div>
                                     </div>
                                     @if ($dataUmumNasabah->status_pernikahan == '2')
                                         <div class="input-box">
                                             <label for="">NIK Pasangan</label>
                                             <div class="p-2 bg-white border-b">
-                                                <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                                <span>{{ $dataUmumNasabah->nik_pasangan ? $dataUmumNasabah->nik_pasangan : '-' }}</span>
                                             </div>
                                         </div>
                                         <div class="input-box">
                                             <label for="">Foto KTP Pasangan</label>
                                             <div class="p-2 bg-white border-b">
-                                                <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                                {{-- <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span> --}}
                                             </div>
                                         </div>
                                     @endif
-                                    <div class="input-box">
+                                    {{-- <div class="input-box">
                                         <label for="">SLIK</label>
                                         <div class="p-2 bg-white border-b">
                                             <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
@@ -154,25 +165,25 @@
                                         <div class="p-2 bg-white border-b">
                                             <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                                 <div class="form-group-3">
                                     <div class="input-box">
                                         <label for="">Kota / Kabupaten KTP</label>
                                         <div class="p-2 bg-white border-b">
-                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                            <span>{{ $kab_ktp }}</span>
                                         </div>
                                     </div>
                                     <div class="input-box">
                                         <label for="">Kecamatan KTP</label>
                                         <div class="p-2 bg-white border-b">
-                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                            <span>{{ $kec_ktp }}</span>
                                         </div>
                                     </div>
                                     <div class="input-box">
                                         <label for="">Desa KTP</label>
                                         <div class="p-2 bg-white border-b">
-                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                            <span>{{ $desa_ktp }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -180,7 +191,7 @@
                                     <div class="input-box">
                                         <label for="">Alamat KTP</label>
                                         <div class="p-2 bg-white border-b">
-                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                            <span>{{ $dataUmumNasabah->alamat_ktp}}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -188,13 +199,13 @@
                                     <div class="input-box">
                                         <label for="">Kota / Kabupaten Domisili</label>
                                         <div class="p-2 bg-white border-b">
-                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                            <span>{{ $kab_dom }}</span>
                                         </div>
                                     </div>
                                     <div class="input-box">
                                         <label for="">Kecamatan Domisili </label>
                                         <div class="p-2 bg-white border-b">
-                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                            <span>{{ $kec_dom }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -202,7 +213,7 @@
                                     <div class="input-box">
                                         <label for="">Alamat Domisili</label>
                                         <div class="p-2 bg-white border-b">
-                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                            <span>{{ $dataUmumNasabah->alamat_dom }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -210,13 +221,13 @@
                                     <div class="input-box">
                                         <label for="">Kota / Kabupaten Usaha</label>
                                         <div class="p-2 bg-white border-b">
-                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                            <span>{{ $kab_usaha }}</span>
                                         </div>
                                     </div>
                                     <div class="input-box">
                                         <label for="">Kecamatan Usaha </label>
                                         <div class="p-2 bg-white border-b">
-                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                            <span>{{ $kec_usaha }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -224,25 +235,25 @@
                                     <div class="input-box">
                                         <label for="">Plafon</label>
                                         <div class="p-2 bg-white border-b">
-                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                            <span>{{ 'Rp ' . number_format($dataUmumNasabah->nominal ? $dataUmumNasabah->nominal : 0, 2, ',', '.') }}</span>
                                         </div>
                                     </div>
                                     <div class="input-box">
                                         <label for="">Jangka Waktu</label>
                                         <div class="p-2 bg-white border-b">
-                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                            <span>{{ $dataUmumNasabah->jangka_waktu ? $dataUmumNasabah->jangka_waktu : '-' }}</span>
                                         </div>
                                     </div>
                                     <div class="input-box">
                                         <label for="">Tujuan Penggunaan</label>
                                         <div class="p-2 bg-white border-b">
-                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                            <span>{{ $dataUmumNasabah->tujuan_penggunaan ? $dataUmumNasabah->tujuan_penggunaan : '-' }}</span>
                                         </div>
                                     </div>
                                     <div class="input-box">
                                         <label for="">Jaminan yang Disediakan</label>
                                         <div class="p-2 bg-white border-b">
-                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                            <span>{{ $dataUmumNasabah->ket_agunan ? $dataUmumNasabah->ket_agunan : '-' }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -250,14 +261,14 @@
                                     <div class="input-box">
                                         <label for="">Hubungan Bank</label>
                                         <div class="p-2 bg-white border-b">
-                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                            <span>{{ $dataUmumNasabah->hubungan_bank ? $dataUmumNasabah->hubungan_bank : '-' }}</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="input-box">
                                     <label for="">Hasil Verifikasi</label>
                                     <div class="p-2 bg-white border-b">
-                                        <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                        <span>{{ $dataUmumNasabah->hasil_verifikasi ? $dataUmumNasabah->hasil_verifikasi : '-' }}</span>
                                     </div>
                                 </div>
 
@@ -274,13 +285,13 @@
                                             @php
                                                 $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
                                                     ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-                                                    ->where('jawaban_text.id_pengajuan', $dataUmum->id)
+                                                    ->where('jawaban_text.id_pengajuan', $dataUmumNasabah->id)
                                                     ->where('jawaban_text.id_jawaban', $item->id)
                                                     ->get();
                                             @endphp
                                             @foreach ($dataDetailJawabanText as $itemTextDua)
                                                 @php
-                                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmumNasabah->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
                                                 @endphp
                                                 <div class="form-group-1">
                                                     <label for="">{{ $item->nama }}</label>
@@ -289,10 +300,10 @@
                                                         <div class="mt-2">
                                                             @if ($file_parts['extension'] == 'pdf')
                                                                 <iframe
-                                                                    src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                    src="{{ asset('..') . '/upload/' . $dataUmumNasabah->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
                                                                     width="100%" height="400px"></iframe>
                                                             @else
-                                                                <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                <img src="{{ asset('..') . '/upload/' . $dataUmumNasabah->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
                                                                     alt="" width="400px">
                                                             @endif
                                                         </div>
@@ -313,13 +324,13 @@
                                             @php
                                                 $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
                                                     ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-                                                    ->where('jawaban_text.id_pengajuan', $dataUmum->id)
+                                                    ->where('jawaban_text.id_pengajuan', $dataUmumNasabah->id)
                                                     ->where('jawaban_text.id_jawaban', $item->id)
                                                     ->get();
                                             @endphp
                                             @foreach ($dataDetailJawabanText as $itemTextDua)
                                                 @php
-                                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmumNasabah->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
                                                 @endphp
                                                 <div class="form-group-1">
                                                     <label for="">{{ $item->nama }}</label>
@@ -328,10 +339,10 @@
                                                         <div class="mt-2">
                                                             @if ($file_parts['extension'] == 'pdf')
                                                                 <iframe
-                                                                    src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                    src="{{ asset('..') . '/upload/' . $dataUmumNasabah->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
                                                                     width="100%" height="400px"></iframe>
                                                             @else
-                                                                <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                <img src="{{ asset('..') . '/upload/' . $dataUmumNasabah->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
                                                                     alt="" width="400px">
                                                             @endif
                                                         </div>
@@ -353,13 +364,13 @@
                                             @php
                                                 $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
                                                     ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-                                                    ->where('jawaban_text.id_pengajuan', $dataUmum->id)
+                                                    ->where('jawaban_text.id_pengajuan', $dataUmumNasabah->id)
                                                     ->where('jawaban_text.id_jawaban', $item->id)
                                                     ->get();
                                             @endphp
                                             @foreach ($dataDetailJawabanText as $itemTextDua)
                                                 @php
-                                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmumNasabah->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
                                                 @endphp
                                                 <div class="form-group-1">
                                                     <label for="">{{ $item->nama }}</label>
@@ -368,10 +379,10 @@
                                                         <div class="mt-2">
                                                             @if ($file_parts['extension'] == 'pdf')
                                                                 <iframe
-                                                                    src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                    src="{{ asset('..') . '/upload/' . $dataUmumNasabah->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
                                                                     width="100%" height="400px"></iframe>
                                                             @else
-                                                                <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                <img src="{{ asset('..') . '/upload/' . $dataUmumNasabah->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
                                                                     alt="" width="400px">
                                                             @endif
                                                         </div>
@@ -381,27 +392,7 @@
                                         @endif
                                     @endforeach
                                 @endif
-                                <div class="form-group-1">
-                                    <label for="">Sektor Kredit</label>
-                                    <select disabled name="sektor_kredit" id=""
-                                        class="form-input @error('sektor_kredit') is-invalid @enderror select2">
-                                        <option value=""> --Pilih Sektor Kredit -- </option>
-                                        <option value="perdagangan"
-                                            {{ old('sektor_kredit', $dataUmumNasabah->sektor_kredit) == 'perdagangan' ? 'selected' : '' }}>
-                                            Perdagangan</option>
-                                        <option value="perindustrian"
-                                            {{ old('sektor_kredit', $dataUmumNasabah->sektor_kredit) == 'perindustrian' ? 'selected' : '' }}>
-                                            Perindustrian</option>
-                                        <option value="dll"
-                                            {{ old('sektor_kredit', $dataUmumNasabah->sektor_kredit) == 'dll' ? 'selected' : '' }}>dll
-                                        </option>
-                                    </select>
-                                    @error('sektor_kredit')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
+
                                 <div class="form-group-1">
                                     <label for="">{{ $itemSlik?->nama }}</label>
                                     <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
@@ -476,81 +467,7 @@
                                         @endforeach
                                     @endif
                                 @endforeach
-                                <div class="form-group-1">
-                                    <label for="">Jenis Usaha</label>
-                                    <textarea disabled name="jenis_usaha" class="form-input @error('jenis_usaha') is-invalid @enderror" id=""
-                                        cols="30" rows="4" placeholder="Jenis Usaha secara spesifik">{{ old('jenis_usaha', $dataUmumNasabah->jenis_usaha) }}</textarea>
-                                    @error('jenis_usaha')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-                                <div class="form-group-1">
-                                    <label for="">Nominal Pengajuan</label>
-                                    <input type="text" disabled name="jumlah_kredit"
-                                        class="form-input @error('jumlah_kredit') is-invalid @enderror"
-                                        placeholder="Jumlah Kredit"
-                                        value="{{ old('jumlah_kredit', 'Rp ' . number_format($dataUmumNasabah->jumlah_kredit ? $dataUmumNasabah->jumlah_kredit : 0, 2, ',', '.')) }}">
-                                    @error('jumlah_kredit')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-                                <div class="form-group-1">
-                                    <label for="">Jangka Waktu</label>
-                                    <input type="text" disabled name="tenor_yang_diminta"
-                                        class="form-input @error('tenor_yang_diminta') is-invalid @enderror"
-                                        placeholder="Tenor Yang Diminta"
-                                        value="{{ old('tenor_yang_diminta', $dataUmumNasabah->tenor_yang_diminta) }} Bulan">
-                                    @error('tenor_yang_diminta')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-                                <div class="form-group-1">
-                                    <label for="">Tujuan Kredit</label>
-                                    <textarea disabled name="tujuan_kredit" class="form-input @error('tujuan_kredit') is-invalid @enderror"
-                                        id="" cols="30" rows="4" placeholder="Tujuan Kredit">{{ old('tujuan_kredit', $dataUmumNasabah->tujuan_kredit) }}</textarea>
-                                    @error('tujuan_kredit')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-                                <div class="form-group-1">
-                                    <label for="">Jaminan yang disediakan</label>
-                                    <textarea disabled name="jaminan" class="form-input @error('jaminan') is-invalid @enderror" id=""
-                                        cols="30" rows="4" placeholder="Jaminan yang disediakan">{{ old('jaminan', $dataUmumNasabah->jaminan_kredit) }}</textarea>
-                                    @error('jaminan')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-                                <div class="form-group-1">
-                                    <label for="">Hubungan Bank</label>
-                                    <textarea disabled name="hubungan_bank" class="form-input @error('hubungan_bank') is-invalid @enderror"
-                                        id="" cols="30" rows="4" placeholder="Hubungan dengan Bank">{{ old('hubungan_bank', $dataUmumNasabah->hubungan_bank) }}</textarea>
-                                    @error('hubungan_bank')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-                                <div class="form-group-1">
-                                    <label for="">Hasil Verifikasi</label>
-                                    <textarea disabled name="hasil_verifikasi" class="form-input @error('hasil_verifikasi') is-invalid @enderror"
-                                        id="" cols="30" rows="4" placeholder="Hasil Verifikasi Karakter Umum">{{ old('hasil_verifikasi', $dataUmumNasabah->hasil_verifikasi) }}</textarea>
-                                    @error('hasil_verifikasi')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                    <hr>
-                                </div>
+
                                 <div class="flex justify-between">
                                     <button type="button"
                                     class="px-5 py-2 border rounded bg-white text-gray-500"
@@ -615,6 +532,7 @@
                                 <div
                                     class="p-5 w-full space-y-5"
                                     id="{{$title_id}}">
+                                    <div class="grid grid-cols-2 md:grid-cols-2 gap-4">
                                     @foreach ($dataLevelDua as $item)
                                         @if ($item->opsi_jawaban != 'option')
                                             @if (!$item->is_hide)
@@ -718,7 +636,7 @@
                                             @if ($itemOption->option == '-')
                                                 @if (!$item->is_hide)
                                                     @if ($item->nama != "Ijin Usaha")
-                                                        <div class="row">
+                                                        <div class="row col-span-2">
                                                             <div class="form-group-1">
                                                                 <h2 class="font-semibold text-lg tracking-tighter ">
                                                                     {{$item->nama}} :
@@ -739,7 +657,7 @@
 
                                         @if (count($dataJawaban) != 0)
                                             @if (!$item->is_hide)
-                                                <div>
+                                                <div class="col-span-2">
                                                     <h2 class="font-semibold text-lg tracking-tighter ">
                                                         {{$item->nama}} :
                                                     </h2>
@@ -984,7 +902,7 @@
                                                         @if (isset($checkJawabanKelayakan))
                                                             @if ($itemTiga->nama != 'Kelayakan Usaha')
                                                             {{-- @else --}}
-                                                                <div class="row">
+                                                                <div class="row col-span-2">
                                                                     <div class="form-group-1">
                                                                         <h6 class="font-medium text-sm" for="">{{ $itemTiga->nama }}</h6>
                                                                     </div>
@@ -992,7 +910,7 @@
                                                             @endif
                                                         @else
                                                             @if ($itemTiga->nama != 'Kelayakan Usaha')
-                                                                <div class="row">
+                                                                <div class="row col-span-2">
                                                                     <div class="form-group-1">
                                                                         <h6 class="font-medium text-sm" for="">{{ $itemTiga->nama }}</h6>
                                                                     </div>
@@ -1093,7 +1011,7 @@
                                                             @endphp
                                                             @foreach ($dataDetailJawabanTextEmpat as $itemTextEmpat)
                                                                 <div class="row">
-                                                                    <div class="form-group-2 mb-0">
+                                                                    <div class="form-group-1 mb-0">
                                                                         <h6 class="font-medium text-sm" for="">{{ $itemTextEmpat->nama }}</h6>
                                                                         @if ($itemEmpat->opsi_jawaban == 'file')
                                                                                     @if (intval($itemTextEmpat->opsi_text) > 1)
@@ -1297,6 +1215,7 @@
                                             @endif
                                         @endforeach
                                     @endforeach
+                                    </div>
                                     @if (Auth::user()->role == 'PBP')
                                         @php
                                             $getPendapatPerAspek = \App\Models\PendapatPerAspek::where('id_pengajuan', $dataUmum->id)
