@@ -26,6 +26,7 @@ use App\Models\JawabanTempModel;
 use App\Models\LogPengajuan;
 use App\Models\MerkModel;
 use App\Models\PengajuanDagulir;
+use App\Models\PlafonUsulan;
 use App\Models\TipeModel;
 use App\Models\User;
 use App\Repository\MasterItemRepository;
@@ -213,7 +214,7 @@ class NewDagulirController extends Controller
         $param['jenis_usaha'] = config('dagulir.jenis_usaha');
         $param['tipe'] = config('dagulir.tipe_pengajuan');
 
-        return view('dagulir.pengajuan.add-pengajuan-kredit', $param);
+        return view('dagulir.pengajuan-kredit.add-pengajuan-kredit', $param);
     }
 
     public function store(Request $request)
@@ -842,6 +843,25 @@ class NewDagulirController extends Controller
                         }
                     }
                 }
+                $plafonUsulan = PlafonUsulan::where('id_pengajuan', $request->id_pengajuan)->first();
+                if ($plafonUsulan == null)
+                    $plafonUsulan = new PlafonUsulan();
+                if($role == 'Penyelia Kredit'){
+                    $plafonUsulan->id_pengajuan = $request->id_pengajuan;
+                    $plafonUsulan->plafon_usulan_penyelia = str_replace('.', '', $request->plafon_usulan_penyelia ?? 0);
+                    $plafonUsulan->jangka_waktu_usulan_penyelia = $request->jangka_waktu_usulan_penyelia;
+                    $plafonUsulan->save();
+                } else if($role == 'PBO'){
+                    $plafonUsulan->id_pengajuan = $request->id_pengajuan;
+                    $plafonUsulan->plafon_usulan_pbo = str_replace('.', '', $request->plafon_usulan_pbo ?? 0);
+                    $plafonUsulan->jangka_waktu_usulan_pbo = $request->jangka_waktu_usulan_pbo;
+                    $plafonUsulan->save();
+                } else if($role == 'PBP'){
+                    $plafonUsulan->id_pengajuan = $request->id_pengajuan;
+                    $plafonUsulan->plafon_usulan_pbp = str_replace('.', '', $request->plafon_usulan_pbp ?? 0);
+                    $plafonUsulan->jangka_waktu_usulan_pbp = $request->jangka_waktu_usulan_pbp;
+                    $plafonUsulan->save();
+                }
 
                 // Log Pengajuan review
                 $dagulir = PengajuanDagulir::find($updateData->dagulir_id);
@@ -954,8 +974,9 @@ class NewDagulirController extends Controller
             $param['dataKecamatan'] = Kecamatan::all();
             $param['dataKabupaten'] = Kabupaten::all();
             $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->where('nama', '!=', 'Data Umum')->get();
+            $param['plafonUsulan'] = PlafonUsulan::where('id_pengajuan', $id)->first();
 
-            return view('dagulir.pengajuan.detail-pengajuan-jawaban', $param);
+            return view('dagulir.pengajuan-kredit.detail-pengajuan-jawaban', $param);
         } else {
             return redirect()->back()->withError('Tidak memiliki hak akses.');
         }
