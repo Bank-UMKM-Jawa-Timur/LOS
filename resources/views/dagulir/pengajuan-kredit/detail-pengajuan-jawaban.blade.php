@@ -39,13 +39,15 @@
 <section class="">
     <nav class="w-full bg-white p-3  top-[4rem] border sticky">
         <div class="owl-carousel owl-theme tab-wrapper">
-            <button data-toggle="tab" data-tab="dagulir" class="btn btn-tab active-tab font-semibold">0% Data Umum</button>
+            <button data-toggle="tab" data-tab="dagulir" class="btn btn-tab active-tab font-semibold">
+                <span class="percentage">0%</span> Data Umum
+            </button>
             @foreach ($dataAspek as $item)
                 @php
                     $title = str_replace('&', 'dan', strtolower($item->nama));
                     $title = str_replace(' ', '-', strtolower($title));
                 @endphp
-                <button data-toggle="tab" data-tab="{{$title}}" class="btn btn-tab font-semibold">0% {{$item->nama}}</button>
+                <button data-toggle="tab" data-tab="{{$title}}" class="btn btn-tab font-semibold"><span class="percentage">0%</span> {{$item->nama}}</button>
             @endforeach
             <button data-toggle="tab" data-tab="pendapat-dan-usulan" class="btn btn-tab font-semibold">Pendapat dan Usulan</button>
         </div>
@@ -2396,7 +2398,8 @@
         $(".tab-wrapper .btn-tab").click(function(e) {
             e.preventDefault();
             var tabId = $(this).data("tab");
-            console.log(tabId);
+            var percentage = formPercentage(`${tabId}-tab`)
+            $(this).closest('.percentage').html(`${percentage}%`)
 
             $(".is-tab-content").removeClass("active");
             $(".tab-wrapper .btn-tab").removeClass(
@@ -2422,9 +2425,18 @@
         $(".next-tab").on("click", function(e) {
             const $activeContent = $(".is-tab-content.active");
             const $nextContent = $activeContent.next();
+            const tabId = $activeContent.attr("id")
+            const dataTab = tabId.replaceAll('-tab', '')
+            // Set percentage
+            var percentage = formPercentage(tabId)
+            $('.tab-wrapper').find(`[data-tab=${dataTab}]`).find('.percentage').html(`${percentage}%`)
+            // Remove class active current nav tab
+            $('.tab-wrapper').find(`[data-tab=${dataTab}]`).removeClass('active-tab')
 
-            console.log($nextContent.length);
             if ($nextContent.length) {
+                const dataNavTab = $nextContent.attr("id") ? $nextContent.attr("id").replaceAll('-tab', '') : null
+                if (dataNavTab)
+                    $('.tab-wrapper').find(`[data-tab=${dataNavTab}]`).addClass('active-tab')
                 $activeContent.removeClass("active");
                 $nextContent.addClass("active");
             }else{
@@ -2437,14 +2449,134 @@
         $(".prev-tab").on("click", function() {
             const $activeContent = $(".is-tab-content.active");
             const $prevContent = $activeContent.prev();
+            const tabId = $activeContent.attr("id")
+            var percentage = formPercentage(tabId)
+            const dataTab = tabId.replaceAll('-tab', '')
+            // Set percentage
+            var percentage = formPercentage(tabId)
+            $('.tab-wrapper').find(`[data-tab=${dataTab}]`).find('.percentage').html(`${percentage}%`)
+            // Remove class active current nav tab
+            $('.tab-wrapper').find(`[data-tab=${dataTab}]`).removeClass('active-tab')
 
             if ($prevContent.length) {
+                const dataNavTab = $prevContent.attr("id") ? $prevContent.attr("id").replaceAll('-tab', '') : null
+                if (dataNavTab)
+                    $('.tab-wrapper').find(`[data-tab=${dataNavTab}]`).addClass('active-tab')
                 $activeContent.removeClass("active");
                 $prevContent.addClass("active");
                 $(".next-tab").rem('hidden');
                 $('.btn-simpan').addClass('hidden')
             }
         });
+
+        function formPercentage(tabId) {
+            console.log('percent')
+            var form = `#${tabId}`;
+            var inputFile = $(form + " input[type=file]")
+            var inputText = $(form + " input[type=text]")
+            var inputNumber = $(form + " input[type=number]")
+            var inputDate = $(form + " input[type=date]")
+            var inputHidden = $(form + " input[type=hidden]")
+            var select = $(form + " select")
+            var textarea = $(form + " textarea")
+            var totalInput = 0;
+            var totalInputNull = 0;
+            var totalInputFilled = 0;
+            var totalInputHidden = 0;
+            var totalInputReadOnly = 0;
+            var percent = 0;
+    
+            $.each(inputText, function(i, v) {
+                
+                var inputBox = $(this).closest('.input-box');
+                if (!$(this).prop('disabled') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
+                    totalInput++
+                var isNull = (v.value == '' || v.value == '0')
+                if ((v.value == '' && !$(this).prop('disabled') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+                    totalInputNull++;
+                } else if (!isNull && !$(this).prop('disabled') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
+                    totalInputFilled++;
+                }
+            })
+    
+            $.each(inputHidden, function(i, v) {
+                
+                var inputBox = $(this).closest('.input-box');
+                if ((!$(this).prop('disabled') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+                    totalInputHidden++;
+                }
+            })
+    
+            $.each(inputFile, function(i, v) {
+                
+                var inputBox = $(this).closest('.input-box');
+                if (!$(this).prop('disabled') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
+                    totalInput++
+                var isNull = (v.value == '' || v.value == '0')
+                if ((v.value == '' && !$(this).prop('disabled') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+                    totalInputNull++;
+                } else if (!isNull && !$(this).prop('disabled') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
+                    totalInputFilled++;
+                }
+            })
+    
+            $.each(inputNumber, function(i, v) {
+                
+                var inputBox = $(this).closest('.input-box');
+                if (!$(this).prop('disabled') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
+                    totalInput++
+                var isNull = (v.value == '' || v.value == '0')
+                if ((v.value == '' && !$(this).prop('disabled') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+                    totalInputNull++;
+                } else if (!isNull && !$(this).prop('disabled') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
+                    totalInputFilled++;
+                }
+            })
+    
+            $.each(inputDate, function(i, v) {
+                
+                var inputBox = $(this).closest('.input-box');
+                if (!$(this).prop('disabled') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
+                    totalInput++
+                var isNull = (v.value == '' || v.value == '0')
+                if ((v.value == '' && !$(this).prop('disabled') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+                    totalInputNull++;
+                } else if (!isNull && !$(this).prop('disabled') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
+                    totalInputFilled++;
+                }
+            })
+    
+            $.each(select, function(i, v) {
+                
+                var inputBox = $(this).closest('.input-box');
+                if (!$(this).prop('disabled') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
+                    totalInput++
+                var isNull = (v.value == '' || v.value == '0')
+                if ((isNull && !$(this).prop('disabled') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+                    totalInputNull++;
+                } else if (!isNull && !$(this).prop('disabled') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
+                    totalInputFilled++;
+                }
+            })
+    
+            $.each(textarea, function(i, v) {
+                
+                var inputBox = $(this).closest('.input-box');
+                if (!$(this).prop('disabled') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
+                    totalInput++
+                var isNull = (v.value == '' || v.value == '0')
+                if ((v.value == '' && !$(this).prop('disabled') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+                    totalInputNull++;
+                } else if (!isNull && !$(this).prop('disabled') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
+                    totalInputFilled++;
+                }
+            })
+    
+            var totalReadHidden = (totalInputHidden + totalInputReadOnly)
+            percent = (totalInputFilled / totalInput) * 100
+            console.log(percent)
+            return parseInt(percent)
+        }
 
         $(".toggle-side").click(function(e) {
             $('.sidenav').toggleClass('hidden')

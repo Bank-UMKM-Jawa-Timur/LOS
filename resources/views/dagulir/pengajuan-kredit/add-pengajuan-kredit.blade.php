@@ -2228,7 +2228,6 @@ $dataIndex = match ($skema) {
     $(".tab-wrapper .btn-tab").click(function(e) {
         e.preventDefault();
         var tabId = $(this).data("tab");
-        console.log(tabId);
         var percentage = formPercentage(`${tabId}-tab`)
         $(this).closest('.percentage').html(`${percentage}%`)
 
@@ -2359,7 +2358,7 @@ $dataIndex = match ($skema) {
             var inputBox = $(this).closest('.input-box');
             if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
                 totalInput++
-            var isNull = (v.value == '' || v.value == '0')
+            var isNull = (v.value == '' || v.value == '0') && !$(this).prop('readonly')
             if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
                 totalInputNull++;
             } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
@@ -2410,7 +2409,7 @@ $dataIndex = match ($skema) {
         })
 
         var totalReadHidden = (totalInputHidden + totalInputReadOnly)
-        percent = (totalInputFilled / totalInput) * 100
+        percent = (totalInputFilled / (totalInput - totalInputReadOnly)) * 100
 
         return parseInt(percent)
     }
