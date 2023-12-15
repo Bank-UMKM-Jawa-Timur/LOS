@@ -120,13 +120,7 @@
                                     <div class="input-box">
                                         <label for="">Foto Nasabah</label>
                                         <div class="p-2 bg-white border-b">
-                                            <img class="h-50 w-50" src="{{ asset('..').'/upload/'.$dataUmumNasabah->id.'/'.$dataUmumNasabah->foto_nasabah }}" alt="">
-                                        </div>
-                                    </div>
-                                    <div class="input-box">
-                                        <label for="">Foto KTP Nasabah</label>
-                                        <div class="p-2 bg-white border-b">
-                                            <img class="h-50 w-50" src="{{ asset('..').'/upload/'.$dataUmumNasabah->id.'/'.$dataUmumNasabah->foto_ktp }}" alt="">
+                                            {{-- <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span> --}}
                                         </div>
                                     </div>
                                     <div class="input-box">
@@ -146,10 +140,15 @@
                                     <div class="input-box">
                                         <label for="">NIK</label>
                                         <div class="p-2 bg-white border-b">
-                                            <span>{{ $dataUmumNasabah->nik ? $dataUmumNasabah->nik : '-' }}</span>
+                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
                                         </div>
                                     </div>
-
+                                    <div class="input-box">
+                                        <label for="">Foto KTP Nasabah</label>
+                                        <div class="p-2 bg-white border-b">
+                                            {{-- <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span> --}}
+                                        </div>
+                                    </div>
                                     @if ($dataUmumNasabah->status_pernikahan == '2')
                                         <div class="input-box">
                                             <label for="">NIK Pasangan</label>
@@ -160,7 +159,6 @@
                                         <div class="input-box">
                                             <label for="">Foto KTP Pasangan</label>
                                             <div class="p-2 bg-white border-b">
-                                            <img class="h-50 w-fit" src="{{ asset('..').'/upload/'.$dataUmumNasabah->id.'/'.$dataUmumNasabah->foto_ktp }}" alt="">
                                                 {{-- <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span> --}}
                                             </div>
                                         </div>
@@ -2038,19 +2036,13 @@
         if (tabId == 'pendapat-dan-usulan-tab') {
             var inputText = $(form + " input[type=text]")
             var inputNumber = $(form + " input[type=number]")
-            var inputDate = $(form + " input[type=date]")
-            var inputHidden = $(form + " input[type=hidden]")
-            var select = $(form + " select")
-            var textarea = $(form + " textarea")
-            var totalInput = 0;
-            var totalInputNull = 0;
-            var totalInputFilled = 0;
-            var totalInputHidden = 0;
-            var totalInputReadOnly = 0;
-            var percent = 0;
+
+            if ($('#komentar_penyelia_keseluruhan'))
+                totalInput++
+            if($('#komentar_penyelia_keseluruhan').val() != '')
+                totalInputFilled++
 
             $.each(inputText, function(i, v) {
-
                 var inputBox = $(this).closest('.input-box');
                 if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
                     totalInput++
@@ -2059,30 +2051,7 @@
                     totalInputFilled++;
                 }
             })
-
-            $.each(inputHidden, function(i, v) {
-
-                var inputBox = $(this).closest('.input-box');
-                if ((!$(this).prop('disabled') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
-                    totalInputHidden++;
-                }
-            })
-
-            $.each(inputFile, function(i, v) {
-
-                var inputBox = $(this).closest('.input-box');
-                if (!$(this).prop('disabled') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
-                    totalInput++
-                var isNull = (v.value == '' || v.value == '0')
-                if ((v.value == '' && !$(this).prop('disabled') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
-                    totalInputNull++;
-                } else if (!isNull && !$(this).prop('disabled') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
-                    totalInputFilled++;
-                }
-            })
-
             $.each(inputNumber, function(i, v) {
-
                 var inputBox = $(this).closest('.input-box');
                 if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
                     totalInput++
@@ -2091,50 +2060,6 @@
                     totalInputFilled++;
                 }
             })
-
-            $.each(inputDate, function(i, v) {
-
-                var inputBox = $(this).closest('.input-box');
-                if (!$(this).prop('disabled') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
-                    totalInput++
-                var isNull = (v.value == '' || v.value == '0')
-                if ((v.value == '' && !$(this).prop('disabled') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
-                    totalInputNull++;
-                } else if (!isNull && !$(this).prop('disabled') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
-                    totalInputFilled++;
-                }
-            })
-
-            $.each(select, function(i, v) {
-
-                var inputBox = $(this).closest('.input-box');
-                if (!$(this).prop('disabled') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
-                    totalInput++
-                var isNull = (v.value == '' || v.value == '0')
-                if ((isNull && !$(this).prop('disabled') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
-                    totalInputNull++;
-                } else if (!isNull && !$(this).prop('disabled') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
-                    totalInputFilled++;
-                }
-            })
-
-            $.each(textarea, function(i, v) {
-
-                var inputBox = $(this).closest('.input-box');
-                if (!$(this).prop('disabled') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
-                    totalInput++
-                var isNull = (v.value == '' || v.value == '0')
-                if ((v.value == '' && !$(this).prop('disabled') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
-                    totalInputNull++;
-                } else if (!isNull && !$(this).prop('disabled') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
-                    totalInputFilled++;
-                }
-            })
-
-            var totalReadHidden = (totalInputHidden + totalInputReadOnly)
-            percent = (totalInputFilled / totalInput) * 100
-            console.log(percent)
-            return parseInt(percent)
         }
 
         percent = (totalInputFilled / totalInput) * 100
