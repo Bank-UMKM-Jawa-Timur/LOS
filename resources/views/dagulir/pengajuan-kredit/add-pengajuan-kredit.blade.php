@@ -2168,13 +2168,9 @@ $dataIndex = match ($skema) {
         var tipe = $(this).val();
         console.log(tipe);
         if (tipe == '2' || tipe == "0" ) {
-            $('#nama_pj').addClass('hidden');
             $('#tempat_berdiri').addClass('hidden');
-            $('#tanggal_berdiri').addClass('hidden');
         }else{
-            $('#nama_pj').removeClass('hidden');
             $('#tempat_berdiri').removeClass('hidden');
-            $('#tanggal_berdiri').removeClass('hidden');
             //badan usaha
             if (tipe == '3') {
                 $('#label_pj').html('Nama penanggung jawab');
