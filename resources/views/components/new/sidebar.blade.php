@@ -38,7 +38,7 @@
                                     </g>
                                 </svg>
                             </span>
-                            <span class="ml-2 mt-[2px]"> Analisis kredit</span>
+                            <span class="ml-2 mt-[2px]"> Analisa kredit</span>
                         </button>
                     </a>
                 </li>

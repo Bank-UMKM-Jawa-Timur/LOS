@@ -661,6 +661,7 @@ class NewDagulirController extends Controller
     // insert komentar
     public function getInsertKomentar(Request $request)
     {
+        
         $role = Auth::user()->role;
         if ($role == 'Penyelia Kredit' || $role == 'PBO' || $role == 'PBP' || $role == 'Pincab') {
             DB::beginTransaction();
@@ -738,6 +739,7 @@ class NewDagulirController extends Controller
                     $updateData->update();
 
                     $idKomentar = KomentarModel::where('id_pengajuan', $request->id_pengajuan)->first();
+                   
                     if ($role == 'Penyelia Kredit') {
                         KomentarModel::where('id', $idKomentar->id)->update(
                             [
@@ -846,6 +848,7 @@ class NewDagulirController extends Controller
                     }
                 }
                 $plafonUsulan = PlafonUsulan::where('id_pengajuan', $request->id_pengajuan)->first();
+
                 if ($plafonUsulan == null)
                     $plafonUsulan = new PlafonUsulan();
                 if($role == 'Penyelia Kredit'){

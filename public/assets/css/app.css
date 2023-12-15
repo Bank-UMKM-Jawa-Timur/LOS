@@ -1540,6 +1540,15 @@ video {
 .w-\[10\%\] {
   width: 10%;
 }
+.w-\[15\%\] {
+  width: 15%;
+}
+.w-\[17\%\] {
+  width: 17%;
+}
+.w-\[16\%\] {
+  width: 16%;
+}
 .max-w-2xl {
   max-width: 42rem;
 }
@@ -2528,10 +2537,6 @@ video {
 
   .md\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .md\:grid-cols-3 {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .md\:border-l {
