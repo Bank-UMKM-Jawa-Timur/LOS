@@ -62,7 +62,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             return view('dagulir.pengajuan-kredit.review-pincab');
         });
         // Route::get('pincab-kredit/{id}', [DagulirController::class, "sendToPincab"])->name('check.pincab');
-        Route::get('pincab-kredit/{id}', [NewDagulirController::class, "sendToPincab"])->name('check.pincab');
+        Route::post('pincab-kredit', [NewDagulirController::class, "sendToPincab"])->name('check.pincab');
         // Review Pincab
         Route::get('jawaban-pengajuan-pincab/{id}', [NewDagulirController::class, "getDetailJawabanPincab"])->name('detailjawaban_pincab');
         Route::post('jawaban-pengajuan-pincab/update/{id}', [DagulirController::class, "updateReviewPincab"])->name('updateReviewPincab');

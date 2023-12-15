@@ -1232,8 +1232,10 @@ class NewDagulirController extends Controller
         ]);
     }
 
-    public function sendToPincab($id)
+    public function sendToPincab(Request $request)
     {
+        // return $request;
+        $id = $request->get('id_pengajuan');
         try {
             $pengajuan = PengajuanModel::find($id);
             if ($pengajuan) {
@@ -1248,7 +1250,7 @@ class NewDagulirController extends Controller
                     $pengajuan->update();
 
                     Alert::success('success', 'Berhasil mengganti posisi');
-                    return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+                    return redirect()->back();
                 } else {
                     Alert::error('error', 'User pincab tidak ditemukan pada cabang ini');
                     return back()->withError('User pincab tidak ditemukan pada cabang ini.');
@@ -1293,7 +1295,7 @@ class NewDagulirController extends Controller
                         // HIT update status analisa endpoint dagulir
                         $lampiran_analisa = lampiranAnalisa();
                         $this->updateStatus($nasabah->kode_pendaftaran, 2, $lampiran_analisa, $nasabah->jangka_waktu, $nasabah->nominal);
-    
+
                         // HIT update status disetujui endpoint dagulir
                         $this->updateStatus($nasabah->kode_pendaftaran, 3, null, $nasabah->jangka_waktu, $nasabah->nominal);
 
