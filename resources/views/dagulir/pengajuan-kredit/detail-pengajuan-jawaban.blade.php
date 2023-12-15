@@ -108,147 +108,199 @@
                                         @endforeach
                                     @endif
                                 @endforeach
+                                <div class="form-group-2">
+                                    <div class="input-box">
+                                        <label for="">Nama Lengkap</label>
+                                        <div class="p-2 bg-white border-b">
+                                            <span>{{ $dataUmumNasabah->nama ? $dataUmumNasabah->nama : '-' }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="input-box">
+                                        <label for="">Email</label>
+                                        <div class="p-2 bg-white border-b">
+                                            <span>{{ $dataUmumNasabah->email ? $dataUmumNasabah->email : '-' }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="input-box">
+                                        <label for="">Tempat Lahir</label>
+                                        <div class="p-2 bg-white border-b">
+                                            <span>{{ $dataUmumNasabah->tempat_lahir ? $dataUmumNasabah->tempat_lahir : '-' }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="input-box">
+                                        <label for="">Tanggal Lahir</label>
+                                        <div class="p-2 bg-white border-b">
+                                            <span>{{ \Carbon\Carbon::parse($dataUmumNasabah->tanggal_lahir)->translatedFormat('d F Y') }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="input-box">
+                                        <label for="">Telp</label>
+                                        <div class="p-2 bg-white border-b">
+                                            <span>{{ $dataUmumNasabah->telp ? $dataUmumNasabah->telp : '-' }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="input-box">
+                                        <label for="">Jenis Usaha</label>
+                                        <div class="p-2 bg-white border-b">
+                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="input-box">
+                                        <label for="">Foto Nasabah</label>
+                                        <div class="p-2 bg-white border-b">
+                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="input-box">
+                                        <label for="">Status</label>
+                                        <div class="p-2 bg-white border-b">
+                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="input-box">
+                                        <label for="">NIK</label>
+                                        <div class="p-2 bg-white border-b">
+                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="input-box">
+                                        <label for="">Foto KTP Nasabah</label>
+                                        <div class="p-2 bg-white border-b">
+                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                        </div>
+                                    </div>
+                                    @if ($dataUmumNasabah->status_pernikahan == '2')
+                                        <div class="input-box">
+                                            <label for="">NIK Pasangan</label>
+                                            <div class="p-2 bg-white border-b">
+                                                <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="input-box">
+                                            <label for="">Foto KTP Pasangan</label>
+                                            <div class="p-2 bg-white border-b">
+                                                <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                            </div>
+                                        </div>
+                                    @endif
+                                    <div class="input-box">
+                                        <label for="">SLIK</label>
+                                        <div class="p-2 bg-white border-b">
+                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="input-box">
+                                        <label for="">File Slik</label>
+                                        <div class="p-2 bg-white border-b">
+                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group-3">
+                                    <div class="input-box">
+                                        <label for="">Kota / Kabupaten KTP</label>
+                                        <div class="p-2 bg-white border-b">
+                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="input-box">
+                                        <label for="">Kecamatan KTP</label>
+                                        <div class="p-2 bg-white border-b">
+                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="input-box">
+                                        <label for="">Desa KTP</label>
+                                        <div class="p-2 bg-white border-b">
+                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-box">
+                                        <label for="">Alamat KTP</label>
+                                        <div class="p-2 bg-white border-b">
+                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group-2">
+                                    <div class="input-box">
+                                        <label for="">Kota / Kabupaten Domisili</label>
+                                        <div class="p-2 bg-white border-b">
+                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="input-box">
+                                        <label for="">Kecamatan Domisili </label>
+                                        <div class="p-2 bg-white border-b">
+                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-box">
+                                        <label for="">Alamat Domisili</label>
+                                        <div class="p-2 bg-white border-b">
+                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group-2">
+                                    <div class="input-box">
+                                        <label for="">Kota / Kabupaten Usaha</label>
+                                        <div class="p-2 bg-white border-b">
+                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="input-box">
+                                        <label for="">Kecamatan Usaha </label>
+                                        <div class="p-2 bg-white border-b">
+                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group-2">
+                                    <div class="input-box">
+                                        <label for="">Plafon</label>
+                                        <div class="p-2 bg-white border-b">
+                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="input-box">
+                                        <label for="">Jangka Waktu</label>
+                                        <div class="p-2 bg-white border-b">
+                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="input-box">
+                                        <label for="">Tujuan Penggunaan</label>
+                                        <div class="p-2 bg-white border-b">
+                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="input-box">
+                                        <label for="">Jaminan yang Disediakan</label>
+                                        <div class="p-2 bg-white border-b">
+                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="form-group-1">
-                                    <label for="">Nama Lengkap</label>
-                                    <input type="text" disabled name="name" id="nama"
-                                        class="form-input @error('name') is-invalid @enderror"
-                                        value="{{ old('name', $dataUmumNasabah->nama) }}" placeholder="Nama sesuai dengan KTP">
-                                    @error('name')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
+                                    <div class="input-box">
+                                        <label for="">Hubungan Bank</label>
+                                        <div class="p-2 bg-white border-b">
+                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
                                         </div>
-                                    @enderror
+                                    </div>
                                 </div>
-                                <div class="form-group col-md-4">
-                                    <label for="">Kabupaten</label>
-                                    <select name="kabupaten" disabled class="form-input @error('name') is-invalid @enderror select2"
-                                        id="kabupaten">
-                                        <option value="">---Pilih Kabupaten----</option>
-                                        @foreach ($allKab as $item)
-                                            <option value="{{ old('id', $item->id) }}"
-                                                {{ old('id', $item->id) == $dataUmumNasabah->kotakab_ktp ? 'selected' : '' }}>
-                                                {{ $item->kabupaten }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('kabupaten')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
+                                <div class="input-box">
+                                    <label for="">Hasil Verifikasi</label>
+                                    <div class="p-2 bg-white border-b">
+                                        <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                    </div>
                                 </div>
-                                <div class="form-group col-md-4">
-                                    <label for="">Kecamatan</label>
-                                    <select name="kec" disabled id="kecamatan"
-                                        class="form-input @error('kec') is-invalid @enderror">
-                                        <option value="">---Pilih Kecamatan----</option>
-                                        @foreach ($allKec as $kec)
-                                            <option value="{{ $kec->id }}"
-                                                {{ $kec->id == $dataUmumNasabah->kec_ktp ? 'selected' : '' }}>{{ $kec->kecamatan }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('kec')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="">Desa</label>
-                                    <select disabled name="desa" id="desa"
-                                        class="form-input @error('desa') is-invalid @enderror select2">
-                                        <option value="">---Pilih Desa----</option>
-                                        @foreach ($allDesa as $desa)
-                                            <option value="{{ $desa->id }}"
-                                                {{ $desa->id == $dataUmumNasabah->id_desa ? 'selected' : '' }}>{{ $desa->desa }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('desa')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-                                <div class="form-group-1">
-                                    <label for="">Alamat Rumah</label>
-                                    <textarea disabled name="alamat_rumah" class="form-input @error('alamat_rumah') is-invalid @enderror" id=""
-                                        cols="30" rows="4" placeholder="Alamat Rumah disesuaikan dengan KTP">{{ old('alamat_rumah', $dataUmumNasabah->alamat_rumah) }}</textarea>
-                                    @error('alamat_rumah')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                    <hr>
-                                </div>
-                                <div class="form-group-1">
-                                    <label for="">Alamat Usaha</label>
-                                    <textarea disabled name="alamat_usaha" class="form-input @error('alamat_usaha') is-invalid @enderror" id=""
-                                        cols="30" rows="4" placeholder="Alamat Usaha disesuaikan dengan KTP">{{ old('alamat_usaha', $dataUmumNasabah->alamat_usaha) }}</textarea>
-                                    @error('alamat_usaha')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="">Tempat</label>
-                                    <input disabled type="text" name="tempat_lahir" id=""
-                                        class="form-input @error('tempat_lahir') is-invalid @enderror"
-                                        value="{{ old('tempat_lahir', $dataUmumNasabah->tempat_lahir) }}" placeholder="Tempat Lahir">
-                                    @error('tempat_lahir')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="">Tanggal Lahir</label>
-                                    <input disabled type="date" name="tanggal_lahir" id=""
-                                        class="form-input @error('tanggal_lahir') is-invalid @enderror"
-                                        value="{{ old('tanggal_lahir', $dataUmumNasabah->tanggal_lahir) }}" placeholder="Tempat Lahir">
-                                    @error('tanggal_lahir')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-                                <div class="form-group col-md-4">
-                                    <label for="">Status</label>
-                                    <select disabled name="status" id=""
-                                        class="form-input @error('status') is-invalid @enderror select2">
-                                        <option value=""> --Pilih Status --</option>
-                                        <option value="menikah"
-                                            {{ old('status', $dataUmumNasabah->status) == 'menikah' ? 'selected' : '' }}>
-                                            Menikah</option>
-                                        <option value="belum menikah"
-                                            {{ old('status', $dataUmumNasabah->status) == 'belum menikah' ? 'selected' : '' }}>Belum
-                                            Menikah
-                                        </option>
-                                        <option value="duda" {{ old('status', $dataUmumNasabah->status) == 'duda' ? 'selected' : '' }}>
-                                            Duda
-                                        </option>
-                                        <option value="janda" {{ old('status', $dataUmumNasabah->status) == 'janda' ? 'selected' : '' }}>
-                                            Janda
-                                        </option>
-                                    </select>
-                                    @error('status')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-                                <div class="form-group-1">
-                                    <label for="">No. KTP</label>
-                                    <input disabled type="text" name="no_ktp"
-                                        class="form-input @error('no_ktp') is-invalid @enderror" id=""
-                                        value="{{ old('no_ktp', $dataUmumNasabah->no_ktp) }}" placeholder="Masukkan 16 digit No. KTP">
-                                    @error('no_ktp')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
+
                                 @if ($dataUmumNasabah->status == 'menikah')
                                     @php
                                         $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
