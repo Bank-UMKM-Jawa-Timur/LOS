@@ -356,7 +356,6 @@
                     type="text"
                     class="form-input"
                     name="tempat_berdiri"
-
                 />
             </div>
             <div class="input-box">
@@ -366,7 +365,6 @@
                     type="date"
                     class="form-input"
                     name="tanggal_berdiri"
-
                     />
                 </div>
             </div>
