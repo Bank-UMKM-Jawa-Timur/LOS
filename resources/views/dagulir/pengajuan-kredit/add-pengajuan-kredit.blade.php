@@ -2224,12 +2224,26 @@ $dataIndex = match ($skema) {
         rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
         return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
     }
+
+    $( document ).ready(function() {
+        countFormPercentage()
+    });
+
+    function countFormPercentage() {
+        $.each($('.tab-wrapper .btn-tab'), function(i, obj) {
+            var tabId = $(this).data('tab')
+            if (tabId) {
+                var percentage = formPercentage(`${tabId}-tab`)
+                $(this).find('.percentage').html(`${percentage}%`)
+            }
+        })
+    }
+
     // tab
     $(".tab-wrapper .btn-tab").click(function(e) {
         e.preventDefault();
         var tabId = $(this).data("tab");
-        var percentage = formPercentage(`${tabId}-tab`)
-        $(this).closest('.percentage').html(`${percentage}%`)
+        countFormPercentage()
 
         $(".is-tab-content").removeClass("active");
         $(".tab-wrapper .btn-tab").removeClass(
@@ -2240,11 +2254,8 @@ $dataIndex = match ($skema) {
         $(".tab-wrapper .btn-tab").addClass("disable-tab");
 
         $(this).addClass("active-tab");
-        // $(this).addClass("text-gray-600");
 
         if (tabId) {
-            // $(this).removeClass("text-gray-400");
-            // $(this).removeClass("text-gray-400");
             $(this).removeClass("disable-tab");
             $(this).removeClass("disable-tab");
         }
