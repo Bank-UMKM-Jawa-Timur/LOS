@@ -43,7 +43,7 @@ $dataIndex = match ($skema) {
     </nav>
     <div class="p-3">
         <div class="body-pages">
-            <form action="{{ route('dagulir.pengajuan-kredit.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('dagulir.pengajuan.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="mt-3 container mx-auto">
                     <div id="dagulir-tab" class="is-tab-content active">
@@ -73,6 +73,7 @@ $dataIndex = match ($skema) {
                                 <div
                                     class="p-5 w-full space-y-5"
                                     id="{{$title_id}}">
+                                    <div class="grid grid-cols-2 md:grid-cols-2 gap-4">
                                     <div class="grid grid-cols-2 md:grid-cols-2 gap-4">
                                     @foreach ($dataLevelDua as $item)
                                         @php
@@ -111,6 +112,8 @@ $dataIndex = match ($skema) {
                                                 </div>
                                             </div>
 
+                                            <div class="form-group" id="nib">
+                                                <div class="input-box">
                                             <div class="form-group" id="nib">
                                                 <div class="input-box">
                                                     <label for="">NIB</label>
@@ -176,7 +179,7 @@ $dataIndex = match ($skema) {
                                                     <label for="">NPWP</label>
                                                     <input type="hidden" name="id_level[79]" value="79" id="npwp_id">
                                                     <input type="hidden" name="opsi_jawaban[79]" value="input text" id="npwp_opsi_jawaban">
-                                                    <input type="text" maxlength="255" name="informasi[79]" id="npwp_text"
+                                                    <input type="text" maxlength="20" name="informasi[79]" id="npwp_text"
                                                         placeholder="Masukkan informasi" class="form-input" value="">
                                                 </div>
                                             </div>
@@ -818,6 +821,38 @@ $dataIndex = match ($skema) {
 @push('script-inject')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    $('#jangka_waktu').on('change', function() {
+        limitJangkaWaktu()
+    })
+    $('#jumlah_kredit').on('change', function() {
+        limitJangkaWaktu()
+    })
+
+    function limitJangkaWaktu() {
+        var nominal = $('#jumlah_kredit').val()
+        nominal = nominal != '' ? nominal.replaceAll('.','') : 0
+        var limit = 50000000
+        if (parseInt(nominal) > limit) {
+            var jangka_waktu = $('#jangka_waktu').val()
+            if (jangka_waktu != '') {
+                jangka_waktu = parseInt(jangka_waktu)
+                if (jangka_waktu <= 36) {
+                    $('.jangka_waktu_error').removeClass('hidden')
+                    $('.jangka_waktu_error').html('Jangka waktu harus lebih dari 36 bulan.')
+                }
+                else {
+                    $('.jangka_waktu_error').addClass('hidden')
+                    $('.jangka_waktu_error').html('')
+                }
+            }
+        }
+        else {
+            $('.jangka_waktu_error').addClass('hidden')
+            $('.jangka_waktu_error').html('')
+        }
+    }
+</script>
+<script>
     //var isPincetar = "{{Request::url()}}".includes('pincetar');
     let dataAspekArr;
         $('#docSKU').hide();
@@ -1208,8 +1243,8 @@ $dataIndex = match ($skema) {
                                 name_lowercase = name_lowercase.replaceAll(' ', '_')
                                 if (valItem.nama == 'Foto') {
                                     $('#bukti_pemilikan_jaminan_tambahan').append(`
-                                        <div class="form-group file-wrapper item-${valItem.id} col-span-2">
-
+                                        <div class="form-group file-wrapper item-${valItem.id}">
+                                            <label for="">${valItem.nama}</label>
                                             <div class="input-box mb-4">
                                                 <label for="">${valItem.nama}</label>
                                                 <div class="flex gap-4">
@@ -2050,7 +2085,9 @@ $dataIndex = match ($skema) {
         var slik = document.getElementById("file_slik");
         var selectedFile;
 
-        slik.addEventListener('change', updateImageDisplaySlik);
+        if (slik) {
+            slik.addEventListener('change', updateImageDisplaySlik);
+        }
 
         function updateImageDisplaySlik() {
             if (slik.files.length == 0) {
@@ -2545,6 +2582,7 @@ $dataIndex = match ($skema) {
     });
     var num = 1;
     $(document).on('click', '.btn-add', function() {
+        console.log($(this));
         const item_id = $(this).data('item-id');
         var item_element = $(`.${item_id}`);
         var iteration = item_element.length;
@@ -2552,24 +2590,25 @@ $dataIndex = match ($skema) {
         var multiple = input.find('.multiple-action');
         var new_multiple = multiple.html().replaceAll('hidden', '');
         input = input.html().replaceAll(multiple.html(), new_multiple);
-        var parent = $(this).closest('.input-box').parent();
-        // var num = parent.find('.input-box').length + 1;
-        num = parseInt($(".figure").text());
-        $(".figure").text(num+1);
-        parent.append(`
-            ${num}
-            <div class="input-box mb-4">
-                ${input}
-            </div>
-        `);
-        num = 1;
-    });
+        var parent = $(this).closest('.input-box').parent()
+        parent.append(`<div class="input-box mb-4">${input}`)
+    })
 
     $(document).on('click', '.btn-minus', function() {
         const item_id = $(this).data('item-id');
         var item_element = $(`#${item_id}`)
         var parent = $(this).closest('.input-box')
         parent.remove()
+    })
+    function formatNpwp(value) {
+        if (typeof value === 'string') {
+            return value.replace(/(\d{2})(\d{3})(\d{3})(\d{1})(\d{3})(\d{3})/, '$1.$2.$3.$4-$5.$6');
+        }
+    }
+    // NPWP format
+    $(document).on('keyup', '#npwp_text', function() {
+        var input = $(this).val()
+        $(this).val(formatNpwp(input))
     })
 </script>
 {{--  @include('pengajuan-kredit.partials.create-save-script')  --}}

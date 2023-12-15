@@ -814,7 +814,7 @@
                                                     </div>
                                                 </div>
                                             @endif
-                                        </div> 
+                                        </div>
                                     @endif
                                 @endif
                             @endif
@@ -1266,7 +1266,7 @@
                                                     <div class="form-group col-md-12 mb-0">
                                                         <label for="">{{ $itemEmpat->nama }}</label>
                                                     </div>
-                                                </div> 
+                                                </div>
                                             @endif
                                         @endif
 

@@ -99,7 +99,7 @@
         @if (Auth()->user()->role == 'Staf Analis Kredit')
             <div class="right-button gap-2 flex lg:justify-start">
             <a
-                href="{{ route('dagulir.pengajuan-kredit.create') }}"
+                href="{{ route('dagulir.pengajuan.create') }}"
                 class="px-7 py-2 rounded flex justify-center items-center font-semibold bg-theme-primary border text-white"
             >
                 <span class="mt-1 mr-3">
@@ -240,7 +240,7 @@
                                             </li>
                                         @endif
                                         @if ((Auth()->user()->role == 'Penyelia Kredit'))
-                                            @if ($item->pengajuan->posisi == 'Proses Input Data')
+                                            @if ($item->pengajuan->posisi == 'Review Penyelia')
                                                 <li class="item-tb-dropdown">
                                                     <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
                                                         class="cursor-pointer">Review</a>
@@ -269,12 +269,22 @@
                                                         class="dropdown-item">Lanjutkan Ke Pincab</a>
                                                 </li>
                                             @endif
-                                        @elseif ((Auth()->user()->role == 'Pincab'))
-                                            @if ($item->pengajuan->posisi == 'Pincab')
-                                                <li class="item-tb-dropdown">
-                                                    <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
-                                                        class="cursor-pointer">Review</a>
-                                                </li>
+                                        @endif
+                                        @if ((Auth()->user()->role == 'Penyelia Kredit') && $item->pengajuan->posisi == 'Review Penyelia')
+                                            <li class="item-tb-dropdown">
+                                                <a href="{{ route('dagulir.pengajuan.detailjawaban', $item->pengajuan->id) }}"
+                                                    class="cursor-pointer">Review</a>
+                                            </li>
+                                        @endif
+                                        @if ((Auth()->user()->role == 'Pincab') && ($item->pengajuan->id_pincab && !$item->pengajuan->tanggal_review_pincab))
+                                            <li class="item-tb-dropdown">
+                                                <a href="{{ route('dagulir.detailjawaban_pincab', $item->pengajuan->id) }}"
+                                                    class="cursor-pointer">Review</a>
+                                            </li>
+                                        @endif
+                                        @if ((Auth()->user()->role == 'Pincab') &&
+                                                $item->pengajuan->posisi == 'Pincab' &&
+                                                ($item->pengajuan->id_pincab && $item->pengajuan->tanggal_review_pincab))
                                                 <li class="item-tb-dropdown">
                                                     <a href="#" data-id="{{$item->pengajuan->id}}"
                                                         data-acc-url="{{ route('dagulir.acc_pincab',$item->pengajuan->id) }}"
@@ -282,7 +292,6 @@
                                                         class="cursor-pointer approval">Approval</a>
 
                                                 </li>
-                                            @endif
                                         @endif
                                         @if ((Auth()->user()->role == 'Pincab') &&
                                             $item->pengajuan->posisi == 'Selesai' &&
