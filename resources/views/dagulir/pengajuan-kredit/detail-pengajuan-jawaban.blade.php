@@ -780,17 +780,19 @@
                                                                         <input type="hidden" name="id_option[]"
                                                                             value="{{ $itemJawaban->id }}">
                                                                         @if ($item->is_commentable == 'Ya')
-                                                                            <div class="grid grid-cols-2 gap-2">
-                                                                                <div class="">
+                                                                            <div class="form-group-2">
+                                                                                <div class="w-full ">
+                                                                                    <label for="">Komentar</label>
                                                                                     <input type="text" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400 komentar"
                                                                                         name="komentar_penyelia[]" placeholder="Masukkan Komentar"
                                                                                         value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                                 </div>
-                                                                                <div class="input-skor">
+                                                                                <div class="w-[10%] m-0">
                                                                                     @php
                                                                                         $skorInput2 = null;
                                                                                         $skorInput2 = $getSkorPenyelia->skor_penyelia ? $getSkorPenyelia->skor_penyelia : $itemJawaban->skor;
                                                                                     @endphp
+                                                                                    <label for="">Skor</label>
                                                                                     <input type="number" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400" placeholder=""
                                                                                         name="skor_penyelia[]"
                                                                                         min="0"
@@ -1040,11 +1042,13 @@
                                                                                     @if ($itemTiga->is_commentable == 'Ya')
                                                                                         <div class="grid grid-cols-2 gap-2">
                                                                                             <div class="">
+                                                                                                <label for="">Komentar</label>
                                                                                                 <input type="text" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400 komentar"
                                                                                                     name="komentar_penyelia[]" placeholder="Masukkan Komentar"
                                                                                                     value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                                             </div>
-                                                                                            <div class="input-skor">
+                                                                                            <div class="input-skor w-[10%]">
+                                                                                                <label for="">Skor</label>
                                                                                                 <input type="number" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400"
                                                                                                     min="0"
                                                                                                     max="4"
@@ -1089,7 +1093,7 @@
                                                             @endphp
                                                             @foreach ($dataDetailJawabanTextEmpat as $itemTextEmpat)
                                                                 <div class="row">
-                                                                    <div class="form-group-1 mb-0">
+                                                                    <div class="form-group-2 mb-0">
                                                                         <h6 class="font-medium text-sm" for="">{{ $itemTextEmpat->nama }}</h6>
                                                                         @if ($itemEmpat->opsi_jawaban == 'file')
                                                                                     @if (intval($itemTextEmpat->opsi_text) > 1)
@@ -1254,11 +1258,13 @@
                                                                                     @if ($itemEmpat->is_commentable == 'Ya')
                                                                                         <div class="grid grid-cols-2 gap-2">
                                                                                             <div class="">
+                                                                                                <label for="">Komentar</label>
                                                                                                 <input type="text" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400 komentar"
                                                                                                     name="komentar_penyelia[]" placeholder="Masukkan Komentar"
                                                                                                     value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                                             </div>
-                                                                                            <div class="input-skor">
+                                                                                            <div class="input-skor w-[10%]">
+                                                                                                <label for="">Skor</label>
                                                                                                 @php
                                                                                                     $skorInput4 = null;
                                                                                                     $skorInput4 = $getSkorPenyelia?->skor_penyelia ? $getSkorPenyelia?->skor_penyelia : $itemJawabanLevelEmpat->skor;
