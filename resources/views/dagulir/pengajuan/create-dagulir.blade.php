@@ -111,8 +111,10 @@
             <div class="input-box">
                 <label for="ktp_nasabah" id="foto-nasabah">Foto Nasabah</label>
                 <div class="flex gap-4">
-                    <input type="file" name="foto_nasabah" class="form-input"" />
+                    <input type="file" name="foto_nasabah" class="form-input limit-size-2" />
                 </div>
+                <span class="error-limit text-red-500" style="display: none; margin-top: 0;">Maximum upload file
+                    size is 2 MB</span>
             </div>
             <div class="input-box">
                 <label for="">Status</label>
@@ -137,8 +139,10 @@
             <div class="input-box" id="ktp-nasabah">
                 <label for="ktp_nasabah" id="label-ktp-nasabah">Foto KTP Nasabah</label>
                 <div class="flex gap-4">
-                    <input type="file" name="ktp_nasabah" class="form-input"" />
+                    <input type="file" name="ktp_nasabah" class="form-input limit-size-2" />
                 </div>
+                <span class="text-red-500" style="display: none; margin-top: 0;">Maximum upload file
+                    size is 2 MB</span>
             </div>
             <div class="input-box hidden" id="nik_pasangan">
                 <label for="">NIK Pasangan</label>
@@ -153,8 +157,10 @@
             <div class="input-box hidden" id="ktp-pasangan">
                 <label for="ktp_pasangan" id="">Foto KTP Pasangan</label>
                 <div class="flex gap-4">
-                    <input type="file" name="ktp_pasangan" class="form-input" />
+                    <input type="file" name="ktp_pasangan" class="form-input limit-size-2" />
                 </div>
+                <span class="text-red-500" style="display: none; margin-top: 0;">Maximum upload file
+                    size is 2 MB</span>
             </div>
         </div>
         <div class="form-group-2">
@@ -169,7 +175,9 @@
             </div>
             <div class="input-box">
                 <label for="">File Slik</label>
-                <input type="file" name="file_slik" class="form-input" />
+                <input type="file" name="file_slik" class="form-input limit-size-slik" />
+                <span class="text-red-500 m-0" style="display: none">Maximum upload file
+                    size is 10 MB</span>
             </div>
         </div>
         <div class="form-group-3">

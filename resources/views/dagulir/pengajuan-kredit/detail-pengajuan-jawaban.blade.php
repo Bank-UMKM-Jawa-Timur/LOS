@@ -1657,107 +1657,6 @@
         // Format NPWP
         var npwp = formatNpwp($('.npwp').html())
         $('.npwp').html(npwp)
-        const nullValue = []
-
-        function cekValueKosong(formIndex) {
-            var skema = $("#skema_kredit").val()
-            var form = ".form-wizard[data-index=" + formIndex + "]";
-            var inputFile = $(form + " input[type=file]")
-            var inputText = $(form + " input[type=text]")
-            var inputNumber = $(form + " input[type=number]")
-            var select = $(form + " select")
-            var textarea = $(form + " textarea")
-
-            $.each(inputFile, function(i, v) {
-                if (v.value == '' && !$(this).prop('disabled') && $(this).closest('.filename') == '') {
-                    if (form == ".form-wizard[data-index='2']") {
-                        var ijin = $(form + " select[name=ijin_usaha]")
-                        if (ijin != "tidak_ada_legalitas_usaha") {
-                            let val = $(this).attr("id").toString();
-                            nullValue.push(val.replaceAll("_", " "))
-                        }
-                    } else {
-                        let val = $(this).attr("id").toString();
-                        nullValue.push(val.replaceAll("_", " "))
-                    }
-                } else if (v.value != '') {
-                    let val = $(this).attr("id").toString().replaceAll("_", " ");
-                    for (var i = 0; i < nullValue.length; i++) {
-                        while (nullValue[i] == val) {
-                            nullValue.splice(i, 1)
-                            break;
-                        }
-                    }
-                }
-            })
-
-            $.each(inputText, function(i, v) {
-                if (v.value == '' && !$(this).prop('disabled')) {
-                    let val = $(this).attr("id").toString();
-                    //console.log(val)
-                    nullValue.push(val.replaceAll("_", " "))
-                } else if (v.value != '') {
-                    let val = $(this).attr("id").toString().replaceAll("_", " ");
-                    for (var i = 0; i < nullValue.length; i++) {
-                        while (nullValue[i] == val) {
-                            nullValue.splice(i, 1)
-                            break;
-                        }
-                    }
-                }
-            })
-
-            $.each(inputNumber, function(i, v) {
-                if (v.value == '' && !$(this).prop('disabled')) {
-                    let val = $(this).attr("id").toString();
-                    //console.log(val)
-                    nullValue.push(val.replaceAll("_", " "))
-                } else if (v.value != '') {
-                    let val = $(this).attr("id").toString().replaceAll("_", " ");
-                    for (var i = 0; i < nullValue.length; i++) {
-                        while (nullValue[i] == val) {
-                            nullValue.splice(i, 1)
-                            break;
-                        }
-                    }
-                }
-            })
-
-            $.each(select, function(i, v) {
-                if (v.value == '' && !$(this).prop('disabled')) {
-                    let val = $(this).attr("id").toString();
-                    if (val != "persentase_kebutuhan_kredit_opsi" && val != "ratio_tenor_asuransi_opsi" && val !=
-                        "ratio_coverage_opsi") {
-                        //console.log(val)
-                        nullValue.push(val.replaceAll("_", " "))
-                    }
-                } else if (v.value != '') {
-                    let val = $(this).attr("id").toString().replaceAll("_", " ");
-                    for (var i = 0; i < nullValue.length; i++) {
-                        while (nullValue[i] == val) {
-                            nullValue.splice(i, 1)
-                            break;
-                        }
-                    }
-                }
-            })
-
-            $.each(textarea, function(i, v) {
-                if (v.value == '' && !$(this).prop('disabled')) {
-                    let val = $(this).attr("id").toString();
-                    //console.log(val)
-                    nullValue.push(val.replaceAll("_", " "))
-                } else if (v.value != '') {
-                    let val = $(this).attr("id").toString().replaceAll("_", " ");
-                    for (var i = 0; i < nullValue.length; i++) {
-                        while (nullValue[i] == val) {
-                            nullValue.splice(i, 1)
-                            break;
-                        }
-                    }
-                }
-            })
-        }
 
         $(".btn-simpan").on('click', function(e) {
             const role = "{{Auth::user()->role}}"
@@ -1846,9 +1745,6 @@
                     if (nullValue.length > 0) {
                         let message = "";
                         $.each(nullValue, (i, v) => {
-                            console.log('validasi')
-                            console.log(v)
-                            console.log('end validasi')
                             message += v != '' ? v + ", " : ''
                         })
                         Swal.fire({
@@ -1869,255 +1765,6 @@
                 e.preventDefault()
             }
         })
-
-        if ($('#val_pengembalian').val() == 0) {
-            $(".side-wizard li[data-index='0'] a span i").html("0%");
-        }else{
-            $(".side-wizard li[data-index='0'] a span i").html("100%");
-        }
-
-        if ($("#komentar_penyelia_keseluruhan").val() == '') {
-            $(".side-wizard li[data-index=9] a span i").html("0%")
-        } else {
-            $(".side-wizard li[data-index=9] a span i").html("100%")
-        }
-    })
-
-    @if ($dataUmum->skema_kredit == 'KKB')
-        $("#id_merk").change(function() {
-            let val = $(this).val();
-
-            $.ajax({
-                type: "get",
-                url: "{{ route('get-tipe-kendaraan') }}?id_merk=" + val,
-                dataType: "json",
-                success: (res) => {
-                    if (res) {
-                        $("#id_tipe").empty();
-                        $("#id_tipe").append(`<option>Pilih Tipe</option>`)
-
-                        $.each(res.tipe, function(i, value) {
-                            $("#id_tipe").append(`
-                            <option value="${value.id}" ${(value.id == {{ $dataPO->id_type }}) ? 'selected' : ''}>${value.tipe}</option>
-                        `);
-                        })
-                    }
-                }
-            });
-        });
-    @endif
-
-    var jumlahData = $('#jumlahData').val();
-    console.log('Jumlah data : '+jumlahData);
-    for (let index = 0; index <= parseInt(jumlahData); index++) {
-        // for (let index = 0; index <= parseInt(jumlahData); index++) {
-            var selected = index == parseInt(jumlahData) ? ' selected' : ''
-            $(".side-wizard li[data-index='" + index + "']").addClass('active' + selected)
-            $(".side-wizard li[data-index='" + index + "'] a span i").removeClass('fa fa-ban')
-            if ($(".side-wizard li[data-index='" + index + "'] a span i").html() == '' || $(
-                    ".side-wizard li[data-index='" + index + "'] a span i").html() == '0%') {
-                $(".side-wizard li[data-index='" + index + "'] a span i").html('0%')
-            }
-        // }
-
-        var form = ".form-wizard[data-index='" + index + "']"
-
-        var input = $(form + " input:disabled");
-        var select = $(form + " select")
-        var textarea = $(form + " textarea")
-
-        var ttlInput = 0;
-        var ttlInputFilled = 0;
-        $.each(input, function(i, v) {
-            ttlInput++
-            if (v.value != '') {
-                ttlInputFilled++
-            }
-        })
-        var ttlSelect = 0;
-        var ttlSelectFilled = 0;
-        $.each(select, function(i, v) {
-            ttlSelect++
-            if (v.value != '') {
-                ttlSelectFilled++
-            }
-        })
-
-        var ttlTextarea = 0;
-        var ttlTextareaFilled = 0;
-        $.each(textarea, function(i, v) {
-            ttlTextarea++
-            if (v.value != '') {
-                ttlTextareaFilled++
-            }
-        })
-
-        if (index == 1) {
-            var allInput = ttlInput - 1
-            var allInputFilled = ttlInputFilled
-        }
-        else if (index == 2) {
-            if (ttlInput == 6 && ttlInputFilled == 3) {
-                var allInput = 6;
-                var allInputFilled = 6;
-            }
-            else {
-                var allInput = ttlInput;
-                var allInputFilled = ttlInputFilled;
-            }
-            if (allInput == 0 && allInputFilled == 0) {
-                allInput = 1;
-                allInputFilled = 1;
-            }
-        }
-        else if (index == 3) {
-            var allInput = ttlInput - 3
-            var allInputFilled = ttlInputFilled
-        }
-        else if (index == 4) {
-            var allInput = ttlInput
-            var allInputFilled = ttlInputFilled
-        }
-        else if (index == 5) {
-            var allInput = ttlInput - 2
-            var allInputFilled = ttlInputFilled
-        }
-        else if (index == 6) {
-            var allInput = ttlInput - 1
-            var allInputFilled = ttlInputFilled
-        }
-        else{
-            var allInput = ttlInput
-            var allInputFilled = ttlInputFilled
-        }
-
-        var percentage = parseInt(allInputFilled / allInput * 100);
-        percentage = Number.isNaN(percentage) ? 0 : percentage;
-        percentage = percentage > 100 ? 100 : percentage;
-        percentage = percentage < 0 ? 0 : percentage;
-
-        if (index == 7) {
-            if ($("textarea[name=komentar_penyelia_keseluruhan]").val() == '') {
-                $(".side-wizard li[data-index='" + index + "'] a span i").html("0%")
-            } else {
-                $(".side-wizard li[data-index='" + index + "'] a span i").html("100%")
-            }
-        } else {
-            $(".side-wizard li[data-index='" + index + "'] a span i").html(Number.isNaN(percentage) ? 0 + "%" : percentage +
-                "%")
-        }
-        // $(".side-wizard li[data-index='"+index+"'] input.answer").val(allInput);
-        // $(".side-wizard li[data-index='"+index+"'] input.answerFilled").val(allInputFilled);
-    }
-
-    // $('textarea[name=komentar_penyelia_keseluruhan]').on('change', function() {
-    $('#komentar_penyelia_keseluruhan').on('change', function() {
-        if ($("textarea[name=komentar_penyelia_keseluruhan]").val() == '') {
-            $(".side-wizard li[data-index=9] a span i").html("0%")
-        } else {
-            $(".side-wizard li[data-index=9] a span i").html("100%")
-        }
-    })
-
-    function cekBtn() {
-        var indexNow = $(".form-wizard.active").data('index')
-        var prev = parseInt(indexNow) - 1
-        var next = parseInt(indexNow) + 1
-
-        $(".btn-prev").hide()
-        $(".btn-simpan").hide()
-
-        $(".progress").prop('disabled', true);
-        if ($(".form-wizard[data-index='" + prev + "']").length == 1) {
-            $(".btn-prev").show()
-        }
-
-        if (parseInt(indexNow) == parseInt(jumlahData)) {
-            // $(".btn-next").click(function(e) {
-            //     if (parseInt(indexNow) != parseInt(jumlahData)) {
-            //         $(".btn-next").show()
-
-            //     }
-            $(".btn-simpan").show()
-            $(".progress").prop('disabled', false);
-            $(".btn-next").hide()
-            // });
-            // $(".btn-next").show()
-
-        } else {
-            $(".btn-next").show()
-            $(".btn-simpan").hide()
-        }
-    }
-
-    function cekWizard(isNext = false) {
-        var indexNow = $(".form-wizard.active").data('index')
-        // console.log(indexNow);
-        if (isNext) {
-            $(".side-wizard li").removeClass('active')
-        }
-
-        $(".side-wizard li").removeClass('selected')
-
-        for (let index = 0; index <= parseInt(indexNow); index++) {
-            var selected = index == parseInt(indexNow) ? ' selected' : ''
-            $(".side-wizard li[data-index='" + index + "']").addClass('active' + selected)
-            $(".side-wizard li[data-index='" + index + "'] a span i").removeClass('fa fa-ban')
-            if ($(".side-wizard li[data-index='" + index + "'] a span i").html() == '' || $(
-                    ".side-wizard li[data-index='" + index + "'] a span i").html() == '0%') {
-                $(".side-wizard li[data-index='" + index + "'] a span i").html('0%')
-            }
-        }
-
-    }
-    cekBtn()
-    cekWizard()
-
-    $(".side-wizard li a").click(function() {
-        var dataIndex = $(this).closest('li').data('index')
-        if ($(this).closest('li').hasClass('active')) {
-            $(".form-wizard").removeClass('active')
-            $(".form-wizard[data-index='" + dataIndex + "']").addClass('active')
-            cekWizard()
-            cekBtn(true)
-        }
-    })
-
-    function setPercentage(formIndex) {
-        var form = ".form-wizard[data-index='" + formIndex + "']"
-    }
-
-    $(".btn-next").click(function(e) {
-        e.preventDefault();
-        var indexNow = $(".form-wizard.active").data('index')
-        var next = parseInt(indexNow) + 1
-        // \($(".form-wizard[data-index='"+next+"']").length==1);
-        // console.log($(".form-wizard[data-index='"+  +"']"));
-        if ($(".form-wizard[data-index='" + next + "']").length == 1) {
-            // console.log(indexNow);
-            $(".form-wizard").removeClass('active')
-            $(".form-wizard[data-index='" + next + "']").addClass('active')
-            $(".form-wizard[data-index='" + indexNow + "']").attr('data-done', 'true')
-        }
-
-        console.log(next);
-        cekWizard()
-        cekBtn()
-        setPercentage(indexNow)
-    })
-    setPercentage(0)
-
-    $(".btn-prev").click(function(e) {
-        event.preventDefault(e);
-        var indexNow = $(".form-wizard.active").data('index')
-        var prev = parseInt(indexNow) - 1
-        if ($(".form-wizard[data-index='" + prev + "']").length == 1) {
-            $(".form-wizard").removeClass('active')
-            $(".form-wizard[data-index='" + prev + "']").addClass('active')
-        }
-        cekWizard()
-        cekBtn()
-        e.preventDefault();
     })
 
     // Penyelia
@@ -2200,8 +1847,6 @@
             }
         });
     }
-
-
 </script>
 <script>
     // Start Validation
@@ -2220,18 +1865,6 @@
         `
         });
     @endif
-
-    $(".btn-simpan").on('click', function(e) {
-        if ($('#pendapat_usulan').val() == '') {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: "Field Pendapat dan usulan harus diisi"
-            })
-            e.preventDefault()
-        }
-    })
-
     // End Validation
 
 
@@ -2263,6 +1896,7 @@
             $("#kecamatan").empty();
         }
     });
+
     $('#kabupaten_domisili').change(function() {
         var kabID = $(this).val();
         if (kabID) {
@@ -2291,6 +1925,7 @@
             $("#kecamatan_domisili").empty();
         }
     });
+
     $('#kabupaten_usaha').change(function() {
         var kabID = $(this).val();
         if (kabID) {
@@ -2384,217 +2019,119 @@
         var input = $(this).val()
         $(this).val(formatrupiah(input))
     });
+
     function formatrupiah(angka, prefix) {
         var number_string = angka.replace(/[^,\d]/g, '').toString(),
-            split = number_string.split(','),
-            sisa = split[0].length % 3,
-            rupiah = split[0].substr(0, sisa),
-            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+        split = number_string.split(','),
+        sisa = split[0].length % 3,
+        rupiah = split[0].substr(0, sisa),
+        ribuan = split[0].substr(sisa).match(/\d{3}/gi);
 
-            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-            return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
-        }
-        // tab
-        $(".tab-wrapper .btn-tab").click(function(e) {
-            e.preventDefault();
-            var tabId = $(this).data("tab");
-            var percentage = formPercentage(`${tabId}-tab`)
-            $(this).closest('.percentage').html(`${percentage}%`)
+        rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+        return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
+    }
+    // tab
+    $(".tab-wrapper .btn-tab").click(function(e) {
+        e.preventDefault();
+        var tabId = $(this).data("tab");
+        var percentage = formPercentage(`${tabId}-tab`)
+        $(this).closest('.percentage').html(`${percentage}%`)
 
-            $(".is-tab-content").removeClass("active");
-            $(".tab-wrapper .btn-tab").removeClass(
-                "active-tab"
-            );
-            $(".tab-wrapper .btn-tab").removeClass("active-tab");
-            $(".tab-wrapper .btn-tab").removeClass("active-tab");
-            $(".tab-wrapper .btn-tab").addClass("disable-tab");
+        $(".is-tab-content").removeClass("active");
+        $(".tab-wrapper .btn-tab").removeClass(
+            "active-tab"
+        );
+        $(".tab-wrapper .btn-tab").removeClass("active-tab");
+        $(".tab-wrapper .btn-tab").removeClass("active-tab");
+        $(".tab-wrapper .btn-tab").addClass("disable-tab");
 
-            $(this).addClass("active-tab");
-            // $(this).addClass("text-gray-600");
+        $(this).addClass("active-tab");
+        // $(this).addClass("text-gray-600");
 
-            if (tabId) {
-                // $(this).removeClass("text-gray-400");
-                // $(this).removeClass("text-gray-400");
-                $(this).removeClass("disable-tab");
-                $(this).removeClass("disable-tab");
-            }
-
-            $("#" + tabId + "-tab").addClass("active");
-        });
-
-        $(".next-tab").on("click", function(e) {
-            const $activeContent = $(".is-tab-content.active");
-            const $nextContent = $activeContent.next();
-            const tabId = $activeContent.attr("id")
-            const dataTab = tabId.replaceAll('-tab', '')
-            // Set percentage
-            var percentage = formPercentage(tabId)
-            $('.tab-wrapper').find(`[data-tab=${dataTab}]`).find('.percentage').html(`${percentage}%`)
-            // Remove class active current nav tab
-            $('.tab-wrapper').find(`[data-tab=${dataTab}]`).removeClass('active-tab')
-
-            if ($nextContent.length) {
-                const dataNavTab = $nextContent.attr("id") ? $nextContent.attr("id").replaceAll('-tab', '') : null
-                if (dataNavTab)
-                    $('.tab-wrapper').find(`[data-tab=${dataNavTab}]`).addClass('active-tab')
-                $activeContent.removeClass("active");
-                $nextContent.addClass("active");
-            }else{
-                $(".next-tab").addClass('hidden');
-                $('.btn-simpan').removeClass('hidden')
-            }
-
-        });
-
-        $(".prev-tab").on("click", function() {
-            const $activeContent = $(".is-tab-content.active");
-            const $prevContent = $activeContent.prev();
-            const tabId = $activeContent.attr("id")
-            var percentage = formPercentage(tabId)
-            const dataTab = tabId.replaceAll('-tab', '')
-            // Set percentage
-            var percentage = formPercentage(tabId)
-            $('.tab-wrapper').find(`[data-tab=${dataTab}]`).find('.percentage').html(`${percentage}%`)
-            // Remove class active current nav tab
-            $('.tab-wrapper').find(`[data-tab=${dataTab}]`).removeClass('active-tab')
-
-            if ($prevContent.length) {
-                const dataNavTab = $prevContent.attr("id") ? $prevContent.attr("id").replaceAll('-tab', '') : null
-                if (dataNavTab)
-                    $('.tab-wrapper').find(`[data-tab=${dataNavTab}]`).addClass('active-tab')
-                $activeContent.removeClass("active");
-                $prevContent.addClass("active");
-                $(".next-tab").rem('hidden');
-                $('.btn-simpan').addClass('hidden')
-            }
-        });
-
-        function formPercentage(tabId) {
-            console.log('percent')
-            var form = `#${tabId}`;
-            var inputFile = $(form + " input[type=file]")
-            var inputText = $(form + " input[type=text]")
-            var inputNumber = $(form + " input[type=number]")
-            var inputDate = $(form + " input[type=date]")
-            var inputHidden = $(form + " input[type=hidden]")
-            var select = $(form + " select")
-            var textarea = $(form + " textarea")
-            var totalInput = 0;
-            var totalInputNull = 0;
-            var totalInputFilled = 0;
-            var totalInputHidden = 0;
-            var totalInputReadOnly = 0;
-            var percent = 0;
-    
-            $.each(inputText, function(i, v) {
-                
-                var inputBox = $(this).closest('.input-box');
-                if (!$(this).prop('disabled') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
-                    totalInput++
-                var isNull = (v.value == '' || v.value == '0')
-                if ((v.value == '' && !$(this).prop('disabled') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
-                    totalInputNull++;
-                } else if (!isNull && !$(this).prop('disabled') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
-                    totalInputFilled++;
-                }
-            })
-    
-            $.each(inputHidden, function(i, v) {
-                
-                var inputBox = $(this).closest('.input-box');
-                if ((!$(this).prop('disabled') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
-                    totalInputHidden++;
-                }
-            })
-    
-            $.each(inputFile, function(i, v) {
-                
-                var inputBox = $(this).closest('.input-box');
-                if (!$(this).prop('disabled') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
-                    totalInput++
-                var isNull = (v.value == '' || v.value == '0')
-                if ((v.value == '' && !$(this).prop('disabled') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
-                    totalInputNull++;
-                } else if (!isNull && !$(this).prop('disabled') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
-                    totalInputFilled++;
-                }
-            })
-    
-            $.each(inputNumber, function(i, v) {
-                
-                var inputBox = $(this).closest('.input-box');
-                if (!$(this).prop('disabled') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
-                    totalInput++
-                var isNull = (v.value == '' || v.value == '0')
-                if ((v.value == '' && !$(this).prop('disabled') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
-                    totalInputNull++;
-                } else if (!isNull && !$(this).prop('disabled') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
-                    totalInputFilled++;
-                }
-            })
-    
-            $.each(inputDate, function(i, v) {
-                
-                var inputBox = $(this).closest('.input-box');
-                if (!$(this).prop('disabled') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
-                    totalInput++
-                var isNull = (v.value == '' || v.value == '0')
-                if ((v.value == '' && !$(this).prop('disabled') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
-                    totalInputNull++;
-                } else if (!isNull && !$(this).prop('disabled') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
-                    totalInputFilled++;
-                }
-            })
-    
-            $.each(select, function(i, v) {
-                
-                var inputBox = $(this).closest('.input-box');
-                if (!$(this).prop('disabled') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
-                    totalInput++
-                var isNull = (v.value == '' || v.value == '0')
-                if ((isNull && !$(this).prop('disabled') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
-                    totalInputNull++;
-                } else if (!isNull && !$(this).prop('disabled') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
-                    totalInputFilled++;
-                }
-            })
-    
-            $.each(textarea, function(i, v) {
-                
-                var inputBox = $(this).closest('.input-box');
-                if (!$(this).prop('disabled') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
-                    totalInput++
-                var isNull = (v.value == '' || v.value == '0')
-                if ((v.value == '' && !$(this).prop('disabled') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
-                    totalInputNull++;
-                } else if (!isNull && !$(this).prop('disabled') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
-                    totalInputFilled++;
-                }
-            })
-    
-            var totalReadHidden = (totalInputHidden + totalInputReadOnly)
-            percent = (totalInputFilled / totalInput) * 100
-            console.log(percent)
-            return parseInt(percent)
+        if (tabId) {
+            // $(this).removeClass("text-gray-400");
+            // $(this).removeClass("text-gray-400");
+            $(this).removeClass("disable-tab");
+            $(this).removeClass("disable-tab");
         }
 
-        $(".toggle-side").click(function(e) {
-            $('.sidenav').toggleClass('hidden')
-        })
-        $('.owl-carousel').owlCarousel({
-            margin: 10,
-            autoWidth: true,
-            dots: false,
-            responsive: {
-                0: {
-                    items: 3
-                },
-                600: {
-                    items: 5
-                },
-                1000: {
-                    items: 10
-                }
+        $("#" + tabId + "-tab").addClass("active");
+    });
+
+    $(".next-tab").on("click", function(e) {
+        const $activeContent = $(".is-tab-content.active");
+        const $nextContent = $activeContent.next();
+        const tabId = $activeContent.attr("id")
+        const dataTab = tabId.replaceAll('-tab', '')
+        // Set percentage
+        var percentage = formPercentage(tabId)
+        $('.tab-wrapper').find(`[data-tab=${dataTab}]`).find('.percentage').html(`${percentage}%`)
+        // Remove class active current nav tab
+        $('.tab-wrapper').find(`[data-tab=${dataTab}]`).removeClass('active-tab')
+
+        if ($nextContent.length) {
+            const dataNavTab = $nextContent.attr("id") ? $nextContent.attr("id").replaceAll('-tab', '') : null
+            if (dataNavTab)
+                $('.tab-wrapper').find(`[data-tab=${dataNavTab}]`).addClass('active-tab')
+            $activeContent.removeClass("active");
+            $nextContent.addClass("active");
+        }else{
+            $(".next-tab").addClass('hidden');
+            $('.btn-simpan').removeClass('hidden')
+        }
+
+    });
+
+    $(".prev-tab").on("click", function() {
+        const $activeContent = $(".is-tab-content.active");
+        const $prevContent = $activeContent.prev();
+        const tabId = $activeContent.attr("id")
+        var percentage = formPercentage(tabId)
+        const dataTab = tabId.replaceAll('-tab', '')
+        // Set percentage
+        var percentage = formPercentage(tabId)
+        $('.tab-wrapper').find(`[data-tab=${dataTab}]`).find('.percentage').html(`${percentage}%`)
+        // Remove class active current nav tab
+        $('.tab-wrapper').find(`[data-tab=${dataTab}]`).removeClass('active-tab')
+
+        if ($prevContent.length) {
+            const dataNavTab = $prevContent.attr("id") ? $prevContent.attr("id").replaceAll('-tab', '') : null
+            if (dataNavTab)
+                $('.tab-wrapper').find(`[data-tab=${dataNavTab}]`).addClass('active-tab')
+            $activeContent.removeClass("active");
+            $prevContent.addClass("active");
+            $(".next-tab").rem('hidden');
+            $('.btn-simpan').addClass('hidden')
+        }
+    });
+
+    function formPercentage(tabId) {
+        var form = `#${tabId}`;
+        var inputFile = $(form + " input[type=file]")
+        var inputText = $(form + " input[type=text]")
+        var inputNumber = $(form + " input[type=number]")
+        var inputDate = $(form + " input[type=date]")
+        var inputHidden = $(form + " input[type=hidden]")
+        var select = $(form + " select")
+        var textarea = $(form + " textarea")
+        var totalInput = 0;
+        var totalInputNull = 0;
+        var totalInputFilled = 0;
+        var totalInputHidden = 0;
+        var totalInputReadOnly = 0;
+        var percent = 0;
+
+        $.each(inputText, function(i, v) {
+            if ($(this).prop('readonly'))
+                totalInputReadOnly++;
+            var inputBox = $(this).closest('.input-box');
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
+                totalInput++
+            var isNull = (v.value == '' || v.value == '0')
+            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+                totalInputNull++;
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
+                totalInputFilled++;
             }
         })
 
@@ -2680,11 +2217,6 @@
         var totalReadHidden = (totalInputHidden + totalInputReadOnly)
         percent = (totalInputFilled / (totalInput - totalInputReadOnly)) * 100
 
-        console.log(`totalInput : ${totalInput}`)
-        console.log(`totalInputFilled : ${totalInputFilled}`)
-        console.log(`totalInputHidden : ${totalInputHidden}`)
-        console.log(`totalInputReadOnly : ${totalInputReadOnly}`)
-        console.log(percent)
         return parseInt(percent)
     }
 
@@ -2772,7 +2304,6 @@
     });
     // ijin usaha
     $("#ijin-usaha").on("change", function() {
-        console.log($(this).val());
         if ($(this).val() == "nib") {
             $("#nib").removeClass("hidden");
             $("#label-nib").removeClass("hidden");
