@@ -1234,8 +1234,10 @@ class NewDagulirController extends Controller
         ]);
     }
 
-    public function sendToPincab($id)
+    public function sendToPincab(Request $request)
     {
+        // return $request;
+        $id = $request->get('id_pengajuan');
         try {
             $pengajuan = PengajuanModel::find($id);
             if ($pengajuan) {
