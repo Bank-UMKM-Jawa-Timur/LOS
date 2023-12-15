@@ -2132,6 +2132,8 @@ function getKaryawan($nip){
                     ->whereNotNull('nip')
                     ->first();
             @endphp
+
+            
             <div class="card mb-3">
                 <div class="card-header bg-info color-white font-weight-bold" data-toggle="collapse" href=#cardPendapatUsulan>
                     Pendapat & Usulan

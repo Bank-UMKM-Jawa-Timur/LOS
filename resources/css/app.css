@@ -260,6 +260,15 @@
     .alert {
         @apply bg-theme-primary/5 p-3 border text-lg border-theme-primary text-theme-primary;
     }
+    .accordion-header {
+        @apply bg-theme-primary/5 font-semibold text-theme-primary  p-2 cursor-pointer;
+    }
+    .accordion-content {
+        @apply bg-white border p-2 hidden;
+    }
+    .accordion-section {
+        @apply mb-4;
+    }
 }
 
 @keyframes scale-in {

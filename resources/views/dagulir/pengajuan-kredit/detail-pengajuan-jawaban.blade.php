@@ -705,13 +705,13 @@
                                                                                         name="komentar_penyelia[]" placeholder="Masukkan Komentar"
                                                                                         value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                                 </div>
-                                                                                <div class="w-[10%] m-0">
+                                                                                <div class="w-[15%] m-0">
                                                                                     @php
                                                                                         $skorInput2 = null;
                                                                                         $skorInput2 = $getSkorPenyelia->skor_penyelia ? $getSkorPenyelia->skor_penyelia : $itemJawaban->skor;
                                                                                     @endphp
                                                                                     <label for="">Skor</label>
-                                                                                    <input type="number" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400" placeholder=""
+                                                                                    <input type="number" class="w-full px-3 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400" placeholder=""
                                                                                         name="skor_penyelia[]"
                                                                                         min="0"
                                                                                         max="4"
@@ -828,7 +828,7 @@
                                                                             <div class="jawaban-responsive p-2 font-medium">
                                                                                 <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
                                                                                     <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
-                                                                                    <h4 class="font-bold">{{ $itemTiga->opsi_jawaban == 'persen' ? $itemTextTiga->opsi_text : 'RP '.number_format((int) $itemTextTiga->opsi_text, 2, ',', '.')  }}{{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</h4>
+                                                                                    <h4 class="font-bold">{{ $itemTiga->opsi_jawaban == 'persen' ? $itemTextTiga->opsi_text : $itemTextTiga->opsi_text  }}{{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</h4>
                                                                                 </div>
 
                                                                             </div>
@@ -965,9 +965,9 @@
                                                                                                     name="komentar_penyelia[]" placeholder="Masukkan Komentar"
                                                                                                     value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                                             </div>
-                                                                                            <div class="input-skor w-[10%]">
+                                                                                            <div class="input-skor w-[15%]">
                                                                                                 <label for="">Skor</label>
-                                                                                                <input type="number" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400"
+                                                                                                <input type="number" class="w-full px-3 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400"
                                                                                                     min="0"
                                                                                                     max="4"
                                                                                                     placeholder="" name="skor_penyelia[]"
@@ -1181,13 +1181,13 @@
                                                                                                     name="komentar_penyelia[]" placeholder="Masukkan Komentar"
                                                                                                     value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                                             </div>
-                                                                                            <div class="input-skor w-[10%]">
+                                                                                            <div class="input-skor w-[15%]">
                                                                                                 <label for="">Skor</label>
                                                                                                 @php
                                                                                                     $skorInput4 = null;
                                                                                                     $skorInput4 = $getSkorPenyelia?->skor_penyelia ? $getSkorPenyelia?->skor_penyelia : $itemJawabanLevelEmpat->skor;
                                                                                                 @endphp
-                                                                                                <input type="number" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400"
+                                                                                                <input type="number" class="w-full px-3 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400"
                                                                                                     placeholder="" name="skor_penyelia[]"
                                                                                                     min="0"
                                                                                                     max="4"
@@ -1359,7 +1359,13 @@
                             <!-- pendapat-dan-usulan -->
                             <div class="p-5 space-y-5">
                                 @if (Auth::user()->role == 'Penyelia Kredit')
-                                    <div class="row">
+                                    <div class="row space-y-5">
+                                        <div class="form-group-1">
+                                            <label for="">Pendapat dan Usulan Staf Kredit</label>
+                                            <span class="border-b p-2">
+                                                {{ $pendapatDanUsulanStaf?->komentar_staff ? $pendapatDanUsulanStaf->komentar_staff : '-' }}
+                                            </span>
+                                        </div>
                                         <div class="form-group-2">
                                             <div class="input-box">
                                                 <label for="">Plafon Usulan Penyelia</label>
@@ -1369,12 +1375,6 @@
                                                 <label for="">Jangka Waktu Usulan Penyelia</label>
                                                 <input type="number" name="jangka_waktu_usulan_penyelia" class="form-input"  value="{{ $plafonUsulan?->jangka_waktu_usulan_penyelia ?? null }}">
                                             </div>
-                                        </div>
-                                        <div class="form-group-1">
-                                            <label for="">Pendapat dan Usulan Staf Kredit</label>
-                                            <span class="border-b p-2">
-                                                {{ $pendapatDanUsulanStaf?->komentar_staff }}
-                                            </span>
                                         </div>
                                         <div class="form-group-1">
                                             <label for="">Pendapat dan Usulan Penyelia</label>
@@ -1389,16 +1389,20 @@
                                         </div>
                                     </div>
                                 @elseif (Auth::user()->role == 'PBO')
-                                    <div class="row">
-                                        <div class="form-group-2">
-                                            <div class="input-box">
-                                                <label for="">Plafon Usulan Penyelia</label>
-                                                <input type="text" class="form-input" value="{{ $plafonUsulan?->plafon_usulan_penyelia ?? '-' }}" readonly disabled>
-                                            </div>
-                                            <div class="input-box">
-                                                <label for="">Jangka Waktu Usulan Penyelia</label>
-                                                <input type="text" class="form-input" value="{{ $plafonUsulan?->jangka_waktu_usulan_penyelia ?? '-' }}" readonly disabled>
-                                            </div>
+                                    <div class="row space-y-5">
+
+                                        <div class="form-group-1">
+                                            <label for="">Pendapat dan Usulan Staf Kredit</label>
+                                            <span class="border-b p-2">
+                                                {{ $pendapatDanUsulanStaf?->komentar_staff ? $pendapatDanUsulanStaf->komentar_staff : '-' }}
+                                            </span>
+                                            <hr>
+                                        </div>
+                                        <div class="form-group-1">
+                                            <label for="">Pendapat dan Usulan Penyelia Kredit</label>
+                                            <span class="border-b p-2">
+                                                {{ $pendapatDanUsulanPenyelia?->komentar_penyelia ? $pendapatDanUsulanPenyelia->komentar_penyelia : '-' }}
+                                            </span>
                                         </div>
                                         <div class="form-group-2">
                                             <div class="input-box">
@@ -1410,6 +1414,16 @@
                                                 <input type="text" class="form-input" value="{{ $plafonUsulan?->jangka_waktu_usulan_penyelia ?? '-' }}" readonly disabled>
                                             </div>
                                         </div>
+                                        {{-- <div class="form-group-2">
+                                            <div class="input-box">
+                                                <label for="">Plafon Usulan Penyelia</label>
+                                                <input type="text" class="form-input" value="{{ $plafonUsulan?->plafon_usulan_penyelia ?? '-' }}" readonly disabled>
+                                            </div>
+                                            <div class="input-box">
+                                                <label for="">Jangka Waktu Usulan Penyelia</label>
+                                                <input type="text" class="form-input" value="{{ $plafonUsulan?->jangka_waktu_usulan_penyelia ?? '-' }}" readonly disabled>
+                                            </div>
+                                        </div> --}}
                                         <div class="form-group-2">
                                             <div class="input-box">
                                                 <label for="">Plafon Usulan PBO</label>
@@ -1419,19 +1433,6 @@
                                                 <label for="">Jangka Waktu Usulan PBO</label>
                                                 <input type="text" class="form-input" name="jangka_waktu_usulan_pbo" value="{{ $plafonUsulan?->jangka_waktu_usulan_pbo ?? null }}">
                                             </div>
-                                        </div>
-                                        <div class="form-group-1">
-                                            <label for="">Pendapat dan Usulan Staf Kredit</label>
-                                            <span class="border-b p-2">
-                                                {{ $pendapatDanUsulanStaf?->komentar_staff }}
-                                            </span>
-                                            <hr>
-                                        </div>
-                                        <div class="form-group-1">
-                                            <label for="">Pendapat dan Usulan Penyelia Kredit</label>
-                                            <span class="border-b p-2">
-                                                {{ $pendapatDanUsulanPenyelia?->komentar_penyelia }}
-                                            </span>
                                         </div>
                                         <div class="form-group-1">
                                             <label for="">Pendapat dan Usulan PBO</label>
@@ -1446,6 +1447,27 @@
                                         </div>
                                     </div>
                                 @elseif (Auth::user()->role == 'PBP')
+                                <div class="space-y-5">
+                                    <div class="form-group-1">
+                                        <label for="">Pendapat dan Usulan Staf Kredit</label>
+                                        <span class="border-b p-2">
+                                            {{ $pendapatDanUsulanStaf?->komentar_staff }}
+                                        </span>
+                                    </div>
+                                    <div class="form-group-1">
+                                        <label for="">Pendapat dan Usulan Penyelia Kredit</label>
+                                        <span class="border-b p-2">
+                                            {{ $pendapatDanUsulanPenyelia?->komentar_penyelia }}
+                                        </span>
+                                    </div>
+                                    @if ($dataUmumNasabah->id_pbo)
+                                        <div class="form-group-1">
+                                            <label for="">Pendapat dan Usulan PBO</label>
+                                            <span class="border-b p-2">
+                                                {{ $pendapatDanUsulanPBO?->komentar_pbo }}
+                                            </span>
+                                        </div>
+                                    @endif
                                     <div class="form-group-2">
                                         <div class="input-box">
                                             <label for="">Plafon Usulan Penyelia</label>
@@ -1456,7 +1478,7 @@
                                             <input type="text" class="form-input" value="{{ $plafonUsulan?->jangka_waktu_usulan_penyelia ?? '-' }}" readonly disabled>
                                         </div>
                                     </div>
-                                    <div class="form-group-2">
+                                    {{-- <div class="form-group-2">
                                         <div class="input-box">
                                             <label for="">Plafon Usulan Penyelia</label>
                                             <input type="text" class="form-input" value="{{ $plafonUsulan?->plafon_usulan_penyelia ?? '-' }}" readonly disabled>
@@ -1465,7 +1487,7 @@
                                             <label for="">Jangka Waktu Usulan Penyelia</label>
                                             <input type="text" class="form-input" value="{{ $plafonUsulan?->jangka_waktu_usulan_penyelia ?? '-' }}" readonly disabled>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="form-group-2">
                                         <div class="input-box">
                                             <label for="">Plafon Usulan PBO</label>
@@ -1487,10 +1509,25 @@
                                         </div>
                                     </div>
                                     <div class="form-group-1">
+                                        <label for="">Pendapat dan Usulan PBP</label>
+                                        <textarea name="komentar_pbp_keseluruhan"
+                                            class="form-input @error('komentar_pbp_keseluruhan') is-invalid @enderror" id="komentar_pbp_keseluruhan" cols="30"
+                                            rows="4" placeholder="Pendapat dan Usulan Penyelia Kredit" >{{ isset($pendapatDanUsulanPBP->komentar_pbp) ? $pendapatDanUsulanPBP->komentar_pbp : '' }}</textarea>
+                                        @error('komentar_pbp_keseluruhan')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                @else
+                                <div class="space-y-5">
+                                    <div class="form-group-1">
                                         <label for="">Pendapat dan Usulan Staf Kredit</label>
                                         <span class="border-b p-2">
                                             {{ $pendapatDanUsulanStaf?->komentar_staff }}
                                         </span>
+                                        <hr>
                                     </div>
                                     <div class="form-group-1">
                                         <label for="">Pendapat dan Usulan Penyelia Kredit</label>
@@ -1506,18 +1543,14 @@
                                             </span>
                                         </div>
                                     @endif
-                                    <div class="form-group-1">
-                                        <label for="">Pendapat dan Usulan PBP</label>
-                                        <textarea name="komentar_pbp_keseluruhan"
-                                            class="form-input @error('komentar_pbp_keseluruhan') is-invalid @enderror" id="komentar_pbp_keseluruhan" cols="30"
-                                            rows="4" placeholder="Pendapat dan Usulan Penyelia Kredit" >{{ isset($pendapatDanUsulanPBP->komentar_pbp) ? $pendapatDanUsulanPBP->komentar_pbp : '' }}</textarea>
-                                        @error('komentar_pbp_keseluruhan')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
-                                    </div>
-                                @else
+                                    @if ($dataUmumNasabah->id_pbp)
+                                        <div class="form-group-1">
+                                            <label for="">Pendapat dan Usulan PBP</label>
+                                            <span class="border-b p-2">
+                                                {{ $pendapatDanUsulanPBP?->komentar_pbp }}
+                                            </span>
+                                        </div>
+                                    @endif
                                     <div class="form-group-2">
                                         <div class="input-box">
                                             <label for="">Plafon Usulan Penyelia</label>
@@ -1562,35 +1595,6 @@
                                             <input type="number" name="jangka_waktu_usulan_pincab" class="form-input">
                                         </div>
                                     </div>
-                                    <div class="form-group-1">
-                                        <label for="">Pendapat dan Usulan Staf Kredit</label>
-                                        <span class="border-b p-2">
-                                            {{ $pendapatDanUsulanStaf?->komentar_staff }}
-                                        </span>
-                                        <hr>
-                                    </div>
-                                    <div class="form-group-1">
-                                        <label for="">Pendapat dan Usulan Penyelia Kredit</label>
-                                        <span class="border-b p-2">
-                                            {{ $pendapatDanUsulanPenyelia?->komentar_penyelia }}
-                                        </span>
-                                    </div>
-                                    @if ($dataUmumNasabah->id_pbo)
-                                        <div class="form-group-1">
-                                            <label for="">Pendapat dan Usulan PBO</label>
-                                            <span class="border-b p-2">
-                                                {{ $pendapatDanUsulanPBO?->komentar_pbo }}
-                                            </span>
-                                        </div>
-                                    @endif
-                                    @if ($dataUmumNasabah->id_pbp)
-                                        <div class="form-group-1">
-                                            <label for="">Pendapat dan Usulan PBP</label>
-                                            <span class="border-b p-2">
-                                                {{ $pendapatDanUsulanPBP?->komentar_pbp }}
-                                            </span>
-                                        </div>
-                                    @endif
                                     <div class="form-group-1 pt-4">
                                         <label for="">Pendapat dan Usulan Pincab</label>
                                         <textarea name="komentar_pincab_keseluruhan"
@@ -1602,6 +1606,7 @@
                                             </div>
                                         @enderror
                                     </div>
+                                </div>
                                 @endif
                                 <div class="flex justify-between">
                                     <button class="px-5 py-2 border rounded bg-white text-gray-500">
