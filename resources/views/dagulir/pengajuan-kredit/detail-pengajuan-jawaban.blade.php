@@ -1752,15 +1752,17 @@
         skorPenyeliaInput1[i].addEventListener('wheel', function(event){
             if (event.deltaY < 0)
             {
-                var valueInput = parseInt(this.value)+1;
-                if (valueInput > 4) {
-                    this.value = 4-1
-                }
-            };
-        } else {
-            $("#kecamatan_usaha").empty();
-        }
-    });
+                    var valueInput = parseInt(this.value)+1;
+                    if (valueInput > 4) {
+                        this.value = 4-1
+                    }
+            } else {
+                $("#kecamatan_usaha").empty();
+            }
+        });
+    }
+
+
 
     $('#status_nasabah').on('change', function(e){
         var status = $(this).val();
@@ -1801,8 +1803,8 @@
                     this.value=0+1
                 }
             }
-        });
-    }
+        };
+    })
 
     var skorPenyeliaInput2 = document.getElementsByClassName('skorPenyeliaInput2')
     for(var i = 0; i < skorPenyeliaInput2.length; i++) {
@@ -1941,6 +1943,7 @@
 
     function countFormPercentage() {
         $.each($('.tab-wrapper .btn-tab'), function(i, obj) {
+            console.log(i);
             var tabId = $(this).data('tab')
             if (tabId) {
                 var percentage = formPercentage(`${tabId}-tab`)
@@ -1951,6 +1954,7 @@
 
     // tab
     $(".tab-wrapper .btn-tab").click(function(e) {
+        console.log(e);
         e.preventDefault();
         var tabId = $(this).data("tab");
         countFormPercentage()
