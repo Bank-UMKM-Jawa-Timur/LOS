@@ -230,6 +230,7 @@ class NewDagulirController extends Controller
             'tujuan_penggunaan' => 'required',
             'jangka_waktu' => 'required',
             'status' => 'required|not_in:0',
+            'desa_id' => 'required|not_ind:0',
             'kecamatan_sesuai_ktp' => 'required|not_in:0',
             'kode_kotakab_ktp' => 'required|not_in:0',
             'alamat_sesuai_ktp' => 'required',
@@ -270,6 +271,7 @@ class NewDagulirController extends Controller
             $pengajuan->kode_bank_pusat = 1;
             $pengajuan->id_slik = (int)$request->get('id_slik');
             $pengajuan->kode_bank_cabang = auth()->user()->id_cabang;
+            $pengajuan->desa_ktp = $request->get('desa_id');
             $pengajuan->kec_ktp = $request->get('kecamatan_sesuai_ktp');
             $pengajuan->desa_id = $request->get('desa');
             $pengajuan->kotakab_ktp = $request->get('kode_kotakab_ktp');

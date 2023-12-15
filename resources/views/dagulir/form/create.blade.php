@@ -138,7 +138,9 @@
                            console.log(res);
                         if (res) {
                             $("#kecamatan").empty();
+                            $("#desa").empty();
                             $("#kecamatan").append('<option>---Pilih Kecamatan---</option>');
+                            $("#desa").append('<option value="0">---Pilih Desa---</option>');
                             $.each(res, function(nama, kode) {
                                 $('#kecamatan').append(`
                                     <option value="${kode}">${nama}</option>
@@ -148,13 +150,44 @@
                             $('#kecamatan').trigger('change');
                         } else {
                             $("#kecamatan").empty();
+                            $("#desa").empty();
                         }
                     }
                 });
             } else {
                 $("#kecamatan").empty();
+                $("#desa").empty();
             }
         });
+
+        $('#kecamatan').change(function() {
+            var kecID = $(this).val();
+            // //console.log(kecID);
+            if (kecID) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ route('getDesa') }}?kecID=" + kecID,
+                    dataType: 'JSON',
+                    success: function(res) {
+                        //    //console.log(res);
+                        if (res) {
+                            $("#desa").empty();
+                            $("#desa").append('<option value="0">---Pilih Desa---</option>');
+                            $.each(res, function(nama, kode) {
+                                $('#desa').append(`
+                                    <option value="${kode}">${nama}</option>
+                                `);
+                            });
+                        } else {
+                            $("#desa").empty();
+                        }
+                    }
+                });
+            } else {
+                $("#desa").empty();
+            }
+        });
+
         $('#kabupaten_domisili').change(function() {
             var kabID = $(this).val();
             if (kabID) {

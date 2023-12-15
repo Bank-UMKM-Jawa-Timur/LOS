@@ -41,15 +41,6 @@ class AuthenticatedSessionController extends Controller
             if ($user->role == 'Administrator' || $user->role == 'Direksi' || $user->user_dagulir == 1) {
                 if (\Hash::check($request->password, $user->password)) {
                     $request->authenticate();
-                    // Get Response API
-                    $response = Http::post(config('dagulir.host').'/login', [
-                        'username' => config('dagulir.username'),
-                        'password' => config('dagulir.password'),
-                    ])->json();
-                    $filePath = storage_path('app/response.json');
-                    file_put_contents($filePath, json_encode($response));
-                    $filePath = storage_path('app/response.json');
-                    // Get Response API
 
                     if (DB::table('sessions')->where('user_id', auth()->user()->id)->count() > 0) {
                         Auth::guard('web')->logout();
