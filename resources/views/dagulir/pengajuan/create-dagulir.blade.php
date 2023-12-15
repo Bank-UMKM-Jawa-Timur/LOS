@@ -331,15 +331,6 @@
                     @endforeach
                 </select>
             </div>
-            <div id="nama_pj" class="input-box hidden">
-            <label for="" id="label_pj"></label>
-                <input
-                    type="text"
-                    class="form-input"
-                    placeholder="Masukan disini .."
-                    name="nama_pj"
-                />
-            </div>
             <div class="input-box">
                 <label for="">Jenis badan hukum</label>
                 <select name="jenis_badan_hukum" id="jenis_badan_hukum" class="form-select">
@@ -348,7 +339,18 @@
                     <option value="Tidak Berbadan Hukum">Tidak Berbadan Hukum</option>
                 </select>
             </div>
-            <div class="input-box hidden" id="tempat_berdiri">
+        </div>
+        <div class="form-group-3 hidden" id="tempat_berdiri">
+            <div id="nama_pj" class="input-box">
+                <label for="" id="label_pj"></label>
+                <input
+                    type="text"
+                    class="form-input"
+                    placeholder="Masukan disini .."
+                    name="nama_pj"
+                />
+            </div>
+            <div class="input-box">
                 <label for="">Tempat Berdiri</label>
                 <input
                     type="text"
@@ -357,7 +359,7 @@
 
                 />
             </div>
-            <div class="input-box hidden" id="tanggal_berdiri">
+            <div class="input-box">
                 <label for="">Tanggal Berdiri</label>
                 <div class="input-grouped">
                     <input
@@ -369,6 +371,7 @@
                 </div>
             </div>
         </div>
+
         <div class="form-group-1">
             <div class="input-box">
                 <label for="">Hubungan Bank</label>
