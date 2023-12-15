@@ -264,10 +264,22 @@
         @apply bg-theme-primary/5 font-semibold text-theme-primary  p-2 cursor-pointer;
     }
     .accordion-content {
-        @apply bg-white border p-2 hidden;
+        @apply bg-white border p-2;
     }
     .accordion-section {
         @apply mb-4;
+    }
+    .field-review {
+        @apply lg:flex grid grid-cols-1 gap-2 w-full relative;
+    }
+    .field-review .field-name {
+        @apply p-2 lg:w-[35%] w-full font-semibold;
+    }
+    .field-review .field-answer {
+        @apply lg:after:content-[':'] after:absolute  lg:after:top-2 after:top-0  lg:after:-ml-5 lg:border-none  after:ml-32  p-2 w-full;
+    }
+    .field-review .field-answer .field-skor {
+        @apply px-4 py-2 rounded bg-theme-primary/5 border font-semibold border-theme-primary text-theme-primary;
     }
 }
 

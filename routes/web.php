@@ -58,8 +58,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('jawaban-pengajuan/{id}', [NewDagulirController::class, "getDetailJawaban"])->name('detailjawaban');
         Route::post('jawaban-pengajuan/update/{id}', [DagulirController::class, "updateReviewPenyelia"])->name('updatePenyelia');
         // Send to pinca
-        Route::get('review/pincab', function() {
-            return view('dagulir.pengajuan-kredit.review-pincab');
+        Route::get('review-pincab-new', function() {
+            return view('dagulir.pengajuan-kredit.review-pincab-new');
         });
         // Route::get('pincab-kredit/{id}', [DagulirController::class, "sendToPincab"])->name('check.pincab');
         Route::get('pincab-kredit/{id}', [NewDagulirController::class, "sendToPincab"])->name('check.pincab');
