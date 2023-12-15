@@ -231,6 +231,7 @@ class NewDagulirController extends Controller
             'tujuan_penggunaan' => 'required',
             'jangka_waktu' => 'required',
             'status' => 'required|not_in:0',
+            'desa_id' => 'required|not_ind:0',
             'kecamatan_sesuai_ktp' => 'required|not_in:0',
             'kode_kotakab_ktp' => 'required|not_in:0',
             'alamat_sesuai_ktp' => 'required',
@@ -271,6 +272,7 @@ class NewDagulirController extends Controller
             $pengajuan->kode_bank_pusat = 1;
             $pengajuan->id_slik = (int)$request->get('id_slik');
             $pengajuan->kode_bank_cabang = auth()->user()->id_cabang;
+            $pengajuan->desa_ktp = $request->get('desa_id');
             $pengajuan->kec_ktp = $request->get('kecamatan_sesuai_ktp');
             $pengajuan->desa_id = $request->get('desa');
             $pengajuan->kotakab_ktp = $request->get('kode_kotakab_ktp');
@@ -917,6 +919,17 @@ class NewDagulirController extends Controller
             $param['dataUmum'] = $pengajuan;
             $param['dataUmumNasabah'] = PengajuanDagulir::find($pengajuan->dagulir_id);
 
+            $param['kec_ktp'] = Kecamatan::find($param['dataUmumNasabah']->kec_ktp)->kecamatan;
+            $param['kab_ktp'] = Kabupaten::find($param['dataUmumNasabah']->kotakab_ktp)->kabupaten;
+            $param['desa_ktp'] = '';
+            if ($param['dataUmumNasabah']->desa_id != null) {
+                $param['desa_ktp'] = Desa::find($param['dataUmumNasabah']->desa_id)->desa;
+            }
+            $param['kec_dom'] = Kecamatan::find($param['dataUmumNasabah']->kec_dom)->kecamatan;
+            $param['kab_dom'] = Kabupaten::find($param['dataUmumNasabah']->kotakab_dom)->kabupaten;
+            $param['kec_usaha'] = Kecamatan::find($param['dataUmumNasabah']->kec_usaha)->kecamatan;
+            $param['kab_usaha'] = Kabupaten::find($param['dataUmumNasabah']->kotakab_usaha)->kabupaten;
+
             $param['allKab'] = Kabupaten::get();
             $param['allKec'] = Kecamatan::where('id_kabupaten', $param['dataUmumNasabah']->kotakab_ktp)->get();
             $param['allDesa'] = Desa::where('id_kecamatan', $param['dataUmumNasabah']->kec_ktp)->get();
@@ -995,9 +1008,9 @@ class NewDagulirController extends Controller
                 "tanggal_lahir" => $pengajuan_dagulir->tanggal_lahir,
                 "telp" => $pengajuan_dagulir->telp,
                 "jenis_usaha" => $pengajuan_dagulir->jenis_usaha,
-                // "nominal_pengajuan" => formatNumber($request->nominal_realisasi),
+                "nominal_pengajuan" => $pengajuan_dagulir->nominal,
                 "tujuan_penggunaan" => $pengajuan_dagulir->tujuan_penggunaan,
-                // "jangka_waktu" => intval($request->get('jangka_waktu')),
+                "jangka_waktu" => $pengajuan_dagulir->jangka_waktu,
                 "ket_agunan" => $pengajuan_dagulir->ket_agunan,
                 "kode_bank_pusat" => '01-BPR',
                 "kode_bank_cabang" => $pengajuan_dagulir->kode_bank_cabang,
@@ -1043,17 +1056,20 @@ class NewDagulirController extends Controller
 
                 DB::commit();
 
-                return redirect()->route('dagulir.index')->withStatus('Berhasil mengirimkan data.');
+                return 'success';
+                // return redirect()->route('dagulir.index')->withStatus('Berhasil mengirimkan data.');
             }
             else {
                 $message = 'Terjadi kesalahan.';
                 if (array_key_exists('error', $pengajuan_dagulir)) $message .= ' '.$pengajuan_dagulir['error'];
 
-                return redirect()->route('dagulir.index')->withError($message);
+                return $message;
+                // return redirect()->route('dagulir.index')->withError($message);
             }
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('dagulir.index')->withError($e->getMessage());
+            return $e->getMessage();
+            // return redirect()->route('dagulir.index')->withError($e->getMessage());
         }
     }
 
@@ -1154,7 +1170,7 @@ class NewDagulirController extends Controller
                     $statusPincab->tanggal_review_pincab = date(now());
                     $statusPincab->update();
 
-                    $nasabah = PengajuanDagulir::select('nama')->find($statusPincab->dagulir_id);
+                    $nasabah = PengajuanDagulir::select('kode_pendaftaran','nama', 'nominal', 'jangka_waktu')->find($statusPincab->dagulir_id);
                     $namaNasabah = 'undifined';
                     if ($nasabah)
                         $namaNasabah = $nasabah->nama;
@@ -1162,12 +1178,27 @@ class NewDagulirController extends Controller
                     $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menyetujui pengajuan atas nama ' . $namaNasabah . '.', $id, Auth::user()->id, Auth::user()->nip);
 
                     // HIT Pengajuan endpoint dagulir
-                    $this->storeSipde($id);
+                    $storeSIPDE = $this->storeSipde($id);
 
-                    DB::commit();
-                    event(new EventMonitoring('menyetujui pengajuan'));
+                    if ($storeSIPDE == 'success') {
+                        // HIT update status survei endpoint dagulir
+                        $this->updateStatus($nasabah->kode_pendaftaran, 1, null, $nasabah->jangka_waktu, $nasabah->nominal);
+    
+                        // HIT update status analisa endpoint dagulir
+                        $this->updateStatus($nasabah->kode_pendaftaran, 2, null, $nasabah->jangka_waktu, $nasabah->nominal);
+    
+                        // HIT update status disetujui endpoint dagulir
+                        $this->updateStatus($nasabah->kode_pendaftaran, 3, null, $nasabah->jangka_waktu, $nasabah->nominal);
 
-                    return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+                        DB::commit();
+                        event(new EventMonitoring('menyetujui pengajuan'));
+
+                        return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+                    }
+                    else {
+                        DB::rollBack();
+                        return redirect()->back()->withError('Terjadi kesalahan saat mengirimkan data SIPDE.');
+                    }
                 } else {
                     return redirect()->back()->withError('Belum di review Pincab.');
                 }

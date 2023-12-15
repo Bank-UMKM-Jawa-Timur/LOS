@@ -290,18 +290,7 @@
                                                         data-acc-url="{{ route('dagulir.acc_pincab',$item->pengajuan->id) }}"
                                                         data-dec-url="{{ route('dagulir.dec_pincab',$item->pengajuan->id) }}"
                                                         class="cursor-pointer approval">Approval</a>
-
                                                 </li>
-                                        @endif
-                                        @if ((Auth()->user()->role == 'Pincab') &&
-                                            $item->pengajuan->posisi == 'Selesai' &&
-                                            ($item->pengajuan->id_pincab && $item->pengajuan->tanggal_review_pincab) &&
-                                            !$item->kode_pendaftaran)
-                                            <li class="item-tb-dropdown">
-                                                <a href="#"
-                                                    data-id="{{$item->pengajuan->id}}"
-                                                    class="cursor-pointer kirimSipde">Kirim</a>
-                                            </li>
                                         @endif
                                     </ul>
                                 </div>
@@ -309,7 +298,6 @@
                         </td>
                     </tr>
                 @endforeach
-
                 </tbody>
             </table>
             </div>
