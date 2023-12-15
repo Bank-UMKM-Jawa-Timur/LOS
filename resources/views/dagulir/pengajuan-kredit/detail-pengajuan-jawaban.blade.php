@@ -81,32 +81,32 @@
                                 <div class="form-group-2">
                                     <div class="input-box">
                                         <label for="">Nama Lengkap</label>
-                                        <div class="p-2 bg-white border-b">
-                                            <span>{{ $dataUmumNasabah->nama ? $dataUmumNasabah->nama : '-' }}</span>
+                                        <div class="p-2 bg-white border-b bg-gray-200">
+                                            <span class="answer">{{ $dataUmumNasabah->nama ? $dataUmumNasabah->nama : '-' }}</span>
                                         </div>
                                     </div>
                                     <div class="input-box">
                                         <label for="">Email</label>
                                         <div class="p-2 bg-white border-b">
-                                            <span>{{ $dataUmumNasabah->email ? $dataUmumNasabah->email : '-' }}</span>
+                                            <span class="answer">{{ $dataUmumNasabah->email ? $dataUmumNasabah->email : '-' }}</span>
                                         </div>
                                     </div>
                                     <div class="input-box">
                                         <label for="">Tempat Lahir</label>
                                         <div class="p-2 bg-white border-b">
-                                            <span>{{ $dataUmumNasabah->tempat_lahir ? $dataUmumNasabah->tempat_lahir : '-' }}</span>
+                                            <span class="answer">{{ $dataUmumNasabah->tempat_lahir ? $dataUmumNasabah->tempat_lahir : '-' }}</span>
                                         </div>
                                     </div>
                                     <div class="input-box">
                                         <label for="">Tanggal Lahir</label>
                                         <div class="p-2 bg-white border-b">
-                                            <span>{{ \Carbon\Carbon::parse($dataUmumNasabah->tanggal_lahir)->translatedFormat('d F Y') }}</span>
+                                            <span class="answer">{{ \Carbon\Carbon::parse($dataUmumNasabah->tanggal_lahir)->translatedFormat('d F Y') }}</span>
                                         </div>
                                     </div>
                                     <div class="input-box">
                                         <label for="">Telp</label>
                                         <div class="p-2 bg-white border-b">
-                                            <span>{{ $dataUmumNasabah->telp ? $dataUmumNasabah->telp : '-' }}</span>
+                                            <span class="answer">{{ $dataUmumNasabah->telp ? $dataUmumNasabah->telp : '-' }}</span>
                                         </div>
                                     </div>
                                     <div class="input-box">
@@ -127,13 +127,13 @@
                                         <label for="">Status</label>
                                         <div class="p-2 bg-white border-b">
                                             @if ($dataUmumNasabah->status_pernikahan == "1")
-                                            <span value="1">Belum Menikah</span>
+                                            <span class="answer" value="1">Belum Menikah</span>
                                             @elseif ($dataUmumNasabah->status_pernikahan == "2")
-                                            <span value="2">Menikah</span>
+                                            <span class="answer" value="2">Menikah</span>
                                             @elseif ($dataUmumNasabah->status_pernikahan == "3")
-                                            <span value="3">Duda</span>
+                                            <span class="answer" value="3">Duda</span>
                                             @elseif ($dataUmumNasabah->status_pernikahan == "4")
-                                            <span value="4">Janda</span>
+                                            <span class="answer" value="4">Janda</span>
                                             @endif
                                         </div>
                                     </div>
@@ -1724,9 +1724,6 @@
                     if (nullValue.length > 0) {
                         let message = "";
                         $.each(nullValue, (i, v) => {
-                            console.log('validasi')
-                            console.log(v)
-                            console.log('end validasi')
                             message += v != '' ? v + ", " : ''
                         })
                         Swal.fire({
@@ -1759,6 +1756,43 @@
                 if (valueInput > 4) {
                     this.value = 4-1
                 }
+            });
+        } else {
+            $("#kecamatan_usaha").empty();
+        }
+    });
+
+    $('#status_nasabah').on('change', function(e){
+        var status = $(this).val();
+        // console.log(status);
+        if (status == 2) {
+            $('#label-ktp-nasabah').empty();
+            $('#label-ktp-nasabah').html('Foto KTP Nasabah');
+            $('#nik_pasangan').removeClass('hidden');
+            $('#ktp-pasangan').removeClass('hidden');
+        } else {
+            $('#label-ktp-nasabah').empty();
+            $('#label-ktp-nasabah').html('Foto KTP Nasabah');
+            $('#nik_pasangan').addClass('hidden');
+            $('#ktp-pasangan').addClass('hidden');
+        }
+    })
+
+    $('#tipe').on('change',function(e) {
+        var tipe = $(this).val();
+        console.log(tipe);
+        if (tipe == '2' || tipe == "0" ) {
+            $('#nama_pj').addClass('hidden');
+            $('#tempat_berdiri').addClass('hidden');
+            $('#tanggal_berdiri').addClass('hidden');
+        }else{
+            $('#nama_pj').removeClass('hidden');
+            $('#tempat_berdiri').removeClass('hidden');
+            $('#tanggal_berdiri').removeClass('hidden');
+            //badan usaha
+            if (tipe == '3') {
+                $('#label_pj').html('Nama penanggung jawab');
+                $('#input_pj').attr('placeholder', 'Masukkan Nama Penanggung Jawab');
             }
             else if (event.deltaY > 0)
             {
