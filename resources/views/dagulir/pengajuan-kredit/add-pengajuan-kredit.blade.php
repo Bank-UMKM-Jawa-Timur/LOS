@@ -74,7 +74,6 @@ $dataIndex = match ($skema) {
                                     class="p-5 w-full space-y-5"
                                     id="{{$title_id}}">
                                     <div class="grid grid-cols-2 md:grid-cols-2 gap-4">
-                                    <div class="grid grid-cols-2 md:grid-cols-2 gap-4">
                                     @foreach ($dataLevelDua as $item)
                                         @php
                                             $idLevelDua = str_replace(' ', '_', strtolower($item->nama));
@@ -112,8 +111,6 @@ $dataIndex = match ($skema) {
                                                 </div>
                                             </div>
 
-                                            <div class="form-group" id="nib">
-                                                <div class="input-box">
                                             <div class="form-group" id="nib">
                                                 <div class="input-box">
                                                     <label for="">NIB</label>
@@ -1243,8 +1240,7 @@ $dataIndex = match ($skema) {
                                 name_lowercase = name_lowercase.replaceAll(' ', '_')
                                 if (valItem.nama == 'Foto') {
                                     $('#bukti_pemilikan_jaminan_tambahan').append(`
-                                        <div class="form-group file-wrapper item-${valItem.id}">
-                                            <label for="">${valItem.nama}</label>
+                                        <div class="form-group file-wrapper item-${valItem.id} col-span-2">
                                             <div class="input-box mb-4">
                                                 <label for="">${valItem.nama}</label>
                                                 <div class="flex gap-4">
@@ -2590,9 +2586,17 @@ $dataIndex = match ($skema) {
         var multiple = input.find('.multiple-action');
         var new_multiple = multiple.html().replaceAll('hidden', '');
         input = input.html().replaceAll(multiple.html(), new_multiple);
-        var parent = $(this).closest('.input-box').parent()
-        parent.append(`<div class="input-box mb-4">${input}`)
-    })
+        var parent = $(this).closest('.input-box').parent();
+        var num = parent.find('.input-box').length + 1;
+        num = parseInt($(".figure").text());
+        // $(".figure").text(num+1);
+        parent.append(`
+            <div class="input-box mb-4">
+                ${input}
+            </div>
+        `);
+        num = 1;
+    });
 
     $(document).on('click', '.btn-minus', function() {
         const item_id = $(this).data('item-id');
