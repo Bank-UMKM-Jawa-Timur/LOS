@@ -103,7 +103,6 @@
                                         <label for="">Jenis Usaha</label>
                                         <div class="p-2 bg-white border-b">
                                             @foreach ($jenis_usaha as $key => $value)
-                                                {{-- <option value="{{ $key }}">{{ $value }}</option> --}}
                                                 <span>{{ $dataUmumNasabah->jenis_usaha == $key ? $value : '' }}</span>
                                             @endforeach
                                         </div>
@@ -111,7 +110,13 @@
                                     <div class="input-box">
                                         <label for="">Foto Nasabah</label>
                                         <div class="p-2 bg-white border-b">
-                                            {{-- <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span> --}}
+                                            <img class="h-50 w-50" src="{{ asset('..').'/upload/'.$dataUmumNasabah->id.'/'.$dataUmumNasabah->foto_nasabah }}" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="input-box">
+                                        <label for="">Foto KTP Nasabah</label>
+                                        <div class="p-2 bg-white border-b">
+                                            <img class="h-50 w-50" src="{{ asset('..').'/upload/'.$dataUmumNasabah->id.'/'.$dataUmumNasabah->foto_ktp }}" alt="">
                                         </div>
                                     </div>
                                     <div class="input-box">
@@ -131,15 +136,10 @@
                                     <div class="input-box">
                                         <label for="">NIK</label>
                                         <div class="p-2 bg-white border-b">
-                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                            <span>{{ $dataUmumNasabah->nik ? $dataUmumNasabah->nik : '-' }}</span>
                                         </div>
                                     </div>
-                                    <div class="input-box">
-                                        <label for="">Foto KTP Nasabah</label>
-                                        <div class="p-2 bg-white border-b">
-                                            {{-- <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span> --}}
-                                        </div>
-                                    </div>
+
                                     @if ($dataUmumNasabah->status_pernikahan == '2')
                                         <div class="input-box">
                                             <label for="">NIK Pasangan</label>
@@ -150,6 +150,7 @@
                                         <div class="input-box">
                                             <label for="">Foto KTP Pasangan</label>
                                             <div class="p-2 bg-white border-b">
+                                            <img class="h-50 w-fit" src="{{ asset('..').'/upload/'.$dataUmumNasabah->id.'/'.$dataUmumNasabah->foto_ktp }}" alt="">
                                                 {{-- <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span> --}}
                                             </div>
                                         </div>

@@ -271,7 +271,6 @@ class NewDagulirController extends Controller
             $pengajuan->tujuan_penggunaan = $request->get('tujuan_penggunaan');
             $pengajuan->jangka_waktu = $request->get('jangka_waktu');
             $pengajuan->kode_bank_pusat = 1;
-            $pengajuan->id_slik = (int)$request->get('id_slik');
             $pengajuan->kode_bank_cabang = auth()->user()->id_cabang;
             $pengajuan->desa_ktp = $request->get('desa');
             $pengajuan->kec_ktp = $request->get('kecamatan_sesuai_ktp');
@@ -313,6 +312,7 @@ class NewDagulirController extends Controller
                     File::makeDirectory($filePath, 493, true);
                 }
                 $image->move($filePath, $fileNameSlik);
+                $update_pengajuan->file_slik = $fileNameSlik;
             }
             // foto nasabah
             if ($request->has('foto_nasabah')) {
@@ -610,11 +610,11 @@ class NewDagulirController extends Controller
 
             if (!$statusSlik){
                 Alert::success('success', 'Data berhasil disimpan');
-                return redirect()->route('dagulir.pengajuan-kredit.index')->withStatus('Data berhasil disimpan.');
+                return redirect()->route('dagulir.pengajuan.index')->withStatus('Data berhasil disimpan.');
             }
             else {
                 Alert::error('error', 'Pengajuan ditolak');
-                return redirect()->route('dagulir.pengajuan-kredit.index')->withError('Pengajuan ditolak');
+                return redirect()->route('dagulir.pengajuan.index')->withError('Pengajuan ditolak');
             }
         } catch (Exception $e) {
             DB::rollBack();
@@ -928,8 +928,8 @@ class NewDagulirController extends Controller
             $param['kec_ktp'] = Kecamatan::find($param['dataUmumNasabah']->kec_ktp)->kecamatan;
             $param['kab_ktp'] = Kabupaten::find($param['dataUmumNasabah']->kotakab_ktp)->kabupaten;
             $param['desa_ktp'] = '';
-            if ($param['dataUmumNasabah']->desa_id != null) {
-                $param['desa_ktp'] = Desa::find($param['dataUmumNasabah']->desa_id)->desa;
+            if ($param['dataUmumNasabah']->desa_ktp != null) {
+                $param['desa_ktp'] = Desa::find($param['dataUmumNasabah']->desa_ktp)->desa;
             }
             $param['kec_dom'] = Kecamatan::find($param['dataUmumNasabah']->kec_dom)->kecamatan;
             $param['kab_dom'] = Kabupaten::find($param['dataUmumNasabah']->kotakab_dom)->kabupaten;
