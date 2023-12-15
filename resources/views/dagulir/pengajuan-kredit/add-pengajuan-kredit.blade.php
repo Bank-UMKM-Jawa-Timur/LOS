@@ -40,7 +40,7 @@ $dataIndex = match ($skema) {
                 @endphp
                 <button data-toggle="tab" data-tab="{{$title}}" class="btn btn-tab font-semibold"><span class="percentage">0%</span> {{$item->nama}}</button>
             @endforeach
-            <button data-toggle="tab" data-tab="pendapat-dan-usulan" class="btn btn-tab font-semibold mt-4">Pendapat dan Usulan</button>
+            <button data-toggle="tab" data-tab="pendapat-dan-usulan" class="btn btn-tab font-semibold">Pendapat dan Usulan</button>
         </div>
     </nav>
     <div class="p-3">
@@ -81,6 +81,7 @@ $dataIndex = match ($skema) {
                                             $idLevelDua = str_replace(' ', '_', strtolower($item->nama));
                                         @endphp
                                         {{-- item ijin usaha --}}
+
                                         @if ($item->nama == 'Ijin Usaha')
                                             <div class="form-group">
                                                 <div class="input-box">
