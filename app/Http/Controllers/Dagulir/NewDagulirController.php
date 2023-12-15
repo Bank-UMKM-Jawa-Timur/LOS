@@ -974,9 +974,9 @@ class NewDagulirController extends Controller
                 "tanggal_lahir" => $pengajuan_dagulir->tanggal_lahir,
                 "telp" => $pengajuan_dagulir->telp,
                 "jenis_usaha" => $pengajuan_dagulir->jenis_usaha,
-                // "nominal_pengajuan" => formatNumber($request->nominal_realisasi),
+                "nominal_pengajuan" => $pengajuan_dagulir->nominal,
                 "tujuan_penggunaan" => $pengajuan_dagulir->tujuan_penggunaan,
-                // "jangka_waktu" => intval($request->get('jangka_waktu')),
+                "jangka_waktu" => $pengajuan_dagulir->jangka_waktu,
                 "ket_agunan" => $pengajuan_dagulir->ket_agunan,
                 "kode_bank_pusat" => '01-BPR',
                 "kode_bank_cabang" => $pengajuan_dagulir->kode_bank_cabang,
@@ -1022,17 +1022,20 @@ class NewDagulirController extends Controller
 
                 DB::commit();
 
-                return redirect()->route('dagulir.index')->withStatus('Berhasil mengirimkan data.');
+                return 'success';
+                // return redirect()->route('dagulir.index')->withStatus('Berhasil mengirimkan data.');
             }
             else {
                 $message = 'Terjadi kesalahan.';
                 if (array_key_exists('error', $pengajuan_dagulir)) $message .= ' '.$pengajuan_dagulir['error'];
 
-                return redirect()->route('dagulir.index')->withError($message);
+                return $message;
+                // return redirect()->route('dagulir.index')->withError($message);
             }
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('dagulir.index')->withError($e->getMessage());
+            return $e->getMessage();
+            // return redirect()->route('dagulir.index')->withError($e->getMessage());
         }
     }
 
@@ -1133,7 +1136,7 @@ class NewDagulirController extends Controller
                     $statusPincab->tanggal_review_pincab = date(now());
                     $statusPincab->update();
 
-                    $nasabah = PengajuanDagulir::select('nama')->find($statusPincab->dagulir_id);
+                    $nasabah = PengajuanDagulir::select('kode_pendaftaran','nama', 'nominal', 'jangka_waktu')->find($statusPincab->dagulir_id);
                     $namaNasabah = 'undifined';
                     if ($nasabah)
                         $namaNasabah = $nasabah->nama;
@@ -1141,12 +1144,27 @@ class NewDagulirController extends Controller
                     $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menyetujui pengajuan atas nama ' . $namaNasabah . '.', $id, Auth::user()->id, Auth::user()->nip);
 
                     // HIT Pengajuan endpoint dagulir
-                    $this->storeSipde($id);
+                    $storeSIPDE = $this->storeSipde($id);
 
-                    DB::commit();
-                    event(new EventMonitoring('menyetujui pengajuan'));
+                    if ($storeSIPDE == 'success') {
+                        // HIT update status survei endpoint dagulir
+                        $this->updateStatus($nasabah->kode_pendaftaran, 1, null, $nasabah->jangka_waktu, $nasabah->nominal);
+    
+                        // HIT update status analisa endpoint dagulir
+                        $this->updateStatus($nasabah->kode_pendaftaran, 2, null, $nasabah->jangka_waktu, $nasabah->nominal);
+    
+                        // HIT update status disetujui endpoint dagulir
+                        $this->updateStatus($nasabah->kode_pendaftaran, 3, null, $nasabah->jangka_waktu, $nasabah->nominal);
 
-                    return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+                        DB::commit();
+                        event(new EventMonitoring('menyetujui pengajuan'));
+
+                        return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+                    }
+                    else {
+                        DB::rollBack();
+                        return redirect()->back()->withError('Terjadi kesalahan saat mengirimkan data SIPDE.');
+                    }
                 } else {
                     return redirect()->back()->withError('Belum di review Pincab.');
                 }
