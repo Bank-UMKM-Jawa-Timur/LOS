@@ -22,6 +22,7 @@
                 <button class="btn-cancel" type="button" data-dismiss-id="confirmationModal">
                     Batal
                 </button>
+                <input type="hidden" name="id_pengajuan" id="id_pengajuan" value="">
                 <button type="submit" class="btn-submit">iya</button>
             </div>
         </form>
