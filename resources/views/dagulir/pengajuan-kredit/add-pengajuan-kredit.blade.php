@@ -2502,6 +2502,7 @@ $dataIndex = match ($skema) {
     });
     var num = 1;
     $(document).on('click', '.btn-add', function() {
+        console.log($(this));
         const item_id = $(this).data('item-id');
         var item_element = $(`.${item_id}`);
         var iteration = item_element.length;
@@ -2510,7 +2511,7 @@ $dataIndex = match ($skema) {
         var new_multiple = multiple.html().replaceAll('hidden', '');
         input = input.html().replaceAll(multiple.html(), new_multiple);
         var parent = $(this).closest('.input-box').parent();
-        // var num = parent.find('.input-box').length + 1;
+        var num = parent.find('.input-box').length + 1;
         num = parseInt($(".figure").text());
         // $(".figure").text(num+1);
         parent.append(`

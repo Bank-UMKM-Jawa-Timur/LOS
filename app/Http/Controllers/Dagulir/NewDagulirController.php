@@ -213,7 +213,7 @@ class NewDagulirController extends Controller
         $param['jenis_usaha'] = config('dagulir.jenis_usaha');
         $param['tipe'] = config('dagulir.tipe_pengajuan');
 
-        return view('dagulir.pengajuan.add-pengajuan-kredit', $param);
+        return view('dagulir.pengajuan-kredit.add-pengajuan-kredit', $param);
     }
 
     public function store(Request $request)
@@ -897,6 +897,17 @@ class NewDagulirController extends Controller
             $param['dataUmum'] = $pengajuan;
             $param['dataUmumNasabah'] = PengajuanDagulir::find($pengajuan->dagulir_id);
 
+            $param['kec_ktp'] = Kecamatan::find($param['dataUmumNasabah']->kec_ktp)->kecamatan;
+            $param['kab_ktp'] = Kabupaten::find($param['dataUmumNasabah']->kotakab_ktp)->kabupaten;
+            $param['desa_ktp'] = '';
+            if ($param['dataUmumNasabah']->desa_id != null) {
+                $param['desa_ktp'] = Desa::find($param['dataUmumNasabah']->desa_id)->desa;
+            }
+            $param['kec_dom'] = Kecamatan::find($param['dataUmumNasabah']->kec_dom)->kecamatan;
+            $param['kab_dom'] = Kabupaten::find($param['dataUmumNasabah']->kotakab_dom)->kabupaten;
+            $param['kec_usaha'] = Kecamatan::find($param['dataUmumNasabah']->kec_usaha)->kecamatan;
+            $param['kab_usaha'] = Kabupaten::find($param['dataUmumNasabah']->kotakab_usaha)->kabupaten;
+
             $param['allKab'] = Kabupaten::get();
             $param['allKec'] = Kecamatan::where('id_kabupaten', $param['dataUmumNasabah']->kotakab_ktp)->get();
             $param['allDesa'] = Desa::where('id_kecamatan', $param['dataUmumNasabah']->kec_ktp)->get();
@@ -955,7 +966,7 @@ class NewDagulirController extends Controller
             $param['dataKabupaten'] = Kabupaten::all();
             $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->where('nama', '!=', 'Data Umum')->get();
 
-            return view('dagulir.pengajuan.detail-pengajuan-jawaban', $param);
+            return view('dagulir.pengajuan-kredit.detail-pengajuan-jawaban', $param);
         } else {
             return redirect()->back()->withError('Tidak memiliki hak akses.');
         }
