@@ -276,7 +276,7 @@
                                                     class="cursor-pointer">Review</a>
                                             </li>
                                         @endif
-                                        @if ((Auth()->user()->role == 'Pincab') && ($item->pengajuan->id_pincab && !$item->pengajuan->tanggal_review_pincab))
+                                        @if ((Auth()->user()->role == 'Pincab') && ($item->pengajuan->id_pincab && $item->pengajuan->tanggal_review_pincab))
                                             <li class="item-tb-dropdown">
                                                 <a href="{{ route('dagulir.detailjawaban_pincab', $item->pengajuan->id) }}"
                                                     class="cursor-pointer">Review</a>
