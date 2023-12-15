@@ -40,7 +40,7 @@ $dataIndex = match ($skema) {
                 @endphp
                 <button data-toggle="tab" data-tab="{{$title}}" class="btn btn-tab font-semibold"><span class="percentage">0%</span> {{$item->nama}}</button>
             @endforeach
-            <button data-toggle="tab" data-tab="pendapat-dan-usulan" class="btn btn-tab font-semibold">Pendapat dan Usulan</button>
+            <button data-toggle="tab" data-tab="pendapat-dan-usulan" class="btn btn-tab font-semibold mt-4">Pendapat dan Usulan</button>
         </div>
     </nav>
     <div class="p-3">
@@ -132,7 +132,7 @@ $dataIndex = match ($skema) {
                                                         placeholder="Masukkan informasi {{ $itemNIB->nama }}" class="form-input limit-size"
                                                         id="file_nib">
                                                     <span class="invalid-tooltip" style="display: none" id="docNIB_text">Besaran file
-                                                        tidak boleh lebih dari 5 MB</span>
+                                                        tidak boleh lebih dari 5 MB</span>
                                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                                         <div class="invalid-feedback">
                                                             {{ $errors->first('dataLevelTiga.' . $key) }}
@@ -162,7 +162,7 @@ $dataIndex = match ($skema) {
                                                         data-id="" placeholder="Masukkan informasi {{ $itemSKU->nama }}"
                                                         class="form-input limit-size">
                                                     <span class="invalid-tooltip" style="display: none" id="docSKU_text">Besaran file
-                                                        tidak boleh lebih dari 5 MB</span>
+                                                        tidak boleh lebih dari 5 MB</span>
                                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                                         <div class="invalid-feedback">
                                                             {{ $errors->first('dataLevelTiga.' . $key) }}
@@ -2228,7 +2228,6 @@ $dataIndex = match ($skema) {
     $(".tab-wrapper .btn-tab").click(function(e) {
         e.preventDefault();
         var tabId = $(this).data("tab");
-        console.log(tabId);
         var percentage = formPercentage(`${tabId}-tab`)
         $(this).closest('.percentage').html(`${percentage}%`)
 
@@ -2257,10 +2256,18 @@ $dataIndex = match ($skema) {
         const $activeContent = $(".is-tab-content.active");
         const $nextContent = $activeContent.next();
         const tabId = $activeContent.attr("id")
+        const dataTab = tabId.replaceAll('-tab', '')
+        // Set percentage
         var percentage = formPercentage(tabId)
-        $('.tab-wrapper').find('.active-tab .percentage').html(`${percentage}%`)
+        $('.tab-wrapper').find(`[data-tab=${dataTab}]`).find('.percentage').html(`${percentage}%`)
+        // Remove class active current nav tab
+        $('.tab-wrapper').find(`[data-tab=${dataTab}]`).removeClass('active-tab')
 
         if ($nextContent.length) {
+            const dataNavTab = $nextContent.attr("id") ? $nextContent.attr("id").replaceAll('-tab', '') : null
+            if (dataNavTab)
+                $('.tab-wrapper').find(`[data-tab=${dataNavTab}]`).addClass('active-tab')
+
             $activeContent.removeClass("active");
             $nextContent.addClass("active");
         }else{
@@ -2274,8 +2281,17 @@ $dataIndex = match ($skema) {
         const $prevContent = $activeContent.prev();
         const tabId = $activeContent.attr("id")
         var percentage = formPercentage(tabId)
+        const dataTab = tabId.replaceAll('-tab', '')
+        // Set percentage
+        var percentage = formPercentage(tabId)
+        $('.tab-wrapper').find(`[data-tab=${dataTab}]`).find('.percentage').html(`${percentage}%`)
+        // Remove class active current nav tab
+        $('.tab-wrapper').find(`[data-tab=${dataTab}]`).removeClass('active-tab')
 
         if ($prevContent.length) {
+            const dataNavTab = $prevContent.attr("id") ? $prevContent.attr("id").replaceAll('-tab', '') : null
+            if (dataNavTab)
+                $('.tab-wrapper').find(`[data-tab=${dataNavTab}]`).addClass('active-tab')
             $activeContent.removeClass("active");
             $prevContent.addClass("active");
             $(".next-tab").removeClass('hidden');
@@ -2288,64 +2304,113 @@ $dataIndex = match ($skema) {
         var inputFile = $(form + " input[type=file]")
         var inputText = $(form + " input[type=text]")
         var inputNumber = $(form + " input[type=number]")
+        var inputDate = $(form + " input[type=date]")
+        var inputHidden = $(form + " input[type=hidden]")
         var select = $(form + " select")
         var textarea = $(form + " textarea")
         var totalInput = 0;
         var totalInputNull = 0;
         var totalInputFilled = 0;
+        var totalInputHidden = 0;
+        var totalInputReadOnly = 0;
         var percent = 0;
 
         $.each(inputText, function(i, v) {
-            if (!$(this).prop('disabled') && !$(this).hasClass('hidden'))
+            if ($(this).prop('readonly'))
+                totalInputReadOnly++;
+            var inputBox = $(this).closest('.input-box');
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
                 totalInput++
-            var isNull = (v.value == '' || v.value == '0' || v.value.includes('kosong'))
-            if (v.value == '' && !$(this).prop('disabled') && !$(this).hasClass('hidden')) {
+            var isNull = (v.value == '' || v.value == '0')
+            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
                 totalInputNull++;
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).hasClass('hidden')) {
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
+                totalInputFilled++;
+            }
+        })
+
+        $.each(inputHidden, function(i, v) {
+            if ($(this).prop('readonly'))
+                totalInputReadOnly++;
+            var inputBox = $(this).closest('.input-box');
+            if ((!$(this).prop('disabled') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+                totalInputHidden++;
+            }
+        })
+
+        $.each(inputFile, function(i, v) {
+            if ($(this).prop('readonly'))
+                totalInputReadOnly++;
+            var inputBox = $(this).closest('.input-box');
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
+                totalInput++
+            var isNull = (v.value == '' || v.value == '0')
+            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+                totalInputNull++;
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
                 totalInputFilled++;
             }
         })
 
         $.each(inputNumber, function(i, v) {
-            if (!$(this).prop('disabled') && !$(this).hasClass('hidden'))
+            if ($(this).prop('readonly'))
+                totalInputReadOnly++;
+            var inputBox = $(this).closest('.input-box');
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
                 totalInput++
-            var isNull = (v.value == '' || v.value == '0' || v.value.includes('kosong'))
-            if (v.value == '' && !$(this).prop('disabled') && !$(this).hasClass('hidden')) {
+            var isNull = (v.value == '' || v.value == '0') && !$(this).prop('readonly')
+            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
                 totalInputNull++;
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).hasClass('hidden')) {
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
+                totalInputFilled++;
+            }
+        })
+
+        $.each(inputDate, function(i, v) {
+            if ($(this).prop('readonly'))
+                totalInputReadOnly++;
+            var inputBox = $(this).closest('.input-box');
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
+                totalInput++
+            var isNull = (v.value == '' || v.value == '0')
+            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+                totalInputNull++;
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
                 totalInputFilled++;
             }
         })
 
         $.each(select, function(i, v) {
-            if (!$(this).prop('disabled') && !$(this).hasClass('hidden'))
+            if ($(this).prop('readonly'))
+                totalInputReadOnly++;
+            var inputBox = $(this).closest('.input-box');
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
                 totalInput++
-            var isNull = (v.value == '' || v.value == '0' || v.value.includes('kosong'))
-            if (isNull && !$(this).prop('disabled') && !$(this).hasClass('hidden')) {
+            var isNull = (v.value == '' || v.value == '0')
+            if ((isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
                 totalInputNull++;
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).hasClass('hidden')) {
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
                 totalInputFilled++;
             }
         })
 
         $.each(textarea, function(i, v) {
-            if (!$(this).prop('disabled') && !$(this).hasClass('hidden'))
+            if ($(this).prop('readonly'))
+                totalInputReadOnly++;
+            var inputBox = $(this).closest('.input-box');
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
                 totalInput++
-            var isNull = (v.value == '' || v.value == '0' || v.value.includes('kosong'))
-            if (v.value == '' && !$(this).prop('disabled') && !$(this).hasClass('hidden')) {
+            var isNull = (v.value == '' || v.value == '0')
+            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
                 totalInputNull++;
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).hasClass('hidden')) {
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
                 totalInputFilled++;
             }
         })
 
-        percent = (totalInputFilled / totalInput) * 100
+        var totalReadHidden = (totalInputHidden + totalInputReadOnly)
+        percent = (totalInputFilled / (totalInput - totalInputReadOnly)) * 100
 
-        console.log('result')
-        console.log(`total : ${totalInput}`)
-        console.log(`total null : ${totalInputNull}`)
-        console.log(`total filled : ${totalInputFilled}`)
-        console.log(`total percent : ${percent}`)
         return parseInt(percent)
     }
 

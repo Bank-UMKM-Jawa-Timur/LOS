@@ -404,7 +404,6 @@
                     class="form-input"
                     name="tanggal_berdiri"
                     value="{{ old('tanggal_berdiri') }}"
-
                     />
                 </div>
             </div>

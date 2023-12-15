@@ -1564,6 +1564,15 @@ video {
   width: -moz-fit-content;
   width: fit-content;
 }
+.w-\[15\%\] {
+  width: 15%;
+}
+.w-\[17\%\] {
+  width: 17%;
+}
+.w-\[16\%\] {
+  width: 16%;
+}
 .max-w-2xl {
   max-width: 42rem;
 }
