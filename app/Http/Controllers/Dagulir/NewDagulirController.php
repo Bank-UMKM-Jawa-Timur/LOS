@@ -666,7 +666,7 @@ class NewDagulirController extends Controller
     // insert komentar
     public function getInsertKomentar(Request $request)
     {
-        
+
         $role = Auth::user()->role;
         if ($role == 'Penyelia Kredit' || $role == 'PBO' || $role == 'PBP' || $role == 'Pincab') {
             DB::beginTransaction();
@@ -744,7 +744,7 @@ class NewDagulirController extends Controller
                     $updateData->update();
 
                     $idKomentar = KomentarModel::where('id_pengajuan', $request->id_pengajuan)->first();
-                   
+
                     if ($role == 'Penyelia Kredit') {
                         KomentarModel::where('id', $idKomentar->id)->update(
                             [
@@ -931,8 +931,8 @@ class NewDagulirController extends Controller
             $param['kec_ktp'] = Kecamatan::find($param['dataUmumNasabah']->kec_ktp)->kecamatan;
             $param['kab_ktp'] = Kabupaten::find($param['dataUmumNasabah']->kotakab_ktp)->kabupaten;
             $param['desa_ktp'] = '';
-            if ($param['dataUmumNasabah']->desa_id != null) {
-                $param['desa_ktp'] = Desa::find($param['dataUmumNasabah']->desa_id)->desa;
+            if ($param['dataUmumNasabah']->desa_ktp != null) {
+                $param['desa_ktp'] = Desa::find($param['dataUmumNasabah']->desa_ktp)->desa;
             }
             $param['kec_dom'] = Kecamatan::find($param['dataUmumNasabah']->kec_dom)->kecamatan;
             $param['kab_dom'] = Kabupaten::find($param['dataUmumNasabah']->kotakab_dom)->kabupaten;
