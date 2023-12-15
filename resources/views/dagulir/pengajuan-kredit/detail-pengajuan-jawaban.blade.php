@@ -1756,7 +1756,7 @@
                 if (valueInput > 4) {
                     this.value = 4-1
                 }
-            });
+            };
         } else {
             $("#kecamatan_usaha").empty();
         }
