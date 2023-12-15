@@ -828,7 +828,7 @@
                                                                             <div class="jawaban-responsive p-2 font-medium">
                                                                                 <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
                                                                                     <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
-                                                                                    <h4 class="font-bold">{{ $itemTiga->opsi_jawaban == 'persen' ? $itemTextTiga->opsi_text : 'RP '.number_format((int) $itemTextTiga->opsi_text, 2, ',', '.')  }}{{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</h4>
+                                                                                    <h4 class="font-bold">{{ $itemTiga->opsi_jawaban == 'persen' ? $itemTextTiga->opsi_text : $itemTextTiga->opsi_text  }}{{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</h4>
                                                                                 </div>
 
                                                                             </div>

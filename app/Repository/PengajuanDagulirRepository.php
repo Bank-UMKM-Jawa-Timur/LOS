@@ -49,6 +49,24 @@ class PengajuanDagulirRepository
             ->latest()
             ->paginate($limit);
         }
+
+        foreach ($data as $key => $item) {
+            $nama_pemroses = 'undifined';
+            $user = \App\Models\User::select('nip')->where('id', $item->pengajuan->id_staf)->first();
+            if ($user)
+                $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
+            else {
+                $check_log = \DB::table('log_pengajuan')
+                                ->select('nip')
+                                ->where('id_pengajuan', $item->pengajuan->id)
+                                ->where('activity', 'LIKE', 'Staf%')
+                                ->orderBy('id', 'DESC')
+                                ->first();
+                if ($check_log)
+                    $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
+            }
+            $item->nama_pemroses = $nama_pemroses;
+        }
         return $data;
     }
 

@@ -207,8 +207,8 @@
                 <label for="">File Slik</label>
                 @if($data->file_slik)
                     @php
-                    $file_parts = pathinfo(asset('..') . '/' . $dagulir->id . '/' . $data->id_slik.'/'.$data->file_slik);
-                @endphp
+                        $file_parts = pathinfo(asset('..') . '/' . $dagulir->id . '/' . $data->id_slik.'/'.$data->file_slik);
+                    @endphp
                 @if (array_key_exists('extension', $file_parts))
                     @if ($file_parts['extension'] == 'pdf')
                         <iframe
