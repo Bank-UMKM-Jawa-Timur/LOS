@@ -176,7 +176,7 @@ $dataIndex = match ($skema) {
                                                     <label for="">NPWP</label>
                                                     <input type="hidden" name="id_level[79]" value="79" id="npwp_id">
                                                     <input type="hidden" name="opsi_jawaban[79]" value="input text" id="npwp_opsi_jawaban">
-                                                    <input type="text" maxlength="255" name="informasi[79]" id="npwp_text"
+                                                    <input type="text" maxlength="20" name="informasi[79]" id="npwp_text"
                                                         placeholder="Masukkan informasi" class="form-input" value="">
                                                 </div>
                                             </div>
@@ -817,6 +817,38 @@ $dataIndex = match ($skema) {
 
 @push('script-inject')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $('#jangka_waktu').on('change', function() {
+        limitJangkaWaktu()
+    })
+    $('#jumlah_kredit').on('change', function() {
+        limitJangkaWaktu()
+    })
+
+    function limitJangkaWaktu() {
+        var nominal = $('#jumlah_kredit').val()
+        nominal = nominal != '' ? nominal.replaceAll('.','') : 0
+        var limit = 50000000
+        if (parseInt(nominal) > limit) {
+            var jangka_waktu = $('#jangka_waktu').val()
+            if (jangka_waktu != '') {
+                jangka_waktu = parseInt(jangka_waktu)
+                if (jangka_waktu <= 36) {
+                    $('.jangka_waktu_error').removeClass('hidden')
+                    $('.jangka_waktu_error').html('Jangka waktu harus lebih dari 36 bulan.')
+                }
+                else {
+                    $('.jangka_waktu_error').addClass('hidden')
+                    $('.jangka_waktu_error').html('')
+                }
+            }
+        }
+        else {
+            $('.jangka_waktu_error').addClass('hidden')
+            $('.jangka_waktu_error').html('')
+        }
+    }
+</script>
 <script>
     //var isPincetar = "{{Request::url()}}".includes('pincetar');
     let dataAspekArr;
@@ -2049,7 +2081,9 @@ $dataIndex = match ($skema) {
         var slik = document.getElementById("file_slik");
         var selectedFile;
 
-        slik.addEventListener('change', updateImageDisplaySlik);
+        if (slik) {
+            slik.addEventListener('change', updateImageDisplaySlik);
+        }
 
         function updateImageDisplaySlik() {
             if (slik.files.length == 0) {
@@ -2568,6 +2602,16 @@ $dataIndex = match ($skema) {
         var item_element = $(`#${item_id}`)
         var parent = $(this).closest('.input-box')
         parent.remove()
+    })
+    function formatNpwp(value) {
+        if (typeof value === 'string') {
+            return value.replace(/(\d{2})(\d{3})(\d{3})(\d{1})(\d{3})(\d{3})/, '$1.$2.$3.$4-$5.$6');
+        }
+    }
+    // NPWP format
+    $(document).on('keyup', '#npwp_text', function() {
+        var input = $(this).val()
+        $(this).val(formatNpwp(input))
     })
 </script>
 {{--  @include('pengajuan-kredit.partials.create-save-script')  --}}

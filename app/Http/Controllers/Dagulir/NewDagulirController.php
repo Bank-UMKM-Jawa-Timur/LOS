@@ -213,7 +213,7 @@ class NewDagulirController extends Controller
         $param['jenis_usaha'] = config('dagulir.jenis_usaha');
         $param['tipe'] = config('dagulir.tipe_pengajuan');
 
-        return view('dagulir.pengajuan-kredit.add-pengajuan-kredit', $param);
+        return view('dagulir.pengajuan.add-pengajuan-kredit', $param);
     }
 
     public function store(Request $request)
@@ -606,17 +606,17 @@ class NewDagulirController extends Controller
             event(new EventMonitoring('store pengajuan'));
 
             if (!$statusSlik)
-                return redirect()->route('dagulir.pengajuan-kredit.index')->withStatus('Data berhasil disimpan.');
+                return redirect()->route('dagulir.pengajuan.index')->withStatus('Data berhasil disimpan.');
             else
-                return redirect()->route('dagulir.pengajuan-kredit.index')->withError('Pengajuan ditolak');
+                return redirect()->route('dagulir.pengajuan.index')->withError('Pengajuan ditolak');
         } catch (Exception $e) {
             DB::rollBack();
             return $e->getMessage();
-            return redirect()->route('dagulir.pengajuan-kredit.index')->withError('Terjadi kesalahan.' . $e->getMessage());
+            return redirect()->route('dagulir.pengajuan.index')->withError('Terjadi kesalahan.' . $e->getMessage());
         } catch (QueryException $e) {
             DB::rollBack();
             return $e->getMessage();
-            return redirect()->route('dagulir.pengajuan-kredit.index')->withError('Terjadi kesalahan' . $e->getMessage());
+            return redirect()->route('dagulir.pengajuan.index')->withError('Terjadi kesalahan' . $e->getMessage());
         }
     }
 
@@ -855,7 +855,7 @@ class NewDagulirController extends Controller
                 DB::commit();
                 event(new EventMonitoring('review pengajuan'));
 
-                return redirect()->route('dagulir.pengajuan-kredit.index')->withStatus('Berhasil Mereview');
+                return redirect()->route('dagulir.pengajuan.index')->withStatus('Berhasil Mereview');
             } catch (Exception $e) {
                 DB::rollBack();
                 return redirect()->back()->withError('Terjadi kesalahan.' . $e->getMessage());
@@ -955,7 +955,7 @@ class NewDagulirController extends Controller
             $param['dataKabupaten'] = Kabupaten::all();
             $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->where('nama', '!=', 'Data Umum')->get();
 
-            return view('dagulir.pengajuan-kredit.detail-pengajuan-jawaban', $param);
+            return view('dagulir.pengajuan.detail-pengajuan-jawaban', $param);
         } else {
             return redirect()->back()->withError('Tidak memiliki hak akses.');
         }
