@@ -290,9 +290,7 @@
                                                         data-acc-url="{{ route('dagulir.acc_pincab',$item->pengajuan->id) }}"
                                                         data-dec-url="{{ route('dagulir.dec_pincab',$item->pengajuan->id) }}"
                                                         class="cursor-pointer approval">Approval</a>
-
                                                 </li>
-                                            @endif
                                         @endif
                                         @if ((Auth()->user()->role == 'Pincab') &&
                                             $item->pengajuan->posisi == 'Selesai' &&
