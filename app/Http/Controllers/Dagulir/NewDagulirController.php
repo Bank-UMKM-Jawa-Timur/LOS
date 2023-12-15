@@ -214,7 +214,7 @@ class NewDagulirController extends Controller
         $param['jenis_usaha'] = config('dagulir.jenis_usaha');
         $param['tipe'] = config('dagulir.tipe_pengajuan');
 
-        return view('dagulir.pengajuan-kredit.add-pengajuan-kredit', $param);
+        return view('dagulir.pengajuan.add-pengajuan-kredit', $param);
     }
 
     public function store(Request $request)
@@ -989,7 +989,7 @@ class NewDagulirController extends Controller
             $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->where('nama', '!=', 'Data Umum')->get();
             $param['plafonUsulan'] = PlafonUsulan::where('id_pengajuan', $id)->first();
 
-            return view('dagulir.pengajuan-kredit.detail-pengajuan-jawaban', $param);
+            return view('dagulir.pengajuan.detail-pengajuan-jawaban', $param);
         } else {
             return redirect()->back()->withError('Tidak memiliki hak akses.');
         }
