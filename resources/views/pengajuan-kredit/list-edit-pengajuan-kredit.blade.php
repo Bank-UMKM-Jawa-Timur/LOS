@@ -1,7 +1,8 @@
 @extends('layouts.tailwind-template')
 
 @section('modal')
-@include('pengajuan-kredit.modal.new-modal-filter')
+    @include('pengajuan-kredit.modal.new-modal-filter')
+    @include('pengajuan-kredit.modal.modal-kembalikan')
 @endsection
 
 @section('content')
@@ -490,6 +491,7 @@
         </div>
     </section>
 @endsection
+
 @push('script-inject')
 <script>
     $('#page_length').on('change', function() {
