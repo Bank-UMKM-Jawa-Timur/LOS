@@ -167,6 +167,7 @@ return [
         Intervention\Image\ImageServiceProvider::class,
         Irsyadulibad\LaravelActivehelper\ActiveHelperServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
+        RealRashid\SweetAlert\SweetAlertServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -239,8 +240,7 @@ return [
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
-
-
+        'Alert' => RealRashid\SweetAlert\Facades\Alert::class,
     ],
 
 ];

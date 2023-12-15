@@ -6,6 +6,7 @@
 
 @endsection
 @include('dagulir.pengajuan-kredit.modal.pilih-penyelia')
+@include('dagulir.modal.konfirmSendToPinca')
 @include('dagulir.modal.approval')
 @include('dagulir.modal.approvalSipde ')
 
@@ -249,8 +250,9 @@
                                             @endif
                                             @if ($item->pengajuan->posisi == 'Review Penyelia' && $item->pengajuan->tanggal_review_penyelia)
                                                 <li class="item-tb-dropdown">
-                                                    <a href="{{ route('dagulir.check.pincab', $item->pengajuan->id) }}"
-                                                        class="dropdown-item">Lanjutkan Ke Pincab</a>
+                                                    <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown">Lanjutkan Ke Pincab</a>
+                                                    {{-- <a href="{{ route('dagulir.check.pincab', $item->pengajuan->id) }}"
+                                                        class="dropdown-item send-pincab">Lanjutkan Ke Pincab</a> --}}
                                                 </li>
                                             @endif
                                         @elseif ((Auth()->user()->role == 'PBO'))
@@ -264,8 +266,9 @@
                                             @if ($item->pengajuan->posisi == 'PBO' && $item->pengajuan->tanggal_review_pbo
                                                 && $item->pengajuan->id_pbo)
                                                 <li class="item-tb-dropdown">
-                                                    <a href="{{ route('dagulir.check.pincab', $item->pengajuan->id) }}"
-                                                        class="dropdown-item">Lanjutkan Ke Pincab</a>
+                                                    <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown">Lanjutkan Ke Pincab</a>
+                                                    {{-- <a href="{{ route('dagulir.check.pincab', $item->pengajuan->id) }}"
+                                                        class="dropdown-item">Lanjutkan Ke Pincab</a> --}}
                                                 </li>
                                             @endif
                                         @elseif ((Auth()->user()->role == 'PBP'))
@@ -280,8 +283,9 @@
                                                 && ($item->pengajuan->id_pbo && $item->pengajuan->tanggal_review_pbo)
                                                 && ($item->pengajuan->id_pbp && $item->pengajuan->tanggal_review_pbp))
                                                 <li class="item-tb-dropdown">
-                                                    <a href="{{ route('dagulir.check.pincab', $item->pengajuan->id) }}"
-                                                        class="dropdown-item">Lanjutkan Ke Pincab</a>
+                                                    <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown">Lanjutkan Ke Pincab</a>
+                                                    {{-- <a href="{{ route('dagulir.check.pincab', $item->pengajuan->id) }}"
+                                                        class="dropdown-item">Lanjutkan Ke Pincab</a> --}}
                                                 </li>
                                             @endif
                                         @elseif ((Auth()->user()->role == 'Pincab'))
@@ -322,5 +326,25 @@
     </div>
   </section>
 @endsection
+
+@push('script-inject')
+<script>
+    document.getElementById('modalConfirmPincab').addEventListener('click', function () {
+        document.getElementById('confirmationModal').classList.remove('hidden');
+        document.getElementById('confirmationModal').classList.add('flex');
+        var nama = $('#modalConfirmPincab').data('nama');
+        var namaHtml = nama.toLowerCase();
+        var idPengajuan = $('#modalConfirmPincab').data('id_pengajuan');
+        console.log(idPengajuan);
+        $('#nama_pengajuan').html(namaHtml);
+        $('[name="id_pengajuan"]').val(idPengajuan);s
+    });
+
+    document.getElementById('cancelAction').addEventListener('click', function () {
+        document.getElementById('confirmationModal').classList.add('hidden');
+        document.getElementById('confirmationModal').classList.remove('flex');
+    });
+</script>
+@endpush
 
 
