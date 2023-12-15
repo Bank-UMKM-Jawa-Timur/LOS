@@ -215,7 +215,7 @@ class NewDagulirController extends Controller
         $param['jenis_usaha'] = config('dagulir.jenis_usaha');
         $param['tipe'] = config('dagulir.tipe_pengajuan');
 
-        return view('dagulir.pengajuan.add-pengajuan-kredit', $param);
+        return view('dagulir.pengajuan-kredit.add-pengajuan-kredit', $param);
     }
 
     public function store(Request $request)
