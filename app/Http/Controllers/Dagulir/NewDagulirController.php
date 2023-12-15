@@ -1250,7 +1250,7 @@ class NewDagulirController extends Controller
                     $pengajuan->update();
 
                     Alert::success('success', 'Berhasil mengganti posisi');
-                    return redirect()->back();
+                    return redirect()->back()->withStatus('Berhasil mengganti posisi.');
                 } else {
                     Alert::error('error', 'User pincab tidak ditemukan pada cabang ini');
                     return back()->withError('User pincab tidak ditemukan pada cabang ini.');
