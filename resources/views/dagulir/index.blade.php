@@ -254,6 +254,7 @@
                                                     {{-- <a href="{{ route('dagulir.check.pincab', $item->pengajuan->id) }}"
                                                         class="dropdown-item send-pincab">Lanjutkan Ke Pincab</a> --}}
                                                 </li>
+
                                             @endif
                                         @elseif ((Auth()->user()->role == 'PBO'))
                                             @if ($item->pengajuan->posisi == 'PBO' && $item->pengajuan->tanggal_review_penyelia
@@ -305,6 +306,11 @@
                                                         </li>
                                                 @endif
                                             @endif
+                                        @else
+                                        <li class="item-tb-dropdown">
+                                            <a href="{{ route('dagulir.pengajuan.cetak-pdf', $item->pengajuan->id) }}"
+                                                class="cursor-pointer">Cetak</a>
+                                        </li>
                                         @endif
                                     </ul>
                                 </div>
