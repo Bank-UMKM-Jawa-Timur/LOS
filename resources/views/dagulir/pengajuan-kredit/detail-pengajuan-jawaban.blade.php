@@ -2071,7 +2071,7 @@
         $.each(pendapat, function(i, v) {
             if (!$(this).prop('disabled') && !$(this).hasClass('hidden'))
                 totalInput++
-            if (v.value != '') {
+            if (v.value != '' && $.trim(v.value) != '') {
                 totalInputFilled++
             }
         })
@@ -2082,14 +2082,14 @@
 
             if ($('#komentar_penyelia_keseluruhan'))
                 totalInput++
-            if($('#komentar_penyelia_keseluruhan').val() != '')
+            if($('#komentar_penyelia_keseluruhan').val() != '' && $.trim($('#komentar_penyelia_keseluruhan').val()) != '')
                 totalInputFilled++
 
             $.each(inputText, function(i, v) {
                 var inputBox = $(this).closest('.input-box');
                 if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
                     totalInput++
-                var isNull = (v.value == '' || v.value == '0')
+                var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
                 if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
                     totalInputFilled++;
                 }
@@ -2098,7 +2098,7 @@
                 var inputBox = $(this).closest('.input-box');
                 if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
                     totalInput++
-                var isNull = (v.value == '' || v.value == '0')
+                var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
                 if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
                     totalInputFilled++;
                 }
