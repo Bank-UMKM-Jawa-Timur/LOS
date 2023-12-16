@@ -255,8 +255,6 @@
                                             @if ($item->pengajuan->posisi == 'Review Penyelia' && $item->pengajuan->tanggal_review_penyelia)
                                                 <li class="item-tb-dropdown">
                                                     <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown">Lanjutkan Ke Pincab</a>
-                                                    {{-- <a href="{{ route('dagulir.check.pincab', $item->pengajuan->id) }}"
-                                                        class="dropdown-item send-pincab">Lanjutkan Ke Pincab</a> --}}
                                                 </li>
 
                                             @endif
@@ -272,8 +270,6 @@
                                                 && $item->pengajuan->id_pbo)
                                                 <li class="item-tb-dropdown">
                                                     <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown">Lanjutkan Ke Pincab</a>
-                                                    {{-- <a href="{{ route('dagulir.check.pincab', $item->pengajuan->id) }}"
-                                                        class="dropdown-item">Lanjutkan Ke Pincab</a> --}}
                                                 </li>
                                             @endif
                                         @elseif ((Auth()->user()->role == 'PBP'))
@@ -289,8 +285,6 @@
                                                 && ($item->pengajuan->id_pbp && $item->pengajuan->tanggal_review_pbp))
                                                 <li class="item-tb-dropdown">
                                                     <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown">Lanjutkan Ke Pincab</a>
-                                                    {{-- <a href="{{ route('dagulir.check.pincab', $item->pengajuan->id) }}"
-                                                        class="dropdown-item">Lanjutkan Ke Pincab</a> --}}
                                                 </li>
                                             @endif
                                         @elseif ((Auth()->user()->role == 'Pincab'))
