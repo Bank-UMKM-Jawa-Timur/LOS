@@ -40,6 +40,9 @@ Route::post('tes-skor', [PengajuanKreditController::class, 'countScore'])->name(
 // })->middleware(['auth'])->name('dashboard');
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/detail-pengajuan-new/tes', function () {
+        return view('dagulir.pengajuan-kredit.detail-pengajuan-jawaban-new');
+    });
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/print-data-nominatif', [DashboardController::class, 'cetak'])->name('print_data_nominatif');
 
@@ -60,6 +63,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Send to pinca
         Route::get('review-pincab-new', function() {
             return view('dagulir.pengajuan-kredit.review-pincab-new');
+        });
+        Route::get('review-jawaban-new', function() {
+            return view('dagulir.pengajuan-kredit.detail-pengajuan-jawaban-new');
         });
         // Route::get('pincab-kredit/{id}', [DagulirController::class, "sendToPincab"])->name('check.pincab');
         Route::post('pincab-kredit', [NewDagulirController::class, "sendToPincab"])->name('check.pincab');

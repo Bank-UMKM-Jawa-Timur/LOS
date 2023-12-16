@@ -745,7 +745,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="accordion-content hidden p-3">
+                <div class="accordion-content p-3">
                     <div class="divide-y-2 divide-red-800">
                         <div class="p-4">
                             <div class="form-group-2">
@@ -922,13 +922,13 @@
                 sisa = split[0].length % 3,
                 rupiah = split[0].substr(0, sisa),
                 ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-    
+
             // tambahkan titik jika yang di input sudah menjadi angka ribuan
             if (ribuan) {
                 separator = sisa ? '.' : '';
                 rupiah += separator + ribuan.join('.');
             }
-    
+
             rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
             return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
         }
