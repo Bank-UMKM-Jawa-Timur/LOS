@@ -281,6 +281,9 @@
     .field-review .field-answer .field-skor {
         @apply px-4 py-2 rounded bg-theme-primary/5 border font-semibold border-theme-primary text-theme-primary;
     }
+    .field-input {
+        @apply bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center;
+    }
 }
 
 @keyframes scale-in {

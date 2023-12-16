@@ -1342,12 +1342,16 @@
                             <!-- pendapat-dan-usulan -->
                             <div class="p-5 space-y-5">
                                 @if (Auth::user()->role == 'Penyelia Kredit')
-                                    <div class="row space-y-5">
-                                        <div class="form-group-1">
-                                            <label for="">Pendapat dan Usulan Staf Kredit</label>
-                                            <span class="border-b p-2">
-                                                {{ $pendapatDanUsulanStaf?->komentar_staff ? $pendapatDanUsulanStaf->komentar_staff : '-' }}
-                                            </span>
+                                    <div class="row space-y-8">
+                                        <div class="form-group-2">
+                                            <div class="field-review">
+                                                <div class="field-name">
+                                                    <label for="">Pendapat dan Usulan Staf Kredit</label>
+                                                </div>
+                                                <div class="field-answer">
+                                                    <p> {{ $pendapatDanUsulanStaf?->komentar_staff ? $pendapatDanUsulanStaf->komentar_staff : 'Tidak ada komentar' }}</p>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="form-group-2">
                                             <div class="input-box">
@@ -1373,19 +1377,25 @@
                                     </div>
                                 @elseif (Auth::user()->role == 'PBO')
                                     <div class="row space-y-5">
-
-                                        <div class="form-group-1">
-                                            <label for="">Pendapat dan Usulan Staf Kredit</label>
-                                            <span class="border-b p-2">
-                                                {{ $pendapatDanUsulanStaf?->komentar_staff ? $pendapatDanUsulanStaf->komentar_staff : '-' }}
-                                            </span>
-                                            <hr>
+                                        <div class="form-group-2">
+                                            <div class="field-review">
+                                                <div class="field-name">
+                                                    <label for="">Pendapat dan Usulan Staf Kredit</label>
+                                                </div>
+                                                <div class="field-answer">
+                                                    <p> {{ $pendapatDanUsulanStaf?->komentar_staff ? $pendapatDanUsulanStaf->komentar_staff : 'Tidak ada komentar' }}</p>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="form-group-1">
-                                            <label for="">Pendapat dan Usulan Penyelia Kredit</label>
-                                            <span class="border-b p-2">
-                                                {{ $pendapatDanUsulanPenyelia?->komentar_penyelia ? $pendapatDanUsulanPenyelia->komentar_penyelia : '-' }}
-                                            </span>
+                                        <div class="form-group-2">
+                                            <div class="field-review">
+                                                <div class="field-name">
+                                                    <label for="">Pendapat dan Usulan Penyelia Kredit</label>
+                                                </div>
+                                                <div class="field-answer">
+                                                    <p> {{ $pendapatDanUsulanPenyelia?->komentar_penyelia ? $pendapatDanUsulanPenyelia->komentar_penyelia : 'Tidak ada komentar' }}</p>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="form-group-2">
                                             <div class="input-box">
@@ -1431,24 +1441,36 @@
                                     </div>
                                 @elseif (Auth::user()->role == 'PBP')
                                 <div class="space-y-5">
-                                    <div class="form-group-1">
-                                        <label for="">Pendapat dan Usulan Staf Kredit</label>
-                                        <span class="border-b p-2">
-                                            {{ $pendapatDanUsulanStaf?->komentar_staff }}
-                                        </span>
+                                    <div class="form-group-2">
+                                        <div class="field-review">
+                                            <div class="field-name">
+                                                <label for="">Pendapat dan Usulan Staf Kredit</label>
+                                            </div>
+                                            <div class="field-answer">
+                                                <p> {{ $pendapatDanUsulanStaf?->komentar_staff ? $pendapatDanUsulanStaf->komentar_staff : 'Tidak ada komentar' }}</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="form-group-1">
-                                        <label for="">Pendapat dan Usulan Penyelia Kredit</label>
-                                        <span class="border-b p-2">
-                                            {{ $pendapatDanUsulanPenyelia?->komentar_penyelia }}
-                                        </span>
+                                    <div class="form-group-2">
+                                        <div class="field-review">
+                                            <div class="field-name">
+                                                <label for="">Pendapat dan Usulan Penyelia Kredit</label>
+                                            </div>
+                                            <div class="field-answer">
+                                                <p> {{ $pendapatDanUsulanPenyelia?->komentar_penyelia ? $pendapatDanUsulanPenyelia->komentar_penyelia : 'Tidak ada komentar' }}</p>
+                                            </div>
+                                        </div>
                                     </div>
                                     @if ($dataUmumNasabah->id_pbo)
-                                        <div class="form-group-1">
-                                            <label for="">Pendapat dan Usulan PBO</label>
-                                            <span class="border-b p-2">
-                                                {{ $pendapatDanUsulanPBO?->komentar_pbo }}
-                                            </span>
+                                        <div class="form-group-2">
+                                            <div class="field-review">
+                                                <div class="field-name">
+                                                    <label for="">Pendapat dan Usulan PBO</label>
+                                                </div>
+                                                <div class="field-answer">
+                                                    <p> {{ $pendapatDanUsulanPBO?->komentar_pbo ? $pendapatDanUsulanPBO?->komentar_pbo  : 'Tidak ada komentar' }}</p>
+                                                </div>
+                                            </div>
                                         </div>
                                     @endif
                                     <div class="form-group-2">
@@ -1505,33 +1527,48 @@
                                 </div>
                                 @else
                                 <div class="space-y-5">
-                                    <div class="form-group-1">
-                                        <label for="">Pendapat dan Usulan Staf Kredit</label>
-                                        <span class="border-b p-2">
-                                            {{ $pendapatDanUsulanStaf?->komentar_staff }}
-                                        </span>
-                                        <hr>
+                                    <div class="form-group-2">
+                                        <div class="field-review">
+                                            <div class="field-name">
+                                                <label for="">Pendapat dan Usulan Staf Kredit</label>
+                                            </div>
+                                            <div class="field-answer">
+                                                <p> {{ $pendapatDanUsulanStaf?->komentar_staff ? $pendapatDanUsulanStaf->komentar_staff : 'Tidak ada komentar' }}</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="form-group-1">
-                                        <label for="">Pendapat dan Usulan Penyelia Kredit</label>
-                                        <span class="border-b p-2">
-                                            {{ $pendapatDanUsulanPenyelia?->komentar_penyelia }}
-                                        </span>
+                                    <div class="form-group-2">
+                                        <div class="field-review">
+                                            <div class="field-name">
+                                                <label for="">Pendapat dan Usulan Penyelia Kredit</label>
+                                            </div>
+                                            <div class="field-answer">
+                                                <p> {{ $pendapatDanUsulanPenyelia?->komentar_penyelia ? $pendapatDanUsulanPenyelia->komentar_penyelia : 'Tidak ada komentar' }}</p>
+                                            </div>
+                                        </div>
                                     </div>
                                     @if ($dataUmumNasabah->id_pbo)
-                                        <div class="form-group-1">
-                                            <label for="">Pendapat dan Usulan PBO</label>
-                                            <span class="border-b p-2">
-                                                {{ $pendapatDanUsulanPBO?->komentar_pbo }}
-                                            </span>
+                                        <div class="form-group-2">
+                                            <div class="field-review">
+                                                <div class="field-name">
+                                                    <label for="">Pendapat dan Usulan PBO</label>
+                                                </div>
+                                                <div class="field-answer">
+                                                    <p> {{ $pendapatDanUsulanPBO?->komentar_pbo ? $pendapatDanUsulanPBO?->komentar_pbo  : 'Tidak ada komentar' }}</p>
+                                                </div>
+                                            </div>
                                         </div>
                                     @endif
                                     @if ($dataUmumNasabah->id_pbp)
-                                        <div class="form-group-1">
-                                            <label for="">Pendapat dan Usulan PBP</label>
-                                            <span class="border-b p-2">
-                                                {{ $pendapatDanUsulanPBP?->komentar_pbp }}
-                                            </span>
+                                        <<div class="form-group-2">
+                                            <div class="field-review">
+                                                <div class="field-name">
+                                                    <label for="">Pendapat dan Usulan PBP</label>
+                                                </div>
+                                                <div class="field-answer">
+                                                    <p> {{ $pendapatDanUsulanPBO?->komentar_pbp ? $pendapatDanUsulanPBO?->komentar_pbp  : 'Tidak ada komentar' }}</p>
+                                                </div>
+                                            </div>
                                         </div>
                                     @endif
                                     <div class="form-group-2">
