@@ -164,21 +164,21 @@
                 </div>
             </div>
             </div>
-            <div class="table-responsive">
+            <div class="table-responsive pl-5 pr-5">
             <table class="tables">
                 <thead>
                 <tr>
-                    <th>No.</th>
+                    <th class="w-5">No.</th>
                     <th>Kode SIPDE</th>
                     <th>Nama</th>
-                    <th>Tanggal Pengajuan</th>
-                    <th>Jenis Usaha</th>
-                    <th>Tipe Pengajuan</th>
+                    <th class="w-10">Tanggal Pengajuan</th>
+                    <th class="w-13">Jenis Usaha</th>
+                    <th class="w-11">Tipe Pengajuan</th>
                     <th>Plafon</th>
-                    <th>Tenor</th>
-                    <th>Status Pincetar</th>
-                    <th>Status SIPDE</th>
-                    <th>Aksi</th>
+                    <th class="w-13">Tenor</th>
+                    <th class="w-13">Status Pincetar</th>
+                    <th class="w-7">Status SIPDE</th>
+                    <th class="w-5">Aksi</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -320,7 +320,7 @@
             </table>
             </div>
             <div class="footer-table p-2">
-            <div class="flex justify-between">
+            <div class="flex justify-between pb-3">
                 <div class="mt-5 ml-5 text-sm font-medium text-gray-500">
                 <p>Showing {{ $start }} - {{ $end }} from {{ $data->total() }} entries</p>
                 </div>

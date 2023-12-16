@@ -518,8 +518,17 @@
                                         @endif
                                     @endforeach
                                 @endif
-
-                                <div class="form-group-1">
+                                {{-- SLIK --}}
+                                {{-- <div class="form-group-1 col-span-2 pl-2 pb-0">
+                                </div> --}}
+                                <div class="form-group-1 pl-2">
+                                    <div>
+                                        <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
+                                            <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
+                                                Data Slik :
+                                            </h2>
+                                        </div>
+                                    </div>
                                     <label for="">{{ $itemSlik?->nama }}</label>
                                     <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
                                         <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
@@ -1124,7 +1133,7 @@
                                                                                     @if ($itemTiga->is_commentable == 'Ya')
                                                                                         <div class="flex pl-2">
                                                                                             <div class="flex-1 w-64">
-                                                                                                <label for="">Komentar 99</label>
+                                                                                                <label for="">Komentar </label>
                                                                                                 <input type="text" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400 komentar"
                                                                                                     name="komentar_penyelia[]" placeholder="Masukkan Komentar"
                                                                                                     value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
