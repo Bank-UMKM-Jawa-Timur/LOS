@@ -81,6 +81,7 @@ $dataIndex = match ($skema) {
                                             $idLevelDua = str_replace(' ', '_', strtolower($item->nama));
                                         @endphp
                                         {{-- item ijin usaha --}}
+
                                         @if ($item->nama == 'Ijin Usaha')
                                             <div class="form-group">
                                                 <div class="input-box">
@@ -131,8 +132,8 @@ $dataIndex = match ($skema) {
                                                     <input type="file" name="upload_file[{{ $itemNIB->id }}]" data-id=""
                                                         placeholder="Masukkan informasi {{ $itemNIB->nama }}" class="form-input limit-size"
                                                         id="file_nib">
-                                                    <span class="invalid-tooltip" style="display: none" id="docNIB_text">Besaran file
-                                                        tidak boleh lebih dari 5 MB</span>
+                                                    <span class="text-red-500 m-0" style="display: none" id="docNIB_text">Besaran file
+                                                        tidak boleh lebih dari 5 MB</span>
                                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                                         <div class="invalid-feedback">
                                                             {{ $errors->first('dataLevelTiga.' . $key) }}
@@ -161,8 +162,8 @@ $dataIndex = match ($skema) {
                                                     <input type="file" name="upload_file[{{ $itemSKU->id }}]" id="surat_keterangan_usaha_file"
                                                         data-id="" placeholder="Masukkan informasi {{ $itemSKU->nama }}"
                                                         class="form-input limit-size">
-                                                    <span class="invalid-tooltip" style="display: none" id="docSKU_text">Besaran file
-                                                        tidak boleh lebih dari 5 MB</span>
+                                                    <span class="text-red-500 m-0" style="display: none" id="docSKU_text">Besaran file
+                                                        tidak boleh lebih dari 5 MB</span>
                                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                                         <div class="invalid-feedback">
                                                             {{ $errors->first('dataLevelTiga.' . $key) }}
@@ -189,7 +190,7 @@ $dataIndex = match ($skema) {
                                                         id="docNPWP_id">
                                                     <input type="file" name="upload_file[{{ $itemNPWP->id }}]" id="npwp_file" data-id=""
                                                         placeholder="Masukkan informasi {{ $itemNPWP->nama }}" class="form-input limit-size">
-                                                    <span class="invalid-tooltip" style="display: none" id="docNPWP_text">Besaran file
+                                                    <span class="text-red-500 m-0" style="display: none" id="docNPWP_text">Besaran file
                                                         tidak boleh lebih dari 5 MB</span>
                                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
                                                         <div class="invalid-feedback">
@@ -302,7 +303,7 @@ $dataIndex = match ($skema) {
                                                             <input type="file" name="upload_file[{{ $item->id }}]" id="{{ $idLevelDua }}"
                                                                 data-id="" placeholder="Masukkan informasi {{ $item->nama }}"
                                                                 class="form-input limit-size">
-                                                            <span class="invalid-tooltip" style="display: none">Maximum upload file size is 15
+                                                            <span class="text-red-500 m-0" style="display: none">Maximum upload file size is 15
                                                                 MB</span>
                                                             <span class="filename" style="display: inline;"></span>
                                                         </div>
@@ -491,7 +492,7 @@ $dataIndex = match ($skema) {
                                                                                 id="{{ $idLevelTiga }}" data-id=""
                                                                                 placeholder="Masukkan informasi {{ $itemTiga->nama }}"
                                                                                 class="form-input limit-size file-usaha" accept="image/*">
-                                                                            <span class="invalid-tooltip" style="display: none">Maximum upload
+                                                                            <span class="text-red-500 m-0" style="display: none">Maximum upload
                                                                                 file size is 15 MB</span>
                                                                             <span class="filename" style="display: inline;"></span>
                                                                             @if ($itemTiga->is_multiple)
@@ -675,8 +676,8 @@ $dataIndex = match ($skema) {
                                                                             name="upload_file[{{ $itemEmpat->id }}]" data-id=""
                                                                             placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
                                                                             class="form-input limit-size">
-                                                                        <span class="invalid-tooltip" style="display: none">Maximum upload file
-                                                                            size is 15 MB</span>
+                                                                        <span class="text-red-500 m-0" style="display: none">Maximum upload file
+                                                                            size is 5 MB</span>
                                                                         <span class="filename" style="display: inline;"></span>
                                                                     </div>
                                                                 </div>
@@ -899,7 +900,7 @@ $dataIndex = match ($skema) {
                 <label for="">{{ $itemKTPIs->nama }}</label>
                 <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
                 <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-input limit-size" id="foto_ktp_istri">
-                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                 @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                     <div class="invalid-feedback">
                         {{ $errors->first('dataLevelDua.' . $key) }}
@@ -911,7 +912,7 @@ $dataIndex = match ($skema) {
                     <label for="">{{ $itemKTPSu->nama }}</label>
                     <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
                     <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-input limit-size" id="foto_ktp_suami">
-                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                    <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                     @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                         <div class="invalid-feedback">
                             {{ $errors->first('dataLevelDua.' . $key) }}
@@ -926,7 +927,7 @@ $dataIndex = match ($skema) {
                 <label for="">{{ $itemKTPNas->nama }}</label>
                 <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
                 <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-input limit-size" id="foto_ktp_nasabah">
-                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                 @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                     <div class="invalid-feedback">
                         {{ $errors->first('dataLevelDua.' . $key) }}
@@ -1104,7 +1105,7 @@ $dataIndex = match ($skema) {
                                     <label>${valItem.nama}</label>
                                     <input type="hidden" name="id_item_file[${valItem.id}]" value="${valItem.id}" id="" class="input">
                                     <input type="file" name="upload_file[${valItem.id}]" data-id="" class="form-input limit-size">
-                                    <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                                    <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                                     <span class="filename" style="display: inline;"></span>
                                 </div>`);
                             } else {
@@ -1240,7 +1241,7 @@ $dataIndex = match ($skema) {
                                                 <input type="file" id="${valItem.nama.toString().replaceAll(" ", "_")}"
                                                     name="upload_file[${valItem.id}][]" data-id=""
                                                     placeholder="Masukkan informasi ${valItem.nama}" class="form-input limit-size">
-                                                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                                                <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                                                 <span class="filename" style="display: inline;"></span>
                                                 <div class="flex gap-2 multiple-action">
                                                     <button type="button" class="btn-add" data-item-id="${valItem.id}-${name_lowercase}">
@@ -1494,7 +1495,6 @@ $dataIndex = match ($skema) {
 
     // Cek Npwp
     $('#isNpwp').change(function() {
-        //console.log($(this).is(':checked'));
         if ($(this).is(':checked')) {
             $('#npwp').show();
             $('#npwp_id').removeAttr('disabled');
@@ -1742,6 +1742,20 @@ $dataIndex = match ($skema) {
             });
         }
     })
+    // Limit 2 MB
+    $('.limit-size-2').on('change', function() {
+        var size = (this.files[0].size / 1024 / 1024).toFixed(2)
+        if (size > 2) {
+            $(this).parent().parent().find('.error-limit').css({
+                "display": "block"
+            });
+            this.value = ''
+        } else {
+            $(this).parent().parent().find('.error-limit').css({
+                "display": "none"
+            });
+        }
+    })
     // Limit Upload Slik
     $('.limit-size-slik').on('change', function() {
         var size = (this.files[0].size / 1024 / 1024).toFixed(2)
@@ -1756,63 +1770,6 @@ $dataIndex = match ($skema) {
             });
         }
     })
-
-    $('body').on('click', '.file-wrapper .btn-add-file', function(e) {
-        const wrapper = $(this).parent().parent().parent();
-        const $clone = wrapper.clone();
-
-        $clone.find('[type="file"]').attr('data-id', '');
-        $clone.find('[type="file"]').val('');
-        $clone.find('.filename').html('');
-        $clone.insertAfter(wrapper);
-        $('.limit-size').on('change', function() {
-            var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-            if (size > 5) {
-                $(this).next().css({
-                    "display": "block"
-                });
-                this.value = ''
-            } else {
-                $(this).next().css({
-                    "display": "none"
-                });
-            }
-        })
-
-        $('.limit-size-slik').on('change', function() {
-            var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-            if (size > 10) {
-                $(this).next().css({
-                    "display": "block"
-                });
-                this.value = ''
-            } else {
-                $(this).next().css({
-                    "display": "none"
-                });
-            }
-        })
-    });
-
-    $('body').on('click', '.file-wrapper .btn-del-file', function(e) {
-        const inputData = $(this).parent().parent().find('input[type="file"]');
-        const wrapperEl = $(this).parent().parent().parent();
-
-        $.ajax({
-            url: '{{ route('pengajuan-kredit.temp.file') }}',
-            method: 'DELETE',
-            data: {
-                answer_id: inputData.data('id'),
-            },
-            success: (res) => {
-                inputData.parent().find('.filename').text('');
-                inputData.val('');
-
-                if (wrapperEl.siblings('.file-wrapper').get().length < 1) return;
-                wrapperEl.remove();
-            }
-        });
-    });
     // End Limit Upload
 
     @if (count($errors->all()))
@@ -1830,106 +1787,6 @@ $dataIndex = match ($skema) {
         `
         });
     @endif
-
-    function cekValueKosong(formIndex) {
-        var skema = $("#skema_kredit").val()
-        var form = ".form-wizard[data-index=" + formIndex + "]";
-        var inputFile = $(form + " input[type=file]")
-        var inputText = $(form + " input[type=text]")
-        var inputNumber = $(form + " input[type=number]")
-        var select = $(form + " select")
-        var textarea = $(form + " textarea")
-        /*$.each(inputFile, function(i, v) {
-            console.log(v.value)
-            if (v.value == '' && !$(this).prop('disabled') && $(this).closest('.filename') == '') {
-                if (form == ".form-wizard[data-index='2']") {
-                    var ijin = $(form + " select[name=ijin_usaha]")
-                    if (ijin != "tidak_ada_legalitas_usaha") {
-                        let val = $(this).attr("id").toString();
-                        nullValue.push(val.replaceAll("_", " "))
-                    }
-                } else {
-                    let val = $(this).attr("id").toString();
-                    nullValue.push(val.replaceAll("_", " "))
-                }
-            } else if (v.value != '') {
-                let val = $(this).attr("id").toString().replaceAll("_", " ");
-                for (var i = 0; i < nullValue.length; i++) {
-                    while (nullValue[i] == val) {
-                        nullValue.splice(i, 1)
-                        break;
-                    }
-                }
-            }
-        })*/
-
-        $.each(inputText, function(i, v) {
-            if (v.value == '' && !$(this).prop('disabled')) {
-                let val = $(this).attr("id").toString();
-                //console.log(val)
-                nullValue.push(val.replaceAll("_", " "))
-            } else if (v.value != '') {
-                let val = $(this).attr("id").toString().replaceAll("_", " ");
-                for (var i = 0; i < nullValue.length; i++) {
-                    while (nullValue[i] == val) {
-                        nullValue.splice(i, 1)
-                        break;
-                    }
-                }
-            }
-        })
-
-        $.each(inputNumber, function(i, v) {
-            if (v.value == '' && !$(this).prop('disabled')) {
-                let val = $(this).attr("id").toString();
-                //console.log(val)
-                nullValue.push(val.replaceAll("_", " "))
-            } else if (v.value != '') {
-                let val = $(this).attr("id").toString().replaceAll("_", " ");
-                for (var i = 0; i < nullValue.length; i++) {
-                    while (nullValue[i] == val) {
-                        nullValue.splice(i, 1)
-                        break;
-                    }
-                }
-            }
-        })
-
-        $.each(select, function(i, v) {
-            if (v.value == '' && !$(this).prop('disabled')) {
-                let val = $(this).attr("id").toString();
-                if (val != "persentase_kebutuhan_kredit_opsi" && val != "ratio_tenor_asuransi_opsi" && val !=
-                    "ratio_coverage_opsi") {
-                    //console.log(val)
-                    nullValue.push(val.replaceAll("_", " "))
-                }
-            } else if (v.value != '') {
-                let val = $(this).attr("id").toString().replaceAll("_", " ");
-                for (var i = 0; i < nullValue.length; i++) {
-                    while (nullValue[i] == val) {
-                        nullValue.splice(i, 1)
-                        break;
-                    }
-                }
-            }
-        })
-
-        $.each(textarea, function(i, v) {
-            if (v.value == '' && !$(this).prop('disabled')) {
-                let val = $(this).attr("id").toString();
-                //console.log(val)
-                nullValue.push(val.replaceAll("_", " "))
-            } else if (v.value != '') {
-                let val = $(this).attr("id").toString().replaceAll("_", " ");
-                for (var i = 0; i < nullValue.length; i++) {
-                    while (nullValue[i] == val) {
-                        nullValue.splice(i, 1)
-                        break;
-                    }
-                }
-            }
-        })
-    }
 
     var slik = document.getElementById("file_slik");
     var selectedFile;
@@ -2048,18 +1905,6 @@ $dataIndex = match ($skema) {
         `
         });
     @endif
-
-    $(".btn-simpan").on('click', function(e) {
-        if ($('#pendapat_usulan').val() == '') {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: "Field Pendapat dan usulan harus diisi"
-            })
-            e.preventDefault()
-        }
-    })
-
     // End Validation
 
 
@@ -2071,7 +1916,6 @@ $dataIndex = match ($skema) {
                 url: "{{ url('') }}/getkecamatan?kabID=" + kabID,
                 dataType: 'JSON',
                 success: function(res) {
-                       console.log(res);
                     if (res) {
                         $("#kecamatan").empty();
                         $("#kecamatan").append('<option>---Pilih Kecamatan---</option>');
@@ -2099,7 +1943,6 @@ $dataIndex = match ($skema) {
                 url: "{{ url('') }}/getkecamatan?kabID=" + kabID,
                 dataType: 'JSON',
                 success: function(res) {
-                       console.log(res);
                     if (res) {
                         $("#kecamatan_domisili").empty();
                         $("#kecamatan_domisili").append('<option>---Pilih Kecamatan---</option>');
@@ -2127,7 +1970,6 @@ $dataIndex = match ($skema) {
                 url: "{{ url('') }}/getkecamatan?kabID=" + kabID,
                 dataType: 'JSON',
                 success: function(res) {
-                       console.log(res);
                     if (res) {
                         $("#kecamatan_usaha").empty();
                         $("#kecamatan_usaha").append('<option>---Pilih Kecamatan---</option>');
@@ -2150,7 +1992,6 @@ $dataIndex = match ($skema) {
 
     $('#status_nasabah').on('change', function(e){
         var status = $(this).val();
-        // console.log(status);
         if (status == 2) {
             $('#label-ktp-nasabah').empty();
             $('#label-ktp-nasabah').html('Foto KTP Nasabah');
@@ -2166,15 +2007,10 @@ $dataIndex = match ($skema) {
 
     $('#tipe').on('change',function(e) {
         var tipe = $(this).val();
-        console.log(tipe);
         if (tipe == '2' || tipe == "0" ) {
-            $('#nama_pj').addClass('hidden');
             $('#tempat_berdiri').addClass('hidden');
-            $('#tanggal_berdiri').addClass('hidden');
         }else{
-            $('#nama_pj').removeClass('hidden');
             $('#tempat_berdiri').removeClass('hidden');
-            $('#tanggal_berdiri').removeClass('hidden');
             //badan usaha
             if (tipe == '3') {
                 $('#label_pj').html('Nama penanggung jawab');
@@ -2228,13 +2064,26 @@ $dataIndex = match ($skema) {
         rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
         return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
     }
+
+    $( document ).ready(function() {
+        countFormPercentage()
+    });
+
+    function countFormPercentage() {
+        $.each($('.tab-wrapper .btn-tab'), function(i, obj) {
+            var tabId = $(this).data('tab')
+            if (tabId) {
+                var percentage = formPercentage(`${tabId}-tab`)
+                $(this).find('.percentage').html(`${percentage}%`)
+            }
+        })
+    }
+
     // tab
     $(".tab-wrapper .btn-tab").click(function(e) {
         e.preventDefault();
         var tabId = $(this).data("tab");
-        console.log(tabId);
-        var percentage = formPercentage(`${tabId}-tab`)
-        $(this).closest('.percentage').html(`${percentage}%`)
+        countFormPercentage()
 
         $(".is-tab-content").removeClass("active");
         $(".tab-wrapper .btn-tab").removeClass(
@@ -2245,11 +2094,8 @@ $dataIndex = match ($skema) {
         $(".tab-wrapper .btn-tab").addClass("disable-tab");
 
         $(this).addClass("active-tab");
-        // $(this).addClass("text-gray-600");
 
         if (tabId) {
-            // $(this).removeClass("text-gray-400");
-            // $(this).removeClass("text-gray-400");
             $(this).removeClass("disable-tab");
             $(this).removeClass("disable-tab");
         }
@@ -2261,10 +2107,18 @@ $dataIndex = match ($skema) {
         const $activeContent = $(".is-tab-content.active");
         const $nextContent = $activeContent.next();
         const tabId = $activeContent.attr("id")
+        const dataTab = tabId.replaceAll('-tab', '')
+        // Set percentage
         var percentage = formPercentage(tabId)
-        $('.tab-wrapper').find('.active-tab .percentage').html(`${percentage}%`)
+        $('.tab-wrapper').find(`[data-tab=${dataTab}]`).find('.percentage').html(`${percentage}%`)
+        // Remove class active current nav tab
+        $('.tab-wrapper').find(`[data-tab=${dataTab}]`).removeClass('active-tab')
 
         if ($nextContent.length) {
+            const dataNavTab = $nextContent.attr("id") ? $nextContent.attr("id").replaceAll('-tab', '') : null
+            if (dataNavTab)
+                $('.tab-wrapper').find(`[data-tab=${dataNavTab}]`).addClass('active-tab')
+
             $activeContent.removeClass("active");
             $nextContent.addClass("active");
         }else{
@@ -2278,8 +2132,17 @@ $dataIndex = match ($skema) {
         const $prevContent = $activeContent.prev();
         const tabId = $activeContent.attr("id")
         var percentage = formPercentage(tabId)
+        const dataTab = tabId.replaceAll('-tab', '')
+        // Set percentage
+        var percentage = formPercentage(tabId)
+        $('.tab-wrapper').find(`[data-tab=${dataTab}]`).find('.percentage').html(`${percentage}%`)
+        // Remove class active current nav tab
+        $('.tab-wrapper').find(`[data-tab=${dataTab}]`).removeClass('active-tab')
 
         if ($prevContent.length) {
+            const dataNavTab = $prevContent.attr("id") ? $prevContent.attr("id").replaceAll('-tab', '') : null
+            if (dataNavTab)
+                $('.tab-wrapper').find(`[data-tab=${dataNavTab}]`).addClass('active-tab')
             $activeContent.removeClass("active");
             $prevContent.addClass("active");
             $(".next-tab").removeClass('hidden');
@@ -2292,64 +2155,113 @@ $dataIndex = match ($skema) {
         var inputFile = $(form + " input[type=file]")
         var inputText = $(form + " input[type=text]")
         var inputNumber = $(form + " input[type=number]")
+        var inputDate = $(form + " input[type=date]")
+        var inputHidden = $(form + " input[type=hidden]")
         var select = $(form + " select")
         var textarea = $(form + " textarea")
         var totalInput = 0;
         var totalInputNull = 0;
         var totalInputFilled = 0;
+        var totalInputHidden = 0;
+        var totalInputReadOnly = 0;
         var percent = 0;
 
         $.each(inputText, function(i, v) {
-            if (!$(this).prop('disabled') && !$(this).hasClass('hidden'))
+            if ($(this).prop('readonly'))
+                totalInputReadOnly++;
+            var inputBox = $(this).closest('.input-box');
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
                 totalInput++
-            var isNull = (v.value == '' || v.value == '0' || v.value.includes('kosong'))
-            if (v.value == '' && !$(this).prop('disabled') && !$(this).hasClass('hidden')) {
+            var isNull = (v.value == '' || v.value == '0')
+            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
                 totalInputNull++;
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).hasClass('hidden')) {
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
+                totalInputFilled++;
+            }
+        })
+
+        $.each(inputHidden, function(i, v) {
+            if ($(this).prop('readonly'))
+                totalInputReadOnly++;
+            var inputBox = $(this).closest('.input-box');
+            if ((!$(this).prop('disabled') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+                totalInputHidden++;
+            }
+        })
+
+        $.each(inputFile, function(i, v) {
+            if ($(this).prop('readonly'))
+                totalInputReadOnly++;
+            var inputBox = $(this).closest('.input-box');
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
+                totalInput++
+            var isNull = (v.value == '' || v.value == '0')
+            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+                totalInputNull++;
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
                 totalInputFilled++;
             }
         })
 
         $.each(inputNumber, function(i, v) {
-            if (!$(this).prop('disabled') && !$(this).hasClass('hidden'))
+            if ($(this).prop('readonly'))
+                totalInputReadOnly++;
+            var inputBox = $(this).closest('.input-box');
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
                 totalInput++
-            var isNull = (v.value == '' || v.value == '0' || v.value.includes('kosong'))
-            if (v.value == '' && !$(this).prop('disabled') && !$(this).hasClass('hidden')) {
+            var isNull = (v.value == '' || v.value == '0') && !$(this).prop('readonly')
+            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
                 totalInputNull++;
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).hasClass('hidden')) {
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
+                totalInputFilled++;
+            }
+        })
+
+        $.each(inputDate, function(i, v) {
+            if ($(this).prop('readonly'))
+                totalInputReadOnly++;
+            var inputBox = $(this).closest('.input-box');
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
+                totalInput++
+            var isNull = (v.value == '' || v.value == '0')
+            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+                totalInputNull++;
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
                 totalInputFilled++;
             }
         })
 
         $.each(select, function(i, v) {
-            if (!$(this).prop('disabled') && !$(this).hasClass('hidden'))
+            if ($(this).prop('readonly'))
+                totalInputReadOnly++;
+            var inputBox = $(this).closest('.input-box');
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
                 totalInput++
-            var isNull = (v.value == '' || v.value == '0' || v.value.includes('kosong'))
-            if (isNull && !$(this).prop('disabled') && !$(this).hasClass('hidden')) {
+            var isNull = (v.value == '' || v.value == '0')
+            if ((isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
                 totalInputNull++;
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).hasClass('hidden')) {
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
                 totalInputFilled++;
             }
         })
 
         $.each(textarea, function(i, v) {
-            if (!$(this).prop('disabled') && !$(this).hasClass('hidden'))
+            if ($(this).prop('readonly'))
+                totalInputReadOnly++;
+            var inputBox = $(this).closest('.input-box');
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
                 totalInput++
-            var isNull = (v.value == '' || v.value == '0' || v.value.includes('kosong'))
-            if (v.value == '' && !$(this).prop('disabled') && !$(this).hasClass('hidden')) {
+            var isNull = (v.value == '' || v.value == '0')
+            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
                 totalInputNull++;
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).hasClass('hidden')) {
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
                 totalInputFilled++;
             }
         })
 
-        percent = (totalInputFilled / totalInput) * 100
+        var totalReadHidden = (totalInputHidden + totalInputReadOnly)
+        percent = (totalInputFilled / (totalInput - totalInputReadOnly)) * 100
 
-        console.log('result')
-        console.log(`total : ${totalInput}`)
-        console.log(`total null : ${totalInputNull}`)
-        console.log(`total filled : ${totalInputFilled}`)
-        console.log(`total percent : ${percent}`)
         return parseInt(percent)
     }
 
@@ -2513,7 +2425,7 @@ $dataIndex = match ($skema) {
         var parent = $(this).closest('.input-box').parent();
         var num = parent.find('.input-box').length + 1;
         num = parseInt($(".figure").text());
-        // $(".figure").text(num+1);
+        $(".figure").text(num+1);
         parent.append(`
             <div class="input-box mb-4">
                 ${input}
@@ -2539,6 +2451,5 @@ $dataIndex = match ($skema) {
         $(this).val(formatNpwp(input))
     })
 </script>
-{{--  @include('pengajuan-kredit.partials.create-save-script')  --}}
 <script src="{{ asset('') }}js/custom.js"></script>
 @endpush

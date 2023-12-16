@@ -215,7 +215,7 @@ class NewDagulirController extends Controller
         $param['jenis_usaha'] = config('dagulir.jenis_usaha');
         $param['tipe'] = config('dagulir.tipe_pengajuan');
 
-        return view('dagulir.pengajuan.add-pengajuan-kredit', $param);
+        return view('dagulir.pengajuan-kredit.add-pengajuan-kredit', $param);
     }
 
     public function store(Request $request)
@@ -232,7 +232,7 @@ class NewDagulirController extends Controller
             'tujuan_penggunaan' => 'required',
             'jangka_waktu' => 'required',
             'status' => 'required|not_in:0',
-            'desa_id' => 'required|not_ind:0',
+            'desa' => 'required|not_in:0',
             'kecamatan_sesuai_ktp' => 'required|not_in:0',
             'kode_kotakab_ktp' => 'required|not_in:0',
             'alamat_sesuai_ktp' => 'required',
@@ -271,11 +271,9 @@ class NewDagulirController extends Controller
             $pengajuan->tujuan_penggunaan = $request->get('tujuan_penggunaan');
             $pengajuan->jangka_waktu = $request->get('jangka_waktu');
             $pengajuan->kode_bank_pusat = 1;
-            $pengajuan->id_slik = (int)$request->get('id_slik');
             $pengajuan->kode_bank_cabang = auth()->user()->id_cabang;
-            $pengajuan->desa_ktp = $request->get('desa_id');
+            $pengajuan->desa_ktp = $request->get('desa');
             $pengajuan->kec_ktp = $request->get('kecamatan_sesuai_ktp');
-            $pengajuan->desa_id = $request->get('desa');
             $pengajuan->kotakab_ktp = $request->get('kode_kotakab_ktp');
             $pengajuan->alamat_ktp = $request->get('alamat_sesuai_ktp');
             $pengajuan->kec_dom = $request->get('kecamatan_domisili');
@@ -314,6 +312,7 @@ class NewDagulirController extends Controller
                     File::makeDirectory($filePath, 493, true);
                 }
                 $image->move($filePath, $fileNameSlik);
+                $update_pengajuan->file_slik = $fileNameSlik;
             }
             // foto nasabah
             if ($request->has('foto_nasabah')) {
@@ -611,11 +610,11 @@ class NewDagulirController extends Controller
 
             if (!$statusSlik){
                 Alert::success('success', 'Data berhasil disimpan');
-                return redirect()->route('dagulir.pengajuan-kredit.index')->withStatus('Data berhasil disimpan.');
+                return redirect()->route('dagulir.pengajuan.index')->withStatus('Data berhasil disimpan.');
             }
             else {
                 Alert::error('error', 'Pengajuan ditolak');
-                return redirect()->route('dagulir.pengajuan-kredit.index')->withError('Pengajuan ditolak');
+                return redirect()->route('dagulir.pengajuan.index')->withError('Pengajuan ditolak');
             }
         } catch (Exception $e) {
             DB::rollBack();
@@ -667,6 +666,7 @@ class NewDagulirController extends Controller
     // insert komentar
     public function getInsertKomentar(Request $request)
     {
+
         $role = Auth::user()->role;
         if ($role == 'Penyelia Kredit' || $role == 'PBO' || $role == 'PBP' || $role == 'Pincab') {
             DB::beginTransaction();
@@ -744,6 +744,7 @@ class NewDagulirController extends Controller
                     $updateData->update();
 
                     $idKomentar = KomentarModel::where('id_pengajuan', $request->id_pengajuan)->first();
+
                     if ($role == 'Penyelia Kredit') {
                         KomentarModel::where('id', $idKomentar->id)->update(
                             [
@@ -852,6 +853,7 @@ class NewDagulirController extends Controller
                     }
                 }
                 $plafonUsulan = PlafonUsulan::where('id_pengajuan', $request->id_pengajuan)->first();
+
                 if ($plafonUsulan == null)
                     $plafonUsulan = new PlafonUsulan();
                 if($role == 'Penyelia Kredit'){
@@ -929,8 +931,8 @@ class NewDagulirController extends Controller
             $param['kec_ktp'] = Kecamatan::find($param['dataUmumNasabah']->kec_ktp)->kecamatan;
             $param['kab_ktp'] = Kabupaten::find($param['dataUmumNasabah']->kotakab_ktp)->kabupaten;
             $param['desa_ktp'] = '';
-            if ($param['dataUmumNasabah']->desa_id != null) {
-                $param['desa_ktp'] = Desa::find($param['dataUmumNasabah']->desa_id)->desa;
+            if ($param['dataUmumNasabah']->desa_ktp != null) {
+                $param['desa_ktp'] = Desa::find($param['dataUmumNasabah']->desa_ktp)->desa;
             }
             $param['kec_dom'] = Kecamatan::find($param['dataUmumNasabah']->kec_dom)->kecamatan;
             $param['kab_dom'] = Kabupaten::find($param['dataUmumNasabah']->kotakab_dom)->kabupaten;
@@ -996,7 +998,7 @@ class NewDagulirController extends Controller
             $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->where('nama', '!=', 'Data Umum')->get();
             $param['plafonUsulan'] = PlafonUsulan::where('id_pengajuan', $id)->first();
 
-            return view('dagulir.pengajuan.detail-pengajuan-jawaban', $param);
+            return view('dagulir.pengajuan-kredit.detail-pengajuan-jawaban', $param);
         } else {
             Alert::error('error', 'Tidak memiliki hak akses');
             return redirect()->back()->withError('Tidak memiliki hak akses.');

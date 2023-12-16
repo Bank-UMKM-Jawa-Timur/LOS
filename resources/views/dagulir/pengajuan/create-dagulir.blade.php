@@ -54,17 +54,19 @@
                 <input
                     type="text"
                     class="form-input"
-                    placeholder="Masukan Nama"
+                    placeholder="Masukkan Nama"
                     name="nama_lengkap"
+                    value="{{ old('nama_lengkap') }}"
                 />
             </div>
             <div class="input-box">
                 <label for="">Email</label>
                 <input
-                type="text"
+                type="email"
                 class="form-input"
-                placeholder="Masukan Email"
+                placeholder="Masukkan Email"
                 name="email"
+                value="{{ old('email') }}"
                 />
             </div>
         </div>
@@ -74,8 +76,9 @@
                 <input
                     type="text"
                     class="form-input"
-                    placeholder="Masukan Tempat Lahir"
+                    placeholder="Masukkan Tempat Lahir"
                     name="tempat_lahir"
+                    value="{{ old('tempat_lahir') }}"
                 />
             </div>
             <div class="input-box">
@@ -83,8 +86,9 @@
                 <input
                     type="date"
                     class="form-input"
-                    placeholder="Masukan Tanggal Lahir"
+                    placeholder="Masukkan Tanggal Lahir"
                     name="tanggal_lahir"
+                    value="{{ old('tempat_lahir') }}"
                 />
             </div>
             <div class="input-box">
@@ -92,9 +96,10 @@
                 <input
                     type="text"
                     class="form-input"
-                    placeholder="Masukan Nomor Telepon"
+                    placeholder="Masukkan Nomor Telepon"
                     name="telp"
                     oninput="validatePhoneNumber(this)"
+                    value="{{ old('telp') }}"
                 />
             </div>
             <div class="input-box">
@@ -102,7 +107,7 @@
                 <select name="jenis_usaha" id="" class="form-select">
                     <option value="">Pilih Jenis Usaha</option>
                     @foreach ($jenis_usaha as $key => $value)
-                        <option value="{{ $key }}">{{ $value }}</option>
+                        <option value="{{ $key }}" {{ old('jenis_usaha') }}>{{ $value }}</option>
                     @endforeach
                 </select>
             </div>
@@ -111,17 +116,19 @@
             <div class="input-box">
                 <label for="ktp_nasabah" id="foto-nasabah">Foto Nasabah</label>
                 <div class="flex gap-4">
-                    <input type="file" name="foto_nasabah" class="form-input"" />
+                    <input type="file" name="foto_nasabah" class="form-input limit-size-2" />
                 </div>
+                <span class="error-limit text-red-500" style="display: none; margin-top: 0;">Maximum upload file
+                    size is 2 MB</span>
             </div>
             <div class="input-box">
                 <label for="">Status</label>
                 <select name="status" id="status_nasabah" class="form-select">
-                    <option value="0">Pilih Status</option>
-                    <option value="1">Belum Menikah</option>
-                    <option value="2">Menikah</option>
-                    <option value="3">Duda</option>
-                    <option value="4">Janda</option>
+                    <option value="0" {{ old('status_nasabah') }}>Pilih Status</option>
+                    <option value="1" {{ old('status_nasabah') }}>Belum Menikah</option>
+                    <option value="2" {{ old('status_nasabah') }}>Menikah</option>
+                    <option value="3" {{ old('status_nasabah') }}>Duda</option>
+                    <option value="4" {{ old('status_nasabah') }}>Janda</option>
                 </select>
             </div>
             <div class="input-box">
@@ -132,13 +139,16 @@
                     placeholder="Masukan NIK"
                     name="nik_nasabah"
                     oninput="validateNIK(this)"
+                    value="{{ old('nik') }}"
                 />
             </div>
             <div class="input-box" id="ktp-nasabah">
                 <label for="ktp_nasabah" id="label-ktp-nasabah">Foto KTP Nasabah</label>
                 <div class="flex gap-4">
-                    <input type="file" name="ktp_nasabah" class="form-input"" />
+                    <input type="file" name="ktp_nasabah" class="form-input limit-size-2" />
                 </div>
+                <span class="text-red-500" style="display: none; margin-top: 0;">Maximum upload file
+                    size is 2 MB</span>
             </div>
             <div class="input-box hidden" id="nik_pasangan">
                 <label for="">NIK Pasangan</label>
@@ -147,30 +157,54 @@
                     class="form-input"
                     placeholder="Masukan NIK Pasangan"
                     name="nik_pasangan"
+                    value="{{ old('nik_pasangan') }}"
                     oninput="validateNIK(this)"
                 />
             </div>
             <div class="input-box hidden" id="ktp-pasangan">
                 <label for="ktp_pasangan" id="">Foto KTP Pasangan</label>
                 <div class="flex gap-4">
-                    <input type="file" name="ktp_pasangan" class="form-input" />
+                    <input type="file" name="ktp_pasangan" class="form-input limit-size-2" />
                 </div>
+                <span class="text-red-500" style="display: none; margin-top: 0;">Maximum upload file
+                    size is 2 MB</span>
             </div>
         </div>
         <div class="form-group-2">
             <div class="input-box">
                 <label for="">{{ $itemSlik->nama }}</label>
-                <select class="form-select" name="dataLevelDua[{{ $itemSlik->id }}]" id="dataLevelDua">
-                    <option value="">Pilih Slik</option>
+                <select name="dataLevelDua[{{ $itemSlik->id }}]" id="dataLevelDua" class="form-select"
+                    data-id_item={{ $itemSlik->id }}>
+                    <option value=""> --Pilih Data -- </option>
                     @foreach ($itemSlik->option as $itemJawaban)
-                        <option value="{{ $itemJawaban->id }}">{{ $itemJawaban->option }}</option>
+                    <option value="{{ $itemJawaban->skor . '-' . $itemJawaban->id }}">
+                        {{ $itemJawaban->option }}</option>
                     @endforeach
                 </select>
+                <div id="item{{ $itemSlik->id }}">
+
+                </div>
+                @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                <div class="invalid-feedback">
+                    {{ $errors->first('dataLevelDua.' . $key) }}
+                </div>
+                @endif
             </div>
             <div class="input-box">
-                <label for="">File Slik</label>
-                <input type="file" name="file_slik" class="form-input" />
+                <label for="">{{ $itemP->nama }}</label>
+                <input type="hidden" name="id_item_file[{{ $itemP->id }}]" value="{{ $itemP->id }}" id="">
+                <input type="file" name="upload_file[{{ $itemP->id }}]" id="file_slik" data-id=""
+                    placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-input limit-size-slik">
+                @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                <div class="invalid-feedback">
+                    {{ $errors->first('dataLevelDua.' . $key) }}
+                </div>
+                @endif
+                <span class="filename" style="display: inline;"></span>
+                {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
             </div>
+            <span class="text-red-500 m-0" style="display: none">Maximum upload file
+                size is 10 MB</span>
         </div>
         <div class="form-group-3">
                 <div class="input-box">
@@ -179,7 +213,7 @@
                         id="kabupaten">
                         <option value="0"> --- Pilih Kabupaten --- </option>
                         @foreach ($dataKabupaten as $item)
-                            <option value="{{ $item->id }}">{{ $item->kabupaten }}</option>
+                            <option value="{{ $item->id }}" {{ old('kode_kotakab_ktp') }}>{{ $item->kabupaten }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -202,9 +236,9 @@
                 <textarea
                     name="alamat_sesuai_ktp"
                     class="form-textarea"
-                    placeholder="Alamat Domisili"
+                    placeholder="Alamat K"
                     id=""
-                ></textarea>
+                >{{ old('alamat_sesuai_ktp') }}</textarea>
             </div>
         </div>
         <div class="form-group-2">
@@ -214,7 +248,7 @@
                     id="kabupaten_domisili">
                     <option value="0"> --- Pilih Kabupaten --- </option>
                     @foreach ($dataKabupaten as $item)
-                        <option value="{{ $item->id }}">{{ $item->kabupaten }}</option>
+                        <option value="{{ $item->id }}" {{ old('alamat_sesuai_ktp') == $item->id ? 'selected' : '' }}>{{ $item->kabupaten }}</option>
                     @endforeach
                 </select>
             </div>
@@ -233,7 +267,9 @@
                     class="form-textarea"
                     placeholder="Alamat Domisili"
                     id=""
-                ></textarea>
+                >
+                {{ old('alamat_domisili') }}
+            </textarea>
             </div>
 
         </div>
@@ -244,7 +280,7 @@
                     id="kabupaten_usaha">
                     <option value="0"> --- Pilih Kabupaten --- </option>
                     @foreach ($dataKabupaten as $item)
-                        <option value="{{ $item->id }}">{{ $item->kabupaten }}</option>
+                        <option value="{{ $item->id }}" {{ old('alamat_sesuai_ktp') == $item->id ? 'selected' : '' }}>{{ $item->kabupaten }}</option>
                     @endforeach
                 </select>
             </div>
@@ -263,7 +299,9 @@
                     class="form-textarea"
                     placeholder="Alamat Usaha"
                     id=""
-                ></textarea>
+                >
+                {{ old('alamat_usaha') }}
+                </textarea>
             </div>
         </div>
 
@@ -276,6 +314,7 @@
                     placeholder="Plafon"
                     name="nominal_pengajuan"
                     id="jumlah_kredit"
+                    value="{{ old('nominal_pengajuan') }}"
                 />
             </div>
             <div class="input-box">
@@ -289,6 +328,7 @@
                             name="jangka_waktu"
                             id="jangka_waktu"
                             aria-label="Jangka Waktu"
+                            value="{{ old('jangka_waktu') }}"
                             aria-describedby="basic-addon2"
                         />
                         <span class="jangka_waktu_error text-red-400 hidden"></span>
@@ -307,16 +347,17 @@
                     class="form-input"
                     placeholder="Masukan Tujuan Penggunaan"
                     name="tujuan_penggunaan"
+                    value="{{ old('tujuan_penggunaan') }}"
                 />
             </div>
             <div class="input-box">
                 <label for="">Jaminan yang disediakan</label>
                 <select name="ket_agunan" id="" class="form-select">
-                    <option value="0">Pilih Jaminan</option>
-                    <option value="shm">SHM</option>
-                    <option value="bpkb">BPKB</option>
-                    <option value="shgb">SHGB</option>
-                    <option value="lainnya">Lainnya</option>
+                    <option value="0" >Pilih Jaminan</option>
+                    <option value="shm" {{ old('ket_agunan') == 'shm' ? 'selected' : '' }}>SHM</option>
+                    <option value="bpkb" {{ old('ket_agunan') == 'bpkb' ? 'selected' : '' }}>BPKB</option>
+                    <option value="shgb" {{ old('ket_agunan') == 'shgb' ? 'selected' : '' }}>SHGB</option>
+                    <option value="lainnya" {{ old('ket_agunan') == 'lainnya' ? 'selected' : '' }}>Lainnya</option>
                 </select>
             </div>
         </div>
@@ -327,48 +368,54 @@
                 <select name="tipe_pengajuan" id="tipe" class="form-select">
                     <option value="0">Tipe Pengajuan</option>
                     @foreach ($tipe as $key => $value)
-                    <option value="{{ $key }}">{{ $value }}</option>
+                    <option value="{{ $key }}" {{ old('alamat_sesuai_ktp') == $key ? 'selected' : '' }}>{{ $value }}</option>
                     @endforeach
                 </select>
-            </div>
-            <div id="nama_pj" class="input-box hidden">
-            <label for="" id="label_pj"></label>
-                <input
-                    type="text"
-                    class="form-input"
-                    placeholder="Masukan disini .."
-                    name="nama_pj"
-                />
             </div>
             <div class="input-box">
                 <label for="">Jenis badan hukum</label>
                 <select name="jenis_badan_hukum" id="jenis_badan_hukum" class="form-select">
                     <option value="0">Jenis Badan Hukum</option>
-                    <option value="Berbadan Hukum">Berbadan Hukum</option>
-                    <option value="Tidak Berbadan Hukum">Tidak Berbadan Hukum</option>
+                    <option value="Berbadan Hukum" {{ old('jenis_berbadan') == 'Berbadan Hukum' ? 'selected' : '' }}>Berbadan Hukum</option>
+                    <option value="Tidak Berbadan Hukum" {{ old('jenis_berbadan') == 'Tidak Berbadan Hukum' ? 'selected' : '' }}>Tidak Berbadan Hukum</option>
                 </select>
             </div>
-            <div class="input-box hidden" id="tempat_berdiri">
+        </div>
+        <div class="form-group-3 hidden" id="tempat_berdiri">
+            <div id="nama_pj" class="input-box">
+                <label for="" id="label_pj"></label>
+                <input
+                    type="text"
+                    class="form-input"
+                    placeholder="Masukkan disini .."
+                    name="nama_pj"
+                    value="{{ old('nama_pj') }}"
+                />
+            </div>
+            <div class="input-box">
                 <label for="">Tempat Berdiri</label>
                 <input
                     type="text"
                     class="form-input"
                     name="tempat_berdiri"
+                    placeholder="Masukkan disini"
+                    value="{{ old('tempat_berdiri') }}"
 
                 />
             </div>
-            <div class="input-box hidden" id="tanggal_berdiri">
+            <div class="input-box">
                 <label for="">Tanggal Berdiri</label>
                 <div class="input-grouped">
                     <input
                     type="date"
                     class="form-input"
                     name="tanggal_berdiri"
-
+                    value="{{ old('tanggal_berdiri') }}"
                     />
                 </div>
             </div>
         </div>
+
         <div class="form-group-1">
             <div class="input-box">
                 <label for="">Hubungan Bank</label>
@@ -377,7 +424,7 @@
                     class="form-textarea"
                     placeholder="Hubungan Bank"
                     id=""
-                ></textarea>
+                >{{ old('hub_bank') }}</textarea>
             </div>
         </div>
         <div class="form-group-1">
@@ -388,7 +435,7 @@
                     class="form-textarea"
                     placeholder="Hasil Verikasi"
                     id=""
-                ></textarea>
+                >{{ old('hasil_verifikasi') }}</textarea>
             </div>
         </div>
         <div class="flex justify-between">
