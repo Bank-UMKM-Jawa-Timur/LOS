@@ -4,11 +4,11 @@
 
 @include('dagulir.modal.filter')
 
-@endsection
 @include('dagulir.pengajuan-kredit.modal.pilih-penyelia')
 @include('dagulir.modal.konfirmSendToPinca')
 @include('dagulir.modal.approval')
-@include('dagulir.modal.approvalSipde ')
+@include('dagulir.modal.approvalSipde')
+@endsection
 
 @push('script-inject')
 <script>
@@ -331,13 +331,13 @@
 <script>
     document.getElementById('modalConfirmPincab').addEventListener('click', function () {
         document.getElementById('confirmationModal').classList.remove('hidden');
-        document.getElementById('confirmationModal').classList.add('flex');
+        document.getElementById('confirmationModal').classList.add('h-fit');
         var nama = $('#modalConfirmPincab').data('nama');
         var namaHtml = nama.toLowerCase();
         var idPengajuan = $('#modalConfirmPincab').data('id_pengajuan');
         console.log(idPengajuan);
         $('#nama_pengajuan').html(namaHtml);
-        $('[name="id_pengajuan"]').val(idPengajuan);s
+        $('[name="id_pengajuan"]').val(idPengajuan);
     });
 
     document.getElementById('cancelAction').addEventListener('click', function () {

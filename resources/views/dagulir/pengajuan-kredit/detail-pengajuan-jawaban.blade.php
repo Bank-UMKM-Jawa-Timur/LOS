@@ -120,13 +120,7 @@
                                     <div class="input-box">
                                         <label for="">Foto Nasabah</label>
                                         <div class="p-2 bg-white border-b">
-                                            <img class="h-50 w-50" src="{{ asset('..').'/upload/'.$dataUmumNasabah->id.'/'.$dataUmumNasabah->foto_nasabah }}" alt="">
-                                        </div>
-                                    </div>
-                                    <div class="input-box">
-                                        <label for="">Foto KTP Nasabah</label>
-                                        <div class="p-2 bg-white border-b">
-                                            <img class="h-50 w-50" src="{{ asset('..').'/upload/'.$dataUmumNasabah->id.'/'.$dataUmumNasabah->foto_ktp }}" alt="">
+                                            {{-- <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span> --}}
                                         </div>
                                     </div>
                                     <div class="input-box">
@@ -146,10 +140,15 @@
                                     <div class="input-box">
                                         <label for="">NIK</label>
                                         <div class="p-2 bg-white border-b">
-                                            <span>{{ $dataUmumNasabah->nik ? $dataUmumNasabah->nik : '-' }}</span>
+                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
                                         </div>
                                     </div>
-
+                                    <div class="input-box">
+                                        <label for="">Foto KTP Nasabah</label>
+                                        <div class="p-2 bg-white border-b">
+                                            {{-- <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span> --}}
+                                        </div>
+                                    </div>
                                     @if ($dataUmumNasabah->status_pernikahan == '2')
                                         <div class="input-box">
                                             <label for="">NIK Pasangan</label>
@@ -160,7 +159,6 @@
                                         <div class="input-box">
                                             <label for="">Foto KTP Pasangan</label>
                                             <div class="p-2 bg-white border-b">
-                                            <img class="h-50 w-fit" src="{{ asset('..').'/upload/'.$dataUmumNasabah->id.'/'.$dataUmumNasabah->foto_ktp }}" alt="">
                                                 {{-- <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span> --}}
                                             </div>
                                         </div>
@@ -1754,15 +1752,17 @@
         skorPenyeliaInput1[i].addEventListener('wheel', function(event){
             if (event.deltaY < 0)
             {
-                var valueInput = parseInt(this.value)+1;
-                if (valueInput > 4) {
-                    this.value = 4-1
-                }
-            });
-        } else {
-            $("#kecamatan_usaha").empty();
-        }
-    });
+                    var valueInput = parseInt(this.value)+1;
+                    if (valueInput > 4) {
+                        this.value = 4-1
+                    }
+            } else {
+                $("#kecamatan_usaha").empty();
+            }
+        });
+    }
+
+
 
     $('#status_nasabah').on('change', function(e){
         var status = $(this).val();
@@ -1803,8 +1803,8 @@
                     this.value=0+1
                 }
             }
-        });
-    }
+        };
+    })
 
     var skorPenyeliaInput2 = document.getElementsByClassName('skorPenyeliaInput2')
     for(var i = 0; i < skorPenyeliaInput2.length; i++) {
@@ -1943,6 +1943,7 @@
 
     function countFormPercentage() {
         $.each($('.tab-wrapper .btn-tab'), function(i, obj) {
+            console.log(i);
             var tabId = $(this).data('tab')
             if (tabId) {
                 var percentage = formPercentage(`${tabId}-tab`)
@@ -1953,6 +1954,7 @@
 
     // tab
     $(".tab-wrapper .btn-tab").click(function(e) {
+        console.log(e);
         e.preventDefault();
         var tabId = $(this).data("tab");
         countFormPercentage()
