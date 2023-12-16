@@ -871,6 +871,11 @@ class NewDagulirController extends Controller
                     $plafonUsulan->plafon_usulan_pbp = str_replace('.', '', $request->plafon_usulan_pbp ?? 0);
                     $plafonUsulan->jangka_waktu_usulan_pbp = $request->jangka_waktu_usulan_pbp;
                     $plafonUsulan->save();
+                } else{
+                    $plafonUsulan->id_pengajuan = $request->id_pengajuan;
+                    $plafonUsulan->plafon_usulan_pincab = str_replace('.', '', $request->plafon_usulan_pincab ?? 0);
+                    $plafonUsulan->jangka_waktu_usulan_pincab = $request->jangka_waktu_usulan_pincab;
+                    $plafonUsulan->save();
                 }
 
                 // Log Pengajuan review
