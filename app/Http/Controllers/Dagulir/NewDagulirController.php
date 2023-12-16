@@ -1024,13 +1024,22 @@ class NewDagulirController extends Controller
                 ->first();
             $param['itemSP'] = ItemModel::where('level', 1)->where('nama', '=', 'Data Umum')->first();
 
-            $param['dataNasabah'] = PengajuanModel::select('pengajuan_dagulir.*', 'kabupaten.id as kabupaten_id', 'kabupaten.kabupaten', 'kecamatan.id as kecamatan_id', 'kecamatan.id_kabupaten', 'kecamatan.kecamatan', 'desa.id as desa_id', 'desa.id_kabupaten', 'desa.id_kecamatan', 'desa.desa')
+            $nasabah = PengajuanModel::select('pengajuan_dagulir.*', 'kabupaten.id as kabupaten_id', 'kabupaten.kabupaten', 'kecamatan.id as kecamatan_id', 'kecamatan.id_kabupaten', 'kecamatan.kecamatan', 'desa.id as desa_id', 'desa.id_kabupaten', 'desa.id_kecamatan', 'desa.desa')
                 ->join('pengajuan_dagulir', 'pengajuan_dagulir.id', 'pengajuan.dagulir_id')
                 ->leftJoin('kabupaten', 'kabupaten.id', 'pengajuan_dagulir.kotakab_ktp')
                 ->leftJoin('kecamatan', 'kecamatan.id', 'pengajuan_dagulir.kec_ktp')
                 ->leftJoin('desa', 'desa.id', 'pengajuan_dagulir.desa_ktp')
                 ->where('pengajuan.id', $id)
                 ->first();
+            $param['dataNasabah'] = $nasabah;
+            $param['dataDesa'] = Desa::where('id', $nasabah->desa_id)->first();
+            $param['dataKecamatan'] = Kecamatan::where('id', $nasabah->kec_ktp)->first();
+            $param['dataKabupaten'] = Kabupaten::where('id', $nasabah->kotakab_ktp)->first();
+            $param['dataKabupatenDom'] = Kabupaten::where('id', $nasabah->kotakab_dom)->first();
+            $param['dataKecamatanDom'] = Kecamatan::where('id', $nasabah->kec_dom)->first();
+            $param['dataKabupatenUsaha'] = Kabupaten::where('id', $nasabah->kotakab_usaha)->first();
+            $param['dataKecamatanUsaha'] = Kecamatan::where('id', $nasabah->kec_usaha)->first();
+            // return $param['dataKecamatanDom'];
             $param['jenis_usaha'] = config('dagulir.jenis_usaha');
 
             $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit', 'pengajuan.average_by_sistem', 'pengajuan.average_by_penyelia', 'pengajuan.average_by_pbo', 'pengajuan.average_by_pbp')
