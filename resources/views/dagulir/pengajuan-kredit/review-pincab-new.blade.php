@@ -13,7 +13,7 @@
                 </div>
             </div>
         </div>
-        <div class="body-pages">
+        <div class="body-pages review-pengajuan">
             <div class="container mx-auto p-3 bg-white">
             <div class="accordion-section">
                 <div class="accordion-header rounded pl-3 border border-theme-primary/5 relative">
@@ -110,7 +110,7 @@
                                         @endphp
 
                                         @if ($itemTextDua->opsi_text != "tidak_ada_legalitas_usaha")
-                                            <div class="form-group">
+                                            <div class="form-group-1">
                                                 <div class="field-review">
                                                     <div class="field-name">
                                                         <label for="">{{ $item->nama }}</label>
@@ -141,7 +141,7 @@
                                             </div>
                                         @endif
                                         @if ($itemTextDua->status_skor == 1)
-                                            <div class="form-group-2">
+                                            <div class="form-group-1">
                                                 <div class="field-review">
                                                     <div class="field-name">
                                                         <label for="">{{ $item->nama }}</label>
@@ -248,7 +248,7 @@
                                     @if ($item->nama == 'Persentase Kebutuhan Kredit Opsi' || $item->nama == 'Repayment Capacity Opsi')
 
                                     @else
-                                        <div class="form-group-2">
+                                        <div class="form-group-1">
                                             <div class="field-review">
                                                 <div class="field-name">
                                                     <label for="">{{ $item->nama }}</label>
@@ -320,7 +320,7 @@
                                         {{--  skor  --}}
                                     @endif
                                 @endif
-                                <div class="form-group-2">
+                                <div class="form-group-1">
                                     @foreach ($dataLevelTiga as $key => $itemTiga)
                                         @if (!$itemTiga->is_hide)
                                             @if ($itemTiga->opsi_jawaban != 'option')
@@ -676,7 +676,7 @@
                         <div class="p-5 space-y-5">
                             <hr>
                             @foreach ($pendapatUsulanStaf as $itemStaf)
-                                <div class="form-group">
+                                <div class="form-group-2">
                                     <div class="field-review">
                                         <div class="field-name">
                                             <h6>Pendapat dan Usulan Staf</h6>
@@ -688,7 +688,7 @@
                                 </div>
                             @endforeach
                             @foreach ($pendapatUsulanPenyelia as $itemPenyelia)
-                                <div class="form-group">
+                                <div class="form-group-2">
                                     <div class="field-review">
                                         <div class="field-name">
                                             <h6>Pendapat dan Usulan Penyelia</h6>
@@ -701,7 +701,7 @@
                             @endforeach
                             @if ($dataUmum->id_pbo)
                                 @foreach ($pendapatUsulanPBO as $itemPBO)
-                                    <div class="form-group">
+                                    <div class="form-group-2">
                                         <div class="field-review">
                                             <div class="field-name">
                                                 <h6>Pendapat dan Usulan PBO</h6>
@@ -715,7 +715,7 @@
                             @endif
                             @if ($dataUmum->id_pbp)
                                 @foreach ($pendapatUsulanPBP as $itemPBP)
-                                    <div class="form-group">
+                                    <div class="form-group-2">
                                         <div class="field-review">
                                             <div class="field-name">
                                                 <h6>Pendapat dan Usulan PBP</h6>
@@ -859,13 +859,13 @@
                         <p>Lengkapi form dibawah ini untuk menyetujui pengajuan.</p>
                     </div>
                     <div class="space-y-3">
-                        <div class="form-group">
+                        <div class="form-group-1">
                             <div class="input-box">
                                 <label for="">Nominal Disetujui</label>
                                 <input type="text" class="form-input rupiah" name="nominal_disetujui" id="nominal_disetujui" required>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group-1">
                             <div class="input-box">
                                 <label for="">Jangka Waktu Disetujui (Bulan)</label>
                                 <div class="flex items-center">

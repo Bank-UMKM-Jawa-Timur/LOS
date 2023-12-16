@@ -1243,6 +1243,55 @@ video {
   --tw-text-opacity: 1;
   color: rgb(220 53 69 / var(--tw-text-opacity));
 }
+    .review-pincab .field-review .field-name {
+  width: 100%;
+  padding: 0.5rem;
+  font-weight: 600;
+}
+    @media (min-width: 1024px) {
+
+  .review-pincab .field-review .field-name {
+    width: 85%;
+  }
+}
+    .review-pincab .field-review .field-answer {
+  width: 100%;
+  border-width: 1px;
+  padding: 0.5rem;
+}
+    .review-pincab .field-review .field-answer::after {
+  position: absolute;
+  top: 0px;
+  content: var(--tw-content);
+  margin-left: 8rem;
+}
+    @media (min-width: 1024px) {
+
+  .review-pincab .field-review .field-answer {
+    border-style: none;
+  }
+
+  .review-pincab .field-review .field-answer::after {
+    top: 0.5rem;
+    margin-left: -1.25rem;
+    --tw-content: ':';
+    content: var(--tw-content);
+  }
+}
+    .review-pincab .field-review .field-answer .field-skor {
+  border-radius: 0.25rem;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(220 53 69 / var(--tw-border-opacity));
+  background-color: rgb(220 53 69 / 0.05);
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-weight: 600;
+  --tw-text-opacity: 1;
+  color: rgb(220 53 69 / var(--tw-text-opacity));
+}
 
 *, ::before, ::after {
   --tw-border-spacing-x: 0;

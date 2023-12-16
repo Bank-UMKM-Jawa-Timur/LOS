@@ -293,6 +293,15 @@
     .review-pengajuan .field-review .field-answer .field-skor {
         @apply px-4 py-2 rounded bg-theme-primary/5 border font-semibold border-theme-primary text-theme-primary;
     }
+    .review-pincab .field-review .field-name {
+        @apply p-2 lg:w-[85%] w-full font-semibold;
+    }
+    .review-pincab .field-review .field-answer {
+        @apply lg:after:content-[':'] after:absolute  lg:after:top-2 after:top-0  lg:after:-ml-5 lg:border-none  after:ml-32 border  p-2 w-full;
+    }
+    .review-pincab .field-review .field-answer .field-skor {
+        @apply px-4 py-2 rounded bg-theme-primary/5 border font-semibold border-theme-primary text-theme-primary;
+    }
 
     .scrollbar {
         @apply h-[40px] overflow-hidden;
