@@ -629,7 +629,7 @@ class DagulirController extends Controller
             'data' => $data,
         ]);
     }
-    public function accPengajuan($id)
+    public function accPengajuan($id, Request $request)
     {
         $statusPincab = PengajuanModel::find($id);
         $komentarPincab = KomentarModel::where('id_pengajuan', $id)->first();
