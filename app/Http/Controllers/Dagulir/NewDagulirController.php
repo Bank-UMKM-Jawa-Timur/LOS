@@ -1405,7 +1405,10 @@ class NewDagulirController extends Controller
                     else
                         $storeSIPDE = 'success';
 
-                    $kode_pendaftaran = array_key_exists('kode_pendaftaran', $storeSIPDE) ? $storeSIPDE['kode_pendaftaran'] : false;
+                    $kode_pendaftaran = false;
+                    if (is_array($storeSIPDE)) {
+                        $kode_pendaftaran = array_key_exists('kode_pendaftaran', $storeSIPDE) ? $storeSIPDE['kode_pendaftaran'] : false;
+                    }
                     $delay = 1500000; // 1.5 sec
                     if ($storeSIPDE == 'success' || $kode_pendaftaran) {
                         // HIT update status survei endpoint dagulir
