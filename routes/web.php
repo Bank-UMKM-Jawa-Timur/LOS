@@ -61,6 +61,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('review-pincab-new', function() {
             return view('dagulir.pengajuan-kredit.review-pincab-new');
         });
+        Route::get('review-jawaban-new', function() {
+            return view('dagulir.pengajuan-kredit.detail-pengajuan-jawaban-new');
+        });
         // Route::get('pincab-kredit/{id}', [DagulirController::class, "sendToPincab"])->name('check.pincab');
         Route::post('pincab-kredit', [NewDagulirController::class, "sendToPincab"])->name('check.pincab');
         // Review Pincab

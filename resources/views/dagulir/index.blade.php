@@ -174,7 +174,8 @@
                     <th>Tanggal Pengajuan</th>
                     <th>Jenis Usaha</th>
                     <th>Tipe Pengajuan</th>
-                    <th>Nominal Pengajuan</th>
+                    <th>Plafon</th>
+                    <th>Tenor</th>
                     <th>Status Pincetar</th>
                     <th>Status SIPDE</th>
                     <th>Aksi</th>
@@ -213,6 +214,9 @@
                         </td>
                         <td>
                             {{ number_format($item->nominal,0,',','.') }}
+                        </td>
+                        <td>
+                            {{$item->jangka_waktu}} Bulan
                         </td>
                         <td>
                             {{$item->pengajuan->posisi}}
