@@ -339,7 +339,7 @@
 <script>
     document.getElementById('modalConfirmPincab').addEventListener('click', function () {
         document.getElementById('confirmationModal').classList.remove('hidden');
-        document.getElementById('confirmationModal').classList.add('h-fit');
+        document.getElementById('confirmationModal').classList.add('h-full');
         var nama = $('#modalConfirmPincab').data('nama');
         var namaHtml = nama.toLowerCase();
         var idPengajuan = $('#modalConfirmPincab').data('id_pengajuan');
