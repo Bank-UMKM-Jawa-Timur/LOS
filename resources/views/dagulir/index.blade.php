@@ -216,7 +216,7 @@
                         </td>
                         <td>
                             {{$item->pengajuan->posisi}}
-                            <p class="text-red-500">({{$item->nama_pemroses}})</p>
+                            <p class="text-red-500">{{ $item->pengajuan->posisi != 'Selesai' || $item->pengajuan->posisi != 'Ditolak' ? '(' . $item->nama_pemroses . ')' : '' }}</p>
                         </td>
                         <td>
                             {{ array_key_exists(intval($item->status), $status) ? $status[intval($item->status)] : 'Tidak ditemukan' }}
