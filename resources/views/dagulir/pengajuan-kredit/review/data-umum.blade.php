@@ -96,7 +96,7 @@
                         }
                     @endphp
                     @if ($isSelected)
-                        <p>{{ $dataNasabah->jenis_usaha ? $dataNasabah->jenis_usaha : '-' }}</p>
+                        <p>{{ $dataNasabah->jenis_usaha ? $value : '-' }}</p>
                     @endif
                 @endforeach
             </div>
@@ -108,6 +108,7 @@
             <div class="field-answer">
                 @if($dataNasabah->foto_nasabah)
                     <img src="{{ asset('..') . '/' . $dataNasabah->id . '/' . $dataNasabah->foto_nasabah }}" alt="">
+                    {{-- <img src="{{ asset('..') . '/upload/' . $dataNasabah->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}" alt=""> --}}
                 @else
                     <p>Tidak ada foto nasabah</p>
                 @endif
@@ -137,10 +138,10 @@
         </div>
         <div class="field-review">
             <div class="field-name">
-                <label for="">NIK</label>
+                <label for="">Nik</label>
             </div>
             <div class="field-answer">
-                <span>{{ $dataNasabah->nik ? $dataNasabah->nik : '-' }}</span>
+                <p>{{ $dataNasabah->nik ? $dataNasabah->nik : '-' }}</p>
             </div>
         </div>
         <div class="field-review">
@@ -151,12 +152,30 @@
                 <p>Tidak ada foto KTP nasabah</p>
             </div>
         </div>
+        @if ($dataNasabah->status_pernikahan == '2')
+            <div class="field-review">
+                <div class="field-name">
+                    <label for="">NIK Pasangan</label>
+                </div>
+                <div class="field-answer">
+                    <p>{{ $dataNasabah->nik_pasangan ? $dataNasabah->nik_pasangan : '-' }}</p>
+                </div>
+            </div>
+            <div class="field-review">
+                <div class="field-name">
+                    <label for="">Foto KTP Pasangan</label>
+                </div>
+                <div class="field-answer">
+                    <p>Tidak ada foto KTP nasabah</p>
+                </div>
+            </div>
+        @endif
         <div class="field-review">
             <div class="field-name">
                 <label for="">Slik</label>
             </div>
             <div class="field-answer">
-                <p>Tidak ada file Slik</p>
+                <span>{{ $dataNasabah->id_slik ? $dataNasabah->id_slik : '-' }}</span>
             </div>
         </div>
         <div class="field-review">
@@ -172,7 +191,7 @@
                 <label for="">Kota / Kabupaten KTP</label>
             </div>
             <div class="field-answer">
-                <p>NGAWI</p>
+                <p>{{$dataKabupaten->kabupaten}}</p>
             </div>
         </div>
         <div class="field-review">
@@ -180,46 +199,177 @@
                 <label for="">Kecamatan KTP</label>
             </div>
             <div class="field-answer">
-                <p>SINE</p>
+                <p>{{$dataKecamatan->kecamatan}}</p>
             </div>
         </div>
-    </div>
-    <div class="form-group-2">
+        <div class="field-review">
+            <div class="field-name">
+                <label for="">Desa KTP</label>
+            </div>
+            <div class="field-answer">
+                <p>{{$dataDesa->desa}}</p>
+            </div>
+        </div>
         <div class="field-review">
             <div class="field-name">
                 <label for="">Alamat Domisili</label>
             </div>
             <div class="field-answer">
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae suscipit earum, consectetur amet maiores temporibus laudantium nihil ratione deleniti ducimus, sed quae facilis quam sapiente libero modi cumque debitis totam.</p>
-            </div>
-        </div>  
-        <div class="field-review">
-            <div class="field-name">
-                <label for="">Jaminan Tambahan</label>
-            </div>
-            <div class="field-answer space-y-5">
-                <div>
-                    <h2 class="font-semibold">Tanah</h2>
-                </div>
-                <div>
-                    <h2 class="font-semibold">Marketable (Mempunyai Nilai)</h2>
-                </div>
-                <div>
-                    <div class="field-review">
-                        <div class="field-name">
-                            <label for="">Skor</label>
-                        </div>
-                        <div class="field-answer space-y-5">
-                            <p>
-                                <span class="field-skor">
-                                    4
-                                </span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
+                <p>{{ $dataNasabah->alamat_ktp ? $dataNasabah->alamat_ktp : '-' }}</p>
             </div>
         </div>
-    </div>
-
+        <div class="field-review">
+            <div class="field-name">
+                <label for="">Kota / Kabupaten Domisili</label>
+            </div>
+            <div class="field-answer">
+                <p>{{$dataKabupatenDom->kabupaten}}</p>
+            </div>
+        </div>
+        <div class="field-review">
+            <div class="field-name">
+                <label for="">Kecamatan Domisili</label>
+            </div>
+            <div class="field-answer">
+                <p>{{$dataKecamatanDom->kecamatan}}</p>
+            </div>
+        </div>
+        <div class="field-review">
+            <div class="field-name">
+                <label for="">Alamat Domisili</label>
+            </div>
+            <div class="field-answer">
+                <p>{{$dataNasabah->alamat_dom ?? '-'}}</p>
+            </div>
+        </div>
+        <div class="field-review">
+            <div class="field-name">
+                <label for="">Kota / Kabupaten Usaha</label>
+            </div>
+            <div class="field-answer">
+                <p>{{$dataKabupatenUsaha->kabupaten}}</p>
+            </div>
+        </div>
+        <div class="field-review">
+            <div class="field-name">
+                <label for="">Kecamatan Usaha</label>
+            </div>
+            <div class="field-answer">
+                <p>{{$dataKecamatanUsaha->kecamatan}}</p>
+            </div>
+        </div>
+        <div class="field-review">
+            <div class="field-name">
+                <label for="">Alamat Usaha</label>
+            </div>
+            <div class="field-answer">
+                <p>{{$dataNasabah->alamat_usaha ?? '-'}}</p>
+            </div>
+        </div>
+        <div class="field-review">
+            <div class="field-name">
+                <label for="">Plafon</label>
+            </div>
+            <div class="field-answer">
+                <p>{{$dataNasabah->nominal ? number_format($dataNasabah->nominal, 0, ',', '.') : '-'}}</p>
+            </div>
+        </div>
+        <div class="field-review">
+            <div class="field-name">
+                <label for="">Tenor</label>
+            </div>
+            <div class="field-answer">
+                <p>{{$dataNasabah->jangka_waktu ? $dataNasabah->jangka_waktu : '-'}} Bulan</p>
+            </div>
+        </div>
+        <div class="field-review">
+            <div class="field-name">
+                <label for="">Tujuan Penggunaan</label>
+            </div>
+            <div class="field-answer">
+                <p>{{$dataNasabah->tujuan_penggunaan ? $dataNasabah->tujuan_penggunaan : '-'}}</p>
+            </div>
+        </div>
+        <div class="field-review">
+            <div class="field-name">
+                <label for="">Jaminan yang disediakan</label>
+            </div>
+            <div class="field-answer">
+                <p>{{$dataNasabah->ket_agunan ? strtolower(trans($dataNasabah->ket_agunan)) : '-'}}</p>
+            </div>
+        </div>
+        @php
+            $tipe = "";
+            $nama_pj = "";
+            if ($dataNasabah->tipe == 2) {
+                $tipe = "Perorangan";
+            } else if ($dataNasabah->tipe == 3) {
+                $tipe = "Badan Usaha";
+                $nama_pj = "Nama penanggung jawab";
+            } else if ($dataNasabah->tipe == 4){
+                $tipe = "Kelompok Usaha";
+                $nama_pj = "Nama ketua";
+            } else {
+                $tipe = "-";
+                $nama_pj = "-";
+            }
+        @endphp
+        <div class="field-review">
+            <div class="field-name">
+                <label for="">Tipe Pengajuan</label>
+            </div>
+            <div class="field-answer">
+                <p>{{$dataNasabah->tipe ? $tipe : '-'}}</p>
+            </div>
+        </div>
+        <div class="field-review">
+            <div class="field-name">
+                <label for="">Jenis badan hukum</label>
+            </div>
+            <div class="field-answer">
+                <p>{{$dataNasabah->jenis_badan_hukum ? $dataNasabah->jenis_badan_hukum : '-'}}</p>
+            </div>
+        </div>
+        @if ($dataNasabah->tipe == 2)
+        <div class="field-review">
+            <div class="field-name">
+                <label for="">{{$nama_pj}}</label>
+            </div>
+            <div class="field-answer">
+                <p>{{$dataNasabah->nama_pj_ketua ? $dataNasabah->nama_pj_ketua : '-'}}</p>
+            </div>
+        </div>
+        <div class="field-review">
+            <div class="field-name">
+                <label for="">Tempat Berdiri</label>
+            </div>
+            <div class="field-answer">
+                <p>{{$dataNasabah->tempat_berdiri ? $dataNasabah->tempat_berdiri : '-'}}</p>
+            </div>
+        </div>
+        <div class="field-review">
+            <div class="field-name">
+                <label for="">Tanggal Berdiri</label>
+            </div>
+            <div class="field-answer">
+                <p>{{$dataNasabah->tanggal_berdiri ? $dataNasabah->tanggal_berdiri : '-'}}</p>
+            </div>
+        </div>
+        @endif
+        <div class="field-review">
+            <div class="field-name">
+                <label for="">Hubungan Bank</label>
+            </div>
+            <div class="field-answer">
+                <p>{{$dataNasabah->hubungan_bank ? $dataNasabah->hubungan_bank : '-'}}</p>
+            </div>
+        </div>
+        <div class="field-review">
+            <div class="field-name">
+                <label for="">Hasil Verifikasi</label>
+            </div>
+            <div class="field-answer">
+                <p>{{$dataNasabah->hasil_verifikasi ? $dataNasabah->hasil_verifikasi : '-'}}</p>
+            </div>
+        </div>
 </div>
