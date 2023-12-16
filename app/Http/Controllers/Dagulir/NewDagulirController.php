@@ -1146,7 +1146,11 @@ class NewDagulirController extends Controller
 
                 DB::commit();
 
-                return 'success';
+                $response = [
+                    'status' => 'success',
+                    'kode_pendaftaran' => $pengajuan_dagulir['data']['kode_pendaftaran'],
+                ];
+                return $response;
                 // return redirect()->route('dagulir.index')->withStatus('Berhasil mengirimkan data.');
             }
             else {
@@ -1401,10 +1405,11 @@ class NewDagulirController extends Controller
                     else
                         $storeSIPDE = 'success';
 
+                    $kode_pendaftaran = array_key_exists('kode_pendaftaran', $storeSIPDE) ? $storeSIPDE['kode_pendaftaran'] : false;
                     $delay = 1500000; // 1.5 sec
-                    if ($storeSIPDE == 'success') {
+                    if ($storeSIPDE == 'success' || $kode_pendaftaran) {
                         // HIT update status survei endpoint dagulir
-                        $survei = $this->updateStatus($nasabah->kode_pendaftaran, 1);
+                        $survei = $this->updateStatus($kode_pendaftaran, 1);
                         if ($currentPosisi == 'Pincab') {
                             if (is_array($survei)) {
                                 // Fail block
@@ -1425,7 +1430,7 @@ class NewDagulirController extends Controller
                         // HIT update status analisa endpoint dagulir
                         if ($nasabah->status != 2) {
                             $lampiran_analisa = lampiranAnalisa();
-                            $analisa = $this->updateStatus($nasabah->kode_pendaftaran, 2, $lampiran_analisa);
+                            $analisa = $this->updateStatus($kode_pendaftaran, 2, $lampiran_analisa);
                             if (is_array($analisa)) {
                                 // Fail block
                                 DB::rollBack();
@@ -1442,7 +1447,7 @@ class NewDagulirController extends Controller
 
                         // HIT update status disetujui endpoint dagulir
                         if ($nasabah->status != 3) {
-                            $setuju = $this->updateStatus($nasabah->kode_pendaftaran, 3);
+                            $setuju = $this->updateStatus($kode_pendaftaran, 3);
                             if (is_array($setuju)) {
                                 // Fail block
                                 DB::rollBack();
