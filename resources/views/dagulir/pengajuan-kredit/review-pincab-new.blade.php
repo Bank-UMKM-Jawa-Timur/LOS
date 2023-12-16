@@ -463,19 +463,8 @@
                                     <label for="">Pendapat & Usulan Pimpinan Cabang</label>
                                 </div>
                                 <div class="field-answer">
-                                    <textarea class="form-textarea w-full" placeholder="isi pendapat..."></textarea>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-4">
-                        <div class="form-group-2">
-                            <div class="field-review">
-                                <div class="field-name">
-                                    <label for="">Pendapat & Usulan Pimpinan Cabang</label>
-                                </div>
-                                <div class="field-answer">
-                                    <input type="text" class="form-input" placeholder="isi pendapat dan usulan">
+                                    <textarea class="form-textarea w-full" placeholder="isi pendapat..."
+                                        name="pendapat_usulan" id="pendapat_usulan"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -483,13 +472,91 @@
                 </div>
             </div>
             <div class="mt-4">
-                <button id="btn-dec"
+                <button type="button" id="btn-dec"
                     class="px-5 next-tab py-2 border rounded bg-theme-primary text-white">Tolak</button>
-                <button id="btn-acc"
+                <button type="button" id="btn-acc"
                     class="px-5 py-2 border rounded bg-green-600 text-white btn-simpan">Setujui</button>
             </div>
         </div>
     </section>
+
+    {{--  Decline Modal  --}}
+    <div class="modal-layout hidden" id="modal-confirm">
+        <div class="modal modal-sm bg-white">
+            <form id="logout-form" action="{{ route('dagulir.dec_pincab', $dataUmum->id) }}" method="GET">
+                <div class="modal-head">
+                    <div class="title">
+                        <h2 class="font-bold text-2xl tracking-tighter text-theme-text">
+                            Konfirmasi
+                        </h2>
+                    </div>
+                    <button data-dismiss-id="modal-confirm">
+                        <iconify-icon icon="iconamoon:close-bold" class="text-2xl"></iconify-icon>
+                    </button>
+                </div>
+                <div class="modal-body space-y-5">
+                    <div class="space-y-3">
+                        <p>Anda yakin akan menolak pengajuan ini?</p>
+                    </div>
+                </div>
+                <div class="modal-footer justify-end">
+                    <button class="btn-cancel" type="button" data-dismiss-id="modal-confirm">
+                        Batal
+                    </button>
+                    <button type="submit" class="btn-submit">Tolak</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {{--  Approve Modal  --}}
+    <div class="modal-layout hidden" id="modal-approve">
+        <div class="modal modal-sm bg-white">
+            <form id="logout-form" action="{{ route('dagulir.acc_pincab', $dataUmum->id) }}" method="GET">
+                <div class="modal-head">
+                    <div class="title">
+                        <h2 class="font-bold text-2xl tracking-tighter text-theme-text">
+                            Konfirmasi
+                        </h2>
+                    </div>
+                    <button data-dismiss-id="modal-approve">
+                        <iconify-icon icon="iconamoon:close-bold" class="text-2xl"></iconify-icon>
+                    </button>
+                </div>
+                <div class="modal-body space-y-5">
+                    <div class="space-y-3">
+                        <p>Lengkapi form dibawah ini untuk menyetujui pengajuan.</p>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="form-group">
+                            <div class="input-box">
+                                <label for="">Nominal Disetujui</label>
+                                <input type="text" class="form-input rupiah" name="nominal_disetujui" id="nominal_disetujui" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-box">
+                                <label for="">Jangka Waktu Disetujui (Bulan)</label>
+                                <div class="flex items-center">
+                                    <div class="flex-1">
+                                        <input type="number" class="form-input" name="jangka_waktu_disetujui" id="jangka_waktu_disetujui" required>
+                                    </div>
+                                    <div class="flex-shrink-0  mt-2.5rem">
+                                        <span class="form-input bg-gray-100">Bulan</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-end">
+                    <button class="btn-cancel" type="button" data-dismiss-id="modal-approve">
+                        Batal
+                    </button>
+                    <button type="submit" class="btn-submit">Setujui</button>
+                </div>
+            </form>
+        </div>
+    </div>
 @endsection
 
 @push('script-inject')
@@ -499,5 +566,35 @@
             $(this).next(".accordion-content").slideToggle();
             // $(this).find(".accordion-icon").toggleClass("rotate-180");
         });
+
+        $(document).on('click', '#btn-dec', function() {
+            $('#modal-confirm').removeClass('hidden')
+        })
+
+        $(document).on('click', '#btn-acc', function() {
+            $('#modal-approve').removeClass('hidden')
+        })
+
+        $('.rupiah').keyup(function(e) {
+            var input = $(this).val()
+            $(this).val(formatrupiah(input))
+        });
+
+        function formatrupiah(angka, prefix) {
+            var number_string = angka.replace(/[^,\d]/g, '').toString(),
+                split = number_string.split(','),
+                sisa = split[0].length % 3,
+                rupiah = split[0].substr(0, sisa),
+                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+    
+            // tambahkan titik jika yang di input sudah menjadi angka ribuan
+            if (ribuan) {
+                separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+    
+            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+            return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
+        }
     </script>
 @endpush
