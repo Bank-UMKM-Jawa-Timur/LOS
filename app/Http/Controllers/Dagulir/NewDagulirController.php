@@ -1129,28 +1129,33 @@ class NewDagulirController extends Controller
             ])->post(config('dagulir.host').'/pengajuan.json', $body)->json();
 
             if (array_key_exists('data', $pengajuan_dagulir)) {
-                $update_pengajuan_dagulir = PengajuanDagulir::find($pengajuan->dagulir_id);
-                $update_pengajuan_dagulir->kode_pendaftaran = $pengajuan_dagulir['data']['kode_pendaftaran'];
-                $update_pengajuan_dagulir->status = 1;
-                $update_pengajuan_dagulir->update();
-
-                // Log Pengajuan review
-                $dagulir = PengajuanDagulir::find($update_pengajuan_dagulir->dagulir_id);
-                $namaNasabah = 'undifined';
-
-                if ($dagulir)
-                    $namaNasabah = $dagulir->nama;
-
-                $role = Auth::user()->role;
-                $this->logPengajuan->store($role . ' dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' mengirimkan data dagulir dengan pengajuan atas nama ' . $namaNasabah, $pengajuan->id, Auth::user()->id, Auth::user()->nip);
-
-                DB::commit();
-
-                $response = [
-                    'status' => 'success',
-                    'kode_pendaftaran' => $pengajuan_dagulir['data']['kode_pendaftaran'],
-                ];
-                return $response;
+                if ($pengajuan_dagulir['data']['status_code'] == 200) {
+                    $update_pengajuan_dagulir = PengajuanDagulir::find($pengajuan->dagulir_id);
+                    $update_pengajuan_dagulir->kode_pendaftaran = $pengajuan_dagulir['data']['kode_pendaftaran'];
+                    $update_pengajuan_dagulir->status = 1;
+                    $update_pengajuan_dagulir->update();
+    
+                    // Log Pengajuan review
+                    $dagulir = PengajuanDagulir::find($update_pengajuan_dagulir->dagulir_id);
+                    $namaNasabah = 'undifined';
+    
+                    if ($dagulir)
+                        $namaNasabah = $dagulir->nama;
+    
+                    // $role = Auth::user()->role;
+                    // $this->logPengajuan->store($role . ' dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' mengirimkan data dagulir dengan pengajuan atas nama ' . $namaNasabah, $pengajuan->id, Auth::user()->id, Auth::user()->nip);
+    
+                    DB::commit();
+    
+                    $response = [
+                        'status' => 'success',
+                        'kode_pendaftaran' => $pengajuan_dagulir['data']['kode_pendaftaran'],
+                    ];
+                    return $response;
+                }
+                else {
+                    return $pengajuan_dagulir['data']['message'];
+                }
                 // return redirect()->route('dagulir.index')->withStatus('Berhasil mengirimkan data.');
             }
             else {
@@ -1400,11 +1405,8 @@ class NewDagulirController extends Controller
                     if ($nasabah)
                         $namaNasabah = $nasabah->nama;
                     // HIT Pengajuan endpoint dagulir
-                    if (!$nasabah->kode_pendaftaran)
-                        $storeSIPDE = $this->storeSipde($id);
-                    else
-                        $storeSIPDE = 'success';
-
+                    $storeSIPDE = $this->storeSipde($id);
+                    
                     $kode_pendaftaran = false;
                     if (is_array($storeSIPDE)) {
                         $kode_pendaftaran = array_key_exists('kode_pendaftaran', $storeSIPDE) ? $storeSIPDE['kode_pendaftaran'] : false;
