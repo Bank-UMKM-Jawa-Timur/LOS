@@ -41,8 +41,8 @@
 @endphp
 @section('content')
 <section class="">
-    <nav class="w-full bg-white z-20  p-3  top-[4rem] border sticky">
-        <div class="owl-carousel owl-theme tab-wrapper">
+    <nav class="w-full bg-white p-3  top-[4rem] border sticky">
+        <div class="tab-wrapper form-group-5 justify-center gap-2">
             <button data-toggle="tab" data-tab="dagulir" class="btn btn-tab active-tab font-semibold">
                 <span class="percentage">0%</span> Data Umum
             </button>
@@ -76,16 +76,25 @@
                             <p class="font-semibold text-gray-400">Review Pengajuan</p>
                         </div>
                         <div class="self-start bg-white w-full border">
-                            <div class="p-5 border-b">
+                            {{-- <div class="p-5 border-b">
                                 <h2 class="font-bold text-lg tracking-tighter">
                                     Pengajuan Masuk
                                 </h2>
-                            </div>
+                            </div> --}}
                             <div class="p-5 w-full space-y-5" id="data-umum">
-                                <h4 class="font-bold text-lg tracking-tighter ml-2">
+                                <div class="form-group-1 col-span-2 pl-2">
+                                    <div>
+                                        <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
+                                            <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
+                                                Data Diri :
+                                            </h2>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{-- <h4 class="font-bold text-lg tracking-tighter ml-2">
                                     Data Diri
                                 </h4>
-                                <hr>
+                                <hr> --}}
                                 {{-- <div class="form-group-2">
                                     <div class="p-4 bg-white border border-gray-200 rounded-lg dark:bg-gray-200">
                                         <div class="font-bold field-name">
@@ -264,12 +273,16 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <hr>
-                                <h4 class="font-bold text-lg tracking-tighter ml-2">
-                                    Data Usaha
-                                </h4>
-                                <hr>
+                                {{-- Data Usaha --}}
+                                <div class="form-group-1 col-span-2 pl-2">
+                                    <div>
+                                        <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
+                                            <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
+                                                Data Usaha :
+                                            </h2>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="form-group-2">
                                     <div class="field-review">
                                         <div class="field-name">
@@ -297,13 +310,25 @@
                                             <p>{{ $kec_usaha }}</p>
                                         </div>
                                     </div>
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Alamat Usaha</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <p>{{ $alamat_usaha }}</p>
+                                        </div>
+                                    </div>
                                 </div>
                                 {{-- data Pengajuan --}}
-                                <hr>
-                                <h4 class="font-bold text-lg tracking-tighter ml-2">
-                                    Data Pengajuan
-                                </h4>
-                                <hr>
+                                <div class="form-group-1 col-span-2 pl-2">
+                                    <div>
+                                        <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
+                                            <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
+                                                Data Pengajuan :
+                                            </h2>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="form-group-2">
                                     <div class="field-review">
                                         <div class="field-name">
@@ -335,6 +360,22 @@
                                         </div>
                                         <div class="field-answer">
                                             <p>{{ $dataUmumNasabah->ket_agunan ? $dataUmumNasabah->ket_agunan : '-' }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Tipe Pengajuan</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <p>{{ $dataUmumNasabah->tipe ? $dataUmumNasabah->tipe : '-' }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Jenis Badan Hukum</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <p>{{ $dataUmumNasabah->jenis_badan_hukum ? $dataUmumNasabah->jenis_badan_hukum : '-' }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -715,11 +756,15 @@
                                                         <div class="row col-span-2">
                                                             <div class="form-group-1">
                                                                 {{-- INI --}}
-                                                                <hr>
-                                                                <h4 class="font-bold text-lg tracking-tighter ml-2">
-                                                                    {{$item->nama}}
-                                                                </h4>
-                                                                <hr>
+                                                                <div class="form-group-1 col-span-2 pl-2">
+                                                                    <div>
+                                                                        <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
+                                                                            <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
+                                                                                {{ $item->nama }} :
+                                                                            </h2>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                             @if ($item->nama == 'Ijin Usaha' && $countIjin == 0)
                                                                 <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
@@ -767,7 +812,7 @@
                                                             <div class="form-group-1">
                                                                 @if (!$item->is_hide)
                                                                     @if ($item->nama)
-                                                                        <div class="row">
+                                                                        {{-- <div class="row"> --}}
                                                                             <div class="field-review">
                                                                                 <div class="field-name">
                                                                                     <label for="">{{$item->nama}}</label>
@@ -782,6 +827,8 @@
                                                                                     <h4 class="font-bold">{{ $itemJawaban->option }}</h4>
                                                                                 </div>
                                                                             </div> --}}
+                                                                        {{-- </div> --}}
+                                                                    @endif
                                                                         </div>
                                                                 @endif
                                                                     <div class="input-group input-b-bottom">
@@ -790,14 +837,15 @@
                                                                         <input type="hidden" name="id_option[]"
                                                                             value="{{ $itemJawaban->id }}">
                                                                         @if ($item->is_commentable == 'Ya')
-                                                                            <div class="form-group-2">
-                                                                                <div class="w-full ">
+                                                                            <div class="flex pl-2">
+                                                                                <div class="flex-1 w-64">
                                                                                     <label for="">Komentar</label>
                                                                                     <input type="text" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400 komentar"
                                                                                         name="komentar_penyelia[]" placeholder="Masukkan Komentar"
                                                                                         value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                                 </div>
-                                                                                <div class="w-[15%] m-0">
+                                                                                <div class="flex-3 w-5"></div>
+                                                                                <div class="flex-2 w-16">
                                                                                     @php
                                                                                         $skorInput2 = null;
                                                                                         $skorInput2 = $getSkorPenyelia->skor_penyelia ? $getSkorPenyelia->skor_penyelia : $itemJawaban->skor;
@@ -811,6 +859,7 @@
                                                                                         {{ $item->status_skor == 0 ? 'readonly' : '' }}
                                                                                         value="{{ $skorInput2 || $skorInput2 > 0 ? $skorInput2 : null }}">
                                                                                 </div>
+                                                                                <div class="flex-3 w-5"></div>
                                                                             </div>
                                                                         @else
                                                                             <input type="hidden" name="komentar_penyelia[]"
@@ -1077,14 +1126,15 @@
                                                                                         $skorInput3 = $getSkorPenyelia?->skor_penyelia ? $getSkorPenyelia?->skor_penyelia : $itemJawabanLevelTiga->skor;
                                                                                     @endphp
                                                                                     @if ($itemTiga->is_commentable == 'Ya')
-                                                                                        <div class="grid grid-cols-2 gap-2">
-                                                                                            <div class="w-full">
-                                                                                                <label for="">Komentar</label>
+                                                                                        <div class="flex pl-2">
+                                                                                            <div class="flex-1 w-64">
+                                                                                                <label for="">Komentar 99</label>
                                                                                                 <input type="text" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400 komentar"
                                                                                                     name="komentar_penyelia[]" placeholder="Masukkan Komentar"
                                                                                                     value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                                             </div>
-                                                                                            <div class="input-skor w-[15%]">
+                                                                                            <div class="flex-3 w-5"></div>
+                                                                                            <div class="flex-2 w-16">
                                                                                                 <label for="">Skor</label>
                                                                                                 <input type="number" class="w-full px-3 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400"
                                                                                                     min="0"
@@ -1094,6 +1144,7 @@
                                                                                                     {{ $itemTiga->status_skor == 0 ? 'readonly' : '' }}
                                                                                                     value="{{ $skorInput3 || $skorInput3 > 0 ? $skorInput3 : null }}">
                                                                                             </div>
+                                                                                            <div class="flex-3 w-5"></div>
                                                                                         </div>
                                                                                     @else
                                                                                         <input type="hidden" name="komentar_penyelia[]"
@@ -1495,11 +1546,11 @@
                             <h2 class="text-4xl font-bold tracking-tighter text-theme-primary">Pendapat dan Usulan</h2>
                         </div>
                         <div class="self-start bg-white w-full border">
-                            <div class="p-5 border-b">
+                            {{-- <div class="p-5 border-b">
                                 <h2 class="font-bold text-lg tracking-tighter">
                                     Pendapat dan Usulan
                                 </h2>
-                            </div>
+                            </div> --}}
                             <!-- pendapat-dan-usulan -->
                             <div class="p-5 space-y-5">
                                 @if (Auth::user()->role == 'Penyelia Kredit')
