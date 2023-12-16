@@ -666,7 +666,6 @@ class NewDagulirController extends Controller
     // insert komentar
     public function getInsertKomentar(Request $request)
     {
-
         $role = Auth::user()->role;
         if ($role == 'Penyelia Kredit' || $role == 'PBO' || $role == 'PBP' || $role == 'Pincab') {
             DB::beginTransaction();
@@ -1131,8 +1130,6 @@ class NewDagulirController extends Controller
             if (array_key_exists('data', $pengajuan_dagulir)) {
                 $update_pengajuan_dagulir = PengajuanDagulir::find($pengajuan->dagulir_id);
                 $update_pengajuan_dagulir->kode_pendaftaran = $pengajuan_dagulir['data']['kode_pendaftaran'];
-                // $update_pengajuan_dagulir->nominal_realisasi = $this->formatNumber($request->nominal_realisasi);
-                // $update_pengajuan_dagulir->jangka_waktu = $request->jangka_waktu;
                 $update_pengajuan_dagulir->status = 1;
                 $update_pengajuan_dagulir->update();
 
@@ -1165,8 +1162,7 @@ class NewDagulirController extends Controller
         }
     }
 
-    public function updateStatus($kode_pendaftaran, $status, $lampiran_analisa = null, $jangka_waktu = null, $realisasi_dana = null) {
-        $data = sipde_token();
+    private function getStatusBody($kode_pendaftaran, $status, $lampiran_analisa = null, $jangka_waktu = null, $realisasi_dana = null) {
         $body = [];
         if ($status == 1) {
             // Survei
@@ -1194,8 +1190,8 @@ class NewDagulirController extends Controller
                 "kode_pendaftaran" => $kode_pendaftaran,
                 "status" => $status,
                 "lampiran_analisa" => "",
-                "jangka_waktu" => $jangka_waktu,
-                "realisasi_dana" => $realisasi_dana,
+                "jangka_waktu" => "",
+                "realisasi_dana" => "",
             ];
         }
         if ($status == 4) {
@@ -1208,27 +1204,97 @@ class NewDagulirController extends Controller
                 "realisasi_dana" => "",
             ];
         }
-        $host = config('dagulir.host');
-        $pengajuan_dagulir = Http::withHeaders([
-            'Authorization' => 'Bearer ' .$data['token'],
-        ])->post($host.'/update_status.json', $body)->json();
+        if ($status == 5) {
+            // REALISASI KREDIT
+            $body = [
+                "kode_pendaftaran" => $kode_pendaftaran,
+                "status" => $status,
+                "lampiran_analisa" => "",
+                "jangka_waktu" => $jangka_waktu,
+                "realisasi_dana" => $realisasi_dana,
+            ];
+        }
+        if ($status == 6) {
+            // SELESAI
+            $body = [
+                "kode_pendaftaran" => $kode_pendaftaran,
+                "status" => $status,
+                "lampiran_analisa" => "",
+                "jangka_waktu" => "",
+                "realisasi_dana" => "",
+            ];
+        }
+        if ($status == 7) {
+            // DIBATALKAN
+            $body = [
+                "kode_pendaftaran" => $kode_pendaftaran,
+                "status" => $status,
+                "lampiran_analisa" => "",
+                "jangka_waktu" => "",
+                "realisasi_dana" => "",
+            ];
+        }
+        if ($status == 8) {
+            // DITINDAKLANJUTI
+            $body = [
+                "kode_pendaftaran" => $kode_pendaftaran,
+                "status" => $status,
+                "lampiran_analisa" => "",
+                "jangka_waktu" => "",
+                "realisasi_dana" => "",
+            ];
+        }
 
-        // Log Pengajuan review
-        $dagulir = PengajuanDagulir::select('id', 'nama')
-                                    ->where('kode_pendaftaran', $kode_pendaftaran)
-                                    ->first();
-        // $pengajuan = PengajuanModel::select('id')
-        //                             ->where('dagulir_id', $dagulir->id)
-        //                             ->first();
-        $namaNasabah = 'undifined';
+        return $body;
+    }
 
-        if ($dagulir)
-            $namaNasabah = $dagulir->nama;
+    public function updateStatus($kode_pendaftaran, $status, $lampiran_analisa = null, $jangka_waktu = null, $realisasi_dana = null) {
+        $data = sipde_token();
+        $body = $this->getStatusBody($kode_pendaftaran, $status, $lampiran_analisa = null, $jangka_waktu = null, $realisasi_dana = null);
+        
+        if (!empty($body)) {
+            $host = config('dagulir.host');
+            DB::beginTransaction();
+            try {
+                $pengajuan_dagulir = Http::withHeaders([
+                    'Authorization' => 'Bearer ' .$data['token'],
+                ])->post($host.'/update_status.json', $body)->json();
 
-        $role = Auth::user()->role;
-        // $this->logPengajuan->store($role . ' dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan update status terhadap pengajuan atas nama ' . $namaNasabah, $pengajuan->id, Auth::user()->id, Auth::user()->nip);
-
-        return $pengajuan_dagulir;
+                if ($pengajuan_dagulir) {
+                    if (array_key_exists('data', $pengajuan_dagulir)) {
+                        $response = $pengajuan_dagulir['data'];
+                        // Check status code
+                        if (array_key_exists('status_code', $response)) {
+                            if ($response['status_code'] == 200) {
+                                // Update status
+                                DB::table('pengajuan_dagulir')
+                                ->where('kode_pendaftaran', $kode_pendaftaran)
+                                ->update([
+                                    'status' => $status,
+                                    'updated_at' => date('Y-m-d H:i:s'),
+                                ]);
+                                DB::commit();
+                                return $response['status_code'];
+                            }
+                            else {
+                                return array_key_exists('message', $response) ? $response['message'] : 'failed';
+                            }
+                        }
+                        return $response;
+                    }
+                    return $pengajuan_dagulir;
+                }
+                else {
+                    return $pengajuan_dagulir;
+                }
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return $e->getMessage();
+            }
+        }
+        else {
+            return 'empty body';
+        }
     }
 
     public function index(Request $request)
@@ -1259,7 +1325,6 @@ class NewDagulirController extends Controller
 
     public function sendToPincab(Request $request)
     {
-        // return $request;
         $id = $request->get('id_pengajuan');
         try {
             $pengajuan = PengajuanModel::find($id);
@@ -1295,31 +1360,25 @@ class NewDagulirController extends Controller
     {
         DB::beginTransaction();
         try {
-            $dagulir = PengajuanDagulir::find($id);
-            if ($dagulir) {
-                $pengajuan = PengajuanModel::where('dagulir_id', $dagulir->id)->first();
+            if (auth()->user()->role == 'Pincab') {
+                $pengajuan = PengajuanModel::find($id);
+                $currentPosisi = $pengajuan->posisi;
+                $komentarPincab = KomentarModel::where('id_pengajuan', $id)->first();
                 if ($pengajuan) {
-                    $pengajuan->id_pincab = auth()->user()->id;
-                    $pengajuan->tanggal_review_pincab = date('Y-m-d');
-                    $pengajuan->save();
-
                     $idKomentar = KomentarModel::where('id_pengajuan', $pengajuan->id)->first();
                     KomentarModel::where('id', $idKomentar->id)->update(
                         [
-                            'komentar_pincab' => $request->pendapat,
+                            'komentar_pincab' => $request->pendapat_usulan,
                             'id_pincab' => Auth::user()->id,
                             'updated_at' => date('Y-m-d H:i:s')
                         ]
                     );
-                }
-            }
-            $statusPincab = PengajuanModel::find($id);
-            $komentarPincab = KomentarModel::where('id_pengajuan', $id)->first();
-            if (auth()->user()->role == 'Pincab') {
-                if ($komentarPincab->komentar_pincab != null) {
-                    $statusPincab->posisi = "Selesai";
-                    $statusPincab->tanggal_review_pincab = date(now());
-                    $statusPincab->update();
+                    $pengajuan->id_pincab = auth()->user()->id;
+                    $pengajuan->tanggal_review_pincab = date('Y-m-d');
+                    $pengajuan->posisi = "Selesai";
+                    $pengajuan->tanggal_review_pincab = date(now());
+                    $pengajuan->update();
+
                     $plafonUsulan = PlafonUsulan::where('id_pengajuan', $id)->first();
                     $plafon_acc = intval(str_replace('.','', $request->get('nominal_disetujui')));
                     $tenor_acc = intval($request->get('jangka_waktu_disetujui'));
@@ -1331,39 +1390,85 @@ class NewDagulirController extends Controller
                         $plafonUsulan->update();
                     }
 
-                    $nasabah = PengajuanDagulir::select('kode_pendaftaran','nama', 'nominal', 'jangka_waktu')->find($statusPincab->dagulir_id);
+                    $nasabah = PengajuanDagulir::select('kode_pendaftaran', 'status', 'nama', 'nominal', 'jangka_waktu')->find($pengajuan->dagulir_id);
                     $namaNasabah = 'undifined';
                     if ($nasabah)
                         $namaNasabah = $nasabah->nama;
                     // HIT Pengajuan endpoint dagulir
-                    $storeSIPDE = $this->storeSipde($id);
+                    if (!$nasabah->kode_pendaftaran)
+                        $storeSIPDE = $this->storeSipde($id);
+                    else
+                        $storeSIPDE = 'success';
 
+                    $delay = 1500000; // 1.5 sec
                     if ($storeSIPDE == 'success') {
                         // HIT update status survei endpoint dagulir
-                        $this->updateStatus($nasabah->kode_pendaftaran, 1);
+                        $survei = $this->updateStatus($nasabah->kode_pendaftaran, 1);
+                        if ($currentPosisi == 'Pincab') {
+                            if (is_array($survei)) {
+                                // Fail block
+                                if ($survei['message'] != 'Update Status Gagal. Anda tidak bisa mengubah status, karena status saat ini adalah SURVEY') {
+                                    DB::rollBack();
+                                    return redirect()->back()->withError($survei);
+                                }
+                            }
+                            else {
+                                if ($survei != 200) {
+                                    DB::rollBack();
+                                    return redirect()->back()->withError($survei);
+                                }
+                            }
+                            usleep($delay);
+                        }
 
                         // HIT update status analisa endpoint dagulir
-                        $lampiran_analisa = lampiranAnalisa();
-                        $this->updateStatus($nasabah->kode_pendaftaran, 2, $lampiran_analisa);
+                        if ($nasabah->status != 2) {
+                            $lampiran_analisa = lampiranAnalisa();
+                            $analisa = $this->updateStatus($nasabah->kode_pendaftaran, 2, $lampiran_analisa);
+                            if (is_array($analisa)) {
+                                // Fail block
+                                DB::rollBack();
+                                return redirect()->back()->withError($analisa);
+                            }
+                            else {
+                                if ($survei != 200 || $survei != '200') {
+                                    DB::rollBack();
+                                    return redirect()->back()->withError($analisa);
+                                }
+                            }
+                            usleep($delay);
+                        }
 
                         // HIT update status disetujui endpoint dagulir
-                        $this->updateStatus($nasabah->kode_pendaftaran, 3, null, $tenor_acc, $plafon_acc);
-
-                        // $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menyetujui pengajuan atas nama ' . $namaNasabah . '.', $id, Auth::user()->id, Auth::user()->nip);
+                        if ($nasabah->status != 3) {
+                            $setuju = $this->updateStatus($nasabah->kode_pendaftaran, 3);
+                            if (is_array($setuju)) {
+                                // Fail block
+                                DB::rollBack();
+                                return redirect()->back()->withError($setuju);
+                            }
+                            else {
+                                if ($setuju != 200) {
+                                    DB::rollBack();
+                                    return redirect()->back()->withError($setuju);
+                                }
+                            }
+                        }
 
                         DB::commit();
                         event(new EventMonitoring('menyetujui pengajuan'));
-
-                        Alert::success('success', 'Berhasil mengganti posisi');
-                        return redirect()->route('dagulir.index')->withStatus('Berhasil mengganti posisi.');
+                        Alert::success('success', 'Berhasil menyetujui pengajuan');
+                        return redirect()->route('dagulir.index')->withStatus('Berhasil menyetujui pengajuan.');
                     }
                     else {
                         DB::rollBack();
+                        return 'Terjadi kesalahan saat mengirimkan data SIPDE.';
                         return redirect()->back()->withError('Terjadi kesalahan saat mengirimkan data SIPDE.');
                     }
-                } else {
-                    Alert::error('error', 'Belum di review pincab');
-                    return redirect()->back()->withError('Belum di review Pincab.');
+                }
+                else {
+                    return 'Data pengajuan tidak ditemukan.';
+                    return redirect()->back()->withError('Data pengajuan tidak ditemukan.');
                 }
             } else {
                 Alert::error('error', 'Tidak memiliki hak akses');
@@ -1380,26 +1485,70 @@ class NewDagulirController extends Controller
     {
         DB::beginTransaction();
         try {
-            $statusPincab = PengajuanModel::find($id);
+            $pengajuan = PengajuanModel::find($id);
+            $currentPosisi = $pengajuan->posisi;
             $komentarPincab = KomentarModel::where('id_pengajuan', $id)->first();
             if (auth()->user()->role == 'Pincab') {
                 if ($komentarPincab->komentar_pincab != null) {
-                    $statusPincab->posisi = "Ditolak";
-                    $statusPincab->tanggal_review_pincab = date(now());
-                    $statusPincab->update();
+                    $pengajuan->posisi = "Ditolak";
+                    $pengajuan->tanggal_review_pincab = date(now());
+                    $pengajuan->update();
 
-                    $nasabah = PengajuanDagulir::select('nama')->find($statusPincab->dagulir_id);
+                    $nasabah = PengajuanDagulir::select('nama')->find($pengajuan->dagulir_id);
+                    $delay = 1500000; // 1.5 sec
 
-                    // Update Status Dagulir
                     // HIT update status survei endpoint dagulir
-                    $this->updateStatus($nasabah->kode_pendaftaran, 1);
+                    $survei = $this->updateStatus($nasabah->kode_pendaftaran, 1);
+                    if ($currentPosisi == 'Pincab') {
+                        if (is_array($survei)) {
+                            // Fail block
+                            if ($survei['message'] != 'Update Status Gagal. Anda tidak bisa mengubah status, karena status saat ini adalah SURVEY') {
+                                DB::rollBack();
+                                return redirect()->back()->withError($survei);
+                            }
+                        }
+                        else {
+                            if ($survei != 200) {
+                                DB::rollBack();
+                                return redirect()->back()->withError($survei);
+                            }
+                        }
+                        usleep($delay);
+                    }
 
                     // HIT update status analisa endpoint dagulir
-                    $lampiran_analisa = lampiranAnalisa();
-                    $this->updateStatus($nasabah->kode_pendaftaran, 2, $lampiran_analisa);
+                    if ($nasabah->status != 2) {
+                        $lampiran_analisa = lampiranAnalisa();
+                        $analisa = $this->updateStatus($nasabah->kode_pendaftaran, 2, $lampiran_analisa);
+                        if (is_array($analisa)) {
+                            // Fail block
+                            DB::rollBack();
+                            return redirect()->back()->withError($analisa);
+                        }
+                        else {
+                            if ($survei != 200 || $survei != '200') {
+                                DB::rollBack();
+                                return redirect()->back()->withError($analisa);
+                            }
+                        }
+                        usleep($delay);
+                    }
 
                     // HIT update status ditolak endpoint dagulir
-                    $this->updateStatus($nasabah->kode_pendaftaran, 4);
+                    if ($nasabah->status != 3) {
+                        $ditolak = $this->updateStatus($nasabah->kode_pendaftaran, 3);
+                        if (is_array($ditolak)) {
+                            // Fail block
+                            DB::rollBack();
+                            return redirect()->back()->withError($ditolak);
+                        }
+                        else {
+                            if ($ditolak != 200) {
+                                DB::rollBack();
+                                return redirect()->back()->withError($ditolak);
+                            }
+                        }
+                    }
 
                     $namaNasabah = 'undifined';
                     if ($nasabah)
@@ -1410,8 +1559,8 @@ class NewDagulirController extends Controller
                     DB::commit();
 
                     event(new EventMonitoring('tolak pengajuan'));
-                    Alert::success('success', 'Berhasil mengganti posisi');
-                    return redirect()->route('dagulir.index')->withStatus('Berhasil mengganti posisi.');
+                    Alert::success('success', 'Berhasil menolak pengajuan');
+                    return redirect()->route('dagulir.index')->withStatus('Berhasil menolak pengajuan.');
                 } else {
                     Alert::error('error', 'Belum di review Pincab');
                     return redirect()->back()->withError('Belum di review Pincab.');
@@ -1421,7 +1570,6 @@ class NewDagulirController extends Controller
                 return redirect()->back()->withError('Tidak memiliki hak akses.');
             }
         } catch (\Exception $e) {
-            return $e->getMessage();
             DB::rollBack();
             return redirect()->back()->withError($e->getMessage());
         }
