@@ -45,6 +45,7 @@
     <script src="{{ asset('plugins/owl-carousel/owl.carousel.min.js') }}"></script>
     <script src="{{ asset('') }}vendor/sweetalert-master/dist/sweetalert.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.12/dist/sweetalert2.all.min.js"></script>
+    <script src="{{asset('assets/js/sweetalert2.js')}}"></script>
 
     {{-- app.js is custom global js --}}
     <script src="{{ asset('js/app.js') }}"></script>
