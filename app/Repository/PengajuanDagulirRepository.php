@@ -29,6 +29,7 @@ class PengajuanDagulirRepository
                             ->orWhere('nama','like', "%$search%")
                             ->orWhere('kode_pendaftaran','like', "%$search%");
                 })
+            ->with('pengajuan')
             ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
             ->select('pengajuan_dagulir.*')
             ->where('pengajuan.id_penyelia', $id_user)
@@ -43,6 +44,7 @@ class PengajuanDagulirRepository
                             ->orWhere('nama','like', "%$search%")
                             ->orWhere('kode_pendaftaran','like', "%$search%");
                 })
+            ->with('pengajuan')
             ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
             ->select('pengajuan_dagulir.*')
             ->where('pengajuan.id_pincab', $id_user)
@@ -53,6 +55,17 @@ class PengajuanDagulirRepository
         foreach ($data as $key => $item) {
             $nama_pemroses = 'undifined';
             $user = \App\Models\User::select('nip')->where('id', $item->pengajuan->id_staf)->first();
+            if($item->posisi == 'Proses Input Data'){
+                $user = \App\Models\User::select('nip')->where('id', $item->pengajuan->id_staf)->first();
+            } else if($item->posisi == 'Review Penyelia'){
+                $user = \App\Models\User::select('nip')->where('id', $item->pengajuan->id_penyelia)->first();
+            } else if($item->posisi == 'PBO'){
+                $user = \App\Models\User::select('nip')->where('id', $item->pengajuan->id_pbo)->first();
+            } else if($item->posisi == 'PBP'){
+                $user = \App\Models\User::select('nip')->where('id', $item->pengajuan->id_pbp)->first();
+            } else if($item->posisi == 'Pincab' || $item->posisi == 'Selesai' || $item->posisi == 'Ditolak'){
+                $user = \App\Models\User::select('nip')->where('id', $item->pengajuan->id_pincab)->first();
+            }
             if ($user)
                 $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
             else {
