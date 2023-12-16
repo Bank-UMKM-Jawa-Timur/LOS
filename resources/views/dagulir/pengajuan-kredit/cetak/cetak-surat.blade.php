@@ -55,11 +55,20 @@
         </tr>
         <tr>
             <td style="width: 40%" >
-                <label>Alamat Rumah</label>
+                <label>Alamat KTP</label>
             </td>
             <td>:</td>
             <td style="padding-left: 17px">
-                {{ $dataNasabah->alamat_rumah }}
+                {{ $dataNasabah->alamat_ktp }}
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 40%" >
+                <label>Alamat Domisili</label>
+            </td>
+            <td>:</td>
+            <td style="padding-left: 17px">
+                {{ $dataNasabah->alamat_dom }}
             </td>
         </tr>
         <tr>
@@ -73,11 +82,11 @@
         </tr>
         <tr>
             <td style="width: 40%" >
-                <label>No KTP</label>
+                <label>NIK</label>
             </td>
             <td>:</td>
             <td style="padding-left: 17px">
-                {{ $dataNasabah->no_ktp }}
+                {{ $dataNasabah->nik }}
             </td>
         </tr>
         <tr>
@@ -91,20 +100,15 @@
         </tr>
         <tr>
             <td style="width: 40%" >
-                <label>Sektor Kredit</label>
-            </td>
-            <td>:</td>
-            <td style="padding-left: 17px">
-                {{ $dataNasabah->sektor_kredit }}
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 40%" >
                 <label>Jenis Usaha</label>
             </td>
             <td>:</td>
             <td style="padding-left: 17px">
-                {{ $dataNasabah->jenis_usaha }}
+                @if ($dataNasabah->jenis_usaha)
+                    {{array_key_exists(intval($dataNasabah->jenis_usaha), $jenis_usaha) ? $jenis_usaha[intval($dataNasabah->jenis_usaha)] : 'Tidak ditemukan'}}
+                @else
+                    Tidak ada
+                @endif
             </td>
         </tr>
         <tr>
@@ -113,7 +117,7 @@
             </td>
             <td>:</td>
             <td style="padding-left: 17px">
-                {{ "Rp " . number_format($dataNasabah->jumlah_kredit,2,',','.') }}
+                {{ "Rp " . number_format($dataNasabah->nominal,2,',','.') }}
             </td>
         </tr>
         <tr>
@@ -122,7 +126,7 @@
             </td>
             <td>:</td>
             <td style="padding-left: 17px">
-                {{ $dataNasabah->tujuan_kredit }}
+                {{ $dataNasabah->tujuan_penggunaan }}
             </td>
         </tr>
         <tr>
@@ -131,7 +135,7 @@
             </td>
             <td>:</td>
             <td style="padding-left: 17px">
-                {{ $dataNasabah->jaminan_kredit }}
+                {{ strtoupper($dataNasabah->ket_agunan) }}
             </td>
         </tr>
         <tr>
@@ -149,7 +153,7 @@
             </td>
             <td style="vertical-align: top">:</td>
             <td style="padding-left: 17px; vertical-align: top">
-                {{ $dataNasabah->verifikasi_umum }}
+                {{ $dataNasabah->hasil_verifikasi }}
             </td>
         </tr>
     </table>
@@ -901,7 +905,7 @@
         header("Content-Disposition: attachment; filename=$name");
     @endphp
 @else
-    <script>
+    {{-- <script>
         window.print()
-    </script>
+    </script> --}}
 @endif

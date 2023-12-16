@@ -32,6 +32,7 @@ use App\Models\User;
 use App\Repository\MasterItemRepository;
 use App\Repository\PengajuanDagulirRepository;
 use App\Services\TemporaryService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use DateTime;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -1012,10 +1013,10 @@ class NewDagulirController extends Controller
 
     public function getDetailJawabanPincab($id)
     {
-        if (auth()->user()->role == 'Penyelia Kredit' || auth()->user()->role == 'PBO' ||
-            auth()->user()->role == 'PBP' || auth()->user()->role == 'Pincab') {
+        if (auth()->user()->role == 'Pincab') {
             $param['pageTitle'] = "Dashboard";
-            $param['dataAspek'] = ItemModel::where('level', 1)->where('nama', '!=', 'Data Umum')->get();
+
+            $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->where('nama', '!=', 'Data Umum')->get();
             $param['itemSlik'] = ItemModel::join('option as o', 'o.id_item', 'item.id')
                 ->join('jawaban as j', 'j.id_jawaban', 'o.id')
                 ->join('pengajuan as p', 'p.id', 'j.id_pengajuan')
@@ -1023,41 +1024,27 @@ class NewDagulirController extends Controller
                 ->where('nama', 'SLIK')
                 ->first();
             $param['itemSP'] = ItemModel::where('level', 1)->where('nama', '=', 'Data Umum')->first();
-            $param['itemKTPSu'] = ItemModel::where('level', 1)->where('nama', '=', 'Data Umum')->first();
-            $param['itemKTPIs'] = ItemModel::where('level', 1)->where('nama', '=', 'Data Umum')->first();
 
-            $pengajuan = PengajuanModel::select(
-                'pengajuan.id',
-                'pengajuan.tanggal',
-                'pengajuan.posisi',
-                'pengajuan.tanggal_review_pincab',
-                'pengajuan.dagulir_id',
-                'pengajuan.skema_kredit'
-            )
-            ->find($id);
-            $param['dataUmum'] = $pengajuan;
-            $param['dataUmumNasabah'] = PengajuanDagulir::find($pengajuan->dagulir_id);
+            $param['dataNasabah'] = PengajuanModel::select('pengajuan_dagulir.*', 'kabupaten.id as kabupaten_id', 'kabupaten.kabupaten', 'kecamatan.id as kecamatan_id', 'kecamatan.id_kabupaten', 'kecamatan.kecamatan', 'desa.id as desa_id', 'desa.id_kabupaten', 'desa.id_kecamatan', 'desa.desa')
+                ->join('pengajuan_dagulir', 'pengajuan_dagulir.id', 'pengajuan.dagulir_id')
+                ->leftJoin('kabupaten', 'kabupaten.id', 'pengajuan_dagulir.kotakab_ktp')
+                ->leftJoin('kecamatan', 'kecamatan.id', 'pengajuan_dagulir.kec_ktp')
+                ->leftJoin('desa', 'desa.id', 'pengajuan_dagulir.desa_ktp')
+                ->where('pengajuan.id', $id)
+                ->first();
+            $param['jenis_usaha'] = config('dagulir.jenis_usaha');
 
-            // return $param['dataUmumNasabah'];
+            $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit', 'pengajuan.average_by_sistem', 'pengajuan.average_by_penyelia', 'pengajuan.average_by_pbo', 'pengajuan.average_by_pbp')
+                ->find($id);
+            $param['comment'] = KomentarModel::where('id_pengajuan', $id)->first();
 
-            $param['allKab'] = Kabupaten::get();
-            $param['allKec'] = Kecamatan::where('id_kabupaten', $param['dataUmumNasabah']->kotakab_ktp)->get();
-            $param['allDesa'] = Desa::where('id_kecamatan', $param['dataUmumNasabah']->kec_ktp)->get();
-            $param['pendapatDanUsulanStaf'] = KomentarModel::select('komentar_staff')->where('id_pengajuan', $id)->first();
-            $param['pendapatDanUsulanPenyelia'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_penyelia')->first();
-            if (auth()->user()->role == 'PBO' || auth()->user()->role == 'PBP' || auth()->user()->role == 'Pincab')
-                $param['pendapatDanUsulanPBO'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_pbo')->first();
-            if (auth()->user()->role == 'PBP' || auth()->user()->role == 'Pincab')
-                $param['pendapatDanUsulanPBP'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_pbp')->first();
-            if (auth()->user()->role == 'Pincab')
-                $param['pendapatDanUsulanPincab'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_pincab')->first();
-            if ($param['dataUmumNasabah']->skema_kredit == 'KKB') {
-                $param['dataPO'] = DB::table('data_po')
-                    ->where('id_pengajuan', $id)
-                    ->first();
-            }
+            $param['alasanPengembalian'] = AlasanPengembalianData::where('id_pengajuan', $id)
+                                                                ->join('users', 'users.id', 'alasan_pengembalian_data.id_user')
+                                                                ->select('users.nip', 'alasan_pengembalian_data.*')
+                                                                ->get();
+
             $param['pendapatDanUsulan'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff', 'komentar_penyelia', 'komentar_pincab', 'komentar_pbo', 'komentar_pbp')->first();
-            $param['skema'] = $param['dataUmumNasabah']->skema_kredit;
+
             $dokumenUsaha = DB::table('item')
                 ->where('nama', 'LIKE', '%NIB%')
                 ->orWhere('nama', 'LIKE', '%Surat Keterangan Usaha%')
@@ -1072,34 +1059,30 @@ class NewDagulirController extends Controller
                 $countDoc += $count;
             }
             $param['countIjin'] = $countDoc;
-            $param['alasanPengembalian'] = AlasanPengembalianData::where('id_pengajuan', $id)
-                ->join('users', 'users.id', 'alasan_pengembalian_data.id_user')
-                ->select('users.nip', 'alasan_pengembalian_data.*')
-                ->get();
-            $param['jenis_usaha'] = config('dagulir.jenis_usaha');
-            $param['tipe'] = config('dagulir.tipe_pengajuan');
+            $logPengajuan = DB::table('log_pengajuan')->selectRaw("DISTINCT(date(created_at)) as tgl")->where('id_pengajuan', $id)->get();
+            $log = array();
+            if($logPengajuan){
+                foreach($logPengajuan as $item){
+                    $itemLog = DB::table('log_pengajuan')
+                        ->where('id_pengajuan', $id)
+                        ->whereDate('created_at', $item->tgl)
+                        ->get();
+                    $itemsLog = array();
 
-            $param['itemSlik'] = ItemModel::join('option as o', 'o.id_item', 'item.id')
-                ->join('jawaban as j', 'j.id_jawaban', 'o.id')
-                ->join('pengajuan as p', 'p.id', 'j.id_pengajuan')
-                ->where('p.id', $id)
-                ->where('nama', 'SLIK')
-                ->first();
+                    foreach($itemLog as $itemLogPengajuan){
+                        array_push($itemsLog, $itemLogPengajuan);
+                    }
+                    array_push($log, [
+                        'tgl' => $item->tgl,
+                        'data' => $itemLog
+                    ]);
+                }
+            } else {
+                $log = [];
+            }
+            $param['logPengajuan'] = $log;
 
-            $param['itemSP'] = ItemModel::where('level', 1)->where('nama', '=', 'Data Umum')->first();
-            $param['itemKTPSu'] = ItemModel::where('level', 1)->where('nama', '=', 'Data Umum')->first();
-            $param['itemKTPIs'] = ItemModel::where('level', 1)->where('nama', '=', 'Data Umum')->first();
-            $param['itemKTPNas'] = ItemModel::where('nama', 'Foto KTP Nasabah')->first();
-            $param['itemNIB'] = ItemModel::where('nama', 'Dokumen NIB')->first();
-            $param['itemNPWP'] = ItemModel::where('nama', 'Dokumen NPWP')->first();
-            $param['itemSKU'] = ItemModel::where('nama', 'Dokumen Surat Keterangan Usaha')->first();
-            $param['multipleFiles'] = $this->isMultipleFiles;
-            $param['dataDesa'] = Desa::all();
-            $param['dataKecamatan'] = Kecamatan::all();
-            $param['dataKabupaten'] = Kabupaten::all();
-            $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->where('nama', '!=', 'Data Umum')->get();
-            $param['comment'] = KomentarModel::where('id_pengajuan', $id)->first();
-            return view('dagulir.pengajuan-kredit.review-pincab', $param);
+            return view('dagulir.pengajuan-kredit.review-pincab-new', $param);
         } else {
             return redirect()->back()->withError('Tidak memiliki hak akses.');
         }
@@ -1183,32 +1166,68 @@ class NewDagulirController extends Controller
         }
     }
 
-    public function updateStatus($kode_pendaftaran, $status, $lampiran_analisa = null, $jangka_waktu, $realisasi_dana) {
+    public function updateStatus($kode_pendaftaran, $status, $lampiran_analisa = null, $jangka_waktu = null, $realisasi_dana = null) {
         $data = sipde_token();
+        $body = [];
+        if ($status == 1) {
+            // Survei
+            $body = [
+                "kode_pendaftaran" => $kode_pendaftaran,
+                "status" => $status,
+                "lampiran_analisa" => "",
+                "jangka_waktu" => "",
+                "realisasi_dana" => ""
+            ];
+        }
+        if ($status == 2) {
+            // Analisa
+            $body = [
+                "kode_pendaftaran" => $kode_pendaftaran,
+                "status" => $status,
+                "lampiran_analisa" => $lampiran_analisa,
+                "jangka_waktu" => "",
+                "realisasi_dana" => ""
+            ];
+        }
+        if ($status == 3) {
+            // Disetujui
+            $body = [
+                "kode_pendaftaran" => $kode_pendaftaran,
+                "status" => $status,
+                "lampiran_analisa" => "",
+                "jangka_waktu" => $jangka_waktu,
+                "realisasi_dana" => $realisasi_dana,
+            ];
+        }
+        if ($status == 4) {
+            // Ditolak
+            $body = [
+                "kode_pendaftaran" => $kode_pendaftaran,
+                "status" => $status,
+                "lampiran_analisa" => "",
+                "jangka_waktu" => "",
+                "realisasi_dana" => "",
+            ];
+        }
+        $host = config('dagulir.host');
         $pengajuan_dagulir = Http::withHeaders([
             'Authorization' => 'Bearer ' .$data['token'],
-        ])->post(env('SIPDE_HOST').'/update_status.json',[
-            "kode_pendaftaran" => $kode_pendaftaran,
-            "status" => $status,
-            "lampiran_analisa" => $lampiran_analisa,
-            "jangka_waktu" => $jangka_waktu,
-            "realisasi_dana" => $realisasi_dana
-        ])->json();
+        ])->post($host.'/update_status.json', $body)->json();
 
         // Log Pengajuan review
         $dagulir = PengajuanDagulir::select('id', 'nama')
                                     ->where('kode_pendaftaran', $kode_pendaftaran)
                                     ->first();
-        $pengajuan = PengajuanModel::select('id')
-                                    ->where('dagulir_id', $dagulir->id)
-                                    ->first();
+        // $pengajuan = PengajuanModel::select('id')
+        //                             ->where('dagulir_id', $dagulir->id)
+        //                             ->first();
         $namaNasabah = 'undifined';
 
         if ($dagulir)
             $namaNasabah = $dagulir->nama;
 
         $role = Auth::user()->role;
-        $this->logPengajuan->store($role . ' dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan update status terhadap pengajuan atas nama ' . $namaNasabah, $pengajuan->id, Auth::user()->id, Auth::user()->nip);
+        // $this->logPengajuan->store($role . ' dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan update status terhadap pengajuan atas nama ' . $namaNasabah, $pengajuan->id, Auth::user()->id, Auth::user()->nip);
 
         return $pengajuan_dagulir;
     }
@@ -1273,10 +1292,28 @@ class NewDagulirController extends Controller
         }
     }
 
-    public function accPengajuan($id)
+    public function accPengajuan($id, Request $request)
     {
         DB::beginTransaction();
         try {
+            $dagulir = PengajuanDagulir::find($id);
+            if ($dagulir) {
+                $pengajuan = PengajuanModel::where('dagulir_id', $dagulir->id)->first();
+                if ($pengajuan) {
+                    $pengajuan->id_pincab = auth()->user()->id;
+                    $pengajuan->tanggal_review_pincab = date('Y-m-d');
+                    $pengajuan->save();
+
+                    $idKomentar = KomentarModel::where('id_pengajuan', $pengajuan->id)->first();
+                    KomentarModel::where('id', $idKomentar->id)->update(
+                        [
+                            'komentar_pincab' => $request->pendapat,
+                            'id_pincab' => Auth::user()->id,
+                            'updated_at' => date('Y-m-d H:i:s')
+                        ]
+                    );
+                }
+            }
             $statusPincab = PengajuanModel::find($id);
             $komentarPincab = KomentarModel::where('id_pengajuan', $id)->first();
             if (auth()->user()->role == 'Pincab') {
@@ -1284,33 +1321,42 @@ class NewDagulirController extends Controller
                     $statusPincab->posisi = "Selesai";
                     $statusPincab->tanggal_review_pincab = date(now());
                     $statusPincab->update();
+                    $plafonUsulan = PlafonUsulan::where('id_pengajuan', $id)->first();
+                    $plafon_acc = intval(str_replace('.','', $request->get('nominal_disetujui')));
+                    $tenor_acc = intval($request->get('jangka_waktu_disetujui'));
+
+                    if ($plafonUsulan) {
+                        $plafonUsulan->plafon_usulan_pincab = $plafon_acc;
+                        $plafonUsulan->jangka_waktu_usulan_pincab = $tenor_acc;
+                        $plafonUsulan->updated_at = date('Y-m-d H:i:s');
+                        $plafonUsulan->update();
+                    }
 
                     $nasabah = PengajuanDagulir::select('kode_pendaftaran','nama', 'nominal', 'jangka_waktu')->find($statusPincab->dagulir_id);
                     $namaNasabah = 'undifined';
                     if ($nasabah)
                         $namaNasabah = $nasabah->nama;
-
-                    $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menyetujui pengajuan atas nama ' . $namaNasabah . '.', $id, Auth::user()->id, Auth::user()->nip);
-
                     // HIT Pengajuan endpoint dagulir
                     $storeSIPDE = $this->storeSipde($id);
 
                     if ($storeSIPDE == 'success') {
                         // HIT update status survei endpoint dagulir
-                        $this->updateStatus($nasabah->kode_pendaftaran, 1, null, $nasabah->jangka_waktu, $nasabah->nominal);
+                        $this->updateStatus($nasabah->kode_pendaftaran, 1);
 
                         // HIT update status analisa endpoint dagulir
                         $lampiran_analisa = lampiranAnalisa();
-                        $this->updateStatus($nasabah->kode_pendaftaran, 2, $lampiran_analisa, $nasabah->jangka_waktu, $nasabah->nominal);
+                        $this->updateStatus($nasabah->kode_pendaftaran, 2, $lampiran_analisa);
 
                         // HIT update status disetujui endpoint dagulir
-                        $this->updateStatus($nasabah->kode_pendaftaran, 3, null, $nasabah->jangka_waktu, $nasabah->nominal);
+                        $this->updateStatus($nasabah->kode_pendaftaran, 3, null, $tenor_acc, $plafon_acc);
+
+                        // $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menyetujui pengajuan atas nama ' . $namaNasabah . '.', $id, Auth::user()->id, Auth::user()->nip);
 
                         DB::commit();
                         event(new EventMonitoring('menyetujui pengajuan'));
 
                         Alert::success('success', 'Berhasil mengganti posisi');
-                        return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+                        return redirect()->route('dagulir.index')->withStatus('Berhasil mengganti posisi.');
                     }
                     else {
                         DB::rollBack();
@@ -1325,6 +1371,7 @@ class NewDagulirController extends Controller
                 return redirect()->back()->withError('Tidak memiliki hak akses.');
             }
         } catch (\Exception $e) {
+            return $e->getMessage();
             DB::rollBack();
             return redirect()->back()->withError($e->getMessage());
         }
@@ -1343,6 +1390,18 @@ class NewDagulirController extends Controller
                     $statusPincab->update();
 
                     $nasabah = PengajuanDagulir::select('nama')->find($statusPincab->dagulir_id);
+
+                    // Update Status Dagulir
+                    // HIT update status survei endpoint dagulir
+                    $this->updateStatus($nasabah->kode_pendaftaran, 1);
+
+                    // HIT update status analisa endpoint dagulir
+                    $lampiran_analisa = lampiranAnalisa();
+                    $this->updateStatus($nasabah->kode_pendaftaran, 2, $lampiran_analisa);
+
+                    // HIT update status ditolak endpoint dagulir
+                    $this->updateStatus($nasabah->kode_pendaftaran, 4);
+
                     $namaNasabah = 'undifined';
                     if ($nasabah)
                         $namaNasabah = $nasabah->nama;
@@ -1353,7 +1412,7 @@ class NewDagulirController extends Controller
 
                     event(new EventMonitoring('tolak pengajuan'));
                     Alert::success('success', 'Berhasil mengganti posisi');
-                    return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+                    return redirect()->route('dagulir.index')->withStatus('Berhasil mengganti posisi.');
                 } else {
                     Alert::error('error', 'Belum di review Pincab');
                     return redirect()->back()->withError('Belum di review Pincab.');
@@ -1363,8 +1422,54 @@ class NewDagulirController extends Controller
                 return redirect()->back()->withError('Tidak memiliki hak akses.');
             }
         } catch (\Exception $e) {
+            return $e->getMessage();
             DB::rollBack();
             return redirect()->back()->withError($e->getMessage());
         }
     }
+
+    function CetakPDF($id) {
+        $pengajuan = PengajuanModel::find($id);
+        $param['dataAspek'] = ItemModel::select('*')->where('level',1)->get();
+        $param['dataNasabah'] = PengajuanDagulir::find($pengajuan->dagulir_id);
+        $param['dataUmum'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit')
+                                        ->find($id);
+        $param['komentar'] = KomentarModel::where('id_pengajuan', $id)->first();
+
+        $param['jenis_usaha'] = config('dagulir.jenis_usaha');
+
+
+        $pdf = Pdf::loadview('dagulir.pengajuan-kredit.cetak.cetak-surat',$param);
+
+        $fileName =  time().'.'. 'pdf' ;
+        $pdf->save(public_path() . '/' . $fileName);
+
+        $pdf = public_path($fileName);
+        $file = "data:@file/pdf;base64,".base64_encode(file_get_contents($pdf));
+
+        return redirect()->route('dagulir.pengajuan.index');
+    }
+    function CetakPK($id) {
+        $pengajuan = PengajuanModel::find($id);
+        $param['dataAspek'] = ItemModel::select('*')->where('level',1)->get();
+        $param['dataNasabah'] = PengajuanDagulir::find($pengajuan->dagulir_id);
+        $param['dataUmum'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit')
+                                        ->find($id);
+        $param['komentar'] = KomentarModel::where('id_pengajuan', $id)->first();
+
+        $param['jenis_usaha'] = config('dagulir.jenis_usaha');
+
+
+        $pdf = Pdf::loadview('dagulir.pengajuan-kredit.cetak.cetak-surat',$param);
+
+        $fileName =  time().'.'. 'pdf' ;
+        $pdf->save(public_path() . '/' . $fileName);
+
+        $pdf = public_path($fileName);
+        $file = "data:@file/pdf;base64,".base64_encode(file_get_contents($pdf));
+
+
+    }
+
+
 }
