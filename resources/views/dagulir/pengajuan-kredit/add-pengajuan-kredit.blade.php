@@ -250,6 +250,7 @@ $dataIndex = match ($skema) {
                                                                     <input type="text" maxlength="255" step="any"
                                                                         name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
                                                                         placeholder="Masukkan informasi {{ $item->nama }}" class="form-input rupiah"
+                                                                        required
                                                                         value="">
                                                                 </div>
                                                             </div>
@@ -302,7 +303,8 @@ $dataIndex = match ($skema) {
                                                                 id="">
                                                             <input type="file" name="upload_file[{{ $item->id }}]" id="{{ $idLevelDua }}"
                                                                 data-id="" placeholder="Masukkan informasi {{ $item->nama }}"
-                                                                class="form-input limit-size">
+                                                                class="form-input limit-size"
+                                                                required>
                                                             <span class="text-red-500 m-0" style="display: none">Maximum upload file size is 15
                                                                 MB</span>
                                                             <span class="filename" style="display: inline;"></span>
@@ -317,7 +319,7 @@ $dataIndex = match ($skema) {
                                                             <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}"
                                                                 id="">
                                                             <textarea name="informasi[{{ $item->id }}]" rows="4" id="{{ $idLevelDua }}" maxlength="255"
-                                                                class="form-input" placeholder="Masukkan informasi {{ $item->nama }}"></textarea>
+                                                                class="form-input" placeholder="Masukkan informasi {{ $item->nama }}" required></textarea>
                                                         </div>
                                                     </div>
                                                 @endif
@@ -420,7 +422,8 @@ $dataIndex = match ($skema) {
                                                                                 value="{{ $itemTiga->opsi_jawaban }}" id="">
                                                                             <input type="text" maxlength="255" name="informasi[{{ $itemTiga->id }}]"
                                                                                 placeholder="Masukkan informasi" id="{{ $idLevelTiga }}"
-                                                                                value="" class="form-input {{$itemTiga->is_rupiah ? 'rupiah' : ''}}">
+                                                                                value="" class="form-input {{$itemTiga->is_rupiah ? 'rupiah' : ''}}"
+                                                                                required>
                                                                         </div>
                                                                         @if ($itemTiga->suffix)
                                                                             <div class="flex-shrink-0 mt-2.5rem">
@@ -443,7 +446,7 @@ $dataIndex = match ($skema) {
                                                                                 id="">
                                                                             <input type="text" step="any" name="informasi[{{ $itemTiga->id }}]"
                                                                                 id="{{ $idLevelTiga }}" placeholder="Masukkan informasi {{ $itemTiga->nama }}"
-                                                                                class="form-input rupiah" value="">
+                                                                                class="form-input rupiah" value="" required>
                                                                         </div>
                                                                         @if ($itemTiga->suffix)
                                                                             <div class="flex-shrink-0 mt-2.5rem">
