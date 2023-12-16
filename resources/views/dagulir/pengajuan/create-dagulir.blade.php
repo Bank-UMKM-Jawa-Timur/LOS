@@ -116,8 +116,10 @@
             <div class="input-box">
                 <label for="ktp_nasabah" id="foto-nasabah">Foto Nasabah</label>
                 <div class="flex gap-4">
-                    <input type="file" name="foto_nasabah" class="form-input"" />
+                    <input type="file" name="foto_nasabah" class="form-input limit-size-2" />
                 </div>
+                <span class="error-limit text-red-500" style="display: none; margin-top: 0;">Maximum upload file
+                    size is 2 MB</span>
             </div>
             <div class="input-box">
                 <label for="">Status</label>
@@ -143,8 +145,10 @@
             <div class="input-box" id="ktp-nasabah">
                 <label for="ktp_nasabah" id="label-ktp-nasabah">Foto KTP Nasabah</label>
                 <div class="flex gap-4">
-                    <input type="file" name="ktp_nasabah" class="form-input"" />
+                    <input type="file" name="ktp_nasabah" class="form-input limit-size-2" />
                 </div>
+                <span class="text-red-500" style="display: none; margin-top: 0;">Maximum upload file
+                    size is 2 MB</span>
             </div>
             <div class="input-box hidden" id="nik_pasangan">
                 <label for="">NIK Pasangan</label>
@@ -160,8 +164,10 @@
             <div class="input-box hidden" id="ktp-pasangan">
                 <label for="ktp_pasangan" id="">Foto KTP Pasangan</label>
                 <div class="flex gap-4">
-                    <input type="file" name="ktp_pasangan" class="form-input" />
+                    <input type="file" name="ktp_pasangan" class="form-input limit-size-2" />
                 </div>
+                <span class="text-red-500" style="display: none; margin-top: 0;">Maximum upload file
+                    size is 2 MB</span>
             </div>
         </div>
         <div class="form-group-2">
@@ -189,7 +195,6 @@
                 <input type="hidden" name="id_item_file[{{ $itemP->id }}]" value="{{ $itemP->id }}" id="">
                 <input type="file" name="upload_file[{{ $itemP->id }}]" id="file_slik" data-id=""
                     placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-input limit-size-slik">
-                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 10 MB</span>
                 @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                 <div class="invalid-feedback">
                     {{ $errors->first('dataLevelDua.' . $key) }}
@@ -198,6 +203,8 @@
                 <span class="filename" style="display: inline;"></span>
                 {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
             </div>
+            <span class="text-red-500 m-0" style="display: none">Maximum upload file
+                size is 10 MB</span>
         </div>
         <div class="form-group-3">
                 <div class="input-box">
