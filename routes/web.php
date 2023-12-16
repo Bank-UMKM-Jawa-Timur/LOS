@@ -86,7 +86,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('pengajuan-kredit/jawaban-pengajuan/{id}', [NewDagulirController::class, "getDetailJawaban"])->name('pengajuan.detailjawaban');
 
         // Cetak PDF
-        Route::get('pengajuan-kredir/cetak-surat/{id}',[NewDagulirController::class,"CetakPDF"])->name('pengajuan.cetak-pdf');
+        Route::get('pengajuan-kredit/cetak-surat/{id}',[NewDagulirController::class,"getDocuments"])->name('pengajuan.cetak-pdf');
     });
 
     // check Pincab

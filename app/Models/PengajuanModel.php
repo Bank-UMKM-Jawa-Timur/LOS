@@ -19,4 +19,9 @@ class PengajuanModel extends Model
     {
         return $this->hasMany('\App\Models\PendapatPerAspek', 'id_pengajuan');
     }
+
+    public function dagulir()
+    {
+        return $this->belongsTo(PengajuanDagulir::class, 'dagulir_id', 'id');
+    }
 }

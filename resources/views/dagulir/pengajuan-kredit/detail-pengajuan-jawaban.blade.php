@@ -1210,7 +1210,9 @@
                                             <h4 class="font-semibold text-base" for="">Pendapat dan Usulan {{ $value->nama }}</h4>
                                             <input type="hidden" name="id_aspek[]" value="{{ $value->id }}">
                                             <textarea name="pendapat_per_aspek[]" class="form-input @error('pendapat_per_aspek') is-invalid @enderror"
-                                                id="pendapat_per_aspek[]" cols="30" rows="4" placeholder="Pendapat Per Aspek">{{ isset($getPendapatPerAspek->pendapat_per_aspek) ? $getPendapatPerAspek->pendapat_per_aspek : '' }}</textarea>
+                                                id="pendapat_per_aspek[]" cols="30" rows="4" placeholder="Pendapat Per Aspek">
+                                                {{ old('pendapat_per_aspek', isset($getPendapatPerAspek->pendapat_per_aspek) ? $getPendapatPerAspek->pendapat_per_aspek : '') }}
+                                            </textarea>
                                             @error('pendapat_per_aspek')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
