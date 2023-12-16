@@ -1,4 +1,8 @@
 @extends('layouts.tailwind-template')
+
+@section('modal')
+    @include('dagulir.pengajuan-kredit.modal.modal-photo')
+@endsection
 @php
     $dataIndex = match ($dataUmum->skema_kredit) {
         'PKPJ' => 1,
@@ -53,7 +57,7 @@
         </div>
     </nav>
     <div class="p-3">
-        <div class="body-pages">
+        <div class="body-pages review-pengajuan">
             <form id="pengajuan_kredit" action="{{ route('dagulir.pengajuan.insertkomentar') }}" method="post">
                 @csrf
                 <input type="hidden" id="id_pengajuan" name="id_pengajuan" value="{{ $dataUmum->id }}">
@@ -68,15 +72,10 @@
                 <div class="mt-3 container mx-auto">
                     <div id="dagulir-tab" class="is-tab-content active">
                         <div class="pb-10 space-y-3">
-                            <h2 class="text-4xl font-bold tracking-tighter text-theme-primary">Dagulir</h2>
+                            <h2 class="text-4xl font-bold tracking-tighter text-theme-primary">Data Umum</h2>
                             <p class="font-semibold text-gray-400">Review Pengajuan</p>
                         </div>
                         <div class="self-start bg-white w-full border">
-                            <div class="p-5 border-b">
-                                <h2 class="font-bold text-lg tracking-tighter">
-                                    Pengajuan Masuk
-                                </h2>
-                            </div>
                             <div class="p-5 w-full space-y-5" id="data-umum">
                                 <h4 class="font-bold text-lg tracking-tighter ml-2">
                                     Data Diri
@@ -97,6 +96,14 @@
                                         </div>
                                         <div class="field-answer">
                                             <p>{{ $dataUmumNasabah->email ? $dataUmumNasabah->email : '-' }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">NIK</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <p>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</p>
                                         </div>
                                     </div>
                                     <div class="field-review">
@@ -125,25 +132,6 @@
                                     </div>
                                     <div class="field-review">
                                         <div class="field-name">
-                                            <label for="">Jenis Usaha</label>
-                                        </div>
-                                        <div class="field-answer">
-                                            @foreach ($jenis_usaha as $key => $value)
-                                                <p>{{ $dataUmumNasabah->jenis_usaha == $key ? $value : '' }}</p>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                    <div class="field-review">
-                                        <div class="field-name">
-                                            <label for="">Foto Nasabah</label>
-                                        </div>
-                                        <div class="field-answer">
-                                            <p>-</p>
-                                            {{-- <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span> --}}
-                                        </div>
-                                    </div>
-                                    <div class="field-review">
-                                        <div class="field-name">
                                             <label for="">Status</label>
                                         </div>
                                         <div class="field-answer">
@@ -158,42 +146,6 @@
                                             @endif
                                         </div>
                                     </div>
-                                    <div class="field-review">
-                                        <div class="field-name">
-                                            <label for="">NIK</label>
-                                        </div>
-                                        <div class="field-answer">
-                                            <p>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</p>
-                                        </div>
-                                    </div>
-                                    <div class="field-review">
-                                        <div class="field-name">
-                                            <label for="">Foto KTP Nasabah</label>
-                                        </div>
-                                        <div class="field-answer">
-                                            {{-- <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span> --}}
-                                        </div>
-                                    </div>
-                                    @if ($dataUmumNasabah->status_pernikahan == '2')
-                                        <div class="field-review">
-                                            <div class="field-name">
-                                                <label for="">NIK Pasangan</label>
-                                            </div>
-                                            <div class="field-answer">
-                                                <p>{{ $dataUmumNasabah->nik_pasangan ? $dataUmumNasabah->nik_pasangan : '-' }}</p>
-                                            </div>
-                                        </div>
-                                        <div class="field-review">
-                                            <div class="field-name">
-                                                <label for="">Foto KTP Pasangan</label>
-                                            </div>
-                                            <div class="field-answer">
-                                                {{-- <p>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</p> --}}
-                                            </div>
-                                        </div>
-                                    @endif
-                                </div>
-                                <div class="form-group-2">
                                     <div class="field-review">
                                         <div class="field-name">
                                             <label for="">Kota / Kabupaten KTP</label>
@@ -250,14 +202,61 @@
                                             <p>{{ $dataUmumNasabah->alamat_dom }}</p>
                                         </div>
                                     </div>
+                                    @if ($dataUmumNasabah->status_pernikahan == '2')
+                                        <div class="field-review">
+                                            <div class="field-name">
+                                                <label for="">NIK Pasangan</label>
+                                            </div>
+                                            <div class="field-answer">
+                                                <p>{{ $dataUmumNasabah->nik_pasangan ? $dataUmumNasabah->nik_pasangan : '-' }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="field-review">
+                                            <div class="field-name">
+                                                <label for="">Foto KTP Pasangan</label>
+                                            </div>
+                                            <div class="field-answer">
+                                                <img src="{{ asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
+                                            </div>
+                                        </div>
+                                    @endif
                                 </div>
-
+                                <div class="form-group-2">
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Foto KTP Nasabah</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <img src="{{ asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Foto KTP Nasabah</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <img src="{{ asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
+                                            {{-- <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span> --}}
+                                        </div>
+                                    </div>
+                                </div>
                                 <hr>
                                 <h4 class="font-bold text-lg tracking-tighter ml-2">
                                     Data Usaha
                                 </h4>
                                 <hr>
                                 <div class="form-group-2">
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Jenis Usaha</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            @foreach ($jenis_usaha as $key => $value)
+                                                <p>{{ $dataUmumNasabah->jenis_usaha == $key ? $value : '' }}</p>
+                                            @endforeach
+                                        </div>
+                                    </div>
                                     <div class="field-review">
                                         <div class="field-name">
                                             <label for="">Kota / Kabupaten Usaha</label>
@@ -449,7 +448,7 @@
                                     @endforeach
                                 @endif
 
-                                <div class="form-group-1">s
+                                <div class="form-group-1">
                                     <label for="">{{ $itemSlik?->nama }}</label>
                                     <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
                                         <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
