@@ -1290,6 +1290,24 @@ class NewDagulirController extends Controller
     {
         DB::beginTransaction();
         try {
+            $dagulir = PengajuanDagulir::find($id);
+            if ($dagulir) {
+                $pengajuan = PengajuanModel::where('dagulir_id', $dagulir->id)->first();
+                if ($pengajuan) {
+                    $pengajuan->id_pincab = auth()->user()->id;
+                    $pengajuan->tanggal_review_pincab = date('Y-m-d');
+                    $pengajuan->save();
+
+                    $idKomentar = KomentarModel::where('id_pengajuan', $pengajuan->id)->first();
+                    KomentarModel::where('id', $idKomentar->id)->update(
+                        [
+                            'komentar_pincab' => $request->pendapat,
+                            'id_pincab' => Auth::user()->id,
+                            'updated_at' => date('Y-m-d H:i:s')
+                        ]
+                    );
+                }
+            }
             $statusPincab = PengajuanModel::find($id);
             $komentarPincab = KomentarModel::where('id_pengajuan', $id)->first();
             if (auth()->user()->role == 'Pincab') {

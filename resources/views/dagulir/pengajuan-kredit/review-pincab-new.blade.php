@@ -511,7 +511,9 @@
     {{--  Approve Modal  --}}
     <div class="modal-layout hidden" id="modal-approve">
         <div class="modal modal-sm bg-white">
-            <form id="logout-form" action="{{ route('dagulir.acc_pincab', $dataUmum->id) }}" method="GET">
+            <form id="logout-form" action="{{ route('dagulir.acc_pincab', $dataUmum->id) }}" method="POST">
+                @csrf
+                <input type="hidden" name="pendapat" id="pendapat">
                 <div class="modal-head">
                     <div class="title">
                         <h2 class="font-bold text-2xl tracking-tighter text-theme-text">
@@ -573,6 +575,10 @@
 
         $(document).on('click', '#btn-acc', function() {
             $('#modal-approve').removeClass('hidden')
+            var pendapat = $('#pendapat_usulan').val()
+            if (pendapat) {
+                $('#modal-approve #pendapat').val(pendapat)
+            }
         })
 
         $('.rupiah').keyup(function(e) {

@@ -69,7 +69,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Approval Pincab
 
         // Route::get('acc-pincab/{id}', [DagulirController::class, "accPengajuan"])->name('acc_pincab');
-        Route::get('acc-pincab/{id}', [NewDagulirController::class, "accPengajuan"])->name('acc_pincab');
+        Route::post('acc-pincab/{id}', [NewDagulirController::class, "accPengajuan"])->name('acc_pincab');
         // Route::get('dec-pincab/update/{id}', [DagulirController::class, "decPengajuan"])->name('dec_pincab');
         Route::get('dec-pincab/update/{id}', [NewDagulirController::class, "decPengajuan"])->name('dec_pincab');
         // Kirim Dagulir
