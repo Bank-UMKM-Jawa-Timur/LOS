@@ -644,7 +644,7 @@
                                 <div
                                     class="p-5 w-full space-y-5"
                                     id="{{$title_id}}">
-                                    <div class="">
+                                    <div class="grid grid-cols-2 md:grid-cols-2 gap-4">
                                     @foreach ($dataLevelDua as $item)
                                         @if ($item->opsi_jawaban != 'option')
                                             @if (!$item->is_hide)
@@ -771,7 +771,7 @@
                                                                     <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
                                                                     <h4 class="font-bold">Tidak ada legalitas usaha</h4>
                                                                 </div>
-                                                                
+
                                                             @endif
                                                         </div>
                                                     @endif
@@ -829,8 +829,6 @@
                                                                             </div> --}}
                                                                         {{-- </div> --}}
                                                                     @endif
-                                                                        </div>
-                                                                @endif
                                                                     <div class="input-group input-b-bottom">
                                                                         <input type="hidden" name="id_item[]"
                                                                             value="{{ $item->id }}">
@@ -933,10 +931,9 @@
                                                                             <h6 class="font-medium text-sm" for="">{{ $itemTextTiga->nama }}</h6>
                                                                     @endif --}}
                                                                 </div>
-                                                                <div class="form-group-2">
-                                                                    <div>
+                                                                <div class="col-md-12">
                                                                         @if ($itemTiga->opsi_jawaban == 'file')
-                                                                            <b>{{ $itemTextTiga->nama }}  :</b>
+                                                                        <b>{{ $itemTextTiga->nama }}  :</b>
                                                                             @php
                                                                                 $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text);
                                                                             @endphp
@@ -945,11 +942,10 @@
                                                                                     style="border: 5px solid #dc3545;"
                                                                                     src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}"
                                                                                     width="100%" height="800px"></iframe>
-                                                                            @else0-99.l.
+                                                                            @else
                                                                                 <img style="border: 5px solid #dc3545;" src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}"
                                                                                     alt="" width="800px">
                                                                             @endif
-                                                                    </div>
                                                                             {{-- Rupiah data tiga --}}
                                                                         @elseif ($itemTiga->opsi_jawaban == 'number')
                                                                             <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
@@ -1558,7 +1554,7 @@
                                         <div class="form-group-2">
                                             <div class="field-review">
                                                 <div class="field-name">
-                                                    <label for=""> Staf Kredit</label>
+                                                    <label for="">Pendapat dan Usulan Staf Kredit</label>
                                                 </div>
                                                 <div class="field-answer">
                                                     <p> {{ $pendapatDanUsulanStaf?->komentar_staff ? $pendapatDanUsulanStaf->komentar_staff : 'Tidak ada komentar' }}</p>
@@ -1592,7 +1588,7 @@
                                         <div class="form-group-2">
                                             <div class="field-review">
                                                 <div class="field-name">
-                                                    <label for=""> Staf Kredit</label>
+                                                    <label for="">Pendapat dan Usulan Staf Kredit</label>
                                                 </div>
                                                 <div class="field-answer">
                                                     <p> {{ $pendapatDanUsulanStaf?->komentar_staff ? $pendapatDanUsulanStaf->komentar_staff : 'Tidak ada komentar' }}</p>
@@ -1602,7 +1598,7 @@
                                         <div class="form-group-2">
                                             <div class="field-review">
                                                 <div class="field-name">
-                                                    <label for=""> Penyelia Kredit</label>
+                                                    <label for="">Pendapat dan Usulan Penyelia Kredit</label>
                                                 </div>
                                                 <div class="field-answer">
                                                     <p> {{ $pendapatDanUsulanPenyelia?->komentar_penyelia ? $pendapatDanUsulanPenyelia->komentar_penyelia : 'Tidak ada komentar' }}</p>
@@ -1742,7 +1738,7 @@
                                     <div class="form-group-2">
                                         <div class="field-review">
                                             <div class="field-name">
-                                                <label for=""> Staf Kredit</label>
+                                                <label for="">Pendapat dan Usulan Staf Kredit</label>
                                             </div>
                                             <div class="field-answer">
                                                 <p> {{ $pendapatDanUsulanStaf?->komentar_staff ? $pendapatDanUsulanStaf->komentar_staff : 'Tidak ada komentar' }}</p>
@@ -1752,7 +1748,7 @@
                                     <div class="form-group-2">
                                         <div class="field-review">
                                             <div class="field-name">
-                                                <label for="">Penyelia Kredit</label>
+                                                <label for="">Pendapat dan Usulan Penyelia Kredit</label>
                                             </div>
                                             <div class="field-answer">
                                                 <p> {{ $pendapatDanUsulanPenyelia?->komentar_penyelia ? $pendapatDanUsulanPenyelia->komentar_penyelia : 'Tidak ada komentar' }}</p>
@@ -1763,7 +1759,7 @@
                                         <div class="form-group-2">
                                             <div class="field-review">
                                                 <div class="field-name">
-                                                    <label for="">PBO</label>
+                                                    <label for="">Pendapat dan Usulan PBO</label>
                                                 </div>
                                                 <div class="field-answer">
                                                     <p> {{ $pendapatDanUsulanPBO?->komentar_pbo ? $pendapatDanUsulanPBO?->komentar_pbo  : 'Tidak ada komentar' }}</p>
