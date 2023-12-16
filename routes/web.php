@@ -16,6 +16,7 @@ use App\Http\Controllers\DashboardDireksiController;
 use \App\Http\Controllers\LogPengajuanController;
 use \App\Http\Controllers\Dagulir\DagulirController;
 use App\Http\Controllers\Dagulir\NewDagulirController;
+use RealRashid\SweetAlert\Facades\Alert;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +28,7 @@ use App\Http\Controllers\Dagulir\NewDagulirController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Route::get('/fixScore', [PengajuanKreditController::class, 'fixScore']);
 Route::get('/', function () {
     return redirect()->route('login');

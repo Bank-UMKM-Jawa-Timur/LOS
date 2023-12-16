@@ -167,7 +167,6 @@ return [
         Intervention\Image\ImageServiceProvider::class,
         Irsyadulibad\LaravelActivehelper\ActiveHelperServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
-        RealRashid\SweetAlert\SweetAlertServiceProvider::class,
 
         /*
          * Package Service Providers...
@@ -181,6 +180,8 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        RealRashid\SweetAlert\SweetAlertServiceProvider::class,
+
 
     ],
 
@@ -237,10 +238,10 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Image' => Intervention\Image\Facades\Image::class,
+        'Alert' => RealRashid\SweetAlert\Facades\Alert::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
-        'Alert' => RealRashid\SweetAlert\Facades\Alert::class,
     ],
 
 ];
