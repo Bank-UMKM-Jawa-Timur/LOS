@@ -2170,12 +2170,13 @@ $dataIndex = match ($skema) {
             if ($(this).prop('readonly'))
                 totalInputReadOnly++;
             var inputBox = $(this).closest('.input-box');
-            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
+            var formGroup = inputBox.parent();
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden'))
                 totalInput++
-            var isNull = (v.value == '' || v.value == '0')
-            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+            var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
+            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputNull++;
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputFilled++;
             }
         })
@@ -2184,7 +2185,8 @@ $dataIndex = match ($skema) {
             if ($(this).prop('readonly'))
                 totalInputReadOnly++;
             var inputBox = $(this).closest('.input-box');
-            if ((!$(this).prop('disabled') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+            var formGroup = inputBox.parent();
+            if ((!$(this).prop('disabled') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputHidden++;
             }
         })
@@ -2193,12 +2195,13 @@ $dataIndex = match ($skema) {
             if ($(this).prop('readonly'))
                 totalInputReadOnly++;
             var inputBox = $(this).closest('.input-box');
-            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
+            var formGroup = inputBox.parent();
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden'))
                 totalInput++
-            var isNull = (v.value == '' || v.value == '0')
-            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+            var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
+            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputNull++;
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputFilled++;
             }
         })
@@ -2207,12 +2210,13 @@ $dataIndex = match ($skema) {
             if ($(this).prop('readonly'))
                 totalInputReadOnly++;
             var inputBox = $(this).closest('.input-box');
-            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
+            var formGroup = inputBox.parent();
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden'))
                 totalInput++
-            var isNull = (v.value == '' || v.value == '0') && !$(this).prop('readonly')
-            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+            var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '') && !$(this).prop('readonly') && !$(this).prop('hidden')
+            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputNull++;
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputFilled++;
             }
         })
@@ -2221,12 +2225,13 @@ $dataIndex = match ($skema) {
             if ($(this).prop('readonly'))
                 totalInputReadOnly++;
             var inputBox = $(this).closest('.input-box');
-            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
+            var formGroup = inputBox.parent();
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden'))
                 totalInput++
-            var isNull = (v.value == '' || v.value == '0')
-            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+            var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
+            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputNull++;
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputFilled++;
             }
         })
@@ -2235,12 +2240,13 @@ $dataIndex = match ($skema) {
             if ($(this).prop('readonly'))
                 totalInputReadOnly++;
             var inputBox = $(this).closest('.input-box');
-            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
+            var formGroup = inputBox.parent();
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden'))
                 totalInput++
-            var isNull = (v.value == '' || v.value == '0')
-            if ((isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+            var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
+            if ((isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputNull++;
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputFilled++;
             }
         })
@@ -2249,12 +2255,13 @@ $dataIndex = match ($skema) {
             if ($(this).prop('readonly'))
                 totalInputReadOnly++;
             var inputBox = $(this).closest('.input-box');
-            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
+            var formGroup = inputBox.parent();
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden'))
                 totalInput++
-            var isNull = (v.value == '' || v.value == '0')
-            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+            var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
+            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputNull++;
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputFilled++;
             }
         })

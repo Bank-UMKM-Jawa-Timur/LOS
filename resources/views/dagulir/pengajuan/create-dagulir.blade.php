@@ -236,7 +236,7 @@
                 <textarea
                     name="alamat_sesuai_ktp"
                     class="form-textarea"
-                    placeholder="Alamat K"
+                    placeholder="Alamat KTP"
                     id=""
                 >{{ old('alamat_sesuai_ktp') }}</textarea>
             </div>
@@ -267,9 +267,7 @@
                     class="form-textarea"
                     placeholder="Alamat Domisili"
                     id=""
-                >
-                {{ old('alamat_domisili') }}
-            </textarea>
+                >{{ old('alamat_domisili') }}</textarea>
             </div>
 
         </div>
@@ -299,9 +297,7 @@
                     class="form-textarea"
                     placeholder="Alamat Usaha"
                     id=""
-                >
-                {{ old('alamat_usaha') }}
-                </textarea>
+                >{{ old('alamat_usaha') }}</textarea>
             </div>
         </div>
 
