@@ -1463,8 +1463,8 @@ class NewDagulirController extends Controller
                     }
                     else {
                         DB::rollBack();
-                        return 'Terjadi kesalahan saat mengirimkan data SIPDE.';
-                        return redirect()->back()->withError('Terjadi kesalahan saat mengirimkan data SIPDE.');
+
+                        return redirect()->back()->withError($storeSIPDE);
                     }
                 }
                 else {
