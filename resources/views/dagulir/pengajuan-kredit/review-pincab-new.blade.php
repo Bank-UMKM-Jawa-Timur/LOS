@@ -119,9 +119,6 @@
                                                     <div class="field-name">
                                                         <label for="">{{ $item->nama }}</label>
                                                     </div>
-                                                    <div class="field-answer">
-                                                        <p></p>
-                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="p-3">
@@ -187,23 +184,17 @@
                                         @endif
                                     @endforeach
                                     @if ($item->nama == 'Ijin Usaha' && $countIjin == 0)
-                                            <div class="row form-group sub pl-4">
-                                                <label for="staticEmail"
-                                                    class="col-sm-3 col-form-label font-weight-bold">Ijin Usaha</label>
-                                                <label for="staticEmail" class="col-sm-1 col-form-label px-0">
-                                                    <div class="d-flex justify-content-end">
-                                                        <div style="width: 20px">
-                                                            :
-                                                        </div>
-                                                    </div>
-                                                </label>
-                                                <div class="col">
-                                                    <input type="text" readonly
-                                                        class="form-control-plaintext font-weight-bold" id="staticEmail"
-                                                        value="Tidak ada legalitas usaha">
+                                        <div class="form-group-2">
+                                            <div class="field-review">
+                                                <div class="field-name">
+                                                    <label for="">Ijin Usaha</label>
+                                                </div>
+                                                <div class="field-answer">
+                                                    <p>Tidak ada legalitas usaha</p>
                                                 </div>
                                             </div>
-                                        @endif
+                                        </div>
+                                    @endif
                                 @endif
                                 @php
                                     $dataJawaban = \App\Models\OptionModel::where('option', '!=', '-')
@@ -231,131 +222,6 @@
 
                                     @else
                                         <div class="form-group-2">
-                                            <div class="field-review">
-                                                <div class="field-name">
-                                                    <label for="">{{ $item->nama }}</label>
-                                                </div>
-                                                <div class="field-answer space-y-5">
-                                                    @foreach ($dataJawaban as $key => $itemJawaban)
-                                                        @php
-                                                            $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
-                                                                ->where('id_pengajuan', $dataUmum->id)
-                                                                ->get();
-                                                            $count = count($dataDetailJawaban);
-                                                            for ($i = 0; $i < $count; $i++) {
-                                                                $data[] = $dataDetailJawaban[$i]['id_jawaban'];
-                                                            }
-                                                        @endphp
-                                                        @if (in_array($itemJawaban->id, $data))
-                                                            @if (isset($data))
-                                                                @if (is_numeric($itemJawaban->option) && strlen($itemJawaban->option) > 3)
-                                                                    <p>{{ $itemJawaban->option }}</p>
-                                                                    <input type="hidden" name="id[]" value="{{ $itemAspek->id }}">
-                                                                @else
-                                                                    <p>{{ $itemJawaban->option }}</p>
-                                                                    <input type="hidden" name="id[]" value="{{ $itemAspek->id }}">
-                                                                @endif
-                                                            @endif
-                                                        @endif
-                                                    @endforeach
-                                                    <div>
-                                                        <div class="field-review">
-                                                            @foreach ($dataJawaban as $key => $itemJawaban)
-                                                                @php
-                                                                    $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
-                                                                        ->where('id_pengajuan', $dataUmum->id)
-                                                                        ->get();
-                                                                    $getKomentarPenyelia = null;
-                                                                    $getKomentarPBP = null;
-                                                                    $count = count($dataDetailJawaban);
-                                                                    for ($i = 0; $i < $count; $i++) {
-                                                                        $data[] = $dataDetailJawaban[$i]['id_jawaban'];
-                                                                    }
-                                                                @endphp
-                                                                @if (in_array($itemJawaban->id, $data))
-                                                                    @if (isset($data))
-                                                                        @php
-                                                                            $dataDetailJawabanskor = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
-                                                                                ->where('id_pengajuan', $dataUmum->id)
-                                                                                ->where('id_jawaban', $itemJawaban->id)
-                                                                                ->get();
-                                                                            $getKomentarPenyelia = \App\Models\DetailKomentarModel::select('detail_komentar.*')
-                                                                                ->join('komentar', 'komentar.id', 'detail_komentar.id_komentar')
-                                                                                ->where('detail_komentar.id_komentar', $comment->id)
-                                                                                ->where('detail_komentar.id_item', $item->id)
-                                                                                ->where('detail_komentar.id_user', $comment->id_penyelia)
-                                                                                ->get();
-                                                                            if ($dataUmum->id_cabang == 1) {
-                                                                                $getKomentarPBP = \App\Models\DetailKomentarModel::select('detail_komentar.*')
-                                                                                    ->join('komentar', 'komentar.id', 'detail_komentar.id_komentar')
-                                                                                    ->where('detail_komentar.id_komentar', $comment->id)
-                                                                                    ->where('detail_komentar.id_item', $item->id)
-                                                                                    ->where('detail_komentar.id_user', $comment->id_pbp)
-                                                                                    ->get();
-                                                                            }
-                                                                        @endphp
-                                                                        @foreach ($dataDetailJawabanskor as $item)
-                                                                            @if ($item->skor_penyelia != null && $item->skor_penyelia != '')
-                                                                                <div class="field-name">
-                                                                                    <label for="">Skor</label>
-                                                                                </div>
-                                                                                <div class="field-answer space-y-5">
-                                                                                    <p>{{ $item->skor_penyelia }}</p>
-                                                                                </div>
-                                                                            @endif
-                                                                        @endforeach
-                                                                    @endif
-                                                                @endif
-                                                            @endforeach
-                                                        </div>
-                                                    </div>
-                                                    @if ($dataUmum->id_cabang == 1 && $getKomentarPBP != null)
-                                                        @foreach ($getKomentarPBP as $itemKomentarPBP)
-                                                            <div class="row form-group sub pl-4">
-                                                                <label for="staticEmail" class="col-sm-3 col-form-label"></label>
-                                                                <label for="staticEmail" class="col-sm-1 col-form-label px-0">
-                                                                    <div class="d-flex justify-content-end">
-                                                                        <div style="width: 20px">
-                
-                                                                        </div>
-                                                                    </div>
-                                                                </label>
-                                                                <div class="col">
-                                                                    <div class="d-flex">
-                                                                        <div style="width: 30%">
-                                                                            <p class="p-0 m-0"><strong>Komentar PBP : </strong></p>
-                                                                        </div>
-                                                                        <h6 class="font-italic">{{ $itemKomentarPBP->komentar ?? ''}}</h6>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        @endforeach
-                                                    @endif
-                                                    @if ($item->nama == 'Persentase Kebutuhan Kredit Opsi')
-                
-                                                    @else
-
-                                                    @endif
-                                                    <div>
-                                                        @if (isset($getKomentarPenyelia))
-                                                            @foreach ($getKomentarPenyelia as $itemKomentarPenyelia)
-                                                                <div class="field-review">
-                                                                    <div class="field-name">
-                                                                        <label for="">Komentar Penyelia</label>
-                                                                    </div>
-                                                                    <div class="field-answer space-y-5">
-                                                                        <p>
-                                                                            <span class="field-skor">
-                                                                                {{ $itemKomentarPenyelia->komentar ?? ''}}
-                                                                            </span>
-                                                                        </p>
-                                                                    </div>
-                                                                </div>
-                                                            @endforeach
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                            </div>
                                             <div class="field-review">
                                                 <div class="field-name">
                                                     <label for="">{{ $item->nama }}</label>
