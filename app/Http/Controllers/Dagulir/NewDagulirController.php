@@ -1447,7 +1447,7 @@ class NewDagulirController extends Controller
         $pdf = public_path($fileName);
         $file = "data:@file/pdf;base64,".base64_encode(file_get_contents($pdf));
 
-        return $file;
+        return redirect()->route('dagulir.pengajuan.index');
     }
     function CetakPK($id) {
         $pengajuan = PengajuanModel::find($id);
@@ -1468,6 +1468,8 @@ class NewDagulirController extends Controller
         $pdf = public_path($fileName);
         $file = "data:@file/pdf;base64,".base64_encode(file_get_contents($pdf));
 
-        return $file;
+
     }
+
+
 }
