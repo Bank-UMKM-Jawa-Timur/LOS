@@ -216,7 +216,7 @@
                         </td>
                         <td>
                             {{$item->pengajuan->posisi}}
-                            <p class="text-red-500">({{$item->nama_pemroses}})</p>
+                            <p class="text-red-500">{{ $item->pengajuan->posisi != 'Selesai' || $item->pengajuan->posisi != 'Ditolak' ? '(' . $item->nama_pemroses . ')' : '' }}</p>
                         </td>
                         <td>
                             {{ array_key_exists(intval($item->status), $status) ? $status[intval($item->status)] : 'Tidak ditemukan' }}
@@ -254,6 +254,7 @@
                                                     {{-- <a href="{{ route('dagulir.check.pincab', $item->pengajuan->id) }}"
                                                         class="dropdown-item send-pincab">Lanjutkan Ke Pincab</a> --}}
                                                 </li>
+
                                             @endif
                                         @elseif ((Auth()->user()->role == 'PBO'))
                                             @if ($item->pengajuan->posisi == 'PBO' && $item->pengajuan->tanggal_review_penyelia
@@ -297,6 +298,11 @@
                                                     </li>
                                                 @endif
                                             @endif
+                                        @else
+                                        <li class="item-tb-dropdown">
+                                            <a href="{{ route('dagulir.pengajuan.cetak-pdf', $item->pengajuan->id) }}"
+                                                class="cursor-pointer">Cetak</a>
+                                        </li>
                                         @endif
                                     </ul>
                                 </div>
@@ -325,7 +331,7 @@
 <script>
     document.getElementById('modalConfirmPincab').addEventListener('click', function () {
         document.getElementById('confirmationModal').classList.remove('hidden');
-        document.getElementById('confirmationModal').classList.add('h-fit');
+        document.getElementById('confirmationModal').classList.add('h-full');
         var nama = $('#modalConfirmPincab').data('nama');
         var namaHtml = nama.toLowerCase();
         var idPengajuan = $('#modalConfirmPincab').data('id_pengajuan');

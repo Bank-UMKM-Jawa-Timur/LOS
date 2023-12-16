@@ -32,6 +32,7 @@ use App\Models\User;
 use App\Repository\MasterItemRepository;
 use App\Repository\PengajuanDagulirRepository;
 use App\Services\TemporaryService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use DateTime;
 use Exception;
 use Illuminate\Database\QueryException;
@@ -1574,4 +1575,49 @@ class NewDagulirController extends Controller
             return redirect()->back()->withError($e->getMessage());
         }
     }
+
+    function CetakPDF($id) {
+        $pengajuan = PengajuanModel::find($id);
+        $param['dataAspek'] = ItemModel::select('*')->where('level',1)->get();
+        $param['dataNasabah'] = PengajuanDagulir::find($pengajuan->dagulir_id);
+        $param['dataUmum'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit')
+                                        ->find($id);
+        $param['komentar'] = KomentarModel::where('id_pengajuan', $id)->first();
+
+        $param['jenis_usaha'] = config('dagulir.jenis_usaha');
+
+
+        $pdf = Pdf::loadview('dagulir.pengajuan-kredit.cetak.cetak-surat',$param);
+
+        $fileName =  time().'.'. 'pdf' ;
+        $pdf->save(public_path() . '/' . $fileName);
+
+        $pdf = public_path($fileName);
+        $file = "data:@file/pdf;base64,".base64_encode(file_get_contents($pdf));
+
+        return redirect()->route('dagulir.pengajuan.index');
+    }
+    function CetakPK($id) {
+        $pengajuan = PengajuanModel::find($id);
+        $param['dataAspek'] = ItemModel::select('*')->where('level',1)->get();
+        $param['dataNasabah'] = PengajuanDagulir::find($pengajuan->dagulir_id);
+        $param['dataUmum'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit')
+                                        ->find($id);
+        $param['komentar'] = KomentarModel::where('id_pengajuan', $id)->first();
+
+        $param['jenis_usaha'] = config('dagulir.jenis_usaha');
+
+
+        $pdf = Pdf::loadview('dagulir.pengajuan-kredit.cetak.cetak-surat',$param);
+
+        $fileName =  time().'.'. 'pdf' ;
+        $pdf->save(public_path() . '/' . $fileName);
+
+        $pdf = public_path($fileName);
+        $file = "data:@file/pdf;base64,".base64_encode(file_get_contents($pdf));
+
+
+    }
+
+
 }
