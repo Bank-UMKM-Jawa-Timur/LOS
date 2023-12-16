@@ -943,6 +943,7 @@ class NewDagulirController extends Controller
             $param['kab_dom'] = Kabupaten::find($param['dataUmumNasabah']->kotakab_dom)->kabupaten;
             $param['kec_usaha'] = Kecamatan::find($param['dataUmumNasabah']->kec_usaha)->kecamatan;
             $param['kab_usaha'] = Kabupaten::find($param['dataUmumNasabah']->kotakab_usaha)->kabupaten;
+            $param['alamat_usaha'] = $param['dataUmumNasabah']->alamat_usaha;
 
             $param['allKab'] = Kabupaten::get();
             $param['allKec'] = Kecamatan::where('id_kabupaten', $param['dataUmumNasabah']->kotakab_ktp)->get();
