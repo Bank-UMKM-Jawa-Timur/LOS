@@ -1391,7 +1391,13 @@ class NewDagulirController extends Controller
             }
 
             // PK
-            $pk_base64 = $this->CetakPK($id_pengajuan);
+            $pk_base64 = null;
+            if ($pengajuan) {
+                $filename = $pengajuan->pk;
+                $pk = public_path("upload/$id_pengajuan/pk/$filename");
+                $pk_ext = explode('.', $filename)[1];
+                $pk_base64 = "data:@image/$pk_ext;base64,".base64_encode(file_get_contents($pk));
+            }
 
             $result = [
                 'foto_nasabah' => $foto_nasabah_base64,
