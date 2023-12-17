@@ -15,7 +15,6 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('plugins/owl-carousel/owl.carousel.css') }}" rel="stylesheet">
     <link href="{{ asset('plugins/owl-carousel/owl.theme.default.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('') }}vendor/sweetalert-master/dist/sweetalert.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/0.5.7/perfect-scrollbar.min.css">
 </head>
 <body class="bg-theme-body font-poppins" id="app">
@@ -52,6 +51,7 @@
         </div>
     </div>
     @include('components.new.modal.logout');
+    @include('sweetalert::alert', ['cdn' => "https://cdn.jsdelivr.net/npm/sweetalert2@9"])
 </body>
     {{-- javascript plugins --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -62,9 +62,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
     <script src="{{ asset('plugins/owl-carousel/owl.carousel.js') }}"></script>
     <script src="{{ asset('plugins/owl-carousel/owl.carousel.min.js') }}"></script>
-    <script src="{{ asset('') }}vendor/sweetalert-master/dist/sweetalert.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.12/dist/sweetalert2.all.min.js"></script>
-    <script src="{{asset('assets/js/sweetalert2.js')}}"></script>
 
     {{-- app.js is custom global js --}}
     <script src="{{ asset('js/app.js') }}"></script>

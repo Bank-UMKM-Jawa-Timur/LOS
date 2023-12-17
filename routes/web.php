@@ -16,6 +16,7 @@ use App\Http\Controllers\DashboardDireksiController;
 use \App\Http\Controllers\LogPengajuanController;
 use \App\Http\Controllers\Dagulir\DagulirController;
 use App\Http\Controllers\Dagulir\NewDagulirController;
+use RealRashid\SweetAlert\Facades\Alert;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +28,7 @@ use App\Http\Controllers\Dagulir\NewDagulirController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Route::get('/fixScore', [PengajuanKreditController::class, 'fixScore']);
 Route::get('/', function () {
     return redirect()->route('login');
@@ -40,6 +42,9 @@ Route::post('tes-skor', [PengajuanKreditController::class, 'countScore'])->name(
 // })->middleware(['auth'])->name('dashboard');
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/detail-pengajuan-new/tes', function () {
+        return view('dagulir.pengajuan-kredit.detail-pengajuan-jawaban-new');
+    });
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/print-data-nominatif', [DashboardController::class, 'cetak'])->name('print_data_nominatif');
 

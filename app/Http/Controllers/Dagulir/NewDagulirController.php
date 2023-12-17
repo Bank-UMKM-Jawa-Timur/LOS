@@ -226,6 +226,7 @@ class NewDagulirController extends Controller
 
         $request->validate([
             'nama_lengkap' => 'required',
+            'email' => 'required|unique:pengajuan_dagulir,email',
             'nik_nasabah' => 'required',
             'tempat_lahir' => 'required',
             'tanggal_lahir' => 'required',
@@ -305,55 +306,7 @@ class NewDagulirController extends Controller
             $pengajuan->from_apps = 'pincetar';
             $pengajuan->save();
 
-            $update_pengajuan = PengajuanDagulir::find($pengajuan->id);
-            // Start File Slik
-            if ($request->has('file_slik')) {
-                $image = $request->file('file_slik');
-                $fileNameSlik = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
-                $filePath = public_path() . '/upload/' . $pengajuan->id . '/' .$pengajuan->id_slik;
-                if (!File::isDirectory($filePath)) {
-                    File::makeDirectory($filePath, 493, true);
-                }
-                $image->move($filePath, $fileNameSlik);
-                $update_pengajuan->file_slik = $fileNameSlik;
-            }
-            // foto nasabah
-            if ($request->has('foto_nasabah')) {
-                $image = $request->file('foto_nasabah');
-                $fileNameNasabah = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
-                $filePath = public_path() . '/upload/' . $pengajuan->id;
-                if (!File::isDirectory($filePath)) {
-                    File::makeDirectory($filePath, 493, true);
-                }
-                $image->move($filePath, $fileNameNasabah);
-                $update_pengajuan->foto_nasabah = $fileNameNasabah;
-
-            }
-            if ($request->has('ktp_pasangan')) {
-                $image = $request->file('ktp_pasangan');
-                $fileNamePasangan = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
-                $filePath = public_path() . '/upload/' . $pengajuan->id;
-                if (!File::isDirectory($filePath)) {
-                    File::makeDirectory($filePath, 493, true);
-                }
-                $image->move($filePath, $fileNamePasangan);
-                $update_pengajuan->foto_pasangan = $fileNamePasangan;
-
-            }
-            if ($request->has('ktp_nasabah')) {
-                $image = $request->file('ktp_nasabah');
-                $fileNameKtpNasabah = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
-                $filePath = public_path() . '/upload/' . $pengajuan->id;
-                if (!File::isDirectory($filePath)) {
-                    File::makeDirectory($filePath, 493, true);
-                }
-                $image->move($filePath, $fileNameKtpNasabah);
-                $update_pengajuan->foto_ktp = $fileNameKtpNasabah;
-
-            }
-            // ktp nasabah
-            $update_pengajuan->update();
-            // End File Slik
+            $dagulir_id = $pengajuan->id;
 
             $addPengajuan = new PengajuanModel;
             $addPengajuan->id_staf = auth()->user()->id;
@@ -364,6 +317,47 @@ class NewDagulirController extends Controller
             $addPengajuan->dagulir_id = $pengajuan->id;
             $addPengajuan->save();
             $id_pengajuan = $addPengajuan->id;
+
+            $update_pengajuan = PengajuanDagulir::find($pengajuan->id);
+            // foto nasabah
+            if ($request->has('foto_nasabah')) {
+                $image = $request->file('foto_nasabah');
+                $fileNameNasabah = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
+                $filePath = public_path() . '/upload/' . $id_pengajuan. '/' . $dagulir_id;
+                if (!File::isDirectory($filePath)) {
+                    File::makeDirectory($filePath, 493, true);
+                }
+                $image->move($filePath, $fileNameNasabah);
+                $update_pengajuan->foto_nasabah = $fileNameNasabah;
+
+            }
+            if ($request->has('ktp_pasangan')) {
+                $image = $request->file('ktp_pasangan');
+                $fileNamePasangan = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
+                $filePath = public_path() . '/upload/' . $id_pengajuan. '/' . $dagulir_id;
+                if (!File::isDirectory($filePath)) {
+                    File::makeDirectory($filePath, 493, true);
+                }
+                $image->move($filePath, $fileNamePasangan);
+                $update_pengajuan->foto_pasangan = $fileNamePasangan;
+
+            }
+            if ($request->has('ktp_nasabah')) {
+                $image = $request->file('ktp_nasabah');
+                $fileNameKtpNasabah = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
+                $filePath = public_path() . '/upload/' . $id_pengajuan. '/' . $dagulir_id;
+                if (!File::isDirectory($filePath)) {
+                    File::makeDirectory($filePath, 493, true);
+                }
+                $image->move($filePath, $fileNameKtpNasabah);
+                $update_pengajuan->foto_ktp = $fileNameKtpNasabah;
+
+            }
+            // ktp nasabah
+            $update_pengajuan->update();
+
+
+
             $tempNasabah = TemporaryService::getNasabahData($request->idCalonNasabah);
 
             $dataNasabah = $tempNasabah->toArray();
@@ -612,12 +606,12 @@ class NewDagulirController extends Controller
             event(new EventMonitoring('store pengajuan'));
 
             if (!$statusSlik){
-                Alert::success('success', 'Data berhasil disimpan');
-                return redirect()->route('dagulir.pengajuan.index')->withStatus('Data berhasil disimpan.');
+                Alert::success('Success', 'Data berhasil disimpan.');
+                return redirect()->route('dagulir.pengajuan.index');
             }
             else {
-                Alert::error('error', 'Pengajuan ditolak');
-                return redirect()->route('dagulir.pengajuan.index')->withError('Pengajuan ditolak');
+                Alert::error('error', 'Pengajuan ditolak.');
+                return redirect()->route('dagulir.pengajuan.index');
             }
         } catch (Exception $e) {
             DB::rollBack();
@@ -653,7 +647,7 @@ class NewDagulirController extends Controller
 
                 DB::commit();
                 Alert::success('success', 'Berhasil mengganti posisi');
-                return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+                return redirect()->back();
             } else {
                 return back()->withError('Data pengajuan tidak ditemukan.');
             }
@@ -893,7 +887,7 @@ class NewDagulirController extends Controller
                 event(new EventMonitoring('review pengajuan'));
 
                 Alert::success('success', 'Berhasil Mereview');
-                return redirect()->route('dagulir.pengajuan.index')->withStatus('Berhasil Mereview');
+                return redirect()->route('dagulir.pengajuan.index');
             } catch (Exception $e) {
                 DB::rollBack();
                 return redirect()->back()->withError('Terjadi kesalahan.' . $e->getMessage());
@@ -945,6 +939,7 @@ class NewDagulirController extends Controller
             $param['kab_dom'] = Kabupaten::find($param['dataUmumNasabah']->kotakab_dom)->kabupaten;
             $param['kec_usaha'] = Kecamatan::find($param['dataUmumNasabah']->kec_usaha)->kecamatan;
             $param['kab_usaha'] = Kabupaten::find($param['dataUmumNasabah']->kotakab_usaha)->kabupaten;
+            $param['alamat_usaha'] = $param['dataUmumNasabah']->alamat_usaha;
 
             $param['allKab'] = Kabupaten::get();
             $param['allKec'] = Kecamatan::where('id_kabupaten', $param['dataUmumNasabah']->kotakab_ktp)->get();
@@ -1360,21 +1355,6 @@ class NewDagulirController extends Controller
             $foto_nasabah_ext = explode('.', $filename)[1];
             $foto_nasabah_base64 = "data:@image/$foto_nasabah_ext;base64,".base64_encode(file_get_contents($foto_nasabah));
 
-            // Foto tempat usaha
-            $jawaban = JawabanTextModel::select('id', 'id_jawaban AS item_id', 'opsi_text AS file')
-                                        ->where('id_pengajuan', $pengajuan->id)
-                                        ->where('id_jawaban', 154) // Foto usaha item id
-                                        ->orderBy('id')
-                                        ->first();
-            $foto_usaha_base64 = null;
-            if ($jawaban) {
-                $item_id = $jawaban->item_id;
-                $filename = $jawaban->file;
-                $foto_usaha = public_path("upload/$id_pengajuan/$item_id/$filename");
-                $foto_usaha_ext = explode('.', $filename)[1];
-                $foto_usaha_base64 = "data:@image/$foto_usaha_ext;base64,".base64_encode(file_get_contents($foto_usaha));
-            }
-
             // Foto agunan
             $jawaban = JawabanTextModel::select('id', 'id_jawaban AS item_id', 'opsi_text AS file')
                                         ->where('id_pengajuan', $pengajuan->id)
@@ -1508,7 +1488,12 @@ class NewDagulirController extends Controller
         $id = $request->get('id_pengajuan');
         try {
             $pengajuan = PengajuanModel::find($id);
+            $komentar = KomentarModel::where('id_pengajuan',$id)->first();
             if ($pengajuan) {
+                if ($komentar->komentar_penyelia == null) {
+                    alert()->error('Error','Data pengajuan belum di review.');
+                    return redirect()->route('dagulir.index');
+                }
                 $pincab = User::select('id')
                         ->where('id_cabang', $pengajuan->id_cabang)
                         ->where('role', 'Pincab')
@@ -1520,13 +1505,14 @@ class NewDagulirController extends Controller
                     $pengajuan->update();
 
                     Alert::success('success', 'Berhasil mengganti posisi');
-                    return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+                    return redirect()->back();
                 } else {
-                    Alert::error('error', 'User pincab tidak ditemukan pada cabang ini');
-                    return back()->withError('User pincab tidak ditemukan pada cabang ini.');
+                    alert()->error('Error','User pincab tidak ditemukan pada cabang ini');
+
+                    return redirect()->back();
                 }
             } else {
-                Alert::error('error', 'Data pengajuan tidak ditemukan');
+                alert()->error('Error','Data pengajuan tidak ditemukan');
                 return back()->withError('Data pengajuan tidak ditemukan.');
             }
         } catch (Exception $e) {
@@ -1652,7 +1638,7 @@ class NewDagulirController extends Controller
                     return redirect()->back()->withError('Data pengajuan tidak ditemukan.');
                 }
             } else {
-                Alert::error('error', 'Tidak memiliki hak akses');
+                alert()->error('Error','Tidak memiliki hak akses');
                 return redirect()->back()->withError('Tidak memiliki hak akses.');
             }
         } catch (\Exception $e) {
@@ -1741,14 +1727,14 @@ class NewDagulirController extends Controller
 
                     event(new EventMonitoring('tolak pengajuan'));
                     Alert::success('success', 'Berhasil menolak pengajuan');
-                    return redirect()->route('dagulir.index')->withStatus('Berhasil menolak pengajuan.');
+                    return redirect()->route('dagulir.index');
                 } else {
-                    Alert::error('error', 'Belum di review Pincab');
+                    alert()->error('Error','Belum di review Pincab');
                     return redirect()->back()->withError('Belum di review Pincab.');
                 }
             } else {
-                Alert::error('error', 'Tidak memiliki hak akses');
-                return redirect()->back()->withError('Tidak memiliki hak akses.');
+                alert()->error('Error','Tidak memiliki hak akses');
+                return redirect()->back();
             }
         } catch (\Exception $e) {
             DB::rollBack();
