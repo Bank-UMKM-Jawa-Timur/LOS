@@ -1269,7 +1269,7 @@ class NewDagulirController extends Controller
         return $body;
     }
 
-    public function updateStatus($kode_pendaftaran, $status, $lampiran_analisa = null, $jangka_waktu = null, $realisasi_dana = null) {
+    public function  updateStatus($kode_pendaftaran, $status, $lampiran_analisa = null, $jangka_waktu = null, $realisasi_dana = null) {
         $data = sipde_token();
         $body = $this->getStatusBody($kode_pendaftaran, $status, $lampiran_analisa = null, $jangka_waktu = null, $realisasi_dana = null);
 
@@ -1826,7 +1826,6 @@ class NewDagulirController extends Controller
 
         return view('dagulir.cetak.cetak-pk', $param);
     }
-
     public function cetakSPPk($id)
     {
         $count = DB::table('log_cetak_kkb')
@@ -1892,6 +1891,7 @@ class NewDagulirController extends Controller
 
     public function postFileDagulir(Request $request, $id)
     {
+        // return $request;
         $kode_cabang = DB::table('cabang')
         ->join('pengajuan', 'pengajuan.id_cabang', 'cabang.id')
         ->where('pengajuan.id', $id)
@@ -1926,7 +1926,7 @@ class NewDagulirController extends Controller
                     ->update([
                         'no_pk' => $request->get('no_pk')
                     ]);
-                    // return $count;
+                    $kode_pendaftaran = $request->get('kode_pendaftaran');
                     $folderPK = public_path() . '/upload/' . $id . '/pk/';
                     $filePK = $request->pk;
                     $filenamePK = date('YmdHis') . '.' . $filePK->getClientOriginalExtension();
@@ -1940,17 +1940,21 @@ class NewDagulirController extends Controller
                         ->update([
                             'pk' => $filenamePK,
                     ]);
+                    $this->updateStatus($kode_pendaftaran, 5);
                     break;
             }
 
             DB::commit();
-            return redirect()->route('dagulir.pengajuan.index')->withStatus('Berhasil menambahkan ' . $message);
+            Alert::success('success', $message);
+            return redirect()->route('dagulir.pengajuan.index');
         } catch (Exception $e) {
             DB::rollBack();
-            return redirect()->route('dagulir.pengajuan.index')->withStatus('Terjadi kesalahan. ' . $e->getMessage());
+            Alert::error('Terjadi Kesalahan', $e->getMessage());
+            return redirect()->route('dagulir.pengajuan.index');
         } catch (QueryException $e) {
             DB::rollBack();
-            return redirect()->route('dagulir.pengajuan.index')->withStatus('Terjadi kesalahan. ' . $e->getMessage());
+            Alert::error('Terjadi Kesalahan', $e->getMessage());
+            return redirect()->route('dagulir.pengajuan.index');
         }
     }
 

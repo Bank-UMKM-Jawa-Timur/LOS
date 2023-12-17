@@ -20,6 +20,7 @@
                 <br>
                 @csrf
                 <input type="hidden" name="tipe_file" value="PK">
+                <input type="hidden" name="kode_pendaftaran" value="{{$item->kode_pendaftaran != null ? $item->kode_pendaftaran : '-'}}">
                     <div class="form-group-2">
                         <div class="input-group">
                             <label for="sppk">No PK</label>
