@@ -1718,6 +1718,9 @@ video {
 .w-6 {
   width: 1.5rem;
 }
+.w-60 {
+  width: 15rem;
+}
 .w-64 {
   width: 16rem;
 }
@@ -2871,4 +2874,3 @@ video {
     padding-right: 2rem;
   }
 }
-

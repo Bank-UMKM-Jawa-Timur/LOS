@@ -952,10 +952,31 @@
                                                         // dump($dataDetailJawabanText);
                                                             $jumlahDataDetailJawabanText = $dataDetailJawabanText ? count($dataDetailJawabanText) : 0;
                                                     @endphp
+                                                    {{-- @foreach ($dataDetailJawabanText as $itemTextTiga)
+                                                        @if ($itemTextTiga->nama != 'Ratio Tenor Asuransi')
+                                                            @if ($itemTiga->opsi_jawaban == 'file')
+                                                                @if ($itemTextTiga->nama == "Dokumen NIB" || $itemTextTiga->nama == "Dokumen NPWP" || $itemTextTiga->nama == "Dokumen Surat Keterangan Usaha")
+                                                                    <b>{{ $itemTextTiga->nama }} 121212 :</b>
+                                                                    @php
+                                                                        $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text);
+                                                                    @endphp
+                                                                    @if ($file_parts['extension'] == 'pdf')
+                                                                        <iframe
+                                                                            style="border: 5px solid #dc3545;"
+                                                                            src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}"
+                                                                            width="100%" height="800px"></iframe>
+                                                                    @else
+                                                                        <img style="border: 5px solid #dc3545;" src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}"
+                                                                            alt="" width="800px">
+                                                                    @endif
+                                                                @endif
+                                                            @endif
+                                                        @endif
+                                                    @endforeach --}}
                                                     @foreach ($dataDetailJawabanText as $itemTextTiga)
                                                         @if ($itemTextTiga->nama != 'Ratio Tenor Asuransi')
-                                                            <div class="row">
-                                                                <div class="col-md-12">
+                                                            <div class="flex">
+                                                                <div class="flex-1 w-60">
                                                                         @if ($itemTiga->opsi_jawaban == 'file')
                                                                             <b>{{ $itemTextTiga->nama }} :</b>
                                                                             @php
@@ -1306,11 +1327,11 @@
                                                         @endphp
                                                         @if ($itemEmpat->opsi_jawaban == 'option' && $isJawabanExist > 0)
                                                             @if ($itemEmpat->nama != "Tidak Memiliki Jaminan Tambahan")
-                                                                <div class="row">
+                                                                {{-- <div class="row">
                                                                     <div class="form-group-1 mb-0">
                                                                         <label for="">{{ $itemEmpat->nama }}</label>
                                                                     </div>
-                                                                </div>
+                                                                </div> --}}
                                                             @endif
                                                         @endif
 
@@ -1337,10 +1358,18 @@
                                                                                 @if ($itemEmpat->nama != "Tidak Memiliki Jaminan Tambahan")
                                                                                     <div class="row">
                                                                                         <div class="col-md-12">
-                                                                                            <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
-                                                                                                <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
-                                                                                                <h4 class="font-bold"> {{ $itemJawabanLevelEmpat->option }}</h4>
+                                                                                            <div class="field-review">
+                                                                                                <div class="field-name">
+                                                                                                    <label for="">{{ $itemEmpat->nama }}</label>
+                                                                                                </div>
+                                                                                                <div class="field-answer">
+                                                                                                    <p>{{ $itemJawabanLevelEmpat->option }}</p>
+                                                                                                </div>
                                                                                             </div>
+                                                                                            {{-- <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
+                                                                                                <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : OYY</span>
+                                                                                                <h4 class="font-bold"> {{ $itemJawabanLevelEmpat->option }}</h4>
+                                                                                            </div> --}}
 
                                                                                         </div>
                                                                                     </div>
@@ -1351,14 +1380,15 @@
                                                                                     <input type="hidden" name="id_option[]"
                                                                                         value="{{ $itemJawabanLevelEmpat->id }}">
                                                                                     @if ($itemEmpat->is_commentable == 'Ya')
-                                                                                        <div class="grid grid-cols-2 gap-2">
-                                                                                            <div class="w-full">
+                                                                                        <div class="flex pl-2">
+                                                                                            <div class="flex-1 w-64">
                                                                                                 <label for="">Komentar</label>
                                                                                                 <input type="text" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400 komentar"
                                                                                                     name="komentar_penyelia[]" placeholder="Masukkan Komentar"
                                                                                                     value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                                             </div>
-                                                                                            <div class="input-skor w-[15%]">
+                                                                                            <div class="flex-3 w-5"></div>
+                                                                                            <div class="flex-2 w-16">
                                                                                                 <label for="">Skor</label>
                                                                                                 @php
                                                                                                     $skorInput4 = null;
@@ -1372,6 +1402,7 @@
                                                                                                     {{ $itemEmpat->status_skor == 0 ? 'readonly' : '' }}
                                                                                                     value="{{ $skorInput4 || $skorInput4 > 0 ? $skorInput4 : null }}">
                                                                                             </div>
+                                                                                            <div class="flex-3 w-5"></div>
                                                                                         </div>
 
                                                                                     @endif
@@ -1951,6 +1982,7 @@
     </div>
 </section>
 @endsection
+
 
 @push('script-inject')
 <script>
