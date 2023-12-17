@@ -392,6 +392,7 @@ video {
   position: absolute;
   right: 1.25rem;
   top: 3.5rem;
+  z-index: 50;
   border-width: 1px;
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));

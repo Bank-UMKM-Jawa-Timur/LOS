@@ -1083,8 +1083,10 @@ class NewDagulirController extends Controller
                 $log = [];
             }
             $param['logPengajuan'] = $log;
+            
 
             return view('dagulir.pengajuan-kredit.review-pincab-new', $param);
+
         } else {
             return redirect()->back()->withError('Tidak memiliki hak akses.');
         }
