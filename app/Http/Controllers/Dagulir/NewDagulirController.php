@@ -1376,7 +1376,19 @@ class NewDagulirController extends Controller
             }
 
             // Foto agunan
-
+            $jawaban = JawabanTextModel::select('id', 'id_jawaban AS item_id', 'opsi_text AS file')
+                                        ->where('id_pengajuan', $pengajuan->id)
+                                        ->where('id_jawaban', 148) // Foto usaha item id
+                                        ->orderBy('id')
+                                        ->first();
+            $foto_agunan_base64 = null;
+            if ($jawaban) {
+                $item_id = $jawaban->item_id;
+                $filename = $jawaban->file;
+                $foto_agunan = public_path("upload/$id_pengajuan/$item_id/$filename");
+                $foto_agunan_ext = explode('.', $filename)[1];
+                $foto_agunan_base64 = "data:@image/$foto_agunan_ext;base64,".base64_encode(file_get_contents($foto_agunan));
+            }
 
             // PK
             $pk_base64 = $this->CetakPK($id_pengajuan);
@@ -1384,7 +1396,7 @@ class NewDagulirController extends Controller
             $result = [
                 'foto_nasabah' => $foto_nasabah_base64,
                 'foto_tempat_usaha' => $foto_usaha_base64,
-                'foto_agunan' => '',
+                'foto_agunan' => $foto_agunan_base64,
                 'akad_kredit' => $pk_base64,
             ];
             return $result;
