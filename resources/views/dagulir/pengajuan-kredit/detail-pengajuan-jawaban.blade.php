@@ -1193,12 +1193,12 @@
                                                             @endphp
                                                             @foreach ($dataDetailJawabanTextEmpat as $itemTextEmpat)
                                                                 <div class="row">
-                                                                    <div class="form-group-1 mb-0">
+                                                                    {{-- <div class="form-group-1 mb-0"> --}}
                                                                         {{-- INI --}}
-                                                                        <h6 class="font-medium text-sm" for="">{{ $itemTextEmpat->nama }}</h6>
+                                                                        {{-- <h6 class="font-medium text-sm" for="">{{ $itemTextEmpat->nama }}</h6> --}}
                                                                         @if ($itemEmpat->opsi_jawaban == 'file')
                                                                                     @if (intval($itemTextEmpat->opsi_text) > 1)
-                                                                                        <b>Jawaban:</b>
+                                                                                        <b>{{ $itemTextEmpat->nama }}</b>
                                                                                         @php
                                                                                             $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text);
                                                                                         @endphp
@@ -1246,9 +1246,25 @@
                                                                                         @endif
                                                                                     @endif
                                                                                 @else
-                                                                                    <div class="jawaban-responsive p-2 font-medium">
+                                                                                    <div class="field-review">
+                                                                                        <div class="field-name">
+                                                                                            <label for="">{{ $itemTextEmpat->nama }}</label>
+                                                                                        </div>
+                                                                                        <div class="field-answer">
+                                                                                            <p>
+                                                                                                {{ $itemTextEmpat->opsi_text }}
+                                                                                                @if ($itemEmpat->opsi_jawaban == 'persen')
+                                                                                                    %
+                                                                                                @elseif($itemEmpat->id == 130)
+                                                                                                    Bulan
+                                                                                                @else
+                                                                                                @endif
+                                                                                            </p>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    {{-- <div class="jawaban-responsive p-2 font-medium">
                                                                                         <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
-                                                                                            <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
+                                                                                            <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban 09: </span>
                                                                                             <h4 class="font-bold">
                                                                                                 {{ $itemTextEmpat->opsi_text }}
                                                                                                     @if ($itemEmpat->opsi_jawaban == 'persen')
@@ -1259,7 +1275,7 @@
                                                                                                     @endif
                                                                                             </h4>
                                                                                         </div>
-                                                                                    </div>
+                                                                                    </div> --}}
                                                                                     @if ($itemTextEmpat->is_commentable == 'Ya')
                                                                                         @if (Auth::user()->role != 'Pincab')
                                                                                             <div class="input-k-bottom">
@@ -1274,7 +1290,7 @@
                                                                                     @endif
                                                                                 @endif
 
-                                                                    </div>
+                                                                    {{-- </div> --}}
                                                                 </div>
 
                                                                 <input type="hidden" class="form-input mb-3"
