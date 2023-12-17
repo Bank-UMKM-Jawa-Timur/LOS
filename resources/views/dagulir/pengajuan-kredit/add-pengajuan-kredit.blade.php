@@ -60,6 +60,7 @@ $dataIndex = match ($skema) {
                             // check level 2
                             $dataLevelDua = \App\Models\ItemModel::where('level', 2)
                             ->where('id_parent', $value->id)
+                            ->orderBy('sequence')
                             ->get();
                             // check level 4
                             $dataLevelEmpat = \App\Models\ItemModel::where('level', 4)
@@ -358,7 +359,7 @@ $dataIndex = match ($skema) {
                                                 <div
                                                     class="{{ $idLevelDua == 'persentase_kebutuhan_kredit_opsi' || $idLevelDua == 'repayment_capacity_opsi' ? '' : 'form-group' }}">
                                                     <div class="input-box">
-                                                        <label for="" id="{{ $idLevelDua . '_label' }}">{{ $item->nama }}</label><small class="text-red-500 font-bold">*</small>
+                                                        <label for="" id="{{ $idLevelDua . '_label' }}">{{ $item->nama }}</label>
 
                                                         <select name="dataLevelDua[{{ $item->id }}]" id="{{ $idLevelDua }}"
                                                             class="form-select cek-sub-column" data-id_item={{ $item->id }}>
