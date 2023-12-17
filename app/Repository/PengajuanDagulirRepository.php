@@ -3,6 +3,7 @@ namespace App\Repository;
 
 use App\Models\Kecamatan;
 use App\Models\PengajuanDagulir;
+use App\Models\PengajuanDagulirTemp;
 use Illuminate\Database\Eloquent\Builder;
 
 class PengajuanDagulirRepository
@@ -92,6 +93,17 @@ class PengajuanDagulirRepository
                                 'kec_usaha:id,kecamatan',
                                 'kotakab_usaha:id,kabupaten')
                 ->where('id',$id)->first();
+        return $data;
+    }
+
+    public function getDraftData($search, $limit=10, $page=1, $id_user){
+        $data = null;
+        $data = PengajuanDagulirTemp::where('id_user', $id_user)
+            ->where(function($query) use ($search) {
+                $query->orWhere('nama','like', "%$search%");
+            })
+            ->paginate($limit);
+
         return $data;
     }
 }
