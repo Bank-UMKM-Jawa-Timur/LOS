@@ -248,7 +248,7 @@
                                                 <label for="">Foto KTP Pasangan</label>
                                             </div>
                                             <div class="field-answer">
-                                                <img src="{{ asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
+                                                <img src="{{ $dataUmumNasabah->foto_pasangan != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataUmumNasabah->id.'/'.$dataUmumNasabah->foto_pasangan : asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
                                             </div>
                                         </div>
                                     @endif
@@ -256,20 +256,20 @@
                                 <div class="form-group-2">
                                     <div class="field-review">
                                         <div class="field-name">
-                                            <label for="">Foto KTP Nasabah</label>
+                                            <label for="">Foto Nasabah</label>
                                         </div>
                                         <div class="field-answer">
-                                            <img src="{{ asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
+
+                                            <img src="{{ $dataUmumNasabah->foto_nasabah != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataUmumNasabah->id.'/'.$dataUmumNasabah->foto_nasabah : asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
                                         </div>
                                     </div>
-                                    
+
                                     <div class="field-review">
                                         <div class="field-name">
                                             <label for="">Foto KTP Nasabah</label>
                                         </div>
                                         <div class="field-answer">
-                                            <img src="{{ asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
-                                            {{-- <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span> --}}
+                                            <img src="{{ $dataUmumNasabah->foto_ktp != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataUmumNasabah->id.'/'.$dataUmumNasabah->foto_ktp : asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
                                         </div>
                                     </div>
                                 </div>
@@ -398,7 +398,7 @@
                                     </div>
                                 </div>
 
-                                @if ($dataUmumNasabah->status == 'menikah')
+                                {{-- @if ($dataUmumNasabah->status == 'menikah')
                                     @php
                                         $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
                                             ->where('level', 2)
@@ -517,10 +517,8 @@
                                             @endforeach
                                         @endif
                                     @endforeach
-                                @endif
+                                @endif --}}
                                 {{-- SLIK --}}
-                                {{-- <div class="form-group-1 col-span-2 pl-2 pb-0">
-                                </div> --}}
                                 <div class="form-group-1 pl-2">
                                     <div>
                                         <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
@@ -529,37 +527,15 @@
                                             </h2>
                                         </div>
                                     </div>
-                                    <label for="">{{ $itemSlik?->nama }}</label>
-                                    <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
-                                        <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
-                                        <h4 class="font-bold"> {{ $itemSlik?->option }}</h4>
-                                    </div>
-                                    @php
-                                        $komentarSlik = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', '=', 'detail_komentar.id_komentar')
-                                            ->where('id_pengajuan', $dataUmum->id)
-                                            ->where('id_item', $itemSlik?->id_item)
-                                            ->first();
-                                    @endphp
-                                    <div class="grid w-full grid-cols-2 gap-2">
-                                        <input type="hidden" name="id_item[]" value="{{ $itemSlik?->id_item }}">
-                                        <input type="hidden" name="id_option[]" value="{{ $itemSlik?->id_jawaban }}">
-                                        <div class="">
-                                            <input type="text" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400 komentar" name="komentar_penyelia[]"
-                                            placeholder="Masukkan Komentar"
-                                            value="{{ isset($komentarSlik->komentar) ? $komentarSlik->komentar : '' }}">
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">{{ $itemSlik?->nama }}</label>
                                         </div>
-                                        <div class="input-skor">
-                                            @php
-                                                $skorSlik = $itemSlik?->skor_penyelia ? $itemSlik?->skor_penyelia : $itemSlik?->skor;
-                                            @endphp
-                                            <input type="number" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400" placeholder="" name="skor_penyelia[]"
-                                                onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
-                                                min="0"
-                                                max="4"
-                                                {{ $itemSlik?->status_skor == 0 ? 'readonly' : '' }}
-                                                value="{{ $skorSlik || $skorSlik > 0 ? $skorSlik : null }}">
+                                        <div class="field-answer">
+                                            {{ $itemSlik?->option }}
                                         </div>
                                     </div>
+
                                 </div>
                                 @php
                                     // check level 2
@@ -582,12 +558,11 @@
                                             @php
                                                 $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
                                             @endphp
-                                            <div class="form-group-1">
-                                                <label for="">{{ $item->nama }}</label>
-                                            </div>
-                                            <div class="form-group-1">
-                                                <b>Jawaban:</b>
-                                                <div class="mt-2 pl-3">
+                                            <div class="field-review">
+                                                <div class="field-name">
+                                                    <label for="">{{ $item->nama }}</label>
+                                                </div>
+                                                <div class="field-answer">
                                                     @if ($file_parts['extension'] == 'pdf')
                                                         <iframe
                                                             src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
@@ -601,6 +576,38 @@
                                         @endforeach
                                     @endif
                                 @endforeach
+                                @php
+                                    $komentarSlik = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', '=', 'detail_komentar.id_komentar')
+                                        ->where('id_pengajuan', $dataUmum->id)
+                                        ->where('id_item', $itemSlik?->id_item)
+                                        ->first();
+                                @endphp
+                                <div class="flex pl-2">
+                                    <div class="flex-1 w-64">
+                                        <label for="">Komentar</label>
+                                        <input type="hidden" name="id_item[]" value="{{ $itemSlik?->id_item }}">
+                                        <input type="hidden" name="id_option[]" value="{{ $itemSlik?->id_jawaban }}">
+                                        <input type="text" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400 komentar"
+                                            name="komentar_penyelia[]" placeholder="Masukkan Komentar"
+                                            value="{{ isset($komentarSlik->komentar) ? $komentarSlik->komentar : '' }}">
+                                    </div>
+                                    <div class="flex-3 w-5"></div>
+                                    <div class="flex-2 w-16">
+                                        @php
+                                            $skorSlik = $itemSlik?->skor_penyelia ? $itemSlik?->skor_penyelia : $itemSlik?->skor;
+                                        @endphp
+                                        <label for="">Skor</label>
+                                        <input type="number" class="w-full px-3 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400" placeholder=""
+                                            name="skor_penyelia[]"
+                                            min="0"
+                                            max="4"
+                                            onKeyUp="if(this.value>4){this.value='4';}else if(this.value<=0){this.value='1';}"
+                                            {{ $itemSlik?->status_skor == 0 ? 'readonly' : '' }}
+                                            value="{{ $skorSlik || $skorSlik > 0 ? $skorSlik : null }}">
+                                    </div>
+                                    <div class="flex-3 w-5"></div>
+                                </div>
+
                                 <div class="flex justify-between">
                                     <button type="button"
                                         class="px-5 py-2 border rounded bg-white text-gray-500">
@@ -715,7 +722,7 @@
                                                                         @endif
                                                                     </div>
                                                                 </div>
-                                                                
+
                                                                 @if ($itemTextDua->is_commentable)
                                                                     @if (Auth::user()->role != 'Pincab')
                                                                         <input type="hidden" name="id_item[]" value="{{ $item->id }}">

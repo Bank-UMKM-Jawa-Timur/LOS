@@ -1368,7 +1368,7 @@ class NewDagulirController extends Controller
             }
 
             // Foto agunan
-            
+
 
             // PK
             $pk_base64 = $this->CetakPK($id_pengajuan);
@@ -1415,7 +1415,7 @@ class NewDagulirController extends Controller
                     $upload_syarat = Http::withHeaders([
                         'Authorization' => 'Bearer ' .$data['token'],
                     ])->post($host.'/syarat_dokumen.json', $body)->json();
-    
+
                     if ($upload_syarat) {
                         if (array_key_exists('data', $upload_syarat)) {
                             $response = $upload_syarat['data'];
@@ -1481,7 +1481,12 @@ class NewDagulirController extends Controller
         $id = $request->get('id_pengajuan');
         try {
             $pengajuan = PengajuanModel::find($id);
+            $komentar = KomentarModel::where('id_pengajuan',$id)->first();
             if ($pengajuan) {
+                if ($komentar->komentar_penyelia == null) {
+                    alert()->error('Error','Data pengajuan belum di review.');
+                    return redirect()->route('dagulir.index');
+                }
                 $pincab = User::select('id')
                         ->where('id_cabang', $pengajuan->id_cabang)
                         ->where('role', 'Pincab')
@@ -1495,11 +1500,12 @@ class NewDagulirController extends Controller
                     Alert::success('success', 'Berhasil mengganti posisi');
                     return redirect()->back();
                 } else {
-                    Alert::error('error', 'User pincab tidak ditemukan pada cabang ini');
+                    alert()->error('Error','User pincab tidak ditemukan pada cabang ini');
+
                     return redirect()->back();
                 }
             } else {
-                Alert::error('error', 'Data pengajuan tidak ditemukan');
+                alert()->error('Error','Data pengajuan tidak ditemukan');
                 return back()->withError('Data pengajuan tidak ditemukan.');
             }
         } catch (Exception $e) {
@@ -1625,7 +1631,7 @@ class NewDagulirController extends Controller
                     return redirect()->back()->withError('Data pengajuan tidak ditemukan.');
                 }
             } else {
-                Alert::error('error', 'Tidak memiliki hak akses');
+                alert()->error('Error','Tidak memiliki hak akses');
                 return redirect()->back()->withError('Tidak memiliki hak akses.');
             }
         } catch (\Exception $e) {
@@ -1716,12 +1722,12 @@ class NewDagulirController extends Controller
                     Alert::success('success', 'Berhasil menolak pengajuan');
                     return redirect()->route('dagulir.index');
                 } else {
-                    Alert::error('error', 'Belum di review Pincab');
+                    alert()->error('Error','Belum di review Pincab');
                     return redirect()->back()->withError('Belum di review Pincab.');
                 }
             } else {
-                Alert::error('error', 'Tidak memiliki hak akses');
-                return redirect()->back()->withError('Tidak memiliki hak akses.');
+                alert()->error('Error','Tidak memiliki hak akses');
+                return redirect()->back();
             }
         } catch (\Exception $e) {
             DB::rollBack();

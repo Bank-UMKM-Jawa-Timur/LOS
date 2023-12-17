@@ -120,7 +120,7 @@ $dataIndex = match ($skema) {
                                                     <input type="hidden" name="id_level[77]" value="77" id="nib_id">
                                                     <input type="hidden" name="opsi_jawaban[77]" value="input text" id="nib_opsi_jawaban">
                                                     <input type="text" maxlength="255" name="informasi[77]" id="nib_text"
-                                                        placeholder="Masukkan informasi" class="form-input" value="">
+                                                        placeholder="Masukkan informasi" class="form-input" >
 
                                                 </div>
                                             </div>
@@ -180,7 +180,7 @@ $dataIndex = match ($skema) {
                                                     <input type="hidden" name="id_level[79]" value="79" id="npwp_id">
                                                     <input type="hidden" name="opsi_jawaban[79]" value="input text" id="npwp_opsi_jawaban">
                                                     <input type="text" maxlength="20" name="informasi[79]" id="npwp_text"
-                                                        placeholder="Masukkan informasi" class="form-input" value="">
+                                                        placeholder="Masukkan informasi" class="form-input">
                                                 </div>
                                             </div>
                                             <div class="form-group" id="docNPWP">
@@ -213,7 +213,7 @@ $dataIndex = match ($skema) {
                                                                     <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}"
                                                                         id="">
                                                                     <input type="text" maxlength="255" name="informasi[{{ $item->id }}]"
-                                                                        id="{{ $idLevelDua }}" placeholder="Masukkan informasi {{ $item->nama }}" value=""
+                                                                        id="{{ $idLevelDua }}" placeholder="Masukkan informasi {{ $item->nama }}"
                                                                         class="form-input {{$item->is_rupiah ? 'rupiah' : ''}}" >
                                                                 </div>
                                                                 @if ($item->suffix)
@@ -235,7 +235,7 @@ $dataIndex = match ($skema) {
                                                                     id="">
                                                                 <input type="text" maxlength="255" name="informasi[{{ $item->id }}]"
                                                                     id="{{ $idLevelDua }}" placeholder="Masukkan informasi {{ $item->nama }}"
-                                                                    class="form-input" value="">
+                                                                    class="form-input">
                                                             </div>
                                                         </div>
                                                     @else
@@ -251,7 +251,7 @@ $dataIndex = match ($skema) {
                                                                         name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
                                                                         placeholder="Masukkan informasi {{ $item->nama }}" class="form-input rupiah"
                                                                         required
-                                                                        value="">
+                                                                    >
                                                                 </div>
                                                             </div>
                                                         @else
@@ -265,7 +265,7 @@ $dataIndex = match ($skema) {
                                                                     <input type="text" maxlength="255" step="any"
                                                                         name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
                                                                         placeholder="Masukkan informasi {{ $item->nama }}" class="form-input rupiah"
-                                                                        value="">
+                                                                    >
                                                                 </div>
                                                             </div>
                                                         @endif
@@ -283,7 +283,7 @@ $dataIndex = match ($skema) {
                                                                     <input type="number" step="any" name="informasi[{{ $item->id }}]"
                                                                         id="{{ $idLevelDua }}" placeholder="Masukkan informasi {{ $item->nama }}"
                                                                         class="form-input" aria-label="Recipient's username" aria-describedby="basic-addon2"
-                                                                        value="" onkeydown="return event.keyCode !== 69">
+                                                                        onkeydown="return event.keyCode !== 69">
                                                                 </div>
                                                                 @if ($item->suffix)
                                                                     <div class="flex-shrink-0  mt-2.5rem">
@@ -422,7 +422,7 @@ $dataIndex = match ($skema) {
                                                                                 value="{{ $itemTiga->opsi_jawaban }}" id="">
                                                                             <input type="text" maxlength="255" name="informasi[{{ $itemTiga->id }}]"
                                                                                 placeholder="Masukkan informasi" id="{{ $idLevelTiga }}"
-                                                                                value="" class="form-input {{$itemTiga->is_rupiah ? 'rupiah' : ''}}"
+                                                                                class="form-input {{$itemTiga->is_rupiah ? 'rupiah' : ''}}"
                                                                                 required>
                                                                         </div>
                                                                         @if ($itemTiga->suffix)
@@ -446,7 +446,7 @@ $dataIndex = match ($skema) {
                                                                                 id="">
                                                                             <input type="text" step="any" name="informasi[{{ $itemTiga->id }}]"
                                                                                 id="{{ $idLevelTiga }}" placeholder="Masukkan informasi {{ $itemTiga->nama }}"
-                                                                                class="form-input rupiah" value="" required>
+                                                                                class="form-input rupiah" required>
                                                                         </div>
                                                                         @if ($itemTiga->suffix)
                                                                             <div class="flex-shrink-0 mt-2.5rem">
@@ -472,7 +472,7 @@ $dataIndex = match ($skema) {
                                                                                         id="{{ $idLevelTiga }}"
                                                                                         placeholder="Masukkan informasi {{ $itemTiga->nama }}"
                                                                                         class="form-input {{$itemTiga->readonly ? 'bg-gray-100' : ''}}"
-                                                                                        value="">
+                                                                                    >
                                                                             </div>
                                                                             @if ($itemTiga->suffix)
                                                                                 <div class="flex-shrink-0 mt-2.5rem">
@@ -607,7 +607,7 @@ $dataIndex = match ($skema) {
                                                                                     id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan_/_ht' ? '' : $idLevelEmpat }}"
                                                                                     placeholder="Masukkan informasi"
                                                                                     class="form-input only-number"
-                                                                                    value="">
+                                                                                    >
                                                                                 <div class="input-group-append">
                                                                                     <div class="input-group-text" id="addon_tenor_yang_diminta">
                                                                                         Bulan</div>
@@ -616,7 +616,7 @@ $dataIndex = match ($skema) {
                                                                         @else
                                                                             <input type="text" maxlength="255" name="informasi[{{ $itemEmpat->id }}]"
                                                                                 id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan_/_ht' ? '' : $idLevelEmpat }}"
-                                                                                placeholder="Masukkan informasi" value=""
+                                                                                placeholder="Masukkan informasi"
                                                                                 class="form-input  {{$itemEmpat->is_rupiah ? 'rupiah' : ''}}">
                                                                         @endif
                                                                     </div>
@@ -634,7 +634,7 @@ $dataIndex = match ($skema) {
                                                                                 <input type="text" step="any" name="informasi[{{ $itemEmpat->id }}]"
                                                                                     id="{{ $idLevelEmpat == 'nilai_asuransi_penjaminan_/_ht' ? 'nilai_asuransi_penjaminan' : $idLevelEmpat }}"
                                                                                     placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
-                                                                                    class="form-input only-number" value="">
+                                                                                    class="form-input only-number">
                                                                             </div>
                                                                             @if ($itemEmpat->suffix)
                                                                                 <div class="flex-shrink-0 mt-2.5rem">
@@ -658,7 +658,7 @@ $dataIndex = match ($skema) {
                                                                                     id="{{ $idLevelEmpat }}"
                                                                                     placeholder="Masukkan informasi {{ $itemEmpat->nama }}" class="form-input"
                                                                                     aria-label="Recipient's username" aria-describedby="basic-addon2"
-                                                                                    value="">
+                                                                                >
                                                                             </div>
                                                                             @if ($itemEmpat->suffix)
                                                                                 <div class="flex-shrink-0 mt-2.5rem">
