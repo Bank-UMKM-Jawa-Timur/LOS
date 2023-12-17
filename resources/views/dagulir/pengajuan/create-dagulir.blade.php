@@ -50,7 +50,7 @@
     >
         <div class="form-group-2">
             <div class="input-box">
-                <label for="">Nama Lengkap</label>
+                <label for="">Nama Lengkap</label><small class="text-red-500 font-bold">*</small>
                 <input
                     type="text"
                     class="form-input"
@@ -60,7 +60,7 @@
                 />
             </div>
             <div class="input-box">
-                <label for="">Email</label>
+                <label for="">Email</label><small class="text-red-500 font-bold">*</small>
                 <input
                 type="email"
                 class="form-input"
@@ -72,7 +72,7 @@
         </div>
         <div class="form-group-2">
             <div class="input-box">
-                <label for="">Tempat lahir</label>
+                <label for="">Tempat lahir</label><small class="text-red-500 font-bold">*</small>
                 <input
                     type="text"
                     class="form-input"
@@ -82,7 +82,7 @@
                 />
             </div>
             <div class="input-box">
-                <label for="">Tanggal lahir</label>
+                <label for="">Tanggal lahir</label><small class="text-red-500 font-bold">*</small>
                 <input
                     type="date"
                     class="form-input"
@@ -92,7 +92,7 @@
                 />
             </div>
             <div class="input-box">
-                <label for="">Telp</label>
+                <label for="">Telp</label><small class="text-red-500 font-bold">*</small>
                 <input
                     type="text"
                     class="form-input"
@@ -103,7 +103,7 @@
                 />
             </div>
             <div class="input-box">
-                <label for="">Jenis Usaha</label>
+                <label for="">Jenis Usaha</label><small class="text-red-500 font-bold">*</small>
                 <select name="jenis_usaha" id="" class="form-select">
                     <option value="">Pilih Jenis Usaha</option>
                     @foreach ($jenis_usaha as $key => $value)
@@ -114,7 +114,7 @@
         </div>
         <div class="form-group-2">
             <div class="input-box">
-                <label for="ktp_nasabah" id="foto-nasabah">Foto Nasabah</label>
+                <label for="ktp_nasabah" id="foto-nasabah">Foto Nasabah</label><small class="text-red-500 font-bold">*</small>
                 <div class="flex gap-4">
                     <input type="file" name="foto_nasabah" class="form-input limit-size-2" />
                 </div>
@@ -122,7 +122,7 @@
                     size is 2 MB</span>
             </div>
             <div class="input-box">
-                <label for="">Status</label>
+                <label for="">Status</label><small class="text-red-500 font-bold">*</small>
                 <select name="status" id="status_nasabah" class="form-select">
                     <option value="0" {{ old('status_nasabah') }}>Pilih Status</option>
                     <option value="1" {{ old('status_nasabah') }}>Belum Menikah</option>
@@ -132,7 +132,7 @@
                 </select>
             </div>
             <div class="input-box">
-                <label for="">NIK</label>
+                <label for="">NIK</label><small class="text-red-500 font-bold">*</small>
                 <input
                     type="text"
                     class="form-input"
@@ -143,7 +143,7 @@
                 />
             </div>
             <div class="input-box" id="ktp-nasabah">
-                <label for="ktp_nasabah" id="label-ktp-nasabah">Foto KTP Nasabah</label>
+                <label for="ktp_nasabah" id="label-ktp-nasabah">Foto KTP Nasabah</label><small class="text-red-500 font-bold">*</small>
                 <div class="flex gap-4">
                     <input type="file" name="ktp_nasabah" class="form-input limit-size-2" />
                 </div>
@@ -151,7 +151,7 @@
                     size is 2 MB</span>
             </div>
             <div class="input-box hidden" id="nik_pasangan">
-                <label for="">NIK Pasangan</label>
+                <label for="">NIK Pasangan</label><small class="text-red-500 font-bold">*</small>
                 <input
                     type="text"
                     class="form-input"
@@ -162,7 +162,7 @@
                 />
             </div>
             <div class="input-box hidden" id="ktp-pasangan">
-                <label for="ktp_pasangan" id="">Foto KTP Pasangan</label>
+                <label for="ktp_pasangan" id="">Foto KTP Pasangan</label><small class="text-red-500 font-bold">*</small>
                 <div class="flex gap-4">
                     <input type="file" name="ktp_pasangan" class="form-input limit-size-2" />
                 </div>
@@ -172,7 +172,7 @@
         </div>
         <div class="form-group-2">
             <div class="input-box">
-                <label for="">{{ $itemSlik->nama }}</label>
+                <label for="">{{ $itemSlik->nama }}</label><small class="text-red-500 font-bold">*</small>
                 <select name="dataLevelDua[{{ $itemSlik->id }}]" id="dataLevelDua" class="form-select"
                     data-id_item={{ $itemSlik->id }}>
                     <option value=""> --Pilih Data -- </option>
@@ -191,7 +191,7 @@
                 @endif
             </div>
             <div class="input-box">
-                <label for="">{{ $itemP->nama }}</label>
+                <label for="">{{ $itemP->nama }}</label><small class="text-red-500 font-bold">*</small>
                 <input type="hidden" name="id_item_file[{{ $itemP->id }}]" value="{{ $itemP->id }}" id="">
                 <input type="file" name="upload_file[{{ $itemP->id }}]" id="file_slik" data-id=""
                     placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-input limit-size-slik">
@@ -208,7 +208,7 @@
         </div>
         <div class="form-group-3">
                 <div class="input-box">
-                    <label for="">Kota / Kabupaten KTP</label>
+                    <label for="">Kota / Kabupaten KTP</label><small class="text-red-500 font-bold">*</small>
                     <select name="kode_kotakab_ktp" class="form-select @error('kabupaten') is-invalid @enderror select2"
                         id="kabupaten">
                         <option value="0"> --- Pilih Kabupaten --- </option>
@@ -218,13 +218,13 @@
                     </select>
                 </div>
                 <div class="input-box">
-                    <label for="">Kecamatan KTP</label>
+                    <label for="">Kecamatan KTP</label><small class="text-red-500 font-bold">*</small>
                     <select name="kecamatan_sesuai_ktp" id="kecamatan" class="form-select @error('kec') is-invalid @enderror select2">
                         <option value="0"> --- Pilih Kecamatan --- </option>
                     </select>
                 </div>
                 <div class="input-box">
-                    <label for="">Desa KTP</label>
+                    <label for="">Desa KTP</label><small class="text-red-500 font-bold">*</small>
                     <select name="desa" id="desa" class="form-select @error('desa') is-invalid @enderror select2">
                         <option value="0"> --- Pilih Desa --- </option>
                     </select>
@@ -232,18 +232,18 @@
         </div>
         <div class="form-group-1">
             <div class="input-box">
-                <label for="">Alamat KTP</label>
+                <label for="">Alamat KTP</label><small class="text-red-500 font-bold">*</small>
                 <textarea
                     name="alamat_sesuai_ktp"
                     class="form-textarea"
-                    placeholder="Alamat KTP"
+                    placeholder="Alamat K"
                     id=""
                 >{{ old('alamat_sesuai_ktp') }}</textarea>
             </div>
         </div>
         <div class="form-group-2">
             <div class="input-box">
-                <label for="">Kota / Kabupaten Domisili</label>
+                <label for="">Kota / Kabupaten Domisili</label><small class="text-red-500 font-bold">*</small>
                 <select name="kode_kotakab_domisili" class="form-select @error('kabupaten_domisili') is-invalid @enderror select2"
                     id="kabupaten_domisili">
                     <option value="0"> --- Pilih Kabupaten --- </option>
@@ -253,7 +253,7 @@
                 </select>
             </div>
             <div class="input-box">
-                <label for="">Kecamatan Domisili</label>
+                <label for="">Kecamatan Domisili</label><small class="text-red-500 font-bold">*</small>
                 <select name="kecamatan_domisili" id="kecamatan_domisili" class="form-select @error('kecamatan_domisili') is-invalid @enderror select2">
                     <option value="0"> --- Pilih Kecamatan --- </option>
                 </select>
@@ -261,19 +261,21 @@
         </div>
         <div class="form-group-1">
             <div class="input-box">
-                <label for="">Alamat Domisili</label>
+                <label for="">Alamat Domisili</label><small class="text-red-500 font-bold">*</small>
                 <textarea
                     name="alamat_domisili"
                     class="form-textarea"
                     placeholder="Alamat Domisili"
                     id=""
-                >{{ old('alamat_domisili') }}</textarea>
+                >
+                {{ old('alamat_domisili') }}
+            </textarea>
             </div>
 
         </div>
         <div class="form-group-2">
             <div class="input-box">
-                <label for="">Kota / Kabupaten Usaha</label>
+                <label for="">Kota / Kabupaten Usaha</label><small class="text-red-500 font-bold">*</small>
                 <select name="kode_kotakab_usaha" class="form-select @error('kabupaten_usaha') is-invalid @enderror select2"
                     id="kabupaten_usaha">
                     <option value="0"> --- Pilih Kabupaten --- </option>
@@ -283,7 +285,7 @@
                 </select>
             </div>
             <div class="input-box">
-                <label for="">Kecamatan Usaha</label>
+                <label for="">Kecamatan Usaha</label><small class="text-red-500 font-bold">*</small>
                 <select name="kecamatan_usaha" id="kecamatan_usaha" class="form-select @error('kecamatan_usaha') is-invalid @enderror select2">
                     <option value="0"> --- Pilih Kecamatan --- </option>
                 </select>
@@ -291,19 +293,21 @@
         </div>
         <div class="form-group-1">
             <div class="input-box">
-                <label for="">Alamat Usaha</label>
+                <label for="">Alamat Usaha</label><small class="text-red-500 font-bold">*</small>
                 <textarea
                     name="alamat_usaha"
                     class="form-textarea"
                     placeholder="Alamat Usaha"
                     id=""
-                >{{ old('alamat_usaha') }}</textarea>
+                >
+                {{ old('alamat_usaha') }}
+                </textarea>
             </div>
         </div>
 
         <div class="form-group-2">
             <div class="input-box">
-                <label for="">Plafon</label>
+                <label for="">Plafon</label><small class="text-red-500 font-bold">*</small>
                 <input
                     type="text"
                     class="form-input rupiah"
@@ -314,7 +318,7 @@
                 />
             </div>
             <div class="input-box">
-                <label for="">Jangka Waktu</label>
+                <label for="">Jangka Waktu</label><small class="text-red-500 font-bold">*</small>
                 <div class="flex items-center">
                     <div class="flex-1">
                         <input
@@ -337,7 +341,7 @@
         </div>
         <div class="form-group-2">
             <div class="input-box">
-                <label for="">Tujuan Penggunaan</label>
+                <label for="">Tujuan Penggunaan</label><small class="text-red-500 font-bold">*</small>
                 <input
                     type="text"
                     class="form-input"
@@ -347,7 +351,7 @@
                 />
             </div>
             <div class="input-box">
-                <label for="">Jaminan yang disediakan</label>
+                <label for="">Jaminan yang disediakan</label><small class="text-red-500 font-bold">*</small>
                 <select name="ket_agunan" id="" class="form-select">
                     <option value="0" >Pilih Jaminan</option>
                     <option value="shm" {{ old('ket_agunan') == 'shm' ? 'selected' : '' }}>SHM</option>
@@ -360,7 +364,7 @@
 
         <div class="form-group-2" id="form_tipe_pengajuan">
             <div class="input-box">
-                <label for="">Tipe Pengajuan</label>
+                <label for="">Tipe Pengajuan</label><small class="text-red-500 font-bold">*</small>
                 <select name="tipe_pengajuan" id="tipe" class="form-select">
                     <option value="0">Tipe Pengajuan</option>
                     @foreach ($tipe as $key => $value)
@@ -369,7 +373,7 @@
                 </select>
             </div>
             <div class="input-box">
-                <label for="">Jenis badan hukum</label>
+                <label for="">Jenis badan hukum</label><small class="text-red-500 font-bold">*</small>
                 <select name="jenis_badan_hukum" id="jenis_badan_hukum" class="form-select">
                     <option value="0">Jenis Badan Hukum</option>
                     <option value="Berbadan Hukum" {{ old('jenis_berbadan') == 'Berbadan Hukum' ? 'selected' : '' }}>Berbadan Hukum</option>
@@ -389,7 +393,7 @@
                 />
             </div>
             <div class="input-box">
-                <label for="">Tempat Berdiri</label>
+                <label for="">Tempat Berdiri</label><small class="text-red-500 font-bold">*</small>
                 <input
                     type="text"
                     class="form-input"
@@ -400,7 +404,7 @@
                 />
             </div>
             <div class="input-box">
-                <label for="">Tanggal Berdiri</label>
+                <label for="">Tanggal Berdiri</label><small class="text-red-500 font-bold">*</small>
                 <div class="input-grouped">
                     <input
                     type="date"
@@ -414,7 +418,7 @@
 
         <div class="form-group-1">
             <div class="input-box">
-                <label for="">Hubungan Bank</label>
+                <label for="">Hubungan Bank</label><small class="text-red-500 font-bold">*</small>
                 <textarea
                     name="hub_bank"
                     class="form-textarea"
@@ -425,7 +429,7 @@
         </div>
         <div class="form-group-1">
             <div class="input-box">
-                <label for="">Hasil Verifikasi</label>
+                <label for="">Hasil Verifikasi</label><small class="text-red-500 font-bold">*</small>
                 <textarea
                     name="hasil_verifikasi"
                     class="form-textarea"
