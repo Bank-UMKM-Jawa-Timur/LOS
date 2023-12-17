@@ -224,6 +224,7 @@ class NewDagulirController extends Controller
 
         $request->validate([
             'nama_lengkap' => 'required',
+            'email' => 'required|unique:pengajuan_dagulir,email',
             'nik_nasabah' => 'required',
             'tempat_lahir' => 'required',
             'tanggal_lahir' => 'required',
@@ -607,7 +608,7 @@ class NewDagulirController extends Controller
                 return redirect()->route('dagulir.pengajuan.index');
             }
             else {
-                Alert::success('error', 'Pengajuan ditolak.');
+                Alert::error('error', 'Pengajuan ditolak.');
                 return redirect()->route('dagulir.pengajuan.index');
             }
         } catch (Exception $e) {
