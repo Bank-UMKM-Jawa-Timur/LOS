@@ -1947,4 +1947,23 @@ class NewDagulirController extends Controller
             return redirect()->route('dagulir.pengajuan.index')->withStatus('Terjadi kesalahan. ' . $e->getMessage());
         }
     }
+
+    public function cetakDagulir($id)
+    {
+        $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->get();
+        $dataNasabah = DB::table('pengajuan_dagulir')->select('pengajuan_dagulir.*', 'kabupaten.id as kabupaten_id', 'kabupaten.kabupaten', 'kecamatan.id as kecamatan_id', 'kecamatan.id_kabupaten', 'kecamatan.kecamatan', 'desa.id as desa_id', 'desa.id_kabupaten', 'desa.id_kecamatan', 'desa.desa')
+        ->join('kabupaten', 'kabupaten.id', 'pengajuan_dagulir.kotakab_ktp')
+        ->join('kecamatan', 'kecamatan.id', 'pengajuan_dagulir.kec_ktp')
+        ->join('desa', 'desa.id', 'pengajuan_dagulir.desa_ktp')
+        ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
+        ->where('pengajuan.id', $id)
+        ->first();
+        $param['dataNasabah'] = $dataNasabah;
+        $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit')
+        ->find($id);
+        $param['komentar'] = KomentarModel::where('id_pengajuan', $id)->first();
+        $param['jenis_usaha'] = config('dagulir.jenis_usaha');
+
+        return view('dagulir.cetak.cetak-surat', $param);
+    }
 }

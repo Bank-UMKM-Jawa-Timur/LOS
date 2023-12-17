@@ -331,7 +331,7 @@
                                             @endif
                                         @else
                                         <li class="item-tb-dropdown">
-                                            <a href="{{ route('dagulir.pengajuan.cetak-pdf', $item->pengajuan->id) }}"
+                                            <a href="{{ route('dagulir.cetak-surat', $item->pengajuan->id) }}"
                                                 class="cursor-pointer">Cetak</a>
                                         </li>
                                         @endif
