@@ -4,6 +4,7 @@ namespace App\Repository;
 use App\Models\Kecamatan;
 use App\Models\PengajuanDagulir;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class PengajuanDagulirRepository
 {
@@ -53,6 +54,7 @@ class PengajuanDagulirRepository
         }
 
         foreach ($data as $key => $item) {
+            $item->log_cetak = DB::table('log_cetak_kkb')->where('id_pengajuan', $item->pengajuan->id)->get();
             $nama_pemroses = 'undifined';
             $user = \App\Models\User::select('nip')->where('id', $item->pengajuan->id_staf)->first();
             if($item->posisi == 'Proses Input Data'){
