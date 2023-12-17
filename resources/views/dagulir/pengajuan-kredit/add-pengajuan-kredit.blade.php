@@ -388,8 +388,8 @@ $dataIndex = match ($skema) {
                                                                 <select name="kategori_jaminan_tambahan" id="kategori_jaminan_tambahan" class="form-input"
                                                                     >
                                                                     <option value="">-- Pilih Kategori Jaminan Tambahan --</option>
-                                                                    <option value="Tidak Memiliki Jaminan Tambahan">Tidak Memiliki Jaminan Tambahan
-                                                                    </option>
+                                                                    {{-- <option value="Tidak Memiliki Jaminan Tambahan">Tidak Memiliki Jaminan Tambahan
+                                                                    </option> --}}
                                                                     <option value="Tanah">Tanah</option>
                                                                     <option value="Kendaraan Bermotor">Kendaraan Bermotor</option>
                                                                     <option value="Tanah dan Bangunan">Tanah dan Bangunan</option>
