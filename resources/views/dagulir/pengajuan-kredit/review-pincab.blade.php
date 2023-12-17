@@ -1,7 +1,6 @@
 @extends('layouts.tailwind-template')
 @section('content')
-    <div class="p-3">
-
+    <div class="p-3 ">
         <div class="container mx-auto mt-20 space-y-5">
             <h2 class="text-theme-primary font-bold text-3xl tracking-tighter">Review Pincab</h2>
             <div class="bg-white p-5 border rounded">
@@ -17,8 +16,8 @@
                             <iconify-icon icon="uim:angle-down" class="text-3xl"></iconify-icon>
                         </div>
                     </div>
-                    <div class="accordion-content p-3">
-                        <div class="p-5 w-full space-y-5" id="data-umum">
+                    <div class="accordion-content p-3 ">
+                        <div class="p-5 w-full space-y-5 " id="data-umum">
                             @php
                                 $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide')
                                     ->where('level', 2)

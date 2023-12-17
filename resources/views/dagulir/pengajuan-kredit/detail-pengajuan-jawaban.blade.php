@@ -1,4 +1,8 @@
 @extends('layouts.tailwind-template')
+
+@section('modal')
+    @include('dagulir.pengajuan-kredit.modal.modal-photo')
+@endsection
 @php
     $dataIndex = match ($dataUmum->skema_kredit) {
         'PKPJ' => 1,
@@ -38,7 +42,7 @@
 @section('content')
 <section class="">
     <nav class="w-full bg-white p-3  top-[4rem] border sticky">
-        <div class="owl-carousel owl-theme tab-wrapper">
+        <div class="tab-wrapper form-group-5 justify-center gap-2">
             <button data-toggle="tab" data-tab="dagulir" class="btn btn-tab active-tab font-semibold">
                 <span class="percentage">0%</span> Data Umum
             </button>
@@ -53,7 +57,7 @@
         </div>
     </nav>
     <div class="p-3">
-        <div class="body-pages">
+        <div class="body-pages review-pengajuan">
             <form id="pengajuan_kredit" action="{{ route('dagulir.pengajuan.insertkomentar') }}" method="post">
                 @csrf
                 <input type="hidden" id="id_pengajuan" name="id_pengajuan" value="{{ $dataUmum->id }}">
@@ -68,204 +72,329 @@
                 <div class="mt-3 container mx-auto">
                     <div id="dagulir-tab" class="is-tab-content active">
                         <div class="pb-10 space-y-3">
-                            <h2 class="text-4xl font-bold tracking-tighter text-theme-primary">Dagulir</h2>
+                            <h2 class="text-4xl font-bold tracking-tighter text-theme-primary">Data Umum</h2>
                             <p class="font-semibold text-gray-400">Review Pengajuan</p>
                         </div>
                         <div class="self-start bg-white w-full border">
-                            <div class="p-5 border-b">
+                            {{-- <div class="p-5 border-b">
                                 <h2 class="font-bold text-lg tracking-tighter">
                                     Pengajuan Masuk
                                 </h2>
-                            </div>
+                            </div> --}}
                             <div class="p-5 w-full space-y-5" id="data-umum">
+                                <div class="form-group-1 col-span-2 pl-2">
+                                    <div>
+                                        <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
+                                            <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
+                                                Data Diri :
+                                            </h2>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{-- <h4 class="font-bold text-lg tracking-tighter ml-2">
+                                    Data Diri
+                                </h4>
+                                <hr> --}}
+                                {{-- <div class="form-group-2">
+                                    <div class="p-4 bg-white border border-gray-200 rounded-lg dark:bg-gray-200">
+                                        <div class="font-bold field-name">
+                                            <label for="">Nama Lengkap</label>
+                                        </div>
+                                        <div class="pt-2">
+                                            <label for="">Jawaban : <label class="pl-3 font-medium">10,00</label></label>
+                                        </div>
+                                    </div>
+                                    <div class="p-4 bg-white border border-gray-200 rounded-lg dark:bg-gray-200">
+                                        <div class="font-bold field-name">
+                                            <label for="">Nama Lengkap</label>
+                                        </div>
+                                        <div class="pt-2">
+                                            <label for="">Jawaban : <label class="pl-3 font-medium">10,00</label></label>
+                                        </div>
+                                    </div>
+                                </div> --}}
                                 <div class="form-group-2">
-                                    <div class="input-box">
-                                        <label for="">Nama Lengkap</label>
-                                        <div class="p-2 bg-white border-b bg-gray-200">
-                                            <span class="answer">{{ $dataUmumNasabah->nama ? $dataUmumNasabah->nama : '-' }}</span>
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Nama Lengkap</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <p>{{ $dataUmumNasabah->nama ? $dataUmumNasabah->nama : '-' }}</p>
                                         </div>
                                     </div>
-                                    <div class="input-box">
-                                        <label for="">Email</label>
-                                        <div class="p-2 bg-white border-b">
-                                            <span class="answer">{{ $dataUmumNasabah->email ? $dataUmumNasabah->email : '-' }}</span>
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Email</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <p>{{ $dataUmumNasabah->email ? $dataUmumNasabah->email : '-' }}</p>
                                         </div>
                                     </div>
-                                    <div class="input-box">
-                                        <label for="">Tempat Lahir</label>
-                                        <div class="p-2 bg-white border-b">
-                                            <span class="answer">{{ $dataUmumNasabah->tempat_lahir ? $dataUmumNasabah->tempat_lahir : '-' }}</span>
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">NIK</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <p>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</p>
                                         </div>
                                     </div>
-                                    <div class="input-box">
-                                        <label for="">Tanggal Lahir</label>
-                                        <div class="p-2 bg-white border-b">
-                                            <span class="answer">{{ \Carbon\Carbon::parse($dataUmumNasabah->tanggal_lahir)->translatedFormat('d F Y') }}</span>
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Tempat Lahir</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <p>{{ $dataUmumNasabah->tempat_lahir ? $dataUmumNasabah->tempat_lahir : '-' }}</p>
                                         </div>
                                     </div>
-                                    <div class="input-box">
-                                        <label for="">Telp</label>
-                                        <div class="p-2 bg-white border-b">
-                                            <span class="answer">{{ $dataUmumNasabah->telp ? $dataUmumNasabah->telp : '-' }}</span>
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Tanggal Lahir</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <p>{{ \Carbon\Carbon::parse($dataUmumNasabah->tanggal_lahir)->translatedFormat('d F Y') }}</p>
                                         </div>
                                     </div>
-                                    <div class="input-box">
-                                        <label for="">Jenis Usaha</label>
-                                        <div class="p-2 bg-white border-b">
-                                            @foreach ($jenis_usaha as $key => $value)
-                                                <span>{{ $dataUmumNasabah->jenis_usaha == $key ? $value : '' }}</span>
-                                            @endforeach
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Telp</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <p>{{ $dataUmumNasabah->telp ? $dataUmumNasabah->telp : '-' }}</p>
                                         </div>
                                     </div>
-                                    <div class="input-box">
-                                        <label for="">Foto Nasabah</label>
-                                        <div class="p-2 bg-white border-b">
-                                            {{-- <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span> --}}
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Status</label>
                                         </div>
-                                    </div>
-                                    <div class="input-box">
-                                        <label for="">Status</label>
-                                        <div class="p-2 bg-white border-b">
+                                        <div class="field-answer">
                                             @if ($dataUmumNasabah->status_pernikahan == "1")
-                                            <span class="answer" value="1">Belum Menikah</span>
+                                            <p value="1">Belum Menikah</p>
                                             @elseif ($dataUmumNasabah->status_pernikahan == "2")
-                                            <span class="answer" value="2">Menikah</span>
+                                            <p value="2">Menikah</p>
                                             @elseif ($dataUmumNasabah->status_pernikahan == "3")
-                                            <span class="answer" value="3">Duda</span>
+                                            <p value="3">Duda</p>
                                             @elseif ($dataUmumNasabah->status_pernikahan == "4")
-                                            <span class="answer" value="4">Janda</span>
+                                            <p value="4">Janda</p>
                                             @endif
                                         </div>
                                     </div>
-                                    <div class="input-box">
-                                        <label for="">NIK</label>
-                                        <div class="p-2 bg-white border-b">
-                                            <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span>
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Kota / Kabupaten KTP</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <p>{{ $kab_ktp }}</p>
                                         </div>
                                     </div>
-                                    <div class="input-box">
-                                        <label for="">Foto KTP Nasabah</label>
-                                        <div class="p-2 bg-white border-b">
-                                            {{-- <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span> --}}
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Kecamatan KTP</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <p>{{ $kec_ktp }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Desa KTP</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <p>{{ $desa_ktp == null ? '-' : $desa_ktp }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Alamat KTP</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <p>{{ $dataUmumNasabah->alamat_ktp}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Kota / Kabupaten Domisili</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <p>{{ $kab_dom }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Kecamatan Domisili</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <p>{{ $kec_dom }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Alamat Domisili</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <p>{{ $dataUmumNasabah->alamat_dom }}</p>
                                         </div>
                                     </div>
                                     @if ($dataUmumNasabah->status_pernikahan == '2')
-                                        <div class="input-box">
-                                            <label for="">NIK Pasangan</label>
-                                            <div class="p-2 bg-white border-b">
-                                                <span>{{ $dataUmumNasabah->nik_pasangan ? $dataUmumNasabah->nik_pasangan : '-' }}</span>
+                                        <div class="field-review">
+                                            <div class="field-name">
+                                                <label for="">NIK Pasangan</label>
+                                            </div>
+                                            <div class="field-answer">
+                                                <p>{{ $dataUmumNasabah->nik_pasangan ? $dataUmumNasabah->nik_pasangan : '-' }}</p>
                                             </div>
                                         </div>
-                                        <div class="input-box">
-                                            <label for="">Foto KTP Pasangan</label>
-                                            <div class="p-2 bg-white border-b">
-                                                {{-- <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span> --}}
+                                        <div class="field-review">
+                                            <div class="field-name">
+                                                <label for="">Foto KTP Pasangan</label>
+                                            </div>
+                                            <div class="field-answer">
+                                                <img src="{{ asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
                                             </div>
                                         </div>
                                     @endif
                                 </div>
-                                <div class="form-group-3">
-                                    <div class="input-box">
-                                        <label for="">Kota / Kabupaten KTP</label>
-                                        <div class="p-2 bg-white border-b">
-                                            <span>{{ $kab_ktp }}</span>
+                                <div class="form-group-2">
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Foto KTP Nasabah</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <img src="{{ asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
                                         </div>
                                     </div>
-                                    <div class="input-box">
-                                        <label for="">Kecamatan KTP</label>
-                                        <div class="p-2 bg-white border-b">
-                                            <span>{{ $kec_ktp }}</span>
+                                    
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Foto KTP Nasabah</label>
                                         </div>
-                                    </div>
-                                    <div class="input-box">
-                                        <label for="">Desa KTP</label>
-                                        <div class="p-2 bg-white border-b">
-                                            <span>{{ $desa_ktp }}</span>
+                                        <div class="field-answer">
+                                            <img src="{{ asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
+                                            {{-- <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span> --}}
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <div class="input-box">
-                                        <label for="">Alamat KTP</label>
-                                        <div class="p-2 bg-white border-b">
-                                            <span>{{ $dataUmumNasabah->alamat_ktp}}</span>
+                                {{-- Data Usaha --}}
+                                <div class="form-group-1 col-span-2 pl-2">
+                                    <div>
+                                        <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
+                                            <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
+                                                Data Usaha :
+                                            </h2>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group-2">
-                                    <div class="input-box">
-                                        <label for="">Kota / Kabupaten Domisili</label>
-                                        <div class="p-2 bg-white border-b">
-                                            <span>{{ $kab_dom }}</span>
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Jenis Usaha</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            @foreach ($jenis_usaha as $key => $value)
+                                                <p>{{ $dataUmumNasabah->jenis_usaha == $key ? $value : '' }}</p>
+                                            @endforeach
                                         </div>
                                     </div>
-                                    <div class="input-box">
-                                        <label for="">Kecamatan Domisili </label>
-                                        <div class="p-2 bg-white border-b">
-                                            <span>{{ $kec_dom }}</span>
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Kota / Kabupaten Usaha</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <p>{{ $kab_usaha }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Kecamatan Usaha</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <p>{{ $kec_usaha }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Alamat Usaha</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <p>{{ $alamat_usaha }}</p>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <div class="input-box">
-                                        <label for="">Alamat Domisili</label>
-                                        <div class="p-2 bg-white border-b">
-                                            <span>{{ $dataUmumNasabah->alamat_dom }}</span>
+                                {{-- data Pengajuan --}}
+                                <div class="form-group-1 col-span-2 pl-2">
+                                    <div>
+                                        <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
+                                            <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
+                                                Data Pengajuan :
+                                            </h2>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group-2">
-                                    <div class="input-box">
-                                        <label for="">Kota / Kabupaten Usaha</label>
-                                        <div class="p-2 bg-white border-b">
-                                            <span>{{ $kab_usaha }}</span>
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Plafon</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <p>{{ 'Rp ' . number_format($dataUmumNasabah->nominal ? $dataUmumNasabah->nominal : 0, 2, ',', '.') }}</p>
                                         </div>
                                     </div>
-                                    <div class="input-box">
-                                        <label for="">Kecamatan Usaha </label>
-                                        <div class="p-2 bg-white border-b">
-                                            <span>{{ $kec_usaha }}</span>
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Jangka Waktu</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <p>{{ $dataUmumNasabah->jangka_waktu ? $dataUmumNasabah->jangka_waktu : '-' }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Tujuan Penggunaan</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <p>{{ $dataUmumNasabah->tujuan_penggunaan ? $dataUmumNasabah->tujuan_penggunaan : '-' }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Jaminan yang Disediakan</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <p>{{ $dataUmumNasabah->ket_agunan ? $dataUmumNasabah->ket_agunan : '-' }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Tipe Pengajuan</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <p>{{ $dataUmumNasabah->tipe ? $dataUmumNasabah->tipe : '-' }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Jenis Badan Hukum</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <p>{{ $dataUmumNasabah->jenis_badan_hukum ? $dataUmumNasabah->jenis_badan_hukum : '-' }}</p>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group-2">
-                                    <div class="input-box">
-                                        <label for="">Plafon</label>
-                                        <div class="p-2 bg-white border-b">
-                                            <span>{{ 'Rp ' . number_format($dataUmumNasabah->nominal ? $dataUmumNasabah->nominal : 0, 2, ',', '.') }}</span>
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Hubungan Bank</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <p>{{ $dataUmumNasabah->hubungan_bank ? $dataUmumNasabah->hubungan_bank : '-' }}</p>
                                         </div>
                                     </div>
-                                    <div class="input-box">
-                                        <label for="">Jangka Waktu</label>
-                                        <div class="p-2 bg-white border-b">
-                                            <span>{{ $dataUmumNasabah->jangka_waktu ? $dataUmumNasabah->jangka_waktu : '-' }}</span>
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Hasil Verifikasi</label>
                                         </div>
-                                    </div>
-                                    <div class="input-box">
-                                        <label for="">Tujuan Penggunaan</label>
-                                        <div class="p-2 bg-white border-b">
-                                            <span>{{ $dataUmumNasabah->tujuan_penggunaan ? $dataUmumNasabah->tujuan_penggunaan : '-' }}</span>
+                                        <div class="field-answer">
+                                            <p>{{ $dataUmumNasabah->hasil_verifikasi ? $dataUmumNasabah->hasil_verifikasi : '-' }}</p>
                                         </div>
-                                    </div>
-                                    <div class="input-box">
-                                        <label for="">Jaminan yang Disediakan</label>
-                                        <div class="p-2 bg-white border-b">
-                                            <span>{{ $dataUmumNasabah->ket_agunan ? $dataUmumNasabah->ket_agunan : '-' }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group-1">
-                                    <div class="input-box">
-                                        <label for="">Hubungan Bank</label>
-                                        <div class="p-2 bg-white border-b">
-                                            <span>{{ $dataUmumNasabah->hubungan_bank ? $dataUmumNasabah->hubungan_bank : '-' }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="input-box">
-                                    <label for="">Hasil Verifikasi</label>
-                                    <div class="p-2 bg-white border-b">
-                                        <span>{{ $dataUmumNasabah->hasil_verifikasi ? $dataUmumNasabah->hasil_verifikasi : '-' }}</span>
                                     </div>
                                 </div>
 
@@ -389,8 +518,17 @@
                                         @endif
                                     @endforeach
                                 @endif
-
-                                <div class="form-group-1">
+                                {{-- SLIK --}}
+                                {{-- <div class="form-group-1 col-span-2 pl-2 pb-0">
+                                </div> --}}
+                                <div class="form-group-1 pl-2">
+                                    <div>
+                                        <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
+                                            <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
+                                                Data Slik :
+                                            </h2>
+                                        </div>
+                                    </div>
                                     <label for="">{{ $itemSlik?->nama }}</label>
                                     <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
                                         <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
@@ -402,7 +540,7 @@
                                             ->where('id_item', $itemSlik?->id_item)
                                             ->first();
                                     @endphp
-                                    <div class="grid grid-cols-2 gap-2">
+                                    <div class="grid w-full grid-cols-2 gap-2">
                                         <input type="hidden" name="id_item[]" value="{{ $itemSlik?->id_item }}">
                                         <input type="hidden" name="id_option[]" value="{{ $itemSlik?->id_jawaban }}">
                                         <div class="">
@@ -528,28 +666,31 @@
                                                 @endphp
                                                 @foreach ($dataDetailJawabanText as $itemTextDua)
                                                     <div class="">
-                                                        <div class="form-group-1 mb-0">
-                                                            <h6 class="font-semibold text-sm mb-2" for="">{{ $item->nama }}</h6>
-                                                        </div>
                                                         <div class="form-group-1">
                                                             @if ($item->opsi_jawaban == 'file')
-                                                                <b>Jawaban: </b>
+                                                            {{-- <div class="form-group-2"> --}}
+                                                                <b>{{ $item->nama }}  :</b>
                                                                 @php
                                                                     $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
                                                                 @endphp
                                                                 @if ($file_parts['extension'] == 'pdf')
-                                                                    <iframe
-                                                                        src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
-                                                                        width="100%" height="800px"></iframe>
+                                                                        <iframe
+                                                                            src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                            width="100%" height="800px"></iframe>
                                                                 @else
                                                                     <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
                                                                         alt="" width="800px">
                                                                 @endif
+                                                            {{-- </div> --}}
                                                                 {{-- Rupiah data dua --}}
                                                             @elseif ($item->opsi_jawaban == 'number' && $item->id != 143)
-                                                                    <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
-                                                                        <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
-                                                                        <h4 class="font-bold">Rp. {{ number_format((int) $itemTextDua->opsi_text, 2, ',', '.') }}</h4>
+                                                                    <div class="field-review">
+                                                                        <div class="field-name">
+                                                                            <label for="">{{ $item->nama }}</label>
+                                                                        </div>
+                                                                        <div class="field-answer">
+                                                                            <p>{{ number_format((int) $itemTextDua->opsi_text, 2, ',', '.') }}</p>
+                                                                        </div>
                                                                     </div>
                                                                 @if ($itemTextDua->is_commentable)
                                                                     <input type="hidden" name="id_item[]" value="{{ $item->id }}">
@@ -561,18 +702,20 @@
                                                                     @endif
                                                                 @endif
                                                             @else
-                                                                <div class="jawaban-responsive p-2 font-medium">
-                                                                    <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
-                                                                        <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
+                                                                <div class="field-review">
+                                                                    <div class="field-name">
+                                                                        <label for="">{{ $item->nama }}</label>
+                                                                    </div>
+                                                                    <div class="field-answer">
                                                                         @if ($item->id == 79)
                                                                             {{--  NPWP  --}}
-                                                                            <h4 class="font-bold npwp">{{$itemTextDua->opsi_text}}</h4>
+                                                                            <p>{{$itemTextDua->opsi_text}}</p>
                                                                         @else
-                                                                        <h4 class="font-bold"> {{ str_replace('_', ' ', $itemTextDua->opsi_text) }} {{ $item->opsi_jawaban == 'persen' ? '%' : '' }}</h4>
+                                                                            <p> {{ str_replace('_', ' ', $itemTextDua->opsi_text) }} {{ $item->opsi_jawaban == 'persen' ? '%' : '' }}</p>
                                                                         @endif
                                                                     </div>
-
                                                                 </div>
+                                                                
                                                                 @if ($itemTextDua->is_commentable)
                                                                     @if (Auth::user()->role != 'Pincab')
                                                                         <input type="hidden" name="id_item[]" value="{{ $item->id }}">
@@ -621,9 +764,16 @@
                                                     @if ($item->nama != "Ijin Usaha")
                                                         <div class="row col-span-2">
                                                             <div class="form-group-1">
-                                                                <h2 class="font-semibold text-lg tracking-tighter ">
-                                                                    {{$item->nama}} :
-                                                                </h2>
+                                                                {{-- INI --}}
+                                                                <div class="form-group-1 col-span-2 pl-2">
+                                                                    <div>
+                                                                        <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
+                                                                            <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
+                                                                                {{ $item->nama }} :
+                                                                            </h2>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                             @if ($item->nama == 'Ijin Usaha' && $countIjin == 0)
                                                                 <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
@@ -641,9 +791,14 @@
                                         @if (count($dataJawaban) != 0)
                                             @if (!$item->is_hide)
                                                 <div class="col-span-2">
-                                                    <h2 class="font-semibold text-lg tracking-tighter ">
+                                                    {{-- <hr>
+                                                    <h4 class="font-bold text-lg tracking-tighter ml-2 pt-4 pb-4">
+                                                        {{$item->nama}}
+                                                    </h4>
+                                                    <hr> --}}
+                                                    {{-- <h2 class="font-semibold text-lg tracking-tighter ">
                                                         {{$item->nama}} :
-                                                    </h2>
+                                                    </h2> --}}
                                                 </div>
                                             @endif
                                             <div class="row">
@@ -666,14 +821,22 @@
                                                             <div class="form-group-1">
                                                                 @if (!$item->is_hide)
                                                                     @if ($item->nama)
-                                                                        <div class="row">
-                                                                            <div class="col-md-12">
-                                                                                <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
-                                                                                    <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
-                                                                                    <h4 class="font-bold">{{ $itemJawaban->option }}</h4>
+                                                                        {{-- <div class="row"> --}}
+                                                                            <div class="field-review">
+                                                                                <div class="field-name">
+                                                                                    <label for="">{{$item->nama}}</label>
+                                                                                </div>
+                                                                                <div class="field-answer">
+                                                                                    <p>{{ $itemJawaban->option }}</p>
                                                                                 </div>
                                                                             </div>
-                                                                        </div>
+                                                                            {{-- <div class="col-md-12">
+                                                                                <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
+                                                                                    <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban 09 : </span>
+                                                                                    <h4 class="font-bold">{{ $itemJawaban->option }}</h4>
+                                                                                </div>
+                                                                            </div> --}}
+                                                                        {{-- </div> --}}
                                                                     @endif
                                                                     <div class="input-group input-b-bottom">
                                                                         <input type="hidden" name="id_item[]"
@@ -681,14 +844,15 @@
                                                                         <input type="hidden" name="id_option[]"
                                                                             value="{{ $itemJawaban->id }}">
                                                                         @if ($item->is_commentable == 'Ya')
-                                                                            <div class="form-group-2">
-                                                                                <div class="w-full ">
+                                                                            <div class="flex pl-2">
+                                                                                <div class="flex-1 w-64">
                                                                                     <label for="">Komentar</label>
                                                                                     <input type="text" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400 komentar"
                                                                                         name="komentar_penyelia[]" placeholder="Masukkan Komentar"
                                                                                         value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                                 </div>
-                                                                                <div class="w-[15%] m-0">
+                                                                                <div class="flex-3 w-5"></div>
+                                                                                <div class="flex-2 w-16">
                                                                                     @php
                                                                                         $skorInput2 = null;
                                                                                         $skorInput2 = $getSkorPenyelia->skor_penyelia ? $getSkorPenyelia->skor_penyelia : $itemJawaban->skor;
@@ -702,6 +866,7 @@
                                                                                         {{ $item->status_skor == 0 ? 'readonly' : '' }}
                                                                                         value="{{ $skorInput2 || $skorInput2 > 0 ? $skorInput2 : null }}">
                                                                                 </div>
+                                                                                <div class="flex-3 w-5"></div>
                                                                             </div>
                                                                         @else
                                                                             <input type="hidden" name="komentar_penyelia[]"
@@ -764,7 +929,8 @@
                                                         @if ($itemTextTiga->nama != 'Ratio Tenor Asuransi')
                                                             <div class="row">
                                                                 <div class="form-group-1 mb-0">
-                                                                    @if ($itemTiga->opsi_jawaban == 'file')
+                                                                    {{-- Pemodalan Dipenuhi Dari --}}
+                                                                    {{-- @if ($itemTiga->opsi_jawaban == 'file')
                                                                         @if ($jumlahDataDetailJawabanText > 1)
                                                                             <h6 class="font-medium text-sm" for="">{{ $itemTextTiga->nama }} {{$loop->iteration}}</h6>
                                                                         @else
@@ -772,11 +938,11 @@
                                                                         @endif
                                                                     @else
                                                                             <h6 class="font-medium text-sm" for="">{{ $itemTextTiga->nama }}</h6>
-                                                                    @endif
+                                                                    @endif --}}
                                                                 </div>
                                                                 <div class="col-md-12">
                                                                         @if ($itemTiga->opsi_jawaban == 'file')
-                                                                        <b>Jawaban: </b>
+                                                                        <b>{{ $itemTextTiga->nama }}  :</b>
                                                                             @php
                                                                                 $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text);
                                                                             @endphp
@@ -808,13 +974,21 @@
                                                                                 @endif
                                                                             @endif
                                                                         @else
-                                                                            <div class="jawaban-responsive p-2 font-medium">
+                                                                            <div class="field-review">
+                                                                                <div class="field-name">
+                                                                                    <label for="">{{ $itemTextTiga->nama }}</label>
+                                                                                </div>
+                                                                                <div class="field-answer">
+                                                                                    <p>{{ $itemTiga->opsi_jawaban == 'persen' ? $itemTextTiga->opsi_text : $itemTextTiga->opsi_text  }}{{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</p>
+                                                                                </div>
+                                                                            </div>
+                                                                            {{-- <div class="jawaban-responsive p-2 font-medium">
                                                                                 <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
-                                                                                    <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
+                                                                                    <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban PI: </span>
                                                                                     <h4 class="font-bold">{{ $itemTiga->opsi_jawaban == 'persen' ? $itemTextTiga->opsi_text : $itemTextTiga->opsi_text  }}{{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</h4>
                                                                                 </div>
 
-                                                                            </div>
+                                                                            </div> --}}
                                                                             @if ($item->is_commentable == 'Ya')
                                                                                 @if (Auth::user()->role != 'Pincab')
                                                                                     <div class="input-k-bottom">
@@ -882,9 +1056,8 @@
                                                 @if (count($dataJawabanLevelTiga) != 0)
                                                     @if ($itemTiga->nama == 'Ratio Tenor Asuransi Opsi')
                                                     @else
-                                                        @if (isset($checkJawabanKelayakan))
+                                                        {{-- @if (isset($checkJawabanKelayakan))
                                                             @if ($itemTiga->nama != 'Kelayakan Usaha')
-                                                            {{-- @else --}}
                                                                 <div class="row col-span-2">
                                                                     <div class="form-group-1">
                                                                         <h6 class="font-medium text-sm" for="">{{ $itemTiga->nama }}</h6>
@@ -900,7 +1073,7 @@
                                                                 </div>
                                                             @else
                                                             @endif
-                                                        @endif
+                                                        @endif --}}
                                                         <div class="row">
                                                             @foreach ($dataJawabanLevelTiga as $key => $itemJawabanLevelTiga)
                                                                 {{--  @if (!$itemTiga->is_hide)  --}}
@@ -923,12 +1096,29 @@
                                                                             <div class="form-group-1">
                                                                                 @if ($itemTiga->nama != 'Ratio Coverage Opsi')
                                                                                     <div class="row">
-                                                                                        <div class="col-md-12">
-                                                                                            <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
-                                                                                                <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
-                                                                                                <h4 class="font-bold">{{ $itemJawabanLevelTiga->option }}</h4>
+                                                                                        <div class="field-review">
+                                                                                            <div class="field-name">
+                                                                                                {{-- @if (isset($checkJawabanKelayakan))
+                                                                                                    @if ($itemTiga->nama != 'Kelayakan Usaha')
+                                                                                                    @endif
+                                                                                                    @else
+                                                                                                    @if ($itemTiga->nama != 'Kelayakan Usaha')
+                                                                                                    <label for="">{{ $itemTiga->nama }}</label>
+                                                                                                    @else
+                                                                                                    @endif
+                                                                                                    @endif --}}
+                                                                                                    <label for="">{{ $itemTiga->nama }}</label>
+                                                                                            </div>
+                                                                                            <div class="field-answer">
+                                                                                                <p>{{ $itemJawabanLevelTiga->option }}</p>
                                                                                             </div>
                                                                                         </div>
+                                                                                        {{-- <div class="col-md-12">
+                                                                                            <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
+                                                                                                <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban 98 : </span>
+                                                                                                <h4 class="font-bold">{{ $itemJawabanLevelTiga->option }}</h4>
+                                                                                            </div>
+                                                                                        </div> --}}
                                                                                     </div>
                                                                                 @endif
                                                                                 <div class="input-group input-b-bottom">
@@ -941,14 +1131,15 @@
                                                                                         $skorInput3 = $getSkorPenyelia?->skor_penyelia ? $getSkorPenyelia?->skor_penyelia : $itemJawabanLevelTiga->skor;
                                                                                     @endphp
                                                                                     @if ($itemTiga->is_commentable == 'Ya')
-                                                                                        <div class="grid grid-cols-2 gap-2">
-                                                                                            <div class="">
-                                                                                                <label for="">Komentar</label>
+                                                                                        <div class="flex pl-2">
+                                                                                            <div class="flex-1 w-64">
+                                                                                                <label for="">Komentar </label>
                                                                                                 <input type="text" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400 komentar"
                                                                                                     name="komentar_penyelia[]" placeholder="Masukkan Komentar"
                                                                                                     value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                                             </div>
-                                                                                            <div class="input-skor w-[15%]">
+                                                                                            <div class="flex-3 w-5"></div>
+                                                                                            <div class="flex-2 w-16">
                                                                                                 <label for="">Skor</label>
                                                                                                 <input type="number" class="w-full px-3 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400"
                                                                                                     min="0"
@@ -958,6 +1149,7 @@
                                                                                                     {{ $itemTiga->status_skor == 0 ? 'readonly' : '' }}
                                                                                                     value="{{ $skorInput3 || $skorInput3 > 0 ? $skorInput3 : null }}">
                                                                                             </div>
+                                                                                            <div class="flex-3 w-5"></div>
                                                                                         </div>
                                                                                     @else
                                                                                         <input type="hidden" name="komentar_penyelia[]"
@@ -995,6 +1187,7 @@
                                                             @foreach ($dataDetailJawabanTextEmpat as $itemTextEmpat)
                                                                 <div class="row">
                                                                     <div class="form-group-1 mb-0">
+                                                                        {{-- INI --}}
                                                                         <h6 class="font-medium text-sm" for="">{{ $itemTextEmpat->nama }}</h6>
                                                                         @if ($itemEmpat->opsi_jawaban == 'file')
                                                                                     @if (intval($itemTextEmpat->opsi_text) > 1)
@@ -1029,7 +1222,7 @@
                                                                                 @elseif ($itemEmpat->opsi_jawaban == 'number' && $itemEmpat->id != 130)
                                                                                     <div class="jawaban-responsive border-b p-2 font-medium">
                                                                                         <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
-                                                                                            <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
+                                                                                            <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban: </span>
                                                                                             <h4 class="font-bold"> Rp.{{ number_format((int) $itemTextEmpat->opsi_text, 2, ',', '.') }}</h4>
                                                                                         </div>
                                                                                     </div>
@@ -1158,7 +1351,7 @@
                                                                                         value="{{ $itemJawabanLevelEmpat->id }}">
                                                                                     @if ($itemEmpat->is_commentable == 'Ya')
                                                                                         <div class="grid grid-cols-2 gap-2">
-                                                                                            <div class="">
+                                                                                            <div class="w-full">
                                                                                                 <label for="">Komentar</label>
                                                                                                 <input type="text" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400 komentar"
                                                                                                     name="komentar_penyelia[]" placeholder="Masukkan Komentar"
@@ -1220,9 +1413,15 @@
                                             @enderror
                                         </div>
                                         <hr>
-                                        <div class="form-group-1">
-                                            <h4 class="font-semibold text-base" for="">Pendapat dan Usulan Staf Kredit</h4>
-                                            <p>{{ $pendapatStafPerAspek->pendapat_per_aspek }}</p>
+                                        <div class="form-group-2">
+                                            <div class="field-review">
+                                                <div class="field-name">
+                                                    <label for="">Pendapat dan Usulan Staf Kredit</label>
+                                                </div>
+                                                <div class="field-answer">
+                                                    <p>{{ $pendapatStafPerAspek->pendapat_per_aspek }}</p>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="form-group-1">
                                             <h4 class="font-semibold text-base" for="">Pendapat dan Usulan Penyelia Kredit</h4>
@@ -1254,9 +1453,15 @@
                                         </div>
                                         <hr>
                                         <hr>
-                                        <div class="form-group-1">
-                                            <h4 class="font-semibold text-base" for=""> Pendapat dan Usulan Staf Kredit</h4>
-                                            <p>{{ $pendapatStafPerAspek->pendapat_per_aspek }}</p>
+                                        <div class="form-group-2">
+                                            <div class="field-review">
+                                                <div class="field-name">
+                                                    <label for="">Pendapat dan Usulan Staf Kredit</label>
+                                                </div>
+                                                <div class="field-answer">
+                                                    <p>{{ $pendapatStafPerAspek->pendapat_per_aspek }}</p>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="form-group-1">
                                             <h4 class="font-semibold text-base" for=""> Pendapat dan Usulan Penyelia Kredit</h4>
@@ -1269,9 +1474,15 @@
                                                 ->where('id_pbp', Auth::user()->id)
                                                 ->first();
                                         @endphp
-                                        <div class="form-group-1">
-                                            <label for="">Pendapat dan Usulan Staf Kredit</label>
-                                            <p class="border-b p-2">{{ $pendapatStafPerAspek->pendapat_per_aspek }}</p>
+                                        <div class="form-group-2">
+                                            <div class="field-review">
+                                                <div class="field-name">
+                                                    <label for="">Pendapat dan Usulan Staf Kredit</label>
+                                                </div>
+                                                <div class="field-answer">
+                                                    <p>{{ $pendapatStafPerAspek->pendapat_per_aspek }}</p>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="form-group-1">
                                             <label for="">Pendapat dan Usulan Penyelia Kredit</label>
@@ -1302,9 +1513,15 @@
                                             @enderror
                                         </div>
                                         <hr>
-                                        <div class="form-group-1">
-                                            <h4 class="font-semibold text-base" for="">Pendapat dan Usulan Staf Kredit</h4>
-                                            <p>{{ $pendapatStafPerAspek?->pendapat_per_aspek }}</p>
+                                        <div class="form-group-2">
+                                            <div class="field-review">
+                                                <div class="field-name">
+                                                    <label for="">Pendapat dan Usulan Staf Kredit</label>
+                                                </div>
+                                                <div class="field-answer">
+                                                    <p>{{ $pendapatStafPerAspek?->pendapat_per_aspek }}</p>
+                                                </div>
+                                            </div>
                                         </div>
                                     @endif
                                     <div class="flex justify-between">
@@ -1336,11 +1553,11 @@
                             <h2 class="text-4xl font-bold tracking-tighter text-theme-primary">Pendapat dan Usulan</h2>
                         </div>
                         <div class="self-start bg-white w-full border">
-                            <div class="p-5 border-b">
+                            {{-- <div class="p-5 border-b">
                                 <h2 class="font-bold text-lg tracking-tighter">
                                     Pendapat dan Usulan
                                 </h2>
-                            </div>
+                            </div> --}}
                             <!-- pendapat-dan-usulan -->
                             <div class="p-5 space-y-5">
                                 @if (Auth::user()->role == 'Penyelia Kredit')

@@ -42,6 +42,9 @@ Route::post('tes-skor', [PengajuanKreditController::class, 'countScore'])->name(
 // })->middleware(['auth'])->name('dashboard');
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/detail-pengajuan-new/tes', function () {
+        return view('dagulir.pengajuan-kredit.detail-pengajuan-jawaban-new');
+    });
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/print-data-nominatif', [DashboardController::class, 'cetak'])->name('print_data_nominatif');
 
