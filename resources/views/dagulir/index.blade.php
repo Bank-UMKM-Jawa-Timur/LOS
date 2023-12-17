@@ -49,24 +49,6 @@
           Dagulir
         </h2>
       </div>
-        @if (session('status'))
-            <div class="bg-success text-primary border-t-4 border-primary rounded-b shadow-md mb-6 p-4">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <i class="icofont icofont-close-line-circled text-white"></i>
-                </button>
-                <strong>{{ session('status') }}</strong>
-            </div>
-        @endif
-
-        @if (session('error'))
-            <div class="bg-danger text-white border-t-4 border-danger rounded-b shadow-md mb-6 p-4">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <i class="icofont icofont-close-line-circled text-white"></i>
-                </button>
-                <strong>{{ session('error') }}</strong>
-            </div>
-        @endif
-
       <div
         class="layout lg:flex grid grid-cols-1 lg:mt-0 justify-between w-full gap-5"
       >
@@ -253,23 +235,49 @@
                                                     ->where('id_pengajuan', $item->pengajuan->id)
                                                     ->first();
                                             @endphp
-                                            @if ($item->sppk == null && ($tglCetak ?->tgl_cetak_sppk == null) && ($tglCetak ?->tgl_cetak_pk == null) && $item->pk == null)
+
+                                            @if ($tglCetak == null || !$tglCetak->tgl_cetak_sppk)
                                                 <li class="item-tb-dropdown">
                                                     <a target="_blank" href="{{ route('dagulir.cetak-sppk-dagulir', $item->pengajuan->id) }}" class="dropdown-item">Cetak SPPK</a>
                                                 </li>
-                                            @elseif ($item->sppk != null && ($tglCetak ?->tgl_cetak_sppk == null) && ($tglCetak ?->tgl_cetak_pk == null) && $item->pk == null)
+                                            @elseif ($tglCetak->tgl_cetak_sppk != null && $item->sppk == null)
                                                 <li class="item-tb-dropdown">
                                                     <a href="#" class="dropdown-item" data-toggle="modal" data-id="{{ $item->pengajuan->id }}" data-target="#uploadSPPKModal-{{ $item->pengajuan->id }}" onclick="showModalSPPK({{$item->pengajuan->id}})">Upload File SPPK</a>
                                                 </li>
-                                            @elseif ($item->sppk != null && $tglCetak ?->tgl_cetak_sppk != null && $tglCetak ?->tgl_cetak_pk == null && $item->pk == null)
+                                            @elseif ($tglCetak->tgl_cetak_pk == null && $item->sppk != null && $tglCetak->tgl_cetak_sppk != null )
                                                 <li class="item-tb-dropdown">
                                                     <a target="_blank" href="{{ route('dagulir.cetak-pk-dagulir', $item->pengajuan->id) }}" class="dropdown-item">Cetak PK</a>
                                                 </li>
-                                            @elseif ($item->sppk != null && $tglCetak ?->tgl_cetak_sppk != null && $tglCetak ?->tgl_cetak_pk != null && $item->pk == null)
+                                            @elseif ($item->pk == null && $item->sppk != null && $tglCetak->tgl_cetak_sppk != null)
                                                 <li class="item-tb-dropdown">
                                                     <a href="#" class="dropdown-item" data-toggle="modal" data-id="{{ $item->pengajuan->id }}" data-target="#uploadPKModal-{{ $item->pengajuan->id }}" onclick="showModalPPK({{$item->pengajuan->id}})">Upload File PK</a>
                                                 </li>
                                             @endif
+
+                                            {{-- @if ($item->skema_kredit == 'KKB')
+                                                @if ($item->sppk && $tglCetak && $tglCetak->tgl_cetak_sppk && !$tglCetak->tgl_cetak_po)
+                                                    <li class="item-tb-dropdown">
+                                                        <a target="_blank" href="{{ route('cetak-po', $item->id_pengajuan) }}" class="dropdown-item">Cetak PO</a>
+                                                    </li>
+                                                @elseif ($item->sppk && $tglCetak && $tglCetak->tgl_cetak_po && !$item->po)
+                                                    <li class="item-tb-dropdown">
+                                                        <a href="#" class="dropdown-item" data-toggle="modal" data-id="{{ $item->id_pengajuan }}" data-target="#uploadPOModal-{{ $item->id_pengajuan }}">Upload File PO</a>
+                                                    </li>
+                                                @endif
+
+                                                @if ($item->po && $tglCetak && $tglCetak->tgl_cetak_po && !$tglCetak->tgl_cetak_pk)
+                                                    <li class="item-tb-dropdown">
+                                                        <a target="_blank" href="{{ route('dagulir.cetak-pk-dagulir', $item->pengajuan->id) }}" class="dropdown-item">Cetak PK</a>
+                                                    </li>
+                                                @elseif ($item->po && $tglCetak && $tglCetak->tgl_cetak_pk && !$item->pk)
+                                                    <li class="item-tb-dropdown">
+                                                        <a href="#" class="dropdown-item" data-toggle="modal" data-id="{{ $item->pengajuan->id }}" data-target="#uploadPKModal-{{ $item->pengajuan->id }}" onclick="showModalPPK({{$item->pengajuan->id}})">Upload File PK</a>
+                                                    </li>
+                                                @endif
+                                            @else
+
+                                                @endif
+                                            @endif --}}
                                         @endif
                                         @if ((Auth()->user()->role == 'Penyelia Kredit'))
                                             @if ($item->pengajuan->posisi == 'Review Penyelia')
