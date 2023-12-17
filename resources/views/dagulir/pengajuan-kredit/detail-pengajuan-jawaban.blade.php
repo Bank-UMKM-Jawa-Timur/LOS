@@ -738,9 +738,13 @@
                                                                             </div>
                                                                             <div class="field-answer">
                                                                                 @if ($item->id == 79)
-                                                                                    <p>{{$itemTextDua->opsi_text}}</p>
+                                                                                <p>{{ $itemTextDua->opsi_text }} :  {{ $item->id }}</p>
                                                                                 @else
-                                                                                    <p> {{ str_replace('_', ' ', $itemTextDua->opsi_text) }} {{ $item->opsi_jawaban == 'persen' ? '%' : '' }}</p>
+                                                                                    @if ($item->opsi_jawaban == 'persen' || $item->nama == "Repayment Capacity")
+                                                                                        <p> {{ str_replace('_', ' ', $itemTextDua->opsi_text) }} {{ $item->opsi_jawaban == 'persen' ? '%' : '' }}</p>
+                                                                                    @else
+                                                                                        <p>{{ number_format((int) $itemTextDua->opsi_text, 2, ',', '.') }}</p>
+                                                                                    @endif
                                                                                 @endif
                                                                             </div>
                                                                         </div>
@@ -796,7 +800,7 @@
                                                 ->first();
 
                                             // check level 3
-                                            $dataLevelTiga = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide')
+                                            $dataLevelTiga = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide', 'is_rupiah')
                                                 ->where('level', 3)
                                                 ->where('id_parent', $item->id)
                                                 ->get();
@@ -1015,7 +1019,11 @@
                                                                                     <label for="">{{ $itemTextTiga->nama }}</label>
                                                                                 </div>
                                                                                 <div class="field-answer">
-                                                                                    <p>{{ $itemTiga->opsi_jawaban == 'persen' ? $itemTextTiga->opsi_text : $itemTextTiga->opsi_text  }}{{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</p>
+                                                                                    @if ($itemTiga->is_rupiah == 1)
+                                                                                        <p>Rp. {{ number_format((int) $itemTextTiga->opsi_text, 2, ',', '.') }}</p>
+                                                                                    @else
+                                                                                        <p>{{ $itemTiga->opsi_jawaban == 'persen' ? $itemTextTiga->opsi_text : $itemTextTiga->opsi_text  }}{{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</p>
+                                                                                    @endif
                                                                                 </div>
                                                                             </div>
                                                                             @if ($item->is_commentable == 'Ya')
@@ -1056,7 +1064,7 @@
                                                         ->where('id_item', $itemTiga->id)
                                                         ->first();
                                                     // check level empat
-                                                    $dataLevelEmpat = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide')
+                                                    $dataLevelEmpat = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide', 'is_rupiah')
                                                         ->where('level', 4)
                                                         ->where('id_parent', $itemTiga->id)
                                                         ->get();
@@ -1229,7 +1237,7 @@
                                                                                     <div class="jawaban-responsive border-b p-2 font-medium">
                                                                                         <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
                                                                                             <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban: </span>
-                                                                                            <h4 class="font-bold"> Rp.{{ number_format((int) $itemTextEmpat->opsi_text, 2, ',', '.') }}</h4>
+                                                                                            <h4 class="font-bold">Rp.{{ number_format((int) $itemTextEmpat->opsi_text, 2, ',', '.') }}</h4>
                                                                                         </div>
                                                                                     </div>
                                                                                     @if ($itemTextEmpat->is_commentable == 'Ya')
@@ -1251,7 +1259,12 @@
                                                                                         </div>
                                                                                         <div class="field-answer">
                                                                                             <p>
-                                                                                                {{ $itemTextEmpat->opsi_text }}
+                                                                                                @if ($itemEmpat->is_rupiah == 1)
+                                                                                                    Rp.{{ number_format((int) $itemTextEmpat->opsi_text, 2, ',', '.') }}
+                                                                                                @else
+                                                                                                    {{ $itemTextEmpat->opsi_text }}
+                                                                                                @endif
+
                                                                                                 @if ($itemEmpat->opsi_jawaban == 'persen')
                                                                                                     %
                                                                                                 @elseif($itemEmpat->id == 130)
