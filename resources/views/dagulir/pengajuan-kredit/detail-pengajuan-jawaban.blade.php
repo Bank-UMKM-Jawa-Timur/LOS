@@ -1210,7 +1210,9 @@
                                             <h4 class="font-semibold text-base" for="">Pendapat dan Usulan {{ $value->nama }}</h4>
                                             <input type="hidden" name="id_aspek[]" value="{{ $value->id }}">
                                             <textarea name="pendapat_per_aspek[]" class="form-input @error('pendapat_per_aspek') is-invalid @enderror"
-                                                id="pendapat_per_aspek[]" cols="30" rows="4" placeholder="Pendapat Per Aspek">{{ isset($getPendapatPerAspek->pendapat_per_aspek) ? $getPendapatPerAspek->pendapat_per_aspek : '' }}</textarea>
+                                                id="pendapat_per_aspek[]" cols="30" rows="4" placeholder="Pendapat Per Aspek">
+                                                {{ old('pendapat_per_aspek', isset($getPendapatPerAspek->pendapat_per_aspek) ? $getPendapatPerAspek->pendapat_per_aspek : '') }}
+                                            </textarea>
                                             @error('pendapat_per_aspek')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
@@ -2069,7 +2071,7 @@
         $.each(pendapat, function(i, v) {
             if (!$(this).prop('disabled') && !$(this).hasClass('hidden'))
                 totalInput++
-            if (v.value != '') {
+            if (v.value != '' && $.trim(v.value) != '') {
                 totalInputFilled++
             }
         })
@@ -2080,14 +2082,14 @@
 
             if ($('#komentar_penyelia_keseluruhan'))
                 totalInput++
-            if($('#komentar_penyelia_keseluruhan').val() != '')
+            if($('#komentar_penyelia_keseluruhan').val() != '' && $.trim($('#komentar_penyelia_keseluruhan').val()) != '')
                 totalInputFilled++
 
             $.each(inputText, function(i, v) {
                 var inputBox = $(this).closest('.input-box');
                 if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
                     totalInput++
-                var isNull = (v.value == '' || v.value == '0')
+                var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
                 if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
                     totalInputFilled++;
                 }
@@ -2096,7 +2098,7 @@
                 var inputBox = $(this).closest('.input-box');
                 if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
                     totalInput++
-                var isNull = (v.value == '' || v.value == '0')
+                var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
                 if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
                     totalInputFilled++;
                 }
