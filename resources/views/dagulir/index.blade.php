@@ -240,20 +240,19 @@
                                                 <li class="item-tb-dropdown">
                                                     <a target="_blank" href="{{ route('dagulir.cetak-sppk-dagulir', $item->pengajuan->id) }}" class="dropdown-item">Cetak SPPK</a>
                                                 </li>
-                                            @elseif ($tglCetak->tgl_cetak_sppk != null && $item->sppk == null)
+                                            @elseif (!$item->pengajuan->sppk && $tglCetak->tgl_cetak_sppk)
                                                 <li class="item-tb-dropdown">
                                                     <a href="#" class="dropdown-item" data-toggle="modal" data-id="{{ $item->pengajuan->id }}" data-target="#uploadSPPKModal-{{ $item->pengajuan->id }}" onclick="showModalSPPK({{$item->pengajuan->id}})">Upload File SPPK</a>
                                                 </li>
-                                            @elseif ($tglCetak->tgl_cetak_pk == null && $item->sppk != null && $tglCetak->tgl_cetak_sppk != null )
+                                            @elseif (!$tglCetak->tgl_cetak_pk && $item->pengajuan->sppk && $tglCetak->tgl_cetak_sppk )
                                                 <li class="item-tb-dropdown">
                                                     <a target="_blank" href="{{ route('dagulir.cetak-pk-dagulir', $item->pengajuan->id) }}" class="dropdown-item">Cetak PK</a>
                                                 </li>
-                                            @elseif ($item->pk == null && $item->sppk != null && $tglCetak->tgl_cetak_sppk != null)
+                                            @elseif (!$item->pengajuan->pk && $item->pengajuan->sppk && $tglCetak->tgl_cetak_sppk)
                                                 <li class="item-tb-dropdown">
                                                     <a href="#" class="dropdown-item" data-toggle="modal" data-id="{{ $item->pengajuan->id }}" data-target="#uploadPKModal-{{ $item->pengajuan->id }}" onclick="showModalPPK({{$item->pengajuan->id}})">Upload File PK</a>
                                                 </li>
                                             @endif
-
                                             {{-- @if ($item->skema_kredit == 'KKB')
                                                 @if ($item->sppk && $tglCetak && $tglCetak->tgl_cetak_sppk && !$tglCetak->tgl_cetak_po)
                                                     <li class="item-tb-dropdown">
