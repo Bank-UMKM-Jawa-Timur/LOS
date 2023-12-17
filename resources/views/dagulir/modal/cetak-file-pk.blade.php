@@ -20,9 +20,15 @@
                 <br>
                 @csrf
                 <input type="hidden" name="tipe_file" value="PK">
-                    <div class="form-group">
-                        <label for="sppk">File PK</label>
-                        <input type="file" name="pk" id="pk" class="form-input file" required>
+                    <div class="form-group-2">
+                        <div class="input-group">
+                            <label for="sppk">No PK</label>
+                            <input type="Text" name="no_pk" id="no_pk" class="form-input" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="sppk">File PK</label>
+                            <input type="file" name="pk" id="pk" class="form-input file" required>
+                        </div>
                     </div>
                 </div>
             </div>

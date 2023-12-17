@@ -1775,18 +1775,12 @@ class NewDagulirController extends Controller
     function CetakPK($id) {
         $count = DB::table('log_cetak_kkb')
         ->where('id_pengajuan', $id)
-        ->count('*');
+        ->count('tgl_cetak_pk');
         if ($count < 1) {
-            DB::table('log_cetak_kkb')
-            ->insert([
-                'id_pengajuan' => $id,
-                'tgl_cetak_sppk' => now()
-            ]);
-        } else {
             DB::table('log_cetak_kkb')
             ->where('id_pengajuan', $id)
             ->update([
-                'tgl_cetak_sppk' => now()
+                'tgl_cetak_pk' => now()
             ]);
         }
 
@@ -1921,6 +1915,12 @@ class NewDagulirController extends Controller
                     // File PK Handler
                 case 'PK':
                     $message = 'file PK.';
+                    $count = DB::table('log_cetak_kkb')
+                    ->where('id_pengajuan', $id)
+                    ->update([
+                        'no_pk' => $request->get('no_pk')
+                    ]);
+                    // return $count;
                     $folderPK = public_path() . '/upload/' . $id . '/pk/';
                     $filePK = $request->pk;
                     $filenamePK = date('YmdHis') . '.' . $filePK->getClientOriginalExtension();
@@ -1932,8 +1932,8 @@ class NewDagulirController extends Controller
                     DB::table('pengajuan')
                     ->where('id', $id)
                         ->update([
-                            'pk' => $filenamePK
-                        ]);
+                            'pk' => $filenamePK,
+                    ]);
                     break;
             }
 

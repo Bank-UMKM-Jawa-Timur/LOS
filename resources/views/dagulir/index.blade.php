@@ -248,7 +248,7 @@
                                                 <li class="item-tb-dropdown">
                                                     <a target="_blank" href="{{ route('dagulir.cetak-pk-dagulir', $item->pengajuan->id) }}" class="dropdown-item">Cetak PK</a>
                                                 </li>
-                                            @elseif (!$item->pengajuan->pk && $item->pengajuan->sppk && $tglCetak->tgl_cetak_sppk)
+                                            @elseif (!$item->pengajuan->pk && $tglCetak->tgl_cetak_pk && $item->pengajuan->sppk)
                                                 <li class="item-tb-dropdown">
                                                     <a href="#" class="dropdown-item" data-toggle="modal" data-id="{{ $item->pengajuan->id }}" data-target="#uploadPKModal-{{ $item->pengajuan->id }}" onclick="showModalPPK({{$item->pengajuan->id}})">Upload File PK</a>
                                                 </li>
@@ -359,6 +359,7 @@
 @endsection
 
 @push('script-inject')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
     document.getElementById('modalConfirmPincab').addEventListener('click', function () {
