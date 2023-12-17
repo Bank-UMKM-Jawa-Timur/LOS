@@ -748,38 +748,18 @@
                 <div class="accordion-content p-3">
                     <div class="divide-y-2 divide-red-800">
                         @if($pendapatDanUsulan->komentar_staff)
-                        <div class="p-4">
-                            <div class="form-group-2">
-                                <div class="field-review">
-                                    <div class="field-name">
-                                        <label for="">Staff Kredit</label>
-                                    </div>
-                                    <div class="field-answer">
-                                        <p>{{ $pendapatDanUsulan->komentar_staff }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group-2">
-                                <div class="field-review">
-                                    <div class="field-name">
-                                        <label for="">Tenor</label>
-                                    </div>
-                                    <div class="field-answer">
-                                        <p>12 Bulan</p>
+                            <div class="p-4">
+                                <div class="form-group-2">
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Staff Kredit</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <p>{{ $pendapatDanUsulan->komentar_staff }}</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group-2">
-                                <div class="field-review">
-                                    <div class="field-name">
-                                        <label for="">Plafon</label>
-                                    </div>
-                                    <div class="field-answer">
-                                        <p>Rp. 30.000.000 </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         @endif
                 @if($pendapatDanUsulan->komentar_penyelia)
                     <div class="p-4">
@@ -799,7 +779,7 @@
                                     <label for="">Tenor</label>
                                 </div>
                                 <div class="field-answer">
-                                    <p>12 Bulan</p>
+                                    <p>{{ $plafonUsulan->jangka_waktu_usulan_penyelia }} Bulan</p>
                                 </div>
                             </div>
                         </div>
@@ -809,7 +789,7 @@
                                     <label for="">Plafon</label>
                                 </div>
                                 <div class="field-answer">
-                                    <p>Rp. 30.000.000 </p>
+                                    <p>Rp. {{ number_format($plafonUsulan->plafon_usulan_penyelia, 2, ',', '.')}}</p>
                                 </div>
                             </div>
                         </div>
@@ -833,7 +813,7 @@
                                     <label for="">Tenor</label>
                                 </div>
                                 <div class="field-answer">
-                                    <p>12 Bulan</p>
+                                    <p>{{ $plafonUsulan->jangka_waktu_usulan_pbo }} Bulan</p>
                                 </div>
                             </div>
                         </div>
@@ -843,7 +823,7 @@
                                     <label for="">Plafon</label>
                                 </div>
                                 <div class="field-answer">
-                                    <p>Rp. 30.000.000 </p>
+                                    <p>Rp. {{ number_format($plafonUsulan->plafon_usulan_pbo, 2, ',', '.')}}</p>
                                 </div>
                             </div>
                         </div>
@@ -867,7 +847,7 @@
                                     <label for="">Tenor</label>
                                 </div>
                                 <div class="field-answer">
-                                    <p>12 Bulan</p>
+                                    <p>{{ $plafonUsulan->jangka_waktu_usulan_pbp }} Bulan</p>
                                 </div>
                             </div>
                         </div>
@@ -877,7 +857,7 @@
                                     <label for="">Plafon</label>
                                 </div>
                                 <div class="field-answer">
-                                    <p>Rp. 30.000.000 </p>
+                                    <p>Rp. {{ number_format($plafonUsulan->plafon_usulan_pbp, 2, ',', '.')}}</p>
                                 </div>
                             </div>
                         </div>
@@ -901,7 +881,7 @@
                                     <label for="">Tenor</label>
                                 </div>
                                 <div class="field-answer">
-                                    <p>12 Bulan</p>
+                                    <p>{{ $plafonUsulan->jangka_waktu_usulan_pincab }} Bulan</p>
                                 </div>
                             </div>
                         </div>
@@ -911,7 +891,7 @@
                                     <label for="">Plafon</label>
                                 </div>
                                 <div class="field-answer">
-                                    <p>Rp. 30.000.000 </p>
+                                    <p>Rp. {{ number_format($plafonUsulan->plafon_usulan_pincab, 2, ',', '.')}}</p>
                                 </div>
                             </div>
                         </div>

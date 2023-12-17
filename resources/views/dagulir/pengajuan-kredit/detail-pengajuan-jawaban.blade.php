@@ -1108,20 +1108,20 @@
                                                                                     @endphp
                                                                                     @if ($itemTiga->is_commentable == 'Ya')
                                                                                         <div class="flex pl-2">
-                                                                                            <div class="field-review">
+                                                                                            {{-- <div class="field-review">
                                                                                                 <div class="field-name">
                                                                                                         <label for="">{{ $itemTiga->nama }}</label>
                                                                                                 </div>
                                                                                                 <div class="field-answer">
                                                                                                     <p>{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}</p>
                                                                                                 </div>
-                                                                                            </div>
-                                                                                            {{-- <div class="flex-1 w-64">
+                                                                                            </div> --}}
+                                                                                            <div class="flex-1 w-64">
                                                                                                 <label for="">Komentar </label>
                                                                                                 <input type="text" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400 komentar"
                                                                                                     name="komentar_penyelia[]" placeholder="Masukkan Komentar"
                                                                                                     value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
-                                                                                            </div> --}}
+                                                                                            </div>
                                                                                             <div class="flex-3 w-5"></div>
                                                                                             <div class="flex-2 w-16">
                                                                                                 <label for="">Skor</label>
