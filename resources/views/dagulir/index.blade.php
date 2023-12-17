@@ -6,6 +6,8 @@
 
 @include('dagulir.pengajuan-kredit.modal.pilih-penyelia')
 @include('dagulir.modal.konfirmSendToPinca')
+@include('dagulir.modal.cetak-file-sppk')
+@include('dagulir.modal.cetak-file-pk')
 @include('dagulir.modal.approval')
 @include('dagulir.modal.approvalSipde')
 @endsection
@@ -245,6 +247,30 @@
                                                 class="cursor-pointer">Tindak lanjut Review Penyelia</a>
                                             </li>
                                         @endif
+                                        @if (Auth::user()->role == 'Staf Analis Kredit' && $item->pengajuan->posisi == 'Selesai')
+                                            @php
+                                                $tglCetak = DB::table('log_cetak_kkb')
+                                                    ->where('id_pengajuan', $item->pengajuan->id)
+                                                    ->first();
+                                            @endphp
+                                            @if ($item->sppk == null && ($tglCetak ?->tgl_cetak_sppk == null) && ($tglCetak ?->tgl_cetak_pk == null) && $item->pk == null)
+                                                <li class="item-tb-dropdown">
+                                                    <a target="_blank" href="{{ route('dagulir.cetak-sppk-dagulir', $item->pengajuan->id) }}" class="dropdown-item">Cetak SPPK</a>
+                                                </li>
+                                            @elseif ($item->sppk != null && ($tglCetak ?->tgl_cetak_sppk == null) && ($tglCetak ?->tgl_cetak_pk == null) && $item->pk == null)
+                                                <li class="item-tb-dropdown">
+                                                    <a href="#" class="dropdown-item" data-toggle="modal" data-id="{{ $item->pengajuan->id }}" data-target="#uploadSPPKModal-{{ $item->pengajuan->id }}" onclick="showModalSPPK({{$item->pengajuan->id}})">Upload File SPPK</a>
+                                                </li>
+                                            @elseif ($item->sppk != null && $tglCetak ?->tgl_cetak_sppk != null && $tglCetak ?->tgl_cetak_pk == null && $item->pk == null)
+                                                <li class="item-tb-dropdown">
+                                                    <a target="_blank" href="{{ route('dagulir.cetak-pk-dagulir', $item->pengajuan->id) }}" class="dropdown-item">Cetak PK</a>
+                                                </li>
+                                            @elseif ($item->sppk != null && $tglCetak ?->tgl_cetak_sppk != null && $tglCetak ?->tgl_cetak_pk != null && $item->pk == null)
+                                                <li class="item-tb-dropdown">
+                                                    <a href="#" class="dropdown-item" data-toggle="modal" data-id="{{ $item->pengajuan->id }}" data-target="#uploadPKModal-{{ $item->pengajuan->id }}" onclick="showModalPPK({{$item->pengajuan->id}})">Upload File PK</a>
+                                                </li>
+                                            @endif
+                                        @endif
                                         @if ((Auth()->user()->role == 'Penyelia Kredit'))
                                             @if ($item->pengajuan->posisi == 'Review Penyelia')
                                                 <li class="item-tb-dropdown">
@@ -255,8 +281,6 @@
                                             @if ($item->pengajuan->posisi == 'Review Penyelia' && $item->pengajuan->tanggal_review_penyelia)
                                                 <li class="item-tb-dropdown">
                                                     <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown">Lanjutkan Ke Pincab</a>
-                                                    {{-- <a href="{{ route('dagulir.check.pincab', $item->pengajuan->id) }}"
-                                                        class="dropdown-item send-pincab">Lanjutkan Ke Pincab</a> --}}
                                                 </li>
 
                                             @endif
@@ -272,8 +296,6 @@
                                                 && $item->pengajuan->id_pbo)
                                                 <li class="item-tb-dropdown">
                                                     <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown">Lanjutkan Ke Pincab</a>
-                                                    {{-- <a href="{{ route('dagulir.check.pincab', $item->pengajuan->id) }}"
-                                                        class="dropdown-item">Lanjutkan Ke Pincab</a> --}}
                                                 </li>
                                             @endif
                                         @elseif ((Auth()->user()->role == 'PBP'))
@@ -289,8 +311,6 @@
                                                 && ($item->pengajuan->id_pbp && $item->pengajuan->tanggal_review_pbp))
                                                 <li class="item-tb-dropdown">
                                                     <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown">Lanjutkan Ke Pincab</a>
-                                                    {{-- <a href="{{ route('dagulir.check.pincab', $item->pengajuan->id) }}"
-                                                        class="dropdown-item">Lanjutkan Ke Pincab</a> --}}
                                                 </li>
                                             @endif
                                         @elseif ((Auth()->user()->role == 'Pincab'))
@@ -332,6 +352,7 @@
 @endsection
 
 @push('script-inject')
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
     document.getElementById('modalConfirmPincab').addEventListener('click', function () {
         document.getElementById('confirmationModal').classList.remove('hidden');
@@ -348,6 +369,14 @@
         document.getElementById('confirmationModal').classList.add('hidden');
         document.getElementById('confirmationModal').classList.remove('flex');
     });
+
+    // cetak file
+    function showModalSPPK(id){
+        $('#uploadSPPKModal-' + id).removeClass('hidden');
+    }
+    function showModalPPK(id){
+        $('#uploadPPKModal-' + id).removeClass('hidden');
+    }
 </script>
 @endpush
 

@@ -45,6 +45,7 @@ use Illuminate\Support\Facades\Session;
 use Image;
 use Carbon\Carbon;
 use PhpParser\Node\Expr;
+use PhpParser\Node\Stmt\Return_;
 use RealRashid\SweetAlert\Facades\Alert;
 use Symfony\Component\HttpFoundation\Response as HttpFoundationResponse;
 
@@ -62,6 +63,7 @@ class NewDagulirController extends Controller
         ];
         $this->repo = new PengajuanDagulirRepository;
     }
+    protected $bulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
 
     public function getUserJson($role)
     {
@@ -1143,19 +1145,19 @@ class NewDagulirController extends Controller
                     $update_pengajuan_dagulir->kode_pendaftaran = $pengajuan_dagulir['data']['kode_pendaftaran'];
                     $update_pengajuan_dagulir->status = 1;
                     $update_pengajuan_dagulir->update();
-    
+
                     // Log Pengajuan review
                     $dagulir = PengajuanDagulir::find($update_pengajuan_dagulir->dagulir_id);
                     $namaNasabah = 'undifined';
-    
+
                     if ($dagulir)
                         $namaNasabah = $dagulir->nama;
-    
+
                     // $role = Auth::user()->role;
                     // $this->logPengajuan->store($role . ' dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' mengirimkan data dagulir dengan pengajuan atas nama ' . $namaNasabah, $pengajuan->id, Auth::user()->id, Auth::user()->nip);
-    
+
                     DB::commit();
-    
+
                     $response = [
                         'status' => 'success',
                         'kode_pendaftaran' => $pengajuan_dagulir['data']['kode_pendaftaran'],
@@ -1270,7 +1272,7 @@ class NewDagulirController extends Controller
     public function updateStatus($kode_pendaftaran, $status, $lampiran_analisa = null, $jangka_waktu = null, $realisasi_dana = null) {
         $data = sipde_token();
         $body = $this->getStatusBody($kode_pendaftaran, $status, $lampiran_analisa = null, $jangka_waktu = null, $realisasi_dana = null);
-        
+
         if (!empty($body)) {
             $host = config('dagulir.host');
             DB::beginTransaction();
@@ -1337,6 +1339,7 @@ class NewDagulirController extends Controller
             $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user);
         }
 
+        // return $pengajuan_dagulir;
         return view('dagulir.index',[
             'data' => $pengajuan_dagulir
         ]);
@@ -1415,7 +1418,7 @@ class NewDagulirController extends Controller
                         $namaNasabah = $nasabah->nama;
                     // HIT Pengajuan endpoint dagulir
                     $storeSIPDE = $this->storeSipde($id);
-                    
+
                     $kode_pendaftaran = false;
                     if (is_array($storeSIPDE)) {
                         $kode_pendaftaran = array_key_exists('kode_pendaftaran', $storeSIPDE) ? $storeSIPDE['kode_pendaftaran'] : false;
@@ -1617,26 +1620,178 @@ class NewDagulirController extends Controller
         return redirect()->route('dagulir.pengajuan.index');
     }
     function CetakPK($id) {
-        $pengajuan = PengajuanModel::find($id);
-        $param['dataAspek'] = ItemModel::select('*')->where('level',1)->get();
-        $param['dataNasabah'] = PengajuanDagulir::find($pengajuan->dagulir_id);
-        $param['dataUmum'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit')
-                                        ->find($id);
-        $param['komentar'] = KomentarModel::where('id_pengajuan', $id)->first();
+        $count = DB::table('log_cetak_kkb')
+        ->where('id_pengajuan', $id)
+        ->count('*');
+        if ($count < 1) {
+            DB::table('log_cetak_kkb')
+            ->insert([
+                'id_pengajuan' => $id,
+                'tgl_cetak_sppk' => now()
+            ]);
+        } else {
+            DB::table('log_cetak_kkb')
+            ->where('id_pengajuan', $id)
+            ->update([
+                'tgl_cetak_sppk' => now()
+            ]);
+        }
 
-        $param['jenis_usaha'] = config('dagulir.jenis_usaha');
+        $dataNasabah = DB::table('pengajuan_dagulir')->select('pengajuan_dagulir.*', 'kabupaten.id as kabupaten_id', 'kabupaten.kabupaten', 'kecamatan.id as kecamatan_id', 'kecamatan.id_kabupaten', 'kecamatan.kecamatan', 'desa.id as desa_id', 'desa.id_kabupaten', 'desa.id_kecamatan', 'desa.desa', 'pengajuan.*')
+        ->join('kabupaten', 'kabupaten.id', 'pengajuan_dagulir.kotakab_ktp')
+        ->join('kecamatan', 'kecamatan.id', 'pengajuan_dagulir.kec_ktp')
+        ->join('desa', 'desa.id', 'pengajuan_dagulir.desa_ktp')
+        ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
+        ->where('pengajuan.id', $id)
+        ->first();
 
+        $param['dataNasabah'] = $dataNasabah;
 
-        $pdf = Pdf::loadview('dagulir.pengajuan-kredit.cetak.cetak-surat',$param);
+        $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang')
+        ->find($id);
 
-        $fileName =  time().'.'. 'pdf' ;
-        $pdf->save(public_path() . '/' . $fileName);
+        $param['dataCabang'] = DB::table('cabang')
+            ->where('id', $param['dataUmum']->id_cabang)
+            ->first();
 
-        $pdf = public_path($fileName);
-        $file = "data:@file/pdf;base64,".base64_encode(file_get_contents($pdf));
+        $param['tglCetak'] = DB::table('log_cetak_kkb')
+        ->where('id_pengajuan', $id)
+        ->first();
 
+        $kodePincab = $dataNasabah->id_pincab;
+        $kodePenyelia = $dataNasabah->id_penyelia;
+        $param['dataPincab'] = User::where('id', $kodePincab)->get();
+        $param['dataPenyelia'] = User::where('id', $kodePenyelia)->get();
 
+        $indexBulan = intval(date('m', strtotime($param['tglCetak']->tgl_cetak_sppk))) - 1;
+        $param['tgl'] = date('d', strtotime($param['tglCetak']->tgl_cetak_sppk)) . ' ' . $this->bulan[$indexBulan] . ' ' . date('Y', strtotime($param['tglCetak']->tgl_cetak_sppk));
+
+        $param['installment'] = DB::table('jawaban_text')
+        ->where('id_pengajuan', $id)
+        ->where('id_jawaban', 140)
+        ->first() ?? '0';
+
+        return view('dagulir.cetak.cetak-pk', $param);
     }
 
+    public function cetakSPPk($id)
+    {
+        $count = DB::table('log_cetak_kkb')
+        ->where('id_pengajuan', $id)
+            ->count('*');
+        if ($count < 1) {
+            DB::table('log_cetak_kkb')
+            ->insert([
+                'id_pengajuan' => $id,
+                'tgl_cetak_sppk' => now()
+            ]);
+        } else {
+            DB::table('log_cetak_kkb')
+            ->where('id_pengajuan', $id)
+                ->update([
+                    'tgl_cetak_sppk' => now()
+                ]);
+        }
 
+        $dataNasabah = DB::table('pengajuan_dagulir')->select('kabupaten.id as kabupaten_id', 'kabupaten.kabupaten', 'kecamatan.id as kecamatan_id', 'kecamatan.id_kabupaten', 'kecamatan.kecamatan', 'desa.id as desa_id', 'desa.id_kabupaten', 'desa.id_kecamatan', 'desa.desa', 'pengajuan_dagulir.*', 'pengajuan.*')
+        ->join('kabupaten', 'kabupaten.id', 'pengajuan_dagulir.kotakab_ktp')
+        ->join('kecamatan', 'kecamatan.id', 'pengajuan_dagulir.kec_ktp')
+        ->join('desa', 'desa.id', 'pengajuan_dagulir.desa_ktp')
+        ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
+        ->where('pengajuan.id', $id)
+        ->first();
+        // return $dataNasabah;
+        $param['dataNasabah'] = $dataNasabah;
+
+        $dataUmum =
+        DB::table('pengajuan_dagulir')->select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang')
+        ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
+        ->where('pengajuan.id', $id)
+        ->first();
+        // return $dataUmum;
+        $param['dataUmum'] = $dataUmum;
+
+
+        $param['dataCabang'] = DB::table('cabang')
+                ->where('id', $dataUmum->id_cabang)
+                ->first();
+
+        $tglCetak = DB::table('log_cetak_kkb')
+        ->where('id_pengajuan', $id)
+        ->first();
+        $param['tglCetak'] = $tglCetak;
+
+        $kodePincab = $dataNasabah->id_pincab;
+        $kodePenyelia = $dataNasabah->id_penyelia;
+        $param['dataPincab'] = User::where('id', $kodePincab)->get();
+        $param['dataPenyelia'] = User::where('id', $kodePenyelia)->get();
+
+        $indexBulan = intval(date('m', strtotime($param['tglCetak']->tgl_cetak_sppk))) - 1;
+        $param['tgl'] = date('d', strtotime($param['tglCetak']->tgl_cetak_sppk)) . ' ' . $this->bulan[$indexBulan] . ' ' . date('Y', strtotime($param['tglCetak']->tgl_cetak_sppk));
+
+        $param['installment'] = DB::table('jawaban_text')
+        ->where('id_pengajuan', $id)
+            ->where('id_jawaban', 140)
+            ->first() ?? '0';
+
+        return view('dagulir.cetak.cetak-sppk', $param);
+    }
+
+    public function postFileDagulir(Request $request, $id)
+    {
+        $kode_cabang = DB::table('cabang')
+        ->join('pengajuan', 'pengajuan.id_cabang', 'cabang.id')
+        ->where('pengajuan.id', $id)
+            ->select('kode_cabang')
+            ->first();
+
+        try {
+            $message = null;
+            switch ($request->tipe_file) {
+                    // File SPPK Handler
+                case 'SPPK':
+                    $message = 'file SPPK.';
+                    $folderSPPK = public_path() . '/upload/' . $id . '/sppk/';
+                    $fileSPPK = $request->sppk;
+                    $filenameSPPK = date('YmdHis') . '.' . $fileSPPK->getClientOriginalExtension();
+                    $pathSPPK = realpath($folderSPPK);
+                    if (!($pathSPPK !== true and is_dir($pathSPPK))) {
+                        mkdir($folderSPPK, 0755, true);
+                    }
+                    $fileSPPK->move($folderSPPK, $filenameSPPK);
+                    DB::table('pengajuan')
+                    ->where('id', $id)
+                        ->update([
+                            'sppk' => $filenameSPPK
+                        ]);
+                    break;
+                    // File PK Handler
+                case 'PK':
+                    $message = 'file PK.';
+                    $folderPK = public_path() . '/upload/' . $id . '/pk/';
+                    $filePK = $request->pk;
+                    $filenamePK = date('YmdHis') . '.' . $filePK->getClientOriginalExtension();
+                    $pathPK = realpath($folderPK);
+                    if (!($pathPK !== true and is_dir($pathPK))) {
+                        mkdir($folderPK, 0755, true);
+                    }
+                    $filePK->move($folderPK, $filenamePK);
+                    DB::table('pengajuan')
+                    ->where('id', $id)
+                        ->update([
+                            'pk' => $filenamePK
+                        ]);
+                    break;
+            }
+
+            DB::commit();
+            return redirect()->route('dagulir.pengajuan.index')->withStatus('Berhasil menambahkan ' . $message);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->route('dagulir.pengajuan.index')->withStatus('Terjadi kesalahan. ' . $e->getMessage());
+        } catch (QueryException $e) {
+            DB::rollBack();
+            return redirect()->route('dagulir.pengajuan.index')->withStatus('Terjadi kesalahan. ' . $e->getMessage());
+        }
+    }
 }
