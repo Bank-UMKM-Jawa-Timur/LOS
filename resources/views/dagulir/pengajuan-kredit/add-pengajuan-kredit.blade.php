@@ -1926,14 +1926,16 @@ $dataIndex = match ($skema) {
                     $("#jaminan_tambahan").show()
                     // add item by kategori
                     $('#select_kategori_jaminan_tambahan').append(`
-                        <label for="">${response.item.nama}</label>
-                        <select name="dataLevelEmpat[${response.item.id}]" id="itemByKategori" class="form-input cek-sub-column"
-                            data-id_item="${response.item.id}">
-                            <option value=""> --Pilih Opsi -- </option>
-                            </select>
+                        <div class="input-box">
+                            <label for="">${response.item.nama}</label>
+                            <select name="dataLevelEmpat[${response.item.id}]" id="itemByKategori" class="form-input cek-sub-column"
+                                data-id_item="${response.item.id}">
+                                <option value=""> --Pilih Opsi -- </option>
+                                </select>
 
-                        <div id="item${response.item.id}">
+                            <div id="item${response.item.id}">
 
+                            </div>
                         </div>
                     `);
                     // add opsi dari item
@@ -1952,7 +1954,7 @@ $dataIndex = match ($skema) {
                     $.each(response.itemBuktiPemilikan, function(i, valItem) {
                         if (valItem.nama == 'Atas Nama') {
                             $('#bukti_pemilikan_jaminan_tambahan').append(`
-                                <div class="form-group aspek_jaminan_kategori">
+                                <div class="form-group input-box aspek_jaminan_kategori">
                                     <label>${valItem.nama}</label>
                                     <input type="hidden" name="id_level[${valItem.id}]" value="${valItem.id}" id="" class="input">
                                     <input type="hidden" name="opsi_jawaban[${valItem.id}]"
@@ -1966,7 +1968,7 @@ $dataIndex = match ($skema) {
                             name_lowercase = name_lowercase.replaceAll(' ', '_')
                             if (valItem.nama == 'Foto') {
                                 $('#bukti_pemilikan_jaminan_tambahan').append(`
-                                    <div class="form-group file-wrapper item-${valItem.id}">
+                                    <div class="form-group input-box file-wrapper item-${valItem.id}">
                                         <label for="">${valItem.nama}</label>
                                         <div class="input-box mb-4">
                                             <div class="flex gap-4">
@@ -1999,7 +2001,7 @@ $dataIndex = match ($skema) {
                                     }
                                 }
                                 $('#bukti_pemilikan_jaminan_tambahan').append(`
-                                    <div class="form-group aspek_jaminan_kategori">
+                                    <div class="form-group input-box aspek_jaminan_kategori">
                                         <label>${isCheck} ${valItem.nama}</label>
                                         <input type="hidden" name="id_level[${valItem.id}]" value="${valItem.id}" id="" class="input" ${isDisabled}>
                                         <input type="hidden" name="opsi_jawaban[${valItem.id}]"

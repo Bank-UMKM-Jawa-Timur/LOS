@@ -124,11 +124,11 @@
             <div class="input-box">
                 <label for="">Status</label><small class="text-red-500 font-bold">*</small>
                 <select name="status" id="status_nasabah" class="form-select">
-                    <option value="0" {{ old('status_nasabah') }}>Pilih Status</option>
-                    <option value="1" {{ old('status_nasabah') }}>Belum Menikah</option>
-                    <option value="2" {{ old('status_nasabah') }}>Menikah</option>
-                    <option value="3" {{ old('status_nasabah') }}>Duda</option>
-                    <option value="4" {{ old('status_nasabah') }}>Janda</option>
+                    <option value="0" {{ old('status_nasabah') == '0' ? 'selected' : '' }}>Pilih Status</option>
+                    <option value="1" {{ old('status_nasabah') == '1' ? 'selected' : ''}}>Belum Menikah</option>
+                    <option value="2" {{ old('status_nasabah') == '2' ? 'selected' : ''}}>Menikah</option>
+                    <option value="3" {{ old('status_nasabah') == '3' ? 'selected' : ''}}>Duda</option>
+                    <option value="4" {{ old('status_nasabah') == '4' ? 'selected' : ''}}>Janda</option>
                 </select>
             </div>
             <div class="input-box">
@@ -177,7 +177,7 @@
                     data-id_item={{ $itemSlik->id }}>
                     <option value=""> --Pilih Data -- </option>
                     @foreach ($itemSlik->option as $itemJawaban)
-                    <option value="{{ $itemJawaban->skor . '-' . $itemJawaban->id }}">
+                    <option value="{{ $itemJawaban->skor . '-' . $itemJawaban->id }}" {{ old('dataLevelDua[]') == $itemJawaban->skor . '-' . $itemJawaban->id ? 'selected' : '' }}>
                         {{ $itemJawaban->option }}</option>
                     @endforeach
                 </select>
@@ -213,7 +213,7 @@
                         id="kabupaten">
                         <option value="0"> --- Pilih Kabupaten --- </option>
                         @foreach ($dataKabupaten as $item)
-                            <option value="{{ $item->id }}" {{ old('kode_kotakab_ktp') }}>{{ $item->kabupaten }}</option>
+                            <option value="{{ $item->id }}" {{ old('kode_kotakab_ktp') == $item->id ? 'selected' : '' }}>{{ $item->kabupaten }}</option>
                         @endforeach
                     </select>
                 </div>
