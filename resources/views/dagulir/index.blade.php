@@ -202,7 +202,11 @@
                         </td>
                         <td>
                             {{$item->pengajuan->posisi}}
-                            <p class="text-red-500">{{ $item->pengajuan->posisi != 'Selesai' || $item->pengajuan->posisi != 'Ditolak' ? '(' . $item->nama_pemroses . ')' : '' }}</p>
+                            @if ($item->pengajuan->posisi == 'Selesai' || $item->pengajuan->posisi == 'Ditolak')
+                                <p>-</p>
+                            @else
+                            <p class="text-red-500">{{ $item->nama_pemroses }}</p>
+                            @endif
                         </td>
                         <td>
                             {{ array_key_exists(intval($item->status), $status) ? $status[intval($item->status)] : 'Tidak ditemukan' }}
