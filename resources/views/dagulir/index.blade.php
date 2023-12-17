@@ -8,6 +8,7 @@
 @include('dagulir.modal.konfirmSendToPinca')
 @include('dagulir.modal.approval')
 @include('dagulir.modal.approvalSipde')
+@include('dagulir.modal.kembalikan')
 @endsection
 
 @push('script-inject')
@@ -233,12 +234,15 @@
                                                     <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
                                                         class="cursor-pointer">Review</a>
                                                 </li>
+                                                <li class="item-tb-dropdown kembalikan-modal" style="cursor: pointer;"
+                                                    data-id="{{ $item->pengajuan->id }}" data-backto="staf" >
+                                                    <a href="#">Kembalikan ke Staff</a>
+                                                </li>
                                             @endif
                                             @if ($item->pengajuan->posisi == 'Review Penyelia' && $item->pengajuan->tanggal_review_penyelia)
                                                 <li class="item-tb-dropdown">
                                                     <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown">Lanjutkan Ke Pincab</a>
                                                 </li>
-
                                             @endif
                                         @elseif ((Auth()->user()->role == 'PBO'))
                                             @if ($item->pengajuan->posisi == 'PBO' && $item->pengajuan->tanggal_review_penyelia
@@ -246,6 +250,10 @@
                                                 <li class="item-tb-dropdown">
                                                     <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
                                                         class="cursor-pointer">Review</a>
+                                                </li>
+                                                <li class="item-tb-dropdown kembalikan-modal" style="cursor: pointer;"
+                                                    data-id="{{ $item->pengajuan->id }}" data-backto="penyelia">
+                                                    <a href="#">Kembalikan ke Penyelia</a>
                                                 </li>
                                             @endif
                                             @if ($item->pengajuan->posisi == 'PBO' && $item->pengajuan->tanggal_review_pbo
@@ -261,6 +269,10 @@
                                                     <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
                                                         class="cursor-pointer">Review</a>
                                                 </li>
+                                                <li class="item-tb-dropdown kembalikan-modal" style="cursor: pointer;">
+                                                    <a href="#"
+                                                        data-id="{{ $item->pengajuan->id }}" data-backto="{{$item->pengajuan->id_pbo ? 'pbo' : 'penyelia'}}">Kembalikan ke {{$item->pengajuan->id_pbo ? 'PBO' : 'Penyelia'}}</a>
+                                                </li>
                                             @endif
                                             @if ($item->pengajuan->posisi == 'PBP' && $item->pengajuan->tanggal_review_penyelia
                                                 && ($item->pengajuan->id_pbo && $item->pengajuan->tanggal_review_pbo)
@@ -275,6 +287,10 @@
                                                     <li class="item-tb-dropdown">
                                                         <a href="{{ route('dagulir.detailjawaban_pincab', $item->pengajuan->id) }}"
                                                             class="cursor-pointer">Review</a>
+                                                    </li>
+                                                    <li class="item-tb-dropdown kembalikan-modal" style="cursor: pointer;"
+                                                        data-id="{{ $item->pengajuan->id }}" data-backto="{{$item->pengajuan->id_pbp ? 'pbp' : 'penyelia'}}">
+                                                        <a href="#">Kembalikan ke {{$item->pengajuan->id_pbp ? 'PBP' : 'Penyelia'}}</a>
                                                     </li>
                                                 @endif
                                             @endif
@@ -309,21 +325,37 @@
 
 @push('script-inject')
 <script>
-    document.getElementById('modalConfirmPincab').addEventListener('click', function () {
-        document.getElementById('confirmationModal').classList.remove('hidden');
-        document.getElementById('confirmationModal').classList.add('h-full');
-        var nama = $('#modalConfirmPincab').data('nama');
-        var namaHtml = nama.toLowerCase();
-        var idPengajuan = $('#modalConfirmPincab').data('id_pengajuan');
-        console.log(idPengajuan);
-        $('#nama_pengajuan').html(namaHtml);
-        $('[name="id_pengajuan"]').val(idPengajuan);
-    });
+    if (document.getElementById('modalConfirmPincab')) {
+        document.getElementById('modalConfirmPincab').addEventListener('click', function () {
+            document.getElementById('confirmationModal').classList.remove('hidden');
+            document.getElementById('confirmationModal').classList.add('h-full');
+            var nama = $('#modalConfirmPincab').data('nama');
+            var namaHtml = nama.toLowerCase();
+            var idPengajuan = $('#modalConfirmPincab').data('id_pengajuan');
+            console.log(idPengajuan);
+            $('#nama_pengajuan').html(namaHtml);
+            $('[name="id_pengajuan"]').val(idPengajuan);
+        });
+    }
 
-    document.getElementById('cancelAction').addEventListener('click', function () {
-        document.getElementById('confirmationModal').classList.add('hidden');
-        document.getElementById('confirmationModal').classList.remove('flex');
-    });
+    if (document.getElementById('cancelAction')) {
+        document.getElementById('cancelAction').addEventListener('click', function () {
+            document.getElementById('confirmationModal').classList.add('hidden');
+            document.getElementById('confirmationModal').classList.remove('flex');
+        });
+    }
+
+    $(document).on('click', '.kembalikan-modal', function() {
+        const id = $(this).data('id')
+        const backto = $(this).data('backto')
+
+        // Show modal
+        $('#modal-kembalikan').removeClass('hidden')
+
+        // Set form variables
+        $('#modal-kembalikan #id_pengajuan').val(id)
+        $('#modal-kembalikan #backto').val(backto)
+    })
 </script>
 @endpush
 

@@ -1774,5 +1774,54 @@ class NewDagulirController extends Controller
         return $result;
     }
 
+    public function kembalikanDataKePosisiSebelumnya(Request $request){
+        DB::beginTransaction();
+        try{
+            $dataPengajuan = PengajuanModel::find($request->id_pengajuan);
+            $alasan = $request->alasan;
+            $dari = $dataPengajuan->posisi;
+            $ke = '';
+            $backto = $request->backto;
 
+            if ($backto == 'staf') {
+                $ke = 'Proses Input Data';
+            }
+            else if ($backto == 'penyelia') {
+                $ke = 'Review Penyelia';
+            }
+            else if ($backto == 'pbo') {
+                $ke = 'PBO';
+            }
+            else if ($backto == 'pbp') {
+                $ke = 'PBP';
+            }
+
+            if ($ke != '') {
+                $dataPengajuan->posisi = $ke;
+                $dataPengajuan->save();
+    
+                AlasanPengembalianData::insert([
+                    'id_pengajuan' => $dataPengajuan->id,
+                    'id_user' => auth()->user()->id,
+                    'dari' => $dari,
+                    'ke' => $ke,
+                    'alasan' => $alasan,
+                    'created_at' => now()
+                ]);
+                DB::commit();
+
+                event(new EventMonitoring('kembalikan data pengajuan'));
+                return redirect()->back()->withStatus('Berhasil mengembalikan data ke ' . $ke . '.');
+            }
+            else{
+                return redirect()->back()->withError('Data tidak ditemukan');
+            }
+        } catch(Exception $e){
+            DB::rollBack();
+            return redirect()->back()->withError('Terjadi kesalahan. ' . $e->getMessage());
+        } catch(QueryException $e){
+            DB::rollBack();
+            return redirect()->back()->withError('Terjadi kesalahan. ' . $e->getMessage());
+        }
+    }
 }

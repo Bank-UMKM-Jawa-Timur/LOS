@@ -91,7 +91,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('pengajuan-kredit/jawaban-pengajuan/{id}', [NewDagulirController::class, "getDetailJawaban"])->name('pengajuan.detailjawaban');
 
         // Cetak PDF
-        Route::get('pengajuan-kredit/cetak-surat/{id}',[NewDagulirController::class,"getDocuments"])->name('pengajuan.cetak-pdf');
+        Route::get('pengajuan-kredit/cetak-surat/{id}',[NewDagulirController::class,"CetakPK"])->name('pengajuan.cetak-pdf');
+
+        // Kembalikan posisi
+        Route::post('/pengajuan-kredit/kembalikan-ke-posisi-sebelumnya', [NewDagulirController::class, 'kembalikanDataKePosisiSebelumnya'])->name('pengajuan-kredit.kembalikan-ke-posisi-sebelumnya');
     });
 
     // check Pincab

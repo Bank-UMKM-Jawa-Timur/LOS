@@ -20,10 +20,10 @@ class PengajuanDagulirRepository
             ->select('pengajuan_dagulir.*')
             ->where('pengajuan.id_staf', $id_user)
             ->paginate($limit);
-        }else if ($role == 'Penyelia Kredit') {
+        } else if ($role == 'Penyelia Kredit') {
             $data = PengajuanDagulir::whereHas('pengajuan', function (Builder $query) {
                         $query->where('pengajuan.id_penyelia', auth()->user()->id);
-               })
+                })
                 ->where(function($query) use ($search) {
                     $query->where('kode_pendaftaran','like', "%$search%")
                             ->orWhere('nama','like', "%$search%")
@@ -35,10 +35,10 @@ class PengajuanDagulirRepository
             ->where('pengajuan.id_penyelia', $id_user)
             ->latest()
             ->paginate($limit);
-        }else if ($role == 'Pincab') {
+        } else if ($role == 'Pincab') {
             $data = PengajuanDagulir::whereHas('pengajuan', function (Builder $query) {
                         $query->where('pengajuan.id_pincab', auth()->user()->id);
-               })
+                })
                 ->where(function($query) use ($search) {
                     $query->where('kode_pendaftaran','like', "%$search%")
                             ->orWhere('nama','like', "%$search%")
