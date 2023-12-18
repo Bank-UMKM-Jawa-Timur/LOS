@@ -17,24 +17,6 @@
     $('#page_length').on('change', function() {
         $('#form').submit()
     })
-    // $.ajax({
-    //     type: "GET",
-    //     url: "{{ route('dagulir.get-data-dagulir', ['kode_pendaftaran' => 'BK02657767c715863']) }}",
-    //     success: function (response) {
-    //         console.log(response.data);
-    //     }
-    // });
-    // Adjust pagination url
-    // var btn_pagination = $('.pagination').find('a')
-    // var page_url = window.location.href
-    // $('.pagination').find('a').each(function(i, obj) {
-    //     if (page_url.includes('page_length')) {
-    //         btn_pagination[i].href += &page_length=${$('#page_length').val()}
-    //     }
-    //     if (page_url.includes('q')) {
-    //         btn_pagination[i].href += &q=${$('#q').val()}
-    //     }
-    // })
 </script>
 @endpush
 
@@ -267,9 +249,8 @@
                         </td>
                         <td>
                             {{$item->pengajuan->posisi}}
-                            @if ($item->pengajuan->posisi == 'Selesai' || $item->pengajuan->posisi == 'Ditolak')
-                            @else
-                            <p class="text-red-500">{{ $item->nama_pemroses }}</p>
+                            @if ($item->pengajuan->posisi != 'Selesai' || $item->pengajuan->posisi != 'Ditolak')
+                                <p class="text-red-500">{{ $item->nama_pemroses }}</p>
                             @endif
                         </td>
                         <td>
@@ -304,122 +285,85 @@
 
                                             @if ($tglCetak == null || !$tglCetak->tgl_cetak_sppk)
                                                 <li class="item-tb-dropdown">
-                                                    <a href="#"
-                                                    onclick="showTindakLanjut({{ $item->pengajuan->id }},'penyelia kredit')"
-                                                    class="cursor-pointer">Tindak lanjut Review Penyelia</a>
+                                                    <a target="_blank" href="{{ route('dagulir.cetak-sppk-dagulir', $item->pengajuan->id) }}" class="dropdown-item">Cetak SPPK</a>
+                                                </li>
+                                            @elseif (!$item->pengajuan->sppk && $tglCetak->tgl_cetak_sppk)
+                                                <li class="item-tb-dropdown">
+                                                    <a href="#" class="dropdown-item show-upload-sppk" data-toggle="modal"
+                                                        data-target="uploadSPPKModal" data-id="{{ $item->pengajuan->id }}"
+                                                        data-kode_pendaftaran="{{$item->kode_pendaftaran}}">Upload File SPPK</a>
+                                                </li>
+                                            @elseif (!$tglCetak->tgl_cetak_pk && $item->pengajuan->sppk && $tglCetak->tgl_cetak_sppk )
+                                                <li class="item-tb-dropdown">
+                                                    <a target="_blank" href="{{ route('dagulir.cetak-pk-dagulir', $item->pengajuan->id) }}" class="dropdown-item">Cetak PK</a>
+                                                </li>
+                                            @elseif (!$item->pengajuan->pk && $tglCetak->tgl_cetak_pk && $item->pengajuan->sppk)
+                                                <li class="item-tb-dropdown">
+                                                    <a href="#" class="dropdown-item show-upload-pk" data-toggle="modal" data-target="uploadPKModal"
+                                                        data-id="{{ $item->pengajuan->id }}" data-kode_pendaftaran="{{$item->kode_pendaftaran}}">Upload File PK</a>
                                                 </li>
                                             @endif
-                                            @if (Auth::user()->role == 'Staf Analis Kredit' && $item->pengajuan->posisi == 'Selesai')
-                                                @php
-                                                    $tglCetak = DB::table('log_cetak_kkb')
-                                                        ->where('id_pengajuan', $item->pengajuan->id)
-                                                        ->first();
-                                                @endphp
-
-                                                @if ($tglCetak == null || !$tglCetak->tgl_cetak_sppk)
-                                                    <li class="item-tb-dropdown">
-                                                        <a target="_blank" href="{{ route('dagulir.cetak-sppk-dagulir', $item->pengajuan->id) }}" class="dropdown-item">Cetak SPPK</a>
-                                                    </li>
-                                                @elseif (!$item->pengajuan->sppk && $tglCetak->tgl_cetak_sppk)
-                                                    <li class="item-tb-dropdown">
-                                                        <a href="#" class="dropdown-item" data-toggle="modal" data-id="{{ $item->pengajuan->id }}" data-target="#uploadSPPKModal-{{ $item->pengajuan->id }}" onclick="showModalSPPK({{$item->pengajuan->id}})">Upload File SPPK</a>
-                                                    </li>
-                                                @elseif (!$tglCetak->tgl_cetak_pk && $item->pengajuan->sppk && $tglCetak->tgl_cetak_sppk )
-                                                    <li class="item-tb-dropdown">
-                                                        <a target="_blank" href="{{ route('dagulir.cetak-pk-dagulir', $item->pengajuan->id) }}" class="dropdown-item">Cetak PK</a>
-                                                    </li>
-                                                @elseif (!$item->pengajuan->pk && $tglCetak->tgl_cetak_pk && $item->pengajuan->sppk)
-                                                    <li class="item-tb-dropdown">
-                                                        <a href="#" class="dropdown-item" data-toggle="modal" data-id="{{ $item->pengajuan->id }}" data-target="#uploadPKModal-{{ $item->pengajuan->id }}" onclick="showModalPPK({{$item->pengajuan->id}})">Upload File PK</a>
-                                                    </li>
-                                                @endif
-                                                {{-- @if ($item->skema_kredit == 'KKB')
-                                                    @if ($item->sppk && $tglCetak && $tglCetak->tgl_cetak_sppk && !$tglCetak->tgl_cetak_po)
-                                                        <li class="item-tb-dropdown">
-                                                            <a target="_blank" href="{{ route('cetak-po', $item->id_pengajuan) }}" class="dropdown-item">Cetak PO</a>
-                                                        </li>
-                                                    @elseif ($item->sppk && $tglCetak && $tglCetak->tgl_cetak_po && !$item->po)
-                                                        <li class="item-tb-dropdown">
-                                                            <a href="#" class="dropdown-item" data-toggle="modal" data-id="{{ $item->id_pengajuan }}" data-target="#uploadPOModal-{{ $item->id_pengajuan }}">Upload File PO</a>
-                                                        </li>
-                                                    @endif
-
-                                                    @if ($item->po && $tglCetak && $tglCetak->tgl_cetak_po && !$tglCetak->tgl_cetak_pk)
-                                                        <li class="item-tb-dropdown">
-                                                            <a target="_blank" href="{{ route('dagulir.cetak-pk-dagulir', $item->pengajuan->id) }}" class="dropdown-item">Cetak PK</a>
-                                                        </li>
-                                                    @elseif ($item->po && $tglCetak && $tglCetak->tgl_cetak_pk && !$item->pk)
-                                                        <li class="item-tb-dropdown">
-                                                            <a href="#" class="dropdown-item" data-toggle="modal" data-id="{{ $item->pengajuan->id }}" data-target="#uploadPKModal-{{ $item->pengajuan->id }}" onclick="showModalPPK({{$item->pengajuan->id}})">Upload File PK</a>
-                                                        </li>
-                                                    @endif
-                                                @else
-
-                                                    @endif
-                                                @endif --}}
-                                            @endif
-                                            @if ((Auth()->user()->role == 'Penyelia Kredit'))
-                                                @if ($item->pengajuan->posisi == 'Review Penyelia')
-                                                    <li class="item-tb-dropdown">
-                                                        <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
-                                                            class="cursor-pointer">Review</a>
-                                                    </li>
-                                                @endif
-                                                @if ($item->pengajuan->posisi == 'Review Penyelia' && $item->pengajuan->tanggal_review_penyelia)
-                                                    <li class="item-tb-dropdown">
-                                                        <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown">Lanjutkan Ke Pincab</a>
-                                                    </li>
-
-                                                @endif
-                                            @elseif ((Auth()->user()->role == 'PBO'))
-                                                @if ($item->pengajuan->posisi == 'PBO' && $item->pengajuan->tanggal_review_penyelia
-                                                    && $item->pengajuan->id_pbo)
-                                                    <li class="item-tb-dropdown">
-                                                        <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
-                                                            class="cursor-pointer">Review</a>
-                                                    </li>
-                                                @endif
-                                                @if ($item->pengajuan->posisi == 'PBO' && $item->pengajuan->tanggal_review_pbo
-                                                    && $item->pengajuan->id_pbo)
-                                                    <li class="item-tb-dropdown">
-                                                        <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown">Lanjutkan Ke Pincab</a>
-                                                    </li>
-                                                @endif
-                                            @elseif ((Auth()->user()->role == 'PBP'))
-                                                @if ($item->pengajuan->posisi == 'PBP' && $item->pengajuan->tanggal_review_pbp
-                                                    && $item->pengajuan->id_pbp)
-                                                    <li class="item-tb-dropdown">
-                                                        <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
-                                                            class="cursor-pointer">Review</a>
-                                                    </li>
-                                                @endif
-                                                @if ($item->pengajuan->posisi == 'PBP' && $item->pengajuan->tanggal_review_penyelia
-                                                    && ($item->pengajuan->id_pbo && $item->pengajuan->tanggal_review_pbo)
-                                                    && ($item->pengajuan->id_pbp && $item->pengajuan->tanggal_review_pbp))
-                                                    <li class="item-tb-dropdown">
-                                                        <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown">Lanjutkan Ke Pincab</a>
-                                                    </li>
-                                                @endif
-                                            @elseif ((Auth()->user()->role == 'Pincab'))
-                                                @if ($item->pengajuan->posisi != 'Ditolak' &&  $item->pengajuan->posisi != 'Selesai')
-                                                    @if ($item->pengajuan->id_pincab)
-                                                        <li class="item-tb-dropdown">
-                                                            <a href="{{ route('dagulir.detailjawaban_pincab', $item->pengajuan->id) }}"
-                                                                class="cursor-pointer">Review</a>
-                                                        </li>
-                                                    @endif
-                                                @endif
-                                            @else
-                                            @endif
-                                            <li class="item-tb-dropdown">
-                                                <a href="{{ route('dagulir.cetak-surat', $item->pengajuan->id) }}"
-                                                    class="cursor-pointer">Cetak</a>
-                                            </li>
                                         @endif
-                                        </ul>
-                                    </div>
+                                        @if ((Auth()->user()->role == 'Penyelia Kredit'))
+                                            @if ($item->pengajuan->posisi == 'Review Penyelia')
+                                                <li class="item-tb-dropdown">
+                                                    <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
+                                                        class="cursor-pointer">Review</a>
+                                                </li>
+                                            @endif
+                                            @if ($item->pengajuan->posisi == 'Review Penyelia' && $item->pengajuan->tanggal_review_penyelia)
+                                                <li class="item-tb-dropdown">
+                                                    <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown">Lanjutkan Ke Pincab</a>
+                                                </li>
+                                            @endif
+                                        @elseif ((Auth()->user()->role == 'PBO'))
+                                            @if ($item->pengajuan->posisi == 'PBO' && $item->pengajuan->tanggal_review_penyelia
+                                                && $item->pengajuan->id_pbo)
+                                                <li class="item-tb-dropdown">
+                                                    <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
+                                                        class="cursor-pointer">Review</a>
+                                                </li>
+                                            @endif
+                                            @if ($item->pengajuan->posisi == 'PBO' && $item->pengajuan->tanggal_review_pbo
+                                                && $item->pengajuan->id_pbo)
+                                                <li class="item-tb-dropdown">
+                                                    <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown">Lanjutkan Ke Pincab</a>
+                                                </li>
+                                            @endif
+                                        @elseif ((Auth()->user()->role == 'PBP'))
+                                            @if ($item->pengajuan->posisi == 'PBP' && $item->pengajuan->tanggal_review_pbp
+                                                && $item->pengajuan->id_pbp)
+                                                <li class="item-tb-dropdown">
+                                                    <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
+                                                        class="cursor-pointer">Review</a>
+                                                </li>
+                                            @endif
+                                            @if ($item->pengajuan->posisi == 'PBP' && $item->pengajuan->tanggal_review_penyelia
+                                                && ($item->pengajuan->id_pbo && $item->pengajuan->tanggal_review_pbo)
+                                                && ($item->pengajuan->id_pbp && $item->pengajuan->tanggal_review_pbp))
+                                                <li class="item-tb-dropdown">
+                                                    <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown">Lanjutkan Ke Pincab</a>
+                                                </li>
+                                            @endif
+                                        @elseif ((Auth()->user()->role == 'Pincab'))
+                                            @if ($item->pengajuan->posisi != 'Ditolak' &&  $item->pengajuan->posisi != 'Selesai')
+                                                @if ($item->pengajuan->id_pincab)
+                                                    <li class="item-tb-dropdown">
+                                                        <a href="{{ route('dagulir.detailjawaban_pincab', $item->pengajuan->id) }}"
+                                                            class="cursor-pointer">Review</a>
+                                                    </li>
+                                                @endif
+                                            @endif
+                                        @else
+                                        <li class="item-tb-dropdown">
+                                            <a href="{{ route('dagulir.cetak-surat', $item->pengajuan->id) }}"
+                                                class="cursor-pointer">Cetak</a>
+                                        </li>
+                                        @endif
+                                    </ul>
                                 </div>
-                            </td>
+                            </div>
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -443,29 +387,53 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
-    document.getElementById('modalConfirmPincab').addEventListener('click', function () {
-        document.getElementById('confirmationModal').classList.remove('hidden');
-        document.getElementById('confirmationModal').classList.add('h-full');
-        var nama = $('#modalConfirmPincab').data('nama');
-        var namaHtml = nama.toLowerCase();
-        var idPengajuan = $('#modalConfirmPincab').data('id_pengajuan');
-        console.log(idPengajuan);
-        $('#nama_pengajuan').html(namaHtml);
-        $('[name="id_pengajuan"]').val(idPengajuan);
-    });
-
-    document.getElementById('cancelAction').addEventListener('click', function () {
-        document.getElementById('confirmationModal').classList.add('hidden');
-        document.getElementById('confirmationModal').classList.remove('flex');
-    });
-
-    // cetak file
-    function showModalSPPK(id){
-        $('#uploadSPPKModal-' + id).removeClass('hidden');
+    if (document.getElementById('modalConfirmPincab')) {
+        document.getElementById('modalConfirmPincab').addEventListener('click', function () {
+            document.getElementById('confirmationModal').classList.remove('hidden');
+            document.getElementById('confirmationModal').classList.add('h-full');
+            var nama = $('#modalConfirmPincab').data('nama');
+            var namaHtml = nama.toLowerCase();
+            var idPengajuan = $('#modalConfirmPincab').data('id_pengajuan');
+            console.log(idPengajuan);
+            $('#nama_pengajuan').html(namaHtml);
+            $('[name="id_pengajuan"]').val(idPengajuan);
+        });
     }
-    function showModalPPK(id){
-        $('#uploadPPKModal-' + id).removeClass('hidden');
+
+    if (document.getElementById('cancelAction')) {
+        document.getElementById('cancelAction').addEventListener('click', function () {
+            document.getElementById('confirmationModal').classList.add('hidden');
+            document.getElementById('confirmationModal').classList.remove('flex');
+        });
     }
+
+    $('.show-upload-sppk').on('click', function() {
+        const target = $(this).data('target')
+        const id = $(this).data('id')
+        const url_form = "{{url('/dagulir/post-file')}}/"+id
+        const url_cetak = "{{url('/dagulir/cetak-sppk')}}/"+id
+        var token = generateCsrfToken()
+
+        $(`#${target} #form-sppk`).attr('action', url_form)
+        $(`#${target} #token`).val(token)
+        $(`#${target} #btn-cetak-file`).attr('href', url_cetak)
+        $(`#${target}`).removeClass('hidden');
+    })
+
+    $('.show-upload-pk').on('click', function() {
+        const target = $(this).data('target')
+        const id = $(this).data('id')
+        const kode_pendaftaran = $(this).data('kode_pendaftaran')
+        const url_form = "{{url('/dagulir/post-file')}}/"+id
+        const url_cetak = "{{url('/dagulir/cetak-pk')}}/"+id
+        var token = generateCsrfToken()
+
+        $(`#${target} #form-pk`).attr('action', url_form)
+        $(`#${target} #token`).val(token)
+        $(`#${target} #btn-cetak-file`).attr('href', url_cetak)
+        $(`#${target} #kode_pendaftaran`).val(kode_pendaftaran)
+        $(`#${target}`).removeClass('hidden');
+    })
 </script>
 @endpush
 

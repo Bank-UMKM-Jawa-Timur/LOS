@@ -167,10 +167,12 @@
         @if ($dataNasabah->status_pernikahan == '2')
             <div class="field-review">
                 <div class="field-name">
-                    <label for="">Foto KTP Pasangan</label>
+                    <label for="">Foto Pasangan</label>
                 </div>
                 <div class="field-answer">
-                    <img src="{{ $dataNasabah->foto_pasangan != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataNasabah->id.'/'.$dataNasabah->foto_pasangan : asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
+                    <a href="{{ $dataNasabah->foto_pasangan != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataNasabah->id.'/'.$dataNasabah->foto_pasangan : asset('img/no-image.png') }}" data-lightbox="{{ $dataUmum->id }}" data-title="Foto Pasangan : {{ $dataNasabah->nama }}">
+                        <img src="{{ $dataNasabah->foto_pasangan != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataNasabah->id.'/'.$dataNasabah->foto_pasangan : asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
+                    </a>
                 </div>
             </div>
         @endif
@@ -179,7 +181,9 @@
                 <label for="">Foto Nasabah</label>
             </div>
             <div class="field-answer">
-                <img src="{{ $dataNasabah->foto_nasabah != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataNasabah->id.'/'.$dataNasabah->foto_nasabah : asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
+                <a href="{{ $dataNasabah->foto_nasabah != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataNasabah->id.'/'.$dataNasabah->foto_nasabah : asset('img/no-image.png') }}" data-lightbox="{{ $dataUmum->id }}" data-title="Foto Nasabah : {{ $dataNasabah->nama }}">
+                    <img src="{{ $dataNasabah->foto_nasabah != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataNasabah->id.'/'.$dataNasabah->foto_nasabah : asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
+                </a>
             </div>
             {{-- <div class="field-answer">
                 @if($dataNasabah->foto_nasabah)
@@ -194,7 +198,9 @@
                 <label for="">Foto KTP Nasabah</label>
             </div>
             <div class="field-answer">
-                <img src="{{ $dataNasabah->foto_ktp_nasabah != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataNasabah->id.'/'.$dataNasabah->foto_ktp_nasabah : asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
+                <a href="{{ $dataNasabah->foto_ktp != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataNasabah->id.'/'.$dataNasabah->foto_ktp : asset('img/no-image.png') }}" data-lightbox="{{ $dataNasabah->id }}" data-title="Foto KTP Nasabah : {{ $dataNasabah->nama }}">
+                    <img src="{{ $dataNasabah->foto_ktp != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataNasabah->id.'/'.$dataNasabah->foto_ktp : asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
+                </a>
             </div>
         </div>
     </div>
@@ -246,25 +252,67 @@
             </div>
         </div>
     </div>
-    <div class="form-group-2">
+    <div class="form-group-1">
         <div class="field-review">
             <div class="field-name">
-                <label for="">Slik</label>
+                <label for="">{{ $itemSlik?->nama  }}</label>
             </div>
             <div class="field-answer">
-                <span>{{ $dataNasabah->id_slik ? $dataNasabah->id_slik : '-' }}</span>
+                {{-- <p>{{ $dataNasabah->id_slik ? $dataNasabah->id_slik : '-' }}</p> --}}
+                <p> {{ $itemSlik?->option }}</p>
             </div>
         </div>
         <div class="field-review">
         </div>
-        <div class="field-review">
+    </div>
+    <div class="form-group-1">
+        @php
+        // check level 2
+        $dataLS = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+            ->where('level', 2)
+            ->where('id_parent', $itemSP->id)
+            ->where('nama', 'Laporan SLIK')
+            ->get();
+        @endphp
+        @foreach ($dataLS as $item)
+            @if ($item->opsi_jawaban == 'file')
+                @php
+                    $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
+                        ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                        ->where('jawaban_text.id_pengajuan', $dataUmum->id)
+                        ->where('jawaban_text.id_jawaban', $item->id)
+                        ->get();
+                @endphp
+                @foreach ($dataDetailJawabanText as $itemTextDua)
+                    @php
+                        $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                    @endphp
+                    <div class="field-review">
+                        <div class="field-name">
+                            <label for="">{{ $item->nama }}</label>
+                        </div>
+                        <div class="field-answer">
+                            @if ($file_parts['extension'] == 'pdf')
+                                <iframe
+                                    src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                    width="100%" height="800px"></iframe>
+                            @else
+                                <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                    alt="" width="800px">
+                            @endif
+                        </div>
+                    </div>
+                @endforeach
+            @endif
+        @endforeach
+        {{-- <div class="field-review">
             <div class="field-name">
                 <label for="">File Slik</label>
             </div>
             <div class="field-answer">
                 <p>Tidak ada file Slik</p>
             </div>
-        </div>
+        </div> --}}
     </div>
     {{-- Data Usaha --}}
     <div class="form-group-1 col-span-2 pl-0">
@@ -323,7 +371,6 @@
         @if ($dataNasabah->tipe == "2")
             <div class="field-review">
                 <div class="field-name">
-                    {{-- <label for="">{{$nama_pj}}</label> --}}
                     <label for="">Nama Pj</label>
                 </div>
                 <div class="field-answer">

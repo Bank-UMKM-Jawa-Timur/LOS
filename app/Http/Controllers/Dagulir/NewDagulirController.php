@@ -610,7 +610,7 @@ class NewDagulirController extends Controller
                 return redirect()->route('dagulir.pengajuan.index');
             }
             else {
-                alert()->error('error','Pengajuan ditolak.');
+                alert()->error('Terjadi Kesalahan', 'Pengajuan ditolak.');
                 return redirect()->route('dagulir.pengajuan.index');
             }
         } catch (Exception $e) {
@@ -1003,7 +1003,7 @@ class NewDagulirController extends Controller
 
             return view('dagulir.pengajuan-kredit.detail-pengajuan-jawaban', $param);
         } else {
-            Alert::error('error', 'Tidak memiliki hak akses');
+            alert()->error('Terjadi Kesalahan', 'Tidak memiliki hak akses');
             return redirect()->back()->withError('Tidak memiliki hak akses.');
         }
     }
@@ -1302,29 +1302,6 @@ class NewDagulirController extends Controller
                                     'updated_at' => date('Y-m-d H:i:s'),
                                 ]);
 
-                                if ($status == 5) {
-                                    // Realisasi (Upload dokumen)
-                                    $upload = $this->syaratDokumen($kode_pendaftaran);
-                                    if (!is_array($upload)) {
-                                        if ($upload == 200) {
-                                            // Update to SELESAI
-                                            $status = 6;
-                                            $update_selesai = $this->updateStatus($kode_pendaftaran, $status);
-                                            if (!is_array($update_selesai)) {
-                                                if ($update_selesai == 200) {
-                                                    return 200;
-                                                }
-                                            }
-                                            else {
-                                                return $update_selesai;
-                                            }
-                                        }
-                                    }
-                                    else {
-                                        return $upload;
-                                    }
-                                }
-
                                 DB::commit();
                                 return $response['status_code'];
                             }
@@ -1363,39 +1340,50 @@ class NewDagulirController extends Controller
             $dagulir_id = $pengajuan->dagulir_id;
             // Foto nasabah
             $filename = $pengajuan->dagulir->foto_nasabah;
-            $foto_nasabah = public_path("upload/$dagulir_id/$filename");
-            $foto_nasabah_ext = explode('.', $filename)[1];
-            $foto_nasabah_base64 = "data:@image/$foto_nasabah_ext;base64,".base64_encode(file_get_contents($foto_nasabah));
+            $foto_nasabah = public_path("upload/$id_pengajuan/$dagulir_id/$filename");
+            if (file_exists($foto_nasabah)) {
+                $foto_nasabah_ext = explode('.', $filename)[1];
+                $foto_nasabah_base64 = "data:@image/$foto_nasabah_ext;base64,".base64_encode(file_get_contents($foto_nasabah));
+            }
+
+            // Foto usaha
+            $jawaban_usaha = JawabanTextModel::select('id', 'id_jawaban AS item_id', 'opsi_text AS file')
+                                        ->where('id_pengajuan', $pengajuan->id)
+                                        ->where('id_jawaban', 154) // Foto usaha item id
+                                        ->orderBy('id')
+                                        ->first();
+            $foto_usaha_base64 = null;
+            if ($jawaban_usaha) {
+                $item_id = $jawaban_usaha->item_id;
+                $filename = $jawaban_usaha->file;
+                $foto_usaha = public_path("upload/$id_pengajuan/$item_id/$filename");
+                if (file_exists($foto_usaha)) {
+                    $foto_usaha_ext = explode('.', $filename)[1];
+                    $foto_usaha_base64 = "data:@image/$foto_usaha_ext;base64,".base64_encode(file_get_contents($foto_usaha));
+                }
+            }
 
             // Foto agunan
-            $jawaban = JawabanTextModel::select('id', 'id_jawaban AS item_id', 'opsi_text AS file')
+            $jawaban_agunan = JawabanTextModel::select('id', 'id_jawaban AS item_id', 'opsi_text AS file')
                                         ->where('id_pengajuan', $pengajuan->id)
-                                        ->where('id_jawaban', 148) // Foto usaha item id
+                                        ->where('id_jawaban', 148) // Foto agunan item id
                                         ->orderBy('id')
                                         ->first();
             $foto_agunan_base64 = null;
-            if ($jawaban) {
-                $item_id = $jawaban->item_id;
-                $filename = $jawaban->file;
+            if ($jawaban_agunan) {
+                $item_id = $jawaban_agunan->item_id;
+                $filename = $jawaban_agunan->file;
                 $foto_agunan = public_path("upload/$id_pengajuan/$item_id/$filename");
-                $foto_agunan_ext = explode('.', $filename)[1];
-                $foto_agunan_base64 = "data:@image/$foto_agunan_ext;base64,".base64_encode(file_get_contents($foto_agunan));
-            }
-
-            // PK
-            $pk_base64 = null;
-            if ($pengajuan) {
-                $filename = $pengajuan->pk;
-                $pk = public_path("upload/$id_pengajuan/pk/$filename");
-                $pk_ext = explode('.', $filename)[1];
-                $pk_base64 = "data:@image/$pk_ext;base64,".base64_encode(file_get_contents($pk));
+                if (file_exists($foto_agunan)) {
+                    $foto_agunan_ext = explode('.', $filename)[1];
+                    $foto_agunan_base64 = "data:@image/$foto_agunan_ext;base64,".base64_encode(file_get_contents($foto_agunan));
+                }
             }
 
             $result = [
                 'foto_nasabah' => $foto_nasabah_base64,
                 'foto_tempat_usaha' => $foto_usaha_base64,
                 'foto_agunan' => $foto_agunan_base64,
-                'akad_kredit' => $pk_base64,
             ];
             return $result;
         } catch (\Exception $e) {
@@ -1407,60 +1395,76 @@ class NewDagulirController extends Controller
         }
     }
 
-    public function syaratDokumen($kode_pendaftaran) {
-        $dagulir = PengajuanDagulir::select('id')
-                                    ->with([
-                                        'pengajuan' => function($query) {
-                                            $query->select('id');
-                                        }
-                                    ])
-                                    ->where('kode_pendaftaran', $kode_pendaftaran)
+    public function syaratDokumen($kode_pendaftaran, $file_pk_base64) {
+        $dagulir = PengajuanDagulir::select('pengajuan_dagulir.id', 'p.id AS pengajuan_id')
+                                    ->join('pengajuan AS p', 'p.dagulir_id', 'pengajuan_dagulir.id')
+                                    ->where('pengajuan_dagulir.kode_pendaftaran', $kode_pendaftaran)
                                     ->first();
         if ($dagulir) {
             // Get foto
-            $filesArr = $this->getDocuments($dagulir->pengajuan->id);
-            $data = sipde_token();
-            $body = [
-                "kode_pendaftaran" => $kode_pendaftaran,
-                "foto_nasabah" => $filesArr['foto_nasabah'],
-                "foto_tempat_usaha" => $filesArr['foto_tempat_usaha'],
-                "foto_agunan" => $filesArr['foto_agunan'],
-                "akad_kredit" => $filesArr['akad_kredit'], // PK
-            ];
-            if (!empty($body)) {
-                $host = config('dagulir.host');
-                try {
-                    $upload_syarat = Http::withHeaders([
-                        'Authorization' => 'Bearer ' .$data['token'],
-                    ])->post($host.'/syarat_dokumen.json', $body)->json();
-
-                    if ($upload_syarat) {
-                        if (array_key_exists('data', $upload_syarat)) {
-                            $response = $upload_syarat['data'];
-                            // Check status code
-                            if (array_key_exists('status_code', $response)) {
-                                if ($response['status_code'] == 200) {
-                                    // Update status
-                                    return $response['status_code'];
-                                }
-                                else {
-                                    return array_key_exists('message', $response) ? $response['message'] : 'failed';
-                                }
-                            }
-                            return $response;
-                        }
-                        return $upload_syarat;
-                    }
-                    else {
-                        return $upload_syarat;
-                    }
-                } catch (\Exception $e) {
-                    DB::rollBack();
-                    return $e->getMessage();
-                }
+            $filesArr = $this->getDocuments($dagulir->pengajuan_id);
+            if (array_key_exists('message', $filesArr)) {
+                // Failed to get documents
+                return $filesArr['message'];
             }
             else {
-                return 'empty body';
+                if (!$filesArr['foto_nasabah']) {
+                    return 'Foto nasabah tidak ditemukan';
+                }
+                else if (!$filesArr['foto_tempat_usaha']) {
+                    return 'Foto tempat usaha tidak ditemukan';
+                }
+                else if (!$filesArr['foto_agunan']) {
+                    return 'Foto agunan tidak ditemukan';
+                }
+                else {
+                    $data = sipde_token();
+                    $body = [
+                        "kode_pendaftaran" => $kode_pendaftaran,
+                        "foto_nasabah" => $filesArr['foto_nasabah'],
+                        "foto_tempat_usaha" => $filesArr['foto_tempat_usaha'],
+                        "foto_agunan" => $filesArr['foto_agunan'],
+                        "akad_kredit" => $file_pk_base64, // PK
+                    ];
+                    if (!empty($body)) {
+                        $host = config('dagulir.host');
+                        try {
+                            $upload_syarat = Http::withHeaders([
+                                'Authorization' => 'Bearer ' .$data['token'],
+                            ])->post($host.'/syarat_dokumen.json', $body)->json();
+
+                            if ($upload_syarat) {
+                                if (array_key_exists('data', $upload_syarat)) {
+                                    $response = $upload_syarat['data'];
+                                    // Check status code
+                                    if (array_key_exists('status_code', $response)) {
+                                        if ($response['status_code'] == 200) {
+                                            // Update status
+                                            return $response['status_code'];
+                                        }
+                                        else {
+                                            return array_key_exists('message', $response) ? $response['message'] : 'failed';
+                                        }
+                                    }
+                                    return $response;
+                                }
+                                if (array_key_exists('error', $upload_syarat)) {
+                                    return 'API Error: '.$upload_syarat['error'];
+                                }
+                                return $upload_syarat;
+                            }
+                            else {
+                                return $upload_syarat;
+                            }
+                        } catch (\Exception $e) {
+                            DB::rollBack();
+                            return $e->getMessage();
+                        }
+                    }
+                    else {
+                        return 'empty body';
+                    }
+                }
             }
         }
         else {
@@ -1814,8 +1818,8 @@ class NewDagulirController extends Controller
         $param['dataPincab'] = User::where('id', $kodePincab)->get();
         $param['dataPenyelia'] = User::where('id', $kodePenyelia)->get();
 
-        $indexBulan = intval(date('m', strtotime($param['tglCetak']->tgl_cetak_sppk))) - 1;
-        $param['tgl'] = date('d', strtotime($param['tglCetak']->tgl_cetak_sppk)) . ' ' . $this->bulan[$indexBulan] . ' ' . date('Y', strtotime($param['tglCetak']->tgl_cetak_sppk));
+        $indexBulan = intval(date('m', strtotime($param['tglCetak']->tgl_cetak_pk))) - 1;
+        $param['tgl'] = date('d', strtotime($param['tglCetak']->tgl_cetak_pk)) . ' ' . $this->bulan[$indexBulan] . ' ' . date('Y', strtotime($param['tglCetak']->tgl_cetak_pk));
 
         $param['installment'] = DB::table('jawaban_text')
         ->where('id_pengajuan', $id)
@@ -1889,19 +1893,13 @@ class NewDagulirController extends Controller
 
     public function postFileDagulir(Request $request, $id)
     {
-        // return $request;
-        $kode_cabang = DB::table('cabang')
-        ->join('pengajuan', 'pengajuan.id_cabang', 'cabang.id')
-        ->where('pengajuan.id', $id)
-            ->select('kode_cabang')
-            ->first();
-
+        DB::beginTransaction();
         try {
             $message = null;
             switch ($request->tipe_file) {
-                    // File SPPK Handler
+                // File SPPK Handler
                 case 'SPPK':
-                    $message = 'file SPPK.';
+                    $message = 'File SPPK berhasil diupload';
                     $folderSPPK = public_path() . '/upload/' . $id . '/sppk/';
                     $fileSPPK = $request->sppk;
                     $filenameSPPK = date('YmdHis') . '.' . $fileSPPK->getClientOriginalExtension();
@@ -1911,47 +1909,94 @@ class NewDagulirController extends Controller
                     }
                     $fileSPPK->move($folderSPPK, $filenameSPPK);
                     DB::table('pengajuan')
-                    ->where('id', $id)
+                        ->where('id', $id)
                         ->update([
                             'sppk' => $filenameSPPK
                         ]);
+                    DB::commit();
+                    Alert::success('success', $message);
+                    return redirect()->route('dagulir.pengajuan.index');
                     break;
                     // File PK Handler
                 case 'PK':
-                    $message = 'file PK.';
-                    $count = DB::table('log_cetak_kkb')
-                    ->where('id_pengajuan', $id)
-                    ->update([
-                        'no_pk' => $request->get('no_pk')
-                    ]);
+                    $message = 'File PK berhasil diupload';
                     $kode_pendaftaran = $request->get('kode_pendaftaran');
                     $folderPK = public_path() . '/upload/' . $id . '/pk/';
                     $filePK = $request->pk;
                     $filenamePK = date('YmdHis') . '.' . $filePK->getClientOriginalExtension();
+                    $mime = $filePK->getClientMimeType();
+                    $file_pk_base64 = "data:$mime;base64,".base64_encode(file_get_contents($filePK));
                     $pathPK = realpath($folderPK);
                     if (!($pathPK !== true and is_dir($pathPK))) {
                         mkdir($folderPK, 0755, true);
                     }
                     $filePK->move($folderPK, $filenamePK);
+                    DB::table('log_cetak_kkb')
+                    ->where('id_pengajuan', $id)
+                    ->update([
+                        'no_pk' => $request->get('no_pk'),
+                        'no_loan' => $request->get('no_loan'),
+                    ]);
                     DB::table('pengajuan')
                     ->where('id', $id)
                         ->update([
                             'pk' => $filenamePK,
                     ]);
-                    $this->updateStatus($kode_pendaftaran, 5);
+                    $realisasi = $this->updateStatus($kode_pendaftaran, 5);
+
+                    if (is_array($realisasi)) {
+                        DB::rollBack();
+                        alert()->error('Terjadi Kesalahan', json_encode($realisasi));
+                        return redirect()->back();
+                    }
+                    else {
+                        if ($realisasi == 200) {
+                            // Realisasi (Upload dokumen)
+                            $upload = $this->syaratDokumen($kode_pendaftaran, $file_pk_base64);
+                            if (!is_array($upload)) {
+                                if ($upload == 200) {
+                                    // Update to SELESAI
+                                    $update_selesai = $this->updateStatus($kode_pendaftaran, 6);
+                                    if (!is_array($update_selesai)) {
+                                        if ($update_selesai == 200) {
+                                            DB::commit();
+                                            Alert::success('success', $message);
+                                            return redirect()->route('dagulir.pengajuan.index');
+                                        }
+                                    }
+                                    else {
+                                        DB::rollBack();
+                                        alert()->error('Terjadi Kesalahan', $update_selesai);
+                                        return redirect()->back();
+                                    }
+                                }
+                                else {
+                                    DB::rollBack();
+                                    alert()->error('Terjadi Kesalahan', $upload);
+                                    return redirect()->back();
+                                }
+                            }
+                            else {
+                                DB::rollBack();
+                                alert()->error('Terjadi Kesalahan', $upload);
+                                return redirect()->back();
+                            }
+                        }
+                        else {
+                            DB::rollBack();
+                            alert()->error('Terjadi Kesalahan', $realisasi);
+                            return redirect()->back();
+                        }
+                    }
                     break;
             }
-
-            DB::commit();
-            Alert::success('success', $message);
-            return redirect()->route('dagulir.pengajuan.index');
         } catch (Exception $e) {
             DB::rollBack();
-            Alert::error('Terjadi Kesalahan', $e->getMessage());
+            alert()->error('Terjadi Kesalahan', $e->getMessage());
             return redirect()->route('dagulir.pengajuan.index');
         } catch (QueryException $e) {
             DB::rollBack();
-            Alert::error('Terjadi Kesalahan', $e->getMessage());
+            alert()->error('Terjadi Kesalahan', $e->getMessage());
             return redirect()->route('dagulir.pengajuan.index');
         }
     }

@@ -15,6 +15,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('plugins/owl-carousel/owl.carousel.css') }}" rel="stylesheet">
     <link href="{{ asset('plugins/owl-carousel/owl.theme.default.css') }}" rel="stylesheet">
+    <link href="{{ asset('plugins/lightbox/css/lightbox.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/0.5.7/perfect-scrollbar.min.css">
 </head>
 <body class="bg-theme-body font-poppins" id="app">
@@ -43,12 +44,23 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/0.5.7/perfect-scrollbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-    <script src="{{ asset('plugins/') }}"></script>
+    <script src="{{ asset('plugins/lightbox/js/lightbox.js') }}"></script>
     <script src="{{ asset('plugins/owl-carousel/owl.carousel.js') }}"></script>
     <script src="{{ asset('plugins/owl-carousel/owl.carousel.min.js') }}"></script>
 
     {{-- app.js is custom global js --}}
     <script src="{{ asset('js/app.js') }}"></script>
     {{-- inject javascript from view  --}}
+    <script>
+        function generateCsrfToken() {
+            var token = "{{csrf_token()}}"
+            if (token == '') {
+                generateCsrfToken();
+            }
+            else {
+                return token;
+            }
+        }
+    </script>
     @stack('script-inject')
 </html>
