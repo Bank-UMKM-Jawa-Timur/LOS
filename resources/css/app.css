@@ -302,7 +302,9 @@
     .review-pincab .field-review .field-answer .field-skor {
         @apply px-4 py-2 rounded bg-theme-primary/5 border font-semibold border-theme-primary text-theme-primary;
     }
-
+    input[disabled]{
+        @apply bg-gray-100;
+    }
     .scrollbar {
         @apply h-[40px] overflow-hidden;
     }

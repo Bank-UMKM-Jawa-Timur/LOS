@@ -38,6 +38,7 @@
                 return $json->data->nama_karyawan;
         }
     }
+
 @endphp
 @section('content')
 <section class="">
@@ -192,17 +193,6 @@
                                                 <p>{{ $dataUmumNasabah->nik_pasangan ? $dataUmumNasabah->nik_pasangan : '-' }}</p>
                                             </div>
                                         </div>
-                                        <div class="field-review">
-                                            <div class="field-name">
-                                                <label for="">Foto Pasangan</label>
-                                            </div>
-                                            <div class="field-answer">
-                                                <a href="{{ $dataUmumNasabah->foto_pasangan != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataUmumNasabah->id.'/'.$dataUmumNasabah->foto_pasangan : asset('img/no-image.png') }}" data-lightbox="{{ $dataUmum->id }}" data-title="Foto Pasangan : {{ $dataUmumNasabah->nama }}">
-                                                    <img src="{{ $dataUmumNasabah->foto_pasangan != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataUmumNasabah->id.'/'.$dataUmumNasabah->foto_pasangan : asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
-                                                </a>
-                                            </div>
-
-                                        </div>
                                     @endif
                                 </div>
                                 <div class="form-group-2">
@@ -227,6 +217,21 @@
                                             </a>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="form-group-2">
+                                    @if ($dataUmumNasabah->status_pernikahan == '2')
+                                        <div class="field-review">
+                                            <div class="field-name">
+                                                <label for="">Foto Pasangan</label>
+                                            </div>
+                                            <div class="field-answer">
+                                                <a href="{{ $dataUmumNasabah->foto_pasangan != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataUmumNasabah->id.'/'.$dataUmumNasabah->foto_pasangan : asset('img/no-image.png') }}" data-lightbox="{{ $dataUmum->id }}" data-title="Foto Pasangan : {{ $dataUmumNasabah->nama }}">
+                                                    <img src="{{ $dataUmumNasabah->foto_pasangan != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataUmumNasabah->id.'/'.$dataUmumNasabah->foto_pasangan : asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
+                                                </a>
+                                            </div>
+
+                                        </div>
+                                    @endif
                                 </div>
 
                                 {{-- Domisili --}}
@@ -267,7 +272,7 @@
                                 </div>
 
                                 {{-- Data Slik --}}
-                                <div class="form-group-1 pl-2">
+                                <div class="form-group-1">
                                     <div>
                                         <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
                                             <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
@@ -280,7 +285,7 @@
                                             <label for="">{{ $itemSlik?->nama }}</label>
                                         </div>
                                         <div class="field-answer">
-                                            {{ $itemSlik?->option }}
+                                            <p>{{ $itemSlik?->option }}</p>
                                         </div>
                                     </div>
 
@@ -419,15 +424,15 @@
                                             <label for="">Plafon</label>
                                         </div>
                                         <div class="field-answer">
-                                            <p>{{ 'Rp. ' . number_format($dataUmumNasabah->nominal ? $dataUmumNasabah->nominal : 0, 2, ',', '.') }}</p>
+                                            <p>{{ 'Rp. ' . number_format($dataUmumNasabah->nominal ? $dataUmumNasabah->nominal : 0, 0, ',', '.') }}</p>
                                         </div>
                                     </div>
                                     <div class="field-review">
                                         <div class="field-name">
-                                            <label for="">Jangka Waktu</label>
+                                            <label for="">Tenor</label>
                                         </div>
                                         <div class="field-answer">
-                                            <p>{{ $dataUmumNasabah->jangka_waktu ? $dataUmumNasabah->jangka_waktu : '-' }}</p>
+                                            <p>{{ $dataUmumNasabah->jangka_waktu ? $dataUmumNasabah->jangka_waktu : '-' }} Bulan</p>
                                         </div>
                                     </div>
                                     <div class="field-review">
@@ -446,14 +451,56 @@
                                             <p>{{ $dataUmumNasabah->ket_agunan ? $dataUmumNasabah->ket_agunan : '-' }}</p>
                                         </div>
                                     </div>
+                                    @php
+                                        $tipe = "";
+                                        $nama_pj = "";
+                                        if ($dataUmumNasabah->tipe == 2) {
+                                            $tipe = "Perorangan";
+                                        } else if ($dataUmumNasabah->tipe == 3) {
+                                            $tipe = "Badan Usaha";
+                                            $nama_pj = "Nama penanggung jawab";
+                                        } else if ($dataUmumNasabah->tipe == 4){
+                                            $tipe = "Kelompok Usaha";
+                                            $nama_pj = "Nama ketua";
+                                        } else {
+                                            $tipe = "-";
+                                            $nama_pj = "-";
+                                        }
+                                    @endphp
                                     <div class="field-review">
                                         <div class="field-name">
                                             <label for="">Tipe Pengajuan</label>
                                         </div>
                                         <div class="field-answer">
-                                            <p>{{ $dataUmumNasabah->tipe ? $dataUmumNasabah->tipe : '-' }}</p>
+                                            <p>{{ $dataUmumNasabah->tipe ? $tipe : '-' }}</p>
                                         </div>
                                     </div>
+                                    @if ($dataUmumNasabah->tipe != 2)
+                                        <div class="field-review">
+                                            <div class="field-name">
+                                                <label for="">{{ $nama_pj }}</label>
+                                            </div>
+                                            <div class="field-answer">
+                                                <p>{{$dataUmumNasabah->nama_pj_ketua ? $dataUmumNasabah->nama_pj_ketua : '-'}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="field-review">
+                                            <div class="field-name">
+                                                <label for="">Tempat Berdiri</label>
+                                            </div>
+                                            <div class="field-answer">
+                                                <p>{{$dataUmumNasabah->tempat_berdiri ? $dataUmumNasabah->tempat_berdiri : '-'}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="field-review">
+                                            <div class="field-name">
+                                                <label for="">Tanggal Berdiri</label>
+                                            </div>
+                                            <div class="field-answer">
+                                                <p>{{$dataUmumNasabah->tanggal_berdiri ? $dataUmumNasabah->tanggal_berdiri : '-'}}</p>
+                                            </div>
+                                        </div>
+                                    @endif
                                     <div class="field-review">
                                         <div class="field-name">
                                             <label for="">Jenis Badan Hukum</label>
@@ -726,7 +773,7 @@
                                                                         </div>
                                                                         <div class="field-answer">
                                                                             @if ($item->is_rupiah == 1)
-                                                                                <p>Rp. {{ number_format((int) $itemTextDua->opsi_text, 2, ',', '.') }}</p>
+                                                                                <p>Rp. {{ number_format((int) $itemTextDua->opsi_text, 0, ',', '.') }}</p>
                                                                             @else
                                                                                 <p>{{ $itemTextDua->opsi_text }}</p>
                                                                             @endif
@@ -754,7 +801,7 @@
                                                                                     @if ($item->opsi_jawaban == 'persen' || $item->nama == "Repayment Capacity")
                                                                                         <p> {{ str_replace('_', ' ', $itemTextDua->opsi_text) }} {{ $item->opsi_jawaban == 'persen' ? '%' : '' }}</p>
                                                                                     @else
-                                                                                        <p>Rp. {{ number_format((int) $itemTextDua->opsi_text, 2, ',', '.') }}</p>
+                                                                                        <p>Rp. {{ number_format((int) $itemTextDua->opsi_text, 0, ',', '.') }}</p>
                                                                                     @endif
                                                                                 @endif
                                                                             </div>
@@ -766,7 +813,7 @@
                                                                         </div>
                                                                         <div class="field-answer">
                                                                             @if ($item->id == 79)
-                                                                                <p>{{$itemTextDua->opsi_text}}</p>
+                                                                                <p class="npwp">{{$itemTextDua->opsi_text}}</p>
                                                                             @else
                                                                                 <p> {{ str_replace('_', ' ', $itemTextDua->opsi_text) }} {{ $item->opsi_jawaban == 'persen' ? '%' : '' }}</p>
                                                                             @endif
@@ -1009,7 +1056,7 @@
                                                                         @elseif ($itemTiga->opsi_jawaban == 'number')
                                                                             <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
                                                                                 <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
-                                                                                <h4 class="font-bold">Rp. {{ number_format((int) $itemTextTiga->opsi_text, 2, ',', '.') }}</h4>
+                                                                                <h4 class="font-bold">Rp. {{ number_format((int) $itemTextTiga->opsi_text, 0, ',', '.') }}</h4>
                                                                             </div>
 
                                                                             @if ($item->is_commentable == 'Ya')
@@ -1030,7 +1077,7 @@
                                                                                 </div>
                                                                                 <div class="field-answer">
                                                                                     @if ($itemTiga->is_rupiah == 1)
-                                                                                        <p>Rp. {{ number_format((int) $itemTextTiga->opsi_text, 2, ',', '.') }}</p>
+                                                                                        <p>Rp. {{ number_format((int) $itemTextTiga->opsi_text, 0, ',', '.') }}</p>
                                                                                     @else
                                                                                         <p>{{ $itemTiga->opsi_jawaban == 'persen' ? $itemTextTiga->opsi_text : $itemTextTiga->opsi_text  }}{{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</p>
                                                                                     @endif
@@ -1267,7 +1314,7 @@
                                                                                     <div class="jawaban-responsive border-b p-2 font-medium">
                                                                                         <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
                                                                                             <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban: </span>
-                                                                                            <h4 class="font-bold">Rp. {{ number_format((int) $itemTextEmpat->opsi_text, 2, ',', '.') }}</h4>
+                                                                                            <h4 class="font-bold">Rp. {{ number_format((int) $itemTextEmpat->opsi_text, 0, ',', '.') }}</h4>
                                                                                         </div>
                                                                                     </div>
                                                                                     @if ($itemTextEmpat->is_commentable == 'Ya')
@@ -1290,7 +1337,7 @@
                                                                                         <div class="field-answer">
                                                                                             <p>
                                                                                                 @if ($itemEmpat->is_rupiah == 1)
-                                                                                                    Rp. {{ number_format((int) $itemTextEmpat->opsi_text, 2, ',', '.') }}
+                                                                                                    Rp. {{ number_format((int) $itemTextEmpat->opsi_text, 0, ',', '.') }}
                                                                                                 @else
                                                                                                     {{ $itemTextEmpat->opsi_text }}
                                                                                                 @endif

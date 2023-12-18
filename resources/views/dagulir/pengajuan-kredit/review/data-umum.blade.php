@@ -368,7 +368,7 @@
                 <p>{{$dataNasabah->alamat_usaha ?? '-'}}</p>
             </div>
         </div>
-        @if ($dataNasabah->tipe == "2")
+        {{-- @if ($dataNasabah->tipe == "2")
             <div class="field-review">
                 <div class="field-name">
                     <label for="">Nama Pj</label>
@@ -393,7 +393,7 @@
                     <p>{{$dataNasabah->tanggal_berdiri ? $dataNasabah->tanggal_berdiri : '-'}}</p>
                 </div>
             </div>
-        @endif
+        @endif --}}
     </div>
     {{-- Data Pengajuan --}}
     <div class="form-group-1 col-span-2 pl-0">
@@ -462,6 +462,32 @@
                 <p>{{$dataNasabah->tipe ? $tipe : '-'}}</p>
             </div>
         </div>
+        @if ($dataNasabah->tipe != 2)
+            <div class="field-review">
+                <div class="field-name">
+                    <label for="">{{ $nama_pj }}</label>
+                </div>
+                <div class="field-answer">
+                    <p>{{$dataNasabah->nama_pj_ketua ? $dataNasabah->nama_pj_ketua : '-'}}</p>
+                </div>
+            </div>
+            <div class="field-review">
+                <div class="field-name">
+                    <label for="">Tempat Berdiri</label>
+                </div>
+                <div class="field-answer">
+                    <p>{{$dataNasabah->tempat_berdiri ? $dataNasabah->tempat_berdiri : '-'}}</p>
+                </div>
+            </div>
+            <div class="field-review">
+                <div class="field-name">
+                    <label for="">Tanggal Berdiri</label>
+                </div>
+                <div class="field-answer">
+                    <p>{{$dataNasabah->tanggal_berdiri ? $dataNasabah->tanggal_berdiri : '-'}}</p>
+                </div>
+            </div>
+        @endif
         <div class="field-review">
             <div class="field-name">
                 <label for="">Jenis badan hukum</label>
