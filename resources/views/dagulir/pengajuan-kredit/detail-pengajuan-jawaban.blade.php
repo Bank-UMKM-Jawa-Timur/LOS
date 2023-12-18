@@ -1032,10 +1032,10 @@
                                                             @endif
                                                         @endif
                                                     @endforeach --}}
+                                                    @php
+                                                        $no_foto = 0;
+                                                    @endphp
                                                     @foreach ($dataDetailJawabanText as $itemTextTiga)
-                                                        @php
-                                                            $no_foto = 0;
-                                                        @endphp
                                                         @if ($itemTextTiga->nama != 'Ratio Tenor Asuransi')
                                                             <div class="{{ $itemTiga->opsi_jawaban == 'file' ? 'col-span-1 p-2' : 'col-span-2 form-group-2' }} {{ $itemTextTiga->nama === "Modal (awal) Sendiri" || $itemTextTiga->nama === "Modal Pinjaman" ? 'col-span-1 form-group-2' : '' }}">
                                                                 <div class="space-y-5">
