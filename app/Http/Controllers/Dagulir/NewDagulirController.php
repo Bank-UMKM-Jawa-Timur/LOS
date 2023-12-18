@@ -227,7 +227,7 @@ class NewDagulirController extends Controller
         $request->validate([
             'nama_lengkap' => 'required',
             'email' => 'required|unique:pengajuan_dagulir,email',
-            'nik_nasabah' => 'required',
+            'nik_nasabah' => 'required|unique:pengajuan_dagulir,nik_nasabah',
             'tempat_lahir' => 'required',
             'tanggal_lahir' => 'required',
             'telp' => 'required',
@@ -646,7 +646,8 @@ class NewDagulirController extends Controller
                 Alert::success('success', 'Berhasil mengganti posisi');
                 return redirect()->back();
             } else {
-                return back()->withError('Data pengajuan tidak ditemukan.');
+                alert()->error('error','Data pengajuan tidak ditemukan.');
+                return redirect()->back();
             }
         } catch (Exception $e) {
             DB::rollBack();
@@ -1513,7 +1514,7 @@ class NewDagulirController extends Controller
             $komentar = KomentarModel::where('id_pengajuan',$id)->first();
             if ($pengajuan) {
                 if ($komentar->komentar_penyelia == null) {
-                    alert()->error('Error','Data pengajuan belum di review.');
+                    alert()->warning('Waning','Data pengajuan belum di review,tidak dapat melanjutkan ke pincab.');
                     return redirect()->route('dagulir.index');
                 }
                 $pincab = User::select('id')

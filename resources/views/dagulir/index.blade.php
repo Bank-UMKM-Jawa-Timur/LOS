@@ -114,7 +114,7 @@
                 <div class="input-search flex gap-2">
                 <input
                     type="search"
-                    placeholder="Cari nama usaha... "
+                    placeholder="Cari kata kunci... "
                     name="q" id="q"
                     class="w-full px-8 outline-none text-sm p-3 border"
                     value="{{ isset($_GET['q']) ? $_GET['q'] : '' }}"
@@ -357,7 +357,7 @@
                                         @else
                                         <li class="item-tb-dropdown">
                                             <a href="{{ route('dagulir.cetak-surat', $item->pengajuan->id) }}"
-                                                class="cursor-pointer">Cetak</a>
+                                                class="cursor-pointer" target="_blank">Cetak</a>
                                         </li>
                                         @endif
                                     </ul>
