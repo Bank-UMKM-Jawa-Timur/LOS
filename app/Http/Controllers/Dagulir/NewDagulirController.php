@@ -1049,7 +1049,16 @@ class NewDagulirController extends Controller
                                                                 ->get();
 
             $param['pendapatDanUsulan'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff', 'komentar_penyelia', 'komentar_pincab', 'komentar_pbo', 'komentar_pbp')->first();
-
+            $param['plafonUsulan'] = PlafonUsulan::where('id_pengajuan', $id)->select(
+                'plafon_usulan_penyelia', 
+                'jangka_waktu_usulan_penyelia', 
+                'plafon_usulan_pbo', 
+                'jangka_waktu_usulan_pbo',
+                'plafon_usulan_pbp',
+                'jangka_waktu_usulan_pbp',
+                'plafon_usulan_pincab',
+                'jangka_waktu_usulan_pincab'
+                )->first();
             $dokumenUsaha = DB::table('item')
                 ->where('nama', 'LIKE', '%NIB%')
                 ->orWhere('nama', 'LIKE', '%Surat Keterangan Usaha%')
@@ -1086,8 +1095,10 @@ class NewDagulirController extends Controller
                 $log = [];
             }
             $param['logPengajuan'] = $log;
+            
 
             return view('dagulir.pengajuan-kredit.review-pincab-new', $param);
+
         } else {
             return redirect()->back()->withError('Tidak memiliki hak akses.');
         }

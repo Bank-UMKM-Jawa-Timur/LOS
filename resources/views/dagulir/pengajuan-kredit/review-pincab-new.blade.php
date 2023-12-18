@@ -747,45 +747,156 @@
                 </div>
                 <div class="accordion-content p-3">
                     <div class="divide-y-2 divide-red-800">
-                        <div class="p-4">
-                            <div class="form-group-2">
-                                <div class="field-review">
-                                    <div class="field-name">
-                                        <label for="">Pendapat & Usulan
-                                            (Staff)</label>
-                                    </div>
-                                    <div class="field-answer">
-                                        <p>OKE</p>
+                        @if($pendapatDanUsulan->komentar_staff)
+                            <div class="p-4">
+                                <div class="form-group-2">
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Staff Kredit</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <p>{{ $pendapatDanUsulan->komentar_staff }}</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        @endif
+                @if($pendapatDanUsulan->komentar_penyelia)
                     <div class="p-4">
                         <div class="form-group-2">
                             <div class="field-review">
                                 <div class="field-name">
-                                    <label for="">Pendapat & Usulan
-                                        (Penyelia)</label>
+                                    <label for="">Penyelia Kredit</label>
                                 </div>
                                 <div class="field-answer">
-                                    <p>OKE</p>
+                                    <p>{{ $pendapatDanUsulan->komentar_penyelia }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group-2">
+                            <div class="field-review">
+                                <div class="field-name">
+                                    <label for="">Tenor</label>
+                                </div>
+                                <div class="field-answer">
+                                    <p>{{ $plafonUsulan->jangka_waktu_usulan_penyelia }} Bulan</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group-2">
+                            <div class="field-review">
+                                <div class="field-name">
+                                    <label for="">Plafon</label>
+                                </div>
+                                <div class="field-answer">
+                                    <p>Rp. {{ number_format($plafonUsulan->plafon_usulan_penyelia, 2, ',', '.')}}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    @endif
+                    @if($pendapatDanUsulan->komentar_pbo)
                     <div class="p-4">
                         <div class="form-group-2">
                             <div class="field-review">
                                 <div class="field-name">
-                                    <label for="">Pendapat & Usulan
-                                        (Penyelia)</label>
+                                    <label for="">Pincab Kredit</label>
                                 </div>
                                 <div class="field-answer">
-                                    <p>0864929</p>
+                                    <p>{{ $pendapatDanUsulan->komentar_pbo }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group-2">
+                            <div class="field-review">
+                                <div class="field-name">
+                                    <label for="">Tenor</label>
+                                </div>
+                                <div class="field-answer">
+                                    <p>{{ $plafonUsulan->jangka_waktu_usulan_pbo }} Bulan</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group-2">
+                            <div class="field-review">
+                                <div class="field-name">
+                                    <label for="">Plafon</label>
+                                </div>
+                                <div class="field-answer">
+                                    <p>Rp. {{ number_format($plafonUsulan->plafon_usulan_pbo, 2, ',', '.')}}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    @endif
+                    @if($pendapatDanUsulan->komentar_pbo)
+                    <div class="p-4">
+                        <div class="form-group-2">
+                            <div class="field-review">
+                                <div class="field-name">
+                                    <label for="">PBO kredit</label>
+                                </div>
+                                <div class="field-answer">
+                                    <p>{{ $pendapatDanUsulan->komentar_pbo }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group-2">
+                            <div class="field-review">
+                                <div class="field-name">
+                                    <label for="">Tenor</label>
+                                </div>
+                                <div class="field-answer">
+                                    <p>{{ $plafonUsulan->jangka_waktu_usulan_pbp }} Bulan</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group-2">
+                            <div class="field-review">
+                                <div class="field-name">
+                                    <label for="">Plafon</label>
+                                </div>
+                                <div class="field-answer">
+                                    <p>Rp. {{ number_format($plafonUsulan->plafon_usulan_pbp, 2, ',', '.')}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+                    @if($pendapatDanUsulan->komentar_pbp)
+                    <div class="p-4">
+                        <div class="form-group-2">
+                            <div class="field-review">
+                                <div class="field-name">
+                                    <label for="">PBP kredit</label>
+                                </div>
+                                <div class="field-answer">
+                                    <p>{{ $pendapatDanUsulan->komentar_pbp }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group-2">
+                            <div class="field-review">
+                                <div class="field-name">
+                                    <label for="">Tenor</label>
+                                </div>
+                                <div class="field-answer">
+                                    <p>{{ $plafonUsulan->jangka_waktu_usulan_pincab }} Bulan</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group-2">
+                            <div class="field-review">
+                                <div class="field-name">
+                                    <label for="">Plafon</label>
+                                </div>
+                                <div class="field-answer">
+                                    <p>Rp. {{ number_format($plafonUsulan->plafon_usulan_pincab, 2, ',', '.')}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
                     <div class="p-4">
                         <div class="form-group-2">
                             <div class="field-review">

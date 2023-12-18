@@ -1,6 +1,6 @@
 
 <header
-class="sticky top-0 border-b z-30 p-3 font-poppins w-full bg-white"
+class="sticky top-0 border-b z-50 p-3 font-poppins w-full bg-white"
 >
 <div class="flex justify-between items-center flex-wrap">
   <div>

@@ -60,6 +60,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/0.5.7/perfect-scrollbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="{{ asset('plugins/') }}"></script>
     <script src="{{ asset('plugins/owl-carousel/owl.carousel.js') }}"></script>
     <script src="{{ asset('plugins/owl-carousel/owl.carousel.min.js') }}"></script>
 
