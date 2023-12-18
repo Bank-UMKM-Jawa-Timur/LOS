@@ -569,11 +569,37 @@ video {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
 }
+    .btn-edit {
+  border-radius: 0.25rem;
+  --tw-bg-opacity: 1;
+  background-color: rgb(17 32 66 / var(--tw-bg-opacity));
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
+}
     .btn-edit .icon {
   margin-top: 0.5rem;
 }
     .btn-delete .icon {
   margin-top: 0.5rem;
+}
+    .btn-delete {
+  border-radius: 0.25rem;
+  --tw-bg-opacity: 1;
+  background-color: rgb(220 53 69 / var(--tw-bg-opacity));
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
 }
     .btn-add {
   border-radius: 0.25rem;
@@ -684,6 +710,23 @@ video {
 
   .form-group-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+    .form-group-4 {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+    @media (min-width: 768px) {
+
+  .form-group-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+    @media (min-width: 1024px) {
+
+  .form-group-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
     .form-group-5 {
@@ -1627,6 +1670,9 @@ video {
 }
 .mt-\[8px\] {
   margin-top: 8px;
+}
+.mt-10 {
+  margin-top: 2.5rem;
 }
 .box-border {
   box-sizing: border-box;
