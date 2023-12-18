@@ -698,7 +698,7 @@
                                             </tr>
                                         @else
                                             <tr>
-                                                <td style="width: 40%; padding-left: 33px">asd</td>
+                                                <td style="width: 40%; padding-left: 33px">{{ $itemTiga->nama }}</td>
                                                 <td>: </td>
                                                 <td>{{ $itemTextTiga->opsi_text }}</td>
                                             </tr>
