@@ -15,7 +15,9 @@ use \App\Http\Controllers\CetakSuratController;
 use App\Http\Controllers\DashboardDireksiController;
 use \App\Http\Controllers\LogPengajuanController;
 use \App\Http\Controllers\Dagulir\DagulirController;
+use App\Http\Controllers\Dagulir\master\NewCabangController;
 use App\Http\Controllers\Dagulir\NewDagulirController;
+use App\Http\Controllers\Dagulir\master\NewUserController;
 use RealRashid\SweetAlert\Facades\Alert;
 
 /*
@@ -98,6 +100,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/cetak-sppk/{id}', [NewDagulirController::class, 'cetakSPPK'])->name('cetak-sppk-dagulir');
         Route::get('/cetak-pk/{id}', [NewDagulirController::class, 'cetakPK'])->name('cetak-pk-dagulir');
         Route::get('cetak-surat/{id}', [NewDagulirController::class, 'cetakDagulir'])->name('cetak-surat');
+
+        Route::middleware(['Admin'])->prefix('master')->name('master.')->group(function () {
+            Route::resource('kabupaten', KabupatenController::class);
+            Route::resource('kecamatan', KecamatanController::class);
+            Route::resource('desa', DesaController::class);
+            Route::resource('cabang', NewCabangController::class);
+            Route::resource('user', NewUserController::class);
+            Route::resource('merk', MerkController::class);
+            Route::resource('tipe', TipeController::class);
+            Route::resource('master-item', MasterItemController::class);
+
+            Route::get('/reset-sessions', [UserController::class, 'indexSession'])->name('index-session');
+            Route::post('/reset-session/{id}', [UserController::class, 'resetSession'])->name('reset-session');
+
+            Route::get('/reset-api-sessions', [UserController::class, 'indexAPISession'])->name('index-api-session');
+            Route::post('/reset-api-session/{id}', [UserController::class, 'resetAPISession'])->name('reset-api-session');
+        });
     });
 
     // check Pincab

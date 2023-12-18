@@ -78,7 +78,7 @@
                 <div class="dropdown-menu-link hidden">
                     <ul class="space-y-1 p-2 mt-3 bg-gray-50">
                         <li>
-                            <a href="master-cabang.html">
+                            <a href="{{route('dagulir.master.cabang.index')}}">
                                 <button class="item-dp-link">
                                     Master kantor cabang
                                 </button>
@@ -100,7 +100,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="master-user.html">
+                            <a href="{{route('dagulir.master.user.index')}}">
                                 <button class="item-dp-link">Master User</button>
                             </a>
                         </li>
