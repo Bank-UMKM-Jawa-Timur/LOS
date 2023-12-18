@@ -698,61 +698,61 @@
                                     $no = 0;
                                 @endphp
                             @endforeach
-                        </div>
-                        <div class="p-5 space-y-5">
-                            <hr>
-                            @foreach ($pendapatUsulanStaf as $itemStaf)
-                                <div class="form-group-2">
-                                    <div class="field-review">
-                                        <div class="field-name">
-                                            <h6>Pendapat dan Usulan Staf</h6>
-                                        </div>
-                                        <div class="field-answer">
-                                            <h6>{{ $itemStaf->pendapat_per_aspek }}</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                            @foreach ($pendapatUsulanPenyelia as $itemPenyelia)
-                                <div class="form-group-2">
-                                    <div class="field-review">
-                                        <div class="field-name">
-                                            <h6>Pendapat dan Usulan Penyelia</h6>
-                                        </div>
-                                        <div class="field-answer">
-                                            <h6>{{ $itemPenyelia->pendapat_per_aspek }}</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                            @if ($dataUmum->id_pbo)
-                                @foreach ($pendapatUsulanPBO as $itemPBO)
+                            <div class="p-5 space-y-5">
+                                <hr>
+                                @foreach ($pendapatUsulanStaf as $itemStaf)
                                     <div class="form-group-2">
                                         <div class="field-review">
                                             <div class="field-name">
-                                                <h6>Pendapat dan Usulan PBO</h6>
+                                                <h6>Pendapat dan Usulan Staf</h6>
                                             </div>
                                             <div class="field-answer">
-                                                <h6>{{ $itemPBO->pendapat_per_aspek }}</h6>
+                                                <h6>{{ $itemStaf->pendapat_per_aspek }}</h6>
                                             </div>
                                         </div>
                                     </div>
                                 @endforeach
-                            @endif
-                            @if ($dataUmum->id_pbp)
-                                @foreach ($pendapatUsulanPBP as $itemPBP)
+                                @foreach ($pendapatUsulanPenyelia as $itemPenyelia)
                                     <div class="form-group-2">
                                         <div class="field-review">
                                             <div class="field-name">
-                                                <h6>Pendapat dan Usulan PBP</h6>
+                                                <h6>Pendapat dan Usulan Penyelia</h6>
                                             </div>
                                             <div class="field-answer">
-                                                <h6>{{ $itemPBP->pendapat_per_aspek }}</h6>
+                                                <h6>{{ $itemPenyelia->pendapat_per_aspek }}</h6>
                                             </div>
                                         </div>
                                     </div>
                                 @endforeach
-                            @endif
+                                @if ($dataUmum->id_pbo)
+                                    @foreach ($pendapatUsulanPBO as $itemPBO)
+                                        <div class="form-group-2">
+                                            <div class="field-review">
+                                                <div class="field-name">
+                                                    <h6>Pendapat dan Usulan PBO</h6>
+                                                </div>
+                                                <div class="field-answer">
+                                                    <h6>{{ $itemPBO->pendapat_per_aspek }}</h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
+                                @if ($dataUmum->id_pbp)
+                                    @foreach ($pendapatUsulanPBP as $itemPBP)
+                                        <div class="form-group-2">
+                                            <div class="field-review">
+                                                <div class="field-name">
+                                                    <h6>Pendapat dan Usulan PBP</h6>
+                                                </div>
+                                                <div class="field-answer">
+                                                    <h6>{{ $itemPBP->pendapat_per_aspek }}</h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>

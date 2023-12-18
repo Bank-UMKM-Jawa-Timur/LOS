@@ -153,6 +153,8 @@
                 <p>{{ $dataNasabah->alamat_ktp ? $dataNasabah->alamat_ktp : '-' }}</p>
             </div>
         </div>
+    </div>
+    <div class="form-group-2">
         <div class="field-review">
             <div class="field-name">
                 <label for="">Foto Nasabah</label>
@@ -162,13 +164,6 @@
                     <img src="{{ $dataNasabah->foto_nasabah != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataNasabah->id.'/'.$dataNasabah->foto_nasabah : asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
                 </a>
             </div>
-            {{-- <div class="field-answer">
-                @if($dataNasabah->foto_nasabah)
-                    <img src="{{ asset('..') . '/' . $dataNasabah->id . '/' . $dataNasabah->foto_nasabah }}" alt="">
-                @else
-                    <p>Tidak ada foto nasabah</p>
-                @endif
-            </div> --}}
         </div>
         <div class="field-review">
             <div class="field-name">
