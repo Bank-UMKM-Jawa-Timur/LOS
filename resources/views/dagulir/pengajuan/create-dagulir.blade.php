@@ -50,8 +50,8 @@
     >
         <div class="form-group-1 col-span-2">
             <div>
-                <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
-                    <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
+                <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                    <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
                         Data Diri :
                     </h2>
                 </div>
@@ -207,8 +207,8 @@
         </div>
         <div class="form-group-1 col-span-2">
             <div>
-                <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
-                    <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
+                <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                    <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
                         Domisili :
                     </h2>
                 </div>
@@ -247,8 +247,8 @@
 
         <div class="form-group-1 col-span-2">
             <div>
-                <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
-                    <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
+                <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                    <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
                         File Slik :
                     </h2>
                 </div>
@@ -295,8 +295,8 @@
 
         <div class="form-group-1 col-span-2">
             <div>
-                <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
-                    <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
+                <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                    <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
                         Data Usaha :
                     </h2>
                 </div>
@@ -344,8 +344,8 @@
         </div>
         <div class="form-group-1 col-span-2">
             <div>
-                <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
-                    <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
+                <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                    <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
                         Data Pengajuan :
                     </h2>
                 </div>
