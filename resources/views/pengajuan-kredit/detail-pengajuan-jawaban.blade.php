@@ -1364,7 +1364,7 @@
                 <hr>
                 <div class="form-group col-md-12">
                     <label for="">Pendapat dan Usulan Staf Kredit</label>
-                    <p>{{ $pendapatStafPerAspek->pendapat_per_aspek }}</p>
+                    <p>{{ $pendapatStafPerAspek?->pendapat_per_aspek }}</p>
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">Pendapat dan Usulan Penyelia Kredit</label>
@@ -1373,7 +1373,7 @@
                 @if ($dataUmumNasabah->id_pbo)
                     <div class="form-group col-md-12">
                         <label for="">Pendapat dan Usulan PBO</label>
-                        <p>{{ $pendapatDanUsulanPBO->komentar_pbo }}</p>
+                        <p>{{ $pendapatDanUsulanPBO?->komentar_pbo }}</p>
                     </div>
                 @endif
             @elseif (Auth::user()->role == 'PBO')
@@ -1399,11 +1399,11 @@
             <hr>
             <div class="form-group col-md-12">
                 <label for="">Pendapat dan Usulan Staf Kredit</label>
-                <p>{{ $pendapatStafPerAspek->pendapat_per_aspek }}</p>
+                <p>{{ $pendapatStafPerAspek?->pendapat_per_aspek }}</p>
             </div>
             <div class="form-group col-md-12">
                 <label for="">Pendapat dan Usulan Penyelia Kredit</label>
-                <p>{{ $pendapatPenyeliaPerAspek->pendapat_per_aspek }}</p>
+                <p>{{ $pendapatPenyeliaPerAspek?->pendapat_per_aspek }}</p>
             </div>
             @else
                 @php
@@ -1514,7 +1514,7 @@
                         <label for="">Pendapat dan Usulan PBO</label>
                         <textarea name="komentar_pbo_keseluruhan"
                             class="form-control @error('komentar_pbo_keseluruhan') is-invalid @enderror" id="komentar_pbo_keseluruhan" cols="30"
-                            rows="4" placeholder="Pendapat dan Usulan Penyelia Kredit" >{{ isset($pendapatDanUsulanPBO->komentar_pbO) ? $pendapatDanUsulanPBO->komentar_pbO : '' }}</textarea>
+                            rows="4" placeholder="Pendapat dan Usulan Penyelia Kredit" >{{ isset($pendapatDanUsulanPBO->komentar_pbO) ? $pendapatDanUsulanPBO?->komentar_pbO : '' }}</textarea>
                         @error('komentar_pbo_keseluruhan')
                             <div class="invalid-feedback">
                                 {{ $message }}
