@@ -622,7 +622,7 @@
                                 $key += $dataIndex;
 
                             // check level 2
-                            $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide')
+                            $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide', 'is_rupiah')
                                 ->where('level', 2)
                                 ->where('id_parent', $value->id)
                                 ->get();
@@ -716,10 +716,14 @@
                                                             @elseif ($item->opsi_jawaban == 'number' && $item->id != 143)
                                                                     <div class="field-review">
                                                                         <div class="field-name">
-                                                                            <label for="">{{ $item->nama }} </label>
+                                                                            <label for="">{{ $item->nama }}</label>
                                                                         </div>
                                                                         <div class="field-answer">
-                                                                            <p>{{ number_format((int) $itemTextDua->opsi_text, 2, ',', '.') }}</p>
+                                                                            @if ($item->is_rupiah == 1)
+                                                                                <p>Rp. {{ number_format((int) $itemTextDua->opsi_text, 2, ',', '.') }}</p>
+                                                                            @else
+                                                                                <p>{{ $itemTextDua->opsi_text }}</p>
+                                                                            @endif
                                                                         </div>
                                                                     </div>
                                                                 @if ($itemTextDua->is_commentable)
