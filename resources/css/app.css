@@ -84,7 +84,7 @@
         @apply bg-theme-primary text-white px-4 py-1 rounded text-2xl;
     }
     .modal-layout {
-        @apply w-full h-screen bg-black/50 fixed top-0 left-0 z-50 lg:p-5 p-2 overflow-y-auto;
+        @apply w-full h-screen bg-black/50 fixed top-0 left-0 z-[99999] lg:p-5 p-2 overflow-y-auto;
     }
     .modal-lg {
         @apply lg:max-w-[80%] max-w-full;

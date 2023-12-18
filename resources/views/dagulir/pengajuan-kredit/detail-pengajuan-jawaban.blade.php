@@ -1778,18 +1778,18 @@
                                         <div class="form-group-2 pl-2">
                                             <div class="input-box">
                                                 <label for="">Plafon Usulan Penyelia</label>
-                                                <input type="text" name="plafon_usulan_penyelia" class="form-input rupiah" value="{{ $plafonUsulan->plafon_usulan_penyelia != null ? $plafonUsulan->plafon_usulan_penyelia : null}}">
+                                                <input type="text" name="plafon_usulan_penyelia" class="form-input rupiah" value="">
                                             </div>
                                             <div class="input-box">
                                                 <label for="">Jangka Waktu Usulan Penyelia</label>
-                                                <input type="number" name="jangka_waktu_usulan_penyelia" class="form-input"  value="{{ $plafonUsulan->jangka_waktu_usulan_penyelia != null ? $plafonUsulan->jangka_waktu_usulan_penyelia : null }}">
+                                                <input type="number" name="jangka_waktu_usulan_penyelia" class="form-input"  value="">
                                             </div>
                                         </div>
                                         <div class="form-group-1">
                                             <label for="">Pendapat dan Usulan Penyelia</label>
                                             <textarea name="komentar_penyelia_keseluruhan"
-                                                class="form-textarea @error('komentar_penyelia_keseluruhan') is-invalid @enderror" id="komentar_penyelia_keseluruhan" cols="30"
-                                                rows="4" placeholder="Pendapat dan Usulan Penyelia">{{ isset($pendapatDanUsulanPenyelia->komentar_penyelia) ? $pendapatDanUsulanPenyelia->komentar_penyelia : '' }}</textarea>
+                                                class="form-input @error('komentar_penyelia_keseluruhan') is-invalid @enderror" id="komentar_penyelia_keseluruhan" cols="30"
+                                                rows="4" placeholder="Pendapat dan Usulan Penyelia"></textarea>
                                             @error('komentar_penyelia_keseluruhan')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
@@ -1829,31 +1829,21 @@
                                                 <input type="text" class="form-input" value="{{ $plafonUsulan?->jangka_waktu_usulan_penyelia ?? '-' }}" readonly disabled>
                                             </div>
                                         </div>
-                                        {{-- <div class="form-group-2">
-                                            <div class="input-box">
-                                                <label for="">Plafon Usulan Penyelia</label>
-                                                <input type="text" class="form-input" value="{{ $plafonUsulan?->plafon_usulan_penyelia ?? '-' }}" readonly disabled>
-                                            </div>
-                                            <div class="input-box">
-                                                <label for="">Jangka Waktu Usulan Penyelia</label>
-                                                <input type="text" class="form-input" value="{{ $plafonUsulan?->jangka_waktu_usulan_penyelia ?? '-' }}" readonly disabled>
-                                            </div>
-                                        </div> --}}
                                         <div class="form-group-2">
                                             <div class="input-box">
                                                 <label for="">Plafon Usulan PBO</label>
-                                                <input type="text" class="form-input rupiah" name="plafon_usulan_pbo" value="{{ $plafonUsulan?->plafon_usulan_pbo ?? null }}">
+                                                <input type="text" class="form-input rupiah" name="plafon_usulan_pbo" value="">
                                             </div>
                                             <div class="input-box">
                                                 <label for="">Jangka Waktu Usulan PBO</label>
-                                                <input type="text" class="form-input" name="jangka_waktu_usulan_pbo" value="{{ $plafonUsulan?->jangka_waktu_usulan_pbo ?? null }}">
+                                                <input type="text" class="form-input" name="jangka_waktu_usulan_pbo" value="">
                                             </div>
                                         </div>
                                         <div class="form-group-1">
                                             <label for="">Pendapat dan Usulan PBO</label>
                                             <textarea name="komentar_pbo_keseluruhan"
-                                                class="form-textarea @error('komentar_pbo_keseluruhan') is-invalid @enderror" id="komentar_pbo_keseluruhan" cols="30"
-                                                rows="4" placeholder="Penyelia Kredit" >{{ isset($pendapatDanUsulanPBO->komentar_pbO) ? $pendapatDanUsulanPBO->komentar_pbO : '' }}</textarea>
+                                                class="form-input @error('komentar_pbo_keseluruhan') is-invalid @enderror" id="komentar_pbo_keseluruhan" cols="30"
+                                                rows="4" placeholder="Pendapat dan Usulan Penyelia Kredit" ></textarea>
                                             @error('komentar_pbo_keseluruhan')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
@@ -1905,16 +1895,6 @@
                                             <input type="text" class="form-input" value="{{ $plafonUsulan?->jangka_waktu_usulan_penyelia ?? '-' }}" readonly disabled>
                                         </div>
                                     </div>
-                                    {{-- <div class="form-group-2">
-                                        <div class="input-box">
-                                            <label for="">Plafon Usulan Penyelia</label>
-                                            <input type="text" class="form-input" value="{{ $plafonUsulan?->plafon_usulan_penyelia ?? '-' }}" readonly disabled>
-                                        </div>
-                                        <div class="input-box   ">
-                                            <label for="">Jangka Waktu Usulan Penyelia</label>
-                                            <input type="text" class="form-input" value="{{ $plafonUsulan?->jangka_waktu_usulan_penyelia ?? '-' }}" readonly disabled>
-                                        </div>
-                                    </div> --}}
                                     <div class="form-group-2">
                                         <div class="input-box">
                                             <label for="">Plafon Usulan PBO</label>
@@ -1928,18 +1908,18 @@
                                     <div class="form-group-2">
                                         <div class="input-box">
                                             <label for="">Plafon Usulan PBP</label>
-                                            <input type="text" class="form-input rupiah" name="plafon_usulan_pbp" value="{{ $plafonUsulan?->plafon_usulan_pbp ?? null }}">
+                                            <input type="text" class="form-input rupiah" name="plafon_usulan_pbp" value="">
                                         </div>
                                         <div class="input-box">
                                             <label for="">Jangka Waktu Usulan PBP</label>
-                                            <input type="text" class="form-input" name="jangka_waktu_usulan_pbp" value="{{ $plafonUsulan?->jangka_waktu_usulan_pbp ?? null }}">
+                                            <input type="text" class="form-input" name="jangka_waktu_usulan_pbp" value="">
                                         </div>
                                     </div>
                                     <div class="form-group-1">
                                         <label for="">Pendapat dan Usulan PBP</label>
                                         <textarea name="komentar_pbp_keseluruhan"
-                                            class="form-textarea @error('komentar_pbp_keseluruhan') is-invalid @enderror" id="komentar_pbp_keseluruhan" cols="30"
-                                            rows="4" placeholder="Penyelia Kredit" >{{ isset($pendapatDanUsulanPBP->komentar_pbp) ? $pendapatDanUsulanPBP->komentar_pbp : '' }}</textarea>
+                                            class="form-input @error('komentar_pbp_keseluruhan') is-invalid @enderror" id="komentar_pbp_keseluruhan" cols="30"
+                                            rows="4" placeholder="Pendapat dan Usulan Penyelia Kredit" ></textarea>
                                         @error('komentar_pbp_keseluruhan')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -2501,15 +2481,18 @@
             var inputText = $(form + " input[type=text]")
             var inputNumber = $(form + " input[type=number]")
 
-            if ($('#komentar_penyelia_keseluruhan'))
+            if ($('#komentar_penyelia_keseluruhan')) {
                 totalInput++
-            if($('#komentar_penyelia_keseluruhan').val() != '' && $.trim($('#komentar_penyelia_keseluruhan').val()) != '')
+            }
+            if($('#komentar_penyelia_keseluruhan').val() != '' && $.trim($('#komentar_penyelia_keseluruhan').val()) != '') {
                 totalInputFilled++
+            }
 
             $.each(inputText, function(i, v) {
                 var inputBox = $(this).closest('.input-box');
-                if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
+                if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
                     totalInput++
+                }
                 var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
                 if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
                     totalInputFilled++;
@@ -2517,8 +2500,9 @@
             })
             $.each(inputNumber, function(i, v) {
                 var inputBox = $(this).closest('.input-box');
-                if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
+                if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
                     totalInput++
+                }
                 var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
                 if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
                     totalInputFilled++;
