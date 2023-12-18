@@ -21,13 +21,13 @@
             </div>
             <div class="layout lg:flex grid grid-cols-1 lg:mt-0 mt-5 justify-end gap-5">
                 <div class="button-wrapper gap-2 flex lg:justify-end">
-                    <button data-modal-id="modal-add-item"
+                    <a href="{{route('dagulir.master.master-item.create')}}"
                         class="open-modal px-7 py-2 rounded flex justify-center items-center font-semibold bg-theme-primary border text-white">
                         <span class="mt-1 mr-3">
                         <iconify-icon icon="ph:plus-bold"></iconify-icon>
                         </span>
                         <span class="ml-1 text-sm"> Tambah </span>
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>

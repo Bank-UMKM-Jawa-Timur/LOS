@@ -20,6 +20,8 @@ use App\Http\Controllers\Dagulir\master\NewDesaController;
 use App\Http\Controllers\Dagulir\master\NewItemController;
 use App\Http\Controllers\Dagulir\master\NewKabupatenController;
 use App\Http\Controllers\Dagulir\master\NewKecamatanController;
+use App\Http\Controllers\Dagulir\master\NewMerkController;
+use App\Http\Controllers\Dagulir\master\NewTipeController;
 use App\Http\Controllers\Dagulir\NewDagulirController;
 use App\Http\Controllers\Dagulir\master\NewUserController;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -111,15 +113,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::resource('desa', NewDesaController::class);
             Route::resource('cabang', NewCabangController::class);
             Route::resource('user', NewUserController::class);
-            Route::resource('merk', MerkController::class);
-            Route::resource('tipe', TipeController::class);
+            Route::resource('merk', NewMerkController::class);
+            Route::resource('tipe', NewTipeController::class);
             Route::resource('master-item', NewItemController::class);
 
-            Route::get('/reset-sessions', [UserController::class, 'indexSession'])->name('index-session');
-            Route::post('/reset-session/{id}', [UserController::class, 'resetSession'])->name('reset-session');
+            Route::get('/reset-sessions', [NewUserController::class, 'indexSession'])->name('index-session');
+            Route::post('/reset-session/{id}', [NewUserController::class, 'resetSession'])->name('reset-session');
 
-            Route::get('/reset-api-sessions', [UserController::class, 'indexAPISession'])->name('index-api-session');
-            Route::post('/reset-api-session/{id}', [UserController::class, 'resetAPISession'])->name('reset-api-session');
+            Route::get('/reset-api-sessions', [NewUserController::class, 'indexAPISession'])->name('index-api-session');
+            Route::post('/reset-api-session/{id}', [NewUserController::class, 'resetAPISession'])->name('reset-api-session');
         });
     });
 

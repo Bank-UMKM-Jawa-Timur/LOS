@@ -712,6 +712,23 @@ video {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+    .form-group-4 {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+    @media (min-width: 768px) {
+
+  .form-group-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+    @media (min-width: 1024px) {
+
+  .form-group-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
     .form-group-5 {
   display: grid;
   grid-template-columns: repeat(1, minmax(0, 1fr));
@@ -1653,6 +1670,9 @@ video {
 }
 .mt-\[8px\] {
   margin-top: 8px;
+}
+.mt-10 {
+  margin-top: 2.5rem;
 }
 .box-border {
   box-sizing: border-box;

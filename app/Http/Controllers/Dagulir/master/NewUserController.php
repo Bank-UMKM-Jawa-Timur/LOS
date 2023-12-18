@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dagulir\master;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\PengajuanKreditController;
 use Illuminate\Http\Request;
 use \App\Http\Requests\UserRequest;
 use \App\Models\User;
@@ -268,14 +269,15 @@ class NewUserController extends Controller
         $this->param['pageTitle'] = 'Master Session';
 
         try {
-            $keyword = $request->get('keyword');
+            $cari = $request->get('q');
+            $limit = $request->has('page_length') ? $request->get('page_length') : 10;
             $data = DB::table('sessions')
                 ->join('users', 'users.id', 'sessions.user_id')
                 ->select('sessions.ip_address', 'users.name', 'users.email', 'users.nip', 'users.role', 'sessions.id', 'users.id_cabang', 'sessions.user_id', 'sessions.created_at')
-                ->when($request->keyword, function ($query, $search) {
+                ->when($cari, function ($query, $search) {
                     return $query->where('users.email', 'like', '%' . $search . '%');
                 })
-                ->paginate(10);
+                ->paginate($limit);
 
             $pengajuanController = new PengajuanKreditController;
             foreach ($data as $key => $value) {
@@ -299,7 +301,7 @@ class NewUserController extends Controller
             return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
         }
 
-        return view('user.sessions.index', $this->param);
+        return view('dagulir.master.user.sessions.index', $this->param);
     }
 
     public function resetSession($id)
@@ -322,13 +324,15 @@ class NewUserController extends Controller
         $this->param['pageTitle'] = 'Master Session Mobile';
 
         try {
+            $cari = $request->get('q');
+            $limit = $request->has('page_length') ? $request->get('page_length') : 10;
             $data = DB::table('personal_access_tokens')
                 ->join('users', 'users.id', 'personal_access_tokens.tokenable_id')
                 ->select('personal_access_tokens.ip_address', 'users.email', 'users.nip', 'users.role', 'personal_access_tokens.id', 'users.id_cabang', 'personal_access_tokens.tokenable_id', 'personal_access_tokens.created_at', 'personal_access_tokens.project')
-                ->when($request->keyword, function ($query, $search) {
+                ->when($cari, function ($query, $search) {
                     return $query->where('users.email', 'like', '%' . $search . '%');
                 })
-                ->paginate(10);
+                ->paginate($limit);
 
             $pengajuanController = new PengajuanKreditController;
             foreach ($data as $key => $value) {
@@ -352,7 +356,7 @@ class NewUserController extends Controller
             return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
         }
 
-        return view('user.api-sessions.index', $this->param);
+        return view('dagulir.master.user.api-sessions.index', $this->param);
     }
 
     public function resetAPISession($id)

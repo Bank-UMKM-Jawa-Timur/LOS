@@ -64,7 +64,7 @@ class NewItemController extends Controller
         $this->param['btnLink'] = route('master-item.index');
         // $this->param['itemsatu'] = ItemModel::select('*')->where('level', 1)->get();
 
-        return \view('master-item.create', $this->param);
+        return \view('dagulir.master.item.form.create', $this->param);
     }
     public function dataItemSatu(Request $request)
     {

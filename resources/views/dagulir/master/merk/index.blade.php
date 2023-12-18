@@ -1,3 +1,4 @@
+@include('dagulir.master.merk.modal.create')
 @extends('layouts.tailwind-template')
 @include('components.new.modal.loading')
 @push('script-inject')
@@ -12,11 +13,22 @@
         <div class="head lg:flex grid grid-cols-1 justify-between w-full font-poppins">
             <div class="heading flex-auto">
                 <p class="text-theme-primary font-semibold font-poppins text-xs">
-                    Master Session Mobile
+                    Master Merk
                 </p>
                 <h2 class="font-bold tracking-tighter text-2xl text-theme-text">
-                    Session Mobile
+                    Merk
                 </h2>
+            </div>
+            <div class="layout lg:flex grid grid-cols-1 lg:mt-0 mt-5 justify-end gap-5">
+                <div class="button-wrapper gap-2 flex lg:justify-end">
+                    <button data-modal-id="modal-add-merk"
+                        class="open-modal px-7 py-2 rounded flex justify-center items-center font-semibold bg-theme-primary border text-white">
+                        <span class="mt-1 mr-3">
+                        <iconify-icon icon="ph:plus-bold"></iconify-icon>
+                        </span>
+                        <span class="ml-1 text-sm"> Tambah </span>
+                    </button>
+                </div>
             </div>
         </div>
         <div class="body-pages">
@@ -47,7 +59,7 @@
                         </div>
                         <div class="right-layout lg:w-auto w-full">
                             <div class="input-search flex gap-2">
-                                <input type="search" placeholder="Cari nama... " name="q" id="q"
+                                <input type="search" placeholder="Cari nama merk kendaraan... " name="q" id="q"
                                     class="w-full px-8 outline-none text-sm p-3 border"
                                     value="{{ isset($_GET['q']) ? $_GET['q'] : '' }}" />
                                 <button class="px-5 py-2 bg-theme-primary rounded text-white text-lg">
@@ -60,14 +72,7 @@
                         <table class="tables">
                             <thead>
                                 <th class="text-center">No</th>
-                                <th>Ip Address</th>
-                                <th>Email</th>
-                                {{-- <th>Nama</th> --}}
-                                <th>Role</th>
-                                <th>Cabang</th>
-                                <th>Aplikasi</th>
-                                <th>Lama Login</th>
-                                <th>Status</th>
+                                <th>Nama Merk Kendaraan</th>
                                 <th>Aksi</th>
                             </thead>
                             <tbody>
@@ -78,89 +83,17 @@
                                     $end = $page == 1 ? $page_length : $start + $page_length - 1;
                                     $i = $page == 1 ? 1 : $start;
                                 @endphp
-                                @foreach ($data as $key => $item)
-                                    @php
-                                        $cabang = '-';
-                                        if ($item->id_cabang) {
-                                            $dataCabang = DB::table('cabang')
-                                                ->where('id', $item->id_cabang)
-                                                ->first();
-                                            $cabang = $dataCabang->cabang;
-                                        }
-
-                                        // Waktu login pengguna
-                                        $startTime = new DateTime($item->created_at);
-
-                                        // Waktu saat ini
-                                        $endTime = new DateTime('now');
-
-                                        // Hitung perbedaan waktu
-                                        $interval = $endTime->diff($startTime);
-
-                                        // Format waktu
-                                        $hours = $interval->h;
-                                        $minutes = $interval->i;
-                                        $seconds = $interval->s;
-                                    @endphp
+                                @foreach ($data as $item)
                                     <tr>
                                         <td>{{ $i++ }}</td>
-                                        <td>{{ $item->ip_address }}</td>
-                                        <td>{{ $item->email }}</td>
-                                        {{-- <td>
-                                            {{-- @if ($item->karyawan) --}}
-                                                {{-- {{ array_key_exists('nama', $item->karyawan) ? $item->karyawan['nama'] : '-' }} --}}
-                                            {{-- @else
-                                                {{ property_exists($item, 'name') ? $item->name : '-' }}
-                                            @endif --}}
-                                        {{-- </td> --}}
-                                        <td>{{ $item->role }}</td>
-                                        <td>{{ $cabang }}</td>
-                                        <td>{{ ucwords(str_replace('_', ' ', $item->project)) }}</td>
+                                        <td>{{ $item->merk }}</td>
                                         <td>
-                                            <span class="clock_{{ $item->id }}"></span>
-                                            <script>
-                                                currentTime({{ $hours }}, {{ $minutes }}, {{ $seconds }}, "clock_{{ $item->id }}")
-
-                                                function currentTime(h, m, s, widget_id) {
-                                                    let hh = parseInt(h);
-                                                    let mm = parseInt(m);
-                                                    let ss = parseInt(s);
-                                                    ss++;
-
-                                                    if (ss > 59) {
-                                                        mm++;
-                                                        ss = 0;
-                                                    }
-
-                                                    if (mm > 59) {
-                                                        hh++;
-                                                        mm = 0;
-                                                    }
-
-                                                    hh = (hh < 10) ? "0" + hh : hh;
-                                                    mm = (mm < 10) ? "0" + mm : mm;
-                                                    ss = (ss < 10) ? "0" + ss : ss;
-
-                                                    let time = hh + ":" + mm + ":" + ss;
-                                                    document.querySelector(`.${widget_id}`).innerHTML = time;
-                                                    var t = setTimeout(function() {
-                                                        currentTime(hh, mm, ss, `${widget_id}`)
-                                                    }, 1000);
-                                                }
-                                            </script>
-                                        </td>
-                                        <td>
-                                            <h5 class="badge badge-info">Aktif</h5>
-                                        </td>
-                                        <td>
-                                            {{-- <form action="{{ route('reset-api-session', $item->id) }}" method="post">
-                                                @csrf
-                                                <button type="button" class="btn btn-danger" data-toggle="modal"
-                                                    data-target="#confirmResetApiSession-{{ $key }}">
-                                                    Reset
-                                                </button>
-                                                @include('user.api-sessions.confirm-modal')
-                                            </form> --}}
+                                            <button class="btn-edit">
+                                                <iconify-icon icon="uil:edit" class="icon"></iconify-icon>
+                                            </button>
+                                            <button class="btn-delete">
+                                                <iconify-icon class="icon" icon="ic:baseline-delete"></iconify-icon>
+                                            </button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -200,5 +133,7 @@
                 }
             })
         }
+
+
     </script>
 @endpush
