@@ -97,7 +97,6 @@
             }
 
             if (no_pk != '' && no_loan != '' && file != '') {
-                console.log('submit')
                 $('#uploadPKModal #form-pk').submit()
             }
         })

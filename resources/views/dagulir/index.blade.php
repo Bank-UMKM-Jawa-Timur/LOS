@@ -289,7 +289,9 @@
                                                 </li>
                                             @elseif (!$item->pengajuan->sppk && $tglCetak->tgl_cetak_sppk)
                                                 <li class="item-tb-dropdown">
-                                                    <a href="#" class="dropdown-item" data-toggle="modal" data-id="{{ $item->pengajuan->id }}" data-target="#uploadSPPKModal-{{ $item->pengajuan->id }}" onclick="showModalSPPK({{$item->pengajuan->id}})">Upload File SPPK</a>
+                                                    <a href="#" class="dropdown-item show-upload-sppk" data-toggle="modal"
+                                                        data-target="uploadSPPKModal" data-id="{{ $item->pengajuan->id }}"
+                                                        data-kode_pendaftaran="{{$item->kode_pendaftaran}}">Upload File SPPK</a>
                                                 </li>
                                             @elseif (!$tglCetak->tgl_cetak_pk && $item->pengajuan->sppk && $tglCetak->tgl_cetak_sppk )
                                                 <li class="item-tb-dropdown">
@@ -406,10 +408,18 @@
         });
     }
 
-    // cetak file
-    function showModalSPPK(id){
-        $('#uploadSPPKModal-' + id).removeClass('hidden');
-    }
+    $('.show-upload-sppk').on('click', function() {
+        const target = $(this).data('target')
+        const id = $(this).data('id')
+        const url_form = "{{url('/dagulir/post-file')}}/"+id
+        const url_cetak = "{{url('/dagulir/cetak-sppk')}}/"+id
+        var token = generateCsrfToken()
+
+        $(`#${target} #form-sppk`).attr('action', url_form)
+        $(`#${target} #token`).val(token)
+        $(`#${target} #btn-cetak-file`).attr('href', url_cetak)
+        $(`#${target}`).removeClass('hidden');
+    })
 
     $('.show-upload-pk').on('click', function() {
         const target = $(this).data('target')
