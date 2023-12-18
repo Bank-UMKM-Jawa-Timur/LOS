@@ -1944,32 +1944,13 @@ class NewDagulirController extends Controller
                     $realisasi = $this->updateStatus($kode_pendaftaran, 5);
 
                     if (is_array($realisasi)) {
-                        // Realisasi (Upload dokumen)
-                        $upload = $this->syaratDokumen($kode_pendaftaran, $file_pk_base64);
-                        if (!is_array($upload)) {
-                            if ($upload == 200) {
-                                // Update to SELESAI
-                                $update_selesai = $this->updateStatus($kode_pendaftaran, 6);
-                                if (!is_array($update_selesai)) {
-                                    if ($update_selesai == 200) {
-                                        DB::commit();
-                                        Alert::success('success', $message);
-                                        return redirect()->route('dagulir.pengajuan.index');
-                                    }
-                                }
-                                else {
-                                    return $update_selesai;
-                                }
-                            }
-                        }
-                        else {
-                            DB::rollBack();
-                            alert()->error('Terjadi Kesalahan', $upload);
-                            return redirect()->back();
-                        }
+                        DB::rollBack();
+                        alert()->error('Terjadi Kesalahan', json_encode($realisasi));
+                        return redirect()->back();
                     }
                     else {
-                        if (str_contains($realisasi, 'Update Status Gagal. Anda tidak bisa mengubah status, karena status saat ini adalah REALISASI KREDIT')) {
+                        if ($realisasi == 200) {
+                            // Realisasi (Upload dokumen)
                             $upload = $this->syaratDokumen($kode_pendaftaran, $file_pk_base64);
                             if (!is_array($upload)) {
                                 if ($upload == 200) {
@@ -1983,27 +1964,27 @@ class NewDagulirController extends Controller
                                         }
                                     }
                                     else {
-                                        return $update_selesai;
+                                        DB::rollBack();
+                                        alert()->error('Terjadi Kesalahan', $update_selesai);
+                                        return redirect()->back();
                                     }
+                                }
+                                else {
+                                    DB::rollBack();
+                                    alert()->error('Terjadi Kesalahan', $upload);
+                                    return redirect()->back();
                                 }
                             }
                             else {
                                 DB::rollBack();
-                                alert()->error('Terjadi Kesalahan',$upload);
+                                alert()->error('Terjadi Kesalahan', $upload);
                                 return redirect()->back();
                             }
-                        }
-                        else if (str_contains($realisasi, 'Update Status Gagal, karena status pengajuan sudah SELESAI!')) {
-                            DB::rollBack();
-                            alert()->error('Terjadi Kesalahan',$realisasi);
-                            return redirect()->back();
                         }
                         else {
-                            if ($realisasi != 200) {
-                                DB::rollBack();
-                                alert()->error('Terjadi Kesalahan',$realisasi);
-                                return redirect()->back();
-                            }
+                            DB::rollBack();
+                            alert()->error('Terjadi Kesalahan', $realisasi);
+                            return redirect()->back();
                         }
                     }
                     break;
