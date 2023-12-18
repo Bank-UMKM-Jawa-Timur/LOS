@@ -655,7 +655,7 @@
                                                                                     <div class="form-group-2"> --}}
                                                                                         <div class="field-review">
                                                                                             <div class="field-name">
-                                                                                                <label for="">{{ $itemEmpat->nama }} 9999</label>
+                                                                                                <label for="">{{ $itemEmpat->nama }}</label>
                                                                                             </div>
                                                                                             <div class="field-answer">
                                                                                                 <p>{{ $itemJawabanLevelEmpat->option }}</p>
