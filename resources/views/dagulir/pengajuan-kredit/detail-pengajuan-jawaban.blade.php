@@ -798,7 +798,6 @@
                                                 ->where('id_item', $item->id)
                                                 ->where('id_user', Auth::user()->id)
                                                 ->first();
-
                                             // check level 3
                                             $dataLevelTiga = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable', 'is_hide', 'is_rupiah')
                                                 ->where('level', 3)
@@ -1068,7 +1067,6 @@
                                                         ->where('level', 4)
                                                         ->where('id_parent', $itemTiga->id)
                                                         ->get();
-                                                        // dump($itemTiga->id);
                                                     // check jawaban kelayakan
                                                     $checkJawabanKelayakan = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor')
                                                         ->where('id_pengajuan', $dataUmum->id)
@@ -1076,7 +1074,7 @@
                                                         ->first();
                                                 @endphp
 
-                                                @foreach ($dataOptionTiga as $itemOptionTiga)
+                                                {{-- @foreach ($dataOptionTiga as $itemOptionTiga)
                                                     @if (!$itemTiga->is_hide)
                                                         @if ($itemOptionTiga->option == '-')
                                                             @if (isset($checkJawabanKelayakan))
@@ -1088,6 +1086,19 @@
                                                                 </div>
                                                             @endif
                                                         @endif
+                                                    @endif
+                                                @endforeach --}}
+                                                @foreach ($dataOptionTiga as $itemOptionTiga)
+                                                    @if ($itemOptionTiga->option == '-')
+                                                        <div class="form-group-1 col-span-2 pl-2">
+                                                            <div>
+                                                                <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
+                                                                    <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
+                                                                        {{$itemTiga->nama}} :
+                                                                    </h2>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     @endif
                                                 @endforeach
 
@@ -1205,31 +1216,39 @@
                                                                         {{-- <h6 class="font-medium text-sm" for="">{{ $itemTextEmpat->nama }}</h6> --}}
                                                                         @if ($itemEmpat->opsi_jawaban == 'file')
                                                                                     @if (intval($itemTextEmpat->opsi_text) > 1)
-                                                                                        <b>{{ $itemTextEmpat->nama }}</b>
+                                                                                        <b class="pl-2">{{ $itemTextEmpat->nama }}</b>
                                                                                         @php
                                                                                             $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text);
                                                                                         @endphp
                                                                                         @if ($file_parts['extension'] == 'pdf')
-                                                                                            <iframe
-                                                                                                src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
-                                                                                                width="100%" height="400"></iframe>
+                                                                                            <div class="pl-2">
+                                                                                                <iframe
+                                                                                                    src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
+                                                                                                    width="100%" height="400"></iframe>
+                                                                                            </div>
                                                                                         @else
-                                                                                            <img style="border: 5px solid #c2c7cf"
-                                                                                                src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
-                                                                                                alt="" width="400">
+                                                                                            <div class="pl-2">
+                                                                                                <img style="border: 5px solid #c2c7cf"
+                                                                                                    src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
+                                                                                                    alt="" width="400">
+                                                                                            </div>
                                                                                         @endif
                                                                                     @else
                                                                                         @php
                                                                                             $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text);
                                                                                         @endphp
                                                                                         @if ($file_parts['extension'] == 'pdf')
-                                                                                            <iframe
-                                                                                                src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
-                                                                                                width="100%" height="500px"></iframe>
+                                                                                            <div class="pl-2">
+                                                                                                <iframe
+                                                                                                    src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
+                                                                                                    width="100%" height="500px"></iframe>
+                                                                                            </div>
                                                                                         @else
-                                                                                            <img style="border: 5px solid #c2c7cf"
-                                                                                                src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
-                                                                                                alt="" width="500px">
+                                                                                            <div class="pl-2">
+                                                                                                <img style="border: 5px solid #c2c7cf"
+                                                                                                    src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
+                                                                                                    alt="" width="500px">
+                                                                                            </div>
                                                                                         @endif
                                                                                     @endif
                                                                                     {{-- Rupiah data empat --}}

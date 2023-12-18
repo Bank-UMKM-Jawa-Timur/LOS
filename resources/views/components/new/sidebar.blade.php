@@ -53,7 +53,7 @@
                     </a>
                 </li>
                 @if (auth()->user()->role == 'Administrator')
-                <li class="menu-item">
+                <li class="menu-item @active('master,master.*', 'active-menu')">
                     <a href="#" class="toggle-dp-menu">
                         <button class="item-link relative w-full flex gap-2 font-medium text-left px-4 py-3 rounded-md">
                             <span>
@@ -78,54 +78,54 @@
                 <div class="dropdown-menu-link hidden">
                     <ul class="space-y-1 p-2 mt-3 bg-gray-50">
                         <li>
-                            <a href="master-cabang.html">
+                            <a href="{{route('dagulir.master.cabang.index')}}">
                                 <button class="item-dp-link">
                                     Master kantor cabang
                                 </button>
                             </a>
                         </li>
                         <li>
-                            <a href="master-kabupaten.html">
+                            <a href="{{route('dagulir.master.kabupaten.index')}}">
                                 <button class="item-dp-link">Master Kabupaten</button>
                             </a>
                         </li>
                         <li>
-                            <a href="master-kecamatan.html">
+                            <a href="{{route('dagulir.master.kecamatan.index')}}">
                                 <button class="item-dp-link">Master Kecamatan</button>
                             </a>
                         </li>
                         <li>
-                            <a href="master-desa.html">
+                            <a href="{{route('dagulir.master.desa.index')}}">
                                 <button class="item-dp-link">Master Desa</button>
                             </a>
                         </li>
                         <li>
-                            <a href="master-user.html">
+                            <a href="{{route('dagulir.master.user.index')}}">
                                 <button class="item-dp-link">Master User</button>
                             </a>
                         </li>
                         <li>
-                            <a href="master-item.html">
+                            <a href="{{route('dagulir.master.master-item.index')}}">
                                 <button class="item-dp-link">Master Item</button>
                             </a>
                         </li>
                         <li>
-                            <a href="master-merk.html">
+                            <a href="{{route('dagulir.master.merk.index')}}">
                                 <button class="item-dp-link">Master Merk</button>
                             </a>
                         </li>
                         <li>
-                            <a href="master-tipe.html">
+                            <a href="{{route('dagulir.master.tipe.index')}}">
                                 <button class="item-dp-link">Master Tipe</button>
                             </a>
                         </li>
                         <li>
-                            <a href="master-session.html">
+                            <a href="{{route('dagulir.master.index-session')}}">
                                 <button class="item-dp-link">Master Session</button>
                             </a>
                         </li>
                         <li>
-                            <a href="master-api-session.html">
+                            <a href="{{route('dagulir.master.index-api-session')}}">
                                 <button class="item-dp-link">Master API Session</button>
                             </a>
                         </li>
