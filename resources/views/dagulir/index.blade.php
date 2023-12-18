@@ -160,6 +160,7 @@
                     <th class="w-11">Tipe Pengajuan</th>
                     <th>Plafon</th>
                     <th class="w-13">Tenor</th>
+                    <th class="w-13">Skoe</th>
                     <th class="w-13">Status Pincetar</th>
                     <th class="w-7">Status SIPDE</th>
                     <th class="w-5">Aksi</th>
@@ -201,6 +202,68 @@
                         </td>
                         <td>
                             {{$item->jangka_waktu}} Bulan
+                        </td>
+                        <td>
+                            @php
+                                $avgResult = $item->pengajuan->average_by_sistem;
+                                if ($item->pengajuan->posisi == 'Review Penyelia')
+                                    $avgResult = $item->pengajuan->average_by_penyelia ? $item->pengajuan->average_by_penyelia : $item->pengajuan->average_by_sistem;
+                                else if ($item->pengajuan->posisi == 'PBO')
+                                    $avgResult = $item->pengajuan->average_by_pbo ? $item->pengajuan->average_by_pbo : $item->pengajuan->average_by_penyelia;
+                                else if ($item->pengajuan->posisi == 'PBP')
+                                    $avgResult = $item->pengajuan->average_by_pbp ? $item->pengajuan->average_by_pbp : $item->pengajuan->average_by_pbo;
+                                else if ($item->pengajuan->posisi == 'Pincab') {
+                                    if (!$item->pengajuan->average_by_penyelia && !$item->pengajuan->average_by_pbo && $item->pengajuan->average_by_pbp)
+                                        $avgResult = $item->pengajuan->average_by_pbp;
+                                    else if (!$item->pengajuan->average_by_penyelia && $item->pengajuan->average_by_pbo && !$item->pengajuan->average_by_pbp)
+                                        $avgResult = $item->pengajuan->average_by_pbo;
+                                    else if ($item->pengajuan->average_by_penyelia && !$item->pengajuan->average_by_pbo && !$item->pengajuan->average_by_pbp)
+                                        $avgResult = $item->pengajuan->average_by_penyelia;
+                                }
+                                else if ($item->pengajuan->posisi == 'Ditolak') {
+                                    if (!$item->pengajuan->average_by_penyelia && !$item->pengajuan->average_by_pbo && $item->pengajuan->average_by_pbp)
+                                        $avgResult = $item->pengajuan->average_by_pbp;
+                                    else if (!$item->pengajuan->average_by_penyelia && $item->pengajuan->average_by_pbo && !$item->pengajuan->average_by_pbp)
+                                        $avgResult = $item->pengajuan->average_by_pbo;
+                                    else if ($item->pengajuan->average_by_penyelia && !$item->pengajuan->average_by_pbo && !$item->pengajuan->average_by_pbp)
+                                        $avgResult = $item->pengajuan->average_by_penyelia;
+                                }
+                                else if ($item->pengajuan->posisi == 'Selesai') {
+                                    if (!$item->pengajuan->average_by_penyelia && !$item->pengajuan->average_by_pbo && $item->pengajuan->average_by_pbp)
+                                        $avgResult = $item->pengajuan->average_by_pbp;
+                                    else if (!$item->pengajuan->average_by_penyelia && $item->pengajuan->average_by_pbo && !$item->pengajuan->average_by_pbp)
+                                        $avgResult = $item->pengajuan->average_by_pbo;
+                                    else if ($item->pengajuan->average_by_penyelia && !$item->pengajuan->average_by_pbo && !$item->pengajuan->average_by_pbp)
+                                        $avgResult = $item->pengajuan->average_by_penyelia;
+                                }
+                                $status_skor = "";
+                                if ($avgResult > 0 && $avgResult <= 2) {
+                                    $status_skor = "merah";
+                                } elseif ($avgResult > 2 && $avgResult <= 3) {
+                                    $status_skor = "kuning";
+                                } elseif ($avgResult > 3) {
+                                    $status_skor = "hijau";
+                                } else {
+                                    $status_skor = "merah";
+                                }
+                            @endphp
+                            @if ($status_skor == 'hijau')
+                                <font class="text-green-500">
+                                    {{ $avgResult }}
+                                </font>
+                            @elseif ($status_skor == 'kuning')
+                                <font class="text-yellow-500">
+                                    {{ $avgResult }}
+                                </font>
+                            @elseif ($status_skor == 'merah')
+                                <font class="text-red-500">
+                                    {{ $avgResult }}
+                                </font>
+                            @else
+                                <font class="text-neutral-800">
+                                    {{ $avgResult }}
+                                </font>
+                            @endif
                         </td>
                         <td>
                             {{$item->pengajuan->posisi}}
