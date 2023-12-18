@@ -813,7 +813,7 @@
                                                                         </div>
                                                                         <div class="field-answer">
                                                                             @if ($item->id == 79)
-                                                                                <p class="npwp">{{$itemTextDua->opsi_text}}</p>
+                                                                                <p class="npwp">{{$dataUmumNasabah->npwp}}</p>
                                                                             @else
                                                                                 <p> {{ str_replace('_', ' ', $itemTextDua->opsi_text) }} {{ $item->opsi_jawaban == 'persen' ? '%' : '' }}</p>
                                                                             @endif
@@ -2065,10 +2065,9 @@
         $("#id_merk").trigger("change");
     });
 
-    function formatNpwp() {
-        var value = $('.npwp').html()
-        if (typeof value === 'string') {
-            return value.replace(/(\d{2})(\d{3})(\d{3})(\d{1})(\d{3})(\d{3})/, '$1.$2.$3.$4-$5.$6');
+    function formatNpwp(param) {
+        if (typeof param === 'string') {
+            return param.replace(/(\d{2})(\d{3})(\d{3})(\d{1})(\d{3})(\d{3})/, '$1.$2.$3.$4-$5.$6');
         }
     }
 
