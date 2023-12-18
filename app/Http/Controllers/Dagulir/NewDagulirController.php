@@ -1307,8 +1307,7 @@ class NewDagulirController extends Controller
                                     if (!is_array($upload)) {
                                         if ($upload == 200) {
                                             // Update to SELESAI
-                                            $status = 6;
-                                            $update_selesai = $this->updateStatus($kode_pendaftaran, $status);
+                                            $update_selesai = $this->updateStatus($kode_pendaftaran, 6);
                                             if (!is_array($update_selesai)) {
                                                 if ($update_selesai == 200) {
                                                     return 200;
@@ -1813,8 +1812,8 @@ class NewDagulirController extends Controller
         $param['dataPincab'] = User::where('id', $kodePincab)->get();
         $param['dataPenyelia'] = User::where('id', $kodePenyelia)->get();
 
-        $indexBulan = intval(date('m', strtotime($param['tglCetak']->tgl_cetak_sppk))) - 1;
-        $param['tgl'] = date('d', strtotime($param['tglCetak']->tgl_cetak_sppk)) . ' ' . $this->bulan[$indexBulan] . ' ' . date('Y', strtotime($param['tglCetak']->tgl_cetak_sppk));
+        $indexBulan = intval(date('m', strtotime($param['tglCetak']->tgl_cetak_pk))) - 1;
+        $param['tgl'] = date('d', strtotime($param['tglCetak']->tgl_cetak_pk)) . ' ' . $this->bulan[$indexBulan] . ' ' . date('Y', strtotime($param['tglCetak']->tgl_cetak_pk));
 
         $param['installment'] = DB::table('jawaban_text')
         ->where('id_pengajuan', $id)
@@ -1888,19 +1887,12 @@ class NewDagulirController extends Controller
 
     public function postFileDagulir(Request $request, $id)
     {
-        // return $request;
-        $kode_cabang = DB::table('cabang')
-        ->join('pengajuan', 'pengajuan.id_cabang', 'cabang.id')
-        ->where('pengajuan.id', $id)
-            ->select('kode_cabang')
-            ->first();
-
         try {
             $message = null;
             switch ($request->tipe_file) {
                     // File SPPK Handler
                 case 'SPPK':
-                    $message = 'file SPPK.';
+                    $message = 'File SPPK berhasil diupload';
                     $folderSPPK = public_path() . '/upload/' . $id . '/sppk/';
                     $fileSPPK = $request->sppk;
                     $filenameSPPK = date('YmdHis') . '.' . $fileSPPK->getClientOriginalExtension();
@@ -1917,12 +1909,7 @@ class NewDagulirController extends Controller
                     break;
                     // File PK Handler
                 case 'PK':
-                    $message = 'file PK.';
-                    $count = DB::table('log_cetak_kkb')
-                    ->where('id_pengajuan', $id)
-                    ->update([
-                        'no_pk' => $request->get('no_pk')
-                    ]);
+                    $message = 'File PK berhasil diupload';
                     $kode_pendaftaran = $request->get('kode_pendaftaran');
                     $folderPK = public_path() . '/upload/' . $id . '/pk/';
                     $filePK = $request->pk;
@@ -1932,6 +1919,12 @@ class NewDagulirController extends Controller
                         mkdir($folderPK, 0755, true);
                     }
                     $filePK->move($folderPK, $filenamePK);
+                    DB::table('log_cetak_kkb')
+                    ->where('id_pengajuan', $id)
+                    ->update([
+                        'no_pk' => $request->get('no_pk'),
+                        'no_loan' => $request->get('no_loan'),
+                    ]);
                     DB::table('pengajuan')
                     ->where('id', $id)
                         ->update([

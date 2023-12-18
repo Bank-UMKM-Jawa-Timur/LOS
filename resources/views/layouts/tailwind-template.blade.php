@@ -67,5 +67,16 @@
     {{-- app.js is custom global js --}}
     <script src="{{ asset('js/app.js') }}"></script>
     {{-- inject javascript from view  --}}
+    <script>
+        function generateCsrfToken() {
+            var token = "{{csrf_token()}}"
+            if (token == '') {
+                generateCsrfToken();
+            }
+            else {
+                return token;
+            }
+        }
+    </script>
     @stack('script-inject')
 </html>
