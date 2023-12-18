@@ -21,6 +21,7 @@ use App\Models\PengajuanModel;
 use App\Models\JawabanSubColumnModel;
 use App\Models\PendapatPerAspek;
 use App\Models\DetailPendapatPerAspek;
+use App\Models\JawabanModel;
 use App\Models\JawabanTemp;
 use App\Models\JawabanTempModel;
 use App\Models\LogPengajuan;
@@ -223,7 +224,6 @@ class NewDagulirController extends Controller
 
     public function store(Request $request)
     {
-
         $request->validate([
             'nama_lengkap' => 'required',
             'email' => 'required|unique:pengajuan_dagulir,email',
@@ -356,8 +356,6 @@ class NewDagulirController extends Controller
             // ktp nasabah
             $update_pengajuan->update();
 
-
-
             $tempNasabah = TemporaryService::getNasabahData($request->idCalonNasabah);
 
             $dataNasabah = $tempNasabah->toArray();
@@ -384,7 +382,6 @@ class NewDagulirController extends Controller
                     } else {
                         $dataJawabanText->opsi_text = $request->get('informasi')[$key];
                     }
-                    // $dataJawabanText->opsi_text = $request->get('informasi')[$key] == null ? '-' : $request->get('informasi')[$key];
                     $dataJawabanText->save();
                 }
             }
@@ -691,7 +688,17 @@ class NewDagulirController extends Controller
                         } else
                             $totalDataNull++;
                     }
-                    $average = ($sum_select) / (count($request->skor_penyelia) - $totalDataNull);
+                    // get skor ratio coverage opsi
+                    $jawaban = JawabanModel::select('id', 'skor')
+                                            ->where('id_pengajuan', $request->id_pengajuan)
+                                            ->where('id_jawaban', 158) // 158  = id_option ratio coverage opsi 
+                                            ->first();
+                    $total_input_data = (count($request->skor_penyelia) - $totalDataNull);
+                    if ($jawaban) {
+                        $sum_select += $jawaban->skor;
+                        $total_input_data++;
+                    }
+                    $average = ($sum_select) / $total_input_data;
                     $result = round($average, 2);
                     $status = "";
                     $updateData = PengajuanModel::find($request->id_pengajuan);
