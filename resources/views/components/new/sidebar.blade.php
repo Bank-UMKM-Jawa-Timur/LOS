@@ -85,17 +85,17 @@
                             </a>
                         </li>
                         <li>
-                            <a href="master-kabupaten.html">
+                            <a href="{{route('dagulir.master.kabupaten.index')}}">
                                 <button class="item-dp-link">Master Kabupaten</button>
                             </a>
                         </li>
                         <li>
-                            <a href="master-kecamatan.html">
+                            <a href="{{route('dagulir.master.kecamatan.index')}}">
                                 <button class="item-dp-link">Master Kecamatan</button>
                             </a>
                         </li>
                         <li>
-                            <a href="master-desa.html">
+                            <a href="{{route('dagulir.master.desa.index')}}">
                                 <button class="item-dp-link">Master Desa</button>
                             </a>
                         </li>
@@ -105,27 +105,27 @@
                             </a>
                         </li>
                         <li>
-                            <a href="master-item.html">
+                            <a href="{{route('dagulir.master.master-item.index')}}">
                                 <button class="item-dp-link">Master Item</button>
                             </a>
                         </li>
                         <li>
-                            <a href="master-merk.html">
+                            <a href="{{route('dagulir.master.merk.index')}}">
                                 <button class="item-dp-link">Master Merk</button>
                             </a>
                         </li>
                         <li>
-                            <a href="master-tipe.html">
+                            <a href="{{route('dagulir.master.tipe.index')}}">
                                 <button class="item-dp-link">Master Tipe</button>
                             </a>
                         </li>
                         <li>
-                            <a href="master-session.html">
+                            <a href="{{route('dagulir.master.index-session')}}">
                                 <button class="item-dp-link">Master Session</button>
                             </a>
                         </li>
                         <li>
-                            <a href="master-api-session.html">
+                            <a href="{{route('dagulir.master.index-api-session')}}">
                                 <button class="item-dp-link">Master API Session</button>
                             </a>
                         </li>

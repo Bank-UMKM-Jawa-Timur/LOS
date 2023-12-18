@@ -1,15 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Dagulir\master;
+
+use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
-use \App\Http\Requests\KabupatenRequest;
+use \App\Http\Requests\KecamatanRequest;
+use \App\Models\Kecamatan;
 use \App\Models\Kabupaten;
 use Exception;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\DB;
 
-class KabupatenController extends Controller
+class NewKecamatanController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -27,27 +29,27 @@ class KabupatenController extends Controller
 
     public function index(Request $request)
     {
-        $this->param['pageTitle'] = 'List Kabupaten';
-        $this->param['btnText'] = 'Tambah Kabupaten';
-        $this->param['btnLink'] = route('kabupaten.create');
+        $this->param['pageTitle'] = 'List Kecamatan';
+        $this->param['btnText'] = 'Tambah Kecamatan';
+        $this->param['btnLink'] = route('kecamatan.create');
 
         try {
-            $keyword = $request->get('keyword');
-            $getKabupaten = Kabupaten::orderBy('id', 'ASC');
-
-            if ($keyword) {
-                $getKabupaten->where('id', 'LIKE', "%{$keyword}%")->orWhere('kabupaten', 'LIKE', "%{$keyword}%");
+            $search = $request->get('q');
+            $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+            $page = $request->has('page') ? $request->get('page') : 1;
+            $getKecamatan = Kecamatan::with('kabupaten')->orderBy('id', 'ASC');
+            if ($search) {
+                $getKecamatan->where('id', 'LIKE', "%{$search}%")->orWhere('kecamatan', 'LIKE', "%{$search}%");
             }
 
-            $this->param['kabupaten'] = $getKabupaten->paginate(10);
+            $this->param['data'] = $getKecamatan->paginate($limit);
         } catch (\Illuminate\Database\QueryException $e) {
             return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
         }
 
-        return \view('kabupaten.index', $this->param);
+        return \view('dagulir.master.kecamatan.index', $this->param);
     }
 
     /**
@@ -57,11 +59,13 @@ class KabupatenController extends Controller
      */
     public function create()
     {
-        $this->param['pageTitle'] = 'Tambah Kabupaten';
-        $this->param['btnText'] = 'List kabupaten';
-        $this->param['btnLink'] = route('kabupaten.index');
+        $this->param['pageTitle'] = 'Tambah Kecamatan';
+        $this->param['btnText'] = 'List Kecamatan';
+        $this->param['btnLink'] = route('kecamatan.index');
+        $this->param['allKab'] = Kabupaten::get();
 
-        return \view('kabupaten.create', $this->param);
+
+        return \view('kecamatan.create', $this->param);
     }
 
     /**
@@ -70,9 +74,9 @@ class KabupatenController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(KabupatenRequest $request)
+    public function store(KecamatanRequest $request)
     {
-                /*
+        /*
         TODO
         1. validasi form
         2. simpan ke db
@@ -81,16 +85,17 @@ class KabupatenController extends Controller
 
         $validated = $request->validated();
         try {
-            $kabupaten = new kabupaten;
-            $kabupaten->kabupaten = $validated['kabupaten'];
-            $kabupaten->save();
+            $kecamatan = new kecamatan;
+            $kecamatan->kecamatan = $validated['kecamatan'];
+            $kecamatan->id_kabupaten = $validated['id_kabupaten'];
+            $kecamatan->save();
         } catch (Exception $e) {
             return back()->withError('Terjadi kesalahan.');
         } catch (QueryException $e) {
             return back()->withError('Terjadi kesalahan.');
         }
 
-        return redirect()->route('kabupaten.index')->withStatus('Data berhasil disimpan.');
+        return redirect()->route('kecamatan.index')->withStatus('Data berhasil disimpan.');
     }
 
     /**
@@ -112,12 +117,13 @@ class KabupatenController extends Controller
      */
     public function edit($id)
     {
-        $this->param['pageTitle'] = 'Edit Kabupaten';
-        $this->param['kabupaten'] = Kabupaten::find($id);
-        $this->param['btnText'] = 'List Kabupaten';
-        $this->param['btnLink'] = route('kabupaten.index');
+        $this->param['pageTitle'] = 'Edit Kecamatan';
+        $this->param['kecamatan'] = kecamatan::find($id);
+        $this->param['btnText'] = 'List Kecamatan';
+        $this->param['btnLink'] = route('kecamatan.index');
+        $this->param['allKab'] = Kabupaten::get();
 
-        return view('kabupaten.edit', $this->param);
+        return view('kecamatan.edit', $this->param);
     }
 
     /**
@@ -129,26 +135,26 @@ class KabupatenController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $kabupaten = Kabupaten::findOrFail($id);
+        $kecamatan = Kecamatan::findOrFail($id);
 
         $validatedData = $request->validate(
             [
-                'kabupaten' => 'required',
+                'kecamatan' => 'required',
+                'id_kabupaten' => 'required',
             ],
         );
 
         try {
-            $kabupaten->kabupaten = $request->get('kabupaten');
-            $kabupaten->save();
-
-
+            $kecamatan->kecamatan = $request->get('kecamatan');
+            $kecamatan->id_kabupaten = $request['id_kabupaten'];
+            $kecamatan->save();
         } catch (\Exception $e) {
             return redirect()->back()->withError('Terjadi kesalahan.');
         } catch (\Illuminate\Database\QueryException $e) {
             return redirect()->back()->withError('Terjadi kesalahan.');
         }
 
-        return redirect()->route('kabupaten.index')->withStatus('Data berhasil diperbarui.');
+        return redirect()->route('kecamatan.index')->withStatus('Data berhasil diperbarui.');
     }
 
     /**
@@ -160,14 +166,21 @@ class KabupatenController extends Controller
     public function destroy($id)
     {
         try {
-            $kabupaten = Kabupaten::findOrFail($id);
-            $kabupaten->delete();
+            $kecamatan = Kecamatan::findOrFail($id);
+            $kecamatan->delete();
         } catch (Exception $e) {
             return back()->withError('Terjadi kesalahan.');
         } catch (QueryException $e) {
             return back()->withError('Terjadi kesalahan.');
         }
 
-        return redirect()->route('kabupaten.index')->withStatus('Data berhasil dihapus.');
+        return redirect()->route('kecamatan.index')->withStatus('Data berhasil dihapus.');
+    }
+
+    public function getKecamatanByKabupatenId($id)
+    {
+        $kecamatan = Kecamatan::where('id_kabupaten', $id)->get();
+
+        return json_encode($kecamatan);
     }
 }

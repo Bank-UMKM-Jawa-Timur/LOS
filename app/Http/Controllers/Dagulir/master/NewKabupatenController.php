@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Dagulir\master;
+
+use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use \App\Http\Requests\KabupatenRequest;
@@ -8,8 +10,9 @@ use \App\Models\Kabupaten;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
+use RealRashid\SweetAlert\Facades\Alert;
 
-class KabupatenController extends Controller
+class NewKabupatenController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -32,22 +35,23 @@ class KabupatenController extends Controller
         $this->param['btnLink'] = route('kabupaten.create');
 
         try {
-            $keyword = $request->get('keyword');
-            $getKabupaten = Kabupaten::orderBy('id', 'ASC');
+            $search = $request->get('q');
+            $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+            $page = $request->has('page') ? $request->get('page') : 1;
+            $getKabupaten = DB::table('kabupaten')->orderBy('id', 'ASC');
 
-            if ($keyword) {
-                $getKabupaten->where('id', 'LIKE', "%{$keyword}%")->orWhere('kabupaten', 'LIKE', "%{$keyword}%");
+            if ($search) {
+                $getKabupaten->where('id', 'LIKE', "%{$search}%")->orWhere('kabupaten', 'LIKE', "%{$search}%");
             }
 
-            $this->param['kabupaten'] = $getKabupaten->paginate(10);
+            $this->param['data'] = $getKabupaten->paginate($limit);
         } catch (\Illuminate\Database\QueryException $e) {
             return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
         }
 
-        return \view('kabupaten.index', $this->param);
+        return \view('dagulir.master.kabupaten.index', $this->param);
     }
 
     /**
@@ -72,7 +76,8 @@ class KabupatenController extends Controller
      */
     public function store(KabupatenRequest $request)
     {
-                /*
+
+        /*
         TODO
         1. validasi form
         2. simpan ke db
@@ -85,8 +90,10 @@ class KabupatenController extends Controller
             $kabupaten->kabupaten = $validated['kabupaten'];
             $kabupaten->save();
         } catch (Exception $e) {
+            dd($e);
             return back()->withError('Terjadi kesalahan.');
         } catch (QueryException $e) {
+            dd($e);
             return back()->withError('Terjadi kesalahan.');
         }
 
@@ -140,8 +147,6 @@ class KabupatenController extends Controller
         try {
             $kabupaten->kabupaten = $request->get('kabupaten');
             $kabupaten->save();
-
-
         } catch (\Exception $e) {
             return redirect()->back()->withError('Terjadi kesalahan.');
         } catch (\Illuminate\Database\QueryException $e) {
