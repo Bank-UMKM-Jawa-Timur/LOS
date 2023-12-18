@@ -53,7 +53,7 @@
                     </a>
                 </li>
                 @if (auth()->user()->role == 'Administrator')
-                <li class="menu-item">
+                <li class="menu-item @active('master,master.*', 'active-menu')">
                     <a href="#" class="toggle-dp-menu">
                         <button class="item-link relative w-full flex gap-2 font-medium text-left px-4 py-3 rounded-md">
                             <span>

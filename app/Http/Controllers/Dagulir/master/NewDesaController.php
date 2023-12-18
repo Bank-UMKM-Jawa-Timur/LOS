@@ -98,8 +98,8 @@ class NewDesaController extends Controller
         } catch (QueryException $e) {
             return back()->withError('Terjadi kesalahan.');
         }
-
-        return redirect()->route('desa.index')->withStatus('Data berhasil disimpan.');
+        alert()->success('Berhasil','Berhasil menambahkan data.');
+        return redirect()->route('dagulir.master.desa.index')->withStatus('Data berhasil disimpan.');
     }
 
     /**
