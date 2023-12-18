@@ -1050,9 +1050,9 @@ class NewDagulirController extends Controller
 
             $param['pendapatDanUsulan'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff', 'komentar_penyelia', 'komentar_pincab', 'komentar_pbo', 'komentar_pbp')->first();
             $param['plafonUsulan'] = PlafonUsulan::where('id_pengajuan', $id)->select(
-                'plafon_usulan_penyelia', 
-                'jangka_waktu_usulan_penyelia', 
-                'plafon_usulan_pbo', 
+                'plafon_usulan_penyelia',
+                'jangka_waktu_usulan_penyelia',
+                'plafon_usulan_pbo',
                 'jangka_waktu_usulan_pbo',
                 'plafon_usulan_pbp',
                 'jangka_waktu_usulan_pbp',
@@ -1095,7 +1095,7 @@ class NewDagulirController extends Controller
                 $log = [];
             }
             $param['logPengajuan'] = $log;
-            
+
 
             return view('dagulir.pengajuan-kredit.review-pincab-new', $param);
 

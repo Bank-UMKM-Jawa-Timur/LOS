@@ -200,7 +200,7 @@
                 <textarea
                     name="alamat_sesuai_ktp"
                     class="form-textarea"
-                    placeholder="Alamat K"
+                    placeholder="Alamat KTP"
                     id=""
                 >{{ old('alamat_sesuai_ktp') }}</textarea>
             </div>
@@ -240,9 +240,7 @@
                     class="form-textarea"
                     placeholder="Alamat Domisili"
                     id=""
-                >
-                {{ old('alamat_domisili') }}
-            </textarea>
+                >{{ old('alamat_domisili') }}</textarea>
             </div>
 
         </div>
@@ -304,7 +302,7 @@
                 </div>
             </div>
         </div>
-        <div class="form-group-2">
+        <div class="form-group-3">
             <div class="input-box">
                 <label for="">Jenis Usaha</label><small class="text-red-500 font-bold">*</small>
                 <select name="jenis_usaha" id="" class="form-select">
@@ -331,49 +329,7 @@
                     <option value="0"> --- Pilih Kecamatan --- </option>
                 </select>
             </div>
-            <div class="input-box">
-                <label for="">Tipe Pengajuan</label><small class="text-red-500 font-bold">*</small>
-                <select name="tipe_pengajuan" id="tipe" class="form-select">
-                    <option value="0">Tipe Pengajuan</option>
-                    @foreach ($tipe as $key => $value)
-                    <option value="{{ $key }}" {{ old('alamat_sesuai_ktp') == $key ? 'selected' : '' }}>{{ $value }}</option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
-        <div class="form-group-3 hidden" id="tempat_berdiri">
-            <div id="nama_pj" class="input-box">
-                <label for="" id="label_pj"></label>
-                <input
-                    type="text"
-                    class="form-input"
-                    placeholder="Masukkan disini .."
-                    name="nama_pj"
-                    value="{{ old('nama_pj') }}"
-                />
-            </div>
-            <div class="input-box">
-                <label for="">Tempat Berdiri</label><small class="text-red-500 font-bold">*</small>
-                <input
-                    type="text"
-                    class="form-input"
-                    name="tempat_berdiri"
-                    placeholder="Masukkan disini"
-                    value="{{ old('tempat_berdiri') }}"
 
-                />
-            </div>
-            <div class="input-box">
-                <label for="">Tanggal Berdiri</label><small class="text-red-500 font-bold">*</small>
-                <div class="input-grouped">
-                    <input
-                    type="date"
-                    class="form-input"
-                    name="tanggal_berdiri"
-                    value="{{ old('tanggal_berdiri') }}"
-                    />
-                </div>
-            </div>
         </div>
         <div class="form-group-1">
             <div class="input-box">
@@ -383,9 +339,7 @@
                     class="form-textarea"
                     placeholder="Alamat Usaha"
                     id=""
-                >
-                {{ old('alamat_usaha') }}
-                </textarea>
+                >{{ old('alamat_usaha') }}</textarea>
             </div>
         </div>
         <div class="form-group-1 col-span-2">
@@ -431,7 +385,8 @@
                 </div>
             </div>
         </div>
-        <div class="form-group-3">
+
+        <div class="form-group-2">
             <div class="input-box">
                 <label for="">Tujuan Penggunaan</label><small class="text-red-500 font-bold">*</small>
                 <input
@@ -459,6 +414,49 @@
                     <option value="Berbadan Hukum" {{ old('jenis_berbadan') == 'Berbadan Hukum' ? 'selected' : '' }}>Berbadan Hukum</option>
                     <option value="Tidak Berbadan Hukum" {{ old('jenis_berbadan') == 'Tidak Berbadan Hukum' ? 'selected' : '' }}>Tidak Berbadan Hukum</option>
                 </select>
+            </div>
+            <div class="input-box">
+                <label for="">Tipe Pengajuan</label><small class="text-red-500 font-bold">*</small>
+                <select name="tipe_pengajuan" id="tipe" class="form-select">
+                    <option value="0">Tipe Pengajuan</option>
+                    @foreach ($tipe as $key => $value)
+                    <option value="{{ $key }}" {{ old('alamat_sesuai_ktp') == $key ? 'selected' : '' }}>{{ $value }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+        <div class="form-group-3 hidden" id="tempat_berdiri">
+            <div id="nama_pj" class="input-box">
+                <label for="" id="label_pj"></label>
+                <input
+                    type="text"
+                    class="form-input"
+                    placeholder="Masukkan disini .."
+                    name="nama_pj"
+                    value="{{ old('nama_pj') }}"
+                />
+            </div>
+            <div class="input-box">
+                <label for="">Tempat Berdiri</label><small class="text-red-500 font-bold">*</small>
+                <input
+                    type="text"
+                    class="form-input"
+                    name="tempat_berdiri"
+                    placeholder="Masukkan disini"
+                    value="{{ old('tempat_berdiri') }}"
+
+                />
+            </div>
+            <div class="input-box">
+                <label for="">Tanggal Berdiri</label><small class="text-red-500 font-bold">*</small>
+                <div class="input-grouped">
+                    <input
+                    type="date"
+                    class="form-input"
+                    name="tanggal_berdiri"
+                    value="{{ old('tanggal_berdiri') }}"
+                    />
+                </div>
             </div>
         </div>
         <div class="form-group-1">
