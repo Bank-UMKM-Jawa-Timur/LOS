@@ -1,4 +1,5 @@
 @include('dagulir.master.cabang.modal.create')
+@include('dagulir.master.cabang.modal.edit')
 @extends('layouts.tailwind-template')
 @include('components.new.modal.loading')
 @push('script-inject')
@@ -94,7 +95,7 @@
                                         <td>{{ $item->email }}</td>
                                         <td>{{ $item->alamat }}</td>
                                         <td>
-                                            <button class="btn-edit">
+                                            <button class="btn-edit" data-id="{{ $item->id }}">
                                                 <iconify-icon icon="uil:edit" class="icon"></iconify-icon>
                                             </button>
                                             <button class="btn-delete">

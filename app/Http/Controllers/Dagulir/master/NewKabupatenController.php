@@ -96,8 +96,8 @@ class NewKabupatenController extends Controller
             dd($e);
             return back()->withError('Terjadi kesalahan.');
         }
-
-        return redirect()->route('kabupaten.index')->withStatus('Data berhasil disimpan.');
+        alert()->success('Berhasil','Berhasil menambahkan data.');
+        return redirect()->route('dagulir.master.kabupaten.index')->withStatus('Data berhasil disimpan.');
     }
 
     /**

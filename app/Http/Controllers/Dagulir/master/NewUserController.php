@@ -100,8 +100,8 @@ class NewUserController extends Controller
         } catch (QueryException $e) {
             return back()->withError('Terjadi kesalahan.');
         }
-
-        return redirect()->route('user.index')->withStatus('Data berhasil disimpan.');
+        alert()->success('Berhasil','Berhasil Menambahkan data');
+        return redirect()->route('dagulir.master.user.index')->withStatus('Data berhasil disimpan.');
     }
 
     /**

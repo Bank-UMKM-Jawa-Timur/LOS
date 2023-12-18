@@ -89,8 +89,8 @@ class NewCabangController extends Controller
         } catch (QueryException $e) {
             return back()->withError('Terjadi kesalahan.');
         }
-
-        return redirect()->route('cabang.index')->withStatus('Data berhasil disimpan.');
+        alert()->success('Success', 'Berhasil menambahkan data.');
+        return redirect()->route('dagulir.master.cabang.index');
     }
 
     /**

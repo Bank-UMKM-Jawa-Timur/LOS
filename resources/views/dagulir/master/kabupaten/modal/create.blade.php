@@ -10,7 +10,7 @@
                 <iconify-icon icon="iconamoon:close-bold" class="text-2xl"></iconify-icon>
             </button>
         </div>
-        <form action="{{ route('dagulir.master.kabupaten.store') }}">
+        <form action="{{ route('dagulir.master.kabupaten.store') }}" method="POST">
         @csrf
             <div class="modal-body">
                 <div class="form-group-1 mb-4">
