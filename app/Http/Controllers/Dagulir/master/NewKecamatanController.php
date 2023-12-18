@@ -94,8 +94,8 @@ class NewKecamatanController extends Controller
         } catch (QueryException $e) {
             return back()->withError('Terjadi kesalahan.');
         }
-
-        return redirect()->route('kecamatan.index')->withStatus('Data berhasil disimpan.');
+        alert()->success('Berhasil','Berhasil menambahkan data');
+        return redirect()->route('dagulir.master.kecamatan.index')->withStatus('Data berhasil disimpan.');
     }
 
     /**

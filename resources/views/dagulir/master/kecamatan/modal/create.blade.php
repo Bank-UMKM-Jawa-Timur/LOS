@@ -17,7 +17,8 @@
           </button>
         </div>
         <div class="modal-body">
-          <form action="">
+          <form action="{{ route('dagulir.master.kecamatan.store') }}" method="POST">
+            @csrf
             <div class="form-group-1 mb-4">
               <div class="input-box">
                 <label for="">Nama Kecamatan</label>
