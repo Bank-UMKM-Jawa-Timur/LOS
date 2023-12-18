@@ -410,16 +410,17 @@
                                                     @endif
                                                 @endif
                                             @else
+                                            @endif
                                             <li class="item-tb-dropdown">
                                                 <a href="{{ route('dagulir.cetak-surat', $item->pengajuan->id) }}"
                                                     class="cursor-pointer">Cetak</a>
                                             </li>
-                                            @endif
+                                        @endif
                                         </ul>
                                     </div>
                                 </div>
                             </td>
-                        </tr>
+                    </tr>
                     @endforeach
                 </tbody>
             </table>
