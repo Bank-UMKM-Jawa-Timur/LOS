@@ -1542,8 +1542,17 @@ video {
 .z-50 {
   z-index: 50;
 }
+.order-2 {
+  order: 2;
+}
+.order-3 {
+  order: 3;
+}
 .col-span-2 {
   grid-column: span 2 / span 2;
+}
+.col-span-1 {
+  grid-column: span 1 / span 1;
 }
 .m-0 {
   margin: 0px;
@@ -2004,6 +2013,9 @@ video {
 .border-2 {
   border-width: 2px;
 }
+.border-4 {
+  border-width: 4px;
+}
 .border-b {
   border-bottom-width: 1px;
 }
@@ -2058,6 +2070,10 @@ video {
 }
 .border-transparent {
   border-color: transparent;
+}
+.border-gray-800 {
+  --tw-border-opacity: 1;
+  border-color: rgb(31 41 55 / var(--tw-border-opacity));
 }
 .bg-\[\#39B568\]\/20 {
   background-color: rgb(57 181 104 / 0.2);

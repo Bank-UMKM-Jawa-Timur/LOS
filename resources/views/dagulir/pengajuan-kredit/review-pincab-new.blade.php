@@ -127,13 +127,24 @@
                                                             @endif
                                                             @elseif ($item->opsi_jawaban == 'number' && $item->id != 143)
                                                             <p class="">
-                                                                Rp. {{ number_format((int) $itemTextDua->opsi_text, 2, ',', '.') }}
+                                                                @if ($item->is_rupiah == 1)
+                                                                    Rp. {{ number_format((int) $itemTextDua->opsi_text, 2, ',', '.') }}
+                                                                @else
+                                                                    {{ $itemTextDua->opsi_text }}
+                                                                @endif
                                                             </p>
                                                         @else
-                                                            @if (is_numeric($itemJawaban->option) && strlen($itemJawaban->option) > 3)
-                                                                <p class="">{{ $itemTextDua->is_rupiah ? 'Rp. ' . number_format($itemTextDua->opsi_text, 0, '.', '.') : $itemTextDua->opsi_text }}</p>
+                                                            @if ($item->opsi_jawaban == "persen")
+                                                                <p>{{ $itemTextDua->opsi_text }} %</p>
+                                                            @elseif($item->is_rupiah == 1)
+                                                                <p>Rp. {{ number_format($itemTextDua->opsi_text, 0, '.', '.') }}</p>
                                                             @else
-                                                                <p class="">{{ $itemTextDua->is_rupiah ? 'Rp. ' . number_format((int) $itemTextDua->opsi_text, 0, '.', '.') : $itemTextDua->opsi_text }} {{$itemTextDua->opsi_jawaban == 'persen' ? '%' : ''}}</p>
+                                                                <p>{{ $itemTextDua->opsi_text }}</p>
+                                                                {{-- @if (is_numeric($itemJawaban->option) && strlen($itemJawaban->option) > 3)
+                                                                    <p class="">{{ $itemTextDua->is_rupiah ? 'Rp. ' . number_format($itemTextDua->opsi_text, 0, '.', '.') : $itemTextDua->opsi_text }}</p>
+                                                                @else
+                                                                    <p class="">{{ $itemTextDua->is_rupiah ? 'Rp. ' . number_format((int) $itemTextDua->opsi_text, 0, '.', '.') : $itemTextDua->opsi_text }} {{$itemTextDua->opsi_jawaban == 'persen' ? '%' : ''}}</p>
+                                                                @endif --}}
                                                             @endif
                                                         @endif
                                                     </div>
@@ -602,14 +613,14 @@
                                                         @endphp
                                                         @if ($itemEmpat->opsi_jawaban == 'option' && $isJawabanExist > 0)
                                                             @if ($itemEmpat->nama != "Tidak Memiliki Jaminan Tambahan")
-                                                                <div class="row">
+                                                                {{-- <div class="row">
                                                                     <div class="form-group-1 mb-0">
                                                                         <label for="">{{ $itemEmpat->nama }}</label>
                                                                     </div>
-                                                                </div>
+                                                                </div> --}}
                                                             @endif
                                                         @endif
-        
+                                                    </div>
                                                         {{-- Data jawaban Level Empat --}}
                                                         @if (count($dataJawabanLevelEmpat) != 0)
                                                             @foreach ($dataJawabanLevelEmpat as $key => $itemJawabanLevelEmpat)
@@ -639,17 +650,24 @@
                                                                                 ->where('detail_komentar.id_user', $comment->id_penyelia)
                                                                                 ->first();
                                                                         @endphp
-                                                                        <div class="form-group-1">
                                                                             @if ($itemEmpat->nama != "Tidak Memiliki Jaminan Tambahan")
-                                                                                <div class="row">
-                                                                                    <div class="col-md-12">
-                                                                                        <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
+                                                                                {{-- <div class="row">
+                                                                                    <div class="form-group-2"> --}}
+                                                                                        <div class="field-review">
+                                                                                            <div class="field-name">
+                                                                                                <label for="">{{ $itemEmpat->nama }}</label>
+                                                                                            </div>
+                                                                                            <div class="field-answer">
+                                                                                                <p>{{ $itemJawabanLevelEmpat->option }}</p>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    {{-- </div> --}}
+                                                                                        {{-- <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
                                                                                             <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
                                                                                             <h4 class="font-bold"> {{ $itemJawabanLevelEmpat->option }}</h4>
-                                                                                        </div>
+                                                                                        </div> --}}
     
-                                                                                    </div>
-                                                                                </div>
+                                                                                {{-- </div> --}}
                                                                             @endif
                                                                             
                                                                         </div>
@@ -662,7 +680,7 @@
                                                                 @endif
                                                             @endforeach
                                                         @endif
-                                                    </div>
+                                                    
                                                 @endif
                                             @endforeach
                                         @endif
@@ -898,14 +916,15 @@
                     </div>
                     @endif
                     <div class="p-4">
-                        <div class="form-group-2">
+                        <div class="form-group-1">
                             <div class="field-review">
                                 <div class="field-name">
                                     <label for="">Pendapat & Usulan Pimpinan Cabang</label>
                                 </div>
                                 <div class="field-answer">
-                                    <textarea class="form-textarea w-full" placeholder="isi pendapat..."
-                                        name="pendapat_usulan" id="pendapat_usulan"></textarea>
+                                    <span>
+                                        <textarea class="form-textarea w-full" placeholder="isi pendapat..." name="pendapat_usulan" id="pendapat_usulan"></textarea>
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -1043,5 +1062,12 @@
             rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
             return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
         }
+    </script>
+    <script>
+        lightbox.option({
+          'resizeDuration': 200,
+          'wrapAround': true,
+          'maxWidth': 5000,
+        })
     </script>
 @endpush
