@@ -697,7 +697,7 @@
                                                         ->get();
                                                 @endphp
                                                 @foreach ($dataDetailJawabanText as $itemTextDua)
-                                                    <div class="row {{ $item->opsi_jawaban == 'file' ? 'col-span-1 order-2' : 'col-span-2 order-3' }}">
+                                                    <div class="row {{ $item->opsi_jawaban == 'file' ? 'col-span-1 order-2' : 'col-span-2 order-3' }}  {{ $item->nama === "Jumlah Orang yang menjalankan usaha" ?  'col-span-1 order-3' : '' }}">
                                                         <div class="col-md-12 space-y-4 order">
                                                             @if ($item->opsi_jawaban == 'file')
                                                                 <b>{{ $item->nama }} :</b>
@@ -857,7 +857,7 @@
                                                     @endphp
                                                     @if (in_array($itemJawaban->id, $data))
                                                         @if (isset($data))
-                                                        <div class="row {{ $item->is_hide ? 'hidden' : 'col-span-2'}}">
+                                                        <div class="row {{ $item->is_hide ? 'hidden' : 'col-span-2'}}  {{ $item->nama === "Badan Usaha" ? 'col-span-1 form-group-2' : ''  }}">
                                                             <div class="col-md-12">
                                                                 @if (!$item->is_hide)
                                                                     <div class="field-review">
@@ -979,7 +979,7 @@
                                                     @endforeach --}}
                                                     @foreach ($dataDetailJawabanText as $itemTextTiga)
                                                         @if ($itemTextTiga->nama != 'Ratio Tenor Asuransi')
-                                                            <div class="{{ $itemTiga->opsi_jawaban == 'file' ? 'col-span-1 p-2' : 'col-span-2 form-group-2' }}">
+                                                            <div class="{{ $itemTiga->opsi_jawaban == 'file' ? 'col-span-1 p-2' : 'col-span-2 form-group-2' }} {{ $itemTextTiga->nama === "Modal (awal) Sendiri" || $itemTextTiga->nama === "Modal Pinjaman" ? 'col-span-1 form-group-2' : '' }}">
                                                                 <div class="space-y-5">
                                                                         @if ($itemTiga->opsi_jawaban == 'file')
                                                                             <b>{{ $itemTextTiga->nama }} :</b>
@@ -1016,7 +1016,7 @@
                                                                         @else
                                                                             <div class="field-review">
                                                                                 <div class="field-name">
-                                                                                    <label for="">{{ $itemTextTiga->nama }}</label>
+                                                                                    <label for="">{{ $itemTextTiga->nama }} </label>
                                                                                 </div>
                                                                                 <div class="field-answer">
                                                                                     @if ($itemTiga->is_rupiah == 1)
@@ -1125,7 +1125,7 @@
                                                                     @endphp
                                                                     @if (in_array($itemJawabanLevelTiga->id, $data))
                                                                         @if (isset($data))
-                                                                            <div class="form-group-1">
+                                                                            <div class="form-group-2">
                                                                                 @if ($itemTiga->nama != 'Ratio Coverage Opsi')
                                                                                     <div class="row">
                                                                                         <div class="field-review">
@@ -1138,7 +1138,7 @@
                                                                                         </div>
                                                                                     </div>
                                                                                 @endif
-                                                                                <div class="input-group input-b-bottom">
+                                                                                <div class="input-group input-b-bottom col-span-2">
                                                                                     <input type="hidden" name="id_item[]"
                                                                                         value="{{ $itemTiga->id }}">
                                                                                     <input type="hidden" name="id_option[]"
