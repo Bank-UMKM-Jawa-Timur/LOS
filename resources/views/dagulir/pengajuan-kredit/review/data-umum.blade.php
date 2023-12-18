@@ -170,7 +170,9 @@
                     <label for="">Foto Pasangan</label>
                 </div>
                 <div class="field-answer">
-                    <img src="{{ $dataNasabah->foto_pasangan != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataNasabah->id.'/'.$dataNasabah->foto_pasangan : asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
+                    <a href="{{ $dataNasabah->foto_pasangan != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataNasabah->id.'/'.$dataNasabah->foto_pasangan : asset('img/no-image.png') }}" data-lightbox="{{ $dataUmum->id }}" data-title="Foto Pasangan : {{ $dataNasabah->nama }}">
+                        <img src="{{ $dataNasabah->foto_pasangan != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataNasabah->id.'/'.$dataNasabah->foto_pasangan : asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
+                    </a>
                 </div>
             </div>
         @endif
@@ -179,7 +181,9 @@
                 <label for="">Foto Nasabah</label>
             </div>
             <div class="field-answer">
-                <img src="{{ $dataNasabah->foto_nasabah != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataNasabah->id.'/'.$dataNasabah->foto_nasabah : asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
+                <a href="{{ $dataNasabah->foto_nasabah != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataNasabah->id.'/'.$dataNasabah->foto_nasabah : asset('img/no-image.png') }}" data-lightbox="{{ $dataUmum->id }}" data-title="Foto Nasabah : {{ $dataNasabah->nama }}">
+                    <img src="{{ $dataNasabah->foto_nasabah != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataNasabah->id.'/'.$dataNasabah->foto_nasabah : asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
+                </a>
             </div>
             {{-- <div class="field-answer">
                 @if($dataNasabah->foto_nasabah)
@@ -194,7 +198,9 @@
                 <label for="">Foto KTP Nasabah</label>
             </div>
             <div class="field-answer">
-                <img src="{{ $dataNasabah->foto_ktp != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataNasabah->id.'/'.$dataNasabah->foto_ktp : asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
+                <a href="{{ $dataNasabah->foto_ktp != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataNasabah->id.'/'.$dataNasabah->foto_ktp : asset('img/no-image.png') }}" data-lightbox="{{ $dataNasabah->id }}" data-title="Foto KTP Nasabah : {{ $dataNasabah->nama }}">
+                    <img src="{{ $dataNasabah->foto_ktp != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataNasabah->id.'/'.$dataNasabah->foto_ktp : asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
+                </a>
             </div>
         </div>
     </div>
