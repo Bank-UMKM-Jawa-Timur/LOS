@@ -160,7 +160,7 @@
                     <th class="w-11">Tipe Pengajuan</th>
                     <th>Plafon</th>
                     <th class="w-13">Tenor</th>
-                    <th class="w-13">Skoe</th>
+                    <th class="w-13">Skor</th>
                     <th class="w-13">Status Pincetar</th>
                     <th class="w-7">Status SIPDE</th>
                     <th class="w-5">Aksi</th>
