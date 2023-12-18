@@ -324,8 +324,8 @@
                                         ->where('id_item', $itemSlik?->id_item)
                                         ->first();
                                 @endphp
-                                <div class="flex pl-2">
-                                    <div class="flex-1 w-64">
+                                <div class="flex flex-column pl-2">
+                                    <div class="flex-1 w-64 col-span-1">
                                         <label for="">Komentar</label>
                                         <input type="hidden" name="id_item[]" value="{{ $itemSlik?->id_item }}">
                                         <input type="hidden" name="id_option[]" value="{{ $itemSlik?->id_jawaban }}">
@@ -861,7 +861,7 @@
                                                     @endphp
                                                     @if (in_array($itemJawaban->id, $data))
                                                         @if (isset($data))
-                                                        <div class="row {{ $item->is_hide ? 'hidden' : ''}}">
+                                                        <div class="row {{ $item->is_hide ? 'hidden' : 'col-span-2'}}">
                                                             <div class="col-md-12">
                                                                 @if (!$item->is_hide)
                                                                     <div class="field-review">
@@ -1129,7 +1129,7 @@
                                                                     @endphp
                                                                     @if (in_array($itemJawabanLevelTiga->id, $data))
                                                                         @if (isset($data))
-                                                                            <div class="form-group-2">
+                                                                            <div class="form-group-1">
                                                                                 @if ($itemTiga->nama != 'Ratio Coverage Opsi')
                                                                                     <div class="row">
                                                                                         <div class="field-review">
@@ -1857,7 +1857,7 @@
                                             <label for="">Plafon Usulan Penyelia</label>
                                             <input type="text" class="form-input" value="{{ $plafonUsulan?->plafon_usulan_penyelia ?? '-' }}" readonly disabled>
                                         </div>
-                                        <div class="input-box">
+                                        <div class="input-box   ">
                                             <label for="">Jangka Waktu Usulan Penyelia</label>
                                             <input type="text" class="form-input" value="{{ $plafonUsulan?->jangka_waktu_usulan_penyelia ?? '-' }}" readonly disabled>
                                         </div>
