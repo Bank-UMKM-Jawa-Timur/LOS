@@ -121,16 +121,6 @@
                 <p>{{ $text_status}}</p>
             </div>
         </div>
-        @if ($dataNasabah->status_pernikahan == '2')
-            <div class="field-review">
-                <div class="field-name">
-                    <label for="">NIK Pasangan</label>
-                </div>
-                <div class="field-answer">
-                    <p>{{ $dataNasabah->nik_pasangan ? $dataNasabah->nik_pasangan : '-' }}</p>
-                </div>
-            </div>
-        @endif
         <div class="field-review">
             <div class="field-name">
                 <label for="">Kota / Kabupaten KTP</label>
@@ -163,19 +153,6 @@
                 <p>{{ $dataNasabah->alamat_ktp ? $dataNasabah->alamat_ktp : '-' }}</p>
             </div>
         </div>
-        {{-- <div class="field-review"></div> --}}
-        @if ($dataNasabah->status_pernikahan == '2')
-            <div class="field-review">
-                <div class="field-name">
-                    <label for="">Foto Pasangan</label>
-                </div>
-                <div class="field-answer">
-                    <a href="{{ $dataNasabah->foto_pasangan != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataNasabah->id.'/'.$dataNasabah->foto_pasangan : asset('img/no-image.png') }}" data-lightbox="{{ $dataUmum->id }}" data-title="Foto Pasangan : {{ $dataNasabah->nama }}">
-                        <img src="{{ $dataNasabah->foto_pasangan != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataNasabah->id.'/'.$dataNasabah->foto_pasangan : asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
-                    </a>
-                </div>
-            </div>
-        @endif
         <div class="field-review">
             <div class="field-name">
                 <label for="">Foto Nasabah</label>
@@ -204,6 +181,29 @@
             </div>
         </div>
     </div>
+    @if ($dataNasabah->status_pernikahan == '2')
+        <hr>
+        <div class="form-group-2">
+            <div class="field-review">
+                <div class="field-name">
+                    <label for="">Foto Pasangan</label>
+                </div>
+                <div class="field-answer">
+                    <a href="{{ $dataNasabah->foto_pasangan != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataNasabah->id.'/'.$dataNasabah->foto_pasangan : asset('img/no-image.png') }}" data-lightbox="{{ $dataUmum->id }}" data-title="Foto Pasangan : {{ $dataNasabah->nama }}">
+                        <img src="{{ $dataNasabah->foto_pasangan != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataNasabah->id.'/'.$dataNasabah->foto_pasangan : asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
+                    </a>
+                </div>
+            </div>
+            <div class="field-review">
+                <div class="field-name">
+                    <label for="">NIK Pasangan</label>
+                </div>
+                <div class="field-answer">
+                    <p>{{ $dataNasabah->nik_pasangan ? $dataNasabah->nik_pasangan : '-' }}</p>
+                </div>
+            </div>
+        </div>
+    @endif
 
     {{-- Domisili --}}
     <div class="form-group-1 col-span-2 pl-0">

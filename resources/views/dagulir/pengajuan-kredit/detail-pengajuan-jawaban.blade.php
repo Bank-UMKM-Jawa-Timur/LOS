@@ -184,16 +184,6 @@
                                             <p>{{ $dataUmumNasabah->alamat_ktp}}</p>
                                         </div>
                                     </div>
-                                    @if ($dataUmumNasabah->status_pernikahan == '2')
-                                        <div class="field-review">
-                                            <div class="field-name">
-                                                <label for="">NIK Pasangan</label>
-                                            </div>
-                                            <div class="field-answer">
-                                                <p>{{ $dataUmumNasabah->nik_pasangan ? $dataUmumNasabah->nik_pasangan : '-' }}</p>
-                                            </div>
-                                        </div>
-                                    @endif
                                 </div>
                                 <div class="form-group-2">
                                     <div class="field-review">
@@ -218,8 +208,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group-2">
-                                    @if ($dataUmumNasabah->status_pernikahan == '2')
+                                @if ($dataUmumNasabah->status_pernikahan == '2')
+                                    <hr>
+                                    <div class="form-group-2">
                                         <div class="field-review">
                                             <div class="field-name">
                                                 <label for="">Foto Pasangan</label>
@@ -229,10 +220,17 @@
                                                     <img src="{{ $dataUmumNasabah->foto_pasangan != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataUmumNasabah->id.'/'.$dataUmumNasabah->foto_pasangan : asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
                                                 </a>
                                             </div>
-
                                         </div>
-                                    @endif
-                                </div>
+                                        <div class="field-review">
+                                            <div class="field-name">
+                                                <label for="">NIK Pasangan</label>
+                                            </div>
+                                            <div class="field-answer">
+                                                <p>{{ $dataUmumNasabah->nik_pasangan ? $dataUmumNasabah->nik_pasangan : '-' }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
 
                                 {{-- Domisili --}}
                                 <div class="form-group-1 col-span-2 pl-2">
