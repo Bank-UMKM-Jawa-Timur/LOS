@@ -108,7 +108,7 @@
                                             <label for="">NIK</label>
                                         </div>
                                         <div class="field-answer">
-                                            <p>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</p>
+                                            <p>{{ $dataUmumNasabah->nik ? $dataUmumNasabah->nik : '-' }}</p>
                                         </div>
                                     </div>
                                     <div class="field-review">
@@ -194,11 +194,14 @@
                                         </div>
                                         <div class="field-review">
                                             <div class="field-name">
-                                                <label for="">Foto KTP Pasangan</label>
+                                                <label for="">Foto Pasangan</label>
                                             </div>
                                             <div class="field-answer">
-                                                <img src="{{ $dataUmumNasabah->foto_pasangan != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataUmumNasabah->id.'/'.$dataUmumNasabah->foto_pasangan : asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
+                                                <a href="{{ $dataUmumNasabah->foto_pasangan != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataUmumNasabah->id.'/'.$dataUmumNasabah->foto_pasangan : asset('img/no-image.png') }}" data-lightbox="{{ $dataUmum->id }}" data-title="Foto Pasangan : {{ $dataUmumNasabah->nama }}">
+                                                    <img src="{{ $dataUmumNasabah->foto_pasangan != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataUmumNasabah->id.'/'.$dataUmumNasabah->foto_pasangan : asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
+                                                </a>
                                             </div>
+
                                         </div>
                                     @endif
                                 </div>
@@ -208,8 +211,9 @@
                                             <label for="">Foto Nasabah</label>
                                         </div>
                                         <div class="field-answer">
-
-                                            <img src="{{ $dataUmumNasabah->foto_nasabah != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataUmumNasabah->id.'/'.$dataUmumNasabah->foto_nasabah : asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
+                                            <a href="{{ $dataUmumNasabah->foto_nasabah != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataUmumNasabah->id.'/'.$dataUmumNasabah->foto_nasabah : asset('img/no-image.png') }}" data-lightbox="{{ $dataUmum->id }}" data-title="Foto Nasabah : {{ $dataUmumNasabah->nama }}">
+                                                <img src="{{ $dataUmumNasabah->foto_nasabah != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataUmumNasabah->id.'/'.$dataUmumNasabah->foto_nasabah : asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
+                                            </a>
                                         </div>
                                     </div>
 
@@ -218,7 +222,9 @@
                                             <label for="">Foto KTP Nasabah</label>
                                         </div>
                                         <div class="field-answer">
-                                            <img src="{{ $dataUmumNasabah->foto_ktp != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataUmumNasabah->id.'/'.$dataUmumNasabah->foto_ktp : asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
+                                            <a href="{{ $dataUmumNasabah->foto_ktp != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataUmumNasabah->id.'/'.$dataUmumNasabah->foto_ktp : asset('img/no-image.png') }}" data-lightbox="{{ $dataUmum->id }}" data-title="Foto KTP : {{ $dataUmumNasabah->nama }}">
+                                                <img src="{{ $dataUmumNasabah->foto_ktp != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataUmumNasabah->id.'/'.$dataUmumNasabah->foto_ktp : asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -413,7 +419,7 @@
                                             <label for="">Plafon</label>
                                         </div>
                                         <div class="field-answer">
-                                            <p>{{ 'Rp ' . number_format($dataUmumNasabah->nominal ? $dataUmumNasabah->nominal : 0, 2, ',', '.') }}</p>
+                                            <p>{{ 'Rp. ' . number_format($dataUmumNasabah->nominal ? $dataUmumNasabah->nominal : 0, 2, ',', '.') }}</p>
                                         </div>
                                     </div>
                                     <div class="field-review">
@@ -748,7 +754,7 @@
                                                                                     @if ($item->opsi_jawaban == 'persen' || $item->nama == "Repayment Capacity")
                                                                                         <p> {{ str_replace('_', ' ', $itemTextDua->opsi_text) }} {{ $item->opsi_jawaban == 'persen' ? '%' : '' }}</p>
                                                                                     @else
-                                                                                        <p>{{ number_format((int) $itemTextDua->opsi_text, 2, ',', '.') }}</p>
+                                                                                        <p>Rp. {{ number_format((int) $itemTextDua->opsi_text, 2, ',', '.') }}</p>
                                                                                     @endif
                                                                                 @endif
                                                                             </div>
@@ -1003,7 +1009,7 @@
                                                                         @elseif ($itemTiga->opsi_jawaban == 'number')
                                                                             <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
                                                                                 <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
-                                                                                <h4 class="font-bold">Rp.{{ number_format((int) $itemTextTiga->opsi_text, 2, ',', '.') }}</h4>
+                                                                                <h4 class="font-bold">Rp. {{ number_format((int) $itemTextTiga->opsi_text, 2, ',', '.') }}</h4>
                                                                             </div>
 
                                                                             @if ($item->is_commentable == 'Ya')
@@ -1261,7 +1267,7 @@
                                                                                     <div class="jawaban-responsive border-b p-2 font-medium">
                                                                                         <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
                                                                                             <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban: </span>
-                                                                                            <h4 class="font-bold">Rp.{{ number_format((int) $itemTextEmpat->opsi_text, 2, ',', '.') }}</h4>
+                                                                                            <h4 class="font-bold">Rp. {{ number_format((int) $itemTextEmpat->opsi_text, 2, ',', '.') }}</h4>
                                                                                         </div>
                                                                                     </div>
                                                                                     @if ($itemTextEmpat->is_commentable == 'Ya')
@@ -1284,7 +1290,7 @@
                                                                                         <div class="field-answer">
                                                                                             <p>
                                                                                                 @if ($itemEmpat->is_rupiah == 1)
-                                                                                                    Rp.{{ number_format((int) $itemTextEmpat->opsi_text, 2, ',', '.') }}
+                                                                                                    Rp. {{ number_format((int) $itemTextEmpat->opsi_text, 2, ',', '.') }}
                                                                                                 @else
                                                                                                     {{ $itemTextEmpat->opsi_text }}
                                                                                                 @endif
@@ -1722,14 +1728,14 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group-2">
+                                        <div class="form-group-2 pl-2">
                                             <div class="input-box">
                                                 <label for="">Plafon Usulan Penyelia</label>
-                                                <input type="text" name="plafon_usulan_penyelia" class="form-input rupiah" value="{{ $plafonUsulan?->plafon_usulan_penyelia ?? null }}">
+                                                <input type="text" name="plafon_usulan_penyelia" class="form-input rupiah" value="{{ $plafonUsulan->plafon_usulan_penyelia != null ? $plafonUsulan->plafon_usulan_penyelia : null}}">
                                             </div>
                                             <div class="input-box">
                                                 <label for="">Jangka Waktu Usulan Penyelia</label>
-                                                <input type="number" name="jangka_waktu_usulan_penyelia" class="form-input"  value="{{ $plafonUsulan?->jangka_waktu_usulan_penyelia ?? null }}">
+                                                <input type="number" name="jangka_waktu_usulan_penyelia" class="form-input"  value="{{ $plafonUsulan->jangka_waktu_usulan_penyelia != null ? $plafonUsulan->jangka_waktu_usulan_penyelia : null }}">
                                             </div>
                                         </div>
                                         <div class="form-group-1">
