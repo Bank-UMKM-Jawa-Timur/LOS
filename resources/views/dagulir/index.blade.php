@@ -114,7 +114,7 @@
                 <div class="input-search flex gap-2">
                 <input
                     type="search"
-                    placeholder="Cari nama usaha... "
+                    placeholder="Cari kata kunci... "
                     name="q" id="q"
                     class="w-full px-8 outline-none text-sm p-3 border"
                     value="{{ isset($_GET['q']) ? $_GET['q'] : '' }}"
