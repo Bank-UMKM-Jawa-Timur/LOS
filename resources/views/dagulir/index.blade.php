@@ -268,7 +268,6 @@
                         <td>
                             {{$item->pengajuan->posisi}}
                             @if ($item->pengajuan->posisi == 'Selesai' || $item->pengajuan->posisi == 'Ditolak')
-                                <p>-</p>
                             @else
                             <p class="text-red-500">{{ $item->nama_pemroses }}</p>
                             @endif

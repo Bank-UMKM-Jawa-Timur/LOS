@@ -1502,7 +1502,7 @@ class NewDagulirController extends Controller
             $komentar = KomentarModel::where('id_pengajuan',$id)->first();
             if ($pengajuan) {
                 if ($komentar->komentar_penyelia == null) {
-                    alert()->error('Error','Data pengajuan belum di review.');
+                    alert()->warning('Waning','Data pengajuan belum di review,tidak dapat melanjutkan ke pincab.');
                     return redirect()->route('dagulir.index');
                 }
                 $pincab = User::select('id')
