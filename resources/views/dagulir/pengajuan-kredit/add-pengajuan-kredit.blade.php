@@ -417,7 +417,7 @@ $dataIndex = match ($skema) {
                                                         @if ($itemTiga->opsi_jawaban == 'input text')
                                                             <div class="form-group">
                                                                 <div class="input-box">
-                                                                    <label for="">{{ $itemTiga->nama }}</label>
+                                                                    <label for="">{{ $itemTiga->nama }}</label><small class="text-red-500 font-bold">*</small>
                                                                     <div class="flex items-center">
                                                                         <div class="flex-1">
                                                                             <input type="hidden" name="id_level[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}"
@@ -441,7 +441,7 @@ $dataIndex = match ($skema) {
                                                         @elseif ($itemTiga->opsi_jawaban == 'number')
                                                             <div class="form-group">
                                                                 <div class="input-box">
-                                                                    <label for="">{{ $itemTiga->nama }}</label>
+                                                                    <label for="">{{ $itemTiga->nama }}</label><small class="text-red-500 font-bold">*</small>
                                                                     <div class="flex items-center">
                                                                         <div class="flex-1">
                                                                             <input type="hidden" name="opsi_jawaban[{{ $itemTiga->id }}]"
@@ -465,7 +465,7 @@ $dataIndex = match ($skema) {
                                                                 @if ($itemTiga->nama == 'Ratio Tenor Asuransi')
                                                                 @else
                                                                     <div class="input-box">
-                                                                        <label for="">{{ $itemTiga->nama }}</label>
+                                                                        <label for="">{{ $itemTiga->nama }}</label><small class="text-red-500 font-bold">*</small>
                                                                         <div class="flex items-center">
                                                                             <div class="flex-1">
                                                                                 <input type="hidden" name="opsi_jawaban[{{ $itemTiga->id }}]"
@@ -490,7 +490,7 @@ $dataIndex = match ($skema) {
                                                         @elseif ($itemTiga->opsi_jawaban == 'file')
                                                             <div class="form-group file-wrapper item-{{ $itemTiga->id }}">
                                                                 <div class="input-box">
-                                                                    <label for="">{{ $itemTiga->nama }}</label>
+                                                                    <label for="">{{ $itemTiga->nama }}</label><small class="text-red-500 font-bold">*</small>
                                                                     <div class="input-box mb-4">
                                                                         <div class="flex gap-4">
                                                                             <input type="hidden" name="id_item_file[{{ $itemTiga->id }}][]"
@@ -519,7 +519,7 @@ $dataIndex = match ($skema) {
                                                         @elseif ($itemTiga->opsi_jawaban == 'long text')
                                                             <div class="form-group">
                                                                 <div class="input-box">
-                                                                    <label for="">{{ $itemTiga->nama }}</label>
+                                                                    <label for="">{{ $itemTiga->nama }}</label><small class="text-red-500 font-bold">*</small>
                                                                     <input type="hidden" name="opsi_jawaban[{{ $itemTiga->id }}]"
                                                                         value="{{ $itemTiga->opsi_jawaban }}" id="">
                                                                     <input type="hidden" name="id_level[{{ $itemTiga->id }}]"
@@ -572,7 +572,7 @@ $dataIndex = match ($skema) {
                                                                     class="{{ $idLevelTiga == 'ratio_tenor_asuransi_opsi' || $idLevelTiga == 'ratio_coverage_opsi' ? '' : 'form-group' }}">
                                                                     <div class="input-box">
                                                                         <label for=""
-                                                                            id="{{ $idLevelTiga . '_label' }}">{{ $itemTiga->nama }}</label>
+                                                                            id="{{ $idLevelTiga . '_label' }}">{{ $itemTiga->nama }}</label><small class="text-red-500 font-bold">*</small>
 
                                                                         <select name="dataLevelTiga[{{ $itemTiga->id }}]" id="{{ $idLevelTiga }}"
                                                                             class="form-input cek-sub-column" data-id_item={{ $itemTiga->id }}>
@@ -599,7 +599,7 @@ $dataIndex = match ($skema) {
                                                             @if ($itemEmpat->opsi_jawaban == 'input text')
                                                                 <div class="form-group">
                                                                     <div class="input-box">
-                                                                        <label for="">{{ $itemEmpat->nama }}</label>
+                                                                        <label for="">{{ $itemEmpat->nama }}</label><small class="text-red-500 font-bold">*</small>
                                                                         <input type="hidden" name="id_level[{{ $itemEmpat->id }}]"
                                                                             value="{{ $itemEmpat->id }}" id="">
                                                                         <input type="hidden" name="opsi_jawaban[{{ $itemEmpat->id }}]"
@@ -628,7 +628,7 @@ $dataIndex = match ($skema) {
                                                             @elseif ($itemEmpat->opsi_jawaban == 'number')
                                                                 <div class="form-group">
                                                                     <div class="input-box">
-                                                                        <label for="">{{ $itemEmpat->nama }}</label>
+                                                                        <label for="">{{ $itemEmpat->nama }}</label><small class="text-red-500 font-bold">*</small>
                                                                         <div class="flex items-center">
                                                                             <div class="flex-1">
                                                                                 <input type="hidden" name="opsi_jawaban[{{ $itemEmpat->id }}]"
@@ -651,7 +651,7 @@ $dataIndex = match ($skema) {
                                                             @elseif ($itemEmpat->opsi_jawaban == 'persen')
                                                                 <div class="form-group">
                                                                     <div class="input-box">
-                                                                        <label for="">{{ $itemEmpat->nama }}</label>
+                                                                        <label for="">{{ $itemEmpat->nama }}</label><small class="text-red-500 font-bold">*</small>
                                                                         <div class="flex items-center">
                                                                             <div class="flex-1">
                                                                                 <input type="hidden" name="opsi_jawaban[{{ $itemEmpat->id }}]"
@@ -675,7 +675,7 @@ $dataIndex = match ($skema) {
                                                             @elseif ($itemEmpat->opsi_jawaban == 'file')
                                                                 <div class="form-group">
                                                                     <div class="input-box">
-                                                                        <label for="">{{ $itemEmpat->nama }}</label>
+                                                                        <label for="">{{ $itemEmpat->nama }}</label><small class="text-red-500 font-bold">*</small>
                                                                         {{-- <input type="hidden" name="opsi_jawaban[]" value="{{ $itemEmpat->opsi_jawaban }}" id=""> --}}
                                                                         <input type="hidden" name="id_item_file[{{ $itemEmpat->id }}]"
                                                                             value="{{ $itemEmpat->id }}" id="">
@@ -691,7 +691,7 @@ $dataIndex = match ($skema) {
                                                             @elseif ($itemEmpat->opsi_jawaban == 'long text')
                                                                 <div class="form-group">
                                                                     <div class="input-box">
-                                                                        <label for="">{{ $itemEmpat->nama }}</label>
+                                                                        <label for="">{{ $itemEmpat->nama }}</label><small class="text-red-500 font-bold">*</small>
                                                                         <input type="hidden" name="opsi_jawaban[{{ $itemEmpat->id }}]"
                                                                             value="{{ $itemEmpat->opsi_jawaban }}" id="">
                                                                         <input type="hidden" name="id_level[{{ $itemEmpat->id }}]"
@@ -750,7 +750,7 @@ $dataIndex = match ($skema) {
                                         <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
                                         <input type="hidden" name="id_aspek[{{ $value->id }}]" value="{{ $value->id }}">
                                         <textarea name="pendapat_per_aspek[{{ $value->id }}]"
-                                            class="form-input @error('pendapat_per_aspek') is-invalid @enderror" id="" maxlength="255"
+                                            class="form-input @error('pendapat_per_aspek') is-invalid @enderror" id="{{  str_replace(' ', '_', strtolower($value->nama)) }}" maxlength="255"
                                             cols="30" rows="4" placeholder="Pendapat Per Aspek"></textarea>
                                         @error('pendapat_per_aspek')
                                             <div class="invalid-feedback">
@@ -813,7 +813,7 @@ $dataIndex = match ($skema) {
                                         >
                                           Sebelumnya
                                         </button>
-                                        <button class="px-5 py-2 border rounded bg-theme-primary text-white btn-simpan-data" type="button">
+                                        <button class="px-5 py-2 border rounded bg-theme-primary text-white btn-simpan-data" type="submit">
                                             Simpan
                                         </button>
                                     </div>
@@ -1051,6 +1051,7 @@ $dataIndex = match ($skema) {
         const $activeContent = $(".is-tab-content.active");
         const $nextContent = $activeContent.next();
         const tabId = $activeContent.attr("id")
+        console.log(tabId);
         const dataTab = tabId.replaceAll('-tab', '')
         // Set percentage
         var percentage = formPercentage(tabId)
@@ -1097,6 +1098,7 @@ $dataIndex = match ($skema) {
     // End Validation
     function formPercentage(tabId) {
         var form = `#${tabId}`;
+        // var form = `#aspek-jaminan-tab`;
         var inputFile = $(form + " input[type=file]")
         var inputText = $(form + " input[type=text]")
         var inputNumber = $(form + " input[type=number]")
@@ -1105,6 +1107,7 @@ $dataIndex = match ($skema) {
         var select = $(form + " select")
         var textarea = $(form + " textarea")
         var totalInput = 0;
+        var totalInputChecked = 0;
         var totalInputNull = 0;
         var totalInputFilled = 0;
         var totalInputHidden = 0;
@@ -1124,7 +1127,7 @@ $dataIndex = match ($skema) {
                 if ($(this).attr('id') != undefined) {
                     nullValue.push($(this).attr('id').toString().replaceAll("_", " "))
                 }
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).is(":checked") && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputFilled++;
                 if ($(this).attr('id') != undefined) {
                     let val = $(this).attr("id").toString().replaceAll("_", " ");
@@ -1135,6 +1138,8 @@ $dataIndex = match ($skema) {
                         }
                     }
                 }
+            } else if (!$(this).is(':checked')) {
+                totalInputChecked++;
             }
         })
 
@@ -1257,6 +1262,7 @@ $dataIndex = match ($skema) {
                 }
             } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputFilled++;
+
                 if ($(this).attr('id') != undefined) {
                     let val = $(this).attr("id").toString().replaceAll("_", " ");
                     for (var i = 0; i < nullValue.length; i++) {
@@ -1299,13 +1305,11 @@ $dataIndex = match ($skema) {
                 }
             }
         })
-        console.log(`${totalInput} -  ${totalInputHidden} - ${totalInputReadOnly}`)
         var totalReadHidden = (totalInputHidden + totalInputReadOnly)
+        var total = totalInput + totalInputChecked;
         percent = (totalInputFilled / (totalInput - totalInputReadOnly)) * 100
-
         return parseInt(percent)
     }
-
 
     $(".toggle-side").click(function(e) {
         $('.sidenav').toggleClass('hidden')
@@ -1546,7 +1550,6 @@ $dataIndex = match ($skema) {
                     title: 'Oops...',
                     html: '<ul>'+message+'</ul>'
                 })
-                nullValue = [];
                 e.preventDefault()
             } else {
                 // $("#loadingModal").modal({

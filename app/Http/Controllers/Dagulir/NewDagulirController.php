@@ -227,7 +227,7 @@ class NewDagulirController extends Controller
         $request->validate([
             'nama_lengkap' => 'required',
             'email' => 'required|unique:pengajuan_dagulir,email',
-            'nik_nasabah' => 'required',
+            'nik_nasabah' => 'required|unique:pengajuan_dagulir,nik_nasabah',
             'tempat_lahir' => 'required',
             'tanggal_lahir' => 'required',
             'telp' => 'required',
@@ -610,7 +610,7 @@ class NewDagulirController extends Controller
                 return redirect()->route('dagulir.pengajuan.index');
             }
             else {
-                Alert::error('error', 'Pengajuan ditolak.');
+                alert()->error('error','Pengajuan ditolak.');
                 return redirect()->route('dagulir.pengajuan.index');
             }
         } catch (Exception $e) {
@@ -649,7 +649,8 @@ class NewDagulirController extends Controller
                 Alert::success('success', 'Berhasil mengganti posisi');
                 return redirect()->back();
             } else {
-                return back()->withError('Data pengajuan tidak ditemukan.');
+                alert()->error('error','Data pengajuan tidak ditemukan.');
+                return redirect()->back();
             }
         } catch (Exception $e) {
             DB::rollBack();
