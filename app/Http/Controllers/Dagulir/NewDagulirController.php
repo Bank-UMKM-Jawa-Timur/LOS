@@ -1402,7 +1402,6 @@ class NewDagulirController extends Controller
         if ($dagulir) {
             // Get foto
             $filesArr = $this->getDocuments($dagulir->pengajuan_id);
-            return $filesArr;
             if (array_key_exists('message', $filesArr)) {
                 // Failed to get documents
                 return $filesArr['message'];

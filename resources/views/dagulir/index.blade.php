@@ -315,20 +315,6 @@
                                                 <li class="item-tb-dropdown">
                                                     <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown">Lanjutkan Ke Pincab</a>
                                                 </li>
-
-                                            @endif
-                                        @endif
-                                        @if ((Auth()->user()->role == 'Penyelia Kredit'))
-                                            @if ($item->pengajuan->posisi == 'Review Penyelia')
-                                                <li class="item-tb-dropdown">
-                                                    <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
-                                                        class="cursor-pointer">Review</a>
-                                                </li>
-                                            @endif
-                                            @if ($item->pengajuan->posisi == 'Review Penyelia' && $item->pengajuan->tanggal_review_penyelia)
-                                                <li class="item-tb-dropdown">
-                                                    <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown">Lanjutkan Ke Pincab</a>
-                                                </li>
                                             @endif
                                         @elseif ((Auth()->user()->role == 'PBO'))
                                             @if ($item->pengajuan->posisi == 'PBO' && $item->pengajuan->tanggal_review_penyelia

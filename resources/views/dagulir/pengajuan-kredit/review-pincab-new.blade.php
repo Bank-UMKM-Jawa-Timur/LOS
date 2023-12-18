@@ -302,7 +302,11 @@
                                                                                 <h6>Komentar Penyelia</h6>
                                                                             </div>
                                                                             <div class="field-answer">
-                                                                                <h6>{{ strlen($getKomentarPenyelia[$key]?->komentar) > 0 ? $getKomentarPenyelia[$key]?->komenta ?? '-' : '-' }}</h6>
+                                                                                <h6>
+                                                                                    @if (count($getKomentarPenyelia) > 0)
+                                                                                        {{ strlen($getKomentarPenyelia[$key]?->komentar) > 0 ? $getKomentarPenyelia[$key]?->komenta ?? '-' : '-' }}
+                                                                                    @endif
+                                                                                </h6>
                                                                             </div>
                                                                         </div>
                                                                     @endif
@@ -496,7 +500,11 @@
                                                                                                         <h6>Komentar Penyelia</h6>
                                                                                                     </div>
                                                                                                     <div class="field-answer">
-                                                                                                        <h6>{{ strlen($getKomentarPenyelia3[$key]?->komentar) > 0 ? $getKomentarPenyelia3[$key]?->komenta ?? '-' : '-' }}</h6>
+                                                                                                        <h6>
+                                                                                                            @if (count($getKomentarPenyelia3) > 0)
+                                                                                                                {{ strlen($getKomentarPenyelia3[$key]?->komentar) > 0 ? $getKomentarPenyelia3[$key]?->komenta ?? '-' : '-' }}
+                                                                                                            @endif
+                                                                                                        </h6>
                                                                                                     </div>
                                                                                                 </div>
                                                                                             @endif
