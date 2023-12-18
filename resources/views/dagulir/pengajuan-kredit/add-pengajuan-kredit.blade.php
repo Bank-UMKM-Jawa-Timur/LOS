@@ -813,7 +813,7 @@ $dataIndex = match ($skema) {
                                         >
                                           Sebelumnya
                                         </button>
-                                        <button class="px-5 py-2 border rounded bg-theme-primary text-white btn-simpan-data" type="submit">
+                                        <button class="px-5 py-2 border rounded bg-theme-primary text-white btn-simpan-data" type="button">
                                             Simpan
                                         </button>
                                     </div>
@@ -1299,7 +1299,7 @@ $dataIndex = match ($skema) {
                 }
             }
         })
-
+        console.log(`${totalInput} -  ${totalInputHidden} - ${totalInputReadOnly}`)
         var totalReadHidden = (totalInputHidden + totalInputReadOnly)
         percent = (totalInputFilled / (totalInput - totalInputReadOnly)) * 100
 
@@ -2291,11 +2291,13 @@ $dataIndex = match ($skema) {
 
     // hitung ratio covarege
     function hitungRatioCoverage() {
-        let thls = parseInt($('#thls').val().split('.').join(''));
-        let nilaiAsuransi = parseInt($('#nilai_pertanggungan_asuransi').val().split('.').join(''));
-        let kreditYangDiminta = parseInt($('#jumlah_kredit').val().split('.').join(''));
+        let thls = isNaN(parseInt($('#thls').val().split('.').join(''))) ? 0 : parseInt($('#thls').val().split('.').join(''));
+        let nilaiAsuransi = isNaN(parseInt($('#nilai_pertanggungan_asuransi').val().split('.').join(''))) ? 0 : parseInt($('#nilai_pertanggungan_asuransi').val().split('.').join(''));
+        let kreditYangDiminta = isNaN(parseInt($('#jumlah_kredit').val().split('.').join(''))) ? 0 : parseInt($('#jumlah_kredit').val().split('.').join(''));
 
-        let ratioCoverage = (thls + nilaiAsuransi) / kreditYangDiminta * 100; //cek rumus nya lagi
+        console.log(`${thls}-${nilaiAsuransi}-${kreditYangDiminta}`);
+
+        let ratioCoverage = (thls + nilaiAsuransi) / kreditYangDiminta  * 100; //cek rumus nya lagi
         $('#ratio_coverage').val(ratioCoverage);
 
         if (ratioCoverage >= 150) {
