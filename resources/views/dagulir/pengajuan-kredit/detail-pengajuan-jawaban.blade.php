@@ -1032,15 +1032,26 @@
                                                             @endif
                                                         @endif
                                                     @endforeach --}}
+                                                    @php
+                                                        $no_foto = 0;
+                                                    @endphp
                                                     @foreach ($dataDetailJawabanText as $itemTextTiga)
                                                         @if ($itemTextTiga->nama != 'Ratio Tenor Asuransi')
                                                             <div class="{{ $itemTiga->opsi_jawaban == 'file' ? 'col-span-1 p-2' : 'col-span-2 form-group-2' }} {{ $itemTextTiga->nama === "Modal (awal) Sendiri" || $itemTextTiga->nama === "Modal Pinjaman" ? 'col-span-1 form-group-2' : '' }}">
                                                                 <div class="space-y-5">
                                                                         @if ($itemTiga->opsi_jawaban == 'file')
-                                                                            <b>{{ $itemTextTiga->nama }} :</b>
                                                                             @php
                                                                                 $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text);
                                                                             @endphp
+
+                                                                            @if ($file_parts['extension'] == 'pdf')
+                                                                                <b>{{ $itemTextTiga->nama }} : 8777</b>
+                                                                            @else
+                                                                                @php
+                                                                                    $no_foto++;
+                                                                                @endphp
+                                                                                <b>{{ $itemTextTiga->nama }} {{ $no_foto }} : </b>
+                                                                            @endif
                                                                             @if ($file_parts['extension'] == 'pdf')
                                                                                 <iframe
                                                                                     class="border-2 border-gray-500"
