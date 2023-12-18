@@ -631,10 +631,10 @@
                                                                         @php
                                                                             $dataDetailJawabanEmpat = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
                                                                                 ->where('id_pengajuan', $dataUmum->id)
-                                                                                ->where('id_jawaban', $itemJawabanEmpat->id)
+                                                                                ->where('id_jawaban', $itemJawabanLevelEmpat->id)
                                                                                 ->get();
                                                                             $getKomentarPenyeliaEmpat = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', 'detail_komentar.id_komentar')
-                                                                                ->where('detail_komentar.id_item', $itemJawabanEmpat->id_item)
+                                                                                ->where('detail_komentar.id_item', $itemJawabanLevelEmpat->id_item)
                                                                                 ->where('komentar.id_pengajuan', $comment->id_pengajuan)
                                                                                 ->where('detail_komentar.id_user', $comment->id_penyelia)
                                                                                 ->first();
