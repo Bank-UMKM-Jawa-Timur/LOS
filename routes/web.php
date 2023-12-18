@@ -16,6 +16,8 @@ use App\Http\Controllers\DashboardDireksiController;
 use \App\Http\Controllers\LogPengajuanController;
 use \App\Http\Controllers\Dagulir\DagulirController;
 use App\Http\Controllers\Dagulir\master\NewCabangController;
+use App\Http\Controllers\Dagulir\master\NewDesaController;
+use App\Http\Controllers\Dagulir\master\NewItemController;
 use App\Http\Controllers\Dagulir\master\NewKabupatenController;
 use App\Http\Controllers\Dagulir\master\NewKecamatanController;
 use App\Http\Controllers\Dagulir\NewDagulirController;
@@ -106,12 +108,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::middleware(['Admin'])->prefix('master')->name('master.')->group(function () {
             Route::resource('kabupaten', NewKabupatenController::class);
             Route::resource('kecamatan', NewKecamatanController::class);
-            Route::resource('desa', DesaController::class);
+            Route::resource('desa', NewDesaController::class);
             Route::resource('cabang', NewCabangController::class);
             Route::resource('user', NewUserController::class);
             Route::resource('merk', MerkController::class);
             Route::resource('tipe', TipeController::class);
-            Route::resource('master-item', MasterItemController::class);
+            Route::resource('master-item', NewItemController::class);
 
             Route::get('/reset-sessions', [UserController::class, 'indexSession'])->name('index-session');
             Route::post('/reset-session/{id}', [UserController::class, 'resetSession'])->name('reset-session');
