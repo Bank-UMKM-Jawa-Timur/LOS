@@ -475,6 +475,14 @@
                                             <p>{{ $dataUmumNasabah->tipe ? $tipe : '-' }}</p>
                                         </div>
                                     </div>
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Jenis Badan Hukum</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <p>{{ $dataUmumNasabah->jenis_badan_hukum ? $dataUmumNasabah->jenis_badan_hukum : '-' }}</p>
+                                        </div>
+                                    </div>
                                     @if ($dataUmumNasabah->tipe != 2)
                                         <div class="field-review">
                                             <div class="field-name">
@@ -501,16 +509,6 @@
                                             </div>
                                         </div>
                                     @endif
-                                    <div class="field-review">
-                                        <div class="field-name">
-                                            <label for="">Jenis Badan Hukum</label>
-                                        </div>
-                                        <div class="field-answer">
-                                            <p>{{ $dataUmumNasabah->jenis_badan_hukum ? $dataUmumNasabah->jenis_badan_hukum : '-' }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group-2">
                                     <div class="field-review">
                                         <div class="field-name">
                                             <label for="">Hubungan Bank</label>

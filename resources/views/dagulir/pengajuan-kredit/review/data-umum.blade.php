@@ -462,6 +462,30 @@
                 <p>{{$dataNasabah->tipe ? $tipe : '-'}}</p>
             </div>
         </div>
+        <div class="field-review">
+            <div class="field-name">
+                <label for="">Jenis badan hukum</label>
+            </div>
+            <div class="field-answer">
+                <p>{{$dataNasabah->jenis_badan_hukum ? $dataNasabah->jenis_badan_hukum : '-'}}</p>
+            </div>
+        </div>
+        <div class="field-review">
+            <div class="field-name">
+                <label for="">Hubungan Bank</label>
+            </div>
+            <div class="field-answer">
+                <p>{{$dataNasabah->hubungan_bank ? $dataNasabah->hubungan_bank : '-'}}</p>
+            </div>
+        </div>
+        <div class="field-review">
+            <div class="field-name">
+                <label for="">Hasil Verifikasi</label>
+            </div>
+            <div class="field-answer">
+                <p>{{$dataNasabah->hasil_verifikasi ? $dataNasabah->hasil_verifikasi : '-'}}</p>
+            </div>
+        </div>
         @if ($dataNasabah->tipe != 2)
             <div class="field-review">
                 <div class="field-name">
@@ -488,28 +512,4 @@
                 </div>
             </div>
         @endif
-        <div class="field-review">
-            <div class="field-name">
-                <label for="">Jenis badan hukum</label>
-            </div>
-            <div class="field-answer">
-                <p>{{$dataNasabah->jenis_badan_hukum ? $dataNasabah->jenis_badan_hukum : '-'}}</p>
-            </div>
-        </div>
-        <div class="field-review">
-            <div class="field-name">
-                <label for="">Hubungan Bank</label>
-            </div>
-            <div class="field-answer">
-                <p>{{$dataNasabah->hubungan_bank ? $dataNasabah->hubungan_bank : '-'}}</p>
-            </div>
-        </div>
-        <div class="field-review">
-            <div class="field-name">
-                <label for="">Hasil Verifikasi</label>
-            </div>
-            <div class="field-answer">
-                <p>{{$dataNasabah->hasil_verifikasi ? $dataNasabah->hasil_verifikasi : '-'}}</p>
-            </div>
-        </div>
     </div>
