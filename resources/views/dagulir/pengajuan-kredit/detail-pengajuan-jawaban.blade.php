@@ -1380,7 +1380,7 @@
 
                                                         {{-- Data jawaban Level Empat --}}
                                                         @if (count($dataJawabanLevelEmpat) != 0)
-                                                            <div class="row">
+                                                            <div class="row col-span-2">
                                                                 @foreach ($dataJawabanLevelEmpat as $key => $itemJawabanLevelEmpat)
                                                                     @php
                                                                         $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
@@ -1399,7 +1399,7 @@
                                                                         @if (isset($data))
                                                                             <div class="form-group-1">
                                                                                 @if ($itemEmpat->nama != "Tidak Memiliki Jaminan Tambahan")
-                                                                                    <div class="row">
+                                                                                    <div class="row form-group-2">
                                                                                         <div class="col-md-12">
                                                                                             <div class="field-review">
                                                                                                 <div class="field-name">
