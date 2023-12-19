@@ -43,6 +43,7 @@ class NewKecamatanController extends Controller
             }
 
             $this->param['data'] = $getKecamatan->paginate($limit);
+            $this->param['allKab'] = Kabupaten::get();
         } catch (\Illuminate\Database\QueryException $e) {
             return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
         } catch (Exception $e) {
