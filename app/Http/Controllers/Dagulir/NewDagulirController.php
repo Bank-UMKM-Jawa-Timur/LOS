@@ -692,7 +692,7 @@ class NewDagulirController extends Controller
                     // get skor ratio coverage opsi
                     $jawaban = JawabanModel::select('id', 'skor')
                                             ->where('id_pengajuan', $request->id_pengajuan)
-                                            ->where('id_jawaban', 158) // 158  = id_option ratio coverage opsi 
+                                            ->where('id_jawaban', 158) // 158  = id_option ratio coverage opsi
                                             ->first();
                     $total_input_data = (count($request->skor_penyelia) - $totalDataNull);
                     if ($jawaban) {
