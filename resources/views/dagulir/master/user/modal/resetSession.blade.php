@@ -27,7 +27,7 @@
 @push('script-inject')
     <script>
         $('#form-reset-api-session .btn-submit').on('click', function(e) {
-            $('#resetSessionModal #form-reset-session').submit()
+            $('#resetSessionModal #form-reset-api-session').submit()
         })
     </script>
 @endpush

@@ -43,7 +43,8 @@ class NewUserController extends Controller
             $getUser = User::with('cabang')->orderBy('id', 'ASC');
 
             if ($search) {
-                $getUser->where('id', 'LIKE', "%{$search}%")->orWhere('name', 'LIKE', "%{$search}%")->orWhere('nip', 'LIKE', "%{$search}%");
+                $getUser->where('email', 'LIKE', "%{$search}%")->orWhere('name', 'LIKE', "%{$search}%")
+                ->orWhere('nip', 'LIKE', "%{$search}%");
             }
 
             $this->param['data'] = $getUser->paginate($limit);
@@ -52,6 +53,8 @@ class NewUserController extends Controller
         } catch (Exception $e) {
             return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
         }
+
+        // return $this->param['data'];
 
         return view('dagulir.master.user.index', $this->param);
     }
@@ -278,6 +281,7 @@ class NewUserController extends Controller
                     return $query->where('users.email', 'like', '%' . $search . '%');
                 })
                 ->paginate($limit);
+
 
             $pengajuanController = new PengajuanKreditController;
             foreach ($data as $key => $value) {

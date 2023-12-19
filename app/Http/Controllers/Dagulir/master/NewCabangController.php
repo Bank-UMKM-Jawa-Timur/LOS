@@ -129,6 +129,8 @@ class NewCabangController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $status = '';
+        $message = '';
         $kode_cabang = Cabang::find($id);
         $isUniqueKodeCabang = $kode_cabang->kode_cabang == $request->kode_cabang ? '' : '|unique:cabang,kode_cabang';
         $isUniqueEmail = $kode_cabang->email == $request->email ? '' : '|unique:cabang,email';
@@ -148,10 +150,25 @@ class NewCabangController extends Controller
             $cabang->email = $request->get('email');
             $cabang->alamat = $request['alamat'];
             $cabang->save();
+
+            
+            $status = 'success';
+            $message = 'Berhasil menyimpan perubahan';
         } catch (\Exception $e) {
+            $status = 'failed';
+            $message = 'Terjadi kesalahan';
             return redirect()->back()->withError('Terjadi kesalahan.');
         } catch (\Illuminate\Database\QueryException $e) {
+            $status = 'failed';
+            $message = 'Terjadi kesalahan pada database';
             return redirect()->back()->withError('Terjadi kesalahan.');
+        } finally {
+            $response = [
+                'status' => $status,
+                'message' => $message,
+            ];
+
+            return response()->json($response);
         }
 
         return redirect()->route('cabang.index')->withStatus('Data berhasil diperbarui.');

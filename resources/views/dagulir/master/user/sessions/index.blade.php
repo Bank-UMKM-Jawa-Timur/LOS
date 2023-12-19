@@ -172,7 +172,7 @@
         function generateCsrfToken() {
             return '{{ csrf_token() }}';
         }
-        
+
         $('.show-reset-session').on('click', function() {
         console.log('masuk');
         const target = $(this).data('target')

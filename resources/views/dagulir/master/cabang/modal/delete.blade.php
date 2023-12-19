@@ -1,17 +1,17 @@
 <div class="modal-layout hidden" id="modal-edit-cabang">
-    <form id="form-edit-cabang" method="POST">
-    <input type="hidden" name="_token" value="{{ csrf_token() }}" id="token_edit_cabang">
     <div class="modal modal-sm bg-white">
         <div class="modal-head">
             <div class="title">
                 <h2 class="font-bold text-lg tracking-tighter text-theme-text">
-                    Edit Kantor Cabang
+                    Tambah Kantor Cabang
                 </h2>
             </div>
-            <button data-dismiss-id="modal-edit-cabang" type="button">
+            <button data-dismiss-id="modal-edit-cabang">
                 <iconify-icon icon="iconamoon:close-bold" class="text-2xl"></iconify-icon>
             </button>
         </div>
+        <form id="form-edit-cabang" method="POST">
+            <input type="hidden" name="_token" id="token_edit_cabang">
             <div class="modal-body">
                 <div class="form-group-2 mb-4">
                     <div class="input-box">
@@ -60,6 +60,7 @@
                     </div>
                 </div>
             </div>
+            @csrf
             <div class="modal-footer justify-end">
                 <button class="btn-cancel" type="button" data-dismiss-id="modal-edit-cabang">
                     Batal

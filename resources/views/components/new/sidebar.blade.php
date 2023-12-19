@@ -104,12 +104,12 @@
                                 <button class="item-dp-link">Master User</button>
                             </a>
                         </li>
-                        {{-- <li>
+                         <li>
                             <a href="{{route('dagulir.master.master-item.index')}}">
                                 <button class="item-dp-link">Master Item</button>
                             </a>
                         </li>
-                        <li>
+                        {{-- <li>
                             <a href="{{route('dagulir.master.merk.index')}}">
                                 <button class="item-dp-link">Master Merk</button>
                             </a>
