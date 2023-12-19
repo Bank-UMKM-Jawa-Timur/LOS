@@ -572,7 +572,7 @@ $dataIndex = match ($skema) {
                                                                     class="{{ $idLevelTiga == 'ratio_tenor_asuransi_opsi' || $idLevelTiga == 'ratio_coverage_opsi' ? '' : 'form-group' }}">
                                                                     <div class="input-box">
                                                                         <label for=""
-                                                                            id="{{ $idLevelTiga . '_label' }}">{{ $itemTiga->nama }}</label><small class="text-red-500 font-bold">*</small>
+                                                                            id="{{ $idLevelTiga . '_label' }}">{{ $itemTiga->nama }}</label>
 
                                                                         <select name="dataLevelTiga[{{ $itemTiga->id }}]" id="{{ $idLevelTiga }}"
                                                                             class="form-input cek-sub-column" data-id_item={{ $itemTiga->id }}>
