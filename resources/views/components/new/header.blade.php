@@ -23,9 +23,12 @@ class="sticky top-0 border-b z-50 p-3 font-poppins w-full bg-white"
     <div
       class="dropdown-account account-info mr-3 cursor-pointer flex gap-5"
     >
+    @php
+    $name_karyawan = App\Http\Controllers\DashboardController::getKaryawan();
+  @endphp
       <div class="avatar text-center">
         <img
-          src="{{ asset('img/avatar.png') }}"
+          src="https://ui-avatars.com/api/?background=dc3545&name={{ $name_karyawan ? $name_karyawan : auth()->user()->name }}&bold=true&length=2&color=fff"
           alt=""
           class="w-10 h-10 rounded-full"
         />
@@ -34,9 +37,7 @@ class="sticky top-0 border-b z-50 p-3 font-poppins w-full bg-white"
         <h2
           class="font-poppins font-semibold tracking-tighter text-sm"
         >
-          @php
-            $name_karyawan = App\Http\Controllers\DashboardController::getKaryawan();
-          @endphp
+      
           @if (auth()->user()->nip)
             {{ $name_karyawan ? $name_karyawan : auth()->user()->name }}
           @else

@@ -47,9 +47,16 @@ $dataIndex = match ($skema) {
         <div class="body-pages">
             <form action="{{ route('dagulir.pengajuan.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
+                @if (\Request::has('dagulir'))
+                    <input type="hidden" name="dagulir_id" value="{{\Request::get('dagulir')}}">
+                @endif
                 <div class="mt-3 container mx-auto">
                     <div id="dagulir-tab" class="is-tab-content active">
-                        @include('dagulir.pengajuan.create-dagulir')
+                        @if (\Request::has('dagulir'))
+                            @include('dagulir.pengajuan.create-sipde')
+                        @else
+                            @include('dagulir.pengajuan.create-dagulir')
+                        @endif
                     </div>
                     @foreach ($dataAspek as $key => $value)
                         @php
@@ -991,6 +998,25 @@ $dataIndex = match ($skema) {
 
         input.value = nikNumber;
     }
+
+    $(document).ready(function() {
+        var inputRupiah = $('.rupiah')
+        $.each(inputRupiah, function(i, obj) {
+            $(this).val(formatrupiah(obj.value))
+        })
+        var inputDisabled = $("input:disabled")
+        $.each(inputDisabled, function(i, obj) {
+            $(this).addClass('bg-gray-200')
+        })
+        var selectDisabled = $("select:disabled")
+        $.each(selectDisabled, function(i, obj) {
+            $(this).addClass('bg-gray-200')
+        })
+        var textAreaDisabled = $("textarea:disabled")
+        $.each(textAreaDisabled, function(i, obj) {
+            $(this).addClass('bg-gray-200')
+        })
+    })
 
     $('.rupiah').keyup(function(e) {
         var input = $(this).val()
@@ -2446,29 +2472,6 @@ $dataIndex = match ($skema) {
         }
     }
     //end Repayment Capacity
-
-    $('.rupiah').keyup(function(e) {
-        var input = $(this).val()
-        $(this).val(formatrupiah(input))
-    });
-
-    function formatrupiah(angka, prefix) {
-        var number_string = angka.replace(/[^,\d]/g, '').toString(),
-            split = number_string.split(','),
-            sisa = split[0].length % 3,
-            rupiah = split[0].substr(0, sisa),
-            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-
-        // tambahkan titik jika yang di input sudah menjadi angka ribuan
-        if (ribuan) {
-            separator = sisa ? '.' : '';
-            rupiah += separator + ribuan.join('.');
-        }
-
-        rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-        return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
-    }
-    // End Format Rupiah
 
     // Limit Upload
     $('.limit-size').on('change', function() {

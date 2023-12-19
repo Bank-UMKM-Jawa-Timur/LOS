@@ -1336,6 +1336,48 @@ video {
   --tw-bg-opacity: 1;
   background-color: rgb(243 244 246 / var(--tw-bg-opacity));
 }
+    .tab-table-wrapper {
+  display: flex;
+  gap: 0px;
+}
+    .tab-table-wrapper .tab-button {
+  display: flex;
+  gap: 0.5rem;
+  border-width: 1px;
+  border-bottom-width: 0px;
+  --tw-bg-opacity: 1;
+  background-color: rgb(249 250 251 / var(--tw-bg-opacity));
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-weight: 600;
+  --tw-text-opacity: 1;
+  color: rgb(156 163 175 / var(--tw-text-opacity));
+}
+    .tab-table-wrapper .tab-button:hover {
+  background-color: rgb(220 53 69 / 0.8);
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+    .tab-table-wrapper .tab-button.active {
+  --tw-bg-opacity: 1;
+  background-color: rgb(220 53 69 / var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+    .tab-table-wrapper .tab-button.tab-button-start {
+  border-top-left-radius: 0.375rem;
+}
+    .tab-table-wrapper .tab-button.tab-button-end {
+  border-top-right-radius: 0.375rem;
+}
+    .table-wrapper-tab .tab-content {
+  display: none;
+}
+    .table-wrapper-tab .tab-content.active {
+  display: block;
+}
 
 *, ::before, ::after {
   --tw-border-spacing-x: 0;
@@ -1741,9 +1783,6 @@ video {
 .h-\[127px\] {
   height: 127px;
 }
-.h-\[300px\] {
-  height: 300px;
-}
 .h-\[80\%\] {
   height: 80%;
 }
@@ -1752,9 +1791,6 @@ video {
 }
 .h-screen {
   height: 100vh;
-}
-.h-auto {
-  height: auto;
 }
 .min-h-screen {
   min-height: 100vh;
@@ -2105,6 +2141,10 @@ video {
   --tw-bg-opacity: 1;
   background-color: rgb(243 244 246 / var(--tw-bg-opacity));
 }
+.bg-gray-200 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(229 231 235 / var(--tw-bg-opacity));
+}
 .bg-gray-50 {
   --tw-bg-opacity: 1;
   background-color: rgb(249 250 251 / var(--tw-bg-opacity));
@@ -2255,9 +2295,6 @@ video {
 .py-6 {
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
-}
-.pb-0 {
-  padding-bottom: 0px;
 }
 .pb-1 {
   padding-bottom: 0.25rem;
