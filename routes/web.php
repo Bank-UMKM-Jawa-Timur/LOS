@@ -24,6 +24,7 @@ use App\Http\Controllers\Dagulir\master\NewMerkController;
 use App\Http\Controllers\Dagulir\master\NewTipeController;
 use App\Http\Controllers\Dagulir\NewDagulirController;
 use App\Http\Controllers\Dagulir\master\NewUserController;
+use App\Http\Controllers\MasterDanaController;
 use RealRashid\SweetAlert\Facades\Alert;
 
 /*
@@ -128,6 +129,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/reset-api-sessions', [NewUserController::class, 'indexAPISession'])->name('index-api-session');
             Route::post('/reset-api-session/{id}', [NewUserController::class, 'resetAPISession'])->name('reset-api-session');
         });
+    });
+    Route::middleware(['KreditProgram'])->group(function () {
+            Route::prefix('master-dana')->group(function () {
+                Route::get('/',[MasterDanaController::class,'index'])->name('master-dana.index');
+                Route::post('/update/{id}',[MasterDanaController::class,'update'])->name('master-dana.update');
+                Route::get('/dana-cabang',[MasterDanaController::class,'danaCabang'])->name('master-dana.cabang.index');
+                Route::post('/store-cabang',[MasterDanaController::class,'storeCabang'])->name('master-dana.store-cabang');
+            });
     });
 
     // check Pincab
