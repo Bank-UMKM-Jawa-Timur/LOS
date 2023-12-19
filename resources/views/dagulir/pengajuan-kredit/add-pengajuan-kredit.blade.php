@@ -1078,8 +1078,12 @@ $dataIndex = match ($skema) {
         const $activeContent = $(".is-tab-content.active");
         const $nextContent = $activeContent.next();
         const tabId = $activeContent.attr("id")
-        console.log(tabId);
         const dataTab = tabId.replaceAll('-tab', '')
+        if(tabId == 'dagulir-tab'){
+            saveDataUmum()
+        } else{
+            saveDataTemporary(tabId)
+        }
         // Set percentage
         var percentage = formPercentage(tabId)
         $('.tab-wrapper').find(`[data-tab=${dataTab}]`).find('.percentage').html(`${percentage}%`)
