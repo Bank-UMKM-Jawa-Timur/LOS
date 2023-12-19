@@ -39,9 +39,16 @@ class MasterDanaController extends Controller
         ]);
         try {
             $update = MasterDana::find($id);
-            $update->dana_idle = $request->get('dana_idle');
-            $update->dana_modal = $request->get('dana_modal');
-            $update->update();
+            if ($update) {
+                $update->dana_idle = $request->get('dana_idle');
+                $update->dana_modal = $request->get('dana_modal');
+                $update->update();
+            }else{
+                $insert = new MasterDana;
+                $insert->dana_idle = $request->get('dana_idle');
+                $insert->dana_modal = $request->get('dana_modal');
+                $insert->save();
+            }
             alert()->success('Berhasil','Data berhasil diperbarui!')->autoclose(1500);
             return redirect()->route('master-dana.index');
         } catch (Exception $th) {
