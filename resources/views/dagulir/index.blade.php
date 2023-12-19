@@ -276,6 +276,10 @@
                                                 onclick="showTindakLanjut({{ $item->pengajuan->id }},'penyelia kredit')"
                                                 class="cursor-pointer">Tindak lanjut Review Penyelia</a>
                                             </li>
+                                            <li class="item-tb-dropdown">
+                                                <a href="{{route('dagulir.edit', $item->pengajuan->id)}}"
+                                                class="cursor-pointer">Edit</a>
+                                            </li>
                                         @endif
                                         @if (Auth::user()->role == 'Staf Analis Kredit' && $item->pengajuan->posisi == 'Selesai')
                                             @php
@@ -311,7 +315,7 @@
                                                     <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
                                                         class="cursor-pointer">Review</a>
                                                 </li>
-                                                <li class="item-tb-dropdown kembalikan-modal" style="cursor: pointer;"
+                                                <li class="item-tb-dropdown kembalikan-modal" cursor-pointer
                                                     data-id="{{ $item->pengajuan->id }}" data-backto="staf" >
                                                     <a href="#">Kembalikan ke Staff</a>
                                                 </li>
@@ -328,7 +332,7 @@
                                                     <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
                                                         class="cursor-pointer">Review</a>
                                                 </li>
-                                                <li class="item-tb-dropdown kembalikan-modal" style="cursor: pointer;"
+                                                <li class="item-tb-dropdown kembalikan-modal" cursor-pointer
                                                     data-id="{{ $item->pengajuan->id }}" data-backto="penyelia">
                                                     <a href="#">Kembalikan ke Penyelia</a>
                                                 </li>
@@ -346,7 +350,7 @@
                                                     <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
                                                         class="cursor-pointer">Review</a>
                                                 </li>
-                                                <li class="item-tb-dropdown kembalikan-modal" style="cursor: pointer;">
+                                                <li class="item-tb-dropdown kembalikan-modal" cursor-pointer>
                                                     <a href="#"
                                                         data-id="{{ $item->pengajuan->id }}" data-backto="{{$item->pengajuan->id_pbo ? 'pbo' : 'penyelia'}}">Kembalikan ke {{$item->pengajuan->id_pbo ? 'PBO' : 'Penyelia'}}</a>
                                                 </li>
@@ -365,7 +369,7 @@
                                                         <a href="{{ route('dagulir.detailjawaban_pincab', $item->pengajuan->id) }}"
                                                             class="cursor-pointer">Review</a>
                                                     </li>
-                                                    <li class="item-tb-dropdown kembalikan-modal" style="cursor: pointer;"
+                                                    <li class="item-tb-dropdown kembalikan-modal" cursor-pointer
                                                         data-id="{{ $item->pengajuan->id }}" data-backto="{{$item->pengajuan->id_pbp ? 'pbp' : 'penyelia'}}">
                                                         <a href="#">Kembalikan ke {{$item->pengajuan->id_pbp ? 'PBP' : 'Penyelia'}}</a>
                                                     </li>

@@ -61,6 +61,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('dagulir')->name('dagulir.')->group(function () {
         Route::get('/', [DagulirController::class, 'index'])->name('index');
+        // edit
+        Route::get('edit/{id}',[NewDagulirController::class,'edit'])->name('edit');
         // create
         Route::get('create',[DagulirController::class,'create'])->name('create');
         Route::get('get-data-dagulir/{kode_pendaftaran}',[DagulirController::class,'getPengajuanDagulir'])->name('get-data-dagulir');

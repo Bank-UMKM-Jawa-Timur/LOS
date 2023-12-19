@@ -19,6 +19,7 @@ use App\Models\PengajuanModel;
 use App\Models\JawabanSubColumnModel;
 use App\Models\PendapatPerAspek;
 use App\Models\DetailPendapatPerAspek;
+use App\Models\JawabanModel;
 use App\Models\JawabanTemp;
 use App\Models\JawabanTempModel;
 use App\Models\LogPengajuan;
@@ -1574,7 +1575,6 @@ class PengajuanKreditController extends Controller
      */
     public function edit($id)
     {
-
         $param['pageTitle'] = "Dashboard";
         $param['multipleFiles'] = $this->isMultipleFiles;
 

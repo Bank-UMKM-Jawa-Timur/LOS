@@ -1741,11 +1741,20 @@ video {
 .h-\[127px\] {
   height: 127px;
 }
+.h-\[300px\] {
+  height: 300px;
+}
+.h-\[80\%\] {
+  height: 80%;
+}
 .h-full {
   height: 100%;
 }
 .h-screen {
   height: 100vh;
+}
+.h-auto {
+  height: auto;
 }
 .min-h-screen {
   min-height: 100vh;
@@ -2159,6 +2168,10 @@ video {
   -o-object-fit: contain;
      object-fit: contain;
 }
+.object-fill {
+  -o-object-fit: fill;
+     object-fit: fill;
+}
 .p-0 {
   padding: 0px;
 }
@@ -2242,6 +2255,9 @@ video {
 .py-6 {
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
+}
+.pb-0 {
+  padding-bottom: 0px;
 }
 .pb-1 {
   padding-bottom: 0.25rem;
@@ -2470,6 +2486,9 @@ video {
 .underline {
   -webkit-text-decoration-line: underline;
           text-decoration-line: underline;
+}
+.underline-offset-4 {
+  text-underline-offset: 4px;
 }
 .antialiased {
   -webkit-font-smoothing: antialiased;
