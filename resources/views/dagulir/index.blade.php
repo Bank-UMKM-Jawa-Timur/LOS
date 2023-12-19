@@ -73,8 +73,8 @@
     </div>
     <div class="body-pages">
         <div class="tab-table-wrapper p-0">
-            <button data-tab="dagulir" class="tab-button active tab-button-start"><iconify-icon icon="tabler:database-dollar" class="mt-1"></iconify-icon> Dagulir</button>
-            <button data-tab="sipde" class="tab-button tab-button-end"><iconify-icon icon="solar:dollar-minimalistic-linear" class="mt-1"></iconify-icon> SIPDe</button>
+            <button data-tab="dagulir" class="tab-button active tab-button-start"><iconify-icon icon="tabler:database-dollar" class="mt-1"></iconify-icon>Pincetar</button>
+            <button data-tab="sipde" class="tab-button tab-button-end"><iconify-icon icon="solar:dollar-minimalistic-linear" class="mt-1"></iconify-icon>SIPDe</button>
         </div>
         <div class="table-wrapper-tab">
             {{-- dagulir --}}
@@ -617,7 +617,11 @@
                                         @endif
                                     </td>
                                     <td>
-                                        {{$item->pengajuan->posisi}}
+                                        @if ($item->pengajuan->posisi == 'Proses Input Data')
+                                            Perlu ditindaklanjuti
+                                        @else
+                                            {{$item->pengajuan->posisi}}
+                                        @endif
                                         @if ($item->pengajuan->posisi != 'Selesai' || $item->pengajuan->posisi != 'Ditolak')
                                             <p class="text-red-500">{{ $item->nama_pemroses }}</p>
                                         @endif
