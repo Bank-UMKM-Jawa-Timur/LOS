@@ -73,6 +73,8 @@
                             <thead>
                                 <th class="text-center">No</th>
                                 <th>Desa</th>
+                                <th>Kecamatan</th>
+                                <th>Kabupaten</th>
                                 <th>Aksi</th>
                             </thead>
                             <tbody>
@@ -87,6 +89,8 @@
                                     <tr>
                                         <td>{{ $i++ }}</td>
                                         <td>{{ $item->desa }}</td>
+                                        <td>{{ $item->kecamatan->kecamatan }}</td>
+                                        <td>{{ $item->kabupaten->kabupaten }}</td>
                                         <td>
                                             <button class="btn-edit">
                                                 <iconify-icon icon="uil:edit" class="icon"></iconify-icon>
