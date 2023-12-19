@@ -190,8 +190,8 @@
                         <td>
                             @if ($item->pengajuan->posisi == 'Selesai')
                                 @php
-                                    $awal = date_create($item->tanggal);
-                                    $akhir = date_create($item->tanggal_review_pincab);
+                                    $awal = date_create($item->pengajuan->tanggal);
+                                    $akhir = date_create($item->pengajuan->tanggal_review_pincab);
                                     $interval = $akhir->diff($awal);
                                     $res = $interval->format('%a');
                                 @endphp
@@ -303,15 +303,34 @@
                                     </button>
                                     <ul class="dropdown-tb-menu hidden">
                                         @if (Auth::user()->role == 'Staf Analis Kredit' && $item->pengajuan->posisi == 'Proses Input Data')
-                                            <li class="item-tb-dropdown">
-                                                <a href="#"
-                                                onclick="showTindakLanjut({{ $item->pengajuan->id }},'penyelia kredit')"
-                                                class="cursor-pointer">Tindak lanjut Review Penyelia</a>
-                                            </li>
-                                            <li class="item-tb-dropdown">
-                                                <a href="{{route('dagulir.edit', $item->pengajuan->id)}}"
-                                                class="cursor-pointer">Edit</a>
-                                            </li>
+                                            @if ($item->from_apps == 'pincetar')
+                                                @if (!$item->pengajuan->id_penyelia)
+                                                    <li class="item-tb-dropdown">
+                                                        <a href="#"
+                                                        onclick="showTindakLanjut({{ $item->pengajuan->id }},'penyelia kredit')"
+                                                        class="cursor-pointer">Tindak lanjut Review Penyelia</a>
+                                                    </li>
+                                                @endif
+                                                <li class="item-tb-dropdown">
+                                                    <a href="{{route('dagulir.edit', $item->pengajuan->id)}}"
+                                                    class="cursor-pointer">Edit</a>
+                                                </li>
+                                            @else
+                                                @if ($item->pengajuan->average_by_sistem)
+                                                    @if (!$item->pengajuan->id_penyelia)
+                                                        <li class="item-tb-dropdown">
+                                                            <a href="#"
+                                                            onclick="showTindakLanjut({{ $item->pengajuan->id }},'penyelia kredit')"
+                                                            class="cursor-pointer">Tindak lanjut Review Penyelia</a>
+                                                        </li>
+                                                    @endif
+                                                @else
+                                                    <li class="item-tb-dropdown">
+                                                        <a href="{{route('dagulir.pengajuan.create')}}?dagulir={{$item->id}}"
+                                                        class="cursor-pointer">Tindak Lanjut</a>
+                                                    </li>
+                                                @endif
+                                            @endif
                                         @endif
                                         @if (Auth::user()->role == 'Staf Analis Kredit' && $item->pengajuan->posisi == 'Selesai')
                                             @php
