@@ -24,11 +24,17 @@
     });
 
     $('body').on('change', 'input[type=file]', function(e) {
-        const url = `{{ route('dagulir.temp.file') }}`;
-        const inputData = $(this);
-        const formData = new FormData();
-        const answerId = inputData.attr('name').replace(/\D/g, '');
+        e.preventDefault()
+        let url = `{{ route('dagulir.temp.file') }}`;
+        let inputData = $(this);
+        let inputName = inputData.attr('name');
+        let formData = new FormData();
+        let answerId = inputData.attr('name').replace(/\D/g, '');
 
+        if(inputName == 'foto_nasabah' || inputName == 'foto_pasangan' || inputName == 'ktp_nasabah'){
+            url = `{{ route('dagulir.temp.fileDataUmum') }}`;
+            formData.append('tipe', inputName);
+        }
         formData.append('file', e.target.files[0]);
         formData.append('file_id', inputData.attr('data-id'));
         formData.append('answer_id', answerId);
@@ -52,7 +58,7 @@
 
     function saveDataUmum() {
         const data = {
-            id_nasabah: {{ $duTemp->id }},
+            id_dagulir_temp: {{ $duTemp->id }},
         };
 
         $('#dagulir-tab input, #dagulir-tab select, #dagulir-tab textarea').each(function() {
@@ -92,7 +98,7 @@
             method: 'POST',
             data: data,
             success(res) {
-                //console.log(res);
+                console.log(res);
             }
         });
     }

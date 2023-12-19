@@ -1973,7 +1973,6 @@ class NewDagulirController extends Controller
         }
 
         try {
-            return $finalArray;
             for ($i = 0; $i < count($finalArray); $i++) {
                 $cekDataSelect = DB::table('jawaban_temp')
                     ->where('temporary_dagulir_id', $request->id_dagulir_temp)
@@ -2019,6 +2018,16 @@ class NewDagulirController extends Controller
         return response()->json([
             'statusCode' => 200,
             'data' => $data,
+        ]);
+    }
+
+    public function tempFileDataUmum(Request $request){
+        $dagulir = PengajuanDagulirTemp::find($request->id_dagulir_temp);
+        $data = TemporaryService::saveFileDagulirDataUmum($dagulir, $request, $request->file('file'));
+
+        return response()->json([
+            'statusCode' => 200,
+            'data' => $data
         ]);
     }
 }

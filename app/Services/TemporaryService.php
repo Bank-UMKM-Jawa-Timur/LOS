@@ -246,4 +246,45 @@ class TemporaryService
 
         return true;
     }
+
+    public static function saveFileDagulirDataUmum(PengajuanDagulirTemp $dagulir, Request $request, UploadedFile $file)
+    {
+        $filename = $filename = auth()->user()->id . '-' . time() . '-' . $file->getClientOriginalName();
+        $tipe = $request->tipe;
+        $path = public_path() . "/upload/temp/{$request->id_dagulir_temp}/";
+        $field = '';
+        if($tipe == 'ktp_nasabah')
+            $field = 'foto_ktp';
+        else if($tipe == 'ktp_pasangan')
+            $field = 'foto_pasangan';
+        else if($tipe == 'foto_nasabah')
+            $field = 'foto_nasabah';
+
+        if($dagulir->$tipe != null){
+            @unlink($path . $dagulir->$tipe);
+            $dagulir->update([$field => $filename]);
+        } else {
+            $dagulir
+                ->where('id', $dagulir->id)
+                ->update([$field => $filename]);
+        }
+
+        $file->move($path, $filename);
+        return [
+            'filename' => $filename,
+            'file_id' => $dagulir->id
+        ];
+    }
+
+    public static function delFileDagulirDataUmum(JawabanTemp|null $answer)
+    {
+        if(!$answer) return false;
+
+        $path = public_path("upload/temp/{$answer->id_jawaban}/{$answer->opsi_text}");
+
+        @unlink($path);
+        $answer->delete();
+
+        return true;
+    }
 }

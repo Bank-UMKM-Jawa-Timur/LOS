@@ -970,7 +970,8 @@ $dataIndex = match ($skema) {
                 url: "{{ route('getKecamatan') }}?kabID=" + kabID,
                 dataType: 'JSON',
                 success: function(res) {
-                    //    //console.log(res);
+                    console.log('kecamatan');
+                    console.log(res);
                     if (res) {
                         $("#kecamatan").empty();
                         $("#desa").empty();
@@ -978,7 +979,7 @@ $dataIndex = match ($skema) {
                         $("#desa").append('<option value="0">---Pilih Desa---</option>');
                         $.each(res, function(nama, kode) {
                             $('#kecamatan').append(`
-                                <option value="${kode}">${nama}</option>
+                                <option value="${kode}" ${kode == {{ $duTemp?->kec_ktp ?? 'null' }} ? 'selected' : '' }>${nama}</option>
                             `);
                         });
 
@@ -1010,7 +1011,7 @@ $dataIndex = match ($skema) {
                         $("#desa").append('<option value="0">---Pilih Desa---</option>');
                         $.each(res, function(nama, kode) {
                             $('#desa').append(`
-                                <option value="${kode}">${nama}</option>
+                                <option value="${kode}" ${kode == {{ $duTemp?->desa_ktp ?? 'null' }} ? 'selected' : '' }>${nama}</option>
                             `);
                         });
                     } else {
@@ -1194,7 +1195,7 @@ $dataIndex = match ($skema) {
 
         $.ajax({
             type: "get",
-            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}`,
+            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}&idCalonNasabah={{ $duTemp?->id }}`,
             dataType: "json",
             success: function(response) {
                 if (kategoriJaminan != "Tidak Memiliki Jaminan Tambahan") {
@@ -1242,28 +1243,52 @@ $dataIndex = match ($skema) {
                             name_lowercase = name_lowercase.replaceAll(' ', '_')
                             if (valItem.nama == 'Foto') {
                                 $('#bukti_pemilikan_jaminan_tambahan').append(`
-                                    <div class="form-group file-wrapper item-${valItem.id}">
-                                        <label for="">${valItem.nama}</label>
-                                        <div class="input-box mb-4">
-                                            <div class="flex gap-4">
-                                                <input type="hidden" name="id_item_file[${valItem.id}][]"
-                                                    value="${valItem.id}" id="">
-                                                <input type="file" id="${valItem.nama.toString().replaceAll(" ", "_")}"
-                                                    name="upload_file[${valItem.id}][]" data-id=""
-                                                    placeholder="Masukkan informasi ${valItem.nama}" class="form-input limit-size">
-                                                <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
-                                                <span class="filename" style="display: inline;"></span>
-                                                <div class="flex gap-2 multiple-action">
-                                                    <button type="button" class="btn-add" data-item-id="${valItem.id}-${name_lowercase}">
-                                                        <iconify-icon icon="fluent:add-16-filled" class="mt-2"></iconify-icon>
-                                                    </button>
-                                                    <button type="button" class="btn-minus hidden" data-item-id="${valItem.id}-${name_lowercase}">
-                                                        <iconify-icon icon="lucide:minus" class="mt-2"></iconify-icon>
-                                                    </button>
-                                                </div>
-                                            </div>
+                                @forelse (temporary_dagulir($duTemp->id, 148, true) as $tempData)
+                                <div class="form-group file-wrapper item-${valItem.id}">
+                                    <label for="">${valItem.nama}</label>
+                                    <div class="input-box mb-4">
+                                        <div class="flex gap-4">
+                                            <input type="hidden" name="id_item_file[${valItem.id}][]" value="${valItem.id}" id="">
+                                            <input type="file" name="upload_file[${valItem.id}][]" data-id="{{ $tempData->id }}"
+                                                placeholder="Masukkan informasi ${valItem.nama}"
+                                                class="form-control limit-size" id="${valItem.nama.toString().replaceAll(" ", "_").toLowerCase()}"
+                                                value="{{$tempData->opsi_text}}">
+                                                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                                            <span class="filename" style="display: inline;">{{ $tempData->opsi_text }}</span>
+                                        </div>
+                                        <div class="flex gap-2 multiple-action">
+                                            <button type="button" class="btn-add" data-item-id="${valItem.id}-${name_lowercase}">
+                                                <iconify-icon icon="fluent:add-16-filled" class="mt-2"></iconify-icon>
+                                            </button>
+                                            <button type="button" class="btn-minus hidden" data-item-id="${valItem.id}-${name_lowercase}">
+                                                <iconify-icon icon="lucide:minus" class="mt-2"></iconify-icon>
+                                            </button>
                                         </div>
                                     </div>
+                                </div>
+                                @empty
+                                <div class="form-group file-wrapper item-${valItem.id}">
+                                    <label for="">${valItem.nama}</label>
+                                    <div class="input-box mb-4">
+                                        <div class="flex gap-4">
+                                            <input type="hidden" name="id_item_file[${valItem.id}][]" value="${valItem.id}" id="">
+                                            <input type="file" name="upload_file[${valItem.id}][]" data-id=""
+                                                placeholder="Masukkan informasi ${valItem.nama}"
+                                                class="form-control limit-size" id="${valItem.nama.toString().replaceAll(" ", "_").toLowerCase()}">
+                                                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                                            <span class="filename" style="display: inline;"></span>
+                                        </div>
+                                        <div class="flex gap-2 multiple-action">
+                                            <button type="button" class="btn-add" data-item-id="${valItem.id}-${name_lowercase}">
+                                                <iconify-icon icon="fluent:add-16-filled" class="mt-2"></iconify-icon>
+                                            </button>
+                                            <button type="button" class="btn-minus hidden" data-item-id="${valItem.id}-${name_lowercase}">
+                                                <iconify-icon icon="lucide:minus" class="mt-2"></iconify-icon>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endforelse
                                 `);
                             } else {
                                 if (response.dataJawaban[i] != null && response.dataJawaban[
@@ -1331,6 +1356,20 @@ $dataIndex = match ($skema) {
                     $("#select_kategori_jaminan_tambahan").hide()
                     $("#jaminan_tambahan").hide()
                 }
+            }
+        })
+        // Limit Upload
+        $('.limit-size').on('change', function() {
+            var size = (this.files[0].size / 1024 / 1024).toFixed(2)
+            if (size > 5) {
+                $(this).next().css({
+                    "display": "block"
+                });
+                this.value = ''
+            } else {
+                $(this).next().css({
+                    "display": "none"
+                });
             }
         })
     });
@@ -1931,7 +1970,7 @@ $dataIndex = match ($skema) {
                         $("#kecamatan").append('<option>---Pilih Kecamatan---</option>');
                         $.each(res, function(nama, kode) {
                             $('#kecamatan').append(`
-                                <option value="${kode}">${nama}</option>
+                                <option value="${kode}" ${kode == {{ $duTemp?->kec_ktp ?? 'null' }} ? 'selected' : '' }>${nama}</option>
                             `);
                         });
 
@@ -1958,7 +1997,7 @@ $dataIndex = match ($skema) {
                         $("#kecamatan_domisili").append('<option>---Pilih Kecamatan---</option>');
                         $.each(res, function(nama, kode) {
                             $('#kecamatan_domisili').append(`
-                                <option value="${kode}">${nama}</option>
+                                <option value="${kode}" ${kode == {{ $duTemp?->kec_dom ?? null }} ? 'selected' : ''}>${nama}</option>
                             `);
                         });
 
@@ -1985,7 +2024,7 @@ $dataIndex = match ($skema) {
                         $("#kecamatan_usaha").append('<option>---Pilih Kecamatan---</option>');
                         $.each(res, function(nama, kode) {
                             $('#kecamatan_usaha').append(`
-                                <option value="${kode}">${nama}</option>
+                                <option value="${kode}" ${kode == {{ $duTemp?->kec_usaha ?? null }} ? 'selected' : ''}>${nama}</option>
                             `);
                         });
 
@@ -2079,6 +2118,8 @@ $dataIndex = match ($skema) {
         countFormPercentage()
         $(".rupiah").trigger('keyup')
         $("#ijin_usaha").trigger('change')
+        $("#kabupaten_domisili").trigger('change')
+        $("#kabupaten_usaha").trigger('change')
     });
 
     function countFormPercentage() {
