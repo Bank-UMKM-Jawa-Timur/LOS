@@ -30,10 +30,11 @@ class PengajuanController extends Controller
             $validator = Validator::make($req, [
                 'kode_pendaftaran' => 'required|unique:pengajuan_dagulir,kode_pendaftaran',
                 'nama' => 'required',
-                'nik' => 'required',
+                'nik' => 'required|unique:pengajuan_dagulir,nik',
+                'email' => 'required|unique:pengajuan_dagulir,email',
                 'tempat_lahir' => 'required',
                 'tanggal_lahir' => 'required',
-                'telp' => 'required',
+                'telp' => 'required|unique:pengajuan_dagulir,telp',
                 'jenis_usaha' => 'required',
                 'nominal' => 'required',
                 'tujuan_penggunaan' => 'required',
@@ -52,15 +53,15 @@ class PengajuanController extends Controller
                 'tipe' => 'required',
                 'npwp' => 'required',
                 'jenis_badan_hukum' => 'required',
-                'tempat_berdiri' => 'required',
-                'tanggal_berdiri' => 'required',
+                'ket_agunan' => 'required',
                 'tanggal' => 'required',
             ], [
                 'required' => ':attribute harus diisi.',
-                'unique' => ':attribute telah digunakan'
+                'unique' => ':attribute telah digunakan.'
             ], [
                 'kode_pendaftaran' => 'Kode Pendaftaran',
                 'nama' => 'Nama',
+                'email' => 'Email',
                 'nik' => 'NIK',
                 'tempat_lahir' => 'Tempat Lahir',
                 'tanggal_lahir' => 'Tanggal Lahir',
@@ -86,6 +87,7 @@ class PengajuanController extends Controller
                 'tempat_berdiri' => 'Tempat Berdiri',
                 'tanggal_berdiri' => 'Tanggal Berdiri',
                 'tanggal' => 'Tanggal',
+                'ket_agunan' => 'Keterangan Agunan',
             ]);
 
             if($validator->fails()){
@@ -105,6 +107,7 @@ class PengajuanController extends Controller
                         'kode_pendaftaran' => $request->get('kode_pendaftaran'),
                         'nama' => $request->get('nama'),
                         'nik' => $request->get('nik'),
+                        'email' => $request->get('email'),
                         'nama_pj_ketua' => $request->get('nama_pj_ketua') ?? null,
                         'tempat_lahir' => $request->get('tempat_lahir'),
                         'tanggal_lahir' => date('Y-m-d', strtotime($request->get('tanggal_lahir'))),
@@ -130,6 +133,7 @@ class PengajuanController extends Controller
                         'tempat_berdiri' => $request->get('tempat_berdiri'),
                         'tanggal_berdiri' => date('Y-m-d', strtotime($request->get('tanggal_berdiri'))),
                         'tanggal' => date('Y-m-d', strtotime($request->get('tanggal'))),
+                        'ket_agunan' => $request->get('ket_agunan'),
                         'user_id' => $userId->id,
                         'from_apps' => 'sipde',
                         'status' => 8,
@@ -140,6 +144,7 @@ class PengajuanController extends Controller
 
                     $addPengajuan = new PengajuanModel();
                     $addPengajuan->id_staf = $userId->id;
+                    $addPengajuan->posisi = 'Proses Input Data';
                     $addPengajuan->tanggal = date(now());
                     $addPengajuan->id_cabang = $request->get('kode_bank_cabang');
                     $addPengajuan->skema_kredit = 'Dagulir';

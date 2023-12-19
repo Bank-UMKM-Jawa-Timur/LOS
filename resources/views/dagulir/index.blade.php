@@ -143,6 +143,7 @@
                     <th class="w-11">Tipe Pengajuan</th>
                     <th>Plafon</th>
                     <th class="w-13">Tenor</th>
+                    <th class="w-13">Durasi</th>
                     <th class="w-13">Skor</th>
                     <th class="w-13">Status Pincetar</th>
                     <th class="w-7">Status SIPDE</th>
@@ -185,6 +186,30 @@
                         </td>
                         <td>
                             {{$item->jangka_waktu}} Bulan
+                        </td>
+                        <td>
+                            @if ($item->pengajuan->posisi == 'Selesai')
+                                @php
+                                    $awal = date_create($item->tanggal);
+                                    $akhir = date_create($item->tanggal_review_pincab);
+                                    $interval = $akhir->diff($awal);
+                                    $res = $interval->format('%a');
+                                @endphp
+
+                                @if ($res != 0)
+                                    @if ($res == 1 || $res == 2 || $res == 3)
+                                        <font class="text-green-500">{{ $res . ' hari' }}</font>
+                                    @elseif ($res == 4 || $res == 5 || $res == 6)
+                                        <font class="text-yellow-500">{{ $res . ' hari' }}</font>
+                                    @else
+                                        <font class="text-red-500">{{ $res . ' hari' }}</font>
+                                    @endif
+                                @else
+                                    {{ '-' }}
+                                @endif
+                            @else
+                                {{ '-' }}
+                            @endif
                         </td>
                         <td>
                             @php
@@ -232,26 +257,33 @@
                             @endphp
                             @if ($status_skor == 'hijau')
                                 <font class="text-green-500">
-                                    {{ $avgResult }}
+                                    {{ $avgResult ? $avgResult : '-' }}
                                 </font>
                             @elseif ($status_skor == 'kuning')
                                 <font class="text-yellow-500">
-                                    {{ $avgResult }}
+                                    {{ $avgResult ? $avgResult : '-' }}
                                 </font>
                             @elseif ($status_skor == 'merah')
                                 <font class="text-red-500">
-                                    {{ $avgResult }}
+                                    {{ $avgResult ? $avgResult : '-' }}
                                 </font>
                             @else
                                 <font class="text-neutral-800">
-                                    {{ $avgResult }}
+                                    {{ $avgResult ? $avgResult : '-' }}
                                 </font>
                             @endif
                         </td>
                         <td>
-                            {{$item->pengajuan->posisi}}
-                            @if ($item->pengajuan->posisi != 'Selesai' || $item->pengajuan->posisi != 'Ditolak')
-                                <p class="text-red-500">{{ $item->nama_pemroses }}</p>
+                            @if ($item->from_apps == 'pincetar')
+                                {{$item->pengajuan->posisi}}
+                                @if ($item->pengajuan->posisi != 'Selesai' || $item->pengajuan->posisi != 'Ditolak')
+                                    <p class="text-red-500">{{ $item->nama_pemroses }}</p>
+                                @endif
+                            @else
+                                {{$item->pengajuan->posisi == 'Proses Input Data' ? 'Perlu ditindak lanjuti' : $item->pengajuan->posisi}}
+                                @if ($item->pengajuan->posisi != 'Selesai' || $item->pengajuan->posisi != 'Ditolak')
+                                    <p class="text-red-500">{{ $item->nama_pemroses }}</p>
+                                @endif
                             @endif
                         </td>
                         <td>
