@@ -18,5 +18,6 @@ class JawabanTemp extends Model
         'skor_penyelia',
         'skor',
         'type',
+        'temporary_dagulir_id'
     ];
 }

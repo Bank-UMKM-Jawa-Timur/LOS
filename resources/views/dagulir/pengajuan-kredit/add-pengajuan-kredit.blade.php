@@ -50,6 +50,7 @@ $dataIndex = match ($skema) {
                 @if (\Request::has('dagulir'))
                     <input type="hidden" name="dagulir_id" value="{{\Request::get('dagulir')}}">
                 @endif
+                <input type="hidden" name="id_dagulir_temp" id="id_dagulir_temp">
                 <div class="mt-3 container mx-auto">
                     <div id="dagulir-tab" class="is-tab-content active">
                         @if (\Request::has('dagulir'))
@@ -1077,8 +1078,12 @@ $dataIndex = match ($skema) {
         const $activeContent = $(".is-tab-content.active");
         const $nextContent = $activeContent.next();
         const tabId = $activeContent.attr("id")
-        console.log(tabId);
         const dataTab = tabId.replaceAll('-tab', '')
+        if(tabId == 'dagulir-tab'){
+            saveDataUmum()
+        } else{
+            saveDataTemporary(tabId)
+        }
         // Set percentage
         var percentage = formPercentage(tabId)
         $('.tab-wrapper').find(`[data-tab=${dataTab}]`).find('.percentage').html(`${percentage}%`)
@@ -2619,4 +2624,5 @@ $dataIndex = match ($skema) {
 </script>
 
 <script src="{{ asset('') }}js/custom.js"></script>
+@include('dagulir.partials.create-save-temp')
 @endpush
