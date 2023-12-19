@@ -149,46 +149,46 @@
                 <td>1.</td>
                 <td style="width: 25%">Bentuk Pinjaman</td>
                 <td style="width: 2%">:</td>
-                <td>Angsuran</td>
+                <td>Angsuran/plafon tetap <sup>1</sup>)</td>
             </tr>
             <tr>
                 <td>2.</td>
                 <td style="width: 25%">Tujuan Kredit</td>
                 <td style="width: 2%">:</td>
-                <td>Konsumsi</td>
+                <td>Modal Kerja / Investasi <sup>2</sup>)</td>
             </tr>
-            <tr>
+            {{-- <tr>
                 <td>3.</td>
                 <td style="width: 25%">Untuk Keperluan</td>
                 <td style="width: 2%">:</td>
                 <td><b>Pembelian Kendaraan Bermotor</b></td>
-            </tr>
+            </tr> --}}
             <tr>
-                <td>4.</td>
+                <td>3.</td>
                 <td style="width: 25%">Besarnya Pinjaman</td>
                 <td style="width: 2%">:</td>
                 <td>Rp. {{ rupiah($dataNasabah->nominal) }}</td>
             </tr>
             <tr>
-                <td>5.</td>
+                <td>4.</td>
                 <td style="width: 25%">Jangka Waktu Pinjaman</td>
                 <td style="width: 2%">:</td>
                 <td>{{ intval($dataNasabah->jangka_waktu) }} bulan</td>
             </tr>
             <tr>
-                <td>6.</td>
+                <td>5.</td>
                 <td style="width: 25%">Bunga Pinjaman</td>
                 <td style="width: 2%">:</td>
-                <td>...... p.a anuitas/efektif/floating <sup>2</sup>) rate</td>
+                <td>...... p.a anuitas/efektif/floating) rate</td>
             </tr>
             <tr>
-                <td>7.</td>
+                <td>6.</td>
                 <td style="width: 25%">Angsuran Perbulan</td>
                 <td style="width: 2%">:</td>
                 <td>Rp. {{ $installment ? rupiah(intval($installment?->opsi_text)) : 0 }}</td>
             </tr>
             <tr>
-                <td>8.</td>
+                <td>7.</td>
                 <td style="width: 25%">Denda</td>
                 <td style="width: 2%">:</td>
                 <td >
@@ -201,7 +201,7 @@
                 </td>
             </tr>
             <tr>
-                <td>9.</td>
+                <td>8.</td>
                 <td style="width: 25%">Biaya - Biaya</td>
                 <td style="width: 2%">:</td>
                 <td>
@@ -214,13 +214,13 @@
                         </tr>
                         <tr>
                             <td>-</td>
-                            <td style="width: 70%">Administrasi</td>
+                            <td style="width: 70%">Biaya Notaris</td>
                             <td>:</td>
                             <td>Rp. ...................</td>
                         </tr>
                         <tr>
                             <td>-</td>
-                            <td style="width: 70%">Asuransi jiwa, Asuransi kredit</td>
+                            <td style="width: 70%">Premi Asuransi Barang Jaminan/Jiwa/Kredit<sup>2</sup>)</td>
                             <td>:</td>
                             <td>Rp. ...................</td>
                         </tr>
@@ -240,39 +240,57 @@
                 </td>
             </tr>
             <tr>
-                <td>10.</td>
+                <td>9.</td>
                 <td style="width: 25%">Jaminan Kredit Berupa <sup>3</sup>)</td>
                 <td style="width: 2%">:</td>
-                <td>Asli BPKB Kendaraan Bermotor yang dibeli disertai faktur pembelian atas nama yang tercantum pada BPKB</td>
+                <td>. . . . . . . . . . . . . . . . . . . . . . .</td>
             </tr>
         </table>
 
         <table class="table-body-2">
             <tr>
-                <td style="vertical-align: text-top"><b>11.</b></td>
-                <td><b>Debitur diwajibkan membuka rekening tabungan yang digunakan sebagai rekening penampungan realisasi kredit, angsuran kredit Bank dan pembayaran kendaraan.</b></td>
+                <td style="vertical-align: text-top"><b>10. </b></td>
+                <td>Peminjam diwajibkan membuka rekening tabungan yang digunakan sebagai rekening penampungan realisasi kredit dan angsuran kredit Bank.</td>
             </tr>
             <tr>
-                <td style="vertical-align: text-top">12.</td>
+                <td style="vertical-align: text-top">11.</td>
                 <td>Semua surat-surat asli dari barang-barang yang dijaminkan harus diserahkan pada Bank dan pemilik jaminan ikut menandatangani.</td>
             </tr>
             <tr>
+                <td style="vertical-align: text-top">12.</td>
+                <td><b>Barang-barang jaminan berupa tanahdan/atau bangunan/kendaraan bermotor/mesin/kendaraan kerja/alat/perkakas/alat peraga <sup>2</sup>) harus diasuransikan atas nama Bank dengan biaya beban debitur.</b></td>
+            </tr>
+            <tr>
                 <td style="vertical-align: text-top">13.</td>
-                <td>Permohonan kredit Saudara dapat direalisir paling awal pada 1 hari kerja setelah {{ $tgl }}</td>
+                <td>Permohonan kredit Saudara dapat direalisir pada tanggal {{ $tgl }}.</td>
             </tr>
             <tr>
                 <td style="vertical-align: text-top">14.</td>
-                <td>Sesuai dengan ketentuan perkreditan yang berlaku.<br>
-                    Selanjutnya apabila ketentuan-ketentuan tersebut di atas Suadara setujui, maka lembar kedua dari surat ini, sesudah ditandatangani harap dikirim kepada kami sebagai tanda persetujuan saudara.<br>
-                    <br>Demikian untuk menjadikan saudara maklum
+                <td>Sesuai dengan ketentuan perkreditan yang berlaku.</td>
+            </tr>
+            <tr>
+                <td style="vertical-align: text-top">15.</td>
+                <td><b>Saudara dilarang memberikan imbalan dalam bentuk uang atau materi lainnya kepada Pegawai Bank BPR Jatim Bank UMKM Jawa Timur atas pencarian kredit dari Bank BPR Jatim Bank BPR UMKM Jawa Timur</b></td>
+            </tr>
+        </table>
+
+        <br>
+
+        <table>
+            <tr>
+                <td></td>
+                <td></td>
+                <td style="text-align: justify">
+                        Apabila ketentuan-ketentuan tersebut di atas Saudara setujui, maka lembar  kedua dari surat ini, sesudah ditandatangani harap dikirim kepada kami sebagai tanda persetujuan saudara.
+                Demikian untuk menjadikan saudara maklum.
                 </td>
             </tr>
         </table>
 
         <table class="table-ttd">
             <tr>
-                <th style="font-weight: 500; width: 50%;"><br>DEBITUR</th>
-                <th style="font-weight: 500; width: 50%;">PT. Bank Perkreditan Rakyat Jawa Timur <br>Cabang {{ $dataCabang->cabang }}</th>
+                <th style="font-weight: 500; width: 50%;"><br>Peminjam</th>
+                <th style="font-weight: 500; width: 50%;">PT. BPR Jawa Timur <br>Kantor Cabang {{ $dataCabang->cabang }}</th>
             </tr>
             <tr>
                 <td style="text-align: center; padding-top: 100px">
