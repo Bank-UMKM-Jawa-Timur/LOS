@@ -88,8 +88,8 @@ class MasterDanaController extends Controller
             }else{
                 $dana_cabang = new DanaCabang;
                 $dana_cabang->id_cabang = $request->get('cabang');
-                $dana_cabang->dana_modal = $total_dana_diterima;
-                $dana_cabang->dana_idle = $total_dana_diterima;
+                $dana_cabang->dana_modal =  formatNumber($request->get('dana_modal'));
+                $dana_cabang->dana_idle =  formatNumber($request->get('dana_modal'));
                 $dana_cabang->plafon_akumulasi = $nominal_plafon;
                 $dana_cabang->baki_debet = $nominal_plafon;
                 $dana_cabang->save();
