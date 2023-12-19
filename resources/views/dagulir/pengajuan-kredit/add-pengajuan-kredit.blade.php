@@ -848,8 +848,7 @@ $dataIndex = match ($skema) {
         `
         });
     @endif
-    let dataAspekArr;
-    var nullValue = [];
+    let nullValue = [];
     $(document).ready(function() {
         countFormPercentage()
         // dataAspekArr = <?php echo json_encode($dataAspek); ?>;
@@ -1121,7 +1120,8 @@ $dataIndex = match ($skema) {
             var formGroup = inputBox.parent();
             if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden'))
                 totalInput++
-            var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
+            // var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
+            var isNull = (v.value == '' || $.trim(v.value) == '')
             if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputNull++;
                 if ($(this).attr('id') != undefined) {
@@ -1169,7 +1169,8 @@ $dataIndex = match ($skema) {
             var formGroup = inputBox.parent();
             if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden'))
                 totalInput++
-            var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
+            // var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
+            var isNull = (v.value == '' || $.trim(v.value) == '')
             if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputNull++;
                 if ($(this).attr('id') != undefined) {
@@ -1296,6 +1297,7 @@ $dataIndex = match ($skema) {
                 totalInputFilled++;
                 if ($(this).attr('id') != undefined) {
                     let val = $(this).attr("id").toString().replaceAll("_", " ");
+                    console.log(val);
                     for (var i = 0; i < nullValue.length; i++) {
                         while (nullValue[i] == val) {
                             nullValue.splice(i, 1)

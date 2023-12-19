@@ -1923,7 +1923,7 @@ class NewDagulirController extends Controller
             if ($ke != '') {
                 $dataPengajuan->posisi = $ke;
                 $dataPengajuan->save();
-    
+
                 AlasanPengembalianData::insert([
                     'id_pengajuan' => $dataPengajuan->id,
                     'id_user' => auth()->user()->id,
@@ -2104,7 +2104,7 @@ class NewDagulirController extends Controller
             $dataLevelDua = ItemModel::where('level', 2)
                                     ->where('id_parent', $value->id)
                                     ->get();
-            
+
             foreach ($dataLevelDua as $key2 => $lev2) {
                 // Get jawaban text
                 $jawaban = JawabanTextModel::where('id_pengajuan', $id)
@@ -2449,7 +2449,7 @@ class NewDagulirController extends Controller
                     if (array_key_exists($key, $request->informasi) && array_key_exists($key, $request->id_text)) {
                         if ($request->id_jawaban_text[$key] != null && $request->informasi[$key] != null) {
                             if ($request->informasi[$key] == null) continue;
-    
+
                             if ($request->id_jawaban_text[$key] == null && $request->informasi[$key] != null) {
                                 if (isset($request->id_text[$key]) && isset($request->informasi[$key])) {
                                     // dd($request->id_jawaban_text)
@@ -2570,7 +2570,7 @@ class NewDagulirController extends Controller
             // get skor ratio coverage opsi
             $jawaban = JawabanModel::select('id', 'id_jawaban', 'skor')
                                 ->where('id_pengajuan', $id_pengajuan)
-                                ->where('id_jawaban', 158) // 158  = id_option ratio coverage opsi 
+                                ->where('id_jawaban', 158) // 158  = id_option ratio coverage opsi
                                 ->first();
             if ($jawaban) {
                 array_push($rata_rata, $jawaban->skor);

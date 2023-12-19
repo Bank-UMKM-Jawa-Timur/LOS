@@ -181,7 +181,26 @@
                             @endif
                         </td>
                         <td>
-                            {{ number_format($item->nominal,0,',','.') }}
+                            @if ($item->pengajuan->posisi == 'Selesai')
+                                @if ($plafon)
+                                    @if ($item->plafon->plafon_usulan_penyelia != null)
+                                        {{ number_format($item->plafon->plafon_usulan_penyelia,0,',','.') }}
+                                    @elseif ($item->plafon->plafon_usulan_pbo != null)
+                                        {{ number_format($item->plafon->plafon_pbo,0,',','.') }}
+                                    @elseif ($item->plafon->plafon_usulan_pbp != null)
+                                        {{ number_format($item->plafon->plafon_pbp,0,',','.') }}
+                                    @elseif ($item->plafon->plafon_usulan_pincab != null)
+                                        {{ number_format($item->plafon->plafon_pincab,0,',','.') }}
+                                    @else
+                                        {{ number_format($item->nominal,0,',','.') }}
+                                    @endif
+                                @else
+                                {{ number_format($item->nominal,0,',','.') }}
+
+                                @endif
+                            @else
+                                {{ number_format($item->nominal,0,',','.') }}
+                            @endif
                         </td>
                         <td>
                             {{$item->jangka_waktu}} Bulan

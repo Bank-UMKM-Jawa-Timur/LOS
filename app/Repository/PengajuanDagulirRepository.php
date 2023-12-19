@@ -3,6 +3,7 @@ namespace App\Repository;
 
 use App\Models\Kecamatan;
 use App\Models\PengajuanDagulir;
+use App\Models\PlafonUsulan;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
@@ -81,6 +82,7 @@ class PengajuanDagulirRepository
                     $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
             }
             $item->nama_pemroses = $nama_pemroses;
+            $item->plafon = PlafonUsulan::where('id_pengajuan',$item->pengajuan->id)->first();
         }
         return $data;
     }
