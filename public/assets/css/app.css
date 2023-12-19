@@ -1629,6 +1629,9 @@ video {
 .mt-1 {
   margin-top: 0.25rem;
 }
+.mt-10 {
+  margin-top: 2.5rem;
+}
 .mt-2 {
   margin-top: 0.5rem;
 }
@@ -1670,9 +1673,6 @@ video {
 }
 .mt-\[8px\] {
   margin-top: 8px;
-}
-.mt-10 {
-  margin-top: 2.5rem;
 }
 .box-border {
   box-sizing: border-box;
