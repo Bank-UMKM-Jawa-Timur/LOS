@@ -15,7 +15,15 @@ use \App\Http\Controllers\CetakSuratController;
 use App\Http\Controllers\DashboardDireksiController;
 use \App\Http\Controllers\LogPengajuanController;
 use \App\Http\Controllers\Dagulir\DagulirController;
+use App\Http\Controllers\Dagulir\master\NewCabangController;
+use App\Http\Controllers\Dagulir\master\NewDesaController;
+use App\Http\Controllers\Dagulir\master\NewItemController;
+use App\Http\Controllers\Dagulir\master\NewKabupatenController;
+use App\Http\Controllers\Dagulir\master\NewKecamatanController;
+use App\Http\Controllers\Dagulir\master\NewMerkController;
+use App\Http\Controllers\Dagulir\master\NewTipeController;
 use App\Http\Controllers\Dagulir\NewDagulirController;
+use App\Http\Controllers\Dagulir\master\NewUserController;
 use RealRashid\SweetAlert\Facades\Alert;
 
 /*
@@ -69,6 +77,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('review-jawaban-new', function() {
             return view('dagulir.pengajuan-kredit.detail-pengajuan-jawaban-new');
         });
+
         // Route::get('pincab-kredit/{id}', [DagulirController::class, "sendToPincab"])->name('check.pincab');
         Route::post('pincab-kredit', [NewDagulirController::class, "sendToPincab"])->name('check.pincab');
         // Review Pincab
@@ -95,6 +104,28 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // Kembalikan posisi
         Route::post('/pengajuan-kredit/kembalikan-ke-posisi-sebelumnya', [NewDagulirController::class, 'kembalikanDataKePosisiSebelumnya'])->name('pengajuan-kredit.kembalikan-ke-posisi-sebelumnya');
+        Route::get('pengajuan-kredit/cetak-surat/{id}',[NewDagulirController::class,"CetakPDF"])->name('pengajuan.cetak-pdf');
+        Route::post('post-file/{id}', [NewDagulirController::class, 'postFileDagulir'])->name('post-file-dagulir');
+        Route::get('/cetak-sppk/{id}', [NewDagulirController::class, 'cetakSPPK'])->name('cetak-sppk-dagulir');
+        Route::get('/cetak-pk/{id}', [NewDagulirController::class, 'cetakPK'])->name('cetak-pk-dagulir');
+        Route::get('cetak-surat/{id}', [NewDagulirController::class, 'cetakDagulir'])->name('cetak-surat');
+
+        Route::middleware(['Admin'])->prefix('master')->name('master.')->group(function () {
+            Route::resource('kabupaten', NewKabupatenController::class);
+            Route::resource('kecamatan', NewKecamatanController::class);
+            Route::resource('desa', NewDesaController::class);
+            Route::resource('cabang', NewCabangController::class);
+            Route::resource('user', NewUserController::class);
+            Route::resource('merk', NewMerkController::class);
+            Route::resource('tipe', NewTipeController::class);
+            Route::resource('master-item', NewItemController::class);
+
+            Route::get('/reset-sessions', [NewUserController::class, 'indexSession'])->name('index-session');
+            Route::post('/reset-session/{id}', [NewUserController::class, 'resetSession'])->name('reset-session');
+
+            Route::get('/reset-api-sessions', [NewUserController::class, 'indexAPISession'])->name('index-api-session');
+            Route::post('/reset-api-session/{id}', [NewUserController::class, 'resetAPISession'])->name('reset-api-session');
+        });
     });
 
     // check Pincab

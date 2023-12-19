@@ -6,6 +6,8 @@
 
 @include('dagulir.pengajuan-kredit.modal.pilih-penyelia')
 @include('dagulir.modal.konfirmSendToPinca')
+@include('dagulir.modal.cetak-file-sppk')
+@include('dagulir.modal.cetak-file-pk')
 @include('dagulir.modal.approval')
 @include('dagulir.modal.approvalSipde')
 @include('dagulir.modal.kembalikan')
@@ -16,24 +18,6 @@
     $('#page_length').on('change', function() {
         $('#form').submit()
     })
-    // $.ajax({
-    //     type: "GET",
-    //     url: "{{ route('dagulir.get-data-dagulir', ['kode_pendaftaran' => 'BK02657767c715863']) }}",
-    //     success: function (response) {
-    //         console.log(response.data);
-    //     }
-    // });
-    // Adjust pagination url
-    // var btn_pagination = $('.pagination').find('a')
-    // var page_url = window.location.href
-    // $('.pagination').find('a').each(function(i, obj) {
-    //     if (page_url.includes('page_length')) {
-    //         btn_pagination[i].href += &page_length=${$('#page_length').val()}
-    //     }
-    //     if (page_url.includes('q')) {
-    //         btn_pagination[i].href += &q=${$('#q').val()}
-    //     }
-    // })
 </script>
 @endpush
 
@@ -131,7 +115,7 @@
                 <div class="input-search flex gap-2">
                 <input
                     type="search"
-                    placeholder="Cari nama usaha... "
+                    placeholder="Cari kata kunci... "
                     name="q" id="q"
                     class="w-full px-8 outline-none text-sm p-3 border"
                     value="{{ isset($_GET['q']) ? $_GET['q'] : '' }}"
@@ -159,6 +143,7 @@
                     <th class="w-11">Tipe Pengajuan</th>
                     <th>Plafon</th>
                     <th class="w-13">Tenor</th>
+                    <th class="w-13">Skor</th>
                     <th class="w-13">Status Pincetar</th>
                     <th class="w-7">Status SIPDE</th>
                     <th class="w-5">Aksi</th>
@@ -202,8 +187,72 @@
                             {{$item->jangka_waktu}} Bulan
                         </td>
                         <td>
+                            @php
+                                $avgResult = $item->pengajuan->average_by_sistem;
+                                if ($item->pengajuan->posisi == 'Review Penyelia')
+                                    $avgResult = $item->pengajuan->average_by_penyelia ? $item->pengajuan->average_by_penyelia : $item->pengajuan->average_by_sistem;
+                                else if ($item->pengajuan->posisi == 'PBO')
+                                    $avgResult = $item->pengajuan->average_by_pbo ? $item->pengajuan->average_by_pbo : $item->pengajuan->average_by_penyelia;
+                                else if ($item->pengajuan->posisi == 'PBP')
+                                    $avgResult = $item->pengajuan->average_by_pbp ? $item->pengajuan->average_by_pbp : $item->pengajuan->average_by_pbo;
+                                else if ($item->pengajuan->posisi == 'Pincab') {
+                                    if (!$item->pengajuan->average_by_penyelia && !$item->pengajuan->average_by_pbo && $item->pengajuan->average_by_pbp)
+                                        $avgResult = $item->pengajuan->average_by_pbp;
+                                    else if (!$item->pengajuan->average_by_penyelia && $item->pengajuan->average_by_pbo && !$item->pengajuan->average_by_pbp)
+                                        $avgResult = $item->pengajuan->average_by_pbo;
+                                    else if ($item->pengajuan->average_by_penyelia && !$item->pengajuan->average_by_pbo && !$item->pengajuan->average_by_pbp)
+                                        $avgResult = $item->pengajuan->average_by_penyelia;
+                                }
+                                else if ($item->pengajuan->posisi == 'Ditolak') {
+                                    if (!$item->pengajuan->average_by_penyelia && !$item->pengajuan->average_by_pbo && $item->pengajuan->average_by_pbp)
+                                        $avgResult = $item->pengajuan->average_by_pbp;
+                                    else if (!$item->pengajuan->average_by_penyelia && $item->pengajuan->average_by_pbo && !$item->pengajuan->average_by_pbp)
+                                        $avgResult = $item->pengajuan->average_by_pbo;
+                                    else if ($item->pengajuan->average_by_penyelia && !$item->pengajuan->average_by_pbo && !$item->pengajuan->average_by_pbp)
+                                        $avgResult = $item->pengajuan->average_by_penyelia;
+                                }
+                                else if ($item->pengajuan->posisi == 'Selesai') {
+                                    if (!$item->pengajuan->average_by_penyelia && !$item->pengajuan->average_by_pbo && $item->pengajuan->average_by_pbp)
+                                        $avgResult = $item->pengajuan->average_by_pbp;
+                                    else if (!$item->pengajuan->average_by_penyelia && $item->pengajuan->average_by_pbo && !$item->pengajuan->average_by_pbp)
+                                        $avgResult = $item->pengajuan->average_by_pbo;
+                                    else if ($item->pengajuan->average_by_penyelia && !$item->pengajuan->average_by_pbo && !$item->pengajuan->average_by_pbp)
+                                        $avgResult = $item->pengajuan->average_by_penyelia;
+                                }
+                                $status_skor = "";
+                                if ($avgResult > 0 && $avgResult <= 2) {
+                                    $status_skor = "merah";
+                                } elseif ($avgResult > 2 && $avgResult <= 3) {
+                                    $status_skor = "kuning";
+                                } elseif ($avgResult > 3) {
+                                    $status_skor = "hijau";
+                                } else {
+                                    $status_skor = "merah";
+                                }
+                            @endphp
+                            @if ($status_skor == 'hijau')
+                                <font class="text-green-500">
+                                    {{ $avgResult }}
+                                </font>
+                            @elseif ($status_skor == 'kuning')
+                                <font class="text-yellow-500">
+                                    {{ $avgResult }}
+                                </font>
+                            @elseif ($status_skor == 'merah')
+                                <font class="text-red-500">
+                                    {{ $avgResult }}
+                                </font>
+                            @else
+                                <font class="text-neutral-800">
+                                    {{ $avgResult }}
+                                </font>
+                            @endif
+                        </td>
+                        <td>
                             {{$item->pengajuan->posisi}}
-                            <p class="text-red-500">{{ $item->pengajuan->posisi != 'Selesai' || $item->pengajuan->posisi != 'Ditolak' ? '(' . $item->nama_pemroses . ')' : '' }}</p>
+                            @if ($item->pengajuan->posisi != 'Selesai' || $item->pengajuan->posisi != 'Ditolak')
+                                <p class="text-red-500">{{ $item->nama_pemroses }}</p>
+                            @endif
                         </td>
                         <td>
                             {{ array_key_exists(intval($item->status), $status) ? $status[intval($item->status)] : 'Tidak ditemukan' }}
@@ -227,6 +276,34 @@
                                                 onclick="showTindakLanjut({{ $item->pengajuan->id }},'penyelia kredit')"
                                                 class="cursor-pointer">Tindak lanjut Review Penyelia</a>
                                             </li>
+                                        @endif
+                                        @if (Auth::user()->role == 'Staf Analis Kredit' && $item->pengajuan->posisi == 'Selesai')
+                                            @php
+                                                $tglCetak = DB::table('log_cetak_kkb')
+                                                    ->where('id_pengajuan', $item->pengajuan->id)
+                                                    ->first();
+                                            @endphp
+
+                                            @if ($tglCetak == null || !$tglCetak->tgl_cetak_sppk)
+                                                <li class="item-tb-dropdown">
+                                                    <a target="_blank" href="{{ route('dagulir.cetak-sppk-dagulir', $item->pengajuan->id) }}" class="dropdown-item">Cetak SPPK</a>
+                                                </li>
+                                            @elseif (!$item->pengajuan->sppk && $tglCetak->tgl_cetak_sppk)
+                                                <li class="item-tb-dropdown">
+                                                    <a href="#" class="dropdown-item show-upload-sppk" data-toggle="modal"
+                                                        data-target="uploadSPPKModal" data-id="{{ $item->pengajuan->id }}"
+                                                        data-kode_pendaftaran="{{$item->kode_pendaftaran}}">Upload File SPPK</a>
+                                                </li>
+                                            @elseif (!$tglCetak->tgl_cetak_pk && $item->pengajuan->sppk && $tglCetak->tgl_cetak_sppk )
+                                                <li class="item-tb-dropdown">
+                                                    <a target="_blank" href="{{ route('dagulir.cetak-pk-dagulir', $item->pengajuan->id) }}" class="dropdown-item">Cetak PK</a>
+                                                </li>
+                                            @elseif (!$item->pengajuan->pk && $tglCetak->tgl_cetak_pk && $item->pengajuan->sppk)
+                                                <li class="item-tb-dropdown">
+                                                    <a href="#" class="dropdown-item show-upload-pk" data-toggle="modal" data-target="uploadPKModal"
+                                                        data-id="{{ $item->pengajuan->id }}" data-kode_pendaftaran="{{$item->kode_pendaftaran}}">Upload File PK</a>
+                                                </li>
+                                            @endif
                                         @endif
                                         @if ((Auth()->user()->role == 'Penyelia Kredit'))
                                             @if ($item->pengajuan->posisi == 'Review Penyelia')
@@ -296,8 +373,8 @@
                                             @endif
                                         @else
                                         <li class="item-tb-dropdown">
-                                            <a href="{{ route('dagulir.pengajuan.cetak-pdf', $item->pengajuan->id) }}"
-                                                class="cursor-pointer">Cetak</a>
+                                            <a href="{{ route('dagulir.cetak-surat', $item->pengajuan->id) }}"
+                                                class="cursor-pointer" target="_blank">Cetak</a>
                                         </li>
                                         @endif
                                     </ul>
@@ -305,7 +382,7 @@
                             </div>
                         </td>
                     </tr>
-                @endforeach
+                    @endforeach
                 </tbody>
             </table>
             </div>
@@ -324,6 +401,8 @@
 @endsection
 
 @push('script-inject')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
     if (document.getElementById('modalConfirmPincab')) {
         document.getElementById('modalConfirmPincab').addEventListener('click', function () {
@@ -355,6 +434,34 @@
         // Set form variables
         $('#modal-kembalikan #id_pengajuan').val(id)
         $('#modal-kembalikan #backto').val(backto)
+    })
+
+    $('.show-upload-sppk').on('click', function() {
+        const target = $(this).data('target')
+        const id = $(this).data('id')
+        const url_form = "{{url('/dagulir/post-file')}}/"+id
+        const url_cetak = "{{url('/dagulir/cetak-sppk')}}/"+id
+        var token = generateCsrfToken()
+
+        $(`#${target} #form-sppk`).attr('action', url_form)
+        $(`#${target} #token`).val(token)
+        $(`#${target} #btn-cetak-file`).attr('href', url_cetak)
+        $(`#${target}`).removeClass('hidden');
+    })
+
+    $('.show-upload-pk').on('click', function() {
+        const target = $(this).data('target')
+        const id = $(this).data('id')
+        const kode_pendaftaran = $(this).data('kode_pendaftaran')
+        const url_form = "{{url('/dagulir/post-file')}}/"+id
+        const url_cetak = "{{url('/dagulir/cetak-pk')}}/"+id
+        var token = generateCsrfToken()
+
+        $(`#${target} #form-pk`).attr('action', url_form)
+        $(`#${target} #token`).val(token)
+        $(`#${target} #btn-cetak-file`).attr('href', url_cetak)
+        $(`#${target} #kode_pendaftaran`).val(kode_pendaftaran)
+        $(`#${target}`).removeClass('hidden');
     })
 </script>
 @endpush

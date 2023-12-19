@@ -127,13 +127,24 @@
                                                             @endif
                                                             @elseif ($item->opsi_jawaban == 'number' && $item->id != 143)
                                                             <p class="">
-                                                                Rp. {{ number_format((int) $itemTextDua->opsi_text, 2, ',', '.') }}
+                                                                @if ($item->is_rupiah == 1)
+                                                                    Rp. {{ number_format((int) $itemTextDua->opsi_text, 2, ',', '.') }}
+                                                                @else
+                                                                    {{ $itemTextDua->opsi_text }}
+                                                                @endif
                                                             </p>
                                                         @else
-                                                            @if (is_numeric($itemJawaban->option) && strlen($itemJawaban->option) > 3)
-                                                                <p class="">{{ $itemTextDua->is_rupiah ? 'Rp. ' . number_format($itemTextDua->opsi_text, 0, '.', '.') : $itemTextDua->opsi_text }}</p>
+                                                            @if ($item->opsi_jawaban == "persen")
+                                                                <p>{{ $itemTextDua->opsi_text }} %</p>
+                                                            @elseif($item->is_rupiah == 1)
+                                                                <p>Rp. {{ number_format($itemTextDua->opsi_text, 0, '.', '.') }}</p>
                                                             @else
-                                                                <p class="">{{ $itemTextDua->is_rupiah ? 'Rp. ' . number_format((int) $itemTextDua->opsi_text, 0, '.', '.') : $itemTextDua->opsi_text }} {{$itemTextDua->opsi_jawaban == 'persen' ? '%' : ''}}</p>
+                                                                <p>{{ $itemTextDua->opsi_text }}</p>
+                                                                {{-- @if (is_numeric($itemJawaban->option) && strlen($itemJawaban->option) > 3)
+                                                                    <p class="">{{ $itemTextDua->is_rupiah ? 'Rp. ' . number_format($itemTextDua->opsi_text, 0, '.', '.') : $itemTextDua->opsi_text }}</p>
+                                                                @else
+                                                                    <p class="">{{ $itemTextDua->is_rupiah ? 'Rp. ' . number_format((int) $itemTextDua->opsi_text, 0, '.', '.') : $itemTextDua->opsi_text }} {{$itemTextDua->opsi_jawaban == 'persen' ? '%' : ''}}</p>
+                                                                @endif --}}
                                                             @endif
                                                         @endif
                                                     </div>
@@ -302,7 +313,11 @@
                                                                                 <h6>Komentar Penyelia</h6>
                                                                             </div>
                                                                             <div class="field-answer">
-                                                                                <h6>{{ strlen($getKomentarPenyelia[$key]?->komentar) > 0 ? $getKomentarPenyelia[$key]?->komenta ?? '-' : '-' }}</h6>
+                                                                                <h6>
+                                                                                    @if (count($getKomentarPenyelia) > 0)
+                                                                                        {{ strlen($getKomentarPenyelia[$key]?->komentar) > 0 ? $getKomentarPenyelia[$key]?->komenta ?? '-' : '-' }}
+                                                                                    @endif
+                                                                                </h6>
                                                                             </div>
                                                                         </div>
                                                                     @endif
@@ -496,7 +511,11 @@
                                                                                                         <h6>Komentar Penyelia</h6>
                                                                                                     </div>
                                                                                                     <div class="field-answer">
-                                                                                                        <h6>{{ strlen($getKomentarPenyelia3[$key]?->komentar) > 0 ? $getKomentarPenyelia3[$key]?->komenta ?? '-' : '-' }}</h6>
+                                                                                                        <h6>
+                                                                                                            @if (count($getKomentarPenyelia3) > 0)
+                                                                                                                {{ strlen($getKomentarPenyelia3[$key]?->komentar) > 0 ? $getKomentarPenyelia3[$key]?->komenta ?? '-' : '-' }}
+                                                                                                            @endif
+                                                                                                        </h6>
                                                                                                     </div>
                                                                                                 </div>
                                                                                             @endif
@@ -602,14 +621,14 @@
                                                         @endphp
                                                         @if ($itemEmpat->opsi_jawaban == 'option' && $isJawabanExist > 0)
                                                             @if ($itemEmpat->nama != "Tidak Memiliki Jaminan Tambahan")
-                                                                <div class="row">
+                                                                {{-- <div class="row">
                                                                     <div class="form-group-1 mb-0">
                                                                         <label for="">{{ $itemEmpat->nama }}</label>
                                                                     </div>
-                                                                </div>
+                                                                </div> --}}
                                                             @endif
                                                         @endif
-        
+                                                    </div>
                                                         {{-- Data jawaban Level Empat --}}
                                                         @if (count($dataJawabanLevelEmpat) != 0)
                                                             @foreach ($dataJawabanLevelEmpat as $key => $itemJawabanLevelEmpat)
@@ -631,25 +650,32 @@
                                                                         @php
                                                                             $dataDetailJawabanEmpat = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
                                                                                 ->where('id_pengajuan', $dataUmum->id)
-                                                                                ->where('id_jawaban', $itemJawabanEmpat->id)
+                                                                                ->where('id_jawaban', $itemJawabanLevelEmpat->id)
                                                                                 ->get();
                                                                             $getKomentarPenyeliaEmpat = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', 'detail_komentar.id_komentar')
-                                                                                ->where('detail_komentar.id_item', $itemJawabanEmpat->id_item)
+                                                                                ->where('detail_komentar.id_item', $itemJawabanLevelEmpat->id_item)
                                                                                 ->where('komentar.id_pengajuan', $comment->id_pengajuan)
                                                                                 ->where('detail_komentar.id_user', $comment->id_penyelia)
                                                                                 ->first();
                                                                         @endphp
-                                                                        <div class="form-group-1">
                                                                             @if ($itemEmpat->nama != "Tidak Memiliki Jaminan Tambahan")
-                                                                                <div class="row">
-                                                                                    <div class="col-md-12">
-                                                                                        <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
+                                                                                {{-- <div class="row">
+                                                                                    <div class="form-group-2"> --}}
+                                                                                        <div class="field-review">
+                                                                                            <div class="field-name">
+                                                                                                <label for="">{{ $itemEmpat->nama }}</label>
+                                                                                            </div>
+                                                                                            <div class="field-answer">
+                                                                                                <p>{{ $itemJawabanLevelEmpat->option }}</p>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    {{-- </div> --}}
+                                                                                        {{-- <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
                                                                                             <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
                                                                                             <h4 class="font-bold"> {{ $itemJawabanLevelEmpat->option }}</h4>
-                                                                                        </div>
+                                                                                        </div> --}}
     
-                                                                                    </div>
-                                                                                </div>
+                                                                                {{-- </div> --}}
                                                                             @endif
                                                                             
                                                                         </div>
@@ -662,7 +688,7 @@
                                                                 @endif
                                                             @endforeach
                                                         @endif
-                                                    </div>
+                                                    
                                                 @endif
                                             @endforeach
                                         @endif
@@ -672,61 +698,61 @@
                                     $no = 0;
                                 @endphp
                             @endforeach
-                        </div>
-                        <div class="p-5 space-y-5">
-                            <hr>
-                            @foreach ($pendapatUsulanStaf as $itemStaf)
-                                <div class="form-group-2">
-                                    <div class="field-review">
-                                        <div class="field-name">
-                                            <h6>Pendapat dan Usulan Staf</h6>
-                                        </div>
-                                        <div class="field-answer">
-                                            <h6>{{ $itemStaf->pendapat_per_aspek }}</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                            @foreach ($pendapatUsulanPenyelia as $itemPenyelia)
-                                <div class="form-group-2">
-                                    <div class="field-review">
-                                        <div class="field-name">
-                                            <h6>Pendapat dan Usulan Penyelia</h6>
-                                        </div>
-                                        <div class="field-answer">
-                                            <h6>{{ $itemPenyelia->pendapat_per_aspek }}</h6>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
-                            @if ($dataUmum->id_pbo)
-                                @foreach ($pendapatUsulanPBO as $itemPBO)
+                            <div class="p-5 space-y-5">
+                                <hr>
+                                @foreach ($pendapatUsulanStaf as $itemStaf)
                                     <div class="form-group-2">
                                         <div class="field-review">
                                             <div class="field-name">
-                                                <h6>Pendapat dan Usulan PBO</h6>
+                                                <h6>Pendapat dan Usulan Staf</h6>
                                             </div>
                                             <div class="field-answer">
-                                                <h6>{{ $itemPBO->pendapat_per_aspek }}</h6>
+                                                <h6>{{ $itemStaf->pendapat_per_aspek }}</h6>
                                             </div>
                                         </div>
                                     </div>
                                 @endforeach
-                            @endif
-                            @if ($dataUmum->id_pbp)
-                                @foreach ($pendapatUsulanPBP as $itemPBP)
+                                @foreach ($pendapatUsulanPenyelia as $itemPenyelia)
                                     <div class="form-group-2">
                                         <div class="field-review">
                                             <div class="field-name">
-                                                <h6>Pendapat dan Usulan PBP</h6>
+                                                <h6>Pendapat dan Usulan Penyelia</h6>
                                             </div>
                                             <div class="field-answer">
-                                                <h6>{{ $itemPBP->pendapat_per_aspek }}</h6>
+                                                <h6>{{ $itemPenyelia->pendapat_per_aspek }}</h6>
                                             </div>
                                         </div>
                                     </div>
                                 @endforeach
-                            @endif
+                                @if ($dataUmum->id_pbo)
+                                    @foreach ($pendapatUsulanPBO as $itemPBO)
+                                        <div class="form-group-2">
+                                            <div class="field-review">
+                                                <div class="field-name">
+                                                    <h6>Pendapat dan Usulan PBO</h6>
+                                                </div>
+                                                <div class="field-answer">
+                                                    <h6>{{ $itemPBO->pendapat_per_aspek }}</h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
+                                @if ($dataUmum->id_pbp)
+                                    @foreach ($pendapatUsulanPBP as $itemPBP)
+                                        <div class="form-group-2">
+                                            <div class="field-review">
+                                                <div class="field-name">
+                                                    <h6>Pendapat dan Usulan PBP</h6>
+                                                </div>
+                                                <div class="field-answer">
+                                                    <h6>{{ $itemPBP->pendapat_per_aspek }}</h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -747,54 +773,166 @@
                 </div>
                 <div class="accordion-content p-3">
                     <div class="divide-y-2 divide-red-800">
-                        <div class="p-4">
-                            <div class="form-group-2">
-                                <div class="field-review">
-                                    <div class="field-name">
-                                        <label for="">Pendapat & Usulan
-                                            (Staff)</label>
-                                    </div>
-                                    <div class="field-answer">
-                                        <p>OKE</p>
+                        @if($pendapatDanUsulan->komentar_staff)
+                            <div class="p-4">
+                                <div class="form-group-2">
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Staff Kredit</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <p>{{ $pendapatDanUsulan->komentar_staff }}</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        @endif
+                @if($pendapatDanUsulan->komentar_penyelia)
                     <div class="p-4">
                         <div class="form-group-2">
                             <div class="field-review">
                                 <div class="field-name">
-                                    <label for="">Pendapat & Usulan
-                                        (Penyelia)</label>
+                                    <label for="">Penyelia Kredit</label>
                                 </div>
                                 <div class="field-answer">
-                                    <p>OKE</p>
+                                    <p>{{ $pendapatDanUsulan->komentar_penyelia }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group-2">
+                            <div class="field-review">
+                                <div class="field-name">
+                                    <label for="">Tenor</label>
+                                </div>
+                                <div class="field-answer">
+                                    <p>{{ $plafonUsulan->jangka_waktu_usulan_penyelia }} Bulan</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group-2">
+                            <div class="field-review">
+                                <div class="field-name">
+                                    <label for="">Plafon</label>
+                                </div>
+                                <div class="field-answer">
+                                    <p>Rp. {{ number_format($plafonUsulan->plafon_usulan_penyelia, 2, ',', '.')}}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    @endif
+                    @if($pendapatDanUsulan->komentar_pbo)
                     <div class="p-4">
                         <div class="form-group-2">
                             <div class="field-review">
                                 <div class="field-name">
-                                    <label for="">Pendapat & Usulan
-                                        (Penyelia)</label>
+                                    <label for="">Pincab Kredit</label>
                                 </div>
                                 <div class="field-answer">
-                                    <p>0864929</p>
+                                    <p>{{ $pendapatDanUsulan->komentar_pbo }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group-2">
+                            <div class="field-review">
+                                <div class="field-name">
+                                    <label for="">Tenor</label>
+                                </div>
+                                <div class="field-answer">
+                                    <p>{{ $plafonUsulan->jangka_waktu_usulan_pbo }} Bulan</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group-2">
+                            <div class="field-review">
+                                <div class="field-name">
+                                    <label for="">Plafon</label>
+                                </div>
+                                <div class="field-answer">
+                                    <p>Rp. {{ number_format($plafonUsulan->plafon_usulan_pbo, 2, ',', '.')}}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    @endif
+                    @if($pendapatDanUsulan->komentar_pbo)
                     <div class="p-4">
                         <div class="form-group-2">
+                            <div class="field-review">
+                                <div class="field-name">
+                                    <label for="">PBO kredit</label>
+                                </div>
+                                <div class="field-answer">
+                                    <p>{{ $pendapatDanUsulan->komentar_pbo }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group-2">
+                            <div class="field-review">
+                                <div class="field-name">
+                                    <label for="">Tenor</label>
+                                </div>
+                                <div class="field-answer">
+                                    <p>{{ $plafonUsulan->jangka_waktu_usulan_pbp }} Bulan</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group-2">
+                            <div class="field-review">
+                                <div class="field-name">
+                                    <label for="">Plafon</label>
+                                </div>
+                                <div class="field-answer">
+                                    <p>Rp. {{ number_format($plafonUsulan->plafon_usulan_pbp, 2, ',', '.')}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+                    @if($pendapatDanUsulan->komentar_pbp)
+                    <div class="p-4">
+                        <div class="form-group-2">
+                            <div class="field-review">
+                                <div class="field-name">
+                                    <label for="">PBP kredit</label>
+                                </div>
+                                <div class="field-answer">
+                                    <p>{{ $pendapatDanUsulan->komentar_pbp }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group-2">
+                            <div class="field-review">
+                                <div class="field-name">
+                                    <label for="">Tenor</label>
+                                </div>
+                                <div class="field-answer">
+                                    <p>{{ $plafonUsulan->jangka_waktu_usulan_pincab }} Bulan</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group-2">
+                            <div class="field-review">
+                                <div class="field-name">
+                                    <label for="">Plafon</label>
+                                </div>
+                                <div class="field-answer">
+                                    <p>Rp. {{ number_format($plafonUsulan->plafon_usulan_pincab, 2, ',', '.')}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+                    <div class="p-4">
+                        <div class="form-group-1">
                             <div class="field-review">
                                 <div class="field-name">
                                     <label for="">Pendapat & Usulan Pimpinan Cabang</label>
                                 </div>
                                 <div class="field-answer">
-                                    <textarea class="form-textarea w-full" placeholder="isi pendapat..."
-                                        name="pendapat_usulan" id="pendapat_usulan"></textarea>
+                                    <span>
+                                        <textarea class="form-textarea w-full" placeholder="isi pendapat..." name="pendapat_usulan" id="pendapat_usulan"></textarea>
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -932,5 +1070,12 @@
             rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
             return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
         }
+    </script>
+    <script>
+        lightbox.option({
+          'resizeDuration': 200,
+          'wrapAround': true,
+          'maxWidth': 5000,
+        })
     </script>
 @endpush

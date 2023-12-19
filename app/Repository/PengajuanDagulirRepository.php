@@ -3,7 +3,9 @@ namespace App\Repository;
 
 use App\Models\Kecamatan;
 use App\Models\PengajuanDagulir;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class PengajuanDagulirRepository
 {
@@ -54,17 +56,17 @@ class PengajuanDagulirRepository
 
         foreach ($data as $key => $item) {
             $nama_pemroses = 'undifined';
-            $user = \App\Models\User::select('nip')->where('id', $item->pengajuan->id_staf)->first();
+            $user = User::select('nip')->where('id', $item->pengajuan->id_staf)->first();
             if($item->posisi == 'Proses Input Data'){
-                $user = \App\Models\User::select('nip')->where('id', $item->pengajuan->id_staf)->first();
+                $user = User::select('nip')->where('id', $item->pengajuan->id_staf)->first();
             } else if($item->posisi == 'Review Penyelia'){
-                $user = \App\Models\User::select('nip')->where('id', $item->pengajuan->id_penyelia)->first();
+                $user = User::select('nip')->where('id', $item->pengajuan->id_penyelia)->first();
             } else if($item->posisi == 'PBO'){
-                $user = \App\Models\User::select('nip')->where('id', $item->pengajuan->id_pbo)->first();
+                $user = User::select('nip')->where('id', $item->pengajuan->id_pbo)->first();
             } else if($item->posisi == 'PBP'){
-                $user = \App\Models\User::select('nip')->where('id', $item->pengajuan->id_pbp)->first();
+                $user = User::select('nip')->where('id', $item->pengajuan->id_pbp)->first();
             } else if($item->posisi == 'Pincab' || $item->posisi == 'Selesai' || $item->posisi == 'Ditolak'){
-                $user = \App\Models\User::select('nip')->where('id', $item->pengajuan->id_pincab)->first();
+                $user = User::select('nip')->where('id', $item->pengajuan->id_pincab)->first();
             }
             if ($user)
                 $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);

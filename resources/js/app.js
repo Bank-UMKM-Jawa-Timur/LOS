@@ -1,7 +1,7 @@
 // require("./bootstrap");
 
 // require("alpinejs");
-import Swal from 'sweetalert2/dist/sweetalert2.js';
+import Swal from "sweetalert2/dist/sweetalert2.js";
 
 $(".dropdown-account").on("click", function (e) {
     $(".dropdown-account-menu").toggleClass("hidden");
