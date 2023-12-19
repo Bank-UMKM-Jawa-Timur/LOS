@@ -99,6 +99,7 @@
                                 <th>Dana Modal</th>
                                 <th>Dana Idle</th>
                                 <th>Plafon Akumulasi</th>
+                                <th>Bagi Debet</th>
                                 <th>Tanggal</th>
                             </thead>
                             <tbody>
@@ -116,6 +117,7 @@
                                         <td>{{ number_format($item->dana_modal,2, ",", ".") }}</td>
                                         <td>{{ number_format($item->dana_idle,2, ",", ".") }}</td>
                                         <td>{{ number_format($item->plafon_akumulasi,2, ",", ".") }}</td>
+                                        <td>{{ number_format($item->baki_debet,2, ",", ".") }}</td>
                                         <td>{{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y') }}</td>
                                     </tr>
                                 @endforeach
