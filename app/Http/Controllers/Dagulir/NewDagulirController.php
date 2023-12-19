@@ -1563,16 +1563,21 @@ class NewDagulirController extends Controller
         $page = $request->has('page') ? $request->get('page') : 1;
         if ($role == 'Staf Analis Kredit') {
             $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user);
+            $pengajuan_sipde = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user, 'sipde');
         } elseif ($role == 'Penyelia Kredit') {
             $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Penyelia Kredit', $id_user);
+            $pengajuan_sipde = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user, 'sipde');
         } elseif ($role == 'Pincab') {
             $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Pincab', $id_user);
+            $pengajuan_sipde = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user, 'sipde');
         } else {
             $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user);
+            $pengajuan_sipde = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user, 'sipde');
         }
 
         return view('dagulir.index',[
-            'data' => $pengajuan_dagulir
+            'data' => $pengajuan_dagulir,
+            'data_sipde' => $pengajuan_sipde,
         ]);
     }
 

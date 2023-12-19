@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class PengajuanDagulirRepository
 {
-    function get($search, $limit=10, $page=1, $role, $id_user) {
+    function get($search, $limit=10, $page=1, $role, $id_user, $from_apps='pincetar') {
         $data = null;
         if ($role == 'Staf Analis Kredit') {
             $data = PengajuanDagulir::with('pengajuan')->where(function($query) use ($search) {
@@ -21,6 +21,7 @@ class PengajuanDagulirRepository
             ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
             ->select('pengajuan_dagulir.*')
             ->where('pengajuan.id_staf', $id_user)
+            ->where('pengajuan_dagulir.from_apps', $from_apps)
             ->paginate($limit);
         } else if ($role == 'Penyelia Kredit') {
             $data = PengajuanDagulir::whereHas('pengajuan', function (Builder $query) {
@@ -35,6 +36,7 @@ class PengajuanDagulirRepository
             ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
             ->select('pengajuan_dagulir.*')
             ->where('pengajuan.id_penyelia', $id_user)
+            ->where('pengajuan_dagulir.from_apps', $from_apps)
             ->latest()
             ->paginate($limit);
         } else if ($role == 'Pincab') {
@@ -50,6 +52,7 @@ class PengajuanDagulirRepository
             ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
             ->select('pengajuan_dagulir.*')
             ->where('pengajuan.id_pincab', $id_user)
+            ->where('pengajuan_dagulir.from_apps', $from_apps)
             ->latest()
             ->paginate($limit);
         }
