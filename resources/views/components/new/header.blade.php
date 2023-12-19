@@ -25,7 +25,7 @@ class="sticky top-0 border-b z-50 p-3 font-poppins w-full bg-white"
     >
       <div class="avatar text-center">
         <img
-          src="{{ asset('img/avatar.png') }}"
+          src="https://ui-avatars.com/api/?background=dc3545&name={{ auth()->user()->name }}&bold=true&length=1&color=fff"
           alt=""
           class="w-10 h-10 rounded-full"
         />
