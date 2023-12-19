@@ -2045,6 +2045,7 @@ class PengajuanKreditController extends Controller
                 }
             }
 
+            dd($request->id_text, $request->id_jawaban_text);
             // dd($finalArray_text);
             // return $finalArray_text;
             for ($i = 0; $i < count($request->id_text); $i++) {

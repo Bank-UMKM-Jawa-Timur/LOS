@@ -151,8 +151,8 @@
                 </div>
                 <div class="form-group col-md-12">
                     <label for="">No Telp</label>
-                    <input type="text" name="no_telp" id="nama" class="form-control @error('no_telp') is-invalid @enderror"
-                        placeholder="No Telp" value="" required maxlength="255">
+                    <input type="text" name="no_telp" id="no_telp" class="form-control @error('no_telp') is-invalid @enderror"
+                        placeholder="No Telp" value="{{$dataUmum->no_telp}}" required maxlength="255">
                     @error('no_telp')
                     <div class="invalid-feedback">
                         {{ $message }}
@@ -1364,8 +1364,6 @@
                                                     value="{{ $itemTextTiga->id }}">
                                                 <input type="hidden" name="skor_penyelia_text[]"
                                                     value="{{ $itemTextTiga->skor_penyelia }}">
-                                                <input type="hidden" name="id_jawaban_text[]"
-                                                    value="{{ $itemTextTiga->id }}">
 
                                                 <input type="hidden" name="id_text[]"
                                                     value="{{ $itemTextTiga->id_item }}">
