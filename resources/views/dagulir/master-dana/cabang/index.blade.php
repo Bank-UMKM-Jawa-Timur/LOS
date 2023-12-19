@@ -100,7 +100,6 @@
                                 <th>Dana Idle</th>
                                 <th>Plafon Akumulasi</th>
                                 <th>Tanggal</th>
-                                <th>Aksi</th>
                             </thead>
                             <tbody>
                                 @php
@@ -118,11 +117,6 @@
                                         <td>{{ number_format($item->dana_idle,2, ",", ".") }}</td>
                                         <td>{{ number_format($item->plafon_akumulasi,2, ",", ".") }}</td>
                                         <td>{{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y') }}</td>
-                                        <td>
-                                            <button class="btn-edit">
-                                                <iconify-icon icon="uil:edit" class="icon"></iconify-icon>
-                                            </button>
-                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>

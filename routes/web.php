@@ -24,7 +24,8 @@ use App\Http\Controllers\Dagulir\master\NewMerkController;
 use App\Http\Controllers\Dagulir\master\NewTipeController;
 use App\Http\Controllers\Dagulir\NewDagulirController;
 use App\Http\Controllers\Dagulir\master\NewUserController;
-use App\Http\Controllers\MasterDanaController;
+use App\Http\Controllers\KreditProgram\DashboardKreditProgramController;
+use App\Http\Controllers\KreditProgram\MasterDanaController;
 use RealRashid\SweetAlert\Facades\Alert;
 
 /*
@@ -126,12 +127,24 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
     });
     Route::middleware(['KreditProgram'])->group(function () {
+            // Dashboard Dana
+            Route::get('dashboard-dana',[DashboardKreditProgramController::class,'index'])->name('dashboard.dana');
+            // Master Dana
             Route::prefix('master-dana')->group(function () {
+                // master dana modal
                 Route::get('/',[MasterDanaController::class,'index'])->name('master-dana.index');
                 Route::post('/update/{id}',[MasterDanaController::class,'update'])->name('master-dana.update');
+                // master dana cabang
                 Route::get('/dana-cabang',[MasterDanaController::class,'danaCabang'])->name('master-dana.cabang.index');
                 Route::post('/store-cabang',[MasterDanaController::class,'storeCabang'])->name('master-dana.store-cabang');
+                // master alih dana
+                Route::get('alih-dana',[MasterDanaController::class,'alihDana'])->name('master-dana.alih-dana');
+                Route::post('alih-dana/post',[MasterDanaController::class,'alihDanaPost'])->name('master-dana.alih-dana.post');
             });
+            // Get data dari dana cabang
+            Route::get('get-data-dari',[MasterDanaController::class,'getDari'])->name('master-dana.dari');
+            Route::get('get-data-ke',[MasterDanaController::class,'getKe'])->name('master-dana.ke');
+            Route::get('get-cabang-lawan',[MasterDanaController::class,'cabangLawan'])->name('master-dana.lawan');
     });
 
     // check Pincab
