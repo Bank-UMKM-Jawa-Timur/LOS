@@ -190,7 +190,7 @@ class NewUserController extends Controller
             return back()->withError('Terjadi kesalahan.');
         }
 
-        return redirect()->route('user.index')->withStatus('Data berhasil dihapus.');
+        return redirect()->route('dagulir.master.user.index')->withStatus('Data berhasil dihapus.');
     }
 
     public function changePassword()
