@@ -27,6 +27,7 @@ use App\Models\JawabanTempModel;
 use App\Models\LogPengajuan;
 use App\Models\MerkModel;
 use App\Models\PengajuanDagulir;
+use App\Models\PengajuanDagulirTemp;
 use App\Models\PlafonUsulan;
 use App\Models\TipeModel;
 use App\Models\User;
@@ -1817,7 +1818,7 @@ class NewDagulirController extends Controller
                 else {
                     alert()->error('Peringatan', 'Data pengajuan tidak ditemukan.');
                     return redirect()->back();
-                }   
+                }
             } else {
                 alert()->error('Error','Tidak memiliki hak akses');
                 return redirect()->back();
@@ -2081,7 +2082,7 @@ class NewDagulirController extends Controller
             if ($ke != '') {
                 $dataPengajuan->posisi = $ke;
                 $dataPengajuan->save();
-    
+
                 AlasanPengembalianData::insert([
                     'id_pengajuan' => $dataPengajuan->id,
                     'id_user' => auth()->user()->id,
@@ -2262,7 +2263,7 @@ class NewDagulirController extends Controller
             $dataLevelDua = ItemModel::where('level', 2)
                                     ->where('id_parent', $value->id)
                                     ->get();
-            
+
             foreach ($dataLevelDua as $key2 => $lev2) {
                 // Get jawaban text
                 $jawaban = JawabanTextModel::where('id_pengajuan', $id)
@@ -2607,7 +2608,7 @@ class NewDagulirController extends Controller
                     if (array_key_exists($key, $request->informasi) && array_key_exists($key, $request->id_text)) {
                         if ($request->id_jawaban_text[$key] != null && $request->informasi[$key] != null) {
                             if ($request->informasi[$key] == null) continue;
-    
+
                             if ($request->id_jawaban_text[$key] == null && $request->informasi[$key] != null) {
                                 if (isset($request->id_text[$key]) && isset($request->informasi[$key])) {
                                     // dd($request->id_jawaban_text)
@@ -2728,7 +2729,7 @@ class NewDagulirController extends Controller
             // get skor ratio coverage opsi
             $jawaban = JawabanModel::select('id', 'id_jawaban', 'skor')
                                 ->where('id_pengajuan', $id_pengajuan)
-                                ->where('id_jawaban', 158) // 158  = id_option ratio coverage opsi 
+                                ->where('id_jawaban', 158) // 158  = id_option ratio coverage opsi
                                 ->first();
             if ($jawaban) {
                 array_push($rata_rata, $jawaban->skor);
@@ -2846,5 +2847,399 @@ class NewDagulirController extends Controller
             alert()->error('Terjadi Kesalahan', $e->getMessage());
             return redirect()->back();
         }
+    }
+
+    public function indexTemp(Request $request){
+        $id_user = Auth::user()->id;
+        $param['cabang'] = DB::table('cabang')
+            ->get();
+        // paginate
+        $search = $request->get('q');
+        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+        $page = $request->has('page') ? $request->get('page') : 1;
+        $data = $this->repo->getDraftData($search, $limit, $page, $id_user);
+        return view('dagulir.pengajuan-kredit.index-draft', compact($data));
+    }
+
+    public function continueDraft($id)
+    {
+        $nasabah = PengajuanDagulirTemp::find($id);
+        $createRoute = route('dagulir.temp.continue-draft');
+        // dd($createRoute);
+
+        return redirect()->to($createRoute . "?tempId={$nasabah->id}&continue=true");
+    }
+
+    public function showContinueDraft(Request $request)
+    {
+        $param['pageTitle'] = "Dashboard";
+        $param['multipleFiles'] = $this->isMultipleFiles;
+
+        $param['dataDesa'] = Desa::all();
+        $param['dataKecamatan'] = Kecamatan::all();
+        $param['dataKabupaten'] = Kabupaten::all();
+        $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->where('nama', '!=', 'Data Umum')->get();
+        $param['itemSlik'] = ItemModel::with('option')->where('nama', 'SLIK')->first();
+        $param['itemSP'] = ItemModel::where('nama', 'Surat Permohonan')->first();
+        $param['itemP'] = ItemModel::where('nama', 'Laporan SLIK')->first();
+        $param['itemKTPSu'] = ItemModel::where('nama', 'Foto KTP Suami')->first();
+        $param['itemKTPIs'] = ItemModel::where('nama', 'Foto KTP Istri')->first();
+        $param['itemKTPNas'] = ItemModel::where('nama', 'Foto KTP Nasabah')->first();
+        $param['itemNIB'] = ItemModel::where('nama', 'Dokumen NIB')->first();
+        $param['itemNPWP'] = ItemModel::where('nama', 'Dokumen NPWP')->first();
+        $param['itemSKU'] = ItemModel::where('nama', 'Dokumen Surat Keterangan Usaha')->first();
+
+        $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
+        $param['dataMerk'] = MerkModel::all();
+        $param['jenis_usaha'] = config('dagulir.jenis_usaha');
+        $param['tipe'] = config('dagulir.tipe_pengajuan');
+        $param['duTemp'] = TemporaryService::getNasabahDataDagulir($request->tempId);
+        // return $param['duTemp'];
+
+        $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
+
+        // dump($param['dataAspek']);
+        // dump($param['itemSlik']);
+        // dump($param['itemSP']);
+        // dump($param['dataPertanyaanSatu']);
+        // dd($param['itemP']);
+        return view('dagulir.pengajuan-kredit.continue-draft', $param);
+    }
+
+    public function tempDagulir(Request $request){
+        if(isset($request->id_dagulir_temp)){
+            $dagulir = TemporaryService::saveDagulir(
+                $request->id_dagulir_temp,
+                TemporaryService::convertDagulirReq($request)
+            );
+        } else{
+            $dagulir = TemporaryService::saveDagulir(
+                null,
+                TemporaryService::convertDagulirReq($request)
+            );
+        }
+
+        try {
+            foreach ($request->dataLevelDua as $key => $value) {
+                $dataSlik = getDataLevel($value);
+                $cek = DB::table('jawaban_temp')
+                    ->where('temporary_dagulir_id', $request->id_dagulir_temp ?? $dagulir->id)
+                    ->where('id_jawaban', $dataSlik[1])
+                    ->count('id');
+                if ($cek < 1) {
+                    DB::table('jawaban_temp')
+                        ->insert([
+                            'temporary_dagulir_id' => $request->id_dagulir_temp ?? $dagulir->id,
+                            'id_jawaban' => $dataSlik[1],
+                            'skor' => $dataSlik[0],
+                            'id_option' => $key,
+                            'created_at' => now()
+                        ]);
+                } else {
+                    DB::table('jawaban_temp')
+                        ->where('temporary_dagulir_id', $request->id_dagulir_temp ?? $dagulir->id)
+                        ->where('id_option', $key)
+                        ->update([
+                            'id_jawaban' => $dataSlik[1],
+                            'skor' => $dataSlik[0],
+                            'updated_at' => now()
+                        ]);
+                }
+            }
+        } catch (\Exception $e) {
+        }
+
+        return response()->json([
+            'status' => 'ok',
+            'code' => 200,
+            'data' => $dagulir,
+        ]);
+    }
+
+    public function tempJawaban(Request $request)
+    {
+        $find = array('Rp ', '.');
+
+        try {
+            if ($request->kategori_jaminan_tambahan != null) {
+                DB::table('temporary_calon_nasabah')
+                    ->where('id', $request->id_dagulir_temp)
+                    ->update([
+                        'jaminan_tambahan' => $request->kategori_jaminan_tambahan
+                    ]);
+            }
+            foreach ($request->id_level as $key => $value) {
+                $cekData = DB::table('temporary_jawaban_text')
+                    ->where('temporary_dagulir_id', $request->id_dagulir_temp)
+                    ->where('id_jawaban', $value)
+                    ->first();
+                if (!$cekData) {
+                    $dataJawabanText = new JawabanTemp();
+                    $dataJawabanText->temporary_dagulir_id = $request->get('id_dagulir_temp');
+                    $dataJawabanText->id_jawaban = $request->get('id_level')[$key];
+                    $dataJawabanText->temporary_dagulir_id = $request->id_dagulir_temp;
+
+                    $dataJawabanText->opsi_text = $request->get('informasi')[$key];
+                    if ($value != '131' && $value != '143' && $value != '90' && $value != '138') {
+                        $dataJawabanText->opsi_text = str_replace($find, '', $request->get('informasi')[$key]);
+                    } else {
+                        $dataJawabanText->opsi_text = $request->get('informasi')[$key];
+                    }
+
+                    $dataJawabanText->save();
+                } else {
+                    $data = DB::table('temporary_jawaban_text')
+                        ->where('id_jawaban', $request->get('id_level')[$key])
+                        ->where('temporary_dagulir_id', $request?->id_dagulir_temp)
+                        ->update([
+                            'opsi_text' => ($value != '131' && $value != '143' && $value != '90' && $value != '138') ? str_replace($find, '', $request->get('informasi')[$key]) : $request->get('informasi')[$key],
+                        ]);
+                }
+            }
+        } catch (Exception $e) {
+            // DB::rollBack();
+            // return response()->json([
+            //     'status' => 'failed',
+            //     'message' => $e->getMessage(),
+            // ]);
+        } catch (QueryException $e) {
+            // DB::rollBack();
+            // return response()->json([
+            //     'status' => 'failed',
+            //     'message' => $e->getMessage(),
+            // ]);
+        }
+
+        $finalArray = array();
+        $rata_rata = array();
+
+        if(isset($request->kategori_jaminan_tambahan)){
+            JawabanTemp::insert([
+                'temporary_dagulir_id' => $request->get('id_dagulir_temp'),
+                'id_jawaban' => 76,
+                'opsi_text' => $request->kategori_jaminan_tambahan
+            ]);
+        }
+
+        try {
+            if ($request->ijin_usaha == 'tidak_ada_legalitas_usaha') {
+                $dokumenUsaha = DB::table('item')
+                    ->where('nama', 'LIKE', '%NIB%')
+                    ->orWhere('nama', 'LIKE', '%Surat Keterangan Usaha%')
+                    ->orWhere('nama', 'LIKE', '%NPWP%')
+                    ->get();
+                foreach ($dokumenUsaha as $idDoc) {
+                    DB::table('temporary_jawaban_text')
+                        ->where('temporary_dagulir_id', $request->id_dagulir_temp)
+                        ->where('id_jawaban', $idDoc->id)
+                        ->delete();
+                }
+            }
+            if ($request->isNpwp == 0) {
+                $dokumenUsaha = DB::table('item')
+                    ->orWhere('nama', 'LIKE', '%NPWP%')
+                    ->get();
+                foreach ($dokumenUsaha as $idDoc) {
+                    DB::table('temporary_jawaban_text')
+                        ->where('temporary_dagulir_id', $request->id_dagulir_temp)
+                        ->where('id_jawaban', $idDoc->id)
+                        ->delete();
+                }
+            }
+
+            $finalArray = array();
+            $rata_rata = array();
+            // data Level dua
+            if ($request->dataLevelDua != null) {
+                $data = $request->dataLevelDua;
+                foreach ($data as $key => $value) {
+                    if ($value != null) {
+                        $data_level_dua = getDataLevel($value);
+                        $skor[$key] = $data_level_dua[0];
+                        $id_jawaban[$key] = $data_level_dua[1];
+                        //jika skor nya tidak kosong
+                        if ($skor[$key] != 'kosong') {
+                            if ($id_jawaban[$key] == 66 || $id_jawaban[$key] == 187) {
+                                if ($skor[$key] == 1) {
+                                    $statusSlik = true;
+                                }
+                            }
+                            array_push($rata_rata, $skor[$key]);
+                        } else {
+                            $skor[$key] = NULL;
+                        }
+                        array_push(
+                            $finalArray,
+                            array(
+                                'temporary_dagulir_id' => $request?->id_dagulir_temp,
+                                'id_jawaban' => $id_jawaban[$key],
+                                'skor' => $skor[$key],
+                                'id_option' => $key,
+                                'created_at' => date("Y-m-d H:i:s"),
+                            )
+                        );
+                    }
+                }
+            } else {
+            }
+        } catch (Exception $e) {
+            return $e;
+        }
+
+        try {
+            // data level tiga
+            if ($request->dataLevelTiga != null) {
+                $dataLevelTiga = $request->dataLevelTiga;
+                foreach ($dataLevelTiga as $key => $value) {
+                    if ($value != null) {
+                        $data_level_tiga = getDataLevel($value);
+                        $skor[$key] = $data_level_tiga[0];
+                        $id_jawaban[$key] = $data_level_tiga[1];
+                        //jika skor nya tidak kosong
+                        if ($skor[$key] != 'kosong') {
+                            array_push($rata_rata, $skor[$key]);
+                        } else {
+                            $skor[$key] = NULL;
+                        }
+                        array_push(
+                            $finalArray,
+                            array(
+                                'temporary_dagulir_id' => $request?->id_dagulir_temp,
+                                'id_jawaban' => $id_jawaban[$key],
+                                'skor' => $skor[$key],
+                                'id_option' => $key,
+                                'created_at' => date("Y-m-d H:i:s"),
+                            )
+                        );
+                    }
+                }
+            } else {
+            }
+        } catch (Exception $e) {
+            return $e;
+        }
+
+        try {
+            // data level empat
+            if ($request->dataLevelEmpat != null) {
+                $dataLevelEmpat = $request->dataLevelEmpat;
+                foreach ($dataLevelEmpat as $key => $value) {
+                    if ($value != null) {
+                        $data_level_empat = getDataLevel($value);
+                        $skor[$key] = $data_level_empat[0];
+                        $id_jawaban[$key] = $data_level_empat[1];
+                        //jika skor nya tidak kosong
+                        if ($skor[$key] != 'kosong') {
+                            array_push($rata_rata, $skor[$key]);
+                        } else {
+                            $skor[$key] = NULL;
+                        }
+                        array_push(
+                            $finalArray,
+                            array(
+                                'temporary_dagulir_id' => $request?->id_dagulir_temp,
+                                'id_jawaban' => $id_jawaban[$key],
+                                'skor' => $skor[$key],
+                                'id_option' => $key,
+                                'created_at' => date("Y-m-d H:i:s"),
+                            )
+                        );
+                    }
+                }
+            } else {
+            }
+        } catch (Exception $e) {
+            return $e;
+        }
+
+        try {
+            foreach ($request->pendapat_per_aspek as $i => $val) {
+                $cekUsulan = DB::table('temporary_usulan_dan_pendapat')
+                    ->where('temporary_dagulir_id', $request->id_dagulir_temp)
+                    ->where('id_aspek', $i)
+                    ->count('id');
+                if ($cekUsulan < 1) {
+                    DB::table('temporary_usulan_dan_pendapat')
+                        ->insert([
+                            'temporary_dagulir_id' => $request->id_dagulir_temp,
+                            'id_aspek' => $i,
+                            'usulan' => $val,
+                            'created_at' => now()
+                        ]);
+                } else {
+                    DB::table('temporary_usulan_dan_pendapat')
+                        ->where('temporary_dagulir_id', $request->id_dagulir_temp)
+                        ->where('id_aspek', $i)
+                        ->update([
+                            'usulan' => $val,
+                            'updated_at' => now()
+                        ]);
+                }
+            }
+        } catch (Exception $e) {
+            return $e;
+        }
+
+        try {
+            for ($i = 0; $i < count($finalArray); $i++) {
+                $cekDataSelect = DB::table('jawaban_temp')
+                    ->where('temporary_dagulir_id', $request->id_dagulir_temp)
+                    ->where('id_jawaban', $finalArray[$i]['id_jawaban'])
+                    ->count('id');
+
+                if ($cekDataSelect < 1) {
+                    JawabanTempModel::insert($finalArray[$i]);
+                } else {
+                    for ($i = 0; $i < count($finalArray); $i++) {
+                        DB::table('jawaban_temp')
+                            ->where('id_option', $finalArray[$i]['id_option'])
+                            ->where('temporary_dagulir_id', $request?->id_dagulir_temp)
+                            ->update([
+                                'skor' => $finalArray[$i]['skor'],
+                                'id_jawaban' => $finalArray[$i]['id_jawaban']
+                            ]);
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            return $e;
+        }
+
+        return response()->json([
+            'status' => 'ok',
+            'nasabah' => $request->id_dagulir_temp,
+            'aspek' => $request->pendapat_per_aspek,
+            'all' => $request->all()
+        ]);
+    }
+
+    public function tempFile(Request $request)
+    {
+        $dagulir = PengajuanDagulirTemp::find($request->id_dagulir_temp);
+        $data = TemporaryService::saveFileDagulir(
+            $dagulir,
+            $request->answer_id,
+            $request->file_id,
+            $request->file('file')
+        );
+
+        return response()->json([
+            'statusCode' => 200,
+            'data' => $data,
+        ]);
+    }
+
+    public function tempFileDataUmum(Request $request){
+        $dagulir = PengajuanDagulirTemp::find($request->id_dagulir_temp);
+        $data = TemporaryService::saveFileDagulirDataUmum($dagulir, $request, $request->file('file'));
+
+        return response()->json([
+            'statusCode' => 200,
+            'data' => $data
+        ]);
+    }
+
+    public function listDraftDagulir(){
+        return view('dagulir.pengajuan-kredit.index-draft');
     }
 }

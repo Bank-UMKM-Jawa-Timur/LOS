@@ -38,6 +38,38 @@ if(!function_exists('temporary_usulan')){
     }
 }
 
+if(!function_exists('temporary_dagulir')) {
+    function temporary_dagulir($nId, $id, bool $multiple = false) {
+        $temp = JawabanTemp::where('id_jawaban', $id)
+            ->where('temporary_dagulir_id', $nId)
+            ->orderBy('id', 'desc');
+
+        if($multiple) return $temp->get();
+        return $temp->first();
+    }
+}
+
+if(!function_exists('temporary_select_dagulir')){
+    function temporary_select_dagulir(int $id, int $nId){
+        $temp = JawabanTempModel::where('id_option', $id)
+            ->where('temporary_dagulir_id', $nId)
+            ->orderBy('id', 'desc');
+
+        return $temp->first();
+    }
+}
+
+if(!function_exists('temporary_usulan_dagulir')){
+    function temporary_usulan_dagulir(int $id, int $nId){
+        $temp = DB::table('temporary_usulan_dan_pendapat')
+            ->where('temporary_dagulir_id', $nId)
+            ->where('id_aspek', $id)
+            ->orderBy('id', 'desc');
+
+        return $temp->first();
+    }
+}
+
 if (!function_exists('sipde_token')) {
     function sipde_token() {
         $filePath = storage_path('app/response.json');

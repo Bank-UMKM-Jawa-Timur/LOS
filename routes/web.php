@@ -46,10 +46,6 @@ Route::get('/', function () {
 Route::get('tes-skor', [PengajuanKreditController::class, 'tesskor'])->name('tesskor');
 Route::post('tes-skor', [PengajuanKreditController::class, 'countScore'])->name('tesskor.store');
 
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth'])->name('dashboard');
-
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/detail-pengajuan-new/tes', function () {
         return view('dagulir.pengajuan-kredit.detail-pengajuan-jawaban-new');
@@ -72,6 +68,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('review/post',[DagulirController::class,'updateReview'])->name('review-post');
         // Review Penyelia
         Route::get('jawaban-pengajuan/{id}', [NewDagulirController::class, "getDetailJawaban"])->name('detailjawaban');
+        // Route::get('list-draft-dagulir', [NewDagulirController::class, "listDraftDagulir"])->name('draft.listDraftDagulir');
         Route::post('jawaban-pengajuan/update/{id}', [DagulirController::class, "updateReviewPenyelia"])->name('updatePenyelia');
         // Send to pinca
         Route::get('review-pincab-new', function() {
@@ -129,6 +126,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/reset-api-sessions', [NewUserController::class, 'indexAPISession'])->name('index-api-session');
             Route::post('/reset-api-session/{id}', [NewUserController::class, 'resetAPISession'])->name('reset-api-session');
         });
+
+        Route::get('pengajuan-kredir/cetak-surat/{id}',[NewDagulirController::class,"CetakPDF"])->name('pengajuan.cetak-pdf');
+        Route::prefix('/temp')
+            ->name('temp.')
+            ->group(function(){
+                Route::post('pengajuan-kredit/dagulir', [NewDagulirController::class, "tempDagulir"])->name('dagulir');
+                Route::post('pengajuan-kredit/tempFile', [NewDagulirController::class, "tempFile"])->name('file');
+                Route::post('pengajuan-kredit/tempFileDataUmum', [NewDagulirController::class, "tempFileDataUmum"])->name('fileDataUmum');
+                Route::post('pengajuan-kredit/tempJawaban', [NewDagulirController::class, "tempJawaban"])->name('jawaban');
+                Route::get('pengajuan-kredit/continue-draft/{id}', [NewDagulirController::class, 'continueDraft'])->name('continue');
+                Route::get('pengajuan-kredit/lanjutkan-draft', [NewDagulirController::class, 'showContinueDraft'])->name('continue-draft');
+                Route::get('pengajuan-kredit/list-draft-dagulir', [NewDagulirController::class, "listDraftDagulir"])->name('list-draft-dagulir');
+            });
     });
     Route::middleware(['KreditProgram'])->group(function () {
             Route::prefix('master-dana')->group(function () {

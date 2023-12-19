@@ -50,6 +50,7 @@ $dataIndex = match ($skema) {
                 @if (\Request::has('dagulir'))
                     <input type="hidden" name="dagulir_id" value="{{\Request::get('dagulir')}}">
                 @endif
+                <input type="hidden" name="id_dagulir_temp" id="id_dagulir_temp">
                 <div class="mt-3 container mx-auto">
                     <div id="dagulir-tab" class="is-tab-content active">
                         @if (\Request::has('dagulir'))
@@ -2619,4 +2620,5 @@ $dataIndex = match ($skema) {
 </script>
 
 <script src="{{ asset('') }}js/custom.js"></script>
+@include('dagulir.partials.create-save-temp')
 @endpush
