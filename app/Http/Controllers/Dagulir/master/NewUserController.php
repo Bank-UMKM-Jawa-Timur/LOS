@@ -358,6 +358,8 @@ class NewUserController extends Controller
             return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
         }
 
+        // return $data;
+
         return view('dagulir.master.user.api-sessions.index', $this->param);
     }
 
