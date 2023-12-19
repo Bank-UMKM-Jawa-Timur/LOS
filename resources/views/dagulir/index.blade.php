@@ -99,15 +99,19 @@
         </div>
         @if (Auth()->user()->role == 'Staf Analis Kredit')
             <div class="right-button gap-2 flex lg:justify-start">
-            <a
-                href="{{ route('dagulir.pengajuan.create') }}"
-                class="px-7 py-2 rounded flex justify-center items-center font-semibold bg-theme-primary border text-white"
-            >
-                <span class="mt-1 mr-3">
-                <iconify-icon icon="fa6-solid:plus"></iconify-icon>
-                </span>
-                <span class="ml-1 text-sm"> Tambah pengajuan </span>
-            </a>
+                <a href="{{ route('dagulir.temp.list-draft-dagulir') }}" class="px-7 py-2 flex font-poppins justify-center items-center rounded font-semibold bg-white border text-theme-secondary">
+                    <span class="">
+                        <iconify-icon icon="fluent:drafts-16-regular"></iconify-icon>
+                    </span>
+                    <span class="ml-3 text-sm"> Draft </span>
+                </a>
+                <a href="{{ route('dagulir.pengajuan.create') }}"
+                    class="px-7 py-2 rounded flex justify-center items-center font-semibold bg-theme-primary border text-white">
+                    <span class="mt-1 mr-3">
+                    <iconify-icon icon="fa6-solid:plus"></iconify-icon>
+                    </span>
+                    <span class="ml-1 text-sm"> Tambah pengajuan </span>
+                </a>
             </div>
         @endif
       </div>

@@ -35,10 +35,6 @@ Route::get('/', function () {
 Route::get('tes-skor', [PengajuanKreditController::class, 'tesskor'])->name('tesskor');
 Route::post('tes-skor', [PengajuanKreditController::class, 'countScore'])->name('tesskor.store');
 
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth'])->name('dashboard');
-
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/print-data-nominatif', [DashboardController::class, 'cetak'])->name('print_data_nominatif');
@@ -56,6 +52,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('review/post',[DagulirController::class,'updateReview'])->name('review-post');
         // Review Penyelia
         Route::get('jawaban-pengajuan/{id}', [NewDagulirController::class, "getDetailJawaban"])->name('detailjawaban');
+        // Route::get('list-draft-dagulir', [NewDagulirController::class, "listDraftDagulir"])->name('draft.listDraftDagulir');
         Route::post('jawaban-pengajuan/update/{id}', [DagulirController::class, "updateReviewPenyelia"])->name('updatePenyelia');
         // Send to pinca
         Route::get('review-pincab-new', function() {
@@ -96,6 +93,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 Route::post('pengajuan-kredit/tempJawaban', [NewDagulirController::class, "tempJawaban"])->name('jawaban');
                 Route::get('pengajuan-kredit/continue-draft/{id}', [NewDagulirController::class, 'continueDraft'])->name('continue');
                 Route::get('pengajuan-kredit/lanjutkan-draft', [NewDagulirController::class, 'showContinueDraft'])->name('continue-draft');
+                Route::get('pengajuan-kredit/list-draft-dagulir', [NewDagulirController::class, "listDraftDagulir"])->name('list-draft-dagulir');
             });
     });
 

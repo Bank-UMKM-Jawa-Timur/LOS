@@ -2030,4 +2030,8 @@ class NewDagulirController extends Controller
             'data' => $data
         ]);
     }
+
+    public function listDraftDagulir(){
+        return view('dagulir.pengajuan-kredit.index-draft');
+    }
 }
