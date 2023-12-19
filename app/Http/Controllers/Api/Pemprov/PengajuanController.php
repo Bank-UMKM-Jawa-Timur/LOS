@@ -131,7 +131,8 @@ class PengajuanController extends Controller
                         'tanggal_berdiri' => date('Y-m-d', strtotime($request->get('tanggal_berdiri'))),
                         'tanggal' => date('Y-m-d', strtotime($request->get('tanggal'))),
                         'user_id' => $userId->id,
-                        'status' => 1,
+                        'from_apps' => 'sipde',
+                        'status' => 8,
                         'created_at' => now(),
                     ];
 
