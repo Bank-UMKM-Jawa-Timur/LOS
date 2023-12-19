@@ -1491,7 +1491,7 @@ $dataIndex = match ($skema) {
     }
     // NPWP format
     $(document).on('keyup', '#npwp_text', function() {
-        var input = $(this).val()
+        var input = $(this).val().replace(/\D/g, '');
         $(this).val(formatNpwp(input))
     })
     $(".btn-simpan-data").on('click', function(e) {
