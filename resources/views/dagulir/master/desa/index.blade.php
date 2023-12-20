@@ -90,7 +90,7 @@
                                         <td>{{ $i++ }}</td>
                                         <td>{{ $item->desa }}</td>
                                         <td>{{ $item->kecamatan->kecamatan }}</td>
-                                        <td>{{ $item->kabupaten->kabupaten }}</td>
+                                        <td>{{ $item->kabupaten != null ? $item->kabupaten->kabupaten : '-' }}</td>
                                         <td>
                                             <button class="btn-edit">
                                                 <iconify-icon icon="uil:edit" class="icon"></iconify-icon>

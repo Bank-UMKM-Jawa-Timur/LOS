@@ -124,7 +124,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::resource('master-item', NewItemController::class);
 
             Route::get('/reset-sessions', [NewUserController::class, 'indexSession'])->name('index-session');
-            Route::post('/reset-session-post/{id}', [NewUserController::class, 'resetSession'])->name('reset-session');
+            Route::post('/reset-session-post', [NewUserController::class, 'resetSession'])->name('reset-session');
 
             Route::get('/reset-api-sessions', [NewUserController::class, 'indexAPISession'])->name('index-api-session');
             Route::post('/reset-api-session/{id}', [NewUserController::class, 'resetAPISession'])->name('reset-api-session');

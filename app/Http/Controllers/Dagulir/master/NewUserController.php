@@ -310,14 +310,15 @@ class NewUserController extends Controller
         return view('dagulir.master.user.sessions.index', $this->param);
     }
 
-    public function resetSession($id)
+    public function resetSession(Request $request)
     {
         try {
             DB::table('sessions')
-                ->where('user_id', $id)
+                ->where('user_id', $request->id)
                 ->delete();
 
-            return back()->withStatus('Berhasil menghapus session.');
+            alert()->success('Berhasil','Berhasil menghapus session.');
+            return redirect()->route('dagulir.master.user.index');
         } catch (Exception $e) {
             return redirect()->back()->withError('Terjadi Kesalahan.' . $e);
         } catch (Exception $e) {
