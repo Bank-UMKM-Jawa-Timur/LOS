@@ -1286,18 +1286,20 @@
                                                                                         @php
                                                                                             $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text);
                                                                                         @endphp
-                                                                                        @if ($file_parts['extension'] == 'pdf')
-                                                                                            <div class="pl-2">
-                                                                                                <iframe
-                                                                                                    src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
-                                                                                                    width="100%" height="400"></iframe>
-                                                                                            </div>
-                                                                                        @else
-                                                                                            <div class="pl-2">
-                                                                                                <img style="border: 5px solid #c2c7cf"
-                                                                                                    src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
-                                                                                                    alt="" width="400">
-                                                                                            </div>
+                                                                                        @if (array_key_exists('extension', $file_parts))
+                                                                                            @if ($file_parts['extension'] == 'pdf')
+                                                                                                <div class="pl-2">
+                                                                                                    <iframe
+                                                                                                        src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
+                                                                                                        width="100%" height="400"></iframe>
+                                                                                                </div>
+                                                                                            @else
+                                                                                                <div class="pl-2">
+                                                                                                    <img style="border: 5px solid #c2c7cf"
+                                                                                                        src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
+                                                                                                        alt="" width="400">
+                                                                                                </div>
+                                                                                            @endif
                                                                                         @endif
                                                                                     @else
                                                                                         @php
