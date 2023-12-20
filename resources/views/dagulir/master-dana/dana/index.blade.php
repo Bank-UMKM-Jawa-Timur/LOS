@@ -1,5 +1,3 @@
-{{-- @include('dagulir.master-dana.dana.modal.update',['data' => $update_data]) --}}
-{{-- @include('dagulir.master-dana.dana.modal.update-cabang',['cabang' => $getCabang]) --}}
 @extends('layouts.tailwind-template')
 @include('components.new.modal.loading')
 @push('script-inject')
@@ -13,27 +11,29 @@
                 var input = $(this).val()
                 $(this).val(formatrupiah(input))
             });
-            var dana_modal = $('#dana_modal').val();
-            var dana_idle = $('#dana_idle').val();
-            formatrupiah(dana_modal)
-            formatrupiah(dana_idle)
-        })
-        function formatrupiah(angka, prefix) {
-            var number_string = angka.replace(/[^,\d]/g, '').toString(),
-                split = number_string.split(','),
-                sisa = split[0].length % 3,
-                rupiah = split[0].substr(0, sisa),
-                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+            var dana_modal = document.getElementById("dana_modal");
+            dana_modal.value = formatrupiah(dana_modal.value);
 
-            // tambahkan titik jika yang di input sudah menjadi angka ribuan
-            if (ribuan) {
-                separator = sisa ? '.' : '';
-                rupiah += separator + ribuan.join('.');
+            var dana_idle = document.getElementById("dana_idle");
+            dana_idle.value = formatrupiah(dana_idle.value);
+
+            function formatrupiah(angka, prefix) {
+                var number_string = angka.replace(/[^,\d]/g, '').toString(),
+                    split = number_string.split(','),
+                    sisa = split[0].length % 3,
+                    rupiah = split[0].substr(0, sisa),
+                    ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+                // tambahkan titik jika yang di input sudah menjadi angka ribuan
+                if (ribuan) {
+                    separator = sisa ? '.' : '';
+                    rupiah += separator + ribuan.join('.');
+                }
+
+                rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+                return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
             }
-
-            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-            return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
-        }
+        })
     </script>
 @endpush
 @section('content')
@@ -56,6 +56,10 @@
                 <form action="{{ route('master-dana.update',$update_data != null ? $update_data->id : 1) }}" method="POST">
                     @csrf
                     <div class="p-5 w-full space-y-5">
+                        <div class="flex justify-end text-xs text-gray-500">
+                            Terakhir update : {{ \Carbon\Carbon::parse($update_data != null ? $update_data->updated_at : '')->translatedFormat('d F Y H:i:s') }}
+
+                        </div>
                         <div class="form-group-2 mb-4">
                             <div class="input-box">
                                 <label for="">Dana Idle</label>

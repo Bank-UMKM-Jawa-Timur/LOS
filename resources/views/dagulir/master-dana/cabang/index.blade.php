@@ -10,9 +10,7 @@
         var input = $(this).val()
         $(this).val(formatrupiah(input))
     });
-
     // formatrupiah();
-
     function formatrupiah(angka, prefix) {
         var number_string = angka.replace(/[^,\d]/g, '').toString(),
             split = number_string.split(','),
