@@ -91,8 +91,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="accordion-content p-3">
-                        <div class="p-5 space-y-5">
+                    <div class="accordion-content p-5">
+                        <div class="space-y-5">
                             @foreach ($dataLevelDua as $item)
                                 @if ($item->opsi_jawaban != 'option')
                                     @php
@@ -128,7 +128,7 @@
                                                             @elseif ($item->opsi_jawaban == 'number' && $item->id != 143)
                                                             <p class="">
                                                                 @if ($item->is_rupiah == 1)
-                                                                    Rp. {{ number_format((int) $itemTextDua->opsi_text, 2, ',', '.') }}
+                                                                    Rp. {{ number_format((int) $itemTextDua->opsi_text, 0, ',', '.') }}
                                                                 @else
                                                                     {{ $itemTextDua->opsi_text }}
                                                                 @endif
@@ -241,20 +241,54 @@
                                     $dataOption = \App\Models\OptionModel::where('option', '=', '-')
                                         ->where('id_item', $item->id)
                                         ->get();
-
                                     // check level 3
                                     $dataLevelTiga = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'is_hide', 'is_rupiah')
                                         ->where('level', 3)
                                         ->where('id_parent', $item->id)
                                         ->get();
                                 @endphp
+
                                 @if ($item->id_parent == 10 && $item->nama != 'Hubungan Dengan Supplier')
-                                    <div class="row form-group sub pl-4">
-                                        <label for="staticEmail" class="col-sm-3 col-form-label font-weight-bold">{{ $item->nama }}</label>
-                                        <label for="staticEmail" class="col-sm-1 col-form-label px-0">
+                                    <div class="form-group-1 col-span-2">
+                                        <div>
+                                            <div class="w-full p-2 border-l-8 border-theme-primary bg-gray-100">
+                                                <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                                                    {{ $item->nama }} :
+                                                </h2>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <hr>
                                 @endif
+                                @foreach ($dataOption as $itemOption)
+                                    @if ($itemOption->option == '-')
+                                        @if (!$item->is_hide)
+                                            @if ($item->nama != "Ijin Usaha")
+                                                @if ($item->id == 24 || $item->id == 37 || $item->id == 45)
+                                                @else
+                                                    <div class="row col-span-2">
+                                                        <div class="form-group-1">
+                                                            <div class="form-group-1 col-span-2 pl-2">
+                                                                <div>
+                                                                    <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
+                                                                        <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                                                                            {{ $item->nama }} :
+                                                                        </h2>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        @if ($item->nama == 'Ijin Usaha' && $countIjin == 0)
+                                                            <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
+                                                                <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
+                                                                <h4 class="font-bold">Tidak ada legalitas usaha</h4>
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                @endif
+                                            @endif
+                                        @endif
+                                    @endif
+                                @endforeach
                                 @if (count($dataJawaban) != 0)
                                     @if ($item->nama == 'Persentase Kebutuhan Kredit Opsi' || $item->nama == 'Repayment Capacity Opsi')
 
@@ -419,7 +453,18 @@
                                                     ->first();
                                             @endphp
                                             @foreach ($dataOptionTiga as $itemOptionTiga)
-                                                @if (!$itemTiga->is_hide)
+                                                @if ($itemOptionTiga->option == '-')
+                                                    <div class="form-group-1 col-span-2 pl-2">
+                                                        <div>
+                                                            <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
+                                                                <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                                                                    {{$itemTiga->nama}} :
+                                                                </h2>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                                {{-- @if (!$itemTiga->is_hide)
                                                     @if ($itemOptionTiga->option == '-')
                                                         @if (isset($checkJawabanKelayakan))
                                                         @else
@@ -430,7 +475,7 @@
                                                             </div>
                                                         @endif
                                                     @endif
-                                                @endif
+                                                @endif --}}
                                             @endforeach
     
                                             @if (count($dataJawabanLevelTiga) != 0)
@@ -582,7 +627,7 @@
                                                                     @elseif ($itemTextEmpat->is_rupiah)
                                                                         <p>Rp. {{ number_format((int) $itemTextEmpat->opsi_text, 0, ',', '.') }}</p>
                                                                     @else
-                                                                        <p>{{ $itemEmpat->opsi_jawaban == 'persen' ? $itemTextEmpat->opsi_text : $itemTextEmpat->opsi_text  }}{{ $itemEmpat->opsi_jawaban == 'persen' ? '%' : '' }}</p>
+                                                                        <p>{{ $itemEmpat->opsi_jawaban == 'persen' ? $itemTextEmpat->opsi_text : $itemTextEmpat->opsi_text  }}{{ $itemEmpat->opsi_jawaban == 'persen' ? '%' : '' }} {{ $itemEmpat->id == 130 ? 'Bulan' : ''}}</p>
                                                                     @endif
                                                                 </div>
                                                                 
@@ -658,26 +703,20 @@
                                                                                 ->where('detail_komentar.id_user', $comment->id_penyelia)
                                                                                 ->first();
                                                                         @endphp
-                                                                            @if ($itemEmpat->nama != "Tidak Memiliki Jaminan Tambahan")
-                                                                                {{-- <div class="row">
-                                                                                    <div class="form-group-2"> --}}
-                                                                                        <div class="field-review">
-                                                                                            <div class="field-name">
-                                                                                                <label for="">{{ $itemEmpat->nama }}</label>
-                                                                                            </div>
-                                                                                            <div class="field-answer">
-                                                                                                <p>{{ $itemJawabanLevelEmpat->option }}</p>
-                                                                                            </div>
+                                                                            <div class="col-span-2">
+                                                                                @if ($itemEmpat->nama != "Tidak Memiliki Jaminan Tambahan")
+                                                                                    <div class="field-review">
+                                                                                        <div class="field-name">
+                                                                                            <h6>{{ $itemEmpat->nama }} TESS</h6>
                                                                                         </div>
-                                                                                    {{-- </div> --}}
-                                                                                        {{-- <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
-                                                                                            <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban : </span>
-                                                                                            <h4 class="font-bold"> {{ $itemJawabanLevelEmpat->option }}</h4>
-                                                                                        </div> --}}
-    
-                                                                                {{-- </div> --}}
-                                                                            @endif
-                                                                            
+                                                                                        <div class="field-answer space-y-5">
+                                                                                            <p>
+                                                                                                {{ $itemJawabanLevelEmpat->option }}
+                                                                                            </p>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                @endif
+                                                                            </div>
                                                                         </div>
                                                                         <input type="hidden" class="form-input mb-3"
                                                                             placeholder="Masukkan komentar" name="komentar_penyelia"
@@ -698,7 +737,7 @@
                                     $no = 0;
                                 @endphp
                             @endforeach
-                            <div class="p-5 space-y-5">
+                            <div class="space-y-5">
                                 <hr>
                                 @foreach ($pendapatUsulanStaf as $itemStaf)
                                     <div class="form-group-2">
@@ -815,7 +854,7 @@
                                     <label for="">Plafon</label>
                                 </div>
                                 <div class="field-answer">
-                                    <p>Rp. {{ number_format($plafonUsulan->plafon_usulan_penyelia, 2, ',', '.')}}</p>
+                                    <p>Rp. {{ number_format($plafonUsulan->plafon_usulan_penyelia, 0, ',', '.')}}</p>
                                 </div>
                             </div>
                         </div>
@@ -849,7 +888,7 @@
                                     <label for="">Plafon</label>
                                 </div>
                                 <div class="field-answer">
-                                    <p>Rp. {{ number_format($plafonUsulan->plafon_usulan_pbo, 2, ',', '.')}}</p>
+                                    <p>Rp. {{ number_format($plafonUsulan->plafon_usulan_pbo, 0, ',', '.')}}</p>
                                 </div>
                             </div>
                         </div>
@@ -883,7 +922,7 @@
                                     <label for="">Plafon</label>
                                 </div>
                                 <div class="field-answer">
-                                    <p>Rp. {{ number_format($plafonUsulan->plafon_usulan_pbp, 2, ',', '.')}}</p>
+                                    <p>Rp. {{ number_format($plafonUsulan->plafon_usulan_pbp, 0, ',', '.')}}</p>
                                 </div>
                             </div>
                         </div>
@@ -917,22 +956,22 @@
                                     <label for="">Plafon</label>
                                 </div>
                                 <div class="field-answer">
-                                    <p>Rp. {{ number_format($plafonUsulan->plafon_usulan_pincab, 2, ',', '.')}}</p>
+                                    <p>Rp. {{ number_format($plafonUsulan->plafon_usulan_pincab, 0, ',', '.')}}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                     @endif
                     <div class="p-4">
-                        <div class="form-group-1">
+                        <div class="form-group-2">
                             <div class="field-review">
                                 <div class="field-name">
                                     <label for="">Pendapat & Usulan Pimpinan Cabang</label>
                                 </div>
                                 <div class="field-answer">
-                                    <span>
+                                    <p>
                                         <textarea class="form-textarea w-full" placeholder="isi pendapat..." name="pendapat_usulan" id="pendapat_usulan"></textarea>
-                                    </span>
+                                    </p>
                                 </div>
                             </div>
                         </div>

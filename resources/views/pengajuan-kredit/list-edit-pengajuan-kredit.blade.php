@@ -263,7 +263,6 @@
                                     @else
                                         {{ '-' }}
                                     @endif
-        
                                 </td>
                                 <td>
                                     @php
@@ -337,21 +336,81 @@
                                 </td>
                                 <td>
                                 <div class="dropdown-tb">
-                                @php
-                                    $userPBO = \App\Models\User::select('id')
-                                        ->where('id_cabang', $item->id_cabang)
-                                        ->where('role', 'PBO')
-                                        ->whereNotNull('nip')
-                                        ->first();
-                                    
-                                    $userPBP = \App\Models\User::select('id')
-                                        ->where('id_cabang', $item->id_cabang)
-                                        ->where('role', 'PBP')
-                                        ->whereNotNull('nip')
-                                        ->first();
+                                    @php
+                                        $userPBO = \App\Models\User::select('id')
+                                            ->where('id_cabang', $item->id_cabang)
+                                            ->where('role', 'PBO')
+                                            ->whereNotNull('nip')
+                                            ->first();
+                                        
+                                        $userPBP = \App\Models\User::select('id')
+                                            ->where('id_cabang', $item->id_cabang)
+                                            ->where('role', 'PBP')
+                                            ->whereNotNull('nip')
+                                            ->first();
                                     @endphp
-                                @if ($item->posisi == 'Review Penyelia')
-                                    @if (auth()->user()->id_cabang == '1')
+                                    @if ($item->posisi == 'Review Penyelia')
+                                        @if (auth()->user()->id_cabang == '1')
+                                            <button
+                                                class="dropdown-tb-toggle border rounded px-4 py-2 hover:bg-gray-100 hover:text-gray-500">
+                                                <iconify-icon icon="ph:dots-three-outline-vertical-fill" class="mt-2">
+                                                </iconify-icon>
+                                            </button>
+                                            <ul class="dropdown-tb-menu hidden">
+                                                <li class="item-tb-dropdown">
+                                                    <a href="{{ route('pengajuan.detailjawaban', $item->id_pengajuan) }}">Review</a>
+                                                </li>
+                                                <li class="item-tb-dropdown open-modal" data-modal-id="modal-kembalikan-{{ $item->id }}" data-backto="Staff" >
+                                                    <a href="#">Kembalikan ke Staff</a>
+                                                </li>
+                                                @if ($userPBO)
+                                                <li class="item-tb-dropdown">
+                                                    <a href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbo">Lanjut ke PBO</a>
+                                                </li>
+                                                @else
+                                                    @if ($userPBP)
+                                                    <li class="item-tb-dropdown">
+                                                        <a  href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbp">Lanjut ke PBP</a>
+                                                    </li>
+                                                    @else
+                                                    <li class="item-tb-dropdown">
+                                                        <a  href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pincab">Lanjut ke Pincab</a>
+                                                    </li>
+                                                    @endif
+                                                @endif
+                                                <li class="item-tb-dropdown">
+                                                    <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
+                                                        class="dropdown-item">Cetak</a>
+                                                </li>
+                                            </ul>
+                                        @else
+                                            <button class="dropdown-tb-toggle border rounded px-4 py-2 hover:bg-gray-100 hover:text-gray-500">
+                                                <iconify-icon icon="ph:dots-three-outline-vertical-fill" class="mt-2">
+                                                </iconify-icon>
+                                            </button>
+                                            <ul class="dropdown-tb-menu hidden">
+                                                <li class="item-tb-dropdown">
+                                                    <a href="{{ route('pengajuan.detailjawaban', $item->id_pengajuan) }}">Review</a>
+                                                </li>
+                                                <li class="item-tb-dropdown open-modal" data-modal-id="modal-kembalikan-{{ $item->id }}" data-backto="Staff" >
+                                                    <a href="#">Kembalikan ke Staff</a>
+                                                </li>
+                                                @if ($userPBO)
+                                                <li class="item-tb-dropdown">
+                                                    <a href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbo">Lanjut ke PBO</a>
+                                                </li>
+                                                @else
+                                                <li class="item-tb-dropdown">
+                                                    <a  href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pincab">Lanjut ke Pincab</a>
+                                                </li>
+                                                @endif
+                                                <li class="item-tb-dropdown">
+                                                    <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
+                                                        class="dropdown-item">Cetak</a>
+                                                </li>
+                                            </ul>
+                                        @endif
+                                    @elseif ($item->posisi == 'Proses Input Data')
                                         <button
                                             class="dropdown-tb-toggle border rounded px-4 py-2 hover:bg-gray-100 hover:text-gray-500">
                                             <iconify-icon icon="ph:dots-three-outline-vertical-fill" class="mt-2">
@@ -359,30 +418,34 @@
                                         </button>
                                         <ul class="dropdown-tb-menu hidden">
                                             <li class="item-tb-dropdown">
-                                                <a href="{{ route('pengajuan.detailjawaban', $item->id_pengajuan) }}">Review</a>
+                                                <a href="{{ route('pengajuan-kredit.edit', $item->id_pengajuan) }}"
+                                                    class="dropdown-item">
+                                                    Edit data
+                                                </a>
                                             </li>
-                                            <li class="item-tb-dropdown open-modal" data-modal-id="modal-kembalikan-{{ $item->id }}" data-backto="Staff" >
-                                                <a href="#">Kembalikan ke Staff</a>
-                                            </li>
-                                            @if ($userPBO)
                                             <li class="item-tb-dropdown">
-                                                <a href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbo">Lanjut ke PBO</a>
+                                                <a href="#"
+                                                    onclick="showTindakLanjut({{ $item->id_pengajuan }},'penyelia kredit')"
+                                                    class="dropdown-item">Tindak lanjut Review Penyelia</a>
                                             </li>
-                                            @else
-                                                @if ($userPBP)
-                                                <li class="item-tb-dropdown">
-                                                    <a  href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbp">Lanjut ke PBP</a>
-                                                </li>
-                                                @else
-                                                <li class="item-tb-dropdown">
-                                                    <a  href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pincab">Lanjut ke Pincab</a>
-                                                </li>
-                                                @endif
-                                            @endif
                                             <li class="item-tb-dropdown">
                                                 <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
                                                     class="dropdown-item">Cetak</a>
                                             </li>
+                                            @if ($item->skema_kredit == 'KKB')
+                                                <li class="item-tb-dropdown">
+                                                    <a target="_blank" href="{{ route('cetak-sppk', $item->id_pengajuan) }}"
+                                                        class="dropdown-item">Cetak SPPK</a>
+                                                </li>
+                                                <li class="item-tb-dropdown">
+                                                    <a target="_blank" href="{{ route('cetak-po', $item->id_pengajuan) }}"
+                                                        class="dropdown-item">Cetak PO</a>
+                                                </li>
+                                                <li class="item-tb-dropdown">
+                                                    <a target="_blank" href="{{ route('cetak-pk', $item->id_pengajuan) }}"
+                                                        class="dropdown-item">Cetak PK</a>
+                                                </li>
+                                            @endif
                                         </ul>
                                     @else
                                         <button class="dropdown-tb-toggle border rounded px-4 py-2 hover:bg-gray-100 hover:text-gray-500">
@@ -391,53 +454,26 @@
                                         </button>
                                         <ul class="dropdown-tb-menu hidden">
                                             <li class="item-tb-dropdown">
-                                                <a href="{{ route('pengajuan.detailjawaban', $item->id_pengajuan) }}">Review</a>
-                                            </li>
-                                            <li class="item-tb-dropdown open-modal" data-modal-id="modal-kembalikan-{{ $item->id }}" data-backto="Staff" >
-                                                <a href="#">Kembalikan ke Staff</a>
-                                            </li>
-                                            @if ($userPBO)
-                                            <li class="item-tb-dropdown">
-                                                <a href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbo">Lanjut ke PBO</a>
-                                            </li>
-                                            @else
-                                            <li class="item-tb-dropdown">
-                                                <a  href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pincab">Lanjut ke Pincab</a>
-                                            </li>
-                                            @endif
-                                            <li class="item-tb-dropdown">
                                                 <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
                                                     class="dropdown-item">Cetak</a>
                                             </li>
+                                            @if ($item->posisi == "PBP")
+                                                @if ($item->id_pbo != null)
+                                                    <li class="item-tb-dropdown open-modal" data-modal-id="modal-kembalikan-{{ $item->id }}" data-backto="PBO" >
+                                                        <a href="#">Kembalikan ke PBO</a>
+                                                    </li>
+                                                @else
+                                                <li class="item-tb-dropdown open-modal" data-modal-id="modal-kembalikan-{{ $item->id }}" data-backto="Penyelia"" >
+                                                    <a href="#">Kembalikan ke Penyelia</a>
+                                                </li>
+                                                @endif
+                                            @elseif ($item->posisi == "PBO")
+                                            <li class="item-tb-dropdown open-modal" data-modal-id="modal-kembalikan-{{ $item->id }}" data-backto="Penyelia"" >
+                                                <a href="#">Kembalikan ke Penyelia</a>
+                                            </li>
+                                            @endif
                                         </ul>
                                     @endif
-                                @else
-                                <button class="dropdown-tb-toggle border rounded px-4 py-2 hover:bg-gray-100 hover:text-gray-500">
-                                    <iconify-icon icon="ph:dots-three-outline-vertical-fill" class="mt-2">
-                                    </iconify-icon>
-                                </button>
-                                <ul class="dropdown-tb-menu hidden">
-                                    <li class="item-tb-dropdown">
-                                        <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
-                                            class="dropdown-item">Cetak</a>
-                                    </li>
-                                    @if ($item->posisi == "PBP")
-                                        @if ($item->id_pbo != null)
-                                            <li class="item-tb-dropdown open-modal" data-modal-id="modal-kembalikan-{{ $item->id }}" data-backto="PBO" >
-                                                <a href="#">Kembalikan ke PBO</a>
-                                            </li>
-                                        @else
-                                        <li class="item-tb-dropdown open-modal" data-modal-id="modal-kembalikan-{{ $item->id }}" data-backto="Penyelia"" >
-                                            <a href="#">Kembalikan ke Penyelia</a>
-                                        </li>
-                                        @endif
-                                    @elseif ($item->posisi == "PBO")
-                                    <li class="item-tb-dropdown open-modal" data-modal-id="modal-kembalikan-{{ $item->id }}" data-backto="Penyelia"" >
-                                        <a href="#">Kembalikan ke Penyelia</a>
-                                    </li>
-                                    @endif
-                                </ul>
-                                @endif
                             </div>
                             </td>
                             @empty
