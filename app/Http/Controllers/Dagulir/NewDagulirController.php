@@ -282,7 +282,7 @@ class NewDagulirController extends Controller
         else {
             $request->validate([
                 'nama_lengkap' => 'required',
-                'email' => 'required|unique:pengajuan_dagulir,email',
+                'email' => 'unique:pengajuan_dagulir,email',
                 'nik_nasabah' => 'required|unique:pengajuan_dagulir,nik',
                 'tempat_lahir' => 'required',
                 'tanggal_lahir' => 'required',
@@ -2400,13 +2400,13 @@ class NewDagulirController extends Controller
         try {
             $updatePengajuan = PengajuanModel::find($id);
             $dagulir = PengajuanDagulir::find($updatePengajuan->dagulir_id);
-            $uniqueEmail = $request->get('email') != '' && $request->get('email') != $dagulir->email ? '|unique:pengajuan_dagulir,email' : '';
+            $uniqueEmail = $request->get('email') != '' && $request->get('email') != $dagulir->email ? 'unique:pengajuan_dagulir,email' : '';
             $uniqueNIK = $request->get('nik_nasabah') != '' && $request->get('nik_nasabah') != $dagulir->nik ? '|unique:pengajuan_dagulir,nik' : '';
             $uniqueTelp = $request->get('telp') != '' && $request->get('telp') != $dagulir->telp ? '|unique:pengajuan_dagulir,telp' : '';
             $find = array('Rp.', '.', ',');
             $request->validate([
                 'nama_lengkap' => 'required',
-                'email' => 'required'.$uniqueEmail,
+                'email' => $uniqueEmail,
                 'nik_nasabah' => 'required'.$uniqueNIK,
                 'tempat_lahir' => 'required',
                 'tanggal_lahir' => 'required',

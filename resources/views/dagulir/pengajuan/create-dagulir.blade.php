@@ -69,7 +69,7 @@
                 />
             </div>
             <div class="input-box">
-                <label for="">Email</label><small class="text-red-500 font-bold">*</small>
+                <label for="">Email</label>
                 <input
                 type="email"
                 class="form-input"

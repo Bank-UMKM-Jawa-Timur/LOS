@@ -31,7 +31,7 @@ class PengajuanController extends Controller
                 'kode_pendaftaran' => 'required|unique:pengajuan_dagulir,kode_pendaftaran',
                 'nama' => 'required',
                 'nik' => 'required|unique:pengajuan_dagulir,nik',
-                'email' => 'required|unique:pengajuan_dagulir,email',
+                'email' => 'unique:pengajuan_dagulir,email',
                 'tempat_lahir' => 'required',
                 'tanggal_lahir' => 'required',
                 'telp' => 'required|unique:pengajuan_dagulir,telp',
