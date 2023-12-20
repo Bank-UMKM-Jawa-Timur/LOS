@@ -5,6 +5,7 @@ use App\Models\Kecamatan;
 use App\Models\PengajuanDagulir;
 use App\Models\User;
 use App\Models\PengajuanDagulirTemp;
+use App\Models\PlafonUsulan;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
@@ -85,6 +86,8 @@ class PengajuanDagulirRepository
                     $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
             }
             $item->nama_pemroses = $nama_pemroses;
+            $item->plafon = PlafonUsulan::where('id_pengajuan',$item->pengajuan->id)->first()->plafon_usulan_pincab ?? 0;
+            $item->tenor = PlafonUsulan::where('id_pengajuan',$item->pengajuan->id)->first()->jangka_waktu_usulan_pincab ?? 0;
         }
         return $data;
     }

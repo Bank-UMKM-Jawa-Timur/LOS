@@ -911,7 +911,7 @@
                                                     @endphp
                                                     @if (in_array($itemJawaban->id, $data))
                                                         @if (isset($data))
-                                                        <div class="row {{ $item->is_hide ? 'hidden' : 'col-span-2 '}} {{ $item->name !== "Cara Penjualan" ? 'form-group-2' : 'form-group-1'}} {{ $item->nama === "Badan Usaha" ? 'col-span-1 form-group-2' : ''  }}">
+                                                        <div class="row {{ $item->is_hide ? 'hidden' : 'col-span-2 '}} {{ $item->name !== "Cara Penjualan" ? 'cols-span-1' : 'cols-span-2'}} {{ $item->nama === "Usaha Dilakukan Sejak" ? 'form-group-1' : ''  }}">
                                                             <div class="col-md-12">
                                                                 @if (!$item->is_hide)
                                                                     <div class="field-review">
