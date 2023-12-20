@@ -59,7 +59,7 @@
                         </div>
                         <div class="right-layout lg:w-auto w-full">
                             <div class="input-search flex gap-2">
-                                <input type="search" placeholder="Cari nama usaha... " name="q" id="q"
+                                <input type="search" placeholder="Cari kata kunci... " name="q" id="q"
                                     class="w-full px-8 outline-none text-sm p-3 border"
                                     value="{{ isset($_GET['q']) ? $_GET['q'] : '' }}" />
                                 <button class="px-5 py-2 bg-theme-primary rounded text-white text-lg">
