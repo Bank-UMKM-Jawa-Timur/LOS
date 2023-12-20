@@ -1,5 +1,8 @@
 @extends('layouts.tailwind-template')
 @include('components.new.modal.loading')
+@section('modal')
+@include('dagulir.master.user.modal.resetApiSession')
+@endsection
 @push('script-inject')
     <script>
         $('#page_length').on('change', function() {
@@ -153,14 +156,12 @@
                                             <h5 class="badge badge-info">Aktif</h5>
                                         </td>
                                         <td>
-                                            {{-- <form action="{{ route('reset-api-session', $item->id) }}" method="post">
-                                                @csrf
-                                                <button type="button" class="btn btn-danger" data-toggle="modal"
-                                                    data-target="#confirmResetApiSession-{{ $key }}">
-                                                    Reset
-                                                </button>
-                                                @include('user.api-sessions.confirm-modal')
-                                            </form> --}}
+                                            @if (auth()->user()->id != $item->user_id)
+                                                <a href="javascript:void(0)"
+                                                    class="px-2 py-1 bg-theme-primary rounded text-white text-sm show-reset-api-session" data-toggle="modal"
+                                                    data-target="resetApiSessionModal"
+                                                    data-id="{{ $item->id }}">Reset</a>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach
@@ -181,24 +182,14 @@
         </div>
     </section>
 @endsection
-@push('custom-script')
+@push('script-inject')
     <script>
-        function resetPassword(name, id) {
-            Swal.fire({
-                title: 'Perhatian!!',
-                text: "Apakah anda yakin mereset password " + name + " ?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#112042',
-                cancelButtonColor: '#d33',
-                cancelButtonText: 'Batal',
-                confirmButtonText: 'ResetPassword',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $("#resetPasswordForm" + id).submit()
-                }
-            })
-        }
+        $('.show-reset-api-session').on('click', function() {
+            const target = $(this).data('target');
+            const id = $(this).data('id');
+            $('#id').val(id);
+            $(`#${target}`).removeClass('hidden');
+        })
+
     </script>
 @endpush

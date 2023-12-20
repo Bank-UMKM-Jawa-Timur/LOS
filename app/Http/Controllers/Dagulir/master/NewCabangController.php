@@ -11,6 +11,7 @@ use \App\Models\Kabupaten;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class NewCabangController extends Controller
 {
@@ -129,32 +130,46 @@ class NewCabangController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $kode_cabang = Cabang::find($id);
+        $kode_cabang = Cabang::find($request->get('id'));
         $isUniqueKodeCabang = $kode_cabang->kode_cabang == $request->kode_cabang ? '' : '|unique:cabang,kode_cabang';
         $isUniqueEmail = $kode_cabang->email == $request->email ? '' : '|unique:cabang,email';
-        $validatedData = $request->validate(
-            [
-                'kode_cabang' => 'required' . $isUniqueKodeCabang,
-                'cabang' => 'required',
-                'email' => 'required' . $isUniqueEmail,
-                'alamat' => 'required',
-            ],
-        );
+
+        $validatedData = Validator::make($request->all(), [
+            'kode_cabang' => 'required' . $isUniqueKodeCabang,
+            'cabang' => 'required',
+            'email' => 'required' . $isUniqueEmail,
+            'alamat' => 'required',
+        ]);
+
+        if ($validatedData->fails()) {
+            $html = "<ul style='list-style: none;'>";
+            foreach($validatedData->errors()->getMessages() as $error) {
+                $html .= "<li>$error[0]</li>";
+            }
+            $html .= "</ul>";
+
+            alert()->html('Terjadi kesalahan eror!', $html, 'error');
+            return redirect()->route('dagulir.master.cabang.index');
+        }
 
         try {
-            $cabang = Cabang::findOrFail($id);
+            $cabang = Cabang::findOrFail($request->get('id'));
             $cabang->kode_cabang = $request->get('kode_cabang');
             $cabang->cabang = $request->get('cabang');
             $cabang->email = $request->get('email');
             $cabang->alamat = $request['alamat'];
             $cabang->save();
+
+            alert()->success('Berhasil','Data berhasil diperbarui.');
+            return redirect()->route('dagulir.master.cabang.index');
         } catch (\Exception $e) {
-            return redirect()->back()->withError('Terjadi kesalahan.');
+            alert()->error('Error','Terjadi Kesalahan.');
+            return redirect()->back();
         } catch (\Illuminate\Database\QueryException $e) {
-            return redirect()->back()->withError('Terjadi kesalahan.');
+            alert()->error('Error','Terjadi Kesalahan.');
+            return redirect()->back();
         }
 
-        return redirect()->route('cabang.index')->withStatus('Data berhasil diperbarui.');
     }
 
     /**
@@ -168,12 +183,15 @@ class NewCabangController extends Controller
         try {
             $cabang = Cabang::findOrFail($id);
             $cabang->delete();
+            alert()->success('Berhasil','Data berhasil dihapus.');
+            return redirect()->route('dagulir.master.cabang.index');
         } catch (Exception $e) {
+            alert()->error('Error','Terjadi Kesalahan.');
             return back()->withError('Terjadi kesalahan.');
         } catch (QueryException $e) {
+            alert()->error('Error','Terjadi Kesalahan.');
             return back()->withError('Terjadi kesalahan.');
         }
 
-        return redirect()->route('cabang.index')->withStatus('Data berhasil dihapus.');
     }
 }

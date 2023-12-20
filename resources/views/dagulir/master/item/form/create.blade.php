@@ -110,7 +110,7 @@
                 </div>
                 <div class="mt-5">
                     <div class="flex gap-5">
-                        <a href="{{route('dagulir.master.master-item.indexs')}}" class="px-5 py-2 bg-white border rounded">
+                        <a href="{{route('dagulir.master.master-item.index')}}" class="px-5 py-2 bg-white border rounded">
                             Batal
                         </a>
                         <button class="bg-theme-primary px-5 py-2 text-white rounded">
