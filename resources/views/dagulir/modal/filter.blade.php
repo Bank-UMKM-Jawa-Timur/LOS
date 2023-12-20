@@ -11,40 +11,71 @@
       </button>
     </div>
     <div class="modal-body">
-      <form action="">
+      <form id="form-filter" action="" method="GET">
         <div class="form-group-2 mb-4">
           <div class="input-box">
             <label for="">Tanggal Awal</label>
-            <input type="date" name="tanggal" class="form-input" />
+            <input type="date" name="tAwal" id="tAwal" class="form-input" value="{{ Request()->query('tAwal') }}">
           </div>
           <div class="input-box">
-            <label for="">Tanggal Akhir</label>
-            <input type="date" name="tanggal" class="form-input" />
+            <label for="tAkhir">Tanggal Akhir</label>
+            <input type="date" name="tAkhir" id="tAkhir" class="form-input"
+              value="{{ Request()->query('tAkhir') }}" />
+            <small id="errorAkhir" class="form-text text-theme-primary hidden">Tanggal akhir tidak boleh kurang
+              dari tanggal awal</small>
           </div>
-          {{-- <div class="input-box">
-            <label for="">Cabang</label>
-            <select name="" id="" class="form-input cek-sub-column">
-              <option value="" selected>Pilih Cabang</option>
-            </select>
-          </div> --}}
+        </div>
+        <div class="form-group-2 mb-4">
+          @if (auth()->user()->role == 'Administrator')
+            <div class="input-box">
+              <label for="">Cabang</label>
+              <select name="cbg" class="form-select" id="cabang">
+                <option value="090900909" selected>-- Pilih Cabang --</option>
+              </select>
+            </div>
+          @endif
           <div class="input-box">
             <label for="">Posisi</label>
-            <select name="" id="" class="form-input cek-sub-column">
-              <option value="" selected>Pilih Posisi</option>
+            <select name="pss" class="form-select" id="pss">
+              <option value="" selected>-- Pilih Posisi --</option>
+              <option value="Proses Input Data" {{ Request()->query('pss') == "Proses Input Data" ? 'selected' : ''
+                }}>Proses Input Data</option>
+              <option value="Review Penyelia" {{ Request()->query('pss') == "Review Penyelia" ? 'selected' : ''
+                }}>Review Penyelia</option>
+              <option value="PBO" {{ Request()->query('pss') == "PBO" ? 'selected' : '' }}>PBO</option>
+              <option value="PBP" {{ Request()->query('pss') == "PBP" ? 'selected' : '' }}>PBP</option>
+              <option value="Pincab" {{ Request()->query('pss') == "Pincab" ? 'selected' : '' }}>Pincab</option>
+              <option value="Selesai" {{ Request()->query('pss') == "Selesai" ? 'selected' : '' }}>Selesai</option>
+              <option value="Ditolak" {{ Request()->query('pss') == "Ditolak" ? 'selected' : '' }}>Ditolak</option>
             </select>
           </div>
           <div class="input-box">
             <label for="">Score</label>
-            <select name="" id="" class="form-input cek-sub-column">
-              <option value="" selected>Pilih Score</option>
+            <select name="score" class="form-select" id="">
+              <option value="" selected>-- Pilih Score --</option>
+              <option value="1" {{ Request()->query('score') == "1" ? 'selected' : '' }}>1</option>
+              <option value="2" {{ Request()->query('score') == "2" ? 'selected' : '' }}>2</option>
+              <option value="3" {{ Request()->query('score') == "3" ? 'selected' : '' }}>3</option>
+              <option value="4" {{ Request()->query('score') == "4" ? 'selected' : '' }}>4</option>
             </select>
           </div>
           <div class="input-box">
             <label for="">Status</label>
-            <select name="" id="" class="form-input cek-sub-column">
-              <option value="" selected>Pilih Status</option>
+            <select name="sts" class="form-select" id="sts">
+              <option value="">-- Pilih Status --</option>
+              <option value="Selesai" {{ Request()->query('sts') == "Selesai" ? 'selected' : '' }}>Disetujui</option>
+              <option value="Proses Input Data" {{ Request()->query('sts') == "Proses Input Data" ? 'selected' :
+                '' }}>On Progress</option>
+              <option value="Ditolak" {{ Request()->query('sts') == "Ditolak" ? 'selected' : '' }}>Ditolak</option>
             </select>
           </div>
+        </div>
+        <div class="modal-info">
+          <p>
+            isi form berikut untuk memfilter sebagian data untuk ditampilkan
+            tiap perbulan, pertahun atau perhari di setiap cabang dan juga
+            lainya.
+          </p>
         </div>
       </form>
     </div>
@@ -52,7 +83,7 @@
       <button class="btn-cancel" data-dismiss-id="modal-filter">
         Batal
       </button>
-      <button class="btn-submit">Filter</button>
+      <button type="submit" id="btn-filter" class="btn-submit">Filter</button>
     </div>
   </div>
 </div>
