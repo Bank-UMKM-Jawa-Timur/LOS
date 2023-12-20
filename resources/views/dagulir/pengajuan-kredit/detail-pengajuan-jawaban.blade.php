@@ -896,6 +896,7 @@
                                             {{-- <div class="row"> --}}
                                                 @foreach ($dataJawaban as $key => $itemJawaban)
                                                     @php
+                                                        $data[] = null;
                                                         $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
                                                             ->where('id_pengajuan', $dataUmum->id)
                                                             ->get();
