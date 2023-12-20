@@ -50,6 +50,9 @@ Route::post('tes-skor', [PengajuanKreditController::class, 'countScore'])->name(
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
 // })->middleware(['auth'])->name('dashboard');
+Route::get('/coming-soon', function(){
+    return view('under-construction.index');
+})->name('coming-soon');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/detail-pengajuan-new/tes', function () {

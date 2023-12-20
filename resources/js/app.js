@@ -9,7 +9,7 @@ $(".dropdown-account").on("click", function (e) {
 });
 
 $(".toggle-dp-menu").on("click", function (e) {
-    $(".dropdown-menu-link").toggleClass("hidden");
+    $(this).nextAll(".dropdown-menu-link:first").toggleClass("hidden");
     e.stopPropagation();
 });
 

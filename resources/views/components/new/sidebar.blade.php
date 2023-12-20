@@ -43,7 +43,7 @@
                             </button>
                         </a>
                     </li>
-                    <li class="menu-item">
+                    {{-- <li class="menu-item">
                         <a href="{{ route('dagulir.pengajuan.index') }}">
                             <button class="item-link @active('dagulir,dagulir.*', 'active-menu') w-full flex gap-2 font-medium text-left px-4 py-3 rounded-md">
                                 <span>
@@ -52,13 +52,48 @@
                                 <span class="ml-2 mt-[2px]"> Dagulir</span>
                             </button>
                         </a>
+                    </li> --}}
+                    <li class="toggle-dp-menu menu-item @active('master,master.*', 'active-menu')">
+                        <a href="#">
+                            <button class="item-link relative w-full flex gap-2 font-medium text-left px-4 py-3 rounded-md">
+                                     <span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 14c0-3.771 0-5.657 1.172-6.828C4.343 6 6.229 6 10 6h4c3.771 0 5.657 0 6.828 1.172C22 8.343 22 10.229 22 14c0 3.771 0 5.657-1.172 6.828C19.657 22 17.771 22 14 22h-4c-3.771 0-5.657 0-6.828-1.172C2 19.657 2 17.771 2 14Zm14-8c0-1.886 0-2.828-.586-3.414C14.828 2 13.886 2 12 2c-1.886 0-2.828 0-3.414.586C8 3.172 8 4.114 8 6"/><path stroke-linecap="round" d="M12 17.333c1.105 0 2-.746 2-1.666c0-.92-.895-1.667-2-1.667s-2-.746-2-1.667c0-.92.895-1.666 2-1.666m0 6.666c-1.105 0-2-.746-2-1.666m2 1.666V18m0-8v.667m0 0c1.105 0 2 .746 2 1.666"/></g></svg>
+                                    </span>
+                                    <span class="ml-2 mt-[2px]"> Dagulir</span>
+                         
+                                <span class="absolute right-6">
+                                    <iconify-icon icon="uil:angle-down" class="text-2xl"></iconify-icon>
+                                </span>
+                            </button>
+                        </a>
                     </li>
+                    <div class="dropdown-menu-link hidden">
+                        <ul class="space-y-1 p-2 mt-3 bg-gray-50">
+                            <li>
+                                <a href="{{route('dashboard.dana')}}">
+                                    <button class="item-dp-link">
+                                        Dashboard
+                                    </button>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{route('dagulir.pengajuan.index')}}">
+                                    <button class="item-dp-link">Pengajuan</button>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('coming-soon') }}">
+                                    <button class="item-dp-link">Laporan</button>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 @endif
                 @if (auth()->user()->role == 'Kredit Program')
                     <li class="menu-item">
                         <a href="{{ route('dashboard.dana') }}">
                             <button
-                                class="item-link @active('dashboard', 'active-menu')  w-full flex gap-3 font-medium text-left px-4 py-3 rounded-md">
+                                class="item-link @active('dashboard.dana', 'active-menu')  w-full flex gap-3 font-medium text-left px-4 py-3 rounded-md">
                                 <span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                         viewBox="0 0 24 24">
@@ -70,8 +105,44 @@
                             </button>
                         </a>
                     </li>
-                    <li class="menu-item @active('master-dana,master-dana.*', 'active-menu')">
-                        <a href="#" class="toggle-dp-menu">
+                    <li class="menu-item toggle-dp-menu @active('master,master.*', 'active-menu')">
+                        <a href="#">
+                            <button class="item-link relative w-full flex gap-2 font-medium text-left px-4 py-3 rounded-md">
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 14c0-3.771 0-5.657 1.172-6.828C4.343 6 6.229 6 10 6h4c3.771 0 5.657 0 6.828 1.172C22 8.343 22 10.229 22 14c0 3.771 0 5.657-1.172 6.828C19.657 22 17.771 22 14 22h-4c-3.771 0-5.657 0-6.828-1.172C2 19.657 2 17.771 2 14Zm14-8c0-1.886 0-2.828-.586-3.414C14.828 2 13.886 2 12 2c-1.886 0-2.828 0-3.414.586C8 3.172 8 4.114 8 6"/><path stroke-linecap="round" d="M12 17.333c1.105 0 2-.746 2-1.666c0-.92-.895-1.667-2-1.667s-2-.746-2-1.667c0-.92.895-1.666 2-1.666m0 6.666c-1.105 0-2-.746-2-1.666m2 1.666V18m0-8v.667m0 0c1.105 0 2 .746 2 1.666"/></g></svg>
+                                </span>
+                                <span class="ml-2 mt-[2px]"> 
+                                    Dagulir
+                                </span>
+                                <span class="absolute right-6">
+                                    <iconify-icon icon="uil:angle-down" class="text-2xl"></iconify-icon>
+                                </span>
+                            </button>
+                        </a>
+                    </li>
+                    <div class="dropdown-menu-link @active('dashboard.dana', '', 'hidden')">
+                        <ul class="space-y-1 p-2 mt-3 bg-gray-50">
+                            <li>
+                                <a href="{{route('dashboard.dana')}}">
+                                    <button class="item-dp-link @active('dashboard.dana', 'active-item')">
+                                        Dashboard
+                                    </button>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{route('dagulir.pengajuan.index')}}">
+                                    <button class="item-dp-link @active('dagulir.pengajuan.index', 'active-item')">Pengajuan</button>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{route('dagulir.master.kecamatan.index')}}">
+                                    <button class="item-dp-link @active('dagulir.master.kecamatan.index', 'active-item')">Laporan</button>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <li class="menu-item toggle-dp-menu  @active('master-dana,master-dana.*', 'active-menu', '')">
+                        <a href="#" >
                             <button class="item-link relative w-full flex gap-2 font-medium text-left px-4 py-3 rounded-md">
                                 <span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -95,22 +166,22 @@
                     <div class="dropdown-menu-link hidden">
                         <ul class="space-y-1 p-2 mt-3 bg-gray-50">
                             <li>
-                                <a href="{{route('master-dana.index')}}">
-                                    <button class="item-dp-link">
+                                <a href="{{route('master-dana.index')}}" >
+                                    <button class="item-dp-link  @active('master-dana.index', 'active-item' )">
                                         Dana Dagulir
                                     </button>
                                 </a>
                             </li>
                             <li>
                                 <a href="{{route('master-dana.cabang.index')}}">
-                                    <button class="item-dp-link">
+                                    <button class="item-dp-link @active('master-dana.cabang.index', 'active-item' )">
                                         Dana Cabang
                                     </button>
                                 </a>
                             </li>
                             <li>
                                 <a href="{{route('master-dana.alih-dana')}}">
-                                    <button class="item-dp-link">
+                                    <button class="item-dp-link @active('master-dana.alih-dana', 'active-item' )">
                                         Alih Dana
                                     </button>
                                 </a>

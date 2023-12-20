@@ -156,6 +156,7 @@
                         $end = $page == 1 ? $page_length : $start + $page_length - 1;
                         $i = $page == 1 ? 1 : $start;
                         $status = config('dagulir.status');
+                        $status_color = config('dagulir.status_color');
                         $jenis_usaha = config('dagulir.jenis_usaha');
                         $tipe_pengajuan = config('dagulir.tipe_pengajuan');
                     @endphp
@@ -254,7 +255,7 @@
                             @endif
                         </td>
                         <td>
-                            {{ array_key_exists(intval($item->status), $status) ? $status[intval($item->status)] : 'Tidak ditemukan' }}
+                            <p class="@if (array_key_exists(intval($item->status), $status_color)) {{$status_color[intval($item->status)]}} @endif"> {{ array_key_exists(intval($item->status), $status) ? $status[intval($item->status)] : 'Tidak ditemukan' }}</p>
                         </td>
                         <td>
                             <div class="flex">
