@@ -26,6 +26,7 @@ use App\Http\Controllers\Dagulir\NewDagulirController;
 use App\Http\Controllers\Dagulir\master\NewUserController;
 use App\Http\Controllers\KreditProgram\DashboardKreditProgramController;
 use App\Http\Controllers\KreditProgram\MasterDanaController;
+use App\Http\Controllers\NotificationController;
 use RealRashid\SweetAlert\Facades\Alert;
 
 /*
@@ -117,19 +118,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::middleware(['Admin'])->prefix('master')->name('master.')->group(function () {
             Route::resource('kabupaten', NewKabupatenController::class);
+            Route::get('kecamatan/data',[NewKecamatanController::class,'kabupaten'])->name('get.kabupaten');
             Route::resource('kecamatan', NewKecamatanController::class);
             Route::resource('desa', NewDesaController::class);
             Route::resource('cabang', NewCabangController::class);
+
             Route::resource('user', NewUserController::class);
             Route::resource('merk', NewMerkController::class);
             Route::resource('tipe', NewTipeController::class);
             Route::resource('master-item', NewItemController::class);
 
             Route::get('/reset-sessions', [NewUserController::class, 'indexSession'])->name('index-session');
-            Route::post('/reset-session/{id}', [NewUserController::class, 'resetSession'])->name('reset-session');
+            Route::post('/reset-session-post', [NewUserController::class, 'resetSession'])->name('reset-session');
 
             Route::get('/reset-api-sessions', [NewUserController::class, 'indexAPISession'])->name('index-api-session');
-            Route::post('/reset-api-session/{id}', [NewUserController::class, 'resetAPISession'])->name('reset-api-session');
+            Route::post('/reset-api-session/post', [NewUserController::class, 'resetAPISession'])->name('reset-api-session');
         });
 
         Route::get('pengajuan-kredir/cetak-surat/{id}',[NewDagulirController::class,"CetakPDF"])->name('pengajuan.cetak-pdf');
@@ -143,6 +146,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 Route::get('pengajuan-kredit/continue-draft/{id}', [NewDagulirController::class, 'continueDraft'])->name('continue');
                 Route::get('pengajuan-kredit/lanjutkan-draft', [NewDagulirController::class, 'showContinueDraft'])->name('continue-draft');
                 Route::get('pengajuan-kredit/list-draft-dagulir', [NewDagulirController::class, "listDraftDagulir"])->name('list-draft-dagulir');
+            });
+
+        Route::prefix('/notification')
+            ->name('notification.')
+            ->group(function() {
+                Route::get('', [NotificationController::class, 'index'])->name('index');
             });
     });
     Route::middleware(['KreditProgram'])->group(function () {

@@ -186,10 +186,19 @@
                                         @endif
                                     </td>
                                     <td>
-                                        {{ number_format($item->nominal,0,',','.') }}
+                                        @if ($item->pengajuan->posisi == 'Selesai')
+                                            {{ number_format($item->plafon,0,',','.') }}
+                                        @else
+                                            {{ number_format($item->nominal,0,',','.') }}
+                                        @endif
                                     </td>
                                     <td>
-                                        {{$item->jangka_waktu}} Bulan
+                                        @if ($item->pengajuan->posisi == 'Selesai')
+                                            {{$item->tenor}} Bulan
+
+                                        @else
+                                            {{$item->jangka_waktu}} Bulan
+                                        @endif
                                     </td>
                                     <td>
                                         @if ($item->pengajuan->posisi == 'Selesai')
@@ -277,7 +286,7 @@
                                     </td>
                                     <td>
                                         {{$item->pengajuan->posisi}}
-                                        @if ($item->pengajuan->posisi != 'Selesai' || $item->pengajuan->posisi != 'Ditolak')
+                                        @if ($item->pengajuan->posisi != 'Selesai' && $item->pengajuan->posisi != 'Ditolak')
                                             <p class="text-red-500">{{ $item->nama_pemroses }}</p>
                                         @endif
                                     </td>
@@ -628,7 +637,7 @@
                                         @else
                                             {{$item->pengajuan->posisi}}
                                         @endif
-                                        @if ($item->pengajuan->posisi != 'Selesai' || $item->pengajuan->posisi != 'Ditolak')
+                                        @if ($item->pengajuan->posisi != 'Selesai' && $item->pengajuan->posisi != 'Ditolak')
                                             <p class="text-red-500">{{ $item->nama_pemroses }}</p>
                                         @endif
                                     </td>

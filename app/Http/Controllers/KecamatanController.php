@@ -24,7 +24,7 @@ class KecamatanController extends Controller
         $this->param['parentMenu'] = '/kabupaten';
         $this->param['current'] = 'Kabupaten';
     }
-    
+
     public function index(Request $request)
     {
         $this->param['pageTitle'] = 'List Kecamatan';
@@ -33,7 +33,8 @@ class KecamatanController extends Controller
 
         try {
             $keyword = $request->get('keyword');
-            $getKecamatan = Kecamatan::with('kabupaten')->orderBy('id', 'ASC');          
+            $getKecamatan = Kecamatan::with('kabupaten')
+                            ->orderBy('id', 'ASC');
             if ($keyword) {
                 $getKecamatan->where('id', 'LIKE', "%{$keyword}%")->orWhere('kecamatan', 'LIKE', "%{$keyword}%");
             }
@@ -146,7 +147,7 @@ class KecamatanController extends Controller
             $kecamatan->id_kabupaten = $request['id_kabupaten'];
             $kecamatan->save();
 
-            
+
         } catch (\Exception $e) {
             return redirect()->back()->withError('Terjadi kesalahan.');
         } catch (\Illuminate\Database\QueryException $e) {

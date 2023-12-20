@@ -78,6 +78,17 @@ $(document).keyup(function (e) {
     }
 });
 
+// notification toggle
+$(".toggle-notification").click(function (e) {
+    $(".notification-list").toggleClass("hidden");
+    e.stopPropagation();
+});
+
+$(document).click(function (e) {
+    if (e.target.closest(".notification-list")) return;
+    $(".notification-list").addClass("hidden");
+});
+
 $("[data-dismiss-id]").on("click", function () {
     const dismissId = $(this).data("dismiss-id");
     setTimeout(function () {

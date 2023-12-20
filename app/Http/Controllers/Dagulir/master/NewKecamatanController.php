@@ -10,6 +10,7 @@ use \App\Models\Kecamatan;
 use \App\Models\Kabupaten;
 use Exception;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Validator;
 
 class NewKecamatanController extends Controller
 {
@@ -43,6 +44,7 @@ class NewKecamatanController extends Controller
             }
 
             $this->param['data'] = $getKecamatan->paginate($limit);
+            $this->param['allKab'] = Kabupaten::get();
         } catch (\Illuminate\Database\QueryException $e) {
             return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
         } catch (Exception $e) {
@@ -135,26 +137,37 @@ class NewKecamatanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $kecamatan = Kecamatan::findOrFail($id);
-
-        $validatedData = $request->validate(
+        $kecamatan = Kecamatan::findOrFail($request->get('id'));
+        $validatedData = Validator::make($request->all(),
             [
                 'kecamatan' => 'required',
-                'id_kabupaten' => 'required',
+                'kabupaten' => 'required',
             ],
         );
+        if ($validatedData->fails()) {
+            $html = "<ul style='list-style: none;'>";
+            foreach($validatedData->errors()->getMessages() as $error) {
+                $html .= "<li>$error[0]</li>";
+            }
+            $html .= "</ul>";
+
+            alert()->html('Terjadi kesalahan eror!', $html, 'error');
+            return redirect()->route('dagulir.master.kabupaten.index');
+        }
 
         try {
             $kecamatan->kecamatan = $request->get('kecamatan');
-            $kecamatan->id_kabupaten = $request['id_kabupaten'];
+            $kecamatan->id_kabupaten = $request->get('kabupaten');
             $kecamatan->save();
+
+            alert()->success('Berhasil','Berhasil mengganti data');
+            return redirect()->route('dagulir.master.kecamatan.index');
         } catch (\Exception $e) {
             return redirect()->back()->withError('Terjadi kesalahan.');
         } catch (\Illuminate\Database\QueryException $e) {
             return redirect()->back()->withError('Terjadi kesalahan.');
         }
 
-        return redirect()->route('kecamatan.index')->withStatus('Data berhasil diperbarui.');
     }
 
     /**
@@ -174,7 +187,8 @@ class NewKecamatanController extends Controller
             return back()->withError('Terjadi kesalahan.');
         }
 
-        return redirect()->route('kecamatan.index')->withStatus('Data berhasil dihapus.');
+        alert()->success('Berhasil','Berhasil berhasil dihapus.');
+        return redirect()->route('dagulir.master.kecamatan.index');
     }
 
     public function getKecamatanByKabupatenId($id)
@@ -182,5 +196,10 @@ class NewKecamatanController extends Controller
         $kecamatan = Kecamatan::where('id_kabupaten', $id)->get();
 
         return json_encode($kecamatan);
+    }
+
+    function kabupaten() {
+        $kabupaten = Kabupaten::get();
+        return $kabupaten;
     }
 }

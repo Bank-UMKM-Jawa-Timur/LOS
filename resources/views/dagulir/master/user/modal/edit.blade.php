@@ -1,12 +1,12 @@
-<div class="modal-layout hidden" id="modal-add-user">
+<div class="modal-layout hidden" id="modal-edit-user">
     <div class="modal modal-sm bg-white">
         <div class="modal-head">
             <div class="title">
                 <h2 class="font-bold text-lg tracking-tighter text-theme-text">
-                    Tambah User
+                    Edit User
                 </h2>
             </div>
-            <button data-dismiss-id="modal-add-user">
+            <button data-dismiss-id="modal-edit-user">
                 <iconify-icon icon="iconamoon:close-bold" class="text-2xl"></iconify-icon>
             </button>
         </div>
@@ -73,7 +73,7 @@
                 </div>
             </div>
             <div class="modal-footer justify-end">
-                <button class="btn-cancel" data-dismiss-id="modal-add-user">
+                <button class="btn-cancel" data-dismiss-id="modal-edit-user">
                     Batal
                 </button>
                 <button type="submit" class="btn-submit">Simpan</button>
