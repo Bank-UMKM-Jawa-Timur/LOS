@@ -16,7 +16,7 @@
         <div class="body-pages review-pengajuan">
             <div class="container mx-auto p-3 bg-white">
             <div class="accordion-section">
-                <div class="accordion-header rounded pl-3 border border-theme-primary/5 relative">
+                <div class="accordion-header rounded pl-3 border border-theme-primary/5 relative mb-4">
                     <div class="flex justify-between gap-3">
                     <div class="flex justify-start gap-3">
                         <button class="p-2 rounded-full bg-theme-primary w-10 h-10 text-white">
@@ -707,7 +707,7 @@
                                                                                 @if ($itemEmpat->nama != "Tidak Memiliki Jaminan Tambahan")
                                                                                     <div class="field-review">
                                                                                         <div class="field-name">
-                                                                                            <h6>{{ $itemEmpat->nama }} TESS</h6>
+                                                                                            <h6>{{ $itemEmpat->nama }}</h6>
                                                                                         </div>
                                                                                         <div class="field-answer space-y-5">
                                                                                             <p>

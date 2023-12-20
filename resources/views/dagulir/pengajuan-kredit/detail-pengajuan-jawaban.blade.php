@@ -1787,9 +1787,17 @@
                                                 <label for="">Plafon Usulan Penyelia</label>
                                                 <input type="text" name="plafon_usulan_penyelia" class="form-input rupiah" value="">
                                             </div>
+
                                             <div class="input-box">
                                                 <label for="">Jangka Waktu Usulan Penyelia</label>
-                                                <input type="number" name="jangka_waktu_usulan_penyelia" class="form-input"  value="">
+                                                <div class="flex items-center">
+                                                    <div class="flex-1">
+                                                        <input type="number" name="jangka_waktu_usulan_penyelia" class="form-input"  value="">
+                                                    </div>
+                                                    <div class="flex-shrink-0 mt-2.5rem">
+                                                        <span class="form-input bg-gray-100">Bulan</span>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="form-group-1">
