@@ -1650,7 +1650,7 @@ class NewDagulirController extends Controller
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
         $data = $this->repo->getDraftData($search, $limit, $page, $id_user);
-        return view('dagulir.pengajuan-kredit.index-draft', compact($data));
+        return view('dagulir.pengajuan-kredit.index-draft', compact('data'));
     }
 
     public function continueDraft($id)

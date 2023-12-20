@@ -98,7 +98,7 @@ class PengajuanDagulirRepository
 
     public function getDraftData($search, $limit=10, $page=1, $id_user){
         $data = null;
-        $data = PengajuanDagulirTemp::where('id_user', $id_user)
+        $data = PengajuanDagulirTemp::where('user_id', $id_user)
             ->where(function($query) use ($search) {
                 $query->orWhere('nama','like', "%$search%");
             })

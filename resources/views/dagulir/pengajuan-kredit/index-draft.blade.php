@@ -110,46 +110,52 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Agung</td>
-                                <td>19 Desember 2023</td>
-                                <td>
-                                    <button class="dropdown-tb-toggle border rounded px-4 py-2 hover:bg-gray-100 hover:text-gray-500">
-                                        <iconify-icon icon="ph:dots-three-outline-vertical-fill" class="mt-2">
-                                        </iconify-icon>
-                                    </button>
-                                    <ul class="dropdown-tb-menu hidden">
-                                        <li class="item-tb-dropdown">
-                                            <a target="_blank" href="#"
-                                                class="dropdown-item">Lanjuti</a>
-                                        </li>
-                                        <li class="item-tb-dropdown">
-                                            <a href="#">Hapus</a>
-                                        </li>
-                                    </ul>
-                                </td>
-                            </tr>
+                            @php
+                                $page = isset($_GET['page']) ? $_GET['page'] : 1;
+                                $page_length = isset($_GET['page_length']) ? $_GET['page_length'] : 10;
+                                $start = $page == 1 ? 1 : $page * $page_length - $page_length + 1;
+                                $end = $page == 1 ? $page_length : $start + $page_length - 1;
+                                $i = $page == 1 ? 1 : $start;
+                            @endphp
+                            @forelse ($data as $key => $item)
+                                <tr>
+                                    <td>{{ $i++ }}</td>
+                                    <td>{{ date('d M Y', strtotime($item->created_at)) }}</td>
+                                    <td>{{ $item->nama }}</td>
+                                    <td>
+                                        <div class="flex">
+                                            <div class="dropdown-tb">
+                                                <button class="dropdown-tb-toggle border rounded px-4 py-2 hover:bg-gray-100 hover:text-gray-500">
+                                                    <iconify-icon icon="ph:dots-three-outline-vertical-fill" class="mt-2">
+                                                    </iconify-icon>
+                                                </button>
+                                                <ul class="dropdown-tb-menu hidden">
+                                                    <li class="item-tb-dropdown">
+                                                        <a href="{{ route('dagulir.temp.continue', $item->id) }}"
+                                                            class="dropdown-item">Lanjutkan</a>
+                                                    </li>
+                                                    <li class="item-tb-dropdown">
+                                                        <a href="#">Hapus</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="text-center">Data Belum Ada</td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
-                <div class="footer-table p-4">
+                <div class="footer-table p-2">
                     <div class="flex justify-between">
-                        <div class="mt-3 mr-5 text-sm font-medium text-gray-500">
-                            <p>  
-                                {{-- {{ $data_pengajuan->links() }}
-                                Menampilkan
-                                {{ $data_pengajuan->firstItem() }}
-                                -
-                                {{ $data_pengajuan->lastItem() }}
-                                dari
-                                {{ $data_pengajuan->total() }} --}}
-                                menampilkan 1-10 dari
-                                Data
-                                5
-                            </p>
+                        <div class="mt-5 ml-5 text-sm font-medium text-gray-500">
+                        <p>Showing {{ $start }} - {{ $end }} from {{ $data->total() }} entries</p>
                         </div>
-                        {{-- {{ $data_pengajuan->links('pagination::tailwind') }} --}}
+                        {{ $data->links('pagination::tailwind') }}
                     </div>
                 </div>
             </div>
