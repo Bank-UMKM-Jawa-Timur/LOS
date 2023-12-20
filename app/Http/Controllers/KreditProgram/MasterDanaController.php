@@ -33,7 +33,11 @@ class MasterDanaController extends Controller
             if ($update) {
                 $current = MasterDana::find($id);
                 $total_current_modal = formatNumber($request->get('dana_modal')) + $current->dana_modal;
-                $total_current_idle = $total_current_modal + $current->dana_idle;
+
+                $total_cabang_modal = DanaCabang::latest()->sum('dana_modal');
+                $total_cabang_idle = DanaCabang::latest()->sum('dana_idle');
+                $total_current_idle = $total_current_modal - $total_cabang_modal + $total_cabang_idle;
+
                 $update->dana_modal = $total_current_modal;
                 $update->dana_idle = $total_current_idle;
                 $update->update();
