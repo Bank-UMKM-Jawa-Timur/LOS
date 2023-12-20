@@ -47,9 +47,17 @@ $dataIndex = match ($skema) {
         <div class="body-pages">
             <form action="{{ route('dagulir.pengajuan.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
+                @if (\Request::has('dagulir'))
+                    <input type="hidden" name="dagulir_id" value="{{\Request::get('dagulir')}}">
+                @endif
+                <input type="hidden" name="id_dagulir_temp" id="id_dagulir_temp">
                 <div class="mt-3 container mx-auto">
                     <div id="dagulir-tab" class="is-tab-content active">
-                        @include('dagulir.pengajuan.create-dagulir')
+                        @if (\Request::has('dagulir'))
+                            @include('dagulir.pengajuan.create-sipde')
+                        @else
+                            @include('dagulir.pengajuan.create-dagulir')
+                        @endif
                     </div>
                     @foreach ($dataAspek as $key => $value)
                         @php
@@ -417,7 +425,7 @@ $dataIndex = match ($skema) {
                                                         @if ($itemTiga->opsi_jawaban == 'input text')
                                                             <div class="form-group">
                                                                 <div class="input-box">
-                                                                    <label for="">{{ $itemTiga->nama }}</label>
+                                                                    <label for="">{{ $itemTiga->nama }}</label><small class="text-red-500 font-bold">*</small>
                                                                     <div class="flex items-center">
                                                                         <div class="flex-1">
                                                                             <input type="hidden" name="id_level[{{ $itemTiga->id }}]" value="{{ $itemTiga->id }}"
@@ -441,7 +449,7 @@ $dataIndex = match ($skema) {
                                                         @elseif ($itemTiga->opsi_jawaban == 'number')
                                                             <div class="form-group">
                                                                 <div class="input-box">
-                                                                    <label for="">{{ $itemTiga->nama }}</label>
+                                                                    <label for="">{{ $itemTiga->nama }}</label><small class="text-red-500 font-bold">*</small>
                                                                     <div class="flex items-center">
                                                                         <div class="flex-1">
                                                                             <input type="hidden" name="opsi_jawaban[{{ $itemTiga->id }}]"
@@ -465,7 +473,7 @@ $dataIndex = match ($skema) {
                                                                 @if ($itemTiga->nama == 'Ratio Tenor Asuransi')
                                                                 @else
                                                                     <div class="input-box">
-                                                                        <label for="">{{ $itemTiga->nama }}</label>
+                                                                        <label for="">{{ $itemTiga->nama }}</label><small class="text-red-500 font-bold">*</small>
                                                                         <div class="flex items-center">
                                                                             <div class="flex-1">
                                                                                 <input type="hidden" name="opsi_jawaban[{{ $itemTiga->id }}]"
@@ -490,7 +498,7 @@ $dataIndex = match ($skema) {
                                                         @elseif ($itemTiga->opsi_jawaban == 'file')
                                                             <div class="form-group file-wrapper item-{{ $itemTiga->id }}">
                                                                 <div class="input-box">
-                                                                    <label for="">{{ $itemTiga->nama }}</label>
+                                                                    <label for="">{{ $itemTiga->nama }}</label><small class="text-red-500 font-bold">*</small>
                                                                     <div class="input-box mb-4">
                                                                         <div class="flex gap-4">
                                                                             <input type="hidden" name="id_item_file[{{ $itemTiga->id }}][]"
@@ -519,7 +527,7 @@ $dataIndex = match ($skema) {
                                                         @elseif ($itemTiga->opsi_jawaban == 'long text')
                                                             <div class="form-group">
                                                                 <div class="input-box">
-                                                                    <label for="">{{ $itemTiga->nama }}</label>
+                                                                    <label for="">{{ $itemTiga->nama }}</label><small class="text-red-500 font-bold">*</small>
                                                                     <input type="hidden" name="opsi_jawaban[{{ $itemTiga->id }}]"
                                                                         value="{{ $itemTiga->opsi_jawaban }}" id="">
                                                                     <input type="hidden" name="id_level[{{ $itemTiga->id }}]"
@@ -599,7 +607,7 @@ $dataIndex = match ($skema) {
                                                             @if ($itemEmpat->opsi_jawaban == 'input text')
                                                                 <div class="form-group">
                                                                     <div class="input-box">
-                                                                        <label for="">{{ $itemEmpat->nama }}</label>
+                                                                        <label for="">{{ $itemEmpat->nama }}</label><small class="text-red-500 font-bold">*</small>
                                                                         <input type="hidden" name="id_level[{{ $itemEmpat->id }}]"
                                                                             value="{{ $itemEmpat->id }}" id="">
                                                                         <input type="hidden" name="opsi_jawaban[{{ $itemEmpat->id }}]"
@@ -628,7 +636,7 @@ $dataIndex = match ($skema) {
                                                             @elseif ($itemEmpat->opsi_jawaban == 'number')
                                                                 <div class="form-group">
                                                                     <div class="input-box">
-                                                                        <label for="">{{ $itemEmpat->nama }}</label>
+                                                                        <label for="">{{ $itemEmpat->nama }}</label><small class="text-red-500 font-bold">*</small>
                                                                         <div class="flex items-center">
                                                                             <div class="flex-1">
                                                                                 <input type="hidden" name="opsi_jawaban[{{ $itemEmpat->id }}]"
@@ -651,7 +659,7 @@ $dataIndex = match ($skema) {
                                                             @elseif ($itemEmpat->opsi_jawaban == 'persen')
                                                                 <div class="form-group">
                                                                     <div class="input-box">
-                                                                        <label for="">{{ $itemEmpat->nama }}</label>
+                                                                        <label for="">{{ $itemEmpat->nama }}</label><small class="text-red-500 font-bold">*</small>
                                                                         <div class="flex items-center">
                                                                             <div class="flex-1">
                                                                                 <input type="hidden" name="opsi_jawaban[{{ $itemEmpat->id }}]"
@@ -675,7 +683,7 @@ $dataIndex = match ($skema) {
                                                             @elseif ($itemEmpat->opsi_jawaban == 'file')
                                                                 <div class="form-group">
                                                                     <div class="input-box">
-                                                                        <label for="">{{ $itemEmpat->nama }}</label>
+                                                                        <label for="">{{ $itemEmpat->nama }}</label><small class="text-red-500 font-bold">*</small>
                                                                         {{-- <input type="hidden" name="opsi_jawaban[]" value="{{ $itemEmpat->opsi_jawaban }}" id=""> --}}
                                                                         <input type="hidden" name="id_item_file[{{ $itemEmpat->id }}]"
                                                                             value="{{ $itemEmpat->id }}" id="">
@@ -691,7 +699,7 @@ $dataIndex = match ($skema) {
                                                             @elseif ($itemEmpat->opsi_jawaban == 'long text')
                                                                 <div class="form-group">
                                                                     <div class="input-box">
-                                                                        <label for="">{{ $itemEmpat->nama }}</label>
+                                                                        <label for="">{{ $itemEmpat->nama }}</label><small class="text-red-500 font-bold">*</small>
                                                                         <input type="hidden" name="opsi_jawaban[{{ $itemEmpat->id }}]"
                                                                             value="{{ $itemEmpat->opsi_jawaban }}" id="">
                                                                         <input type="hidden" name="id_level[{{ $itemEmpat->id }}]"
@@ -750,7 +758,7 @@ $dataIndex = match ($skema) {
                                         <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
                                         <input type="hidden" name="id_aspek[{{ $value->id }}]" value="{{ $value->id }}">
                                         <textarea name="pendapat_per_aspek[{{ $value->id }}]"
-                                            class="form-input @error('pendapat_per_aspek') is-invalid @enderror" id="" maxlength="255"
+                                            class="form-input @error('pendapat_per_aspek') is-invalid @enderror" id="{{  str_replace(' ', '_', strtolower($value->nama)) }}" maxlength="255"
                                             cols="30" rows="4" placeholder="Pendapat Per Aspek"></textarea>
                                         @error('pendapat_per_aspek')
                                             <div class="invalid-feedback">
@@ -855,89 +863,6 @@ $dataIndex = match ($skema) {
         // dataAspekArr = <?php echo json_encode($dataAspek); ?>;
     });
 
-
-    $('#kabupaten').change(function() {
-        var kabID = $(this).val();
-        if (kabID) {
-            $.ajax({
-                type: "GET",
-                url: "{{ url('') }}/getkecamatan?kabID=" + kabID,
-                dataType: 'JSON',
-                success: function(res) {
-                    if (res) {
-                        $("#kecamatan").empty();
-                        $("#kecamatan").append('<option>---Pilih Kecamatan---</option>');
-                        $.each(res, function(nama, kode) {
-                            $('#kecamatan').append(`
-                                <option value="${kode}">${nama}</option>
-                            `);
-                        });
-
-                        $('#kecamatan').trigger('change');
-                    } else {
-                        $("#kecamatan").empty();
-                    }
-                }
-            });
-        } else {
-            $("#kecamatan").empty();
-        }
-    });
-    $('#kabupaten_domisili').change(function() {
-        var kabID = $(this).val();
-        if (kabID) {
-            $.ajax({
-                type: "GET",
-                url: "{{ url('') }}/getkecamatan?kabID=" + kabID,
-                dataType: 'JSON',
-                success: function(res) {
-                    if (res) {
-                        $("#kecamatan_domisili").empty();
-                        $("#kecamatan_domisili").append('<option>---Pilih Kecamatan---</option>');
-                        $.each(res, function(nama, kode) {
-                            $('#kecamatan_domisili').append(`
-                                <option value="${kode}">${nama}</option>
-                            `);
-                        });
-
-                        $('#kecamatan_domisili').trigger('change');
-                    } else {
-                        $("#kecamatan_domisili").empty();
-                    }
-                }
-            });
-        } else {
-            $("#kecamatan_domisili").empty();
-        }
-    });
-    $('#kabupaten_usaha').change(function() {
-        var kabID = $(this).val();
-        if (kabID) {
-            $.ajax({
-                type: "GET",
-                url: "{{ url('') }}/getkecamatan?kabID=" + kabID,
-                dataType: 'JSON',
-                success: function(res) {
-                    if (res) {
-                        $("#kecamatan_usaha").empty();
-                        $("#kecamatan_usaha").append('<option>---Pilih Kecamatan---</option>');
-                        $.each(res, function(nama, kode) {
-                            $('#kecamatan_usaha').append(`
-                                <option value="${kode}">${nama}</option>
-                            `);
-                        });
-
-                        $('#kecamatan_usaha').trigger('change');
-                    } else {
-                        $("#kecamatan_usaha").empty();
-                    }
-                }
-            });
-        } else {
-            $("#kecamatan_usaha").empty();
-        }
-    });
-
     $('#status_nasabah').on('change', function(e){
         var status = $(this).val();
         if (status == 2) {
@@ -991,6 +916,25 @@ $dataIndex = match ($skema) {
 
         input.value = nikNumber;
     }
+
+    $(document).ready(function() {
+        var inputRupiah = $('.rupiah')
+        $.each(inputRupiah, function(i, obj) {
+            $(this).val(formatrupiah(obj.value))
+        })
+        var inputDisabled = $("input:disabled")
+        $.each(inputDisabled, function(i, obj) {
+            $(this).addClass('bg-gray-200')
+        })
+        var selectDisabled = $("select:disabled")
+        $.each(selectDisabled, function(i, obj) {
+            $(this).addClass('bg-gray-200')
+        })
+        var textAreaDisabled = $("textarea:disabled")
+        $.each(textAreaDisabled, function(i, obj) {
+            $(this).addClass('bg-gray-200')
+        })
+    })
 
     $('.rupiah').keyup(function(e) {
         var input = $(this).val()
@@ -1052,6 +996,11 @@ $dataIndex = match ($skema) {
         const $nextContent = $activeContent.next();
         const tabId = $activeContent.attr("id")
         const dataTab = tabId.replaceAll('-tab', '')
+        if(tabId == 'dagulir-tab'){
+            saveDataUmum()
+        } else{
+            saveDataTemporary(tabId)
+        }
         // Set percentage
         var percentage = formPercentage(tabId)
         $('.tab-wrapper').find(`[data-tab=${dataTab}]`).find('.percentage').html(`${percentage}%`)
@@ -1097,6 +1046,7 @@ $dataIndex = match ($skema) {
     // End Validation
     function formPercentage(tabId) {
         var form = `#${tabId}`;
+        // var form = `#aspek-jaminan-tab`;
         var inputFile = $(form + " input[type=file]")
         var inputText = $(form + " input[type=text]")
         var inputNumber = $(form + " input[type=number]")
@@ -1105,6 +1055,7 @@ $dataIndex = match ($skema) {
         var select = $(form + " select")
         var textarea = $(form + " textarea")
         var totalInput = 0;
+        var totalInputChecked = 0;
         var totalInputNull = 0;
         var totalInputFilled = 0;
         var totalInputHidden = 0;
@@ -1124,7 +1075,7 @@ $dataIndex = match ($skema) {
                 if ($(this).attr('id') != undefined) {
                     nullValue.push($(this).attr('id').toString().replaceAll("_", " "))
                 }
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).is(":checked") && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputFilled++;
                 if ($(this).attr('id') != undefined) {
                     let val = $(this).attr("id").toString().replaceAll("_", " ");
@@ -1135,6 +1086,8 @@ $dataIndex = match ($skema) {
                         }
                     }
                 }
+            } else if (!$(this).is(':checked')) {
+                totalInputChecked++;
             }
         })
 
@@ -1257,6 +1210,7 @@ $dataIndex = match ($skema) {
                 }
             } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputFilled++;
+
                 if ($(this).attr('id') != undefined) {
                     let val = $(this).attr("id").toString().replaceAll("_", " ");
                     for (var i = 0; i < nullValue.length; i++) {
@@ -1299,13 +1253,11 @@ $dataIndex = match ($skema) {
                 }
             }
         })
-
         var totalReadHidden = (totalInputHidden + totalInputReadOnly)
+        var total = totalInput + totalInputChecked;
         percent = (totalInputFilled / (totalInput - totalInputReadOnly)) * 100
-
         return parseInt(percent)
     }
-
 
     $(".toggle-side").click(function(e) {
         $('.sidenav').toggleClass('hidden')
@@ -1487,7 +1439,7 @@ $dataIndex = match ($skema) {
     }
     // NPWP format
     $(document).on('keyup', '#npwp_text', function() {
-        var input = $(this).val()
+        var input = $(this).val().replace(/\D/g, '');
         $(this).val(formatNpwp(input))
     })
     $(".btn-simpan-data").on('click', function(e) {
@@ -1546,7 +1498,6 @@ $dataIndex = match ($skema) {
                     title: 'Oops...',
                     html: '<ul>'+message+'</ul>'
                 })
-                nullValue = [];
                 e.preventDefault()
             } else {
                 // $("#loadingModal").modal({
@@ -1685,67 +1636,6 @@ $dataIndex = match ($skema) {
                 });
             }
         })
-    });
-
-    $('#kabupaten').change(function() {
-        var kabID = $(this).val();
-        if (kabID) {
-            $.ajax({
-                type: "GET",
-                url: "{{ route('getKecamatan') }}?kabID=" + kabID,
-                dataType: 'JSON',
-                success: function(res) {
-                    //    //console.log(res);
-                    if (res) {
-                        $("#kecamatan").empty();
-                        $("#desa").empty();
-                        $("#kecamatan").append('<option value="0">---Pilih Kecamatan---</option>');
-                        $("#desa").append('<option value="0">---Pilih Desa---</option>');
-                        $.each(res, function(nama, kode) {
-                            $('#kecamatan').append(`
-                                <option value="${kode}">${nama}</option>
-                            `);
-                        });
-
-                        $('#kecamatan').trigger('change');
-                    } else {
-                        $("#kecamatan").empty();
-                        $("#desa").empty();
-                    }
-                }
-            });
-        } else {
-            $("#kecamatan").empty();
-            $("#desa").empty();
-        }
-    });
-
-    $('#kecamatan').change(function() {
-        var kecID = $(this).val();
-        // //console.log(kecID);
-        if (kecID) {
-            $.ajax({
-                type: "GET",
-                url: "{{ route('getDesa') }}?kecID=" + kecID,
-                dataType: 'JSON',
-                success: function(res) {
-                    //    //console.log(res);
-                    if (res) {
-                        $("#desa").empty();
-                        $("#desa").append('<option value="0">---Pilih Desa---</option>');
-                        $.each(res, function(nama, kode) {
-                            $('#desa').append(`
-                                <option value="${kode}">${nama}</option>
-                            `);
-                        });
-                    } else {
-                        $("#desa").empty();
-                    }
-                }
-            });
-        } else {
-            $("#desa").empty();
-        }
     });
 
     //cek apakah opsi yg dipilih memiliki sub column
@@ -2291,11 +2181,13 @@ $dataIndex = match ($skema) {
 
     // hitung ratio covarege
     function hitungRatioCoverage() {
-        let thls = parseInt($('#thls').val().split('.').join(''));
-        let nilaiAsuransi = parseInt($('#nilai_pertanggungan_asuransi').val().split('.').join(''));
-        let kreditYangDiminta = parseInt($('#jumlah_kredit').val().split('.').join(''));
+        let thls = isNaN(parseInt($('#thls').val().split('.').join(''))) ? 0 : parseInt($('#thls').val().split('.').join(''));
+        let nilaiAsuransi = isNaN(parseInt($('#nilai_pertanggungan_asuransi').val().split('.').join(''))) ? 0 : parseInt($('#nilai_pertanggungan_asuransi').val().split('.').join(''));
+        let kreditYangDiminta = isNaN(parseInt($('#jumlah_kredit').val().split('.').join(''))) ? 0 : parseInt($('#jumlah_kredit').val().split('.').join(''));
 
-        let ratioCoverage = (thls + nilaiAsuransi) / kreditYangDiminta * 100; //cek rumus nya lagi
+        console.log(`${thls}-${nilaiAsuransi}-${kreditYangDiminta}`);
+
+        let ratioCoverage = (thls + nilaiAsuransi) / kreditYangDiminta  * 100; //cek rumus nya lagi
         $('#ratio_coverage').val(ratioCoverage);
 
         if (ratioCoverage >= 150) {
@@ -2441,29 +2333,6 @@ $dataIndex = match ($skema) {
         }
     }
     //end Repayment Capacity
-
-    $('.rupiah').keyup(function(e) {
-        var input = $(this).val()
-        $(this).val(formatrupiah(input))
-    });
-
-    function formatrupiah(angka, prefix) {
-        var number_string = angka.replace(/[^,\d]/g, '').toString(),
-            split = number_string.split(','),
-            sisa = split[0].length % 3,
-            rupiah = split[0].substr(0, sisa),
-            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-
-        // tambahkan titik jika yang di input sudah menjadi angka ribuan
-        if (ribuan) {
-            separator = sisa ? '.' : '';
-            rupiah += separator + ribuan.join('.');
-        }
-
-        rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-        return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
-    }
-    // End Format Rupiah
 
     // Limit Upload
     $('.limit-size').on('change', function() {
@@ -2611,4 +2480,5 @@ $dataIndex = match ($skema) {
 </script>
 
 <script src="{{ asset('') }}js/custom.js"></script>
+@include('dagulir.partials.create-save-temp')
 @endpush

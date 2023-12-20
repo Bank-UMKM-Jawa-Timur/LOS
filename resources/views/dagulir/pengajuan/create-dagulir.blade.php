@@ -50,8 +50,8 @@
     >
         <div class="form-group-1 col-span-2">
             <div>
-                <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
-                    <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
+                <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                    <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
                         Data Diri :
                     </h2>
                 </div>
@@ -200,15 +200,15 @@
                 <textarea
                     name="alamat_sesuai_ktp"
                     class="form-textarea"
-                    placeholder="Alamat K"
+                    placeholder="Alamat KTP"
                     id=""
                 >{{ old('alamat_sesuai_ktp') }}</textarea>
             </div>
         </div>
         <div class="form-group-1 col-span-2">
             <div>
-                <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
-                    <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
+                <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                    <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
                         Domisili :
                     </h2>
                 </div>
@@ -240,17 +240,15 @@
                     class="form-textarea"
                     placeholder="Alamat Domisili"
                     id=""
-                >
-                {{ old('alamat_domisili') }}
-            </textarea>
+                >{{ old('alamat_domisili') }}</textarea>
             </div>
 
         </div>
 
         <div class="form-group-1 col-span-2">
             <div>
-                <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
-                    <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
+                <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                    <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
                         File Slik :
                     </h2>
                 </div>
@@ -297,14 +295,14 @@
 
         <div class="form-group-1 col-span-2">
             <div>
-                <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
-                    <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
+                <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                    <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
                         Data Usaha :
                     </h2>
                 </div>
             </div>
         </div>
-        <div class="form-group-2">
+        <div class="form-group-3">
             <div class="input-box">
                 <label for="">Jenis Usaha</label><small class="text-red-500 font-bold">*</small>
                 <select name="jenis_usaha" id="" class="form-select">
@@ -329,6 +327,92 @@
                 <label for="">Kecamatan Usaha</label><small class="text-red-500 font-bold">*</small>
                 <select name="kecamatan_usaha" id="kecamatan_usaha" class="form-select @error('kecamatan_usaha') is-invalid @enderror select2">
                     <option value="0"> --- Pilih Kecamatan --- </option>
+                </select>
+            </div>
+
+        </div>
+        <div class="form-group-1">
+            <div class="input-box">
+                <label for="">Alamat Usaha</label><small class="text-red-500 font-bold">*</small>
+                <textarea
+                    name="alamat_usaha"
+                    class="form-textarea"
+                    placeholder="Alamat Usaha"
+                    id=""
+                >{{ old('alamat_usaha') }}</textarea>
+            </div>
+        </div>
+        <div class="form-group-1 col-span-2">
+            <div>
+                <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                    <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                        Data Pengajuan :
+                    </h2>
+                </div>
+            </div>
+        </div>
+        <div class="form-group-2">
+            <div class="input-box">
+                <label for="">Plafon</label><small class="text-red-500 font-bold">*</small>
+                <input
+                    type="text"
+                    class="form-input rupiah"
+                    placeholder="Plafon"
+                    name="nominal_pengajuan"
+                    id="jumlah_kredit"
+                    value="{{ old('nominal_pengajuan') }}"
+                />
+            </div>
+            <div class="input-box">
+                <label for="">Jangka Waktu</label><small class="text-red-500 font-bold">*</small>
+                <div class="flex items-center">
+                    <div class="flex-1">
+                        <input
+                            type="number"
+                            class="w-full form-input"
+                            placeholder="Masukan Jangka Waktu"
+                            name="jangka_waktu"
+                            id="jangka_waktu"
+                            aria-label="Jangka Waktu"
+                            value="{{ old('jangka_waktu') }}"
+                            aria-describedby="basic-addon2"
+                        />
+                        <span class="jangka_waktu_error text-red-400 hidden"></span>
+                    </div>
+                    <div class="flex-shrink-0 mt-2.5rem">
+                        <span class="form-input bg-gray-100">Bulan</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group-2">
+            <div class="input-box">
+                <label for="">Tujuan Penggunaan</label><small class="text-red-500 font-bold">*</small>
+                <input
+                    type="text"
+                    class="form-input"
+                    placeholder="Masukan Tujuan Penggunaan"
+                    name="tujuan_penggunaan"
+                    value="{{ old('tujuan_penggunaan') }}"
+                />
+            </div>
+            <div class="input-box">
+                <label for="">Jaminan yang disediakan</label><small class="text-red-500 font-bold">*</small>
+                <select name="ket_agunan" id="" class="form-select">
+                    <option value="0" >Pilih Jaminan</option>
+                    <option value="shm" {{ old('ket_agunan') == 'shm' ? 'selected' : '' }}>SHM</option>
+                    <option value="bpkb" {{ old('ket_agunan') == 'bpkb' ? 'selected' : '' }}>BPKB</option>
+                    <option value="shgb" {{ old('ket_agunan') == 'shgb' ? 'selected' : '' }}>SHGB</option>
+                    <option value="lainnya" {{ old('ket_agunan') == 'lainnya' ? 'selected' : '' }}>Lainnya</option>
+                </select>
+            </div>
+            <div class="input-box">
+                <label for="">Jenis badan hukum</label><small class="text-red-500 font-bold">*</small>
+                <select name="jenis_badan_hukum" id="jenis_badan_hukum" class="form-select">
+                    <option value="0">Jenis Badan Hukum</option>
+                    <option value="Berbadan Hukum" {{ old('jenis_berbadan') == 'Berbadan Hukum' ? 'selected' : '' }}>Berbadan Hukum</option>
+                    <option value="Tidak Berbadan Hukum" {{ old('jenis_berbadan') == 'Tidak Berbadan Hukum' ? 'selected' : '' }}>Tidak Berbadan Hukum</option>
                 </select>
             </div>
             <div class="input-box">
@@ -373,92 +457,6 @@
                     value="{{ old('tanggal_berdiri') }}"
                     />
                 </div>
-            </div>
-        </div>
-        <div class="form-group-1">
-            <div class="input-box">
-                <label for="">Alamat Usaha</label><small class="text-red-500 font-bold">*</small>
-                <textarea
-                    name="alamat_usaha"
-                    class="form-textarea"
-                    placeholder="Alamat Usaha"
-                    id=""
-                >
-                {{ old('alamat_usaha') }}
-                </textarea>
-            </div>
-        </div>
-        <div class="form-group-1 col-span-2">
-            <div>
-                <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
-                    <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
-                        Data Pengajuan :
-                    </h2>
-                </div>
-            </div>
-        </div>
-        <div class="form-group-2">
-            <div class="input-box">
-                <label for="">Plafon</label><small class="text-red-500 font-bold">*</small>
-                <input
-                    type="text"
-                    class="form-input rupiah"
-                    placeholder="Plafon"
-                    name="nominal_pengajuan"
-                    id="jumlah_kredit"
-                    value="{{ old('nominal_pengajuan') }}"
-                />
-            </div>
-            <div class="input-box">
-                <label for="">Jangka Waktu</label><small class="text-red-500 font-bold">*</small>
-                <div class="flex items-center">
-                    <div class="flex-1">
-                        <input
-                            type="number"
-                            class="w-full form-input"
-                            placeholder="Masukan Jangka Waktu"
-                            name="jangka_waktu"
-                            id="jangka_waktu"
-                            aria-label="Jangka Waktu"
-                            value="{{ old('jangka_waktu') }}"
-                            aria-describedby="basic-addon2"
-                        />
-                        <span class="jangka_waktu_error text-red-400 hidden"></span>
-                    </div>
-                    <div class="flex-shrink-0 mt-2.5rem">
-                        <span class="form-input bg-gray-100">Bulan</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="form-group-3">
-            <div class="input-box">
-                <label for="">Tujuan Penggunaan</label><small class="text-red-500 font-bold">*</small>
-                <input
-                    type="text"
-                    class="form-input"
-                    placeholder="Masukan Tujuan Penggunaan"
-                    name="tujuan_penggunaan"
-                    value="{{ old('tujuan_penggunaan') }}"
-                />
-            </div>
-            <div class="input-box">
-                <label for="">Jaminan yang disediakan</label><small class="text-red-500 font-bold">*</small>
-                <select name="ket_agunan" id="" class="form-select">
-                    <option value="0" >Pilih Jaminan</option>
-                    <option value="shm" {{ old('ket_agunan') == 'shm' ? 'selected' : '' }}>SHM</option>
-                    <option value="bpkb" {{ old('ket_agunan') == 'bpkb' ? 'selected' : '' }}>BPKB</option>
-                    <option value="shgb" {{ old('ket_agunan') == 'shgb' ? 'selected' : '' }}>SHGB</option>
-                    <option value="lainnya" {{ old('ket_agunan') == 'lainnya' ? 'selected' : '' }}>Lainnya</option>
-                </select>
-            </div>
-            <div class="input-box">
-                <label for="">Jenis badan hukum</label><small class="text-red-500 font-bold">*</small>
-                <select name="jenis_badan_hukum" id="jenis_badan_hukum" class="form-select">
-                    <option value="0">Jenis Badan Hukum</option>
-                    <option value="Berbadan Hukum" {{ old('jenis_berbadan') == 'Berbadan Hukum' ? 'selected' : '' }}>Berbadan Hukum</option>
-                    <option value="Tidak Berbadan Hukum" {{ old('jenis_berbadan') == 'Tidak Berbadan Hukum' ? 'selected' : '' }}>Tidak Berbadan Hukum</option>
-                </select>
             </div>
         </div>
         <div class="form-group-1">
