@@ -156,8 +156,12 @@
                                             <h5 class="badge badge-info">Aktif</h5>
                                         </td>
                                         <td>
-                                            <a href="javascript:void(0)" class="px-2 py-1 bg-theme-primary rounded text-white text-sm show-reset-api-session" data-toggle="modal"
-                                                        data-target="resetApiSessionModal" data-id="{{ $item->id }}">Reset</a>
+                                            @if (auth()->user()->id != $item->user_id)
+                                                <a href="javascript:void(0)"
+                                                    class="px-2 py-1 bg-theme-primary rounded text-white text-sm show-reset-api-session" data-toggle="modal"
+                                                    data-target="resetApiSessionModal"
+                                                    data-id="{{ $item->id }}">Reset</a>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach
@@ -180,21 +184,12 @@
 @endsection
 @push('script-inject')
     <script>
-        function generateCsrfToken() {
-            return '{{ csrf_token() }}';
-        }
-
         $('.show-reset-api-session').on('click', function() {
-        console.log('masuk');
-        const target = $(this).data('target')
-        const id = $(this).data('id')
-        const url_form = "{{url('/dagulir/master/reset-api-session')}}/"+id
-        var token = generateCsrfToken();
-
-        $(`#${target} #form-reset-api-session`).attr('action', url_form)
-        $(`#${target} #token_api`).val(token)
-        $(`#${target}`).removeClass('hidden');
-    })
+            const target = $(this).data('target');
+            const id = $(this).data('id');
+            $('#id').val(id);
+            $(`#${target}`).removeClass('hidden');
+        })
 
     </script>
 @endpush

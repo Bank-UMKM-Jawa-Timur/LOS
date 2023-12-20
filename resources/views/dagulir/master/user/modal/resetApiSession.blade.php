@@ -1,6 +1,6 @@
 <div class="modal-layout hidden" id="resetApiSessionModal">
-    <form id="form-reset-api-session" method="POST" enctype="multipart/form-data">
-        <input type="hidden" name="_token" id="token_api">
+    <form id="form-reset-api-session" method="POST" action="{{ route('dagulir.master.reset-api-session') }}">
+        @csrf
         <div class="modal modal-sm bg-white">
             <div class="modal-head">
                 <div class="title">
@@ -13,6 +13,7 @@
                 </button>
             </div>
             <div class="modal-body space-y-5">
+                <input type="hidden" name="id" id="id">
                 <p>Apakah anda yakin ingin reset mobile session ini?</p>
             </div>
             <div class="modal-footer justify-end">
@@ -24,10 +25,3 @@
         </div>
     </form>
 </div>
-@push('script-inject')
-    <script>
-        $('#form-reset-api-session .btn-submit').on('click', function(e) {
-            $('#resetApiSessionModal #form-reset-api-session').submit()
-        })
-    </script>
-@endpush

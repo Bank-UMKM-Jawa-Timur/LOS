@@ -127,7 +127,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/reset-session-post', [NewUserController::class, 'resetSession'])->name('reset-session');
 
             Route::get('/reset-api-sessions', [NewUserController::class, 'indexAPISession'])->name('index-api-session');
-            Route::post('/reset-api-session/{id}', [NewUserController::class, 'resetAPISession'])->name('reset-api-session');
+            Route::post('/reset-api-session/post', [NewUserController::class, 'resetAPISession'])->name('reset-api-session');
         });
 
         Route::get('pengajuan-kredir/cetak-surat/{id}',[NewDagulirController::class,"CetakPDF"])->name('pengajuan.cetak-pdf');

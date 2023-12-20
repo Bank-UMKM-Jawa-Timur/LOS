@@ -335,7 +335,7 @@ class NewUserController extends Controller
             $limit = $request->has('page_length') ? $request->get('page_length') : 10;
             $data = DB::table('personal_access_tokens')
                 ->join('users', 'users.id', 'personal_access_tokens.tokenable_id')
-                ->select('personal_access_tokens.ip_address', 'users.email', 'users.nip', 'users.role', 'personal_access_tokens.id', 'users.id_cabang', 'personal_access_tokens.tokenable_id', 'personal_access_tokens.created_at', 'personal_access_tokens.project')
+                ->select('personal_access_tokens.ip_address', 'users.email','users.id as user_id', 'users.nip', 'users.role', 'personal_access_tokens.id', 'users.id_cabang', 'personal_access_tokens.tokenable_id', 'personal_access_tokens.created_at', 'personal_access_tokens.project')
                 ->when($cari, function ($query, $search) {
                     return $query->where('users.email', 'like', '%' . $search . '%');
                 })
@@ -368,14 +368,15 @@ class NewUserController extends Controller
         return view('dagulir.master.user.api-sessions.index', $this->param);
     }
 
-    public function resetAPISession($id)
+    public function resetAPISession(Request $request)
     {
         try {
             DB::table('personal_access_tokens')
-                ->where('id', $id)
+                ->where('id', $request->get('id'))
                 ->delete();
 
-            return back()->withStatus('Berhasil menghapus API session.');
+                alert()->success('Berhasil','Berhasil menghapus API session.');
+                return redirect()->route('dagulir.master.index-api-session');
         } catch (Exception $e) {
             return redirect()->back()->withError('Terjadi Kesalahan.' . $e);
         } catch (Exception $e) {
