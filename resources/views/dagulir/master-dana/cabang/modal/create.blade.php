@@ -16,7 +16,7 @@
                 <div class="form-group-1 mb-4">
                     <div class="input-box">
                         <label for="">Cabang </label>
-                        <select name="cabang" id="" class="form-select">
+                        <select name="cabang" id="" class="form-select select2">
                             <option value="">Pilih Cabang</option>
                             @foreach ($cabang as $item)
                                 <option value="{{ $item->id }}">{{ $item->cabang }}</option>

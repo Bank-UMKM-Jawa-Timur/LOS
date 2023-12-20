@@ -9,6 +9,7 @@ use App\Models\MasterDana;
 use App\Models\PengajuanDagulir;
 use App\Models\PengajuanModel;
 use App\Models\PlafonUsulan;
+use App\Repository\MasterDanaRepository;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -51,9 +52,16 @@ class MasterDanaController extends Controller
         }
     }
 
-    function danaCabang(){
+    function danaCabang(Request $request){
         $getCabang = Cabang::orderBy('kode_cabang', 'ASC')->where('kode_cabang','!=','000')->get();
-        $dana_cabang = DanaCabang::with('cabang')->latest()->paginate(10);
+
+        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+        $page = $request->has('page') ? $request->get('page') : 1;
+        $search = $request->get('q');
+
+        $repo = new MasterDanaRepository;
+        $dana_cabang = $repo->getDanaCabang($search,$page,$limit);
+
         return view('dagulir.master-dana.cabang.index',[
             'cabang' => $getCabang,
             'dana_cabang' => $dana_cabang

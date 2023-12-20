@@ -47,9 +47,6 @@ Route::get('/', function () {
 Route::get('tes-skor', [PengajuanKreditController::class, 'tesskor'])->name('tesskor');
 Route::post('tes-skor', [PengajuanKreditController::class, 'countScore'])->name('tesskor.store');
 
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth'])->name('dashboard');
 Route::get('/coming-soon', function(){
     return view('under-construction.index');
 })->name('coming-soon');
@@ -66,6 +63,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('dagulir')->name('dagulir.')->group(function () {
         Route::get('/', [DagulirController::class, 'index'])->name('index');
+        // edit
+        Route::get('edit/{id}',[NewDagulirController::class,'edit'])->name('edit');
         // create
         Route::get('create',[DagulirController::class,'create'])->name('create');
         Route::get('get-data-dagulir/{kode_pendaftaran}',[DagulirController::class,'getPengajuanDagulir'])->name('get-data-dagulir');
@@ -74,6 +73,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('review/post',[DagulirController::class,'updateReview'])->name('review-post');
         // Review Penyelia
         Route::get('jawaban-pengajuan/{id}', [NewDagulirController::class, "getDetailJawaban"])->name('detailjawaban');
+        // Route::get('list-draft-dagulir', [NewDagulirController::class, "listDraftDagulir"])->name('draft.listDraftDagulir');
         Route::post('jawaban-pengajuan/update/{id}', [DagulirController::class, "updateReviewPenyelia"])->name('updatePenyelia');
         // Send to pinca
         Route::get('review-pincab-new', function() {
@@ -105,8 +105,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('pengajuan-kredit/jawaban-pengajuan/{id}', [NewDagulirController::class, "getDetailJawaban"])->name('pengajuan.detailjawaban');
 
         // Cetak PDF
+        Route::get('pengajuan-kredit/cetak-surat/{id}',[NewDagulirController::class,"CetakPK"])->name('pengajuan.cetak-pdf');
+
+        // Kembalikan posisi
+        Route::post('/pengajuan-kredit/kembalikan-ke-posisi-sebelumnya', [NewDagulirController::class, 'kembalikanDataKePosisiSebelumnya'])->name('pengajuan-kredit.kembalikan-ke-posisi-sebelumnya');
         Route::get('pengajuan-kredit/cetak-surat/{id}',[NewDagulirController::class,"CetakPDF"])->name('pengajuan.cetak-pdf');
-        Route::get('pengajuan-kredit/cetak-file',[NewDagulirController::class,"CetakFile"])->name('pengajuan.cetak-file');
         Route::post('post-file/{id}', [NewDagulirController::class, 'postFileDagulir'])->name('post-file-dagulir');
         Route::get('/cetak-sppk/{id}', [NewDagulirController::class, 'cetakSPPK'])->name('cetak-sppk-dagulir');
         Route::get('/cetak-pk/{id}', [NewDagulirController::class, 'cetakPK'])->name('cetak-pk-dagulir');
@@ -128,6 +131,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/reset-api-sessions', [NewUserController::class, 'indexAPISession'])->name('index-api-session');
             Route::post('/reset-api-session/{id}', [NewUserController::class, 'resetAPISession'])->name('reset-api-session');
         });
+
+        Route::get('pengajuan-kredir/cetak-surat/{id}',[NewDagulirController::class,"CetakPDF"])->name('pengajuan.cetak-pdf');
+        Route::prefix('/temp')
+            ->name('temp.')
+            ->group(function(){
+                Route::post('pengajuan-kredit/dagulir', [NewDagulirController::class, "tempDagulir"])->name('dagulir');
+                Route::post('pengajuan-kredit/tempFile', [NewDagulirController::class, "tempFile"])->name('file');
+                Route::post('pengajuan-kredit/tempFileDataUmum', [NewDagulirController::class, "tempFileDataUmum"])->name('fileDataUmum');
+                Route::post('pengajuan-kredit/tempJawaban', [NewDagulirController::class, "tempJawaban"])->name('jawaban');
+                Route::get('pengajuan-kredit/continue-draft/{id}', [NewDagulirController::class, 'continueDraft'])->name('continue');
+                Route::get('pengajuan-kredit/lanjutkan-draft', [NewDagulirController::class, 'showContinueDraft'])->name('continue-draft');
+                Route::get('pengajuan-kredit/list-draft-dagulir', [NewDagulirController::class, "listDraftDagulir"])->name('list-draft-dagulir');
+            });
     });
     Route::middleware(['KreditProgram'])->group(function () {
             // Dashboard Dana

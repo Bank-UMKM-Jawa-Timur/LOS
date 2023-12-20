@@ -5,11 +5,11 @@
         $('#page_length').on('change', function() {
             $('#form').submit()
         })
-        $('.rupiah').keyup(function(e) {
-            var input = $(this).val()
-            $(this).val(formatrupiah(input))
-        });
         $(document).ready(function() {
+            $('.rupiah').keyup(function(e) {
+                var input = $(this).val()
+                $(this).val(formatrupiah(input))
+            });
             // get data dari
             $("#pesan").hide();
             $('#dari_cabang').on('change',function(params) {
@@ -73,11 +73,30 @@
             $('#jumlah_dana_dari').keyup(function() {
                 hitung()
             })
+            var total_test = document.getElementById('total_dana');
+            total_test.value = formatrupiah(total_test.value);
+
+            function formatrupiah(angka, prefix) {
+                var number_string = angka.replace(/[^,\d]/g, '').toString(),
+                    split = number_string.split(','),
+                    sisa = split[0].length % 3,
+                    rupiah = split[0].substr(0, sisa),
+                    ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+                // tambahkan titik jika yang di input sudah menjadi angka ribuan
+                if (ribuan) {
+                    separator = sisa ? '.' : '';
+                    rupiah += separator + ribuan.join('.');
+                }
+
+                rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+                return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
+            }
         })
         // get total
         function hitung() {
             let total_tersedia = parseInt($('#dana_dari').val().split('.').join(''));
-            let jumlah = parseInt($('#jumlah_dana_dari').val().split('.').join(''));
+            let jumlah = isNaN(parseInt($('#jumlah_dana_dari').val().split('.').join(''))) ? 0 : parseInt($('#jumlah_dana_dari').val().split('.').join(''));
             console.log(`${total_tersedia} - ${jumlah}`);
             if (total_tersedia < jumlah) {
                 $("#pesan").show();
@@ -93,25 +112,13 @@
         function total(jumlah) {
             let total_ke = parseInt($('#dana_ke').val().split('.').join(''));
             let total_akhir = jumlah + total_ke;
+
             $('#total_dana').val(total_akhir);
         }
 
-        function formatrupiah(angka, prefix) {
-            var number_string = angka.replace(/[^,\d]/g, '').toString(),
-                split = number_string.split(','),
-                sisa = split[0].length % 3,
-                rupiah = split[0].substr(0, sisa),
-                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
 
-            // tambahkan titik jika yang di input sudah menjadi angka ribuan
-            if (ribuan) {
-                separator = sisa ? '.' : '';
-                rupiah += separator + ribuan.join('.');
-            }
 
-            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-            return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
-        }
+
 
     </script>
 @endpush
