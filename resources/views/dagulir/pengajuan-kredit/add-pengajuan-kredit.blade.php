@@ -945,7 +945,7 @@ $dataIndex = match ($skema) {
                 $("#kecamatan_usaha").empty();
             }
         });
-    @endf
+    @endif
 
     $('#status_nasabah').on('change', function(e){
         var status = $(this).val();
