@@ -113,6 +113,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::middleware(['Admin'])->prefix('master')->name('master.')->group(function () {
             Route::resource('kabupaten', NewKabupatenController::class);
+            Route::get('kecamatan/data',[NewKecamatanController::class,'kabupaten'])->name('get.kabupaten');
             Route::resource('kecamatan', NewKecamatanController::class);
             Route::resource('desa', NewDesaController::class);
             Route::resource('cabang', NewCabangController::class);
