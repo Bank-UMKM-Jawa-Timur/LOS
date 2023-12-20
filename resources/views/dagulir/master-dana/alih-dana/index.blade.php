@@ -159,7 +159,7 @@
                                 @enderror
                             </div>
                             <div class="input-box">
-                                <label for="">Ke</label>
+                                <label for="">Tujuan</label>
                                 <select name="cabang_ke" id="ke_cabang" class="form-select">
                                     <option value="0">Pilih Cabang</option>
                                 </select>

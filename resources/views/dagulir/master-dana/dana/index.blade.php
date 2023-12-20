@@ -62,24 +62,25 @@
                         </div>
                         <div class="form-group-2 mb-4">
                             <div class="input-box">
-                                <label for="">Dana Idle</label>
-                                <input type="text" name="dana_idle"
-                                    class="form-input @error('dana_idle') is-invalid @enderror rupiah" placeholder="Dana Idle"
-                                    id="dana_idle"
-                                    value="{{ old('dana_idle',$update_data != null ? $update_data->dana_idle : '') }}">
-                                @error('dana_idle')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-                            <div class="input-box">
                                 <label for="">Dana Modal</label>
                                 <input type="text" name="dana_modal"
                                     class="form-input @error('dana_modal') is-invalid @enderror rupiah" placeholder="Dana Modal"
                                     id="dana_modal"
                                     value="{{ old('dana_modal',$update_data != null ? $update_data->dana_modal : '') }}">
                                 @error('dana_modal')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                            <div class="input-box">
+                                <label for="">Dana Idle</label>
+                                <input type="text" name="dana_idle"
+                                    class="form-input @error('dana_idle') is-invalid @enderror bg-gray-100 rupiah" placeholder="Dana Idle"
+                                    id="dana_idle"
+                                    readonly
+                                    value="{{ old('dana_idle',$update_data != null ? $update_data->dana_idle : '') }}">
+                                @error('dana_idle')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>

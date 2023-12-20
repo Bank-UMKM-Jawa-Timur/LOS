@@ -26,18 +26,21 @@ class MasterDanaController extends Controller
 
     function update(Request $request, $id) {
         $request->validate([
-            'dana_idle' => 'required',
             'dana_modal' => 'required',
         ]);
         try {
             $update = MasterDana::find($id);
             if ($update) {
-                $update->dana_idle = formatNumber($request->get('dana_idle'));
-                $update->dana_modal = formatNumber($request->get('dana_modal'));
+                $current = MasterDana::find($id);
+                $total_current_modal = formatNumber($request->get('dana_modal')) + $current->dana_modal;
+                $total_current_idle = $total_current_modal + $current->dana_idle;
+                $update->dana_modal = $total_current_modal;
+                $update->dana_idle = $total_current_idle;
                 $update->update();
+
             }else{
                 $insert = new MasterDana;
-                $insert->dana_idle = formatNumber($request->get('dana_idle'));
+                $insert->dana_idle = formatNumber($request->get('dana_modal'));
                 $insert->dana_modal = formatNumber($request->get('dana_modal'));
                 $insert->save();
             }
