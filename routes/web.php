@@ -116,7 +116,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::resource('kecamatan', NewKecamatanController::class);
             Route::resource('desa', NewDesaController::class);
             Route::resource('cabang', NewCabangController::class);
-            Route::post('/dagulir/master/cabang/{id}/update', 'NewCabangController@update')->name('dagulir.master.cabang.update');
 
             Route::resource('user', NewUserController::class);
             Route::resource('merk', NewMerkController::class);

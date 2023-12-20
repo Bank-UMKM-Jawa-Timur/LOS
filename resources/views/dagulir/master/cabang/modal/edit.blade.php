@@ -1,6 +1,7 @@
 <div class="modal-layout hidden" id="modal-edit-cabang">
-    <form id="form-edit-cabang" method="POST">
-    <input type="hidden" name="_token" value="{{ csrf_token() }}" id="token_edit_cabang">
+    <form id="form-edit-cabang" method="POST" action="{{ route('dagulir.master.cabang.update',1) }}">
+    @csrf
+    @method('PUT')
     <div class="modal modal-sm bg-white">
         <div class="modal-head">
             <div class="title">
@@ -14,6 +15,7 @@
         </div>
             <div class="modal-body">
                 <div class="form-group-2 mb-4">
+                    <input type="hidden" name="id" id="id">
                     <div class="input-box">
                         <label for="">Kode Cabang</label>
                         <input type="text" name="kode_cabang" id="kode_cabang"
@@ -70,9 +72,9 @@
     </div>
 </div>
 @push('script-inject')
-    <script>
+    {{-- <script>
         $('#form-edit-cabang .btn-submit').on('click', function(e) {
             $('#modal-edit-cabang #form-edit-cabang').submit()
         })
-    </script>
+    </script> --}}
 @endpush

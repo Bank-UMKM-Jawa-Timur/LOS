@@ -1,10 +1,36 @@
 @include('dagulir.master.kabupaten.modal.create')
+@include('dagulir.master.kabupaten.modal.edit')
+@include('dagulir.master.kabupaten.modal.delete')
 @extends('layouts.tailwind-template')
 @include('components.new.modal.loading')
 @push('script-inject')
     <script>
         $('#page_length').on('change', function() {
             $('#form').submit()
+        })
+        // show edit
+        $('.show-edit-kabupaten').off('click').on('click', function() {
+            const target = $(this).data('target');
+            const id_kabupaten = $(this).data('id');
+            const kabupaten = $(this).data('nama');
+            // set value
+            $(`#${target} #kabupaten`).val(kabupaten)
+            $(`#${target} #id`).val(id_kabupaten);
+
+            $(`#${target}`).removeClass('hidden');
+        })
+        // hapus
+        $('.show-hapus').off('click').on('click',function() {
+            const target = $(this).data('target');
+            const id = $(this).data('id');
+
+            var url = '{{ url('') }}'
+            var deleteUrl = url + '/dagulir/master/kabupaten/' + id;
+
+            $('#form-delete').attr('action', deleteUrl);
+            $('#form-delete').attr('method', 'POST');
+
+            $(`#${target}`).removeClass('hidden');
         })
     </script>
 @endpush
@@ -88,12 +114,23 @@
                                         <td>{{ $i++ }}</td>
                                         <td>{{ $item->kabupaten }}</td>
                                         <td>
-                                            <button class="btn-edit">
+                                            <a href="javascript:void(0)"
+                                                class="btn-edit show-edit-kabupaten"
+                                                data-id="{{ $item->id }}"
+                                                data-nama="{{ $item->kabupaten }}"
+                                                data-target="modal-edit-kabupaten"
+                                            >
                                                 <iconify-icon icon="uil:edit" class="icon"></iconify-icon>
-                                            </button>
-                                            <button class="btn-delete">
+                                            </a>
+                                            <a
+                                                href="javascript:void(0)"
+                                                class="btn-delete show-hapus"
+                                                data-target="modalhapus"
+                                                data-id="{{ $item->id }}"
+
+                                                >
                                                 <iconify-icon class="icon" icon="ic:baseline-delete"></iconify-icon>
-                                            </button>
+                                            </a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -114,26 +151,3 @@
         </div>
     </section>
 @endsection
-@push('custom-script')
-    <script>
-        function resetPassword(name, id) {
-            Swal.fire({
-                title: 'Perhatian!!',
-                text: "Apakah anda yakin mereset password " + name + " ?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#112042',
-                cancelButtonColor: '#d33',
-                cancelButtonText: 'Batal',
-                confirmButtonText: 'ResetPassword',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $("#resetPasswordForm" + id).submit()
-                }
-            })
-        }
-
-
-    </script>
-@endpush

@@ -1,4 +1,5 @@
 @include('dagulir.master.cabang.modal.create')
+@include('dagulir.master.cabang.modal.delete')
 @include('dagulir.master.cabang.modal.edit')
 @extends('layouts.tailwind-template')
 @include('components.new.modal.loading')
@@ -102,7 +103,8 @@
                                                 >
                                                 <iconify-icon icon="uil:edit" class="icon"></iconify-icon>
                                             </a>
-                                            <a href="javascript:void(0)" class="btn-delete">
+                                            <a href="javascript:void(0)" class="btn-delete show-hapus-cabang"
+                                                data-target="modalhapuscabang" data-id="{{ $item->id }}">
                                                 <iconify-icon class="icon" icon="ic:baseline-delete"></iconify-icon>
                                             </a>
                                         </td>
@@ -132,26 +134,31 @@
         }
 
         $('.show-edit-cabang').off('click').on('click', function() {
-        const target = $(this).data('target')
-        const id_cabang = $(this).data('id')
-        console.log('id_cabang:', id_cabang);
-        const kode_cabang = $(this).data('kode_cabang')
-        const cabang = $(this).data('cabang')
-        const email = $(this).data('email')
-        const alamat = $(this).data('alamat')
+            const target = $(this).data('target')
+            const id_cabang = $(this).data('id')
+            console.log('id_cabang:', id_cabang);
+            const kode_cabang = $(this).data('kode_cabang')
+            const cabang = $(this).data('cabang')
+            const email = $(this).data('email')
+            const alamat = $(this).data('alamat')
 
-        // const url_form = "/dagulir/master/cabang/" + id_cabang + "/update";
-        const url_form = "{{ url('dagulir.master.cabang.update') }}/" + id_cabang;
-        var token = generateCsrfToken();
+            $(`#${target} #kode_cabang`).val(kode_cabang)
+            $(`#${target} #cabang`).val(cabang)
+            $(`#${target} #email`).val(email)
+            $(`#${target} #alamat`).val(alamat)
+            $(`#${target} #id`).val(id_cabang)
+            $(`#${target}`).removeClass('hidden');
+        })
+        $('.show-hapus-cabang').off('click').on('click', function() {
+            const target = $(this).data('target')
+            $(`#${target}`).removeClass('hidden');
+            var cabangId = $(this).data('id');
+            var url = '{{ url('') }}'
+            var deleteUrl = url + '/dagulir/master/cabang/' + cabangId;
 
-        $(`#${target} #form-edit-cabang`).attr('action', url_form)
-        $(`#${target} #token_edit_cabang`).val(token)
-        $(`#${target} #kode_cabang`).val(kode_cabang)
-        $(`#${target} #cabang`).val(cabang)
-        $(`#${target} #email`).val(email)
-        $(`#${target} #alamat`).val(alamat)
-        $(`#${target}`).removeClass('hidden');
-    })
+            $('#form-delete-cabang').attr('action', deleteUrl);
+            $('#form-delete-cabang').attr('method', 'POST'); // Diubah ke POST untuk Laravel
+        })
 
 
 
