@@ -10,49 +10,66 @@
         <h2 class="font-semibold text-gray-400">Menu</h2>
         <div class="mt-5 text-sm text-theme-text">
             <ul class="space-y-3">
-                <li class="menu-item">
-                    <a href="{{ route('dashboard') }}">
-                        <button
-                            class="item-link @active('dashboard', 'active-menu')  w-full flex gap-3 font-medium text-left px-4 py-3 rounded-md">
-                            <span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24">
-                                    <path fill="currentColor"
-                                        d="M13 9V3h8v6h-8ZM3 13V3h8v10H3Zm10 8V11h8v10h-8ZM3 21v-6h8v6H3Zm2-10h4V5H5v6Zm10 8h4v-6h-4v6Zm0-12h4V5h-4v2ZM5 19h4v-2H5v2Zm4-8Zm6-4Zm0 6Zm-6 4Z" />
-                                </svg>
-                            </span>
-                            <span class="mt-[2px]"> Dashboard </span>
-                        </button>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="{{ url('pengajuan-kredit') }}">
-                        <button class="item-link @active('pengajuan-kredit,pengajuan-kredit.*', 'active-menu')  w-full flex gap-2 font-medium text-left px-4 py-3 rounded-md">
-                            <span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24">
-                                    <g fill="none" stroke="currentColor" stroke-width="1.5">
-                                        <path
-                                            d="M2 12c0-3.771 0-5.657 1.172-6.828C4.343 4 6.229 4 10 4h4c3.771 0 5.657 0 6.828 1.172C22 6.343 22 8.229 22 12c0 3.771 0 5.657-1.172 6.828C19.657 20 17.771 20 14 20h-4c-3.771 0-5.657 0-6.828-1.172C2 17.657 2 15.771 2 12Z" />
-                                        <path stroke-linecap="round" d="M10 16H6m8 0h-1.5M2 10h20" opacity=".5" />
-                                    </g>
-                                </svg>
-                            </span>
-                            <span class="ml-2 mt-[2px]"> Analisa kredit</span>
-                        </button>
-                    </a>
-                </li>
-                <li class="menu-item">
-                    <a href="{{ route('dagulir.pengajuan.index') }}">
-                        <button class="item-link @active('dagulir,dagulir.*', 'active-menu') w-full flex gap-2 font-medium text-left px-4 py-3 rounded-md">
-                            <span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 14c0-3.771 0-5.657 1.172-6.828C4.343 6 6.229 6 10 6h4c3.771 0 5.657 0 6.828 1.172C22 8.343 22 10.229 22 14c0 3.771 0 5.657-1.172 6.828C19.657 22 17.771 22 14 22h-4c-3.771 0-5.657 0-6.828-1.172C2 19.657 2 17.771 2 14Zm14-8c0-1.886 0-2.828-.586-3.414C14.828 2 13.886 2 12 2c-1.886 0-2.828 0-3.414.586C8 3.172 8 4.114 8 6"/><path stroke-linecap="round" d="M12 17.333c1.105 0 2-.746 2-1.666c0-.92-.895-1.667-2-1.667s-2-.746-2-1.667c0-.92.895-1.666 2-1.666m0 6.666c-1.105 0-2-.746-2-1.666m2 1.666V18m0-8v.667m0 0c1.105 0 2 .746 2 1.666"/></g></svg>
-                            </span>
-                            <span class="ml-2 mt-[2px]"> Dagulir</span>
-                        </button>
-                    </a>
-                </li>
+                @if (auth()->user()->role != 'Kredit Program' && auth()->user()->role != 'Administrator')
+                    <li class="menu-item">
+                        <a href="{{ route('dashboard') }}">
+                            <button
+                                class="item-link @active('dashboard', 'active-menu')  w-full flex gap-3 font-medium text-left px-4 py-3 rounded-md">
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24">
+                                        <path fill="currentColor"
+                                            d="M13 9V3h8v6h-8ZM3 13V3h8v10H3Zm10 8V11h8v10h-8ZM3 21v-6h8v6H3Zm2-10h4V5H5v6Zm10 8h4v-6h-4v6Zm0-12h4V5h-4v2ZM5 19h4v-2H5v2Zm4-8Zm6-4Zm0 6Zm-6 4Z" />
+                                    </svg>
+                                </span>
+                                <span class="mt-[2px]"> Dashboard </span>
+                            </button>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{{ url('pengajuan-kredit') }}">
+                            <button class="item-link @active('pengajuan-kredit,pengajuan-kredit.*', 'active-menu')  w-full flex gap-2 font-medium text-left px-4 py-3 rounded-md">
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24">
+                                        <g fill="none" stroke="currentColor" stroke-width="1.5">
+                                            <path
+                                                d="M2 12c0-3.771 0-5.657 1.172-6.828C4.343 4 6.229 4 10 4h4c3.771 0 5.657 0 6.828 1.172C22 6.343 22 8.229 22 12c0 3.771 0 5.657-1.172 6.828C19.657 20 17.771 20 14 20h-4c-3.771 0-5.657 0-6.828-1.172C2 17.657 2 15.771 2 12Z" />
+                                            <path stroke-linecap="round" d="M10 16H6m8 0h-1.5M2 10h20" opacity=".5" />
+                                        </g>
+                                    </svg>
+                                </span>
+                                <span class="ml-2 mt-[2px]"> Analisa kredit</span>
+                            </button>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="{{ route('dagulir.pengajuan.index') }}">
+                            <button class="item-link @active('dagulir,dagulir.*', 'active-menu') w-full flex gap-2 font-medium text-left px-4 py-3 rounded-md">
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 14c0-3.771 0-5.657 1.172-6.828C4.343 6 6.229 6 10 6h4c3.771 0 5.657 0 6.828 1.172C22 8.343 22 10.229 22 14c0 3.771 0 5.657-1.172 6.828C19.657 22 17.771 22 14 22h-4c-3.771 0-5.657 0-6.828-1.172C2 19.657 2 17.771 2 14Zm14-8c0-1.886 0-2.828-.586-3.414C14.828 2 13.886 2 12 2c-1.886 0-2.828 0-3.414.586C8 3.172 8 4.114 8 6"/><path stroke-linecap="round" d="M12 17.333c1.105 0 2-.746 2-1.666c0-.92-.895-1.667-2-1.667s-2-.746-2-1.667c0-.92.895-1.666 2-1.666m0 6.666c-1.105 0-2-.746-2-1.666m2 1.666V18m0-8v.667m0 0c1.105 0 2 .746 2 1.666"/></g></svg>
+                                </span>
+                                <span class="ml-2 mt-[2px]"> Dagulir</span>
+                            </button>
+                        </a>
+                    </li>
+                @endif
                 @if (auth()->user()->role == 'Kredit Program')
+                    <li class="menu-item">
+                        <a href="{{ route('dashboard.dana') }}">
+                            <button
+                                class="item-link @active('dashboard', 'active-menu')  w-full flex gap-3 font-medium text-left px-4 py-3 rounded-md">
+                                <span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24">
+                                        <path fill="currentColor"
+                                            d="M13 9V3h8v6h-8ZM3 13V3h8v10H3Zm10 8V11h8v10h-8ZM3 21v-6h8v6H3Zm2-10h4V5H5v6Zm10 8h4v-6h-4v6Zm0-12h4V5h-4v2ZM5 19h4v-2H5v2Zm4-8Zm6-4Zm0 6Zm-6 4Z" />
+                                    </svg>
+                                </span>
+                                <span class="mt-[2px]"> Dashboard </span>
+                            </button>
+                        </a>
+                    </li>
                     <li class="menu-item @active('master-dana,master-dana.*', 'active-menu')">
                         <a href="#" class="toggle-dp-menu">
                             <button class="item-link relative w-full flex gap-2 font-medium text-left px-4 py-3 rounded-md">
@@ -92,9 +109,9 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{route('master-dana.index')}}">
+                                <a href="{{route('master-dana.alih-dana')}}">
                                     <button class="item-dp-link">
-                                        Dana Loan
+                                        Alih Dana
                                     </button>
                                 </a>
                             </li>
@@ -102,6 +119,21 @@
                     </div>
                 @endif
                 @if (auth()->user()->role == 'Administrator')
+                <li class="menu-item">
+                    <a href="{{ route('dashboard') }}">
+                        <button
+                            class="item-link @active('dashboard', 'active-menu')  w-full flex gap-3 font-medium text-left px-4 py-3 rounded-md">
+                            <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24">
+                                    <path fill="currentColor"
+                                        d="M13 9V3h8v6h-8ZM3 13V3h8v10H3Zm10 8V11h8v10h-8ZM3 21v-6h8v6H3Zm2-10h4V5H5v6Zm10 8h4v-6h-4v6Zm0-12h4V5h-4v2ZM5 19h4v-2H5v2Zm4-8Zm6-4Zm0 6Zm-6 4Z" />
+                                </svg>
+                            </span>
+                            <span class="mt-[2px]"> Dashboard </span>
+                        </button>
+                    </a>
+                </li>
                 <li class="menu-item @active('master,master.*', 'active-menu')">
                     <a href="#" class="toggle-dp-menu">
                         <button class="item-link relative w-full flex gap-2 font-medium text-left px-4 py-3 rounded-md">
