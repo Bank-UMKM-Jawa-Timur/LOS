@@ -157,7 +157,7 @@ class PengajuanController extends Controller
                     $addPengajuan->save();
 
                     // 3. Insert to notifications table
-                    $notif_msg = "Terdapat data pengajuan SIPDe masuk dengan kode pendaftaran $$kode_pendaftaran.";
+                    $notif_msg = "Terdapat data pengajuan SIPDe masuk dengan kode pendaftaran <b>$kode_pendaftaran</b>.";
                     $notifRepo = new NotificationsRepository;
                     $notification = [
                         'user_id' => $userId->id,

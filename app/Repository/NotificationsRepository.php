@@ -7,13 +7,26 @@ use Illuminate\Support\Facades\DB;
 
 class NotificationsRepository
 {
-    public function list($user_id=null, $limit=10) {
+    public function list($user_id=null, $search=null, $limit=10) {
         $data = Notifications::select('notifications.*', 'u.name', 'u.email', 'u.nip')
                             ->join('users AS u', 'u.id', 'notifications.user_id')
                             ->when($user_id, function ($query) use ($user_id) {
                                 $query->where('notifications.user_id', $user_id);
                             })
+                            ->when($search, function ($query) use ($user_id, $search) {
+                                if ($user_id) {
+                                    $query->where(function($q) use ($search) {
+                                        $q->where('notifications.message', 'LIKE', "%$search%")
+                                        ->orWhere('notifications.created_at', 'LIKE', "%$search%");
+                                    })->where('notifications.user_id', $user_id);
+                                }
+                                else {
+                                    $query->where('notifications.message', 'LIKE', "%$search%")
+                                    ->orWhere('notifications.created_at', 'LIKE', "%$search%");
+                                }
+                            })
                             ->latest()
+                            ->orderBy('notifications.is_read')
                             ->paginate($limit);
 
         return $data;
@@ -25,6 +38,7 @@ class NotificationsRepository
                                 ->when($user_id, function ($query) use ($user_id) {
                                     $query->where('notifications.user_id', $user_id);
                                 })
+                                ->where('notifications.is_read', 0)
                                 ->latest()
                                 ->limit($limit)
                                 ->get();

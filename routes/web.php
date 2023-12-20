@@ -26,6 +26,7 @@ use App\Http\Controllers\Dagulir\NewDagulirController;
 use App\Http\Controllers\Dagulir\master\NewUserController;
 use App\Http\Controllers\KreditProgram\DashboardKreditProgramController;
 use App\Http\Controllers\KreditProgram\MasterDanaController;
+use App\Http\Controllers\NotificationController;
 use RealRashid\SweetAlert\Facades\Alert;
 
 /*
@@ -139,6 +140,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 Route::get('pengajuan-kredit/continue-draft/{id}', [NewDagulirController::class, 'continueDraft'])->name('continue');
                 Route::get('pengajuan-kredit/lanjutkan-draft', [NewDagulirController::class, 'showContinueDraft'])->name('continue-draft');
                 Route::get('pengajuan-kredit/list-draft-dagulir', [NewDagulirController::class, "listDraftDagulir"])->name('list-draft-dagulir');
+            });
+
+        Route::prefix('/notification')
+            ->name('notification.')
+            ->group(function() {
+                Route::get('', [NotificationController::class, 'index'])->name('index');
             });
     });
     Route::middleware(['KreditProgram'])->group(function () {
