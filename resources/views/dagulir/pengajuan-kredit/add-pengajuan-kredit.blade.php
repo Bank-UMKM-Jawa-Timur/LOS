@@ -863,6 +863,115 @@ $dataIndex = match ($skema) {
         // dataAspekArr = <?php echo json_encode($dataAspek); ?>;
     });
 
+    @if (!\Request::has('dagulir'))
+        $('#kabupaten').change(function() {
+            var kabID = $(this).val();
+            if (kabID) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('') }}/getkecamatan?kabID=" + kabID,
+                    dataType: 'JSON',
+                    success: function(res) {
+                        if (res) {
+                            $("#kecamatan").empty();
+                            $("#kecamatan").append('<option>---Pilih Kecamatan---</option>');
+                            $.each(res, function(nama, kode) {
+                                $('#kecamatan').append(`
+                                    <option value="${kode}">${nama}</option>
+                                `);
+                            });
+
+                            $('#kecamatan').trigger('change');
+                        } else {
+                            $("#kecamatan").empty();
+                        }
+                    }
+                });
+            } else {
+                $("#kecamatan").empty();
+            }
+        });
+        $('#kecamatan').change(function() {
+            var kecID = $(this).val();
+            if (kecID) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ route('getDesa') }}?kecID=" + kecID,
+                    dataType: 'JSON',
+                    success: function(res) {
+                        if (res) {
+                            $("#desa").empty();
+                            $("#desa").append('<option value="0">---Pilih Desa---</option>');
+                            $.each(res, function(nama, kode) {
+                                $('#desa').append(`
+                                    <option value="${kode}">${nama}</option>
+                                `);
+                            });
+                        } else {
+                            $("#desa").empty();
+                        }
+                    }
+                });
+            } else {
+                $("#desa").empty();
+            }
+        });
+        $('#kabupaten_domisili').change(function() {
+            var kabID = $(this).val();
+            if (kabID) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('') }}/getkecamatan?kabID=" + kabID,
+                    dataType: 'JSON',
+                    success: function(res) {
+                        if (res) {
+                            $("#kecamatan_domisili").empty();
+                            $("#kecamatan_domisili").append('<option>---Pilih Kecamatan---</option>');
+                            $.each(res, function(nama, kode) {
+                                $('#kecamatan_domisili').append(`
+                                    <option value="${kode}">${nama}</option>
+                                `);
+                            });
+
+                            $('#kecamatan_domisili').trigger('change');
+                        } else {
+                            $("#kecamatan_domisili").empty();
+                        }
+                    }
+                });
+            } else {
+                $("#kecamatan_domisili").empty();
+            }
+        });
+        $('#kabupaten_usaha').change(function() {
+            var kabID = $(this).val();
+            if (kabID) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('') }}/getkecamatan?kabID=" + kabID,
+                    dataType: 'JSON',
+                    success: function(res) {
+                        if (res) {
+                            $("#kecamatan_usaha").empty();
+                            $("#kecamatan_usaha").append('<option>---Pilih Kecamatan---</option>');
+                            $.each(res, function(nama, kode) {
+                                $('#kecamatan_usaha').append(`
+                                    <option value="${kode}">${nama}</option>
+                                `);
+                            });
+
+                            $('#kecamatan_usaha').trigger('change');
+                        } else {
+                            $("#kecamatan_usaha").empty();
+                        }
+                    }
+                });
+            } else {
+                $("#kecamatan_usaha").empty();
+            }
+        });
+    @endif
+
     $('#status_nasabah').on('change', function(e){
         var status = $(this).val();
         if (status == 2) {
