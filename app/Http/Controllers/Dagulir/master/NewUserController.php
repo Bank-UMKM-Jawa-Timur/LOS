@@ -43,7 +43,8 @@ class NewUserController extends Controller
             $getUser = User::with('cabang')->orderBy('id', 'ASC');
 
             if ($search) {
-                $getUser->where('id', 'LIKE', "%{$search}%")->orWhere('name', 'LIKE', "%{$search}%")->orWhere('nip', 'LIKE', "%{$search}%");
+                $getUser->where('email', 'LIKE', "%{$search}%")->orWhere('name', 'LIKE', "%{$search}%")
+                ->orWhere('nip', 'LIKE', "%{$search}%");
             }
 
             $this->param['data'] = $getUser->paginate($limit);
@@ -52,6 +53,8 @@ class NewUserController extends Controller
         } catch (Exception $e) {
             return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
         }
+
+        // return $this->param['data'];
 
         return view('dagulir.master.user.index', $this->param);
     }
@@ -190,7 +193,7 @@ class NewUserController extends Controller
             return back()->withError('Terjadi kesalahan.');
         }
 
-        return redirect()->route('user.index')->withStatus('Data berhasil dihapus.');
+        return redirect()->route('dagulir.master.user.index')->withStatus('Data berhasil dihapus.');
     }
 
     public function changePassword()
@@ -279,6 +282,7 @@ class NewUserController extends Controller
                 })
                 ->paginate($limit);
 
+
             $pengajuanController = new PengajuanKreditController;
             foreach ($data as $key => $value) {
                 $value->karyawan = null;
@@ -301,17 +305,20 @@ class NewUserController extends Controller
             return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
         }
 
+        // return $data;
+
         return view('dagulir.master.user.sessions.index', $this->param);
     }
 
-    public function resetSession($id)
+    public function resetSession(Request $request)
     {
         try {
             DB::table('sessions')
-                ->where('user_id', $id)
+                ->where('user_id', $request->id)
                 ->delete();
 
-            return back()->withStatus('Berhasil menghapus session.');
+            alert()->success('Berhasil','Berhasil menghapus session.');
+            return redirect()->route('dagulir.master.user.index');
         } catch (Exception $e) {
             return redirect()->back()->withError('Terjadi Kesalahan.' . $e);
         } catch (Exception $e) {
@@ -328,7 +335,7 @@ class NewUserController extends Controller
             $limit = $request->has('page_length') ? $request->get('page_length') : 10;
             $data = DB::table('personal_access_tokens')
                 ->join('users', 'users.id', 'personal_access_tokens.tokenable_id')
-                ->select('personal_access_tokens.ip_address', 'users.email', 'users.nip', 'users.role', 'personal_access_tokens.id', 'users.id_cabang', 'personal_access_tokens.tokenable_id', 'personal_access_tokens.created_at', 'personal_access_tokens.project')
+                ->select('personal_access_tokens.ip_address', 'users.email','users.id as user_id', 'users.nip', 'users.role', 'personal_access_tokens.id', 'users.id_cabang', 'personal_access_tokens.tokenable_id', 'personal_access_tokens.created_at', 'personal_access_tokens.project')
                 ->when($cari, function ($query, $search) {
                     return $query->where('users.email', 'like', '%' . $search . '%');
                 })
@@ -356,17 +363,20 @@ class NewUserController extends Controller
             return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
         }
 
+        // return $data;
+
         return view('dagulir.master.user.api-sessions.index', $this->param);
     }
 
-    public function resetAPISession($id)
+    public function resetAPISession(Request $request)
     {
         try {
             DB::table('personal_access_tokens')
-                ->where('id', $id)
+                ->where('id', $request->get('id'))
                 ->delete();
 
-            return back()->withStatus('Berhasil menghapus API session.');
+                alert()->success('Berhasil','Berhasil menghapus API session.');
+                return redirect()->route('dagulir.master.index-api-session');
         } catch (Exception $e) {
             return redirect()->back()->withError('Terjadi Kesalahan.' . $e);
         } catch (Exception $e) {
