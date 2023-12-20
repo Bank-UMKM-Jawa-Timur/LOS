@@ -95,13 +95,17 @@
                             $end = $page == 1 ? $page_length : $start + $page_length - 1;
                             $i = $page == 1 ? 1 : $start;
                         @endphp
-                        @foreach ($data as $item)
+                        @forelse ($data as $item)
                         <tr>
                             <td>{{ $i++ }}</td>
                             <td>{!! $item->message !!}</td>
                             <td>{{date('d-m-Y H:i:s', strtotime($item->created_at))}}</td>
                         </tr>
-                        @endforeach
+                        @empty
+                        <tr>
+                            <td colspan="3">Belum ada notifikasi.</td>
+                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
                 </div>
