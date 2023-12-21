@@ -2923,7 +2923,7 @@ class NewDagulirController extends Controller
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
         $data = $this->repo->getDraftData($search, $limit, $page, $id_user);
-        return view('dagulir.pengajuan-kredit.index-draft', compact($data));
+        return view('dagulir.pengajuan-kredit.index-draft', compact('data'));
     }
 
     public function continueDraft($id)
@@ -3338,5 +3338,25 @@ class NewDagulirController extends Controller
 
     public function listDraftDagulir(){
         return view('dagulir.pengajuan-kredit.index-draft');
+    }
+
+    public function deleteDraft($id){
+        DB::beginTransaction();
+        try{
+            $pengajuanTemp = PengajuanDagulirTemp::find($id);
+            $pengajuanTemp->delete();
+            DB::commit();
+
+            Alert::success('Berhasil', 'Berhasil menghapus data draft');
+            return redirect()->back();
+        } catch (Exception $e){
+            DB::rollBack();
+            Alert::error('Terjadi kesalahan', $e->getMessage());
+            return redirect()->back();
+        } catch(QueryException $e){
+            DB::rollBack();
+            Alert::error('Terjadi kesalahan', $e->getMessage());
+            return redirect()->back();
+        }
     }
 }
