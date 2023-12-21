@@ -749,7 +749,7 @@
                                                         ->get();
                                                 @endphp
                                                 @foreach ($dataDetailJawabanText as $itemTextDua)
-                                                    <div class="row {{ $item->opsi_jawaban == 'file' ? 'col-span-1 order-2' : 'col-span-1 order-3' }}  {{ $item->nama === "Jumlah Orang yang menjalankan usaha" ?  'col-span-1 order-3' : '' }}">
+                                                    <div class="row {{ $item->opsi_jawaban == 'file' ? 'col-span-1 order-2' : 'col-span-2 order-3' }}  {{ $item->nama === "Jumlah Orang yang menjalankan usaha" ?  'col-span-1 order-3' : '' }}">
                                                         <div class="col-md-12 space-y-4 order">
                                                             @if ($item->opsi_jawaban == 'file')
                                                                 <b>{{ $item->nama }} :</b>
@@ -914,7 +914,7 @@
                                                     @endphp
                                                     @if (in_array($itemJawaban->id, $data))
                                                         @if (isset($data))
-                                                        <div class="row {{ $item->is_hide ? 'hidden' : 'col-span-2 '}} {{ $item->name !== "Cara Penjualan" ? 'cols-span-1' : 'cols-span-2'}} {{ $item->nama === "Usaha Dilakukan Sejak" ? 'form-group-1' : ''  }}">
+                                                        <div class="row {{ $item->is_hide ? 'hidden' : 'col-span-2'}}  {{ $item->nama === "Badan Usaha" ? 'col-span-1 form-group-2' : ''  }}">
                                                             <div class="col-md-12">
                                                                 @if (!$item->is_hide)
                                                                     <div class="field-review">
@@ -1785,9 +1785,17 @@
                                                 <label for="">Plafon Usulan Penyelia</label>
                                                 <input type="text" name="plafon_usulan_penyelia" class="form-input rupiah" value="">
                                             </div>
+
                                             <div class="input-box">
                                                 <label for="">Jangka Waktu Usulan Penyelia</label>
-                                                <input type="number" name="jangka_waktu_usulan_penyelia" class="form-input"  value="">
+                                                <div class="flex items-center">
+                                                    <div class="flex-1">
+                                                        <input type="number" name="jangka_waktu_usulan_penyelia" class="form-input"  value="">
+                                                    </div>
+                                                    <div class="flex-shrink-0 mt-2.5rem">
+                                                        <span class="form-input bg-gray-100">Bulan</span>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="form-group-1">
