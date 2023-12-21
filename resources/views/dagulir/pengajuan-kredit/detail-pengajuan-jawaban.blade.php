@@ -648,10 +648,13 @@
                                 {{-- SLIK --}}
                                 <hr>
                                 <div class="flex justify-between">
-                                    <button type="button"
-                                        class="px-5 py-2 border rounded bg-white text-gray-500">
-                                        Kembali
-                                    </button>
+                                    <a href="{{route('dagulir.index')}}">
+                                        <button type="button"
+                                            class="px-5 py-2 border rounded bg-white text-gray-500"
+                                            >
+                                            Kembali
+                                        </button>
+                                    </a>
                                     <button type="button"
                                         class="px-5 py-2 next-tab border rounded bg-theme-primary text-white">
                                         Selanjutnya
@@ -1719,11 +1722,13 @@
                                         </div>
                                     @endif
                                     <div class="flex justify-between">
-                                        <button type="button"
-                                          class="px-5 py-2 border rounded bg-white text-gray-500"
-                                        >
-                                          Kembali
-                                        </button>
+                                        <a href="{{route('dagulir.index')}}">
+                                            <button type="button"
+                                                class="px-5 py-2 border rounded bg-white text-gray-500"
+                                                >
+                                                Kembali
+                                            </button>
+                                        </a>
                                         <div>
                                           <button type="button"
                                           class="px-5 prev-tab py-2 border rounded bg-theme-secondary text-white"
@@ -2022,9 +2027,13 @@
                                 </div>
                                 @endif
                                 <div class="flex justify-between">
-                                    <button class="px-5 py-2 border rounded bg-white text-gray-500">
-                                        Kembali
-                                    </button>
+                                    <a href="{{route('dagulir.index')}}">
+                                        <button type="button"
+                                            class="px-5 py-2 border rounded bg-white text-gray-500"
+                                            >
+                                            Kembali
+                                        </button>
+                                    </a>
                                     <div>
                                         <button class="px-5 py-2 border rounded bg-theme-secondary text-white">
                                             Sebelumnya
