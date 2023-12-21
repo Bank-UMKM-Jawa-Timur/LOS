@@ -8,6 +8,11 @@
 </script>
 @endpush
 
+@section('modal')
+    @include('dagulir.modal.notification.hapus')
+    @include('dagulir.modal.notification.detail')
+@endsection
+
 @section('content')
 <section class="p-5 overflow-y-auto mt-5">
     <div class="head space-y-5 w-full font-poppins mb-5">
@@ -85,6 +90,8 @@
                         <th class="w-5">No.</th>
                         <th>Pesan</th>
                         <th>Waktu</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -100,10 +107,15 @@
                             <td>{{ $i++ }}</td>
                             <td>{!! $item->message !!}</td>
                             <td>{{date('d-m-Y H:i:s', strtotime($item->created_at))}}</td>
+                            <td id="row-read{{ $item->id }}">{{ $item->is_read ? 'Dibaca' : 'Belum Dibaca' }}</td>
+                            <td>
+                                <button data-id="{{ $item->id }}" data-target="#modal-detail" class="btn text-white bg-theme-secondary btnDetail" type="button">Detail</button>
+                                <button data-id="{{ $item->id }}" data-target="#modal-hapus" class="btn text-white bg-theme-primary btnHapus" type="button">Hapus</button>
+                            </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="3">Belum ada notifikasi.</td>
+                            <td colspan="4">Belum ada notifikasi.</td>
                         </tr>
                         @endforelse
                     </tbody>
@@ -126,4 +138,43 @@
 @push('script-inject')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+        }
+    });
+
+    $(".btnDetail").on("click", function(){
+        var id = $(this).data('id');
+        var targetModal = $(this).data('target');
+        $.ajax({
+            url: "{{ route('dagulir.notification.getDetail') }}",
+            type: "POST",
+            data: {
+                id: id
+            },
+            success: function(res){
+                $(`#row-read${id}`).html('Dibaca')
+                $("#field-kode_sipde").html(res.data.kode_pendaftaran)
+                $("#field-nama").html(res.data.nama)
+                $("#field-tanggal_pengajuan").html(res.data.tanggal_pengajuan)
+                $("#field-jenis_usaha").html(res.data.jenis_usaha)
+                $("#field-tipe_pengajuan").html(res.data.tipe_pengajuan)
+                $("#field-plafon").html(res.data.nominal)
+                $("#field-tenor").html(res.data.jangka_waktu + " Bulan")
+
+                $(targetModal).removeClass('hidden');
+            }
+        })
+    })
+
+    $(".btnHapus").on("click", function(){
+        var id = $(this).data('id');
+        var targetModal = $(this).data('target');
+
+        $("#id-hapus").val(id);
+        $(targetModal).removeClass('hidden')
+    })
+</script>
 @endpush

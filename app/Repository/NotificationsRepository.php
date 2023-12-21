@@ -3,7 +3,9 @@
 namespace App\Repository;
 
 use App\Models\Notifications;
+use App\Models\PengajuanModel;
 use Illuminate\Support\Facades\DB;
+use stdClass;
 
 class NotificationsRepository
 {
@@ -61,5 +63,27 @@ class NotificationsRepository
 
     public function delete($id) {
         DB::table('notifications')->delete($id);
+    }
+
+    public function detailNotif($id){
+        $data = PengajuanModel::where('pengajuan.id', $id)
+            ->join('pengajuan_dagulir', 'pengajuan_dagulir.id', 'pengajuan.id')
+            ->select('pengajuan_dagulir.*')
+            ->first();
+        $jenis_usaha = config('dagulir.jenis_usaha');
+        $tipe = config('dagulir.tipe_pengajuan');
+        if($data){
+            $returnData = new stdClass;
+            $returnData->kode_pendaftaran = $data->kode_pendaftaran;
+            $returnData->nama = $data->nama;
+            $returnData->tanggal_pengajuan = date('d M Y', strtotime($data->created_at));
+            $returnData->jenis_usaha = $jenis_usaha[intval($data->jenis_usaha)];
+            $returnData->tipe_pengajuan = $tipe[intval($data->tipe)];
+            $returnData->nominal = $data->nominal;
+            $returnData->jangka_waktu = $data->jangka_waktu;
+            
+            return $returnData;
+        }
+        return null;
     }
 }

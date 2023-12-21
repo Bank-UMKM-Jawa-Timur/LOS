@@ -70,7 +70,7 @@
                     <div class="dropdown-menu-link hidden">
                         <ul class="space-y-1 p-2 mt-3 bg-gray-50">
                             <li>
-                                <a href="{{route('dashboard.dana')}}">
+                                <a href="{{route('dana.dashboard')}}">
                                     <button class="item-dp-link">
                                         Dashboard
                                     </button>
@@ -91,9 +91,9 @@
                 @endif
                 @if (auth()->user()->role == 'Kredit Program')
                     <li class="menu-item">
-                        <a href="{{ route('dashboard.dana') }}">
+                        <a href="{{ route('dana.dashboard') }}">
                             <button
-                                class="item-link @active('dashboard.dana', 'active-menu')  w-full flex gap-3 font-medium text-left px-4 py-3 rounded-md">
+                                class="item-link @active(' dana.dashboard', 'active-menu')  w-full flex gap-3 font-medium text-left px-4 py-3 rounded-md">
                                 <span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                         viewBox="0 0 24 24">
@@ -120,11 +120,11 @@
                             </button>
                         </a>
                     </li>
-                    <div class="dropdown-menu-link @active('dashboard.dana', '', 'hidden')">
+                    <div class="dropdown-menu-link @active('dana.dashboard', '', 'hidden')">
                         <ul class="space-y-1 p-2 mt-3 bg-gray-50">
                             <li>
-                                <a href="{{route('dashboard.dana')}}">
-                                    <button class="item-dp-link @active('dashboard.dana', 'active-item')">
+                                <a href="{{route('dana.dashboard')}}">
+                                    <button class="item-dp-link @active('dana.dashboard', 'active-item')">
                                         Dashboard
                                     </button>
                                 </a>
@@ -205,8 +205,8 @@
                         </button>
                     </a>
                 </li>
-                <li class="menu-item @active('master,master.*', 'active-menu')">
-                    <a href="#" class="toggle-dp-menu">
+                <li class="menu-item toggle-dp-menu @active('master,master.*', 'active-menu')">
+                    <a href="#"">
                         <button class="item-link relative w-full flex gap-2 font-medium text-left px-4 py-3 rounded-md">
                             <span>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"

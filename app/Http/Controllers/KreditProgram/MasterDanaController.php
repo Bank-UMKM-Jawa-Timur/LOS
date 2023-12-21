@@ -82,6 +82,7 @@ class MasterDanaController extends Controller
             'cabang' => 'required',
             'dana_modal' => 'required'
         ]);
+        DB::beginTransaction();
         try {
             $check_dana = DanaCabang::where('id_cabang',$request->get('cabang'))->first();
             $dana_idle = MasterDana::latest()->first()->dana_idle;
@@ -126,6 +127,7 @@ class MasterDanaController extends Controller
                 $master_dana->dana_idle = $total_dana_master;
                 $master_dana->update();
             }
+            DB::commit();
             alert()->success('Berhasil','Berhasil menambahkan data');
             return redirect()->route('master-dana.cabang.index');
         } catch (Exception $th) {
