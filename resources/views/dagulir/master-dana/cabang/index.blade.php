@@ -97,7 +97,7 @@
                                 <th>Dana Modal</th>
                                 <th>Dana Idle</th>
                                 <th>Plafon Akumulasi</th>
-                                <th>Bagi Debet</th>
+                                <th>Baki Debet</th>
                                 <th>Tanggal</th>
                             </thead>
                             <tbody>
