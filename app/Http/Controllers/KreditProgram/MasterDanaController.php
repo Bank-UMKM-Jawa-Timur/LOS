@@ -91,16 +91,6 @@ class MasterDanaController extends Controller
                 return redirect()->route('master-dana.cabang.index');
             }
 
-            $data_pengajuan = PengajuanDagulir::with('pengajuan')
-                                        ->where('status','6')
-                                        ->where('kode_bank_cabang',$request->get('cabang'))
-                                        ->get();
-            $nominal_plafon = 0;
-            foreach ($data_pengajuan as $key => $value) {
-                $plafon = PlafonUsulan::where('id_pengajuan',$value->pengajuan->id)->first()->plafon_usulan_pincab;
-                $nominal_plafon += $plafon;
-            }
-
             if ($check_dana) {
                 alert()->warning('Warning','Dana sudah tersedia.');
                 return redirect()->route('master-dana.cabang.index');
