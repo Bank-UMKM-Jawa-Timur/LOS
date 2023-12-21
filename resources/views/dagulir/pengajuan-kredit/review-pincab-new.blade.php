@@ -241,7 +241,7 @@
                                         @endif
                                     @endforeach
                                     @if ($item->nama == 'Ijin Usaha' && $countIjin == 0)
-                                        <div class="form-group-2">
+                                        <div class="form-group-1">
                                             <div class="field-review">
                                                 <div class="field-name">
                                                     <label for="">Ijin Usaha</label>
@@ -756,13 +756,17 @@
                                     $no = 0;
                                 @endphp
                             @endforeach
-                            <div class="space-y-5">
-                                <hr>
-                                @foreach ($pendapatUsulanStaf as $itemStaf)
-                                    <div class="form-group-2">
+                            <div class="space-y-5 border">
+                                <div class="head p-3 bg-gray-50 border-b flex gap-5">
+                                    <iconify-icon icon="tabler:message" class="text-2xl"></iconify-icon>
+                                    <h2 class="font-bold text-lg tracking-tighter">Pendapat dan Usulan</h2>
+                                </div>
+                                <div class="pl-5 pb-4 divide-y">
+                                    @foreach ($pendapatUsulanStaf as $itemStaf)
+                                    <div class="form-group-1">
                                         <div class="field-review">
                                             <div class="field-name">
-                                                <h6>Pendapat dan Usulan Staf</h6>
+                                                <h6>Staf</h6>
                                             </div>
                                             <div class="field-answer">
                                                 <h6>{{ $itemStaf->pendapat_per_aspek }}</h6>
@@ -771,10 +775,10 @@
                                     </div>
                                 @endforeach
                                 @foreach ($pendapatUsulanPenyelia as $itemPenyelia)
-                                    <div class="form-group-2">
+                                    <div class="form-group-1">
                                         <div class="field-review">
                                             <div class="field-name">
-                                                <h6>Pendapat dan Usulan Penyelia</h6>
+                                                <h6>Penyelia</h6>
                                             </div>
                                             <div class="field-answer">
                                                 <h6>{{ $itemPenyelia->pendapat_per_aspek }}</h6>
@@ -784,10 +788,10 @@
                                 @endforeach
                                 @if ($dataUmum->id_pbo)
                                     @foreach ($pendapatUsulanPBO as $itemPBO)
-                                        <div class="form-group-2">
+                                        <div class="form-group-1">
                                             <div class="field-review">
                                                 <div class="field-name">
-                                                    <h6>Pendapat dan Usulan PBO</h6>
+                                                    <h6> PBO</h6>
                                                 </div>
                                                 <div class="field-answer">
                                                     <h6>{{ $itemPBO->pendapat_per_aspek }}</h6>
@@ -798,10 +802,10 @@
                                 @endif
                                 @if ($dataUmum->id_pbp)
                                     @foreach ($pendapatUsulanPBP as $itemPBP)
-                                        <div class="form-group-2">
+                                        <div class="form-group-1">
                                             <div class="field-review">
                                                 <div class="field-name">
-                                                    <h6>Pendapat dan Usulan PBP</h6>
+                                                    <h6>PBP</h6>
                                                 </div>
                                                 <div class="field-answer">
                                                     <h6>{{ $itemPBP->pendapat_per_aspek }}</h6>
@@ -810,6 +814,7 @@
                                         </div>
                                     @endforeach
                                 @endif
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -833,7 +838,7 @@
                     <div class="divide-y-2 divide-red-800">
                         @if($pendapatDanUsulan->komentar_staff)
                             <div class="p-4">
-                                <div class="form-group-2">
+                                <div class="form-group-1">
                                     <div class="field-review">
                                         <div class="field-name">
                                             <label for="">Staff Kredit</label>
@@ -847,7 +852,7 @@
                         @endif
                 @if($pendapatDanUsulan->komentar_penyelia)
                     <div class="p-4">
-                        <div class="form-group-2">
+                        <div class="form-group-1">
                             <div class="field-review">
                                 <div class="field-name">
                                     <label for="">Penyelia Kredit</label>
@@ -857,7 +862,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group-2">
+                        <div class="form-group-1">
                             <div class="field-review">
                                 <div class="field-name">
                                     <label for="">Tenor</label>
@@ -867,7 +872,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group-2">
+                        <div class="form-group-1">
                             <div class="field-review">
                                 <div class="field-name">
                                     <label for="">Plafon</label>
@@ -881,7 +886,7 @@
                     @endif
                     @if($pendapatDanUsulan->komentar_pbo)
                     <div class="p-4">
-                        <div class="form-group-2">
+                        <div class="form-group-1">
                             <div class="field-review">
                                 <div class="field-name">
                                     <label for="">Pincab Kredit</label>
@@ -891,7 +896,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group-2">
+                        <div class="form-group-1">
                             <div class="field-review">
                                 <div class="field-name">
                                     <label for="">Tenor</label>
@@ -901,7 +906,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group-2">
+                        <div class="form-group-1">
                             <div class="field-review">
                                 <div class="field-name">
                                     <label for="">Plafon</label>
@@ -915,7 +920,7 @@
                     @endif
                     @if($pendapatDanUsulan->komentar_pbo)
                     <div class="p-4">
-                        <div class="form-group-2">
+                        <div class="form-group-1">
                             <div class="field-review">
                                 <div class="field-name">
                                     <label for="">PBO kredit</label>
@@ -925,7 +930,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group-2">
+                        <div class="form-group-1">
                             <div class="field-review">
                                 <div class="field-name">
                                     <label for="">Tenor</label>
@@ -935,7 +940,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group-2">
+                        <div class="form-group-1">
                             <div class="field-review">
                                 <div class="field-name">
                                     <label for="">Plafon</label>
@@ -949,7 +954,7 @@
                     @endif
                     @if($pendapatDanUsulan->komentar_pbp)
                     <div class="p-4">
-                        <div class="form-group-2">
+                        <div class="form-group-1">
                             <div class="field-review">
                                 <div class="field-name">
                                     <label for="">PBP kredit</label>
@@ -959,7 +964,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group-2">
+                        <div class="form-group-1">
                             <div class="field-review">
                                 <div class="field-name">
                                     <label for="">Tenor</label>
@@ -969,7 +974,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group-2">
+                        <div class="form-group-1">
                             <div class="field-review">
                                 <div class="field-name">
                                     <label for="">Plafon</label>
@@ -982,10 +987,10 @@
                     </div>
                     @endif
                     <div class="p-4">
-                        <div class="form-group-2">
+                        <div class="form-group-1">
                             <div class="field-review">
                                 <div class="field-name">
-                                    <label for="">Pendapat & Usulan Pimpinan Cabang</label>
+                                    <label for="">Pimpinan Cabang</label>
                                 </div>
                                 <div class="field-answer">
                                     <p>
