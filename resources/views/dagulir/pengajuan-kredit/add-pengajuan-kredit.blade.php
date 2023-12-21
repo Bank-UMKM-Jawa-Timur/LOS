@@ -1960,7 +1960,7 @@ $dataIndex = match ($skema) {
                                     <input type="hidden" name="opsi_jawaban[${valItem.id}]"
                                         value="${valItem.opsi_jawaban}" id="" class="input">
                                     <input type="text" maxlength="255" id="atas_nama" name="informasi[${valItem.id}]" placeholder="Masukkan informasi"
-                                        class="form-input input" value="${response.dataJawaban[i]}">
+                                        class="form-input input" value="">
                                 </div>
                             `);
                         } else {
@@ -2007,7 +2007,7 @@ $dataIndex = match ($skema) {
                                         <input type="hidden" name="opsi_jawaban[${valItem.id}]"
                                             value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
                                         <input type="text" maxlength="255" id="${valItem.nama.toString().replaceAll(" ", "_")}" name="informasi[${valItem.id}]" placeholder="Masukkan informasi"
-                                            class="form-input input" ${isDisabled} value="${response.dataJawaban[i]}">
+                                            class="form-input input" ${isDisabled} value="">
                                     </div>
                                 `);
                             }
