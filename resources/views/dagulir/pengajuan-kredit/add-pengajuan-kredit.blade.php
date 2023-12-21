@@ -139,7 +139,7 @@ $dataIndex = match ($skema) {
                                                     <input type="hidden" name="id_item_file[{{ $itemNIB->id }}]" value="{{ $itemNIB->id }}"
                                                         id="docNIB_id">
                                                     <input type="file" name="upload_file[{{ $itemNIB->id }}]" data-id=""
-                                                        placeholder="Masukkan informasi {{ $itemNIB->nama }}" class="form-input limit-size bg-white"
+                                                        placeholder="Masukkan informasi {{ $itemNIB->nama }}" class="form-input limit-size bg-white only-image"
                                                         id="file_nib" disabled="true">
                                                     <span class="text-red-500 m-0" style="display: none" id="docNIB_text">Besaran file
                                                         tidak boleh lebih dari 5 MB</span>
@@ -172,7 +172,7 @@ $dataIndex = match ($skema) {
                                                         id="docSKU_id">
                                                     <input type="file" name="upload_file[{{ $itemSKU->id }}]" id="surat_keterangan_usaha_file"
                                                         data-id="" placeholder="Masukkan informasi {{ $itemSKU->nama }}"
-                                                        class="form-input limit-size bg-white"
+                                                        class="form-input limit-size bg-white only-image"
                                                         disabled>
                                                     <span class="text-red-500 m-0" style="display: none" id="docSKU_text">Besaran file
                                                         tidak boleh lebih dari 5 MB</span>
@@ -201,7 +201,7 @@ $dataIndex = match ($skema) {
                                                     <input type="hidden" name="id_item_file[{{ $itemNPWP->id }}]" value="{{ $itemNPWP->id }}"
                                                         id="docNPWP_id">
                                                     <input type="file" name="upload_file[{{ $itemNPWP->id }}]" id="npwp_file" data-id=""
-                                                        placeholder="Masukkan informasi {{ $itemNPWP->nama }}" class="form-input limit-size bg-white">
+                                                        placeholder="Masukkan informasi {{ $itemNPWP->nama }}" class="form-input limit-size bg-white only-image">
                                                     <span class="text-red-500 m-0" style="display: none" id="docNPWP_text">Besaran file
                                                         tidak boleh lebih dari 5 MB</span>
                                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
@@ -309,13 +309,11 @@ $dataIndex = match ($skema) {
                                                     <div class="form-group">
                                                         <div class="input-box">
                                                             <label for="">{{ $item->nama }}</label><small class="text-red-500 font-bold">*</small>
-                                                            {{-- <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" --}} {{--
-                                                                            id="{{ $idLevelDua }}"> --}}
                                                             <input type="hidden" name="id_item_file[{{ $item->id }}]" value="{{ $item->id }}"
                                                                 id="">
                                                             <input type="file" name="upload_file[{{ $item->id }}]" id="{{ $idLevelDua }}"
                                                                 data-id="" placeholder="Masukkan informasi {{ $item->nama }}"
-                                                                class="form-input limit-size"
+                                                                class="form-input limit-size {{$item->only_accept}}"
                                                                 >
                                                             <span class="text-red-500 m-0" style="display: none">Maximum upload file size is 15
                                                                 MB</span>
@@ -506,7 +504,7 @@ $dataIndex = match ($skema) {
                                                                             <input type="file" name="upload_file[{{ $itemTiga->id }}][]"
                                                                                 id="{{ $idLevelTiga }}" data-id=""
                                                                                 placeholder="Masukkan informasi {{ $itemTiga->nama }}"
-                                                                                class="form-input limit-size file-usaha" accept="image/*">
+                                                                                class="form-input limit-size file-usaha {{$itemTiga->only_accept}}" accept="image/*">
                                                                             <span class="text-red-500 m-0" style="display: none">Maximum upload
                                                                                 file size is 15 MB</span>
                                                                             <span class="filename" style="display: inline;"></span>
@@ -690,7 +688,7 @@ $dataIndex = match ($skema) {
                                                                         <input type="file" id="{{ $idLevelEmpat }}"
                                                                             name="upload_file[{{ $itemEmpat->id }}]" data-id=""
                                                                             placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
-                                                                            class="form-input limit-size">
+                                                                            class="form-input limit-size {{$itemEmpat->only_accept}}">
                                                                         <span class="text-red-500 m-0" style="display: none">Maximum upload file
                                                                             size is 5 MB</span>
                                                                         <span class="filename" style="display: inline;"></span>
@@ -1869,7 +1867,7 @@ $dataIndex = match ($skema) {
                                 <div class="form-group aspek_jaminan_kategori_jaminan_utama">
                                     <label>${valItem.nama}</label>
                                     <input type="hidden" name="id_item_file[${valItem.id}]" value="${valItem.id}" id="" class="input">
-                                    <input type="file" name="upload_file[${valItem.id}]" data-id="" class="form-input limit-size">
+                                    <input type="file" name="upload_file[${valItem.id}]" data-id="" class="form-input limit-size only-image">
                                     <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                                     <span class="filename" style="display: inline;"></span>
                                 </div>`);
@@ -2007,7 +2005,7 @@ $dataIndex = match ($skema) {
                                                     value="${valItem.id}" id="">
                                                 <input type="file" id="${valItem.nama.toString().replaceAll(" ", "_")}"
                                                     name="upload_file[${valItem.id}][]" data-id=""
-                                                    placeholder="Masukkan informasi ${valItem.nama}" class="form-input limit-size">
+                                                    placeholder="Masukkan informasi ${valItem.nama}" class="form-input limit-size only-image">
                                                 <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                                                 <span class="filename" style="display: inline;"></span>
                                                 <div class="flex gap-2 multiple-action">
@@ -2478,6 +2476,7 @@ $dataIndex = match ($skema) {
     $('.limit-size').on('change', function() {
         var size = (this.files[0].size / 1024 / 1024).toFixed(2)
         if (size > 5) {
+            $(this).next().html('Maximum upload file size is 5 MB')
             $(this).next().css({
                 "display": "block"
             });
@@ -2492,6 +2491,7 @@ $dataIndex = match ($skema) {
     $('.limit-size-2').on('change', function() {
         var size = (this.files[0].size / 1024 / 1024).toFixed(2)
         if (size > 2) {
+            $(this).parent().parent().find('.error-limit').html('Maximum upload file size is 2 MB')
             $(this).parent().parent().find('.error-limit').css({
                 "display": "block"
             });
@@ -2506,6 +2506,7 @@ $dataIndex = match ($skema) {
     $('.limit-size-slik').on('change', function() {
         var size = (this.files[0].size / 1024 / 1024).toFixed(2)
         if (size > 10) {
+            $(this).next().html('Maximum upload file size is 10 MB')
             $(this).next().css({
                 "display": "block"
             });
@@ -2517,6 +2518,52 @@ $dataIndex = match ($skema) {
         }
     })
     // End Limit Upload
+    // Only Accept file validation
+    $(".only-image").on('change', function() {
+        if (!this.files[0].type.includes('image')) {
+            $(this).val('')
+            $(this).next().html('Hanya boleh memilih berkas berupa gambar(.jpg, .jpeg, .png, .webp)')
+            $(this).next().css({
+                "display": "block"
+            });
+        }
+        else {
+            $(this).next().css({
+                "display": "none"
+            });
+        }
+    })
+
+    $(".only-pdf").on('change', function() {
+        if (!this.files[0].type.includes('pdf')) {
+            $(this).val('')
+            $(this).next().html('Hanya boleh memilih berkas berupa pdf.')
+            $(this).next().css({
+                "display": "block"
+            });
+        }
+        else {
+            $(this).next().css({
+                "display": "none"
+            });
+        }
+    })
+
+    $(".image-pdf").on('change', function() {
+        if (!this.files[0].type.includes('image') && !this.files[0].type.includes('pdf')) {
+            $(this).val('')
+            $(this).next().html('Hanya boleh memilih berkas berupa pdf dan gambar(.jpg, .jpeg, .png, .webp)')
+            $(this).next().css({
+                "display": "block"
+            });
+        }
+        else {
+            $(this).next().css({
+                "display": "none"
+            });
+        }
+    })
+    // END Only Accept file validation
     var slik = document.getElementById("file_slik");
     var selectedFile;
 
