@@ -648,7 +648,7 @@
                                 {{-- SLIK --}}
                                 <hr>
                                 <div class="flex justify-between">
-                                    <a href="{{route('dagulir.index')}}">
+                                    <a href="{{route('dagulir.pengajuan.index')}}">
                                         <button type="button"
                                             class="px-5 py-2 border rounded bg-white text-gray-500"
                                             >
@@ -1722,7 +1722,7 @@
                                         </div>
                                     @endif
                                     <div class="flex justify-between">
-                                        <a href="{{route('dagulir.index')}}">
+                                        <a href="{{route('dagulir.pengajuan.index')}}">
                                             <button type="button"
                                                 class="px-5 py-2 border rounded bg-white text-gray-500"
                                                 >
@@ -2027,7 +2027,7 @@
                                 </div>
                                 @endif
                                 <div class="flex justify-between">
-                                    <a href="{{route('dagulir.index')}}">
+                                    <a href="{{route('dagulir.pengajuan.index')}}">
                                         <button type="button"
                                             class="px-5 py-2 border rounded bg-white text-gray-500"
                                             >
