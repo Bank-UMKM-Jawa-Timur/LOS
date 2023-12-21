@@ -763,12 +763,21 @@ class NewDagulirController extends Controller
                         } else
                             $totalDataNull++;
                     }
-                    // get skor ratio coverage opsi
-                    $jawaban = JawabanModel::select('id', 'skor')
-                                            ->where('id_pengajuan', $request->id_pengajuan)
-                                            ->where('id_jawaban', 158) // 158  = id_option ratio coverage opsi
-                                            ->first();
                     $total_input_data = (count($request->skor_penyelia) - $totalDataNull);
+                    // get skor ratio coverage opsi
+                    $jawaban = ItemModel::select(
+                                            'item.id AS item_id',
+                                            'j.id_jawaban',
+                                            'j.skor',
+                                            'j.skor_penyelia',
+                                            'j.skor_pbo',
+                                            'j.skor_pbp'
+                                        )
+                                        ->join('option AS o', 'o.id_item', 'item.id')
+                                        ->join('jawaban AS j', 'j.id_jawaban', 'o.id')
+                                        ->where('j.id_pengajuan', $request->id_pengajuan)
+                                        ->where('item.id', 132) // id item ratio coverage opsi
+                                        ->first();
                     if ($jawaban) {
                         $sum_select += $jawaban->skor;
                         $total_input_data++;

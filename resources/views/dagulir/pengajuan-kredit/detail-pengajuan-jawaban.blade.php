@@ -926,11 +926,11 @@
                                                                         </div>
                                                                     </div>
                                                                     <div class="input-group input-b-bottom">
-                                                                        <input type="hidden" name="id_item[]"
-                                                                            value="{{ $item->id }}">
-                                                                        <input type="hidden" name="id_option[]"
-                                                                            value="{{ $itemJawaban->id }}">
                                                                         @if ($item->is_commentable == 'Ya')
+                                                                            <input type="hidden" name="id_item[]"
+                                                                                value="{{ $item->id }}">
+                                                                            <input type="hidden" name="id_option[]"
+                                                                                value="{{ $itemJawaban->id }}">
                                                                             <div class="flex pl-2">
                                                                                     <div class="flex-1 w-64">
                                                                                         <label for="">Komentar</label>
@@ -956,6 +956,10 @@
                                                                                     <div class="flex-3 w-5"></div>
                                                                             </div>
                                                                         @else
+                                                                            <input type="hidden" name="id_item[]"
+                                                                                value="{{ $item->id }}">
+                                                                            <input type="hidden" name="id_option[]"
+                                                                                value="{{ $itemJawaban->id }}">
                                                                             <input type="hidden" name="komentar_penyelia[]"
                                                                                 value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                             <input type="hidden" name="skor_penyelia[]"
@@ -964,11 +968,11 @@
                                                                     </div>
                                                                 @else
                                                                     <div class="input-group input-b-bottom">
-                                                                        <input type="hidden" name="id_item[]"
-                                                                            value="{{ $item->id }}">
-                                                                        <input type="hidden" name="id_option[]"
-                                                                            value="{{ $itemJawaban->id }}">
                                                                         @if ($item->is_commentable == 'Ya')
+                                                                            <input type="hidden" name="id_item[]"
+                                                                                value="{{ $item->id }}">
+                                                                            <input type="hidden" name="id_option[]"
+                                                                                value="{{ $itemJawaban->id }}">
                                                                             <input type="hidden" name="komentar_penyelia[]" value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                             <div>
                                                                                 @php
@@ -980,6 +984,10 @@
                                                                                     value="{{ $skorInput2 || $skorInput2 > 0 ? $skorInput2 : null }}">
                                                                             </div>
                                                                         @else
+                                                                            <input type="hidden" name="id_item[]"
+                                                                                value="{{ $item->id }}">
+                                                                            <input type="hidden" name="id_option[]"
+                                                                                value="{{ $itemJawaban->id }}">
                                                                             <input type="hidden" name="komentar_penyelia[]"
                                                                                 value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                             <input type="hidden" name="skor_penyelia[]"
@@ -1201,7 +1209,9 @@
                                                                                 value="{{ $itemTiga->id }}">
                                                                         @endif
                                                                     @endif
-                                                                <div class="input-group input-b-bottom col-span-2">
+                                                            </div>
+                                                            @if ($getSkorPenyelia)
+                                                                @if ($itemTiga->is_commentable == 'Ya')
                                                                     <input type="hidden" name="id_item[]"
                                                                         value="{{ $itemTiga->id }}">
                                                                     <input type="hidden" name="id_option[]"
@@ -1210,10 +1220,6 @@
                                                                         $skorInput3 = null;
                                                                         $skorInput3 = $getSkorPenyelia?->skor ? $getSkorPenyelia?->skor : $itemJawabanLevelTiga->skor;
                                                                     @endphp
-                                                                </div>
-                                                            </div>
-                                                            @if ($getSkorPenyelia)
-                                                                @if ($itemTiga->is_commentable == 'Ya')
                                                                     <div class="row col-span-2">
                                                                         <div class="input-group-1">
                                                                             <div class="flex pl-2">
@@ -1239,6 +1245,10 @@
                                                                         </div>
                                                                     </div>
                                                                 @else
+                                                                    <input type="hidden" name="id_item[]"
+                                                                        value="{{ $itemTiga->id }}">
+                                                                    <input type="hidden" name="id_option[]"
+                                                                        value="{{ $itemJawabanLevelTiga->id }}">
                                                                     <input type="hidden" name="komentar_penyelia[]"
                                                                         value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                     <input type="hidden" name="skor_penyelia[]"
@@ -1459,11 +1469,11 @@
                                                                                     </div>
                                                                                 @endif
                                                                                 <div class="input-group input-b-bottom">
-                                                                                    <input type="hidden" name="id_item[]"
-                                                                                        value="{{ $itemEmpat->id }}">
-                                                                                    <input type="hidden" name="id_option[]"
-                                                                                        value="{{ $itemJawabanLevelEmpat->id }}">
                                                                                     @if ($itemEmpat->is_commentable == 'Ya')
+                                                                                        <input type="hidden" name="id_item[]"
+                                                                                            value="{{ $itemEmpat->id }}">
+                                                                                        <input type="hidden" name="id_option[]"
+                                                                                            value="{{ $itemJawabanLevelEmpat->id }}">
                                                                                         <div class="flex pl-2">
                                                                                             <div class="flex-1 w-64">
                                                                                                 <label for="">Komentar</label>
@@ -1488,7 +1498,6 @@
                                                                                             </div>
                                                                                             <div class="flex-3 w-5"></div>
                                                                                         </div>
-
                                                                                     @endif
                                                                                 </div>
                                                                             </div>
