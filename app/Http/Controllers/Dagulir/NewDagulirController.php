@@ -3216,12 +3216,44 @@ class NewDagulirController extends Controller
     public function tempFile(Request $request)
     {
         $dagulir = PengajuanDagulirTemp::find($request->id_dagulir_temp);
-        $data = TemporaryService::saveFileDagulir(
-            $dagulir,
-            $request->answer_id,
-            $request->file_id,
-            $request->file('file')
-        );
+        $temp = DB::table('temporary_jawaban_text')
+                    ->where('temporary_dagulir_id'. $request->dagulir_temp)
+                    ->where('id_jawaban', $request->answer_id)
+                    ->first();
+        if (!$temp) {
+            // Belum pernah save temp
+            $data = TemporaryService::saveFileDagulir(
+                $dagulir,
+                $request->answer_id,
+                $request->file_id,
+                $request->file('file')
+            );
+        }
+        else {
+            // Sudah pernah save temp
+            $req_file = $request->file('file');
+            $current_filename = $temp->opsi_text;
+            $aID = $request->answer_id;
+            $path = public_path("upload/temp/{$aID}/");
+            if ($current_filename != $req_file->getClientOriginalName()) {
+                // Update file
+                @unlink($path . $temp->opsi_text);
+                DB::table('temporary_jawaban_text')
+                    ->where('temporary_dagulir_id'. $request->dagulir_temp)
+                    ->where('id_jawaban', $request->answer_id)
+                    ->update(['opsi_text' => $req_file->getClientOriginalName()]);
+                $data = [
+                    'filename' => $req_file->getClientOriginalName(),
+                    'file_id' => $temp->id,
+                ];
+            }
+            else {
+                $data = [
+                    'filename' => $temp->opsi_jawaban,
+                    'file_id' => $temp->id,
+                ];
+            }
+        }
 
         return response()->json([
             'statusCode' => 200,
