@@ -123,7 +123,7 @@
                                     <td>{{ date('d M Y', strtotime($item->created_at)) }}</td>
                                     <td>{{ $item->nama }}</td>
                                     <td>
-                                        <div class="flex">
+                                        <div class="flex justify-center">
                                             <div class="dropdown-tb">
                                                 <button class="dropdown-tb-toggle border rounded px-4 py-2 hover:bg-gray-100 hover:text-gray-500">
                                                     <iconify-icon icon="ph:dots-three-outline-vertical-fill" class="mt-2">
