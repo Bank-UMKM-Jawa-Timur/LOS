@@ -153,6 +153,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ->name('notification.')
             ->group(function() {
                 Route::get('', [NotificationController::class, 'index'])->name('index');
+                Route::post('/hapus', [NotificationController::class, 'delete'])->name('delete');
+                Route::post('/get-detail', [NotificationController::class, 'getDetail'])->name('getDetail');
             });
     });
     Route::middleware(['KreditProgram'])->group(function () {
