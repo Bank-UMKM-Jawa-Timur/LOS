@@ -156,7 +156,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     Route::middleware(['KreditProgram'])->group(function () {
             // Dashboard Dana
-            Route::get('dashboard-dana',[DashboardKreditProgramController::class,'index'])->name('dashboard.dana');
+            Route::get('dashboard-dana',[DashboardKreditProgramController::class,'index'])->name('dana.dashboard');
             // Master Dana
             Route::prefix('master-dana')->group(function () {
                 // master dana modal
