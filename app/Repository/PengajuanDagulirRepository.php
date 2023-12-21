@@ -131,7 +131,6 @@ class PengajuanDagulirRepository
             })
             ->latest()
             ->select('pengajuan_dagulir.*')
-            ->where('pengajuan.id_staf', $id_user)
             ->where('pengajuan_dagulir.from_apps', $from_apps)
             ->paginate($limit);
         } else if ($role == 'Penyelia Kredit') {
