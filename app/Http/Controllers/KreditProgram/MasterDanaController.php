@@ -82,26 +82,39 @@ class MasterDanaController extends Controller
             'cabang' => 'required',
             'dana_modal' => 'required'
         ]);
-        DB::beginTransaction();
         try {
             $check_dana = DanaCabang::where('id_cabang',$request->get('cabang'))->first();
+            $dana_idle = MasterDana::latest()->first()->dana_idle;
+            if ($dana_idle < formatNumber($request->get('dana_modal'))) {
+                alert()->warning('Warning','Dana yang tersedia tidak mencukupi.');
+                return redirect()->route('master-dana.cabang.index');
+            }
+
+            $data_pengajuan = PengajuanDagulir::with('pengajuan')
+                                        ->where('status','6')
+                                        ->where('kode_bank_cabang',$request->get('cabang'))
+                                        ->get();
+            $nominal_plafon = 0;
+            foreach ($data_pengajuan as $key => $value) {
+                $plafon = PlafonUsulan::where('id_pengajuan',$value->pengajuan->id)->first()->plafon_usulan_pincab;
+                $nominal_plafon += $plafon;
+            }
 
             if ($check_dana) {
                 alert()->warning('Warning','Dana sudah tersedia.');
                 return redirect()->route('master-dana.cabang.index');
             }else{
-                $dana_idle = MasterDana::latest()->first()->dana_idle;
-                if ($dana_idle < formatNumber($request->get('dana_modal'))) {
-                    alert()->warning('Warning','Dana yang tersedia tidak mencukupi.');
-                    return redirect()->route('master-dana.cabang.index');
-                }
                 // dana cabang
+                $loan_akumulasi = MasterDDLoan::where('id_cabang')->sum('plafon');
+                $loan_debet = MasterDDLoan::where('id_cabang')->sum('baki_debet');
+
+                $total_data_idle = formatNumber($request->get('dana_modal')) - $loan_debet;
                 $dana_cabang = new DanaCabang;
                 $dana_cabang->id_cabang = $request->get('cabang');
                 $dana_cabang->dana_modal = formatNumber($request->get('dana_modal'));
-                $dana_cabang->dana_idle = formatNumber($request->get('dana_modal'));
-                $dana_cabang->plafon_akumulasi = 0;
-                $dana_cabang->baki_debet = 0;
+                $dana_cabang->dana_idle = $total_data_idle;
+                $dana_cabang->plafon_akumulasi = $loan_akumulasi;
+                $dana_cabang->baki_debet = $loan_debet;
                 $dana_cabang->save();
 
                 $total_dana_idle = DanaCabang::first()->sum('dana_idle');
@@ -113,17 +126,14 @@ class MasterDanaController extends Controller
                 $master_dana->dana_idle = $total_dana_master;
                 $master_dana->update();
             }
-            DB::commit();
             alert()->success('Berhasil','Berhasil menambahkan data');
             return redirect()->route('master-dana.cabang.index');
         } catch (Exception $th) {
-            DB::rollBack();
             return $th;
             alert()->error('error','Terjadi Kesalahan');
             return redirect()->route('master-dana.index');
         } catch (QueryException $th){
             return $th;
-            DB::rollBack();
             alert()->error('error','Terjadi Kesalahan');
             return redirect()->route('master-dana.index');
         }
@@ -142,6 +152,10 @@ class MasterDanaController extends Controller
             'cabang_ke' => 'required|not_in:0',
         ]);
         try {
+            if ($request->get('total_dana') <= 0) {
+                alert()->error('error','Dana tidak mencukupi.');
+                return redirect()->route('master-dana.alih-dana');
+            }
             $update_cabang_dari = DanaCabang::where('id_cabang',$request->get('cabang_dari'))->first();
             $update_cabang_dari->dana_idle = $update_cabang_dari->dana_idle - formatNumber($request->get('dana_idle'));
             $update_cabang_dari->update();
@@ -156,10 +170,10 @@ class MasterDanaController extends Controller
             return redirect()->route('master-dana.alih-dana');
         } catch (Exception $e) {
             alert()->error('error','Terjadi Kesalahan');
-            return redirect()->route('master-dana.index');
+            return redirect()->route('master-dana.alih-dana');
         } catch (QueryException $e){
             alert()->error('error','Terjadi Kesalahan');
-            return redirect()->route('master-dana.index');
+            return redirect()->route('master-dana.alih-dana');
         }
     }
 
