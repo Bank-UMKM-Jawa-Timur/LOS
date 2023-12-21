@@ -758,7 +758,7 @@ $dataIndex = match ($skema) {
                                         <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
                                         <input type="hidden" name="id_aspek[{{ $value->id }}]" value="{{ $value->id }}">
                                         <textarea name="pendapat_per_aspek[{{ $value->id }}]"
-                                            class="form-input @error('pendapat_per_aspek') is-invalid @enderror" id="{{  str_replace(' ', '_', strtolower($value->nama)) }}" maxlength="255"
+                                            class="form-input @error('pendapat_per_aspek') is-invalid @enderror" id="{{ str_replace(' ', '_', strtolower($value->nama)) }}" maxlength="255"
                                             cols="30" rows="4" placeholder="Pendapat Per Aspek"></textarea>
                                         @error('pendapat_per_aspek')
                                             <div class="invalid-feedback">
@@ -859,11 +859,9 @@ $dataIndex = match ($skema) {
         `
         });
     @endif
-    let dataAspekArr;
-    var nullValue = [];
+    let nullValue = [];
     $(document).ready(function() {
         countFormPercentage()
-        // dataAspekArr = <?php echo json_encode($dataAspek); ?>;
     });
 
     @if (!\Request::has('dagulir'))
@@ -1153,12 +1151,10 @@ $dataIndex = match ($skema) {
         }
     });
 
-
-
     // End Validation
     function formPercentage(tabId) {
         var form = `#${tabId}`;
-        // var form = `#aspek-jaminan-tab`;
+        // var form = `#aspek-keuangan-tab`;
         var inputFile = $(form + " input[type=file]")
         var inputText = $(form + " input[type=text]")
         var inputNumber = $(form + " input[type=number]")
@@ -1181,7 +1177,8 @@ $dataIndex = match ($skema) {
             var formGroup = inputBox.parent();
             if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden'))
                 totalInput++
-            var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
+            // var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
+            var isNull = (v.value == '' || $.trim(v.value) == '')
             if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputNull++;
                 if ($(this).attr('id') != undefined) {
@@ -1229,7 +1226,8 @@ $dataIndex = match ($skema) {
             var formGroup = inputBox.parent();
             if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden'))
                 totalInput++
-            var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
+            // var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
+            var isNull = (v.value == '' || $.trim(v.value) == '')
             if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputNull++;
                 if ($(this).attr('id') != undefined) {
@@ -1610,6 +1608,7 @@ $dataIndex = match ($skema) {
                     title: 'Oops...',
                     html: '<ul>'+message+'</ul>'
                 })
+                console.log(nullValue);
                 e.preventDefault()
             } else {
                 // $("#loadingModal").modal({
@@ -1682,73 +1681,73 @@ $dataIndex = match ($skema) {
 
     var x = 1;
 
-    $("#status").change(function() {
-        let value = $(this).val();
-        $("#foto-ktp-istri").empty();
-        $("#foto-ktp-suami").empty();
-        $("#foto-ktp-nasabah").empty();
-        $("#foto-ktp-istri").removeClass('form-group');
-        $("#foto-ktp-suami").removeClass('form-group');
-        $("#foto-ktp-nasabah").removeClass('form-group');
+    // $("#status").change(function() {
+    //     let value = $(this).val();
+    //     $("#foto-ktp-istri").empty();
+    //     $("#foto-ktp-suami").empty();
+    //     $("#foto-ktp-nasabah").empty();
+    //     $("#foto-ktp-istri").removeClass('form-group');
+    //     $("#foto-ktp-suami").removeClass('form-group');
+    //     $("#foto-ktp-nasabah").removeClass('form-group');
 
-        if (value == "menikah") {
-            $("#foto-ktp-istri").addClass('form-group')
-            $("#foto-ktp-suami").addClass('form-group')
-            $("#foto-ktp-istri").append(`
-                <label for="">{{ $itemKTPIs->nama }}</label>
-                <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
-                <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-input limit-size" id="foto_ktp_istri">
-                <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
-                @if (isset($key) && $errors->has('dataLevelDua.' . $key))
-                    <div class="invalid-feedback">
-                        {{ $errors->first('dataLevelDua.' . $key) }}
-                    </div>
-                @endif
-                <span class="filename" style="display: inline;"></span>
-            `)
-            $("#foto-ktp-suami").append(`
-                    <label for="">{{ $itemKTPSu->nama }}</label>
-                    <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
-                    <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-input limit-size" id="foto_ktp_suami">
-                    <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
-                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
-                        <div class="invalid-feedback">
-                            {{ $errors->first('dataLevelDua.' . $key) }}
-                        </div>
-                    @endif
-                    <span class="filename" style="display: inline;"></span>
-            `);
-        } else {
-            $("#foto-ktp-nasabah").addClass('form-group-1')
-            $("#foto-ktp-nasabah").append(`
-                @isset($itemKTPNas)
-                <label for="">{{ $itemKTPNas->nama }}</label>
-                <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
-                <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-input limit-size" id="foto_ktp_nasabah">
-                <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
-                @if (isset($key) && $errors->has('dataLevelDua.' . $key))
-                    <div class="invalid-feedback">
-                        {{ $errors->first('dataLevelDua.' . $key) }}
-                    </div>
-                @endif
-                <span class="filename" style="display: inline;"></span>
-                @endisset
-            `)
-        }
-        $('.limit-size').on('change', function() {
-            var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-            if (size > 5) {
-                $(this).next().css({
-                    "display": "block"
-                });
-                this.value = ''
-            } else {
-                $(this).next().css({
-                    "display": "none"
-                });
-            }
-        })
-    });
+    //     if (value == "menikah") {
+    //         $("#foto-ktp-istri").addClass('form-group')
+    //         $("#foto-ktp-suami").addClass('form-group')
+    //         $("#foto-ktp-istri").append(`
+    //             <label for="">{{ $itemKTPIs->nama }}</label>
+    //             <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
+    //             <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-input limit-size" id="foto_ktp_istri">
+    //             <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+    //             @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+    //                 <div class="invalid-feedback">
+    //                     {{ $errors->first('dataLevelDua.' . $key) }}
+    //                 </div>
+    //             @endif
+    //             <span class="filename" style="display: inline;"></span>
+    //         `)
+    //         $("#foto-ktp-suami").append(`
+    //                 <label for="">{{ $itemKTPSu->nama }}</label>
+    //                 <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
+    //                 <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-input limit-size" id="foto_ktp_suami">
+    //                 <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+    //                 @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+    //                     <div class="invalid-feedback">
+    //                         {{ $errors->first('dataLevelDua.' . $key) }}
+    //                     </div>
+    //                 @endif
+    //                 <span class="filename" style="display: inline;"></span>
+    //         `);
+    //     } else {
+    //         $("#foto-ktp-nasabah").addClass('form-group-1')
+    //         $("#foto-ktp-nasabah").append(`
+    //             @isset($itemKTPNas)
+    //             <label for="">{{ $itemKTPNas->nama }}</label>
+    //             <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
+    //             <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-input limit-size" id="foto_ktp_nasabah">
+    //             <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+    //             @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+    //                 <div class="invalid-feedback">
+    //                     {{ $errors->first('dataLevelDua.' . $key) }}
+    //                 </div>
+    //             @endif
+    //             <span class="filename" style="display: inline;"></span>
+    //             @endisset
+    //         `)
+    //     }
+    //     $('.limit-size').on('change', function() {
+    //         var size = (this.files[0].size / 1024 / 1024).toFixed(2)
+    //         if (size > 5) {
+    //             $(this).next().css({
+    //                 "display": "block"
+    //             });
+    //             this.value = ''
+    //         } else {
+    //             $(this).next().css({
+    //                 "display": "none"
+    //             });
+    //         }
+    //     })
+    // });
 
     //cek apakah opsi yg dipilih memiliki sub column
     $('.cek-sub-column').change(function(e) {
