@@ -121,7 +121,7 @@
             <div class="input-box">
                 <label for="ktp_nasabah" id="foto-nasabah">Foto Nasabah</label><small class="text-red-500 font-bold">*</small>
                 <div class="flex gap-4">
-                    <input type="file" name="foto_nasabah" class="form-input limit-size-2" />
+                    <input type="file" name="foto_nasabah" class="form-input limit-size-2" accept="image/png, image/gif, image/jpeg"/>
                 </div>
                 <span class="error-limit text-red-500" style="display: none; margin-top: 0;">Maximum upload file
                     size is 2 MB</span>
@@ -151,7 +151,7 @@
             <div class="input-box" id="ktp-nasabah">
                 <label for="ktp_nasabah" id="label-ktp-nasabah">Foto KTP Nasabah</label><small class="text-red-500 font-bold">*</small>
                 <div class="flex gap-4">
-                    <input type="file" name="ktp_nasabah" class="form-input limit-size-2" />
+                    <input type="file" name="ktp_nasabah" class="form-input limit-size-2" accept="image/png, image/gif, image/jpeg"/>
                 </div>
                 <span class="text-red-500" style="display: none; margin-top: 0;">Maximum upload file
                     size is 2 MB</span>
@@ -504,11 +504,12 @@
             </div>
         </div>
         <div class="flex justify-between">
-            <button type="button"
-            class="px-5 py-2 border rounded bg-white text-gray-500"
-            >
-            Kembali
-            </button>
+            <a href="{{route('dagulir.pengajuan.index')}}">
+                <button type="button"
+                    class="px-5 py-2 border rounded bg-white text-gray-500">
+                    Kembali
+                </button>
+            </a>
             <button type="button"
             class="px-5 py-2 next-tab border rounded bg-theme-primary text-white"
             >

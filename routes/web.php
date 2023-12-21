@@ -48,6 +48,10 @@ Route::get('/', function () {
 Route::get('tes-skor', [PengajuanKreditController::class, 'tesskor'])->name('tesskor');
 Route::post('tes-skor', [PengajuanKreditController::class, 'countScore'])->name('tesskor.store');
 
+Route::get('/coming-soon', function(){
+    return view('under-construction.index');
+})->name('coming-soon');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/detail-pengajuan-new/tes', function () {
         return view('dagulir.pengajuan-kredit.detail-pengajuan-jawaban-new');

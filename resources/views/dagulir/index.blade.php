@@ -88,6 +88,24 @@
                         <div
                         class="layout-wrapping p-3 lg:flex grid grid-cols-1 justify-center lg:justify-between"
                         >
+                        @if (Request()->tAwal != null)
+                            <input type="text" name="tAwal" value="{{ Request()->tAwal }}" hidden>
+                        @endif
+                        @if (Request()->tAkhir != null)
+                            <input type="text" name="tAkhir" value="{{ Request()->tAkhir }}" hidden>
+                        @endif
+                        @if (Request()->cbg != null)
+                            <input type="text" name="cbg" value="{{ Request()->cbg }}" hidden>
+                        @endif
+                        @if (Request()->pss != null)
+                            <input type="text" name="pss" value="{{ Request()->pss }}" hidden>
+                        @endif
+                        @if (Request()->score != null)
+                            <input type="text" name="score" value="{{ Request()->score }}" hidden>
+                        @endif
+                        @if (Request()->sts != null)
+                            <input type="text" name="sts" value="{{ Request()->sts }}" hidden>
+                        @endif
                         <div
                             class="left-layout lg:w-auto w-full lg:block flex justify-center"
                         >
@@ -161,6 +179,7 @@
                                     $end = $page == 1 ? $page_length : $start + $page_length - 1;
                                     $i = $page == 1 ? 1 : $start;
                                     $status = config('dagulir.status');
+                                    $status_color = config('dagulir.status_color');
                                     $jenis_usaha = config('dagulir.jenis_usaha');
                                     $tipe_pengajuan = config('dagulir.tipe_pengajuan');
                                 @endphp
@@ -185,10 +204,19 @@
                                         @endif
                                     </td>
                                     <td>
-                                        {{ number_format($item->nominal,0,',','.') }}
+                                        @if ($item->pengajuan->posisi == 'Selesai')
+                                            {{ number_format($item->plafon,0,',','.') }}
+                                        @else
+                                            {{ number_format($item->nominal,0,',','.') }}
+                                        @endif
                                     </td>
                                     <td>
-                                        {{$item->jangka_waktu}} Bulan
+                                        @if ($item->pengajuan->posisi == 'Selesai')
+                                            {{$item->tenor}} Bulan
+
+                                        @else
+                                            {{$item->jangka_waktu}} Bulan
+                                        @endif
                                     </td>
                                     <td>
                                         @if ($item->pengajuan->posisi == 'Selesai')
@@ -281,7 +309,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        {{ array_key_exists(intval($item->status), $status) ? $status[intval($item->status)] : 'Tidak ditemukan' }}
+                                        <p class="@if (array_key_exists(intval($item->status), $status_color)) {{$status_color[intval($item->status)]}} @endif"> {{ array_key_exists(intval($item->status), $status) ? $status[intval($item->status)] : 'Tidak ditemukan' }}</p>
                                     </td>
                                     <td>
                                         <div class="flex">
@@ -337,64 +365,68 @@
                                                     @endif
                                                     @if ((Auth()->user()->role == 'Penyelia Kredit'))
                                                         @if ($item->pengajuan->posisi == 'Review Penyelia')
-                                                            <li class="item-tb-dropdown">
-                                                                <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
-                                                                    class="cursor-pointer">Review</a>
-                                                            </li>
+                                                            @if ($item->pengajuan->komentar)
+                                                                @if (!$item->pengajuan->komentar->id_penyelia)
+                                                                    <li class="item-tb-dropdown">
+                                                                        <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
+                                                                            class="cursor-pointer">Review</a>
+                                                                    </li>
+                                                                @else
+                                                                    <li class="item-tb-dropdown">
+                                                                        <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown">Lanjutkan Ke Pincab</a>
+                                                                    </li>
+                                                                @endif
+                                                            @endif
                                                             <li class="item-tb-dropdown kembalikan-modal" cursor-pointer
                                                                 data-id="{{ $item->pengajuan->id }}" data-backto="staf" >
                                                                 <a href="#">Kembalikan ke Staff</a>
                                                             </li>
                                                         @endif
-                                                        @if ($item->pengajuan->posisi == 'Review Penyelia' && $item->pengajuan->tanggal_review_penyelia)
-                                                            <li class="item-tb-dropdown">
-                                                                <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown">Lanjutkan Ke Pincab</a>
-                                                            </li>
-                                                        @endif
                                                     @elseif ((Auth()->user()->role == 'PBO'))
                                                         @if ($item->pengajuan->posisi == 'PBO' && $item->pengajuan->tanggal_review_penyelia
                                                             && $item->pengajuan->id_pbo)
-                                                            <li class="item-tb-dropdown">
-                                                                <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
-                                                                    class="cursor-pointer">Review</a>
-                                                            </li>
+                                                            @if (!$item->pengajuan->komentar->id_pbo)
+                                                                <li class="item-tb-dropdown">
+                                                                    <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
+                                                                        class="cursor-pointer">Review</a>
+                                                                </li>
+                                                            @else
+                                                                <li class="item-tb-dropdown">
+                                                                    <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown">Lanjutkan Ke Pincab</a>
+                                                                </li>
+                                                            @endif
                                                             <li class="item-tb-dropdown kembalikan-modal" cursor-pointer
                                                                 data-id="{{ $item->pengajuan->id }}" data-backto="penyelia">
                                                                 <a href="#">Kembalikan ke Penyelia</a>
                                                             </li>
                                                         @endif
-                                                        @if ($item->pengajuan->posisi == 'PBO' && $item->pengajuan->tanggal_review_pbo
-                                                            && $item->pengajuan->id_pbo)
-                                                            <li class="item-tb-dropdown">
-                                                                <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown">Lanjutkan Ke Pincab</a>
-                                                            </li>
-                                                        @endif
                                                     @elseif ((Auth()->user()->role == 'PBP'))
                                                         @if ($item->pengajuan->posisi == 'PBP' && $item->pengajuan->tanggal_review_pbp
                                                             && $item->pengajuan->id_pbp)
-                                                            <li class="item-tb-dropdown">
-                                                                <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
-                                                                    class="cursor-pointer">Review</a>
-                                                            </li>
+                                                            @if (!$item->pengajuan->komentar->id_pbp)
+                                                                <li class="item-tb-dropdown">
+                                                                    <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
+                                                                        class="cursor-pointer">Review</a>
+                                                                </li>
+                                                            @else
+                                                                <li class="item-tb-dropdown">
+                                                                    <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown">Lanjutkan Ke Pincab</a>
+                                                                </li>
+                                                            @endif
                                                             <li class="item-tb-dropdown kembalikan-modal" cursor-pointer>
                                                                 <a href="#"
                                                                     data-id="{{ $item->pengajuan->id }}" data-backto="{{$item->pengajuan->id_pbo ? 'pbo' : 'penyelia'}}">Kembalikan ke {{$item->pengajuan->id_pbo ? 'PBO' : 'Penyelia'}}</a>
                                                             </li>
                                                         @endif
-                                                        @if ($item->pengajuan->posisi == 'PBP' && $item->pengajuan->tanggal_review_penyelia
-                                                            && ($item->pengajuan->id_pbo && $item->pengajuan->tanggal_review_pbo)
-                                                            && ($item->pengajuan->id_pbp && $item->pengajuan->tanggal_review_pbp))
-                                                            <li class="item-tb-dropdown">
-                                                                <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown">Lanjutkan Ke Pincab</a>
-                                                            </li>
-                                                        @endif
                                                     @elseif ((Auth()->user()->role == 'Pincab'))
-                                                        @if ($item->pengajuan->posisi != 'Ditolak' &&  $item->pengajuan->posisi != 'Selesai')
+                                                        @if ($item->pengajuan->posisi == 'Pincab')
                                                             @if ($item->pengajuan->id_pincab)
-                                                                <li class="item-tb-dropdown">
-                                                                    <a href="{{ route('dagulir.detailjawaban_pincab', $item->pengajuan->id) }}"
-                                                                        class="cursor-pointer">Review</a>
-                                                                </li>
+                                                                @if (!$item->pengajuan->komentar->id_pincab)
+                                                                    <li class="item-tb-dropdown">
+                                                                        <a href="{{ route('dagulir.detailjawaban_pincab', $item->pengajuan->id) }}"
+                                                                            class="cursor-pointer">Review</a>
+                                                                    </li>
+                                                                @endif
                                                                 <li class="item-tb-dropdown kembalikan-modal" cursor-pointer
                                                                     data-id="{{ $item->pengajuan->id }}" data-backto="{{$item->pengajuan->id_pbp ? 'pbp' : 'penyelia'}}">
                                                                     <a href="#">Kembalikan ke {{$item->pengajuan->id_pbp ? 'PBP' : 'Penyelia'}}</a>
@@ -402,10 +434,10 @@
                                                             @endif
                                                         @endif
                                                     @else
-                                                    <li class="item-tb-dropdown">
-                                                        <a href="{{ route('dagulir.cetak-surat', $item->pengajuan->id) }}"
-                                                            class="cursor-pointer" target="_blank">Cetak</a>
-                                                    </li>
+                                                        <li class="item-tb-dropdown">
+                                                            <a href="{{ route('dagulir.cetak-surat', $item->pengajuan->id) }}"
+                                                                class="cursor-pointer" target="_blank">Cetak</a>
+                                                        </li>
                                                     @endif
                                                 </ul>
                                             </div>
@@ -507,6 +539,7 @@
                                     $end = $page == 1 ? $page_length : $start + $page_length - 1;
                                     $i = $page == 1 ? 1 : $start;
                                     $status = config('dagulir.status');
+                                    $status_color = config('dagulir.status_color');
                                     $jenis_usaha = config('dagulir.jenis_usaha');
                                     $tipe_pengajuan = config('dagulir.tipe_pengajuan');
                                 @endphp
@@ -631,7 +664,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        {{ array_key_exists(intval($item->status), $status) ? $status[intval($item->status)] : 'Tidak ditemukan' }}
+                                        <p class="@if (array_key_exists(intval($item->status), $status_color)) {{$status_color[intval($item->status)]}} @endif"> {{ array_key_exists(intval($item->status), $status) ? $status[intval($item->status)] : 'Tidak ditemukan' }}</p>
                                     </td>
                                     <td>
                                         <div class="flex">
@@ -866,5 +899,3 @@
     });
     </script>
 @endpush
-
-

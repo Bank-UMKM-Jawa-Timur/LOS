@@ -9,6 +9,7 @@ use App\Models\MasterDana;
 use App\Models\PengajuanDagulir;
 use App\Models\PengajuanModel;
 use App\Models\PlafonUsulan;
+use App\Repository\MasterDanaRepository;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -25,18 +26,25 @@ class MasterDanaController extends Controller
 
     function update(Request $request, $id) {
         $request->validate([
-            'dana_idle' => 'required',
             'dana_modal' => 'required',
         ]);
         try {
             $update = MasterDana::find($id);
             if ($update) {
-                $update->dana_idle = formatNumber($request->get('dana_idle'));
-                $update->dana_modal = formatNumber($request->get('dana_modal'));
+                $current = MasterDana::find($id);
+                $total_current_modal = formatNumber($request->get('dana_modal')) + $current->dana_modal;
+
+                $total_cabang_modal = DanaCabang::latest()->sum('dana_modal');
+                $total_cabang_idle = DanaCabang::latest()->sum('dana_idle');
+                $total_current_idle = $total_current_modal - $total_cabang_modal + $total_cabang_idle;
+
+                $update->dana_modal = $total_current_modal;
+                $update->dana_idle = $total_current_idle;
                 $update->update();
+
             }else{
                 $insert = new MasterDana;
-                $insert->dana_idle = formatNumber($request->get('dana_idle'));
+                $insert->dana_idle = formatNumber($request->get('dana_modal'));
                 $insert->dana_modal = formatNumber($request->get('dana_modal'));
                 $insert->save();
             }
@@ -51,9 +59,16 @@ class MasterDanaController extends Controller
         }
     }
 
-    function danaCabang(){
+    function danaCabang(Request $request){
         $getCabang = Cabang::orderBy('kode_cabang', 'ASC')->where('kode_cabang','!=','000')->get();
-        $dana_cabang = DanaCabang::with('cabang')->latest()->paginate(10);
+
+        $limit = $request->has('page_length') ? $request->get('page_length') : 10;
+        $page = $request->has('page') ? $request->get('page') : 1;
+        $search = $request->get('q');
+
+        $repo = new MasterDanaRepository;
+        $dana_cabang = $repo->getDanaCabang($search,$page,$limit);
+
         return view('dagulir.master-dana.cabang.index',[
             'cabang' => $getCabang,
             'dana_cabang' => $dana_cabang
