@@ -193,7 +193,6 @@ class PengajuanKreditController extends Controller
 
             $statusCode = $response->status();
             $responseBody = json_decode($response->getBody(), true);
-
             if ($responseBody != null) {
                 if (is_array($responseBody)) {
                     if (array_key_exists('data', $responseBody))
@@ -2004,8 +2003,7 @@ class PengajuanKreditController extends Controller
                     );
                 }
             }
-            // dd($request->id, $finalArray, $rata_rata);
-            // return $request;
+
             $average = array_sum($rata_rata) / count($rata_rata);
             $result = round($average, 2);
             $status = "";
@@ -2013,7 +2011,6 @@ class PengajuanKreditController extends Controller
             if ($result > 0 && $result <= 1) {
                 $status = "merah";
             } elseif ($result >= 2 && $result <= 3) {
-                // $updateData->status = "kuning";
                 $status = "kuning";
             } elseif ($result > 3) {
                 $status = "hijau";
@@ -3035,7 +3032,6 @@ class PengajuanKreditController extends Controller
 
     public function storeAspekPenyelia(Request $request)
     {
-
         DB::beginTransaction();
         try {
 
@@ -3066,19 +3062,6 @@ class PengajuanKreditController extends Controller
                     'updated_at' => date('Y-m-d H:i:s')
                 ]
             );
-
-            // skor penyelia
-            // foreach ($request->id_jawaban as $key => $value){
-            //     $detail = [
-            //         'id_pengajuan' => $request->id_pengajuan,
-            //         'id_jawaban' => $value,
-            //         // 'skor' => $request->get('product_code')[$key],
-            //         'skor_penyelia' => $request->get('skor_penyelia')[$key],
-            //         'created_at' => date("Y-m-d H:i:s"),
-            //     ];
-            //     DB::table('jawaban')->insert($detail);
-            // }
-            // return redirect()->route('pengajuan-kredit.index')->withStatus('Data berhasil disimpan.');
         } catch (Exception $e) {
             DB::rollBack();
             return redirect()->back()->withError('Terjadi kesalahan.' . $e->getMessage());

@@ -1,4 +1,5 @@
 @include('dagulir.master.user.modal.create')
+@include('dagulir.master.user.modal.edit')
 @extends('layouts.tailwind-template')
 @include('components.new.modal.loading')
 @push('script-inject')
@@ -59,7 +60,7 @@
                     </div>
                     <div class="right-layout lg:w-auto w-full">
                         <div class="input-search flex gap-2">
-                            <input type="search" placeholder="Cari nama usaha... " name="q" id="q"
+                            <input type="search" placeholder="Cari... " name="q" id="q"
                                 class="w-full px-8 outline-none text-sm p-3 border"
                                 value="{{ isset($_GET['q']) ? $_GET['q'] : '' }}" />
                             <button class="px-5 py-2 bg-theme-primary rounded text-white text-lg">
@@ -105,10 +106,16 @@
                                                 </button>
                                                 <ul class="dropdown-tb-menu hidden">
                                                     <li class="item-tb-dropdown">
-                                                        <a href="{{ route('user.edit', $item->id) }}"
+                                                        {{-- <a href="{{ route('user.edit', $item->id) }}"
                                                             class="dropdown-item">
                                                             Edit
-                                                        </a>
+                                                        </a> --}}
+                                                        <a href="javascript:void(0)" data-id_user="{{$item->id}}"
+                                                            data-nip="{{$item->nip ?? '-'}}"
+                                                            data-nama="{{$item->name}}"
+                                                            data-email="{{$item->email}}"
+                                                            data-role="{{$item->role}}"
+                                                            data-cabang="{{$item->cabang->cabang}}" id="edit-user">Edit</a>
                                                     </li>
                                                     @if (auth()->user()->id != $item->id)
                                                     <li class="item-tb-dropdown">
@@ -177,6 +184,17 @@
         })
     }
 
+    $(document).ready(function() {
+        $('#edit-user').on('click', function(){
+            var id_user = $(this).data("id_user");
+            var nip = $(this).data("nip");
+            var nama = $(this).data("nama");
+            var email = $(this).data("email");
+            var role = $(this).data("role");
+            var cabang = $(this).data("cabang");
 
+        $('#modal-edit-user').removeClass('hidden')
+        });
+    });
 </script>
 @endpush
