@@ -129,7 +129,7 @@ $dataIndex = match ($skema) {
                                                     <input type="hidden" name="id_level[77]" value="77" id="nib_id">
                                                     <input type="hidden" name="opsi_jawaban[77]" value="input text" id="nib_opsi_jawaban">
                                                     <input type="text" maxlength="255" name="informasi[77]" id="nib_text"
-                                                        placeholder="Masukkan informasi" class="form-input" disabled="disabled">
+                                                        placeholder="Masukkan informasi" class="form-input bg-white" disabled>
 
                                                 </div>
                                             </div>
@@ -139,7 +139,7 @@ $dataIndex = match ($skema) {
                                                     <input type="hidden" name="id_item_file[{{ $itemNIB->id }}]" value="{{ $itemNIB->id }}"
                                                         id="docNIB_id">
                                                     <input type="file" name="upload_file[{{ $itemNIB->id }}]" data-id=""
-                                                        placeholder="Masukkan informasi {{ $itemNIB->nama }}" class="form-input limit-size"
+                                                        placeholder="Masukkan informasi {{ $itemNIB->nama }}" class="form-input limit-size bg-white"
                                                         id="file_nib" disabled="true">
                                                     <span class="text-red-500 m-0" style="display: none" id="docNIB_text">Besaran file
                                                         tidak boleh lebih dari 5 MB</span>
@@ -159,8 +159,8 @@ $dataIndex = match ($skema) {
                                                     <input type="hidden" name="opsi_jawaban[78]" value="input text"
                                                         id="surat_keterangan_usaha_opsi_jawaban">
                                                     <input type="text" maxlength="255" name="informasi[78]" id="surat_keterangan_usaha_text"
-                                                        placeholder="Masukkan informasi" class="form-input"
-                                                        disabled="disabled"
+                                                        placeholder="Masukkan informasi" class="form-input bg-white"
+                                                        disabled
                                                     >
                                                 </div>
                                             </div>
@@ -172,8 +172,8 @@ $dataIndex = match ($skema) {
                                                         id="docSKU_id">
                                                     <input type="file" name="upload_file[{{ $itemSKU->id }}]" id="surat_keterangan_usaha_file"
                                                         data-id="" placeholder="Masukkan informasi {{ $itemSKU->nama }}"
-                                                        class="form-input limit-size"
-                                                        disabled="disabled">
+                                                        class="form-input limit-size bg-white"
+                                                        disabled>
                                                     <span class="text-red-500 m-0" style="display: none" id="docSKU_text">Besaran file
                                                         tidak boleh lebih dari 5 MB</span>
                                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
@@ -192,7 +192,7 @@ $dataIndex = match ($skema) {
                                                     <input type="hidden" name="id_level[79]" value="79" id="npwp_id">
                                                     <input type="hidden" name="opsi_jawaban[79]" value="input text" id="npwp_opsi_jawaban">
                                                     <input type="text" maxlength="20" name="informasi[79]" id="npwp_text"
-                                                        placeholder="Masukkan informasi" class="form-input">
+                                                        placeholder="Masukkan informasi" class="form-input bg-white">
                                                 </div>
                                             </div>
                                             <div class="form-group" id="docNPWP">
@@ -201,7 +201,7 @@ $dataIndex = match ($skema) {
                                                     <input type="hidden" name="id_item_file[{{ $itemNPWP->id }}]" value="{{ $itemNPWP->id }}"
                                                         id="docNPWP_id">
                                                     <input type="file" name="upload_file[{{ $itemNPWP->id }}]" id="npwp_file" data-id=""
-                                                        placeholder="Masukkan informasi {{ $itemNPWP->nama }}" class="form-input limit-size">
+                                                        placeholder="Masukkan informasi {{ $itemNPWP->nama }}" class="form-input limit-size bg-white">
                                                     <span class="text-red-500 m-0" style="display: none" id="docNPWP_text">Besaran file
                                                         tidak boleh lebih dari 5 MB</span>
                                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
