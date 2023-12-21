@@ -1,5 +1,9 @@
 @extends('layouts.tailwind-template')
 
+@section('modal')
+    @include('dagulir.modal.delete-draft')
+@endsection
+
 @section('content')
     <section class="p-5 overflow-y-auto mt-5">
         <div class="head space-y-5 w-full font-poppins">
@@ -135,7 +139,7 @@
                                                             class="dropdown-item">Lanjutkan</a>
                                                     </li>
                                                     <li class="item-tb-dropdown">
-                                                        <a href="#">Hapus</a>
+                                                        <a href="javascript:void(0)" class="modalConfirmDelete" data-nama="{{$item->nama}}" data-modal-id="{{ $item->id }}">Hapus</a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -162,3 +166,25 @@
         </div>
     </section>
 @endsection
+
+@push('script-inject')
+    <script>
+        $(".modalConfirmDelete").on("click", function(){
+            var idModal = $(this).data('modal-id');
+            var nama = $(this).data('nama');
+            var modal = `#confirmationModal${idModal}`;
+            $(`${modal} #nama_pengajuan`).html(nama);
+            $(modal).removeClass('hidden');
+            $(modal).addClass('h-full');
+        })
+    
+        $(".cancelModal", on("click", function(){
+            console.log('test');
+            var idModal = $(this).data('modal-id');
+            var modal = `#confirmationModal${idModal}`;
+            console.log(`Modal ${modal}`);
+            $(modal).addClass('hidden');
+            $(modal).removeClass('h-full');
+        }))
+    </script>
+@endpush

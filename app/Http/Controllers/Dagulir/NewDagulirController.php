@@ -2034,4 +2034,24 @@ class NewDagulirController extends Controller
     public function listDraftDagulir(){
         return view('dagulir.pengajuan-kredit.index-draft');
     }
+
+    public function deleteDraft($id){
+        DB::beginTransaction();
+        try{
+            $pengajuanTemp = PengajuanDagulirTemp::find($id);
+            $pengajuanTemp->delete();
+            DB::commit();
+
+            Alert::success('Berhasil', 'Berhasil menghapus data draft');
+            return redirect()->back();
+        } catch (Exception $e){
+            DB::rollBack();
+            Alert::error('Terjadi kesalahan', $e->getMessage());
+            return redirect()->back();
+        } catch(QueryException $e){
+            DB::rollBack();
+            Alert::error('Terjadi kesalahan', $e->getMessage());
+            return redirect()->back();
+        }
+    }
 }
