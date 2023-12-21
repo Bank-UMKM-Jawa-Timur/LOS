@@ -1234,7 +1234,7 @@ class NewDagulirController extends Controller
                 // "jenis_badan_hukum" => "Berbadan Hukum",
                 "tempat_berdiri" => $pengajuan_dagulir->tempat_berdiri,
                 "tanggal_berdiri" => $pengajuan_dagulir->tanggal_berdiri,
-                "email" => $pengajuan_dagulir->email,
+                "email" => $pengajuan_dagulir->email ? $pengajuan_dagulir->email : "",
                 "nama_pj" => $pengajuan_dagulir->nama_pj_ketua ??  null,
             ];
             $pengajuan_dagulir = Http::withHeaders([
@@ -1255,8 +1255,8 @@ class NewDagulirController extends Controller
                     if ($dagulir)
                         $namaNasabah = $dagulir->nama;
 
-                    // $role = Auth::user()->role;
-                    // $this->logPengajuan->store($role . ' dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' mengirimkan data dagulir dengan pengajuan atas nama ' . $namaNasabah, $pengajuan->id, Auth::user()->id, Auth::user()->nip);
+                    $role = Auth::user()->role;
+                    $this->logPengajuan->store($role . ' dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' mengirimkan data dagulir dengan pengajuan atas nama ' . $namaNasabah, $pengajuan->id, Auth::user()->id, Auth::user()->nip);
 
                     DB::commit();
 
@@ -1269,19 +1269,19 @@ class NewDagulirController extends Controller
                 else {
                     return $pengajuan_dagulir['data']['message'];
                 }
-                // return redirect()->route('dagulir.index')->withStatus('Berhasil mengirimkan data.');
+                // return redirect()->route('dagulir.pengajuan.index')->withStatus('Berhasil mengirimkan data.');
             }
             else {
                 $message = 'Terjadi kesalahan.';
                 if (array_key_exists('error', $pengajuan_dagulir)) $message .= ' '.$pengajuan_dagulir['error'];
 
                 return $message;
-                // return redirect()->route('dagulir.index')->withError($message);
+                // return redirect()->route('dagulir.pengajuan.index')->withError($message);
             }
         } catch (\Exception $e) {
             DB::rollBack();
             return $e->getMessage();
-            // return redirect()->route('dagulir.index')->withError($e->getMessage());
+            // return redirect()->route('dagulir.pengajuan.index')->withError($e->getMessage());
         }
     }
 
@@ -1607,7 +1607,7 @@ class NewDagulirController extends Controller
             if ($pengajuan) {
                 if ($komentar->komentar_penyelia == null) {
                     alert()->warning('Waning','Data pengajuan belum di review,tidak dapat melanjutkan ke pincab.');
-                    return redirect()->route('dagulir.index');
+                    return redirect()->route('dagulir.pengajuan.index');
                 }
                 $pincab = User::select('id')
                         ->where('id_cabang', $pengajuan->id_cabang)
@@ -1639,12 +1639,12 @@ class NewDagulirController extends Controller
 
     public function accPengajuan($id, Request $request)
     {
+        ini_set('max_execution_time', 120);
         DB::beginTransaction();
         try {
             if (auth()->user()->role == 'Pincab') {
                 $pengajuan = PengajuanModel::find($id);
                 $currentPosisi = $pengajuan->posisi;
-                $komentarPincab = KomentarModel::where('id_pengajuan', $id)->first();
                 if ($pengajuan) {
                     $idKomentar = KomentarModel::where('id_pengajuan', $pengajuan->id)->first();
                     KomentarModel::where('id', $idKomentar->id)->update(
@@ -1671,7 +1671,7 @@ class NewDagulirController extends Controller
                         $plafonUsulan->update();
                     }
 
-                    $nasabah = PengajuanDagulir::select('kode_pendaftaran', 'status', 'nama', 'nominal', 'jangka_waktu', 'from_apps')->find($pengajuan->dagulir_id);
+                    $nasabah = PengajuanDagulir::select('kode_pendaftaran', 'status', 'nama', 'email', 'nominal', 'jangka_waktu', 'from_apps')->find($pengajuan->dagulir_id);
                     $namaNasabah = 'undifined';
                     if ($nasabah)
                         $namaNasabah = $nasabah->nama;
@@ -1747,11 +1747,11 @@ class NewDagulirController extends Controller
                             DB::commit();
                             event(new EventMonitoring('menyetujui pengajuan'));
                             Alert::success('success', 'Berhasil menyetujui pengajuan');
-                            return redirect()->route('dagulir.index')->withStatus('Berhasil menyetujui pengajuan.');
+                            return redirect()->route('dagulir.pengajuan.index')->withStatus('Berhasil menyetujui pengajuan.');
                         }
                         else {
                             DB::rollBack();
-                            alert()->error('Error', $storeSIPDE);
+                            alert()->error('Peringatan', $storeSIPDE);
                             return redirect()->back();
                         }
                     }
@@ -1822,7 +1822,7 @@ class NewDagulirController extends Controller
                             DB::commit();
                             event(new EventMonitoring('menyetujui pengajuan'));
                             Alert::success('success', 'Berhasil menyetujui pengajuan');
-                            return redirect()->route('dagulir.index')->withStatus('Berhasil menyetujui pengajuan.');
+                            return redirect()->route('dagulir.pengajuan.index');
                         }
                         else {
                             DB::rollBack();
@@ -1848,6 +1848,7 @@ class NewDagulirController extends Controller
 
     public function decPengajuan($id)
     {
+        ini_set('max_execution_time', 120);
         DB::beginTransaction();
         try {
             $pengajuan = PengajuanModel::find($id);
@@ -1925,7 +1926,7 @@ class NewDagulirController extends Controller
 
                     event(new EventMonitoring('tolak pengajuan'));
                     Alert::success('success', 'Berhasil menolak pengajuan');
-                    return redirect()->route('dagulir.index');
+                    return redirect()->route('dagulir.pengajuan.index');
                 } else {
                     alert()->error('Error','Belum di review Pincab');
                     return redirect()->back()->withError('Belum di review Pincab.');
@@ -2152,6 +2153,7 @@ class NewDagulirController extends Controller
                     break;
                     // File PK Handler
                 case 'PK':
+                    ini_set('max_execution_time', 120);
                     $message = 'File PK berhasil diupload';
                     $kode_pendaftaran = $request->get('kode_pendaftaran');
                     $folderPK = public_path() . '/upload/' . $id . '/pk/';
