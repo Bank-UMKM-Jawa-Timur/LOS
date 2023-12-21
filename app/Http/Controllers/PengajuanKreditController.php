@@ -192,7 +192,6 @@ class PengajuanKreditController extends Controller
 
             $statusCode = $response->status();
             $responseBody = json_decode($response->getBody(), true);
-
             if ($responseBody != null) {
                 if (is_array($responseBody)) {
                     if (array_key_exists('data', $responseBody))

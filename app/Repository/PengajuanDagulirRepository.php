@@ -131,17 +131,18 @@ class PengajuanDagulirRepository
             // dd($item->pengajuan);
             $nama_pemroses = 'undifined';
             $user = User::select('nip')->where('id', $item->pengajuan->id_staf)->first();
-            if($item->posisi == 'Proses Input Data'){
+            if($item->pengajuan->posisi == 'Proses Input Data'){
                 $user = User::select('nip')->where('id', $item->pengajuan->id_staf)->first();
-            } else if($item->posisi == 'Review Penyelia'){
+            } else if($item->pengajuan->posisi == 'Review Penyelia'){
                 $user = User::select('nip')->where('id', $item->pengajuan->id_penyelia)->first();
-            } else if($item->posisi == 'PBO'){
+            } else if($item->pengajuan->posisi == 'PBO'){
                 $user = User::select('nip')->where('id', $item->pengajuan->id_pbo)->first();
-            } else if($item->posisi == 'PBP'){
+            } else if($item->pengajuan->posisi == 'PBP'){
                 $user = User::select('nip')->where('id', $item->pengajuan->id_pbp)->first();
-            } else if($item->posisi == 'Pincab' || $item->posisi == 'Selesai' || $item->posisi == 'Ditolak'){
+            } else if($item->pengajuan->posisi == 'Pincab' || $item->pengajuan->posisi == 'Selesai' || $item->pengajuan->posisi == 'Ditolak'){
                 $user = User::select('nip')->where('id', $item->pengajuan->id_pincab)->first();
             }
+
             if ($user)
                 $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
             else {
