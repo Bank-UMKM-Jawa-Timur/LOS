@@ -95,19 +95,13 @@ class MasterDanaController extends Controller
                     alert()->warning('Warning','Dana yang tersedia tidak mencukupi.');
                     return redirect()->route('master-dana.cabang.index');
                 }
-                $total_loan_plafon = MasterDDLoan::where('id_cabang',$request->get('cabang'))->sum('plafon');
-                $total_idle = formatNumber($request->get('dana_modal')) - $total_loan_plafon;
-                if ($total_idle > formatNumber($request->get('dana_modal'))) {
-                    alert()->warning('Warning','Dana yang tersedia tidak mencukupi.');
-                    return redirect()->route('master-dana.cabang.index');
-                };
                 // dana cabang
                 $dana_cabang = new DanaCabang;
                 $dana_cabang->id_cabang = $request->get('cabang');
                 $dana_cabang->dana_modal = formatNumber($request->get('dana_modal'));
-                $dana_cabang->dana_idle = $total_idle;
-                $dana_cabang->plafon_akumulasi = $total_loan_plafon;
-                $dana_cabang->baki_debet = $total_loan_plafon;
+                $dana_cabang->dana_idle = formatNumber($request->get('dana_modal'));
+                $dana_cabang->plafon_akumulasi = 0;
+                $dana_cabang->baki_debet = 0;
                 $dana_cabang->save();
 
                 $total_dana_idle = DanaCabang::first()->sum('dana_idle');
