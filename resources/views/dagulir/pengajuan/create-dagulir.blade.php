@@ -7,6 +7,28 @@
             limitJangkaWaktu()
         })
 
+        $('#tanggal_lahir').on('change',function() {
+            var tanggal  = $(this).val();
+            var today = new Date();
+            var birthday = new Date(tanggal);
+            var year = 0;
+            if (today.getMonth() < birthday.getMonth()) {
+                year = 1;
+            } else if ((today.getMonth() == birthday.getMonth()) && today.getDate() < birthday.getDate()) {
+                year = 1;
+            }
+            var age = today.getFullYear() - birthday.getFullYear() - year;
+
+            if(age < 0){
+                age = 0;
+            }
+            if (age >= 17) {
+                $('#pesan-usia').addClass('hidden');
+            }else{
+                $('#pesan-usia').removeClass('hidden');
+            }
+        })
+
         function limitJangkaWaktu() {
             var nominal = $('#jumlah_kredit').val()
             nominal = nominal != '' ? nominal.replaceAll('.','') : 0
@@ -97,8 +119,10 @@
                     class="form-input"
                     placeholder="Masukkan Tanggal Lahir"
                     name="tanggal_lahir"
+                    id="tanggal_lahir"
                     value="{{ old('tempat_lahir') }}"
                 />
+                <small class="text-red-400 text-base mt-2 hidden" id="pesan-usia">Usia Minimal 17 Tahun</small>
             </div>
             <div class="input-box">
                 <label for="">Telp</label><small class="text-red-500 font-bold">*</small>
@@ -116,7 +140,7 @@
             <div class="input-box">
                 <label for="ktp_nasabah" id="foto-nasabah">Foto Nasabah</label><small class="text-red-500 font-bold">*</small>
                 <div class="flex gap-4">
-                    <input type="file" name="foto_nasabah" class="form-input limit-size-2" />
+                    <input type="file" accept="image/png, image/gif, image/jpeg" name="foto_nasabah" class="form-input limit-size-2" />
                 </div>
                 <span class="error-limit text-red-500" style="display: none; margin-top: 0;">Maximum upload file
                     size is 2 MB</span>
@@ -145,7 +169,7 @@
             <div class="input-box" id="ktp-nasabah">
                 <label for="ktp_nasabah" id="label-ktp-nasabah">Foto KTP Nasabah</label><small class="text-red-500 font-bold">*</small>
                 <div class="flex gap-4">
-                    <input type="file" name="ktp_nasabah" class="form-input limit-size-2" />
+                    <input type="file" name="ktp_nasabah" class="form-input limit-size-2" accept="image/png, image/gif, image/jpeg" />
                 </div>
                 <span class="text-red-500" style="display: none; margin-top: 0;">Maximum upload file
                     size is 2 MB</span>
@@ -164,7 +188,7 @@
             <div class="input-box hidden" id="ktp-pasangan">
                 <label for="ktp_pasangan" id="">Foto KTP Pasangan</label><small class="text-red-500 font-bold">*</small>
                 <div class="flex gap-4">
-                    <input type="file" name="ktp_pasangan" class="form-input limit-size-2" />
+                    <input type="file" name="ktp_pasangan" class="form-input limit-size-2" accept="image/png, image/gif, image/jpeg"/>
                 </div>
                 <span class="text-red-500" style="display: none; margin-top: 0;">Maximum upload file
                     size is 2 MB</span>
@@ -279,7 +303,7 @@
             <div class="input-box">
                 <label for="">{{ $itemP->nama }}</label><small class="text-red-500 font-bold">*</small>
                 <input type="hidden" name="id_item_file[{{ $itemP->id }}]" value="{{ $itemP->id }}" id="">
-                <input type="file" name="upload_file[{{ $itemP->id }}]" id="file_slik" data-id=""
+                <input type="file" accept="application/pdf" name="upload_file[{{ $itemP->id }}]" id="file_slik" data-id=""
                     placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-input limit-size-slik">
                 @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                 <div class="invalid-feedback">
