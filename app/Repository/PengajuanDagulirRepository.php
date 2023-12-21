@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 class PengajuanDagulirRepository
 {
 
-    function get($search, $limit=10, $page=1, $role, $id_user, $from_apps='pincetar',array $filter) {
+    function get($search, $limit=10, $page=1, $role, $id_user, array $filter, $from_apps='pincetar') {
         $data = null;
         $cabang = null;
         if (isset($filter['cbg'])) {
