@@ -1678,7 +1678,6 @@ class NewDagulirController extends Controller
                     if ($nasabah->from_apps == 'pincetar') {
                         // HIT Pengajuan endpoint dagulir
                         $storeSIPDE = $this->storeSipde($id);
-
                         $kode_pendaftaran = false;
                         if (is_array($storeSIPDE)) {
                             $kode_pendaftaran = array_key_exists('kode_pendaftaran', $storeSIPDE) ? $storeSIPDE['kode_pendaftaran'] : false;
@@ -1750,9 +1749,13 @@ class NewDagulirController extends Controller
                             return redirect()->route('dagulir.pengajuan.index')->withStatus('Berhasil menyetujui pengajuan.');
                         }
                         else {
+                            // return $storeSIPDE;
                             DB::rollBack();
-                            alert()->error('Peringatan', $storeSIPDE);
+                            // toast('Your Post as been submited!','success');
+                            alert()->error('Peringatan', $storeSIPDE)->autoClose(5000);
+                            Alert::error('Error','Terjadi kesalahan');
                             return redirect()->back();
+
                         }
                     }
                     else {

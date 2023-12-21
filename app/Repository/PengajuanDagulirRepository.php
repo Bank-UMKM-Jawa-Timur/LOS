@@ -15,57 +15,56 @@ class PengajuanDagulirRepository
         $data = null;
         if ($role == 'Staf Analis Kredit') {
             $data = PengajuanDagulir::with([
-                'pengajuan' => function($query) {
+                    'pengajuan' => function($query) use ($id_user) {
+                        $query->with('komentar');
+                    }
+                ])
+                ->whereHas('pengajuan', function($query) use ($id_user) {
+                    $query->where('id_staf', $id_user);
+                })
+                ->where(function($query) use ($search) {
+                    $query->where('kode_pendaftaran','like', "%$search%")
+                            ->orWhere('nama','like', "%$search%")
+                            ->orWhere('kode_pendaftaran','like', "%$search%");
+                })
+                ->latest()
+                ->select('pengajuan_dagulir.*')
+                ->where('pengajuan_dagulir.from_apps', $from_apps)
+                ->paginate($limit);
+        } else if ($role == 'Penyelia Kredit') {
+            $data = PengajuanDagulir::with([
+                    'pengajuan' => function($query) use ($id_user) {
+                        $query->with('komentar');
+                    }
+                ])
+                ->whereHas('pengajuan', function($query) use ($id_user) {
+                    $query->where('id_penyelia', $id_user);
+                })
+                ->where(function($query) use ($search) {
+                    $query->where('kode_pendaftaran','like', "%$search%")
+                            ->orWhere('nama','like', "%$search%")
+                            ->orWhere('kode_pendaftaran','like', "%$search%");
+                })
+
+                ->select('pengajuan_dagulir.*')
+                ->where('pengajuan_dagulir.from_apps', $from_apps)
+                ->latest()
+                ->paginate($limit);
+        } else if ($role == 'Pincab') {
+            $data = PengajuanDagulir::with([
+                'pengajuan' => function($query) use ($id_user) {
                     $query->with('komentar');
                 }
-            ])->where(function($query) use ($search) {
+            ])
+            ->whereHas('pengajuan', function($query) use ($id_user) {
+                $query->where('id_pincab', $id_user);
+            })
+            ->where(function($query) use ($search) {
                 $query->where('kode_pendaftaran','like', "%$search%")
                         ->orWhere('nama','like', "%$search%")
                         ->orWhere('kode_pendaftaran','like', "%$search%");
             })
-            ->latest()
-            ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
             ->select('pengajuan_dagulir.*')
-            ->where('pengajuan.id_staf', $id_user)
-            ->where('pengajuan_dagulir.from_apps', $from_apps)
-            ->paginate($limit);
-        } else if ($role == 'Penyelia Kredit') {
-            $data = PengajuanDagulir::whereHas('pengajuan', function (Builder $query) {
-                        $query->where('pengajuan.id_penyelia', auth()->user()->id);
-                })
-                ->where(function($query) use ($search) {
-                    $query->where('kode_pendaftaran','like', "%$search%")
-                            ->orWhere('nama','like', "%$search%")
-                            ->orWhere('kode_pendaftaran','like', "%$search%");
-                })
-            ->with([
-                'pengajuan' => function($query) {
-                    $query->with('komentar');
-                }
-            ])
-            ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
-            ->select('pengajuan_dagulir.*')
-            ->where('pengajuan.id_penyelia', $id_user)
-            ->where('pengajuan_dagulir.from_apps', $from_apps)
-            ->latest()
-            ->paginate($limit);
-        } else if ($role == 'Pincab') {
-            $data = PengajuanDagulir::whereHas('pengajuan', function (Builder $query) {
-                        $query->where('pengajuan.id_pincab', auth()->user()->id);
-                })
-                ->where(function($query) use ($search) {
-                    $query->where('kode_pendaftaran','like', "%$search%")
-                            ->orWhere('nama','like', "%$search%")
-                            ->orWhere('kode_pendaftaran','like', "%$search%");
-                })
-            ->with([
-                'pengajuan' => function($query) {
-                    $query->with('komentar');
-                }
-            ])
-            ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
-            ->select('pengajuan_dagulir.*')
-            ->where('pengajuan.id_pincab', $id_user)
             ->where('pengajuan_dagulir.from_apps', $from_apps)
             ->latest()
             ->paginate($limit);
