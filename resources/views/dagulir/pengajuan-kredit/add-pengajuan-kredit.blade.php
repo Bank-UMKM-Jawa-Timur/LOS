@@ -2028,6 +2028,9 @@ $dataIndex = match ($skema) {
                                             "<input type='checkbox' class='checkKategori'>"
                                         isDisabled = ""
                                     }
+                                    if (valItem.nama != 'BPKB No') {
+                                        isDisabled = "disabled"
+                                    }
                                 }
                                 $('#bukti_pemilikan_jaminan_tambahan').append(`
                                     <div class="form-group input-box aspek_jaminan_kategori">
