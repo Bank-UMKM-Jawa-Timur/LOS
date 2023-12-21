@@ -47,9 +47,17 @@ $dataIndex = match ($skema) {
         <div class="body-pages">
             <form action="{{ route('dagulir.pengajuan.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
+                @if (\Request::has('dagulir'))
+                    <input type="hidden" name="dagulir_id" value="{{\Request::get('dagulir')}}">
+                @endif
+                <input type="hidden" name="id_dagulir_temp" id="id_dagulir_temp">
                 <div class="mt-3 container mx-auto">
                     <div id="dagulir-tab" class="is-tab-content active">
-                        @include('dagulir.pengajuan.create-dagulir')
+                        @if (\Request::has('dagulir'))
+                            @include('dagulir.pengajuan.create-sipde')
+                        @else
+                            @include('dagulir.pengajuan.create-dagulir')
+                        @endif
                     </div>
                     @foreach ($dataAspek as $key => $value)
                         @php
@@ -121,7 +129,7 @@ $dataIndex = match ($skema) {
                                                     <input type="hidden" name="id_level[77]" value="77" id="nib_id">
                                                     <input type="hidden" name="opsi_jawaban[77]" value="input text" id="nib_opsi_jawaban">
                                                     <input type="text" maxlength="255" name="informasi[77]" id="nib_text"
-                                                        placeholder="Masukkan informasi" class="form-input" disabled="disabled">
+                                                        placeholder="Masukkan informasi" class="form-input bg-white" disabled>
 
                                                 </div>
                                             </div>
@@ -131,7 +139,7 @@ $dataIndex = match ($skema) {
                                                     <input type="hidden" name="id_item_file[{{ $itemNIB->id }}]" value="{{ $itemNIB->id }}"
                                                         id="docNIB_id">
                                                     <input type="file" name="upload_file[{{ $itemNIB->id }}]" data-id=""
-                                                        placeholder="Masukkan informasi {{ $itemNIB->nama }}" class="form-input limit-size"
+                                                        placeholder="Masukkan informasi {{ $itemNIB->nama }}" class="form-input limit-size bg-white"
                                                         id="file_nib" disabled="true">
                                                     <span class="text-red-500 m-0" style="display: none" id="docNIB_text">Besaran file
                                                         tidak boleh lebih dari 5 MB</span>
@@ -151,8 +159,8 @@ $dataIndex = match ($skema) {
                                                     <input type="hidden" name="opsi_jawaban[78]" value="input text"
                                                         id="surat_keterangan_usaha_opsi_jawaban">
                                                     <input type="text" maxlength="255" name="informasi[78]" id="surat_keterangan_usaha_text"
-                                                        placeholder="Masukkan informasi" class="form-input"
-                                                        disabled="disabled"
+                                                        placeholder="Masukkan informasi" class="form-input bg-white"
+                                                        disabled
                                                     >
                                                 </div>
                                             </div>
@@ -164,8 +172,8 @@ $dataIndex = match ($skema) {
                                                         id="docSKU_id">
                                                     <input type="file" name="upload_file[{{ $itemSKU->id }}]" id="surat_keterangan_usaha_file"
                                                         data-id="" placeholder="Masukkan informasi {{ $itemSKU->nama }}"
-                                                        class="form-input limit-size"
-                                                        disabled="disabled">
+                                                        class="form-input limit-size bg-white"
+                                                        disabled>
                                                     <span class="text-red-500 m-0" style="display: none" id="docSKU_text">Besaran file
                                                         tidak boleh lebih dari 5 MB</span>
                                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
@@ -184,7 +192,7 @@ $dataIndex = match ($skema) {
                                                     <input type="hidden" name="id_level[79]" value="79" id="npwp_id">
                                                     <input type="hidden" name="opsi_jawaban[79]" value="input text" id="npwp_opsi_jawaban">
                                                     <input type="text" maxlength="20" name="informasi[79]" id="npwp_text"
-                                                        placeholder="Masukkan informasi" class="form-input">
+                                                        placeholder="Masukkan informasi" class="form-input bg-white">
                                                 </div>
                                             </div>
                                             <div class="form-group" id="docNPWP">
@@ -193,7 +201,7 @@ $dataIndex = match ($skema) {
                                                     <input type="hidden" name="id_item_file[{{ $itemNPWP->id }}]" value="{{ $itemNPWP->id }}"
                                                         id="docNPWP_id">
                                                     <input type="file" name="upload_file[{{ $itemNPWP->id }}]" id="npwp_file" data-id=""
-                                                        placeholder="Masukkan informasi {{ $itemNPWP->nama }}" class="form-input limit-size">
+                                                        placeholder="Masukkan informasi {{ $itemNPWP->nama }}" class="form-input limit-size bg-white">
                                                     <span class="text-red-500 m-0" style="display: none" id="docNPWP_text">Besaran file
                                                         tidak boleh lebih dari 5 MB</span>
                                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
@@ -854,88 +862,114 @@ $dataIndex = match ($skema) {
         // dataAspekArr = <?php echo json_encode($dataAspek); ?>;
     });
 
+    @if (!\Request::has('dagulir'))
+        $('#kabupaten').change(function() {
+            var kabID = $(this).val();
+            if (kabID) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('') }}/getkecamatan?kabID=" + kabID,
+                    dataType: 'JSON',
+                    success: function(res) {
+                        if (res) {
+                            $("#kecamatan").empty();
+                            $("#kecamatan").append('<option>---Pilih Kecamatan---</option>');
+                            $.each(res, function(nama, kode) {
+                                $('#kecamatan').append(`
+                                    <option value="${kode}">${nama}</option>
+                                `);
+                            });
 
-    $('#kabupaten').change(function() {
-        var kabID = $(this).val();
-        if (kabID) {
-            $.ajax({
-                type: "GET",
-                url: "{{ url('') }}/getkecamatan?kabID=" + kabID,
-                dataType: 'JSON',
-                success: function(res) {
-                    if (res) {
-                        $("#kecamatan").empty();
-                        $("#kecamatan").append('<option>---Pilih Kecamatan---</option>');
-                        $.each(res, function(nama, kode) {
-                            $('#kecamatan').append(`
-                                <option value="${kode}">${nama}</option>
-                            `);
-                        });
-
-                        $('#kecamatan').trigger('change');
-                    } else {
-                        $("#kecamatan").empty();
+                            $('#kecamatan').trigger('change');
+                        } else {
+                            $("#kecamatan").empty();
+                        }
                     }
-                }
-            });
-        } else {
-            $("#kecamatan").empty();
-        }
-    });
-    $('#kabupaten_domisili').change(function() {
-        var kabID = $(this).val();
-        if (kabID) {
-            $.ajax({
-                type: "GET",
-                url: "{{ url('') }}/getkecamatan?kabID=" + kabID,
-                dataType: 'JSON',
-                success: function(res) {
-                    if (res) {
-                        $("#kecamatan_domisili").empty();
-                        $("#kecamatan_domisili").append('<option>---Pilih Kecamatan---</option>');
-                        $.each(res, function(nama, kode) {
-                            $('#kecamatan_domisili').append(`
-                                <option value="${kode}">${nama}</option>
-                            `);
-                        });
-
-                        $('#kecamatan_domisili').trigger('change');
-                    } else {
-                        $("#kecamatan_domisili").empty();
+                });
+            } else {
+                $("#kecamatan").empty();
+            }
+        });
+        $('#kecamatan').change(function() {
+            var kecID = $(this).val();
+            if (kecID) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ route('getDesa') }}?kecID=" + kecID,
+                    dataType: 'JSON',
+                    success: function(res) {
+                        if (res) {
+                            $("#desa").empty();
+                            $("#desa").append('<option value="0">---Pilih Desa---</option>');
+                            $.each(res, function(nama, kode) {
+                                $('#desa').append(`
+                                    <option value="${kode}">${nama}</option>
+                                `);
+                            });
+                        } else {
+                            $("#desa").empty();
+                        }
                     }
-                }
-            });
-        } else {
-            $("#kecamatan_domisili").empty();
-        }
-    });
-    $('#kabupaten_usaha').change(function() {
-        var kabID = $(this).val();
-        if (kabID) {
-            $.ajax({
-                type: "GET",
-                url: "{{ url('') }}/getkecamatan?kabID=" + kabID,
-                dataType: 'JSON',
-                success: function(res) {
-                    if (res) {
-                        $("#kecamatan_usaha").empty();
-                        $("#kecamatan_usaha").append('<option>---Pilih Kecamatan---</option>');
-                        $.each(res, function(nama, kode) {
-                            $('#kecamatan_usaha').append(`
-                                <option value="${kode}">${nama}</option>
-                            `);
-                        });
+                });
+            } else {
+                $("#desa").empty();
+            }
+        });
+        $('#kabupaten_domisili').change(function() {
+            var kabID = $(this).val();
+            if (kabID) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('') }}/getkecamatan?kabID=" + kabID,
+                    dataType: 'JSON',
+                    success: function(res) {
+                        if (res) {
+                            $("#kecamatan_domisili").empty();
+                            $("#kecamatan_domisili").append('<option>---Pilih Kecamatan---</option>');
+                            $.each(res, function(nama, kode) {
+                                $('#kecamatan_domisili').append(`
+                                    <option value="${kode}">${nama}</option>
+                                `);
+                            });
 
-                        $('#kecamatan_usaha').trigger('change');
-                    } else {
-                        $("#kecamatan_usaha").empty();
+                            $('#kecamatan_domisili').trigger('change');
+                        } else {
+                            $("#kecamatan_domisili").empty();
+                        }
                     }
-                }
-            });
-        } else {
-            $("#kecamatan_usaha").empty();
-        }
-    });
+                });
+            } else {
+                $("#kecamatan_domisili").empty();
+            }
+        });
+        $('#kabupaten_usaha').change(function() {
+            var kabID = $(this).val();
+            if (kabID) {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('') }}/getkecamatan?kabID=" + kabID,
+                    dataType: 'JSON',
+                    success: function(res) {
+                        if (res) {
+                            $("#kecamatan_usaha").empty();
+                            $("#kecamatan_usaha").append('<option>---Pilih Kecamatan---</option>');
+                            $.each(res, function(nama, kode) {
+                                $('#kecamatan_usaha').append(`
+                                    <option value="${kode}">${nama}</option>
+                                `);
+                            });
+
+                            $('#kecamatan_usaha').trigger('change');
+                        } else {
+                            $("#kecamatan_usaha").empty();
+                        }
+                    }
+                });
+            } else {
+                $("#kecamatan_usaha").empty();
+            }
+        });
+    @endif
 
     $('#status_nasabah').on('change', function(e){
         var status = $(this).val();
@@ -990,6 +1024,25 @@ $dataIndex = match ($skema) {
 
         input.value = nikNumber;
     }
+
+    $(document).ready(function() {
+        var inputRupiah = $('.rupiah')
+        $.each(inputRupiah, function(i, obj) {
+            $(this).val(formatrupiah(obj.value))
+        })
+        var inputDisabled = $("input:disabled")
+        $.each(inputDisabled, function(i, obj) {
+            $(this).addClass('bg-gray-200')
+        })
+        var selectDisabled = $("select:disabled")
+        $.each(selectDisabled, function(i, obj) {
+            $(this).addClass('bg-gray-200')
+        })
+        var textAreaDisabled = $("textarea:disabled")
+        $.each(textAreaDisabled, function(i, obj) {
+            $(this).addClass('bg-gray-200')
+        })
+    })
 
     $('.rupiah').keyup(function(e) {
         var input = $(this).val()
@@ -1050,8 +1103,12 @@ $dataIndex = match ($skema) {
         const $activeContent = $(".is-tab-content.active");
         const $nextContent = $activeContent.next();
         const tabId = $activeContent.attr("id")
-        console.log(tabId);
         const dataTab = tabId.replaceAll('-tab', '')
+        if(tabId == 'dagulir-tab'){
+            saveDataUmum()
+        } else{
+            saveDataTemporary(tabId)
+        }
         // Set percentage
         var percentage = formPercentage(tabId)
         $('.tab-wrapper').find(`[data-tab=${dataTab}]`).find('.percentage').html(`${percentage}%`)
@@ -1692,67 +1749,6 @@ $dataIndex = match ($skema) {
         })
     });
 
-    $('#kabupaten').change(function() {
-        var kabID = $(this).val();
-        if (kabID) {
-            $.ajax({
-                type: "GET",
-                url: "{{ route('getKecamatan') }}?kabID=" + kabID,
-                dataType: 'JSON',
-                success: function(res) {
-                    //    //console.log(res);
-                    if (res) {
-                        $("#kecamatan").empty();
-                        $("#desa").empty();
-                        $("#kecamatan").append('<option value="0">---Pilih Kecamatan---</option>');
-                        $("#desa").append('<option value="0">---Pilih Desa---</option>');
-                        $.each(res, function(nama, kode) {
-                            $('#kecamatan').append(`
-                                <option value="${kode}">${nama}</option>
-                            `);
-                        });
-
-                        $('#kecamatan').trigger('change');
-                    } else {
-                        $("#kecamatan").empty();
-                        $("#desa").empty();
-                    }
-                }
-            });
-        } else {
-            $("#kecamatan").empty();
-            $("#desa").empty();
-        }
-    });
-
-    $('#kecamatan').change(function() {
-        var kecID = $(this).val();
-        // //console.log(kecID);
-        if (kecID) {
-            $.ajax({
-                type: "GET",
-                url: "{{ route('getDesa') }}?kecID=" + kecID,
-                dataType: 'JSON',
-                success: function(res) {
-                    //    //console.log(res);
-                    if (res) {
-                        $("#desa").empty();
-                        $("#desa").append('<option value="0">---Pilih Desa---</option>');
-                        $.each(res, function(nama, kode) {
-                            $('#desa').append(`
-                                <option value="${kode}">${nama}</option>
-                            `);
-                        });
-                    } else {
-                        $("#desa").empty();
-                    }
-                }
-            });
-        } else {
-            $("#desa").empty();
-        }
-    });
-
     //cek apakah opsi yg dipilih memiliki sub column
     $('.cek-sub-column').change(function(e) {
         let idOption = $(this).val();
@@ -1966,7 +1962,7 @@ $dataIndex = match ($skema) {
                                     <input type="hidden" name="opsi_jawaban[${valItem.id}]"
                                         value="${valItem.opsi_jawaban}" id="" class="input">
                                     <input type="text" maxlength="255" id="atas_nama" name="informasi[${valItem.id}]" placeholder="Masukkan informasi"
-                                        class="form-input input" value="${response.dataJawaban[i]}">
+                                        class="form-input input" value="">
                                 </div>
                             `);
                         } else {
@@ -2013,7 +2009,7 @@ $dataIndex = match ($skema) {
                                         <input type="hidden" name="opsi_jawaban[${valItem.id}]"
                                             value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
                                         <input type="text" maxlength="255" id="${valItem.nama.toString().replaceAll(" ", "_")}" name="informasi[${valItem.id}]" placeholder="Masukkan informasi"
-                                            class="form-input input" ${isDisabled} value="${response.dataJawaban[i]}">
+                                            class="form-input input" ${isDisabled} value="">
                                     </div>
                                 `);
                             }
@@ -2449,29 +2445,6 @@ $dataIndex = match ($skema) {
     }
     //end Repayment Capacity
 
-    $('.rupiah').keyup(function(e) {
-        var input = $(this).val()
-        $(this).val(formatrupiah(input))
-    });
-
-    function formatrupiah(angka, prefix) {
-        var number_string = angka.replace(/[^,\d]/g, '').toString(),
-            split = number_string.split(','),
-            sisa = split[0].length % 3,
-            rupiah = split[0].substr(0, sisa),
-            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-
-        // tambahkan titik jika yang di input sudah menjadi angka ribuan
-        if (ribuan) {
-            separator = sisa ? '.' : '';
-            rupiah += separator + ribuan.join('.');
-        }
-
-        rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-        return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
-    }
-    // End Format Rupiah
-
     // Limit Upload
     $('.limit-size').on('change', function() {
         var size = (this.files[0].size / 1024 / 1024).toFixed(2)
@@ -2618,4 +2591,5 @@ $dataIndex = match ($skema) {
 </script>
 
 <script src="{{ asset('') }}js/custom.js"></script>
+@include('dagulir.partials.create-save-temp')
 @endpush

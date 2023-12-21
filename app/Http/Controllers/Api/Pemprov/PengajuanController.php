@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\PengajuanDagulir;
 use App\Models\PengajuanModel;
 use App\Models\User;
+use App\Repository\NotificationsRepository;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -16,9 +17,10 @@ class PengajuanController extends Controller
 {
     public function store(Request $request) {
         /**
-         * 1. Insert to pengajuan table
-         * 2. Insert to calon_nasabah table
-         * 3. Return json
+         * 1. Insert to pengajuan_dagulir table
+         * 2. Insert to pengajuan table
+         * 3. Insert to notifications table
+         * 4. Return json
          */
         $status = '';
         $message = '';
@@ -30,10 +32,11 @@ class PengajuanController extends Controller
             $validator = Validator::make($req, [
                 'kode_pendaftaran' => 'required|unique:pengajuan_dagulir,kode_pendaftaran',
                 'nama' => 'required',
-                'nik' => 'required',
+                'nik' => 'required|unique:pengajuan_dagulir,nik',
+                'email' => 'unique:pengajuan_dagulir,email',
                 'tempat_lahir' => 'required',
                 'tanggal_lahir' => 'required',
-                'telp' => 'required',
+                'telp' => 'required|unique:pengajuan_dagulir,telp',
                 'jenis_usaha' => 'required',
                 'nominal' => 'required',
                 'tujuan_penggunaan' => 'required',
@@ -52,15 +55,15 @@ class PengajuanController extends Controller
                 'tipe' => 'required',
                 'npwp' => 'required',
                 'jenis_badan_hukum' => 'required',
-                'tempat_berdiri' => 'required',
-                'tanggal_berdiri' => 'required',
+                'ket_agunan' => 'required',
                 'tanggal' => 'required',
             ], [
                 'required' => ':attribute harus diisi.',
-                'unique' => ':attribute telah digunakan'
+                'unique' => ':attribute telah digunakan.'
             ], [
                 'kode_pendaftaran' => 'Kode Pendaftaran',
                 'nama' => 'Nama',
+                'email' => 'Email',
                 'nik' => 'NIK',
                 'tempat_lahir' => 'Tempat Lahir',
                 'tanggal_lahir' => 'Tanggal Lahir',
@@ -86,6 +89,7 @@ class PengajuanController extends Controller
                 'tempat_berdiri' => 'Tempat Berdiri',
                 'tanggal_berdiri' => 'Tanggal Berdiri',
                 'tanggal' => 'Tanggal',
+                'ket_agunan' => 'Keterangan Agunan',
             ]);
 
             if($validator->fails()){
@@ -101,10 +105,13 @@ class PengajuanController extends Controller
                     $message = 'User tidak dapat ditemukan pada bank cabang dengan kode '. $request->get('kode_bank_cabang');
                     $status = 'gagal';
                 } else{
+                    // 1. Insert to pengajuan_dagulir table
+                    $kode_pendaftaran = $request->get('kode_pendaftaran');
                     $insertDagulir = [
-                        'kode_pendaftaran' => $request->get('kode_pendaftaran'),
+                        'kode_pendaftaran' => $kode_pendaftaran,
                         'nama' => $request->get('nama'),
                         'nik' => $request->get('nik'),
+                        'email' => $request->get('email'),
                         'nama_pj_ketua' => $request->get('nama_pj_ketua') ?? null,
                         'tempat_lahir' => $request->get('tempat_lahir'),
                         'tanggal_lahir' => date('Y-m-d', strtotime($request->get('tanggal_lahir'))),
@@ -130,20 +137,36 @@ class PengajuanController extends Controller
                         'tempat_berdiri' => $request->get('tempat_berdiri'),
                         'tanggal_berdiri' => date('Y-m-d', strtotime($request->get('tanggal_berdiri'))),
                         'tanggal' => date('Y-m-d', strtotime($request->get('tanggal'))),
+                        'ket_agunan' => $request->get('ket_agunan'),
                         'user_id' => $userId->id,
-                        'status' => 1,
+                        'from_apps' => 'sipde',
+                        'status' => 8,
                         'created_at' => now(),
                     ];
 
                     $pengajuanDagulirId = PengajuanDagulir::insertGetId($insertDagulir);
 
+                    // 2. Insert to pengajuan table
                     $addPengajuan = new PengajuanModel();
                     $addPengajuan->id_staf = $userId->id;
+                    $addPengajuan->posisi = 'Proses Input Data';
                     $addPengajuan->tanggal = date(now());
                     $addPengajuan->id_cabang = $request->get('kode_bank_cabang');
                     $addPengajuan->skema_kredit = 'Dagulir';
                     $addPengajuan->dagulir_id = $pengajuanDagulirId;
                     $addPengajuan->save();
+
+                    // 3. Insert to notifications table
+                    $notif_msg = "Terdapat data pengajuan SIPDe masuk dengan kode pendaftaran <b>$kode_pendaftaran</b>.";
+                    $notifRepo = new NotificationsRepository;
+                    $notification = [
+                        'user_id' => $userId->id,
+                        'object_id' => $addPengajuan->id,
+                        'object_type' => 'sipde',
+                        'message' => $notif_msg,
+                        'created_at' => date('Y-m-d H:i:s')
+                    ];
+                    $notifRepo->store($notification);
 
                     DB::commit();
                     $status = 'berhasil';
@@ -161,7 +184,7 @@ class PengajuanController extends Controller
             $message = $e->getMessage();
             $req_status = Response::HTTP_BAD_REQUEST;
         } finally {
-            // 3. Return json
+            // 4. Return json
             $response = [
                 'status' => $status,
                 'message' => $message,

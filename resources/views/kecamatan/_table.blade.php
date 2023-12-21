@@ -19,7 +19,7 @@
                 <tr class="border-bottom-primary">
                     <td class="text-center text-muted">{{ $no }}</td>
                     <td>{{ $item->kecamatan }}</td>
-                    <td>{{ $item->kabupaten->kabupaten }}</td>
+                    <td>{{ $item->kabupaten != null ? $item->kabupaten->kabupaten : '-' }}</td>
                     <td>
                         <div class="form-inline btn-action">
                             <a href="{{ route('kecamatan.edit', $item->id) }}" class="mr-2">

@@ -10,6 +10,7 @@ use \App\Models\Kabupaten;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class NewKabupatenController extends Controller
@@ -136,24 +137,34 @@ class NewKabupatenController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $kabupaten = Kabupaten::findOrFail($id);
+        $kabupaten = Kabupaten::findOrFail($request->get('id'));
 
-        $validatedData = $request->validate(
+        $validatedData = Validator::make($request->all(),
             [
                 'kabupaten' => 'required',
             ],
         );
+        if ($validatedData->fails()) {
+            $html = "<ul style='list-style: none;'>";
+            foreach($validatedData->errors()->getMessages() as $error) {
+                $html .= "<li>$error[0]</li>";
+            }
+            $html .= "</ul>";
 
+            alert()->html('Terjadi kesalahan eror!', $html, 'error');
+            return redirect()->route('dagulir.master.kabupaten.index');
+        }
         try {
             $kabupaten->kabupaten = $request->get('kabupaten');
             $kabupaten->save();
+            alert()->success('Berhasil','Data berhasil diperbarui.');
+            return redirect()->route('dagulir.master.kabupaten.index');
         } catch (\Exception $e) {
             return redirect()->back()->withError('Terjadi kesalahan.');
         } catch (\Illuminate\Database\QueryException $e) {
             return redirect()->back()->withError('Terjadi kesalahan.');
         }
 
-        return redirect()->route('kabupaten.index')->withStatus('Data berhasil diperbarui.');
     }
 
     /**
@@ -167,12 +178,12 @@ class NewKabupatenController extends Controller
         try {
             $kabupaten = Kabupaten::findOrFail($id);
             $kabupaten->delete();
+            alert()->success('Berhasil','Data berhasil diperbarui.');
+            return redirect()->route('dagulir.master.kabupaten.index');
         } catch (Exception $e) {
             return back()->withError('Terjadi kesalahan.');
         } catch (QueryException $e) {
             return back()->withError('Terjadi kesalahan.');
         }
-
-        return redirect()->route('kabupaten.index')->withStatus('Data berhasil dihapus.');
     }
 }

@@ -5,12 +5,14 @@ use App\Models\Kecamatan;
 use App\Models\PengajuanDagulir;
 use App\Models\PlafonUsulan;
 use App\Models\User;
+use App\Models\PengajuanDagulirTemp;
+use App\Models\PlafonUsulan;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
 class PengajuanDagulirRepository
 {
-    function get($search, $limit=10, $page=1, $role, $id_user) {
+    function get($search, $limit=10, $page=1, $role, $id_user, $from_apps='pincetar') {
         $data = null;
         if ($role == 'Staf Analis Kredit') {
             $data = PengajuanDagulir::with('pengajuan')->where(function($query) use ($search) {
@@ -22,6 +24,7 @@ class PengajuanDagulirRepository
             ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
             ->select('pengajuan_dagulir.*')
             ->where('pengajuan.id_staf', $id_user)
+            ->where('pengajuan_dagulir.from_apps', $from_apps)
             ->paginate($limit);
         } else if ($role == 'Penyelia Kredit') {
             $data = PengajuanDagulir::whereHas('pengajuan', function (Builder $query) {
@@ -36,6 +39,7 @@ class PengajuanDagulirRepository
             ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
             ->select('pengajuan_dagulir.*')
             ->where('pengajuan.id_penyelia', $id_user)
+            ->where('pengajuan_dagulir.from_apps', $from_apps)
             ->latest()
             ->paginate($limit);
         } else if ($role == 'Pincab') {
@@ -51,6 +55,7 @@ class PengajuanDagulirRepository
             ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
             ->select('pengajuan_dagulir.*')
             ->where('pengajuan.id_pincab', $id_user)
+            ->where('pengajuan_dagulir.from_apps', $from_apps)
             ->latest()
             ->paginate($limit);
         }
@@ -82,7 +87,8 @@ class PengajuanDagulirRepository
                     $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
             }
             $item->nama_pemroses = $nama_pemroses;
-            $item->plafon = PlafonUsulan::where('id_pengajuan',$item->pengajuan->id)->first();
+            $item->plafon = PlafonUsulan::where('id_pengajuan',$item->pengajuan->id)->first()->plafon_usulan_pincab ?? 0;
+            $item->tenor = PlafonUsulan::where('id_pengajuan',$item->pengajuan->id)->first()->jangka_waktu_usulan_pincab ?? 0;
         }
         return $data;
     }
@@ -96,6 +102,17 @@ class PengajuanDagulirRepository
                                 'kec_usaha:id,kecamatan',
                                 'kotakab_usaha:id,kabupaten')
                 ->where('id',$id)->first();
+        return $data;
+    }
+
+    public function getDraftData($search, $limit=10, $page=1, $id_user){
+        $data = null;
+        $data = PengajuanDagulirTemp::where('id_user', $id_user)
+            ->where(function($query) use ($search) {
+                $query->orWhere('nama','like', "%$search%");
+            })
+            ->paginate($limit);
+
         return $data;
     }
 }

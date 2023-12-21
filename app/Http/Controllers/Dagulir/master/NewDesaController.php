@@ -44,8 +44,9 @@ class NewDesaController extends Controller
             if ($search) {
                 $getDesa->where('id', 'LIKE', "%{$search}%")->orWhere('desa', 'LIKE', "%{$search}%");
             }
-
             $this->param['data'] = $getDesa->paginate($limit);
+            $this->param['kabupaten'] = Kabupaten::all();
+            $this->param['kecamatan'] = Kecamatan::all();
         } catch (\Illuminate\Database\QueryException $e) {
             return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
         } catch (Exception $e) {

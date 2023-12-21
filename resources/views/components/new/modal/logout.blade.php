@@ -8,7 +8,7 @@
                       Logout
                   </h2>
               </div>
-              <button data-dismiss-id="modal-logout">
+              <button type="button" data-dismiss-id="modal-logout">
                   <iconify-icon icon="iconamoon:close-bold" class="text-2xl"></iconify-icon>
               </button>
           </div>
