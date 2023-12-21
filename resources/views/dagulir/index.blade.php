@@ -116,9 +116,9 @@
                                 class="border border-gray-300 rounded appearance-none text-center px-4 py-2 outline-none"
                                 id="page_length"
                             >
-                                <option value="1"
+                                <option value="10"
                                     @isset($_GET['page_length']) {{ $_GET['page_length'] == 10 ? 'selected' : '' }} @endisset>
-                                    1</option>
+                                    10</option>
                                 <option value="20"
                                     @isset($_GET['page_length']) {{ $_GET['page_length'] == 20 ? 'selected' : '' }} @endisset>
                                     20</option>
@@ -476,9 +476,9 @@
                                 class="border border-gray-300 rounded appearance-none text-center px-4 py-2 outline-none"
                                 id="page_length"
                             >
-                                <option value="1"
+                                <option value="10"
                                     @isset($_GET['page_length']) {{ $_GET['page_length'] == 10 ? 'selected' : '' }} @endisset>
-                                    1</option>
+                                    10</option>
                                 <option value="20"
                                     @isset($_GET['page_length']) {{ $_GET['page_length'] == 20 ? 'selected' : '' }} @endisset>
                                     20</option>
@@ -897,5 +897,66 @@
             $('#add-pengajuan').addClass('hidden');
         }
     });
+
+    $('#btn-filter').on('click', function (e) { 
+        e.preventDefault()
+        let tAwal = document.getElementById('tAwal');
+        let tAkhir = document.getElementById('tAkhir');
+        console.log(tAkhir.value);
+        if ($("#form-filter")[0].checkValidity()){
+            $('#form-filter').submit()
+        }else{
+            if(tAwal.value == "" && tAkhir.value == ""){
+                $('#form-filter').submit()
+            }else if(tAwal.value == ""){
+                $("#reqAwal").show();
+            }else if(tAkhir.value == ""){
+                $("#reqAkhir").show();
+            }else{
+                $("#reqAkhir").hide();
+                $("#reqAwal").hide();
+            }
+        }
+    })
+
+    $("#tAwal").on("change", function() {
+        var result = $(this).val();
+        if (result != null) {
+            $("#tAkhir").prop("required", true)
+        }
+    });
+
+    var token = "gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFVaNj";
+    var cbgValue = '{{ Request()->query('cbg') }}';
+
+    $(document).ready(function() {
+        $("#errorAkhir").hide();
+
+        $.ajax({
+            type: "GET",
+            url: "/api/v1/get-cabang", 
+            headers: {
+                'token': token,
+            },
+            success: function (response) {
+                response.data.forEach(element => {
+                    $('#cabang').append(
+                        `<option value="${element.kode_cabang}" ${cbgValue == element.kode_cabang ? 'selected' : ''}>${element.cabang}</option>`
+                    );
+                });
+            }
+        });
+    })
+
+    $("#tAkhir").on("change", function() {
+        var tAkhir = $(this).val();
+        var tAwal = $("#tAwal").val();
+        if (Date.parse(tAkhir) < Date.parse(tAwal)) {
+            $("#tAkhir").val('');
+            $("#errorAkhir").show();
+        } else {
+            $("#errorAkhir").hide();
+        }
+    })
     </script>
 @endpush
