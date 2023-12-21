@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Cabang;
 use App\Models\DanaCabang;
 use App\Models\MasterDana;
+use App\Models\MasterDDLoan;
 use App\Models\PengajuanDagulir;
 use App\Models\PengajuanModel;
 use App\Models\PlafonUsulan;
@@ -13,6 +14,7 @@ use App\Repository\MasterDanaRepository;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class MasterDanaController extends Controller
 {
@@ -78,36 +80,28 @@ class MasterDanaController extends Controller
     function storeCabang(Request $request) {
         $request->validate([
             'cabang' => 'required',
-            'dana_idle' => 'required'
+            'dana_modal' => 'required'
         ]);
+        DB::beginTransaction();
         try {
             $check_dana = DanaCabang::where('id_cabang',$request->get('cabang'))->first();
-            $dana_idle = MasterDana::latest()->first()->dana_idle;
-            if ($dana_idle < formatNumber($request->get('dana_idle'))) {
-                alert()->warning('Warning','Dana yang tersedia tidak mencukupi.');
-                return redirect()->route('master-dana.cabang.index');
-            }
-
-            $data_pengajuan = PengajuanDagulir::with('pengajuan')
-                                        ->where('status','6')
-                                        ->where('kode_bank_cabang',$request->get('cabang'))
-                                        ->get();
-            $nominal_plafon = 0;
-            foreach ($data_pengajuan as $key => $value) {
-            $plafon = PlafonUsulan::where('id_pengajuan',$value->pengajuan->id)->first()->plafon_usulan_pincab;
-                $nominal_plafon += $plafon;
-            }
 
             if ($check_dana) {
                 alert()->warning('Warning','Dana sudah tersedia.');
                 return redirect()->route('master-dana.cabang.index');
             }else{
+                $dana_idle = MasterDana::latest()->first()->dana_idle;
+                if ($dana_idle < formatNumber($request->get('dana_modal'))) {
+                    alert()->warning('Warning','Dana yang tersedia tidak mencukupi.');
+                    return redirect()->route('master-dana.cabang.index');
+                }
+                // dana cabang
                 $dana_cabang = new DanaCabang;
                 $dana_cabang->id_cabang = $request->get('cabang');
-                $dana_cabang->dana_modal = formatNumber($request->get('dana_idle'));
-                $dana_cabang->dana_idle = formatNumber($request->get('dana_idle'));
-                $dana_cabang->plafon_akumulasi = $nominal_plafon;
-                $dana_cabang->baki_debet = $nominal_plafon;
+                $dana_cabang->dana_modal = formatNumber($request->get('dana_modal'));
+                $dana_cabang->dana_idle = formatNumber($request->get('dana_modal'));
+                $dana_cabang->plafon_akumulasi = 0;
+                $dana_cabang->baki_debet = 0;
                 $dana_cabang->save();
 
                 $total_dana_idle = DanaCabang::first()->sum('dana_idle');
@@ -119,12 +113,17 @@ class MasterDanaController extends Controller
                 $master_dana->dana_idle = $total_dana_master;
                 $master_dana->update();
             }
+            DB::commit();
             alert()->success('Berhasil','Berhasil menambahkan data');
             return redirect()->route('master-dana.cabang.index');
         } catch (Exception $th) {
+            DB::rollBack();
+            return $th;
             alert()->error('error','Terjadi Kesalahan');
             return redirect()->route('master-dana.index');
         } catch (QueryException $th){
+            return $th;
+            DB::rollBack();
             alert()->error('error','Terjadi Kesalahan');
             return redirect()->route('master-dana.index');
         }

@@ -145,7 +145,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 Route::post('pengajuan-kredit/tempJawaban', [NewDagulirController::class, "tempJawaban"])->name('jawaban');
                 Route::get('pengajuan-kredit/continue-draft/{id}', [NewDagulirController::class, 'continueDraft'])->name('continue');
                 Route::get('pengajuan-kredit/lanjutkan-draft', [NewDagulirController::class, 'showContinueDraft'])->name('continue-draft');
-                Route::get('pengajuan-kredit/list-draft-dagulir', [NewDagulirController::class, "listDraftDagulir"])->name('list-draft-dagulir');
+                Route::get('pengajuan-kredit/list-draft-dagulir', [NewDagulirController::class, "indexTemp"])->name('list-draft-dagulir');
+                Route::post('pengajuan-kredit/deleteDraft/{id}', [NewDagulirController::class, 'deleteDraft'])->name('deleteDraft');
             });
 
         Route::prefix('/notification')
