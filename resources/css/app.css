@@ -302,11 +302,32 @@
     .review-pincab .field-review .field-answer .field-skor {
         @apply px-4 py-2 rounded bg-theme-primary/5 border font-semibold border-theme-primary text-theme-primary;
     }
-    input[disabled]{
+    input[disabled] {
         @apply bg-gray-100;
     }
     .scrollbar {
         @apply h-[40px] overflow-hidden;
+    }
+    .tab-table-wrapper {
+        @apply flex gap-0;
+    }
+    .tab-table-wrapper .tab-button {
+        @apply bg-gray-50 px-5 py-2 flex gap-2 hover:bg-theme-primary/80 hover:text-white  text-gray-400 border-b-0 border font-semibold;
+    }
+    .tab-table-wrapper .tab-button.active {
+        @apply bg-theme-primary text-white;
+    }
+    .tab-table-wrapper .tab-button.tab-button-start {
+        @apply rounded-tl-md;
+    }
+    .tab-table-wrapper .tab-button.tab-button-end {
+        @apply rounded-tr-md;
+    }
+    .table-wrapper-tab .tab-content {
+        @apply hidden;
+    }
+    .table-wrapper-tab .tab-content.active {
+        @apply block;
     }
 }
 
