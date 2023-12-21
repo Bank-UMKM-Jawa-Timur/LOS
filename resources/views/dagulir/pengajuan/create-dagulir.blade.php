@@ -410,7 +410,7 @@
             <div class="input-box">
                 <label for="">Jenis badan hukum</label><small class="text-red-500 font-bold">*</small>
                 <select name="jenis_badan_hukum" id="jenis_badan_hukum" class="form-select">
-                    <option value="0">Jenis Badan Hukum</option>
+                    <option value="0">Pilih Jenis Badan Hukum</option>
                     <option value="Berbadan Hukum" {{ old('jenis_berbadan') == 'Berbadan Hukum' ? 'selected' : '' }}>Berbadan Hukum</option>
                     <option value="Tidak Berbadan Hukum" {{ old('jenis_berbadan') == 'Tidak Berbadan Hukum' ? 'selected' : '' }}>Tidak Berbadan Hukum</option>
                 </select>
