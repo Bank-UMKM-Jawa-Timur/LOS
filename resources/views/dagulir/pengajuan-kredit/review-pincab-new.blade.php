@@ -47,7 +47,6 @@
                         </div>
                     </div>
                 </div>
-                <div></div>
                 <div class="accordion-content p-3">
                     @include('dagulir.pengajuan-kredit.review.data-umum')
                 </div>
