@@ -722,11 +722,13 @@ class NewDagulirController extends Controller
                 return redirect()->back();
             }
         } catch (Exception $e) {
+            alert()->error('error', $e->getMessage());
             DB::rollBack();
-            return redirect()->back()->withError('Terjadi kesalahan.');
+            return redirect()->back();
         } catch (QueryException $e) {
+            alert()->error('error', $e->getMessage());
             DB::rollBack();
-            return redirect()->back()->withError('Terjadi kesalahan');
+            return redirect()->back();
         }
     }
 
@@ -970,12 +972,17 @@ class NewDagulirController extends Controller
                 return redirect()->route('dagulir.pengajuan.index');
             } catch (Exception $e) {
                 DB::rollBack();
-                return redirect()->back()->withError('Terjadi kesalahan.' . $e->getMessage());
+                alert()->error('error', $e->getMessage());
+
+                return redirect()->back();
             } catch (QueryException $e) {
                 DB::rollBack();
-                return redirect()->back()->withError('Terjadi kesalahan.' . $e->getMessage());
+                alert()->error('error', $e->getMessage());
+
+                return redirect()->back();
             }
         } else {
+            alert()->error('error', 'Tidak memiliki hak akses.');
             return redirect()->back()->withError('Tidak memiliki hak akses.');
         }
     }
@@ -1612,13 +1619,13 @@ class NewDagulirController extends Controller
                 }
             } else {
                 alert()->error('Error','Data pengajuan tidak ditemukan');
-                return back()->withError('Data pengajuan tidak ditemukan.');
+                return back();
             }
         } catch (Exception $e) {
-            return redirect()->back()->withError('Terjadi kesalahan.');
+            return redirect()->back();
         } catch (QueryException $e) {
             return redirect()->back()->withError('Terjadi kesalahan');
-        }
+        };
     }
 
     public function accPengajuan($id, Request $request)
@@ -3216,12 +3223,44 @@ class NewDagulirController extends Controller
     public function tempFile(Request $request)
     {
         $dagulir = PengajuanDagulirTemp::find($request->id_dagulir_temp);
-        $data = TemporaryService::saveFileDagulir(
-            $dagulir,
-            $request->answer_id,
-            $request->file_id,
-            $request->file('file')
-        );
+        $temp = DB::table('temporary_jawaban_text')
+                    ->where('temporary_dagulir_id'. $request->dagulir_temp)
+                    ->where('id_jawaban', $request->answer_id)
+                    ->first();
+        if (!$temp) {
+            // Belum pernah save temp
+            $data = TemporaryService::saveFileDagulir(
+                $dagulir,
+                $request->answer_id,
+                $request->file_id,
+                $request->file('file')
+            );
+        }
+        else {
+            // Sudah pernah save temp
+            $req_file = $request->file('file');
+            $current_filename = $temp->opsi_text;
+            $aID = $request->answer_id;
+            $path = public_path("upload/temp/{$aID}/");
+            if ($current_filename != $req_file->getClientOriginalName()) {
+                // Update file
+                @unlink($path . $temp->opsi_text);
+                DB::table('temporary_jawaban_text')
+                    ->where('temporary_dagulir_id'. $request->dagulir_temp)
+                    ->where('id_jawaban', $request->answer_id)
+                    ->update(['opsi_text' => $req_file->getClientOriginalName()]);
+                $data = [
+                    'filename' => $req_file->getClientOriginalName(),
+                    'file_id' => $temp->id,
+                ];
+            }
+            else {
+                $data = [
+                    'filename' => $temp->opsi_jawaban,
+                    'file_id' => $temp->id,
+                ];
+            }
+        }
 
         return response()->json([
             'statusCode' => 200,

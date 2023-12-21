@@ -410,7 +410,7 @@
             <div class="input-box">
                 <label for="">Jenis badan hukum</label><small class="text-red-500 font-bold">*</small>
                 <select name="jenis_badan_hukum" id="jenis_badan_hukum" class="form-select">
-                    <option value="0">Jenis Badan Hukum</option>
+                    <option value="0">Pilih Jenis Badan Hukum</option>
                     <option value="Berbadan Hukum" {{ old('jenis_berbadan') == 'Berbadan Hukum' ? 'selected' : '' }}>Berbadan Hukum</option>
                     <option value="Tidak Berbadan Hukum" {{ old('jenis_berbadan') == 'Tidak Berbadan Hukum' ? 'selected' : '' }}>Tidak Berbadan Hukum</option>
                 </select>
@@ -482,11 +482,12 @@
             </div>
         </div>
         <div class="flex justify-between">
-            <button type="button"
-            class="px-5 py-2 border rounded bg-white text-gray-500"
-            >
-            Kembali
-            </button>
+            <a href="{{route('dagulir.pengajuan.index')}}">
+                <button type="button"
+                    class="px-5 py-2 border rounded bg-white text-gray-500">
+                    Kembali
+                </button>
+            </a>
             <button type="button"
             class="px-5 py-2 next-tab border rounded bg-theme-primary text-white"
             >
