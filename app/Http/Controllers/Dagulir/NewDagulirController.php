@@ -25,6 +25,7 @@ use App\Models\JawabanModel;
 use App\Models\JawabanTemp;
 use App\Models\JawabanTempModel;
 use App\Models\LogPengajuan;
+use App\Models\MasterDDLoan;
 use App\Models\MerkModel;
 use App\Models\PengajuanDagulir;
 use App\Models\PengajuanDagulirTemp;
@@ -1593,7 +1594,7 @@ class NewDagulirController extends Controller
             $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user,$allFilter);
             $pengajuan_sipde = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user, $allFilter, 'sipde');
         }
-      
+
         return view('dagulir.index',[
             'data' => $pengajuan_dagulir,
             'data_sipde' => $pengajuan_sipde,
@@ -2171,6 +2172,7 @@ class NewDagulirController extends Controller
                         mkdir($folderPK, 0755, true);
                     }
                     $filePK->move($folderPK, $filenamePK);
+
                     DB::table('log_cetak_kkb')
                     ->where('id_pengajuan', $id)
                     ->update([
@@ -2197,8 +2199,22 @@ class NewDagulirController extends Controller
                                 if ($upload == 200) {
                                     // Update to SELESAI
                                     $update_selesai = $this->updateStatus($kode_pendaftaran, 6);
+
                                     if (!is_array($update_selesai)) {
                                         if ($update_selesai == 200) {
+                                            // insert to dd loan
+                                            $plafon = PlafonUsulan::where('id_pengajuan',$id)->first();
+                                            $pengajuan = PengajuanModel::with('dagulir')->find($id);
+                                            if ($pengajuan && $plafon) {
+                                                $loan = new MasterDDLoan;
+                                                $loan->id_cabang = $request->get('cabang');
+                                                $loan->no_loan = $request->get('no_loan');
+                                                $loan->kode_pendaftaran = $pengajuan->dagulir->kode_pendaftaran;
+                                                $loan->plafon = $plafon->plafon_usulan_pincab;
+                                                $loan->jangka_waktu = $plafon->jangka_waktu_usulan_pincab;
+                                                $loan->baki_debet = $plafon->plafon_usulan_pincab;
+                                                $loan->save();
+                                            }
                                             DB::commit();
                                             Alert::success('success', $message);
                                             return redirect()->route('dagulir.pengajuan.index');

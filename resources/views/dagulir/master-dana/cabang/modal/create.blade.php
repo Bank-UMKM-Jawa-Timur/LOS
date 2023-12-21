@@ -29,11 +29,11 @@
                         @enderror
                     </div>
                     <div class="input-box">
-                        <label for="">Dana Idle</label>
-                        <input type="text" name="dana_idle"
-                            class="form-input @error('dana_idle') is-invalid @enderror rupiah" placeholder="Dana Idle"
-                            value="{{ old('dana_idle') }}">
-                        @error('dana_idle')
+                        <label for="">Dana Modal</label>
+                        <input type="text" name="dana_modal"
+                            class="form-input @error('dana_modal') is-invalid @enderror rupiah" placeholder="Dana Modal"
+                            value="{{ old('dana_modal') }}">
+                        @error('dana_modal')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>

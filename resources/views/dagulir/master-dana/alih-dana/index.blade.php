@@ -227,12 +227,12 @@
                             </div>
                         </div>
                     </div>
-                    <div class="flex justify-end">
+                    <div class="flex justify-end p-3">
                         <div class="mx-2">
                             <button type="reset" class="px-5 py-2 border rounded bg-white text-gray-500" >Batal</button>
                         </div>
-                        <div>
-                            <button type="submit" class="px-5 py-2 border rounded bg-theme-primary text-white">update</button>
+                        <div class="">
+                            <button type="submit" class="px-5 py-2 border rounded bg-theme-primary text-white">Simpan</button>
                         </div>
                     </div>
                 </form>
