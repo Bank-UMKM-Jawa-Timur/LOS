@@ -91,13 +91,13 @@
                 />
             </div>
             <div class="input-box">
-                <label for="">Email</label>
+                <label for="">Email<small class="text-red-500 font-bold">*</small></label>
                 <input
-                type="email"
-                class="form-input"
-                placeholder="Masukkan Email"
-                name="email"
-                value="{{ old('email') }}"
+                    type="email"
+                    class="form-input"
+                    placeholder="Masukkan Email"
+                    name="email"
+                    value="{{ old('email') }}"
                 />
             </div>
         </div>

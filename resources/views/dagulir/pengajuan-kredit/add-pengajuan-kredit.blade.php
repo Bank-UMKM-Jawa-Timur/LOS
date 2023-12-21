@@ -1159,6 +1159,7 @@ $dataIndex = match ($skema) {
         var inputText = $(form + " input[type=text]")
         var inputNumber = $(form + " input[type=number]")
         var inputDate = $(form + " input[type=date]")
+        var InputEmail = $(form + " input[type=email]")
         var inputHidden = $(form + " input[type=hidden]")
         var select = $(form + " select")
         var textarea = $(form + " textarea")
@@ -1177,8 +1178,36 @@ $dataIndex = match ($skema) {
             var formGroup = inputBox.parent();
             if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden'))
                 totalInput++
-            // var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
-            var isNull = (v.value == '' || $.trim(v.value) == '')
+            var isNull = (v.value == '' || $.trim(v.value) == '' || $.trim(v.value) == '')
+            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
+                totalInputNull++;
+                if ($(this).attr('id') != undefined) {
+                    nullValue.push($(this).attr('id').toString().replaceAll("_", " "))
+                }
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).is(":checked") && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
+                totalInputFilled++;
+                if ($(this).attr('id') != undefined) {
+                    let val = $(this).attr("id").toString().replaceAll("_", " ");
+                    for (var i = 0; i < nullValue.length; i++) {
+                        while (nullValue[i] == val) {
+                            nullValue.splice(i, 1)
+                            break;
+                        }
+                    }
+                }
+            } else if (!$(this).is(':checked')) {
+                totalInputChecked++;
+            }
+        })
+
+        $.each(InputEmail, function(i, v) {
+            if ($(this).prop('readonly'))
+                totalInputReadOnly++;
+            var inputBox = $(this).closest('.input-box');
+            var formGroup = inputBox.parent();
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden'))
+                totalInput++
+            var isNull = (v.value == '' || $.trim(v.value) == '' || $.trim(v.value) == '')
             if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputNull++;
                 if ($(this).attr('id') != undefined) {

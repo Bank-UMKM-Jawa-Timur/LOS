@@ -282,7 +282,7 @@ class NewDagulirController extends Controller
         else {
             $request->validate([
                 'nama_lengkap' => 'required',
-                'email' => 'unique:pengajuan_dagulir,email',
+                'email' => 'required|unique:pengajuan_dagulir,email',
                 'nik_nasabah' => 'required|unique:pengajuan_dagulir,nik',
                 'tempat_lahir' => 'required',
                 'tanggal_lahir' => 'required',
