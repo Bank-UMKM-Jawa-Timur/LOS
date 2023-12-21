@@ -2202,19 +2202,6 @@ class NewDagulirController extends Controller
 
                                     if (!is_array($update_selesai)) {
                                         if ($update_selesai == 200) {
-                                            // insert to dd loan
-                                            $plafon = PlafonUsulan::where('id_pengajuan',$id)->first();
-                                            $pengajuan = PengajuanModel::with('dagulir')->find($id);
-                                            if ($pengajuan && $plafon) {
-                                                $loan = new MasterDDLoan;
-                                                $loan->id_cabang = $request->get('cabang');
-                                                $loan->no_loan = $request->get('no_loan');
-                                                $loan->kode_pendaftaran = $pengajuan->dagulir->kode_pendaftaran;
-                                                $loan->plafon = $plafon->plafon_usulan_pincab;
-                                                $loan->jangka_waktu = $plafon->jangka_waktu_usulan_pincab;
-                                                $loan->baki_debet = $plafon->plafon_usulan_pincab;
-                                                $loan->save();
-                                            }
                                             DB::commit();
                                             Alert::success('success', $message);
                                             return redirect()->route('dagulir.pengajuan.index');
