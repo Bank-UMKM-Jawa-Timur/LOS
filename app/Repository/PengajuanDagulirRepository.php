@@ -104,7 +104,12 @@ class PengajuanDagulirRepository
                 'pengajuan' => function($query) {
                     $query->with('komentar');
                 }
-            ])->when($search, function($query, $search) {
+            ])
+            ->whereHas('pengajuan', function($query) use ($id_user) {
+                $query->where('posisi', 'Pincab')
+                    ->where('id_pincab', $id_user);
+            })
+            ->when($search, function($query, $search) {
                 $query->where('kode_pendaftaran','like', "%$search%")
                         ->orWhere('nama','like', "%$search%");
             })
@@ -131,7 +136,6 @@ class PengajuanDagulirRepository
             })
             ->latest()
             ->select('pengajuan_dagulir.*')
-            ->where('pengajuan.id_staf', $id_user)
             ->where('pengajuan_dagulir.from_apps', $from_apps)
             ->paginate($limit);
         } else if ($role == 'Penyelia Kredit') {
@@ -334,7 +338,7 @@ class PengajuanDagulirRepository
 
     public function getDraftData($search, $limit=10, $page=1, $id_user){
         $data = null;
-        $data = PengajuanDagulirTemp::where('id_user', $id_user)
+        $data = PengajuanDagulirTemp::where('user_id', $id_user)
             ->where(function($query) use ($search) {
                 $query->orWhere('nama','like', "%$search%");
             })

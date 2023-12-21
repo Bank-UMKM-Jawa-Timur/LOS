@@ -292,7 +292,7 @@ $dataIndex = match ($skema) {
                                                                         value="{{ $item->opsi_jawaban }}" id="">
                                                                     <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}"
                                                                         id="">
-                                                                    <input type="number" step="any" name="informasi[{{ $item->id }}]"
+                                                                    <input type="number" min="0" step="any" name="informasi[{{ $item->id }}]"
                                                                         id="{{ $idLevelDua }}" placeholder="Masukkan informasi {{ $item->nama }}"
                                                                         class="form-input" aria-label="Recipient's username" aria-describedby="basic-addon2"
                                                                         onkeydown="return event.keyCode !== 69">
@@ -478,7 +478,7 @@ $dataIndex = match ($skema) {
                                                                                     value="{{ $itemTiga->opsi_jawaban }}" id="">
                                                                                 <input type="hidden" name="id_level[{{ $itemTiga->id }}]"
                                                                                     value="{{ $itemTiga->id }}" id="">
-                                                                                    <input type="number" step="any" name="informasi[{{ $itemTiga->id }}]"
+                                                                                    <input type="number" min="0" step="any" name="informasi[{{ $itemTiga->id }}]"
                                                                                         id="{{ $idLevelTiga }}"
                                                                                         placeholder="Masukkan informasi {{ $itemTiga->nama }}"
                                                                                         class="form-input {{$itemTiga->readonly ? 'bg-gray-100' : ''}}"
@@ -664,7 +664,7 @@ $dataIndex = match ($skema) {
                                                                                     value="{{ $itemEmpat->opsi_jawaban }}" id="">
                                                                                 <input type="hidden" name="id_level[{{ $itemEmpat->id }}]"
                                                                                     value="{{ $itemEmpat->id }}" id="">
-                                                                                <input type="number" step="any" name="informasi[{{ $itemEmpat->id }}]"
+                                                                                <input type="number" min="0" step="any" name="informasi[{{ $itemEmpat->id }}]"
                                                                                     id="{{ $idLevelEmpat }}"
                                                                                     placeholder="Masukkan informasi {{ $itemEmpat->nama }}" class="form-input"
                                                                                     aria-label="Recipient's username" aria-describedby="basic-addon2"
@@ -2025,8 +2025,11 @@ $dataIndex = match ($skema) {
                                         i] != "") {
                                     if (kategoriJaminan != 'Kendaraan Bermotor') {
                                         isCheck =
-                                            "<input type='checkbox' class='checkKategori' checked>"
+                                            "<input type='checkbox' class='checkKategori'>"
                                         isDisabled = ""
+                                    }
+                                    if (valItem.nama != 'BPKB No') {
+                                        isDisabled = "disabled"
                                     }
                                 }
                                 $('#bukti_pemilikan_jaminan_tambahan').append(`
