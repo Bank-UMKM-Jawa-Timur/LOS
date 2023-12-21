@@ -3,6 +3,7 @@ namespace App\Repository;
 
 use App\Models\Kecamatan;
 use App\Models\PengajuanDagulir;
+use App\Models\PengajuanModel;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
@@ -95,5 +96,76 @@ class PengajuanDagulirRepository
                                 'kotakab_usaha:id,kabupaten')
                 ->where('id',$id)->first();
         return $data;
+    }
+
+    public function getDataPemroses($model){
+        $roles = [];
+        $idRoles = [];
+        $users = [];
+        $cekRolePBO = User::where('id_cabang', $model->id_cabang)
+            ->where('role', 'PBO')
+            ->count('id');
+        $cekRolePBP = User::where('id_cabang', $model->id_cabang)
+            ->where('role', 'PBP')
+            ->count('id');
+
+        if($cekRolePBO > 0 && $cekRolePBP > 0){
+            $roles = [
+                'Staf Analis Kredit',
+                'Penyelia Kredit',
+                'PBO',
+                'PBP',
+                'Pincab',
+            ];
+            $idRoles = [
+                'id_staf',
+                'id_penyelia',
+                'id_pbo',
+                'id_pbp',
+                'id_pincab'
+            ];
+        } else if($cekRolePBO > 0 && $cekRolePBP < 1){
+            $roles = [
+                'Staf Analis Kredit',
+                'Penyelia Kredit',
+                'PBO',
+                'Pincab',
+            ];
+            $idRoles = [
+                'id_staf',
+                'id_penyelia',
+                'id_pbo',
+                'id_pincab'
+            ];
+        } else if($cekRolePBO < 1 && $cekRolePBO > 0){
+            $roles = [
+                'Staf Analis Kredit',
+                'Penyelia Kredit',
+                'PBP',
+                'Pincab',
+            ];
+            $idRoles = [
+                'id_staf',
+                'id_penyelia',
+                'id_pbp',
+                'id_pincab'
+            ];
+        } else {
+            $roles = [
+                'Staf Analis Kredit',
+                'Penyelia Kredit',
+                'Pincab',
+            ];
+            $idRoles = [
+                'id_staf',
+                'id_penyelia',
+                'id_pincab'
+            ];
+        }
+
+        return [
+            'roles' => $roles,
+            'idRoles' => $idRoles
+        ];
     }
 }
