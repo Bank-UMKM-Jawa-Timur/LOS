@@ -1582,7 +1582,7 @@ class NewDagulirController extends Controller
         $page = $request->has('page') ? $request->get('page') : 1;
         if ($role == 'Staf Analis Kredit') {
             $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user,$allFilter);
-            $pengajuan_sipde = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user,$allFilter, 'sipde');
+            $pengajuan_sipde = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user, $allFilter, 'sipde');
         } elseif ($role == 'Penyelia Kredit') {
             $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Penyelia Kredit', $id_user,$allFilter);
             $pengajuan_sipde = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user, $allFilter, 'sipde');
