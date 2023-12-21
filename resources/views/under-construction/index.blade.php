@@ -14,7 +14,7 @@
         <div class="content text-center space-y-5">
             <h2 class="font-bold lg:text-5xl text-3xl text-theme-primary tracking-tighter">Coming Soon!</h2>
             <p class="text-sm max-w-lg text-gray-400 mx-auto">Halaman sedang dalam tahap pengembangan, mohon tunggu beberapa saat</p>
-            <a href="{{ route('dashboard') }}" >
+            <a href="{{ route('dashboard') }}" class="mt-5" >
                 <button class="px-5 py-2 bg-theme-primary rounded font-semibold text-white">Kembali ke Dashboard</button>
             </a>
         </div>

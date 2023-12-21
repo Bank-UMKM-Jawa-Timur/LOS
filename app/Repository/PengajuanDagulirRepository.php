@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 class PengajuanDagulirRepository
 {
 
-    function get($search, $limit=10, $page=1, $role, $id_user, $from_apps='pincetar',array $filter) {
+    function get($search, $limit=10, $page=1, $role, $id_user, array $filter, $from_apps='pincetar') {
         $data = null;
         $cabang = null;
         if (isset($filter['cbg'])) {
@@ -25,10 +25,91 @@ class PengajuanDagulirRepository
         }
         if ($role == 'Staf Analis Kredit') {
             $data = PengajuanDagulir::with([
+                    'pengajuan' => function($query) {
+                        $query->with('komentar');
+                    }
+                ])
+                ->whereHas('pengajuan', function($query) use ($id_user) {
+                    $query->where('id_staf', $id_user);
+                })
+                ->when($search, function($query, $search) {
+                    $query->where('kode_pendaftaran','like', "%$search%")
+                            ->orWhere('nama','like', "%$search%");
+                })
+                ->when(isset($filter['tAwal']) && isset($filter['tAkhir']), function ($query) use ($filter) {
+                    return $query->whereBetween('pengajuan.tanggal', [$filter['tAwal'], $filter['tAkhir']]);
+                })
+                ->when($cabang, function ($query, $cabang) {
+                    return $query->where('pengajuan.id_cabang', $cabang->id);
+                })
+                ->when(isset($filter['pss']), function ($query) use ($filter) {
+                    return $query->where('pengajuan.posisi', $filter['pss']);
+                })
+                ->when(isset($filter['sts']), function ($query) use ($filter) {
+                    if ($filter['sts'] == 'Selesai' || $filter['sts'] == 'Ditolak') {
+                        return $query->where('pengajuan.posisi', $filter['sts']);
+                    } else {
+                        return $query->where('pengajuan.posisi', '<>', 'Selesai')
+                            ->where('pengajuan.posisi', '<>', 'Ditolak');
+                    }
+                })
+                ->when(isset($filter['score']), function ($query) use ($filter) {
+                    return $query->whereRaw('FLOOR(pengajuan.average_by_sistem) = ?', $filter['score'])
+                        ->orWhereRaw('FLOOR(pengajuan.average_by_penyelia) = ?', $filter['score']);
+                })
+                ->latest()
+                ->select('pengajuan_dagulir.*')
+                ->where('pengajuan_dagulir.from_apps', $from_apps)
+                ->paginate($limit);
+        } else if ($role == 'Penyelia Kredit') {
+            $data = PengajuanDagulir::with([
+                    'pengajuan' => function($query) {
+                        $query->with('komentar');
+                    }
+                ])
+                ->whereHas('pengajuan', function($query) use ($id_user) {
+                    $query->where('id_penyelia', $id_user);
+                })
+                ->when($search, function($query, $search) {
+                    $query->where('kode_pendaftaran','like', "%$search%")
+                            ->orWhere('nama','like', "%$search%");
+                })
+                ->when(isset($filter['tAwal']) && isset($filter['tAkhir']), function ($query) use ($filter) {
+                    return $query->whereBetween('pengajuan.tanggal', [$filter['tAwal'], $filter['tAkhir']]);
+                })
+                ->when($cabang, function ($query, $cabang) {
+                    return $query->where('pengajuan.id_cabang', $cabang->id);
+                })
+                ->when(isset($filter['pss']), function ($query) use ($filter) {
+                    return $query->where('pengajuan.posisi', $filter['pss']);
+                })
+                ->when(isset($filter['sts']), function ($query) use ($filter) {
+                    if ($filter['sts'] == 'Selesai' || $filter['sts'] == 'Ditolak') {
+                        return $query->where('pengajuan.posisi', $filter['sts']);
+                    } else {
+                        return $query->where('pengajuan.posisi', '<>', 'Selesai')
+                            ->where('pengajuan.posisi', '<>', 'Ditolak');
+                    }
+                })
+                ->when(isset($filter['score']), function ($query) use ($filter) {
+                    return $query->whereRaw('FLOOR(pengajuan.average_by_sistem) = ?', $filter['score'])
+                        ->orWhereRaw('FLOOR(pengajuan.average_by_penyelia) = ?', $filter['score']);
+                })
+                ->select('pengajuan_dagulir.*')
+                ->where('pengajuan_dagulir.from_apps', $from_apps)
+                ->latest()
+                ->paginate($limit);
+        } else if ($role == 'Pincab') {
+            $data = PengajuanDagulir::with([
                 'pengajuan' => function($query) {
                     $query->with('komentar');
                 }
-            ])->when($search, function($query, $search) {
+            ])
+            ->whereHas('pengajuan', function($query) use ($id_user) {
+                $query->where('posisi', 'Pincab')
+                    ->where('id_pincab', $id_user);
+            })
+            ->when($search, function($query, $search) {
                 $query->where('kode_pendaftaran','like', "%$search%")
                         ->orWhere('nama','like', "%$search%");
             })
@@ -55,7 +136,6 @@ class PengajuanDagulirRepository
             })
             ->latest()
             ->select('pengajuan_dagulir.*')
-            ->where('pengajuan.id_staf', $id_user)
             ->where('pengajuan_dagulir.from_apps', $from_apps)
             ->paginate($limit);
         } else if ($role == 'Penyelia Kredit') {
@@ -258,7 +338,7 @@ class PengajuanDagulirRepository
 
     public function getDraftData($search, $limit=10, $page=1, $id_user){
         $data = null;
-        $data = PengajuanDagulirTemp::where('id_user', $id_user)
+        $data = PengajuanDagulirTemp::where('user_id', $id_user)
             ->where(function($query) use ($search) {
                 $query->orWhere('nama','like', "%$search%");
             })

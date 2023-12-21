@@ -13,6 +13,10 @@
                 </div>
             </div>
         </div>
+        @if (session('error'))
+            <strong>Terjadi kesalahan!</strong> {{ session('error') }}
+        @endif
+
         <div class="body-pages review-pengajuan">
             <div class="container mx-auto p-3 bg-white">
                 <div class="accordion-section">
@@ -47,6 +51,7 @@
                         </div>
                     </div>
                 </div>
+                <div></div>
                 <div class="accordion-content p-3">
                     @include('dagulir.pengajuan-kredit.review.data-umum')
                 </div>
@@ -397,7 +402,7 @@
                                                         ->where('jawaban_text.id_pengajuan', $dataUmum->id)
                                                         ->where('jawaban_text.id_jawaban', $itemTiga->id)
                                                         ->get();
-    
+
                                                         $jumlahDataDetailJawabanText = $dataDetailJawabanText ? count($dataDetailJawabanText) : 0;
                                                 @endphp
                                                 @foreach ($dataDetailJawabanText as $itemTextTiga)
@@ -436,12 +441,12 @@
                                                                 @endif
                                                             </div>
                                                         </div>
-    
+
                                                         <input type="hidden" class="form-input mb-3" placeholder="Masukkan komentar"
                                                             name="komentar_penyelia" value="{{ $itemTextTiga->nama }}" disabled>
                                                         <input type="hidden" class="form-input mb-3" placeholder="Masukkan komentar"
                                                             name="komentar_penyelia" value="{{ $itemTextTiga->opsi_text }}" disabled>
-    
+
                                                         <input type="hidden" name="id_jawaban_text[]" value="{{ $itemTextTiga->id }}">
                                                         <input type="hidden" name="id[]" value="{{ $itemTextTiga->id_item }}">
                                                     @endif
@@ -495,7 +500,7 @@
                                                     @endif
                                                 @endif --}}
                                             @endforeach
-    
+
                                             @if (count($dataJawabanLevelTiga) != 0)
                                                 @if ($itemTiga->nama == 'Ratio Tenor Asuransi Opsi')
                                                 @else
@@ -526,7 +531,7 @@
                                                                     $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
                                                                         ->where('id_pengajuan', $dataUmum->id)
                                                                         ->get();
-    
+
                                                                     $getSkorPenyelia = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
                                                                         ->where('id_pengajuan', $dataUmum->id)
                                                                         ->where('id_jawaban', $itemJawabanLevelTiga->id)
@@ -648,7 +653,7 @@
                                                                         <p>{{ $itemEmpat->opsi_jawaban == 'persen' ? $itemTextEmpat->opsi_text : $itemTextEmpat->opsi_text  }}{{ $itemEmpat->opsi_jawaban == 'persen' ? '%' : '' }} {{ $itemEmpat->id == 130 ? 'Bulan' : ''}}</p>
                                                                     @endif
                                                                 </div>
-                                                                
+
                                                                 <input type="hidden" class="form-input mb-3"
                                                                     placeholder="Masukkan komentar" name="komentar_penyelia"
                                                                     value="{{ $itemTextEmpat->nama }}" disabled>
@@ -672,7 +677,7 @@
                                                                 ->where('jawaban.id_pengajuan', $dataUmum->id)
                                                                 ->where('id_item', $itemEmpat->id)
                                                                 ->count();
-        
+
                                                             $getKomentar = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', '=', 'detail_komentar.id_komentar')
                                                                 ->where('id_pengajuan', $dataUmum->id)
                                                                 ->where('id_item', $itemEmpat->id)
@@ -745,7 +750,7 @@
                                                                 @endif
                                                             @endforeach
                                                         @endif
-                                                    
+
                                                 @endif
                                             @endforeach
                                         @endif
