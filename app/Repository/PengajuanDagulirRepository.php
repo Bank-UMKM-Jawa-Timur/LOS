@@ -14,7 +14,11 @@ class PengajuanDagulirRepository
     function get($search, $limit=10, $page=1, $role, $id_user, $from_apps='pincetar') {
         $data = null;
         if ($role == 'Staf Analis Kredit') {
-            $data = PengajuanDagulir::with('pengajuan')->where(function($query) use ($search) {
+            $data = PengajuanDagulir::with([
+                'pengajuan' => function($query) {
+                    $query->with('komentar');
+                }
+            ])->where(function($query) use ($search) {
                 $query->where('kode_pendaftaran','like', "%$search%")
                         ->orWhere('nama','like', "%$search%")
                         ->orWhere('kode_pendaftaran','like', "%$search%");
@@ -34,7 +38,11 @@ class PengajuanDagulirRepository
                             ->orWhere('nama','like', "%$search%")
                             ->orWhere('kode_pendaftaran','like', "%$search%");
                 })
-            ->with('pengajuan')
+            ->with([
+                'pengajuan' => function($query) {
+                    $query->with('komentar');
+                }
+            ])
             ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
             ->select('pengajuan_dagulir.*')
             ->where('pengajuan.id_penyelia', $id_user)
@@ -50,7 +58,11 @@ class PengajuanDagulirRepository
                             ->orWhere('nama','like', "%$search%")
                             ->orWhere('kode_pendaftaran','like', "%$search%");
                 })
-            ->with('pengajuan')
+            ->with([
+                'pengajuan' => function($query) {
+                    $query->with('komentar');
+                }
+            ])
             ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
             ->select('pengajuan_dagulir.*')
             ->where('pengajuan.id_pincab', $id_user)

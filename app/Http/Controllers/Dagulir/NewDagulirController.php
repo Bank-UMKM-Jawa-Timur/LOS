@@ -722,11 +722,13 @@ class NewDagulirController extends Controller
                 return redirect()->back();
             }
         } catch (Exception $e) {
+            alert()->error('error', $e->getMessage());
             DB::rollBack();
-            return redirect()->back()->withError('Terjadi kesalahan.');
+            return redirect()->back();
         } catch (QueryException $e) {
+            alert()->error('error', $e->getMessage());
             DB::rollBack();
-            return redirect()->back()->withError('Terjadi kesalahan');
+            return redirect()->back();
         }
     }
 
@@ -970,12 +972,17 @@ class NewDagulirController extends Controller
                 return redirect()->route('dagulir.pengajuan.index');
             } catch (Exception $e) {
                 DB::rollBack();
-                return redirect()->back()->withError('Terjadi kesalahan.' . $e->getMessage());
+                alert()->error('error', $e->getMessage());
+
+                return redirect()->back();
             } catch (QueryException $e) {
                 DB::rollBack();
-                return redirect()->back()->withError('Terjadi kesalahan.' . $e->getMessage());
+                alert()->error('error', $e->getMessage());
+
+                return redirect()->back();
             }
         } else {
+            alert()->error('error', 'Tidak memiliki hak akses.');
             return redirect()->back()->withError('Tidak memiliki hak akses.');
         }
     }
@@ -1612,13 +1619,13 @@ class NewDagulirController extends Controller
                 }
             } else {
                 alert()->error('Error','Data pengajuan tidak ditemukan');
-                return back()->withError('Data pengajuan tidak ditemukan.');
+                return back();
             }
         } catch (Exception $e) {
-            return redirect()->back()->withError('Terjadi kesalahan.');
+            return redirect()->back();
         } catch (QueryException $e) {
             return redirect()->back()->withError('Terjadi kesalahan');
-        }
+        };
     }
 
     public function accPengajuan($id, Request $request)
