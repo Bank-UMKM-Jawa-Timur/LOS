@@ -192,7 +192,7 @@
                                         </div>
                                         <div class="field-answer">
                                             <a href="{{ $dataUmumNasabah->foto_nasabah != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataUmumNasabah->id.'/'.$dataUmumNasabah->foto_nasabah : asset('img/no-image.png') }}" data-lightbox="{{ $dataUmum->id }}" data-title="Foto Nasabah : {{ $dataUmumNasabah->nama }}">
-                                                <img src="{{ $dataUmumNasabah->foto_nasabah != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataUmumNasabah->id.'/'.$dataUmumNasabah->foto_nasabah : asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
+                                                <img src="{{ $dataUmumNasabah->foto_nasabah != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataUmumNasabah->id.'/'.$dataUmumNasabah->foto_nasabah : asset('img/no-image.png') }}" class="object-contain" width="300" height="400" alt="">
                                             </a>
                                         </div>
                                     </div>
@@ -203,7 +203,7 @@
                                         </div>
                                         <div class="field-answer">
                                             <a href="{{ $dataUmumNasabah->foto_ktp != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataUmumNasabah->id.'/'.$dataUmumNasabah->foto_ktp : asset('img/no-image.png') }}" data-lightbox="{{ $dataUmum->id }}" data-title="Foto KTP : {{ $dataUmumNasabah->nama }}">
-                                                <img src="{{ $dataUmumNasabah->foto_ktp != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataUmumNasabah->id.'/'.$dataUmumNasabah->foto_ktp : asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
+                                                <img src="{{ $dataUmumNasabah->foto_ktp != null ? asset('..').'/upload/'.$dataUmum->id.'/'.$dataUmumNasabah->id.'/'.$dataUmumNasabah->foto_ktp : asset('img/no-image.png') }}" class="object-contain" width="300" height="400" alt="">
                                             </a>
                                         </div>
                                     </div>
