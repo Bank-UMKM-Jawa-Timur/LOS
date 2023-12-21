@@ -777,7 +777,7 @@
                                                             </li>
                                                         @endif
                                                     @elseif ((Auth()->user()->role == 'Pincab'))
-                                                        @if ($item->pengajuan->posisi != 'Ditolak' &&  $item->pengajuan->posisi != 'Selesai')
+                                                        @if ($item->pengajuan->posisi == 'Pincab')
                                                             @if ($item->pengajuan->id_pincab)
                                                                 <li class="item-tb-dropdown">
                                                                     <a href="{{ route('dagulir.detailjawaban_pincab', $item->pengajuan->id) }}"
