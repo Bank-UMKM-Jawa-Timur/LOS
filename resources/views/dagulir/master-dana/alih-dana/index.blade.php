@@ -92,6 +92,7 @@
                 setTimeout(function() {
                     $("#pesan").hide();
                 }, 5000);
+                $('#total_dana').val(0);
             } else {
                 total(jumlah);
                 $("#pesan").hide();
@@ -100,6 +101,7 @@
 
         function total(jumlah) {
             let total_ke = parseInt($('#dana_ke').val().replace(/\./g, ''));
+            console.log(total_ke);
             let total_akhir = jumlah + total_ke;
 
             $('#total_dana').val(total_akhir);
