@@ -2025,7 +2025,7 @@ $dataIndex = match ($skema) {
                                         i] != "") {
                                     if (kategoriJaminan != 'Kendaraan Bermotor') {
                                         isCheck =
-                                            "<input type='checkbox' class='checkKategori' checked>"
+                                            "<input type='checkbox' class='checkKategori'>"
                                         isDisabled = ""
                                     }
                                 }
