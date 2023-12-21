@@ -609,7 +609,7 @@
                                                                 ->where('id_pengajuan', $item->pengajuan->id)
                                                                 ->first();
                                                         @endphp
-            
+
                                                         @if ($tglCetak == null || !$tglCetak->tgl_cetak_sppk)
                                                             <li class="item-tb-dropdown">
                                                                 <a target="_blank" href="{{ route('dagulir.cetak-sppk-dagulir', $item->pengajuan->id) }}" class="dropdown-item">Cetak SPPK</a>
