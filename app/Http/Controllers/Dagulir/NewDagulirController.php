@@ -1860,72 +1860,90 @@ class NewDagulirController extends Controller
             $currentPosisi = $pengajuan->posisi;
             $komentarPincab = KomentarModel::where('id_pengajuan', $id)->first();
             if (auth()->user()->role == 'Pincab') {
-                if ($komentarPincab->komentar_pincab != null) {
+                if ($currentPosisi == 'Pincab') {
                     $pengajuan->posisi = "Ditolak";
                     $pengajuan->tanggal_review_pincab = date(now());
                     $pengajuan->update();
 
                     $nasabah = PengajuanDagulir::select('nama')->find($pengajuan->dagulir_id);
+                    $storeSIPDE = $this->storeSipde($id);
+                    $kode_pendaftaran = false;
+                    if (is_array($storeSIPDE)) {
+                        $kode_pendaftaran = array_key_exists('kode_pendaftaran', $storeSIPDE) ? $storeSIPDE['kode_pendaftaran'] : false;
+                    }
                     $delay = 1500000; // 1.5 sec
 
-                    // HIT update status survei endpoint dagulir
-                    $survei = $this->updateStatus($nasabah->kode_pendaftaran, 1);
-                    if ($currentPosisi == 'Pincab') {
-                        if (is_array($survei)) {
-                            // Fail block
-                            if ($survei['message'] != 'Update Status Gagal. Anda tidak bisa mengubah status, karena status saat ini adalah SURVEY') {
+                    if ($kode_pendaftaran) {
+                        // HIT update status survei endpoint dagulir
+                        $survei = $this->updateStatus($kode_pendaftaran, 1);
+                        if ($currentPosisi == 'Pincab') {
+                            if (is_array($survei)) {
+                                // Fail block
+                                if ($survei['message'] != 'Update Status Gagal. Anda tidak bisa mengubah status, karena status saat ini adalah SURVEY') {
+                                    DB::rollBack();
+                                    alert()->error('Peringatan survei', $survei);
+                                    return redirect()->back();
+                                }
+                            }
+                            else {
+                                if ($survei != 200) {
+                                    DB::rollBack();
+                                    alert()->error('Peringatan survei', $survei);
+                                    return redirect()->back()->withError($survei);
+                                }
+                            }
+                            usleep($delay);
+                        }
+
+                        // HIT update status analisa endpoint dagulir
+                        if ($nasabah->status != 2) {
+                            $lampiran_analisa = lampiranAnalisa();
+                            $analisa = $this->updateStatus($kode_pendaftaran, 2, $lampiran_analisa);
+                            if (is_array($analisa)) {
+                                // Fail block
                                 DB::rollBack();
-                                return redirect()->back()->withError($survei);
+                                alert()->error('Peringatananalisa', $analisa);
+                                return redirect()->back();
+                            }
+                            else {
+                                if ($analisa != 200 || $analisa != '200') {
+                                    DB::rollBack();
+                                    alert()->error('Peringatananalisa', $analisa);
+                                    return redirect()->back();
+                                }
+                            }
+                            usleep($delay);
+                        }
+
+                        // HIT update status ditolak endpoint dagulir
+                        if ($nasabah->status != 3) {
+                            $ditolak = $this->updateStatus($kode_pendaftaran, 4);
+                            if (is_array($ditolak)) {
+                                // Fail block
+                                DB::rollBack();
+                                alert()->error('Peringatanditolak', $ditolak);
+                                return redirect()->back();
+                            }
+                            else {
+                                if ($ditolak != 200) {
+                                    DB::rollBack();
+                                    alert()->error('Peringatanditolak', $ditolak);
+                                    return redirect()->back();
+                                }
                             }
                         }
-                        else {
-                            if ($survei != 200) {
-                                DB::rollBack();
-                                return redirect()->back()->withError($survei);
-                            }
-                        }
-                        usleep($delay);
+
+                        $namaNasabah = 'undifined';
+                        if ($nasabah)
+                            $namaNasabah = $nasabah->nama;
+
+                        $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menolak pengajuan atas nama ' . $namaNasabah . '.', $id, Auth::user()->id, Auth::user()->nip);
                     }
-
-                    // HIT update status analisa endpoint dagulir
-                    if ($nasabah->status != 2) {
-                        $lampiran_analisa = lampiranAnalisa();
-                        $analisa = $this->updateStatus($nasabah->kode_pendaftaran, 2, $lampiran_analisa);
-                        if (is_array($analisa)) {
-                            // Fail block
-                            DB::rollBack();
-                            return redirect()->back()->withError($analisa);
-                        }
-                        else {
-                            if ($survei != 200 || $survei != '200') {
-                                DB::rollBack();
-                                return redirect()->back()->withError($analisa);
-                            }
-                        }
-                        usleep($delay);
+                    else {
+                        DB::rollBack();
+                        alert()->error('Peringatan', $storeSIPDE);
+                        return redirect()->back();
                     }
-
-                    // HIT update status ditolak endpoint dagulir
-                    if ($nasabah->status != 3) {
-                        $ditolak = $this->updateStatus($nasabah->kode_pendaftaran, 3);
-                        if (is_array($ditolak)) {
-                            // Fail block
-                            DB::rollBack();
-                            return redirect()->back()->withError($ditolak);
-                        }
-                        else {
-                            if ($ditolak != 200) {
-                                DB::rollBack();
-                                return redirect()->back()->withError($ditolak);
-                            }
-                        }
-                    }
-
-                    $namaNasabah = 'undifined';
-                    if ($nasabah)
-                        $namaNasabah = $nasabah->nama;
-
-                    $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menolak pengajuan atas nama ' . $namaNasabah . '.', $id, Auth::user()->id, Auth::user()->nip);
 
                     DB::commit();
 
@@ -1933,8 +1951,8 @@ class NewDagulirController extends Controller
                     Alert::success('success', 'Berhasil menolak pengajuan');
                     return redirect()->route('dagulir.pengajuan.index');
                 } else {
-                    alert()->error('Error','Belum di review Pincab');
-                    return redirect()->back()->withError('Belum di review Pincab.');
+                    alert()->error('Error','Posisi data belum sampai Pincab');
+                    return redirect()->back();
                 }
             } else {
                 alert()->error('Error','Tidak memiliki hak akses');
@@ -1942,7 +1960,8 @@ class NewDagulirController extends Controller
             }
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->withError($e->getMessage());
+            alert()->error('Error', $e->getMessage());
+            return redirect()->back();
         }
     }
 

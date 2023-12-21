@@ -419,7 +419,7 @@
                                                             </li>
                                                         @endif
                                                     @elseif ((Auth()->user()->role == 'Pincab'))
-                                                        @if ($item->pengajuan->posisi != 'Ditolak' &&  $item->pengajuan->posisi != 'Selesai')
+                                                        @if ($item->pengajuan->posisi == 'Pincab')
                                                             @if ($item->pengajuan->id_pincab)
                                                                 @if (!$item->pengajuan->komentar->id_pincab)
                                                                     <li class="item-tb-dropdown">

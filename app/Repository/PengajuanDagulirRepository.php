@@ -104,7 +104,12 @@ class PengajuanDagulirRepository
                 'pengajuan' => function($query) {
                     $query->with('komentar');
                 }
-            ])->when($search, function($query, $search) {
+            ])
+            ->whereHas('pengajuan', function($query) use ($id_user) {
+                $query->where('posisi', 'Pincab')
+                    ->where('id_pincab', $id_user);
+            })
+            ->when($search, function($query, $search) {
                 $query->where('kode_pendaftaran','like', "%$search%")
                         ->orWhere('nama','like', "%$search%");
             })
