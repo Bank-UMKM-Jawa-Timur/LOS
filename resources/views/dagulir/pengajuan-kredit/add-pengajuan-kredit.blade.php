@@ -767,11 +767,13 @@ $dataIndex = match ($skema) {
                                         @enderror
                                     </div>
                                     <div class="flex justify-between">
-                                        <button type="button"
-                                          class="px-5 py-2 border rounded bg-white text-gray-500"
-                                        >
-                                          Kembali
-                                        </button>
+                                        <a href="{{route('dagulir.pengajuan.index')}}">
+                                            <button type="button"
+                                                class="px-5 py-2 border rounded bg-white text-gray-500"
+                                                >
+                                                Kembali
+                                            </button>
+                                        </a>
                                         <div>
                                           <button type="button"
                                           class="px-5 prev-tab py-2 border rounded bg-theme-secondary text-white"
@@ -783,7 +785,6 @@ $dataIndex = match ($skema) {
                                         >
                                           Selanjutnya
                                         </button>
-                                        {{-- <button type="submit" class="px-5 py-2 border rounded bg-green-600 text-white btn-simpan hidden" id="submit">Simpan </button> --}}
                                         </div>
                                     </div>
                                 </div>
@@ -810,11 +811,13 @@ $dataIndex = match ($skema) {
                                     </div>
                                 </div>
                                 <div class="flex justify-between">
-                                        <button type="button"
-                                          class="px-5 py-2 border rounded bg-white text-gray-500"
-                                        >
-                                          Kembali
-                                        </button>
+                                        <a href="{{route('dagulir.pengajuan.index')}}">
+                                            <button type="button"
+                                                class="px-5 py-2 border rounded bg-white text-gray-500"
+                                                >
+                                                Kembali
+                                            </button>
+                                        </a>
                                         <div>
                                           <button type="button"
                                           class="px-5 prev-tab py-2 border rounded bg-theme-secondary text-white"

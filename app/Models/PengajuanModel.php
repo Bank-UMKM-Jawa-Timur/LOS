@@ -33,4 +33,8 @@ class PengajuanModel extends Model
     public function plafon() {
         return $this->belongsTo(PlafonUsulan::class,'id_pengajuan','id');
     }
+
+    public function komentar() {
+        return $this->hasOne(KomentarModel::class,'id_pengajuan');
+    }
 }
