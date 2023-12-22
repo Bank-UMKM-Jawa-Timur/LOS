@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class ChangeBakiDebetToDdLoanTable extends Migration
@@ -14,7 +15,8 @@ class ChangeBakiDebetToDdLoanTable extends Migration
     public function up()
     {
         Schema::table('dd_loan', function (Blueprint $table) {
-            $table->double('baki_debet',12,0,true)->change();
+            DB::statement('ALTER TABLE dd_loan MODIFY baki_debet DOUBLE(12,0)');
+            // $table->double('baki_debet',12,0,true)->change();
         });
     }
 

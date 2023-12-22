@@ -112,10 +112,10 @@
                                     <tr>
                                         <td>{{ $i++ }}</td>
                                         <td>{{ $item->cabang->cabang }}</td>
-                                        <td>{{ number_format($item->dana_modal,2, ",", ".") }}</td>
-                                        <td>{{ number_format($item->dana_idle,2, ",", ".") }}</td>
-                                        <td>{{ number_format($item->plafon_akumulasi,2, ",", ".") }}</td>
-                                        <td>{{ number_format($item->baki_debet,2, ",", ".") }}</td>
+                                        <td>{{ number_format($item->dana_modal,0, ",", ".") }}</td>
+                                        <td>{{ number_format($item->dana_idle,0, ",", ".") }}</td>
+                                        <td>{{ number_format($item->plafon_akumulasi,0, ",", ".") }}</td>
+                                        <td>{{ number_format($item->baki_debet,0, ",", ".") }}</td>
                                         <td>{{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y') }}</td>
                                     </tr>
                                 @endforeach
