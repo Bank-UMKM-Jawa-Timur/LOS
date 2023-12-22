@@ -86,19 +86,17 @@ $dataIndex = match ($skema) {
                                         {{-- item ijin usaha --}}
 
                                         @if ($item->nama == 'Ijin Usaha')
-                                            <div class="form-group">
-                                                <div class="input-box">
-                                                    <label for="">{{ $item->nama }}</label>
-                                                    <select name="ijin_usaha" id="ijin_usaha" class="form-input">
-                                                        <option value="" {{old('ijin_usaha', $item->jawaban ? $item->jawaban->opsi_text : '') == '' ? 'selected' : ''}}>-- Pilih Ijin Usaha --</option>
-                                                        <option value="nib" {{old('ijin_usaha', $item->jawaban ? $item->jawaban->opsi_text : '') == 'nib' ? 'selected' : ''}}>NIB</option>
-                                                        <option value="surat_keterangan_usaha" {{old('ijin_usaha', $item->jawaban ? $item->jawaban->opsi_text : '') == 'surat_keterangan_usaha' ? 'selected' : ''}}>Surat Keterangan Usaha</option>
-                                                        <option value="tidak_ada_legalitas_usaha" {{old('ijin_usaha', $item->jawaban ? $item->jawaban->opsi_text : '') == 'tidak_ada_legalitas_usaha' ? 'selected' : ''}}>Tidak Ada Legalitas Usaha</option>
-                                                    </select>
-                                                </div>
+                                            <div class="input-box">
+                                                <label for="">{{ $item->nama }}</label>
+                                                <select name="ijin_usaha" id="ijin_usaha" class="form-input">
+                                                    <option value="" {{old('ijin_usaha', $item->jawaban ? $item->jawaban->opsi_text : '') == '' ? 'selected' : ''}}>-- Pilih Ijin Usaha --</option>
+                                                    <option value="nib" {{old('ijin_usaha', $item->jawaban ? $item->jawaban->opsi_text : '') == 'nib' ? 'selected' : ''}}>NIB</option>
+                                                    <option value="surat_keterangan_usaha" {{old('ijin_usaha', $item->jawaban ? $item->jawaban->opsi_text : '') == 'surat_keterangan_usaha' ? 'selected' : ''}}>Surat Keterangan Usaha</option>
+                                                    <option value="tidak_ada_legalitas_usaha" {{old('ijin_usaha', $item->jawaban ? $item->jawaban->opsi_text : '') == 'tidak_ada_legalitas_usaha' ? 'selected' : ''}}>Tidak Ada Legalitas Usaha</option>
+                                                </select>
                                             </div>
-                                            <div class="form-group" id="npwpsku" style="display:none ">
-                                                <div class="input-box">
+                                            <div>
+                                                <div class="input-box" id="npwpsku" @if ($item->jawaban->opsi_text != 'nib') style="display:none;" @endif>
                                                     <label for="">NPWP</label>
                                                     <br>
                                                     <div class="flex gap-2 rounded p-2 w-full">
@@ -107,6 +105,7 @@ $dataIndex = match ($skema) {
                                                             name="form-input"
                                                             class="form-check cursor-pointer"
                                                             id="isNpwp"
+                                                            @if($itemNPWP->jawaban) checked @endif
                                                         />
                                                         <label
                                                             for="isNpwp"
@@ -116,73 +115,75 @@ $dataIndex = match ($skema) {
                                                     </div>
                                                 </div>
                                             </div>
-                                            @if ($item?->id == 77)
-                                                <div class="form-group" id="nib">
-                                                    <div class="input-box">
-                                                        <label for="">NIB</label>
-                                                        <input type="hidden" name="id_level[77]" value="77" id="nib_id">
-                                                        <input type="hidden" name="opsi_jawaban[77]" value="input text" id="nib_opsi_jawaban">
-                                                        <input type="text" maxlength="255" name="informasi[77]" id="nib_text"
-                                                            placeholder="Masukkan informasi" class="form-input" value="{{old('informasi[77]', $item->jawaban ? $item->jawaban->opsi_text : '')}}">
-                                                        <input type="hidden"name="id_text[]" id="id_nib_text" value="77">
-                                                        <input type="hidden" name="skor_penyelia_text[]"
-                                                            value="{{ $item->jawaban ? $item->jawaban->skor_penyelia : '' }}">
-                                                        <input type="hidden" name="id_jawaban_text[]" value="{{ $item->jawaban ? $item->jawaban->id_jawaban : '' }}">
-                                                        <input type="hidden" name="id_jawaban_text[]" id="id_jawaban_nib"
-                                                            value="{{ $item->jawaban ? $item?->jawaban->id_jawaban : '' }}">
-                                                    </div>
-                                                </div>
-                                            @endif
-
-                                            <div class="form-group" id="docNIB">
-                                                <div class="input-box">
-                                                    <label for="">{{ $itemNIB->nama }}</label>
-                                                    <input type="hidden" name="id_item_file[{{ $itemNIB->id }}]" value="{{ $itemNIB->id }}"
-                                                        id="docNIB_id">
-                                                    @php
-                                                        $nib_jawaban = '';
-                                                        if ($itemNIB != null) {
-                                                            if ($itemNIB->jawaban != null) {
-                                                                $nib_jawaban = $itemNIB->jawaban->opsi_text;
-                                                            }
-                                                        }
-                                                    @endphp
-                                                    <input type="file" name="upload_file[{{ $itemNIB->id }}]" data-id=""
-                                                        placeholder="Masukkan informasi {{ $itemNIB->nama }}" class="form-input limit-size"
-                                                        id="file_nib" value="{{old('upload_file['.$itemNIB->id.']', $nib_jawaban)}}">
-                                                    <span class="text-red-500 m-0" style="display: none" id="docNIB_text">Besaran file
-                                                        tidak boleh lebih dari 5 MB</span>
-                                                    @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
-                                                        <div class="invalid-feedback">
-                                                            {{ $errors->first('dataLevelTiga.' . $key) }}
-                                                        </div>
+                                            <div class="input-box" id="nib">
+                                                <label for="">NIB</label>
+                                                <input type="hidden" name="id_level[77]" value="77" id="nib_id">
+                                                <input type="hidden" name="opsi_jawaban[77]" value="input text" id="nib_opsi_jawaban">
+                                                <input type="text" maxlength="255" name="informasi[77]" id="nib_text"
+                                                    placeholder="Masukkan informasi" class="form-input" value="{{old('informasi[77]', $itemNIBTeks?->jawaban ? $itemNIBTeks?->jawaban->opsi_text : '')}}" @if($item->jawaban->opsi_text != 'nib') disabled @endif>
+                                                <input type="hidden"name="id_text[]" id="id_nib_text" value="77">
+                                                <input type="hidden" name="skor_penyelia_text[]"
+                                                    value="{{ $itemNIBTeks?->jawaban ? $itemNIBTeks?->jawaban->skor_penyelia : '' }}">
+                                                <input type="hidden" name="id_jawaban_text[]" value="{{ $itemNIBTeks?->jawaban ? $itemNIBTeks?->jawaban->id_jawaban : '' }}">
+                                                <input type="hidden" name="id_jawaban_text[]" id="id_jawaban_nib"
+                                                    value="{{ $itemNIBTeks?->jawaban ? $itemNIBTeks?->jawaban->id_jawaban : '' }}">
+                                            </div>
+                                            <div class="input-box" id="docNIB">
+                                                <label for="">{{ $itemNIB?->nama }}</label>
+                                                @if ($itemNIB)
+                                                    @if ($itemNIB->jawaban)
+                                                        <a class="text-theme-primary underline underline-offset-4 cursor-pointer btn-file-preview"
+                                                            data-title="Foto Nasabah" data-filepath="{{asset('../upload')}}/{{$dataPengajuan->id}}/{{$itemNIB?->id}}/{{$itemNIB?->jawaban->opsi_text}}">Preview</a>
                                                     @endif
-                                                    <span class="filename" style="display: inline;"></span>
+                                                @endif
+                                                <input type="hidden" name="id_item_file[{{ $itemNIB?->id }}]" value="{{ $itemNIB?->id }}"
+                                                    id="docNIB_id">
+                                                @php
+                                                    $nib_jawaban = '';
+                                                    if ($itemNIB != null) {
+                                                        if ($itemNIB->jawaban != null) {
+                                                            $nib_jawaban = $itemNIB->jawaban->opsi_text;
+                                                        }
+                                                    }
+                                                @endphp
+                                                <input type="file" name="upload_file[{{ $itemNIB?->id }}]" data-id=""
+                                                    placeholder="Masukkan informasi {{ $itemNIB?->nama }}" class="form-input limit-size"
+                                                    id="file_nib" value="{{old('upload_file['.$itemNIB?->id.']', $nib_jawaban)}}" @if($item->jawaban->opsi_text != 'nib') disabled @endif>
+                                                <span class="text-red-500 m-0" style="display: none" id="docNIB_text">Besaran file
+                                                    tidak boleh lebih dari 5 MB</span>
+                                                @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
+                                                    <div class="invalid-feedback">
+                                                        {{ $errors->first('dataLevelTiga.' . $key) }}
+                                                    </div>
+                                                @endif
+                                                <span class="filename" style="display: inline;"></span>
+                                            </div>
+                                            <div class="form-group" id="surat_keterangan_usaha">
+                                                <div class="input-box">
+                                                    <label for="">Surat Keterangan Usaha</label>
+                                                    <input type="hidden" name="id_level[78]" value="78" id="surat_keterangan_usaha_id">
+                                                    <input type="hidden" name="opsi_jawaban[78]" value="input text"
+                                                        id="surat_keterangan_usaha_opsi_jawaban">
+                                                    <input type="text" maxlength="255" name="informasi[78]" id="surat_keterangan_usaha_text"
+                                                        placeholder="Masukkan informasi" class="form-input" value="{{old('informasi[78]', $itemSKUTeks?->jawaban ? $itemSKUTeks?->jawaban->opsi_text : '')}}">
+                                                    <input type="hidden" name="skor_penyelia_text[]" id="surat_keterangan_usaha_text"
+                                                        value="{{ $itemSKUTeks?->jawaban ? $itemSKUTeks?->jawaban->skor_penyelia : null }}">
+                                                    <input type="hidden" name="id_text[]" id="id_surat_keterangan_usaha_text"
+                                                        value="78">
+                                                    <input type="hidden" name="id_jawaban_text[]" id="id_jawaban_sku"
+                                                        value="{{ $itemSKUTeks?->jawaban ? $itemSKUTeks?->jawaban->id_jawaban : '' }}">
                                                 </div>
                                             </div>
-
-                                            @if ($item?->nama == 'Surat Keterangan Usaha')
-                                                <div class="form-group" id="surat_keterangan_usaha">
-                                                    <div class="input-box">
-                                                        <label for="">Surat Keterangan Usaha</label>
-                                                        <input type="hidden" name="id_level[78]" value="78" id="surat_keterangan_usaha_id">
-                                                        <input type="hidden" name="opsi_jawaban[78]" value="input text"
-                                                            id="surat_keterangan_usaha_opsi_jawaban">
-                                                        <input type="text" maxlength="255" name="informasi[78]" id="surat_keterangan_usaha_text"
-                                                            placeholder="Masukkan informasi" class="form-input" value="{{old('informasi['.$item->id.']', $item->jawaban ? $item->jawaban->opsi_text : '')}}">
-                                                        <input type="hidden" name="skor_penyelia_text[]" id="surat_keterangan_usaha_text"
-                                                            value="{{ $item?->nama == 'Surat Keterangan Usaha' ? $item?->skor_penyelia : null }}">
-                                                        <input type="hidden" name="id_text[]" id="id_surat_keterangan_usaha_text"
-                                                            value="78">
-                                                        <input type="hidden" name="id_jawaban_text[]" id="id_jawaban_sku"
-                                                            value="{{ $item->jawaban ? $item?->jawaban->id_jawaban : '' }}">
-                                                    </div>
-                                                </div>
-                                            @endif
                                             <div class="form-group" id="docSKU">
                                                 <div class="input-box">
-                                                    <label for="">{{ $itemSKU->nama }}</label>
-                                                    <input type="hidden" name="id_item_file[{{ $itemSKU->id }}]" value="{{ $itemSKU->id }}"
+                                                    <label for="">{{ $itemSKU?->nama }}</label>
+                                                    @if ($itemSKU)
+                                                        @if ($itemSKU->jawaban)
+                                                            <a class="text-theme-primary underline underline-offset-4 cursor-pointer btn-file-preview"
+                                                                data-title="Foto Nasabah" data-filepath="{{asset('../upload')}}/{{$dataPengajuan->id}}/{{$itemSKU?->id}}/{{$itemSKU?->jawaban->opsi_text}}">Preview</a>
+                                                        @endif
+                                                    @endif
+                                                    <input type="hidden" name="id_item_file[{{ $itemSKU?->id }}]" value="{{ $itemSKU?->id }}"
                                                         id="docSKU_id">
                                                     @php
                                                         $sku_jawaban = '';
@@ -192,9 +193,9 @@ $dataIndex = match ($skema) {
                                                             }
                                                         }
                                                     @endphp
-                                                    <input type="file" name="upload_file[{{ $itemSKU->id }}]" id="surat_keterangan_usaha_file"
-                                                        data-id="" placeholder="Masukkan informasi {{ $itemSKU->nama }}"
-                                                        class="form-input limit-size" value="{{old('upload_file['.$itemSKU->id.']', $sku_jawaban)}}">
+                                                    <input type="file" name="upload_file[{{ $itemSKU?->id }}]" id="surat_keterangan_usaha_file"
+                                                        data-id="" placeholder="Masukkan informasi {{ $itemSKU?->nama }}"
+                                                        class="form-input limit-size" value="{{old('upload_file['.$itemSKU?->id.']', $sku_jawaban)}}">
                                                     <span class="text-red-500 m-0" style="display: none" id="docSKU_text">Besaran file
                                                         tidak boleh lebih dari 5 MB</span>
                                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
@@ -204,42 +205,42 @@ $dataIndex = match ($skema) {
                                                     @endif
                                                     <span class="filename" style="display: inline;"></span>
                                                     <input type="hidden" id="id_update_sku" id="id_update_sku" name="id_update_file[]"
-                                                        value="{{ $item->jawaban ? $item->jawaban->id : '' }}">
+                                                        value="{{ $itemSKU?->jawaban ? $itemSKU?->jawaban->id : '' }}">
                                                 </div>
                                             </div>
-                                        @elseif($item->id == 79)
                                             <div class="form-group" id="npwp">
-                                                <div class="input-box">
+                                                <div class="input-box" @if($item?->jawaban->opsi_text == 'surat_keterangan_usaha' && !$itemNPWP->jawaban) style="display: none;" @endif>
                                                     <input type="hidden" name="id_text[]" value="79" id="npwp_id">
                                                     <input type="hidden" name="skor_penyelia_text[]" id="npwp_text"
-                                                        value="{{ $item->jawaban ? $item->jawaban->skor_penyelia : '' }}">
+                                                        value="{{ $itemNPWPTeks?->jawaban ? $itemNPWPTeks?->jawaban->skor_penyelia : '' }}">
                                                     <input type="hidden" name="id_jawaban_text[]" id="id_jawaban_npwp"
-                                                        value="{{ $item->jawaban != null ? $item->jawaban->id_jawaban : null }}"
-                                                        @if ($item->jawaban == null) disabled="disabled" @endif>
+                                                        value="{{ $itemNPWPTeks?->jawaban != null ? $itemNPWPTeks?->jawaban->id_jawaban : null }}">
                                                     <label for="">NPWP</label>
                                                     <input type="hidden" name="id_level[79]" value="79" id="npwp_id">
                                                     <input type="hidden" name="opsi_jawaban[79]" value="input text" id="npwp_opsi_jawaban">
                                                     <input type="text" maxlength="20" name="informasi[79]" id="npwp_text"
-                                                        placeholder="Masukkan informasi" class="form-input" value="{{old('informasi[79]', $item->jawaban ? $item->jawaban->opsi_text : '')}}">
+                                                        placeholder="Masukkan informasi" class="form-input" value="{{old('informasi[79]', $itemNPWPTeks?->jawaban ? $itemNPWPTeks?->jawaban->opsi_text : '')}}">
                                                 </div>
                                             </div>
                                             <div class="form-group" id="docNPWP">
-                                                <div class="input-box">
-                                                    <label for="">{{ $itemNPWP->nama }}</label>
+                                                <div class="input-box" @if($item?->jawaban->opsi_text == 'surat_keterangan_usaha' && !$itemNPWP->jawaban) style="display: none;" @endif>
+                                                    <label for="">{{ $itemNPWP?->nama }}</label>
                                                     <input type="hidden" name="id_file_text[]" value="153" id="docNPWP_id">
-                                                    <input type="hidden" name="id_item_file[{{ $itemNPWP->id }}]" value="{{ $itemNPWP->id }}"
+                                                    <input type="hidden" name="id_item_file[{{ $itemNPWP?->id }}]" value="{{ $itemNPWP?->id }}"
                                                         id="docNPWP_id">
                                                     @php
                                                         $npwp_jawaban = '';
-                                                        if ($itemNPWP) {
-                                                            if ($itemNPWP->jawaban != null) {
-                                                                $npwp_jawaban = $itemNPWP->jawaban->opsi_text;
+                                                        if($item->jawaban->opsi_text == 'surat_keterangan_usaha') {
+                                                            if ($itemNPWP) {
+                                                                if ($itemNPWP->jawaban != null) {
+                                                                    $npwp_jawaban = $itemNPWP->jawaban->opsi_text;
+                                                                }
                                                             }
                                                         }
                                                     @endphp
-                                                    <input type="file" name="upload_file[{{ $itemNPWP->id }}]" id="npwp_file" data-id=""
-                                                        placeholder="Masukkan informasi {{ $itemNPWP->nama }}" class="form-input limit-size"
-                                                        value="{{old('upload_file['.$itemNPWP->id.']', $npwp_jawaban)}}">
+                                                    <input type="file" name="upload_file[{{ $itemNPWP?->id }}]" id="npwp_file" data-id=""
+                                                        placeholder="Masukkan informasi {{ $itemNPWP?->nama }}" class="form-input limit-size"
+                                                        value="{{old('upload_file['.$itemNPWP?->id.']', $npwp_jawaban)}}">
                                                     <span class="text-red-500 m-0" style="display: none" id="docNPWP_text">Besaran file
                                                         tidak boleh lebih dari 5 MB</span>
                                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
@@ -250,6 +251,7 @@ $dataIndex = match ($skema) {
                                                     <span class="filename" style="display: inline;"></span>
                                                 </div>
                                             </div>
+                                        @elseif ($item->id == 79)
                                         @else
                                             @if ($item->opsi_jawaban == 'input text')
                                                 <div class="form-group">
@@ -263,7 +265,7 @@ $dataIndex = match ($skema) {
                                                                     id="">
                                                                 <input type="text" maxlength="255" name="informasi[{{ $item->id }}]"
                                                                     id="{{ $idLevelDua }}" placeholder="Masukkan informasi {{ $item->nama }}"
-                                                                    value="{{old('informasi['.$item->id.']', $item->jawaban->opsi_text)}}"
+                                                                    value="{{old('informasi['.$item->id.']', $item->jawaban ? $item->jawaban->opsi_text : '')}}"
                                                                     class="form-input {{$item->is_rupiah ? 'rupiah' : ''}}" >
                                                                 <input type="hidden" name="id_text[]" value="{{ $item->id }}">
                                                                 <input type="hidden" name="skor_penyelia_text[]"
@@ -447,7 +449,7 @@ $dataIndex = match ($skema) {
                                                         <div class="input-box">
                                                             <label for="">{{ $itemTiga->nama }}</label>
                                                             @php
-                                                                $kategori_jawaban = ucwords(str_replace('_', ' ', $itemTiga->jawaban->opsi_text));
+                                                                $kategori_jawaban = ucwords(str_replace('_', ' ', $itemTiga->jawaban->nama_item));
                                                             @endphp
                                                             <input type="hidden" name="id_kategori_jaminan_tambahan"
                                                                 value="{{ $itemTiga?->id ?? null }}">
@@ -578,7 +580,7 @@ $dataIndex = match ($skema) {
                                                                             id="{{ $idLevelTiga }}" data-id=""
                                                                             placeholder="Masukkan informasi {{ $itemTiga->nama }}"
                                                                             class="form-input limit-size file-usaha" accept="image/*"
-                                                                            value="{{old('upload_file['.$itemTiga->id.']', $itemTiga->jawaban->opsi_text)}}">
+                                                                            value="{{old('upload_file['.$itemTiga->id.']', $itemTiga->jawaban ? $itemTiga->jawaban->opsi_text : '')}}">
                                                                         <span class="text-red-500 m-0" style="display: none">Maximum upload
                                                                             file size is 15 MB</span>
                                                                         <span class="filename" style="display: inline;"></span>
@@ -958,10 +960,20 @@ $dataIndex = match ($skema) {
 <script>
     //var isPincetar = "{{Request::url()}}".includes('pincetar');
     let dataAspekArr;
-    $('#docSKU').hide();
-    $('#surat_keterangan_usaha').hide();
-    $('#nib').hide();
-    $('#docNIB').hide();
+    const ijin_usaha = $('#ijin_usaha').val()
+    if (ijin_usaha == 'nib') {
+        $('#docSKU').hide();
+        $('#surat_keterangan_usaha').hide();
+    }
+
+    if (ijin_usaha == 'surat_keterangan_usaha') {
+        $('#nib').hide();
+        $('#docNIB').hide();
+    }
+
+    if (ijin_usaha == 'surat_keterangan_usaha') {
+        $('#npwpsku').show()
+    }
     //make input readonly
     $('#ratio_coverage').attr('readonly', true);
     $('#ratio_tenor_asuransi').attr('readonly', true);
@@ -1227,14 +1239,16 @@ $dataIndex = match ($skema) {
                     $("#jaminan_tambahan").show()
                     // add item by kategori
                     $('#select_kategori_jaminan_tambahan').append(`
-                        <label for="">${response.item.nama}</label>
-                        <select name="dataLevelEmpat[${response.item.id}]" id="itemByKategori" class="form-input cek-sub-column"
-                            data-id_item="${response.item.id}">
-                            <option value=""> --Pilih Opsi -- </option>
-                            </select>
+                        <div class="input-box">
+                            <label for="">${response.item.nama}</label>
+                            <select name="dataLevelEmpat[${response.item.id}]" id="itemByKategori" class="form-input cek-sub-column"
+                                data-id_item="${response.item.id}">
+                                <option value=""> --Pilih Opsi -- </option>
+                                </select>
 
-                        <div id="item${response.item.id}">
+                            <div id="item${response.item.id}">
 
+                            </div>
                         </div>
                     `);
                     // add opsi dari item
@@ -1332,14 +1346,16 @@ $dataIndex = match ($skema) {
                     var skor = 0;
                     var opt = 0;
                     $('#select_kategori_jaminan_tambahan').append(`
-                        <label for="">${response.item.nama}</label>
-                        <select name="dataLevelEmpat[${response.item.id}]" id="itemByKategori" class="form-input cek-sub-column"
-                            data-id_item="${response.item.id}">
-                            <option value=""> --Pilih Opsi -- </option>
-                            </select>
+                        <div class="input-box">
+                            <label for="">${response.item.nama}</label>
+                            <select name="dataLevelEmpat[${response.item.id}]" id="itemByKategori" class="form-input cek-sub-column"
+                                data-id_item="${response.item.id}">
+                                <option value=""> --Pilih Opsi -- </option>
+                                </select>
 
-                        <div id="item${response.item.id}">
+                            <div id="item${response.item.id}">
 
+                            </div>
                         </div>
                     `);
                     // add opsi dari item
@@ -1359,6 +1375,162 @@ $dataIndex = match ($skema) {
             }
         })
     });
+    $(document).ready(function() {
+        //clear item
+        $('#select_kategori_jaminan_tambahan').empty();
+
+        // clear bukti pemilikan
+        $('#bukti_pemilikan_jaminan_tambahan').empty();
+
+        //get item by kategori
+        let kategoriJaminan = $('#kategori_jaminan_tambahan').val();
+
+        $.ajax({
+            type: "get",
+            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}`,
+            dataType: "json",
+            success: function(response) {
+                if (kategoriJaminan != "Tidak Memiliki Jaminan Tambahan") {
+                    $("#select_kategori_jaminan_tambahan").show()
+                    $("#jaminan_tambahan").show()
+                    // add item by kategori
+                    $('#select_kategori_jaminan_tambahan').append(`
+                        <div class="input-box">
+                            <label for="">${response.item.nama}</label>
+                            <select name="dataLevelEmpat[${response.item.id}]" id="itemByKategori" class="form-input cek-sub-column"
+                                data-id_item="${response.item.id}">
+                                <option value=""> --Pilih Opsi -- </option>
+                                </select>
+
+                            <div id="item${response.item.id}">
+
+                            </div>
+                        </div>
+                    `);
+                    // add opsi dari item
+                    $.each(response.item.option, function(i, valOption) {
+                        // //console.log(valOption.skor);
+                        $('#itemByKategori').append(`
+                        <option value="${valOption.skor}-${valOption.id}" ${(response.dataSelect == valOption.id) ? 'selected' : ''}>
+                        ${valOption.option}
+                        </option>`);
+                    });
+
+                    // add item bukti pemilikan
+                    var isCheck = kategoriJaminan != 'Kendaraan Bermotor' ?
+                        "<input type='checkbox' class='checkKategori'>" : ""
+                    var isDisabled = kategoriJaminan != 'Kendaraan Bermotor' ? 'disabled' : ''
+                    $.each(response.itemBuktiPemilikan, function(i, valItem) {
+                        if (valItem.nama == 'Atas Nama') {
+                            $('#bukti_pemilikan_jaminan_tambahan').append(`
+                                <div class="form-group aspek_jaminan_kategori">
+                                    <label>${valItem.nama}</label>
+                                    <input type="hidden" name="id_level[${valItem.id}]" value="${valItem.id}" id="" class="input">
+                                    <input type="hidden" name="opsi_jawaban[${valItem.id}]"
+                                        value="${valItem.opsi_jawaban}" id="" class="input">
+                                    <input type="text" maxlength="255" id="atas_nama" name="informasi[${valItem.id}]" placeholder="Masukkan informasi"
+                                        class="form-input input" value="${response.dataJawaban[i]}">
+                                </div>
+                            `);
+                        } else {
+                            var name_lowercase = valItem.nama.toLowerCase();
+                            name_lowercase = name_lowercase.replaceAll(' ', '_')
+                            if (valItem.nama == 'Foto') {
+                                $('#bukti_pemilikan_jaminan_tambahan').append(`
+                                    <div class="form-group file-wrapper item-${valItem.id}">
+                                        <label for="">${valItem.nama}</label>
+                                        <div class="input-box mb-4">
+                                            <div class="flex gap-4">
+                                                <input type="hidden" name="id_item_file[${valItem.id}][]"
+                                                    value="${valItem.id}" id="">
+                                                <input type="file" id="${valItem.nama.toString().replaceAll(" ", "_")}"
+                                                    name="upload_file[${valItem.id}][]" data-id=""
+                                                    placeholder="Masukkan informasi ${valItem.nama}" class="form-input limit-size">
+                                                <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                                                <span class="filename" style="display: inline;"></span>
+                                                <div class="flex gap-2 multiple-action">
+                                                    <button type="button" class="btn-add" data-item-id="${valItem.id}-${name_lowercase}">
+                                                        <iconify-icon icon="fluent:add-16-filled" class="mt-2"></iconify-icon>
+                                                    </button>
+                                                    <button type="button" class="btn-minus hidden" data-item-id="${valItem.id}-${name_lowercase}">
+                                                        <iconify-icon icon="lucide:minus" class="mt-2"></iconify-icon>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `);
+                            } else {
+                                if (response.dataJawaban[i] != null && response.dataJawaban[
+                                        i] != "") {
+                                    if (kategoriJaminan != 'Kendaraan Bermotor') {
+                                        isCheck =
+                                            "<input type='checkbox' class='checkKategori' checked>"
+                                        isDisabled = ""
+                                    }
+                                }
+                                $('#bukti_pemilikan_jaminan_tambahan').append(`
+                                    <div class="form-group aspek_jaminan_kategori">
+                                        <label>${isCheck} ${valItem.nama}</label>
+                                        <input type="hidden" name="id_level[${valItem.id}]" value="${valItem.id}" id="" class="input" ${isDisabled}>
+                                        <input type="hidden" name="opsi_jawaban[${valItem.id}]"
+                                            value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
+                                        <input type="text" maxlength="255" id="${valItem.nama.toString().replaceAll(" ", "_")}" name="informasi[${valItem.id}]" placeholder="Masukkan informasi"
+                                            class="form-input input" ${isDisabled} value="${response.dataJawaban[i]}">
+                                    </div>
+                                `);
+                            }
+                        }
+                    });
+
+                    $(".checkKategori").click(function() {
+                        var input = $(this).closest('.form-group').find(".input")
+                        // var input_id = $(this).closest('.form-group').find("input_id").last()
+                        // var input_opsi_jawaban = $(this).closest('.form-group').find("input_opsi_jawaban").last()
+                        if ($(this).is(':checked')) {
+                            input.prop('disabled', false)
+                            // input_id.prop('disabled',false)
+                            // input_opsi_jawaban.prop('disabled',false)
+                        } else {
+                            input.val('')
+                            input.prop('disabled', true)
+                            // input_id.prop('disabled',true)
+                            // input_opsi_jawaban.prop('disabled',true)
+                        }
+                    })
+                } else {
+                    var skor = 0;
+                    var opt = 0;
+                    $('#select_kategori_jaminan_tambahan').append(`
+                        <div class="input-box">
+                            <label for="">${response.item.nama}</label>
+                            <select name="dataLevelEmpat[${response.item.id}]" id="itemByKategori" class="form-input cek-sub-column"
+                                data-id_item="${response.item.id}">
+                                <option value=""> --Pilih Opsi -- </option>
+                                </select>
+
+                            <div id="item${response.item.id}">
+
+                            </div>
+                        </div>
+                    `);
+                    // add opsi dari item
+                    $.each(response.item.option, function(i, valOption) {
+                        skor = valOption.skor;
+                        opt = valOption.id;
+                        // //console.log(valOption.skor);
+                        $('#itemByKategori').append(`
+                        <option value="${valOption.skor}-${valOption.id}" selected>
+                        ${valOption.option}
+                        </option>`);
+                    });
+                    $("#itemByKategori").val(skor + '-' + opt);
+                    $("#select_kategori_jaminan_tambahan").hide()
+                    $("#jaminan_tambahan").hide()
+                }
+            }
+        })
+    })
     // end item kategori jaminan tambahan cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
 
     // milih ijin usaha
@@ -1376,6 +1548,7 @@ $dataIndex = match ($skema) {
     $('#docNPWP_upload_file').attr('disabled', true);
     $('#ijin_usaha').change(function(e) {
         let ijinUsaha = $(this).val();
+        $('#isNpwp').prop('checked', false)
         $('#npwpsku').hide();
         if (ijinUsaha == 'nib') {
             $('#npwpsku').hide();
@@ -1403,12 +1576,14 @@ $dataIndex = match ($skema) {
             $('#file_nib').removeAttr('disabled');
 
             $('#npwp').show();
+            console.log('show npwp')
             $('#npwp_id').removeAttr('disabled');
             $('#npwp_text').removeAttr('disabled');
             $('#npwp_opsi_jawaban').removeAttr('disabled');
             $('#npwp_file').removeAttr('disabled');
 
             $('#docNPWP').show();
+            console.log('show npwp')
             $('#docNPWP_id').removeAttr('disabled');
             $('#docNPWP_text').removeAttr('disabled');
             $('#docNPWP_text').val('');
@@ -1453,7 +1628,7 @@ $dataIndex = match ($skema) {
             $('#docNPWP_text').attr('disabled', true);
             $('#docNPWP_text').val('');
             $('#docNPWP_upload_file').attr('disabled', true);
-        } else if (ijinUsaha == 'tidak_ada_legalitas_usaha') {
+        } else {
             $('#npwpsku').hide();
             $('#nib').hide();
             $('#nib_id').attr('disabled', true);
@@ -1494,36 +1669,6 @@ $dataIndex = match ($skema) {
             $('#docNPWP_text').attr('disabled', true);
             $('#docNPWP_text').val('');
             $('#docNPWP_upload_file').attr('disabled', true);
-        } else {
-            $('#npwpsku').hide();
-            $('#nib').hide();
-            $('#nib_id').attr('disabled', true);
-            $('#nib_text').attr('disabled', true);
-            $('#nib_text').val('');
-            $('#nib_opsi_jawaban').attr('disabled', true);
-
-            $('#docNIB').hide();
-            $('#docNIB_id').attr('disabled', true);
-            $('#docNIB_text').attr('disabled', true);
-            $('#docNIB_text').val('');
-            $('#docNIB_upload_file').attr('disabled', true);
-
-            $('#surat_keterangan_usaha').hide();
-            $('#surat_keterangan_usaha_id').attr('disabled', true);
-            $('#surat_keterangan_usaha_text').attr('disabled', true);
-            $('#surat_keterangan_usaha_text').val('');
-            $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
-
-            $('#npwp').show();
-            $('#npwp_id').removeAttr('disabled');
-            $('#npwp_text').removeAttr('disabled');
-            $('#npwp_opsi_jawaban').removeAttr('disabled');
-
-            $('#docNPWP').show();
-            $('#docNPWP_id').removeAttr('disabled');
-            $('#docNPWP_text').removeAttr('disabled');
-            $('#docNPWP_text').val('');
-            $('#docNPWP_upload_file').removeAttr('disabled');
         }
     });
     // end milih ijin usaha
@@ -2107,240 +2252,6 @@ $dataIndex = match ($skema) {
         return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
     }
 
-    $( document ).ready(function() {
-        countFormPercentage()
-    });
-
-    function countFormPercentage() {
-        $.each($('.tab-wrapper .btn-tab'), function(i, obj) {
-            var tabId = $(this).data('tab')
-            if (tabId) {
-                var percentage = formPercentage(`${tabId}-tab`)
-                $(this).find('.percentage').html(`${percentage}%`)
-            }
-        })
-    }
-
-    // tab
-    $(".tab-wrapper .btn-tab").click(function(e) {
-        e.preventDefault();
-        var tabId = $(this).data("tab");
-        countFormPercentage()
-
-        $(".is-tab-content").removeClass("active");
-        $(".tab-wrapper .btn-tab").removeClass(
-            "active-tab"
-        );
-        $(".tab-wrapper .btn-tab").removeClass("active-tab");
-        $(".tab-wrapper .btn-tab").removeClass("active-tab");
-        $(".tab-wrapper .btn-tab").addClass("disable-tab");
-
-        $(this).addClass("active-tab");
-
-        if (tabId) {
-            $(this).removeClass("disable-tab");
-            $(this).removeClass("disable-tab");
-        }
-
-        $("#" + tabId + "-tab").addClass("active");
-    });
-
-    $(".next-tab").on("click", function(e) {
-        const $activeContent = $(".is-tab-content.active");
-        const $nextContent = $activeContent.next();
-        const tabId = $activeContent.attr("id")
-        const dataTab = tabId.replaceAll('-tab', '')
-        // Set percentage
-        var percentage = formPercentage(tabId)
-        $('.tab-wrapper').find(`[data-tab=${dataTab}]`).find('.percentage').html(`${percentage}%`)
-        // Remove class active current nav tab
-        $('.tab-wrapper').find(`[data-tab=${dataTab}]`).removeClass('active-tab')
-
-        if ($nextContent.length) {
-            const dataNavTab = $nextContent.attr("id") ? $nextContent.attr("id").replaceAll('-tab', '') : null
-            if (dataNavTab)
-                $('.tab-wrapper').find(`[data-tab=${dataNavTab}]`).addClass('active-tab')
-
-            $activeContent.removeClass("active");
-            $nextContent.addClass("active");
-        }else{
-            $(".next-tab").addClass('hidden');
-            $('.btn-simpan').removeClass('hidden')
-        }
-    });
-
-    $(".prev-tab").on("click", function() {
-        const $activeContent = $(".is-tab-content.active");
-        const $prevContent = $activeContent.prev();
-        const tabId = $activeContent.attr("id")
-        var percentage = formPercentage(tabId)
-        const dataTab = tabId.replaceAll('-tab', '')
-        // Set percentage
-        var percentage = formPercentage(tabId)
-        $('.tab-wrapper').find(`[data-tab=${dataTab}]`).find('.percentage').html(`${percentage}%`)
-        // Remove class active current nav tab
-        $('.tab-wrapper').find(`[data-tab=${dataTab}]`).removeClass('active-tab')
-
-        if ($prevContent.length) {
-            const dataNavTab = $prevContent.attr("id") ? $prevContent.attr("id").replaceAll('-tab', '') : null
-            if (dataNavTab)
-                $('.tab-wrapper').find(`[data-tab=${dataNavTab}]`).addClass('active-tab')
-            $activeContent.removeClass("active");
-            $prevContent.addClass("active");
-            $(".next-tab").removeClass('hidden');
-            $('.btn-simpan').addClass('hidden')
-        }
-    });
-
-    function formPercentage(tabId) {
-        var form = `#${tabId}`;
-        var inputFile = $(form + " input[type=file]")
-        var inputText = $(form + " input[type=text]")
-        var inputNumber = $(form + " input[type=number]")
-        var inputDate = $(form + " input[type=date]")
-        var inputHidden = $(form + " input[type=hidden]")
-        var select = $(form + " select")
-        var textarea = $(form + " textarea")
-        var totalInput = 0;
-        var totalInputNull = 0;
-        var totalInputFilled = 0;
-        var totalInputHidden = 0;
-        var totalInputReadOnly = 0;
-        var percent = 0;
-
-        $.each(inputText, function(i, v) {
-            if ($(this).prop('readonly'))
-                totalInputReadOnly++;
-            var inputBox = $(this).closest('.input-box');
-            var formGroup = inputBox.parent();
-            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden'))
-                totalInput++
-            var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
-            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
-                totalInputNull++;
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
-                totalInputFilled++;
-            }
-        })
-
-        $.each(inputHidden, function(i, v) {
-            if ($(this).prop('readonly'))
-                totalInputReadOnly++;
-            var inputBox = $(this).closest('.input-box');
-            var formGroup = inputBox.parent();
-            if ((!$(this).prop('disabled') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
-                totalInputHidden++;
-            }
-        })
-        var totalFile = 0
-        var totalFileFilled = 0
-
-        $.each(inputFile, function(i, v) {
-            if ($(this).prop('readonly'))
-                totalInputReadOnly++;
-            var inputBox = $(this).closest('.input-box');
-            var formGroup = inputBox.parent();
-            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
-                totalFile++
-                totalInput++
-            }
-            var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
-
-            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && $(this).prop("defaultValue") == '') {
-                totalInputNull++;
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
-                totalInputFilled++;
-            } else if ($(this).prop("defaultValue") != '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
-                totalFileFilled++
-            }
-        })
-
-        $.each(inputNumber, function(i, v) {
-            if ($(this).prop('readonly'))
-                totalInputReadOnly++;
-            var inputBox = $(this).closest('.input-box');
-            var formGroup = inputBox.parent();
-            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden'))
-                totalInput++
-            var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '') && !$(this).prop('readonly') && !$(this).prop('hidden')
-            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
-                totalInputNull++;
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
-                totalInputFilled++;
-            }
-        })
-
-        $.each(inputDate, function(i, v) {
-            if ($(this).prop('readonly'))
-                totalInputReadOnly++;
-            var inputBox = $(this).closest('.input-box');
-            var formGroup = inputBox.parent();
-            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden'))
-                totalInput++
-            var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
-            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
-                totalInputNull++;
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
-                totalInputFilled++;
-            }
-        })
-
-        $.each(select, function(i, v) {
-            if ($(this).prop('readonly'))
-                totalInputReadOnly++;
-            var inputBox = $(this).closest('.input-box');
-            var formGroup = inputBox.parent();
-            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden'))
-                totalInput++
-            var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
-            if ((isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
-                totalInputNull++;
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
-                totalInputFilled++;
-            }
-        })
-
-        $.each(textarea, function(i, v) {
-            if ($(this).prop('readonly'))
-                totalInputReadOnly++;
-            var inputBox = $(this).closest('.input-box');
-            var formGroup = inputBox.parent();
-            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden'))
-                totalInput++
-            var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
-            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
-                totalInputNull++;
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
-                totalInputFilled++;
-            }
-        })
-
-        var totalReadHidden = (totalInputHidden + totalInputReadOnly)
-        percent = ((totalInputFilled + totalFileFilled) / (totalInput - totalInputReadOnly)) * 100
-
-        return parseInt(percent)
-    }
-
-    $(".toggle-side").click(function(e) {
-        $('.sidenav').toggleClass('hidden')
-    })
-    $('.owl-carousel').owlCarousel({
-        margin: 10,
-        autoWidth: true,
-        dots: false,
-        responsive: {
-            0: {
-                items: 3
-            },
-            600: {
-                items: 5
-            },
-            1000: {
-                items: 10
-            }
-        }
-    })
-
     $("#usaha").on("change", function() {
         if ($(this).val() == "tanah") {
             $("#tanah").removeClass("hidden");
@@ -2468,6 +2379,280 @@ $dataIndex = match ($skema) {
             $("#label-dokumen-npwp").addClass("hidden");
         }
     });
+
+    $( document ).ready(function() {
+        countFormPercentage()
+    });
+
+    function countFormPercentage() {
+        $.each($('.tab-wrapper .btn-tab'), function(i, obj) {
+            var tabId = $(this).data('tab')
+            if (tabId) {
+                var percentage = formPercentage(`${tabId}-tab`)
+                $(this).find('.percentage').html(`${percentage}%`)
+            }
+        })
+    }
+
+    // tab
+    $(".tab-wrapper .btn-tab").click(function(e) {
+        e.preventDefault();
+        var tabId = $(this).data("tab");
+        countFormPercentage()
+
+        $(".is-tab-content").removeClass("active");
+        $(".tab-wrapper .btn-tab").removeClass(
+            "active-tab"
+        );
+        $(".tab-wrapper .btn-tab").removeClass("active-tab");
+        $(".tab-wrapper .btn-tab").removeClass("active-tab");
+        $(".tab-wrapper .btn-tab").addClass("disable-tab");
+
+        $(this).addClass("active-tab");
+
+        if (tabId) {
+            $(this).removeClass("disable-tab");
+            $(this).removeClass("disable-tab");
+        }
+
+        $("#" + tabId + "-tab").addClass("active");
+    });
+
+    $(".next-tab").on("click", function(e) {
+        const $activeContent = $(".is-tab-content.active");
+        const $nextContent = $activeContent.next();
+        const tabId = $activeContent.attr("id")
+        const dataTab = tabId.replaceAll('-tab', '')
+        // Set percentage
+        var percentage = formPercentage(tabId)
+        $('.tab-wrapper').find(`[data-tab=${dataTab}]`).find('.percentage').html(`${percentage}%`)
+        // Remove class active current nav tab
+        $('.tab-wrapper').find(`[data-tab=${dataTab}]`).removeClass('active-tab')
+
+        if ($nextContent.length) {
+            const dataNavTab = $nextContent.attr("id") ? $nextContent.attr("id").replaceAll('-tab', '') : null
+            if (dataNavTab)
+                $('.tab-wrapper').find(`[data-tab=${dataNavTab}]`).addClass('active-tab')
+
+            $activeContent.removeClass("active");
+            $nextContent.addClass("active");
+        }else{
+            $(".next-tab").addClass('hidden');
+            $('.btn-simpan').removeClass('hidden')
+        }
+    });
+
+    $(".prev-tab").on("click", function() {
+        const $activeContent = $(".is-tab-content.active");
+        const $prevContent = $activeContent.prev();
+        const tabId = $activeContent.attr("id")
+        var percentage = formPercentage(tabId)
+        const dataTab = tabId.replaceAll('-tab', '')
+        // Set percentage
+        var percentage = formPercentage(tabId)
+        $('.tab-wrapper').find(`[data-tab=${dataTab}]`).find('.percentage').html(`${percentage}%`)
+        // Remove class active current nav tab
+        $('.tab-wrapper').find(`[data-tab=${dataTab}]`).removeClass('active-tab')
+
+        if ($prevContent.length) {
+            const dataNavTab = $prevContent.attr("id") ? $prevContent.attr("id").replaceAll('-tab', '') : null
+            if (dataNavTab)
+                $('.tab-wrapper').find(`[data-tab=${dataNavTab}]`).addClass('active-tab')
+            $activeContent.removeClass("active");
+            $prevContent.addClass("active");
+            $(".next-tab").removeClass('hidden');
+            $('.btn-simpan').addClass('hidden')
+        }
+    });
+
+    function formPercentage(tabId) {
+        var form = `#${tabId}`;
+        var inputFile = $(form + " input[type=file]")
+        var inputText = $(form + " input[type=text]")
+        var inputNumber = $(form + " input[type=number]")
+        var inputDate = $(form + " input[type=date]")
+        var inputEmail = $(form + " input[type=email]")
+        var inputHidden = $(form + " input[type=hidden]")
+        var select = $(form + " select")
+        var textarea = $(form + " textarea")
+        var totalInput = 0;
+        var totalInputNull = 0;
+        var totalInputFilled = 0;
+        var totalInputHidden = 0;
+        var totalInputReadOnly = 0;
+        var percent = 0;
+
+        $.each(inputText, function(i, v) {
+            if ($(this).prop('readonly'))
+                totalInputReadOnly++;
+            var inputBox = $(this).closest('.input-box');
+            var formGroup = inputBox.parent();
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && formGroup.css('display') != 'none')
+                totalInput++
+            var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
+            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && formGroup.css('display') != 'none') {
+                totalInputNull++;
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && formGroup.css('display') != 'none') {
+                totalInputFilled++;
+            }
+        })
+
+        $.each(inputEmail, function(i, v) {
+            if ($(this).prop('readonly'))
+                totalInputReadOnly++;
+            var inputBox = $(this).closest('.input-box');
+            var formGroup = inputBox.parent();
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && formGroup.css('display') != 'none')
+                totalInput++
+            var isNull = (v.value == '' || $.trim(v.value) == '' || $.trim(v.value) == '')
+            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && formGroup.css('display') != 'none') {
+                totalInputNull++;
+                if ($(this).attr('id') != undefined) {
+                    nullValue.push($(this).attr('id').toString().replaceAll("_", " "))
+                }
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).is(":checked") && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && formGroup.css('display') != 'none') {
+                totalInputFilled++;
+                if ($(this).attr('id') != undefined) {
+                    let val = $(this).attr("id").toString().replaceAll("_", " ");
+                    for (var i = 0; i < nullValue.length; i++) {
+                        while (nullValue[i] == val) {
+                            nullValue.splice(i, 1)
+                            break;
+                        }
+                    }
+                }
+            } else if (!$(this).is(':checked')) {
+                totalInputChecked++;
+            }
+        })
+
+        $.each(inputHidden, function(i, v) {
+            if ($(this).prop('readonly'))
+                totalInputReadOnly++;
+            var inputBox = $(this).closest('.input-box');
+            var formGroup = inputBox.parent();
+            if ((!$(this).prop('disabled') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && formGroup.css('display') != 'none') {
+                totalInputHidden++;
+            }
+        })
+        var totalFile = 0
+        var totalFileFilled = 0
+
+        $.each(inputFile, function(i, v) {
+            if ($(this).prop('readonly'))
+                totalInputReadOnly++;
+            var inputBox = $(this).closest('.input-box');
+            var formGroup = inputBox.parent();
+            var enabled = !$(this).prop('disabled')
+            if (enabled && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && formGroup.css('display') != 'none') {
+                totalFile++
+                totalInput++
+            }
+            var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '') && enabled
+
+            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && $(this).prop("defaultValue") == '' && formGroup.css('display') != 'none') {
+                totalInputNull++;
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
+                totalInputFilled++;
+            } else if ($(this).prop("defaultValue") != '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && formGroup.css('display') != 'none') {
+                totalFileFilled++
+            }
+        })
+
+        $.each(inputNumber, function(i, v) {
+            if ($(this).prop('readonly'))
+                totalInputReadOnly++;
+            var inputBox = $(this).closest('.input-box');
+            var formGroup = inputBox.parent();
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && formGroup.css('display') != 'none')
+                totalInput++
+            var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '') && !$(this).prop('readonly') && !$(this).prop('hidden')
+            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && formGroup.css('display') != 'none') {
+                totalInputNull++;
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && formGroup.css('display') != 'none') {
+                totalInputFilled++;
+            }
+        })
+
+        $.each(inputDate, function(i, v) {
+            if ($(this).prop('readonly'))
+                totalInputReadOnly++;
+            var inputBox = $(this).closest('.input-box');
+            var formGroup = inputBox.parent();
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && formGroup.css('display') != 'none')
+                totalInput++
+            var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
+            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && formGroup.css('display') != 'none') {
+                totalInputNull++;
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && formGroup.css('display') != 'none') {
+                totalInputFilled++;
+            }
+        })
+
+        $.each(select, function(i, v) {
+            if ($(this).prop('readonly'))
+                totalInputReadOnly++;
+            var inputBox = $(this).closest('.input-box');
+            var formGroup = inputBox.parent();
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && formGroup.css('display') != 'none')
+                totalInput++
+            var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
+            if ((isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && formGroup.css('display') != 'none') {
+                totalInputNull++;
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && formGroup.css('display') != 'none') {
+                totalInputFilled++;
+            }
+        })
+
+        $.each(textarea, function(i, v) {
+            if ($(this).prop('readonly'))
+                totalInputReadOnly++;
+            var inputBox = $(this).closest('.input-box');
+            var formGroup = inputBox.parent();
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && formGroup.css('display') != 'none')
+                totalInput++
+            var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
+            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && formGroup.css('display') != 'none') {
+                totalInputNull++;
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && formGroup.css('display') != 'none') {
+                totalInputFilled++;
+            }
+        })
+
+        if (tabId == 'aspek-hukum-tab') {
+            console.log(`totalInput : ${totalInput}`)
+            console.log(`totalInputNull : ${totalInputNull}`)
+            console.log(`totalInputFilled : ${totalInputFilled}`)
+            console.log(`totalFile : ${totalFile}`)
+            console.log(`totalFileFilled : ${totalFileFilled}`)
+        }
+
+        var totalReadHidden = (totalInputHidden + totalInputReadOnly)
+        percent = ((totalInputFilled + totalFileFilled) / (totalInput - totalInputReadOnly)) * 100
+
+        return parseInt(percent)
+    }
+
+    $(".toggle-side").click(function(e) {
+        $('.sidenav').toggleClass('hidden')
+    })
+    $('.owl-carousel').owlCarousel({
+        margin: 10,
+        autoWidth: true,
+        dots: false,
+        responsive: {
+            0: {
+                items: 3
+            },
+            600: {
+                items: 5
+            },
+            1000: {
+                items: 10
+            }
+        }
+    })
+
     var num = 1;
     $(document).on('click', '.btn-add', function() {
         console.log($(this));

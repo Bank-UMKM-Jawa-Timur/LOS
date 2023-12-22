@@ -1157,7 +1157,7 @@ $dataIndex = match ($skema) {
         var inputText = $(form + " input[type=text]")
         var inputNumber = $(form + " input[type=number]")
         var inputDate = $(form + " input[type=date]")
-        var InputEmail = $(form + " input[type=email]")
+        var inputEmail = $(form + " input[type=email]")
         var inputHidden = $(form + " input[type=hidden]")
         var select = $(form + " select")
         var textarea = $(form + " textarea")
@@ -1198,7 +1198,7 @@ $dataIndex = match ($skema) {
             }
         })
 
-        $.each(InputEmail, function(i, v) {
+        $.each(inputEmail, function(i, v) {
             if ($(this).prop('readonly'))
                 totalInputReadOnly++;
             var inputBox = $(this).closest('.input-box');

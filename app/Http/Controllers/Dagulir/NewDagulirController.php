@@ -2337,8 +2337,8 @@ class NewDagulirController extends Controller
             foreach ($dataLevelDua as $key2 => $lev2) {
                 // Get jawaban text
                 $jawaban = JawabanTextModel::where('id_pengajuan', $id)
-                                                ->where('id_jawaban', $lev2->id)
-                                                ->first();
+                                            ->where('id_jawaban', $lev2->id)
+                                            ->first();
                 $lev2->jawaban = $jawaban;
                 // Get jawaban option
                 $dataJawaban = OptionModel::where('option', '!=', '-')
@@ -2405,6 +2405,27 @@ class NewDagulirController extends Controller
                         $lev4->dataOptionEmpat = $dataOptionEmpat;
                     }
 
+                    $is_option_answer = false;
+                    if ($dataLevelEmpat) {
+                        foreach ($dataLevelEmpat as $v4) {
+                            if ($v4->opsi_jawaban == 'option') {
+                                $is_option_answer = true;
+                                break;
+                            }
+                        }
+                    }
+                    if ($is_option_answer) {
+                        // Get jawaban option
+                        $option = ItemModel::where('id_parent', $lev3->id)
+                                            ->pluck('id');
+                        $jawaban = JawabanModel::select('jawaban.*', 'item.nama AS nama_item')
+                                            ->join('item', 'item.id', 'jawaban.id_jawaban')
+                                            ->where('id_pengajuan', $id)
+                                            ->whereIn('id_jawaban', $option)
+                                            ->first();
+                        $lev3->jawaban = $jawaban;
+                    }
+
                     $lev3->dataJawabanLevelTiga = $dataJawabanLevelTiga;
                     $lev3->dataOptionTiga = $dataOptionTiga;
                     $lev3->dataLevelEmpat = $dataLevelEmpat;
@@ -2417,7 +2438,7 @@ class NewDagulirController extends Controller
 
             $value->dataLevelDua = $dataLevelDua;
         }
-
+return $dataAspek;
         $param['pendapat'] = KomentarModel::select('id', 'komentar_staff')
                                         ->where('id_pengajuan', $id)
                                         ->orderBy('id', 'DESC')
@@ -2427,6 +2448,13 @@ class NewDagulirController extends Controller
         $param['itemSP'] = ItemModel::where('nama', 'Surat Permohonan')->first();
         $param['itemP'] = ItemModel::where('nama', 'Laporan SLIK')->first();
         $param['itemKTPNas'] = ItemModel::where('nama', 'Foto KTP Nasabah')->first();
+        $param['itemNIBTeks'] = ItemModel::where('nama', 'NIB')->first();
+        if ($param['itemNIBTeks']) {
+            $jawaban = JawabanTextModel::where('id_pengajuan', $id)
+                                        ->where('id_jawaban', $param['itemNIBTeks']->id)
+                                        ->first();
+            $param['itemNIBTeks']->jawaban = $jawaban;
+        }
         $param['itemNIB'] = ItemModel::where('nama', 'Dokumen NIB')->first();
         if ($param['itemNIB']) {
             $jawaban = JawabanTextModel::where('id_pengajuan', $id)
@@ -2434,12 +2462,26 @@ class NewDagulirController extends Controller
                                         ->first();
             $param['itemNIB']->jawaban = $jawaban;
         }
+        $param['itemNPWPTeks'] = ItemModel::where('nama', 'NPWP')->first();
+        if ($param['itemNPWPTeks']) {
+            $jawaban = JawabanTextModel::where('id_pengajuan', $id)
+                                        ->where('id_jawaban', $param['itemNPWPTeks']->id)
+                                        ->first();
+            $param['itemNPWPTeks']->jawaban = $jawaban;
+        }
         $param['itemNPWP'] = ItemModel::where('nama', 'Dokumen NPWP')->first();
         if ($param['itemNPWP']) {
             $jawaban = JawabanTextModel::where('id_pengajuan', $id)
                                         ->where('id_jawaban', $param['itemNPWP']->id)
                                         ->first();
             $param['itemNPWP']->jawaban = $jawaban;
+        }
+        $param['itemSKUTeks'] = ItemModel::where('nama', 'Surat Keterangan Usaha')->first();
+        if ($param['itemSKUTeks']) {
+            $jawaban = JawabanTextModel::where('id_pengajuan', $id)
+                                        ->where('id_jawaban', $param['itemSKUTeks']->id)
+                                        ->first();
+            $param['itemSKUTeks']->jawaban = $jawaban;
         }
         $param['itemSKU'] = ItemModel::where('nama', 'Dokumen Surat Keterangan Usaha')->first();
         if ($param['itemSKU']) {
