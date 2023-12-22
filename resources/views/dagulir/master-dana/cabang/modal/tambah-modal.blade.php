@@ -1,4 +1,4 @@
-<div class="modal-layout hidden" id="modal-add-cabang">
+<div class="modal-layout hidden" id="modal-tambah-modal">
     <div class="modal modal-sm bg-white">
         <div class="modal-head">
             <div class="title">
@@ -6,7 +6,7 @@
                     Perlimpahan Dana Cabang
                 </h2>
             </div>
-            <button type="button" data-dismiss-id="modal-add-cabang">
+            <button type="button" data-dismiss-id="modal-tambah-modal">
                 <iconify-icon icon="iconamoon:close-bold" class="text-2xl"></iconify-icon>
             </button>
         </div>
@@ -16,17 +16,8 @@
                 <div class="form-group-1 mb-4">
                     <div class="input-box">
                         <label for="">Cabang </label>
-                        <select name="cabang" id="" class="form-select select2">
-                            <option value="">Pilih Cabang</option>
-                            @foreach ($cabang as $item)
-                                <option value="{{ $item->id }}">{{ $item->cabang }}</option>
-                            @endforeach
-                        </select>
-                        @error('cabang')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                        @enderror
+                        <input type="hidden" name="cabang" id="cabang">
+                        <input type="text" class="form-input bg-gray-200" id="nama_cabang" name="nama_cabang" readonly >
                     </div>
                     <div class="input-box">
                         <label for="">Dana Modal</label>
@@ -43,7 +34,7 @@
                 </div>
             </div>
             <div class="modal-footer justify-end">
-                <button type="button" class="btn-cancel" data-dismiss-id="modal-add-cabang">
+                <button type="button" class="btn-cancel" data-dismiss-id="modal-tambah-modal">
                     Batal
                 </button>
                 <button type="submit" class="btn-submit">Simpan</button>

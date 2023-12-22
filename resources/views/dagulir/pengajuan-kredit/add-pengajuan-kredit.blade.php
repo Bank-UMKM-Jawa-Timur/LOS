@@ -2290,16 +2290,18 @@ $dataIndex = match ($skema) {
             $('#docNPWP_upload_file').attr('disabled', true);
         }
     });
-
-    function formatNpwp(value) {
-        if (typeof value === 'string') {
-            return value.replace(/(\d{2})(\d{3})(\d{3})(\d{1})(\d{3})(\d{3})/, '$1.$2.$3.$4-$5.$6');
+    $(document).ready(function() {
+        // NPWP format
+        $(document).on('keyup', '#npwp_text', function() {
+            var input = $(this).val()
+            console.log(input);
+            $(this).val(formatNpwp(input))
+        })
+        function formatNpwp(value) {
+            if (typeof value === 'string') {
+                return value.replace(/(\d{2})(\d{3})(\d{3})(\d{1})(\d{3})(\d{3})/, '$1.$2.$3.$4-$5.$6');
+            }
         }
-    }
-    // NPWP format
-    $(document).on('keyup', '#npwp_text', function() {
-        var input = $(this).val()
-        $(this).val(formatNpwp(input))
     })
 
     //triger hitung ratio coverage
