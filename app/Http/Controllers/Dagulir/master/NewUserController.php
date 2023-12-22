@@ -318,7 +318,7 @@ class NewUserController extends Controller
                 ->delete();
 
             alert()->success('Berhasil','Berhasil menghapus session.');
-            return redirect()->route('dagulir.master.user.index');
+            return redirect()->route('dagulir.master.index-session');
         } catch (Exception $e) {
             return redirect()->back()->withError('Terjadi Kesalahan.' . $e);
         } catch (Exception $e) {
