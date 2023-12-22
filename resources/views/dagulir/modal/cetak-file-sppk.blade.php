@@ -5,7 +5,7 @@
             <div class="modal-head">
                 <div class="title">
                     <h2 class="font-bold text-2xl tracking-tighter text-theme-text">
-                        Upload SPPK.
+                        Upload SPPK
                     </h2>
                 </div>
                 <button data-dismiss-id="uploadSPPKModal" type="button">

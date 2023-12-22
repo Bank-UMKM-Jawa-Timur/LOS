@@ -1,5 +1,8 @@
 @extends('layouts.tailwind-template')
 @include('components.new.modal.loading')
+@section('modal')
+@include('dagulir.master.user.modal.resetSession')
+@endsection
 @push('script-inject')
     <script>
         $('#page_length').on('change', function() {
@@ -84,7 +87,7 @@
                                             $dataCabang = DB::table('cabang')
                                                 ->where('id', $item->id_cabang)
                                                 ->first();
-                                            $cabang = $dataCabang->cabang;
+                                            $cabang = $dataCabang != null ? $dataCabang->cabang : '-';
                                         }
 
                                         // Waktu login pengguna
@@ -143,33 +146,11 @@
                                         <td><h5 class="badge badge-info">Aktif</h5></td>
                                         <td>
                                             @if (auth()->user()->id != $item->user_id)
-                                                <form action="{{ route('reset-session', $item->user_id) }}" method="post">
-                                                    @csrf
-                                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmResetSession-{{$key}}">
-                                                        Reset
-                                                    </button>
-                                                    <div class="modal fade" id="confirmResetSession-{{$key}}" tabindex="-1" role="dialog" aria-labelledby="confirmResetSessionLabel" aria-hidden="true">
-                                                        <div class="modal-dialog" role="document">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title" id="confirmModalLabel">Konfirmasi</h5>
-                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                            <span aria-hidden="true">&times;</span>
-                                                                        </button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    <p>Apakah Anda yakin akan mereset sesi ini?</p>
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                                                                    <button type="submit" id="btn-hapus" class="btn btn-danger">Reset</button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            @else
-                                                -
+                                                <a href="javascript:void(0)"
+                                                    class="px-2 py-1 bg-theme-primary rounded text-white text-sm show-reset-session"
+                                                    data-target="resetSessionModal"
+                                                    data-id="{{ $item->user_id }}
+                                                ">Reset</a>
                                             @endif
                                         </td>
                                     </tr>
@@ -191,25 +172,14 @@
         </div>
     </section>
 @endsection
-@push('custom-script')
+@push('script-inject')
     <script>
-        function resetPassword(name, id) {
-            Swal.fire({
-                title: 'Perhatian!!',
-                text: "Apakah anda yakin mereset password " + name + " ?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#112042',
-                cancelButtonColor: '#d33',
-                cancelButtonText: 'Batal',
-                confirmButtonText: 'ResetPassword',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $("#resetPasswordForm" + id).submit()
-                }
-            })
-        }
+        $('.show-reset-session').on('click', function() {
+            const target = $(this).data('target');
+            const id = $(this).data('id');
+            $('#id').val(id);
+            $(`#${target}`).removeClass('hidden');
+        })
 
 
     </script>

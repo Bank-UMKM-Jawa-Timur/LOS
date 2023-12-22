@@ -29,4 +29,12 @@ class PengajuanModel extends Model
     {
         return $this->belongsTo(PengajuanDagulir::class, 'dagulir_id', 'id');
     }
+
+    public function plafon() {
+        return $this->belongsTo(PlafonUsulan::class,'id_pengajuan','id');
+    }
+
+    public function komentar() {
+        return $this->hasOne(KomentarModel::class,'id_pengajuan');
+    }
 }
