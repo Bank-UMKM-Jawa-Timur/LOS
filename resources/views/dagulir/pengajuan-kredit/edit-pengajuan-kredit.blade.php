@@ -310,7 +310,6 @@ $dataIndex = match ($skema) {
                                                                 <input type="text" maxlength="255" step="any"
                                                                     name="informasi[{{ $item->id }}]" id="{{ $idLevelDua }}"
                                                                     placeholder="Masukkan informasi {{ $item->nama }}" class="form-input rupiah"
-                                                                    required
                                                                     value="{{old('informasi['.$item->id.']', $item->jawaban->opsi_text)}}">
                                                                 <input type="hidden" name="id_text[]" value="{{ $item->id }}">
                                                                 <input type="hidden" name="skor_penyelia_text[]"
@@ -368,6 +367,13 @@ $dataIndex = match ($skema) {
                                             @elseif ($item->opsi_jawaban == 'file')
                                                 <div class="form-group">
                                                     <div class="input-box">
+                                                        <label for="{{ $idLevelDua }}">{{$item->nama}}</label>
+                                                        @if ($item)
+                                                            @if ($item->jawaban)
+                                                                <a class="text-theme-primary underline underline-offset-4 cursor-pointer btn-file-preview"
+                                                                    data-title="Foto Nasabah" data-filepath="{{asset('../upload')}}/{{$dataPengajuan->id}}/{{$item?->id}}/{{$item?->jawaban->opsi_text}}">Preview</a>
+                                                            @endif
+                                                        @endif
                                                         <input type="hidden" name="id_file_text[]"
                                                             value="{{ $item->id }}">
                                                         <input type="hidden" name="skor_penyelia_text[]"
@@ -397,7 +403,7 @@ $dataIndex = match ($skema) {
                                                         <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}"
                                                             id="">
                                                         <textarea name="informasi[{{ $item->id }}]" rows="4" id="{{ $idLevelDua }}" maxlength="255"
-                                                            class="form-input" placeholder="Masukkan informasi {{ $item->nama }}" required>{{old('informasi['.$item->id.']', $item->jawaban->opsi_text)}}</textarea>
+                                                            class="form-input" placeholder="Masukkan informasi {{ $item->nama }}">{{old('informasi['.$item->id.']', $item->jawaban->opsi_text)}}</textarea>
                                                     </div>
                                                 </div>
                                             @endif
@@ -417,8 +423,8 @@ $dataIndex = match ($skema) {
                                             @endforeach
 
                                             @if (count($item->dataJawaban) != 0)
-                                                <div
-                                                    class="{{ $idLevelDua == 'persentase_kebutuhan_kredit_opsi' || $idLevelDua == 'repayment_capacity_opsi' ? '' : 'form-group' }}">
+                                                <div 
+                                                    class="{{ $idLevelDua == 'persentase_kebutuhan_kredit_opsi' || $idLevelDua == 'repayment_capacity_opsi' ? 'hidden' : 'form-group' }}">
                                                     <div class="input-box">
                                                         <label for="" id="{{ $idLevelDua . '_label' }}">{{ $item->nama }}</label>
 
@@ -453,8 +459,7 @@ $dataIndex = match ($skema) {
                                                             @endphp
                                                             <input type="hidden" name="id_kategori_jaminan_tambahan"
                                                                 value="{{ $itemTiga?->id ?? null }}">
-                                                            <select name="kategori_jaminan_tambahan" id="kategori_jaminan_tambahan" class="form-input"
-                                                                required>
+                                                            <select name="kategori_jaminan_tambahan" id="kategori_jaminan_tambahan" class="form-input">
                                                                 <option value="" {{old('kategori_jaminan_tambahan') == '' ? 'selected' : ''}}>-- Pilih Kategori Jaminan Tambahan --</option>
                                                                 <option value="Tidak Memiliki Jaminan Tambahan" {{old('kategori_jaminan_tambahan', $itemTiga->jawaban ? $kategori_jawaban : '') == 'Tidak Memiliki Jaminan Tambahan' ? 'selected' : ''}}>Tidak Memiliki Jaminan Tambahan
                                                                 </option>
@@ -496,8 +501,7 @@ $dataIndex = match ($skema) {
                                                                             value="{{ $itemTiga->opsi_jawaban }}" id="">
                                                                         <input type="text" maxlength="255" name="informasi[{{ $itemTiga->id }}]"
                                                                             placeholder="Masukkan informasi" id="{{ $idLevelTiga }}"
-                                                                            value="{{old('informasi['.$itemTiga->id.']', $itemTiga->jawaban->opsi_text)}}" class="form-input {{$itemTiga->is_rupiah ? 'rupiah' : ''}}"
-                                                                            required>
+                                                                            value="{{old('informasi['.$itemTiga->id.']', $itemTiga->jawaban->opsi_text)}}" class="form-input {{$itemTiga->is_rupiah ? 'rupiah' : ''}}">
                                                                     </div>
                                                                     @if ($itemTiga->suffix)
                                                                         <div class="flex-shrink-0 mt-2.5rem">
@@ -523,7 +527,7 @@ $dataIndex = match ($skema) {
                                                                             id="">
                                                                         <input type="text" step="any" name="informasi[{{ $itemTiga->id }}]"
                                                                             id="{{ $idLevelTiga }}" placeholder="Masukkan informasi {{ $itemTiga->nama }}"
-                                                                            class="form-input {{$itemTiga->is_rupiah ? 'rupiah' : ''}}" value="{{old('informasi['.$itemTiga->id.']', $itemTiga->jawaban->opsi_text)}}" required>
+                                                                            class="form-input {{$itemTiga->is_rupiah ? 'rupiah' : ''}}" value="{{old('informasi['.$itemTiga->id.']', $itemTiga->jawaban->opsi_text)}}">
                                                                     </div>
                                                                     @if ($itemTiga->suffix)
                                                                         <div class="flex-shrink-0 mt-2.5rem">
@@ -896,7 +900,7 @@ $dataIndex = match ($skema) {
                                         <label for="">Pendapat dan Usulan</label>
                                         <input type="hidden" name="id_komentar_staff_text" value="{{ $pendapat?->id }}">
                                         <textarea name="komentar_staff" class="form-textarea"
-                                            placeholder="Pendapat dan Usulan" id="" required>{{$pendapat?->komentar_staff ?? null}}</textarea>
+                                            placeholder="Pendapat dan Usulan" id="">{{$pendapat?->komentar_staff ?? null}}</textarea>
                                     </div>
                                 </div>
                                 <div class="flex justify-between">
@@ -904,7 +908,7 @@ $dataIndex = match ($skema) {
                                         Kembali
                                     </button>
                                     <div>
-                                        <button class="px-5 py-2 border rounded bg-theme-secondary text-white">
+                                        <button type="button" class="px-5 py-2 border rounded bg-theme-secondary text-white">
                                             Sebelumnya
                                         </button>
                                         <button class="px-5 py-2 border rounded bg-theme-primary text-white" type="submit">
@@ -2316,7 +2320,6 @@ $dataIndex = match ($skema) {
     });
     // ijin usaha
     $("#ijin-usaha").on("change", function() {
-        console.log($(this).val());
         if ($(this).val() == "nib") {
             $("#nib").removeClass("hidden");
             $("#label-nib").removeClass("hidden");
@@ -2496,6 +2499,8 @@ $dataIndex = match ($skema) {
                 totalInputFilled++;
             }
         })
+        if (tabId == 'aspek-keuangan-tab')
+            totalInputFilled--
 
         $.each(inputEmail, function(i, v) {
             if ($(this).prop('readonly'))
@@ -2619,12 +2624,13 @@ $dataIndex = match ($skema) {
             }
         })
 
-        if (tabId == 'aspek-hukum-tab') {
+        if (tabId == 'aspek-keuangan-tab') {
             console.log(`totalInput : ${totalInput}`)
             console.log(`totalInputNull : ${totalInputNull}`)
             console.log(`totalInputFilled : ${totalInputFilled}`)
             console.log(`totalFile : ${totalFile}`)
             console.log(`totalFileFilled : ${totalFileFilled}`)
+            console.log(`totalInputReadOnly : ${totalInputReadOnly}`)
         }
 
         var totalReadHidden = (totalInputHidden + totalInputReadOnly)

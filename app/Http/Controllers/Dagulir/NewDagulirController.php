@@ -2438,7 +2438,7 @@ class NewDagulirController extends Controller
 
             $value->dataLevelDua = $dataLevelDua;
         }
-return $dataAspek;
+
         $param['pendapat'] = KomentarModel::select('id', 'komentar_staff')
                                         ->where('id_pengajuan', $id)
                                         ->orderBy('id', 'DESC')
