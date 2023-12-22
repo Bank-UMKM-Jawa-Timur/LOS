@@ -37,24 +37,24 @@
                         @include('dagulir.pengajuan-kredit.review.log')
                     </div>
                 </div>
-            <div class="accordion-section">
-                <div class="accordion-header rounded pl-3 border border-theme-primary/5 relative mb-4">
-                    <div class="flex justify-between gap-3">
-                    <div class="flex justify-start gap-3">
-                        <button class="p-2 rounded-full bg-theme-primary w-10 h-10 text-white">
-                            <h2 class="text-lg">2</h2>
-                        </button>
-                        <h3 class="font-bold text-lg tracking-tighter mt-[6px]">Data Umum</h3>
-                    </div>
-                        <div class="transform accordion-icon mr-2 mt-1">
-                            <iconify-icon icon="uim:angle-down" class="text-3xl"></iconify-icon>
+                <div class="accordion-section">
+                    <div class="accordion-header rounded pl-3 border border-theme-primary/5 relative mb-4">
+                        <div class="flex justify-between gap-3">
+                        <div class="flex justify-start gap-3">
+                            <button class="p-2 rounded-full bg-theme-primary w-10 h-10 text-white">
+                                <h2 class="text-lg">2</h2>
+                            </button>
+                            <h3 class="font-bold text-lg tracking-tighter mt-[6px]">Data Umum</h3>
+                        </div>
+                            <div class="transform accordion-icon mr-2 mt-1">
+                                <iconify-icon icon="uim:angle-down" class="text-3xl"></iconify-icon>
+                            </div>
                         </div>
                     </div>
+                    <div class="accordion-content p-3">
+                        @include('dagulir.pengajuan-kredit.review.data-umum')
+                    </div>
                 </div>
-                <div class="accordion-content p-3">
-                    @include('dagulir.pengajuan-kredit.review.data-umum')
-                </div>
-            </div>
             @php
                 $no_aspek = 2;
             @endphp
@@ -389,6 +389,7 @@
 
                                     @else
                                         {{--  skor  --}}
+                                        <span>Test</span>
                                     @endif
                                 @endif
                                 <div class="form-group-1">
