@@ -1638,10 +1638,8 @@ $dataIndex = match ($skema) {
                 console.log(nullValue);
                 e.preventDefault()
             } else {
-                // $("#loadingModal").modal({
-                //     keyboard: false
-                // });
-                // $("#loadingModal").modal("show");
+                console.log('oke');
+                $("#preload-data").removeClass("hidden");
             }
         }
     })
