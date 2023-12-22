@@ -7,7 +7,7 @@
         @apply overflow-y-hidden;
     }
     .dropdown-account-menu {
-        @apply absolute  text-left bg-white border right-5 top-14;
+        @apply absolute  text-left bg-white border z-50 right-5 top-14;
     }
     .dropdown-account-menu .item-dropdown {
         @apply px-8 py-3 text-left hover:bg-neutral-200 w-full;
@@ -84,7 +84,7 @@
         @apply bg-theme-primary text-white px-4 py-1 rounded text-2xl;
     }
     .modal-layout {
-        @apply w-full h-screen bg-black/50 fixed top-0 left-0 z-50 lg:p-5 p-2 overflow-y-auto;
+        @apply w-full h-screen bg-black/50 fixed top-0 left-0 z-[99999] lg:p-5 p-2 overflow-y-auto;
     }
     .modal-lg {
         @apply lg:max-w-[80%] max-w-full;
@@ -285,7 +285,7 @@
         @apply bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center;
     }
     .review-pengajuan .field-review .field-name {
-        @apply p-2 lg:w-[55%] w-full font-semibold;
+        @apply p-2 lg:w-[75%] w-full font-semibold;
     }
     .review-pengajuan .field-review .field-answer {
         @apply lg:after:content-[':'] after:absolute  lg:after:top-2 after:top-0  lg:after:-ml-5 lg:border-none  after:ml-32 border  p-2 w-full;
@@ -293,9 +293,41 @@
     .review-pengajuan .field-review .field-answer .field-skor {
         @apply px-4 py-2 rounded bg-theme-primary/5 border font-semibold border-theme-primary text-theme-primary;
     }
-
+    .review-pincab .field-review .field-name {
+        @apply p-2 lg:w-[85%] w-full font-semibold;
+    }
+    .review-pincab .field-review .field-answer {
+        @apply lg:after:content-[':'] after:absolute  lg:after:top-2 after:top-0  lg:after:-ml-5 lg:border-none  after:ml-32 border  p-2 w-full;
+    }
+    .review-pincab .field-review .field-answer .field-skor {
+        @apply px-4 py-2 rounded bg-theme-primary/5 border font-semibold border-theme-primary text-theme-primary;
+    }
+    input[disabled] {
+        @apply bg-gray-100;
+    }
     .scrollbar {
         @apply h-[40px] overflow-hidden;
+    }
+    .tab-table-wrapper {
+        @apply flex gap-0;
+    }
+    .tab-table-wrapper .tab-button {
+        @apply bg-gray-50 px-5 py-2 flex gap-2 hover:bg-theme-primary/80 hover:text-white  text-gray-400 border-b-0 border font-semibold;
+    }
+    .tab-table-wrapper .tab-button.active {
+        @apply bg-theme-primary text-white;
+    }
+    .tab-table-wrapper .tab-button.tab-button-start {
+        @apply rounded-tl-md;
+    }
+    .tab-table-wrapper .tab-button.tab-button-end {
+        @apply rounded-tr-md;
+    }
+    .table-wrapper-tab .tab-content {
+        @apply hidden;
+    }
+    .table-wrapper-tab .tab-content.active {
+        @apply block;
     }
 }
 

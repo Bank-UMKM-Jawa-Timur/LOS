@@ -9,7 +9,7 @@
             }, 'utf-8');
 
             container.items.add(file);
-            $(selector).each((i, el) => el.files = container.files);
+            //$(selector).each((i, el) => el.files = container.files);
         }
 
         xhr.open('GET', '/assets/img/no-image.png');
@@ -21,21 +21,6 @@
         headers: {
             'X-CSRF-TOKEN': '{{ csrf_token() }}',
         }
-    });
-
-    $('.btn-next').click(function(e) {
-        if($('#wizard-data-umum').hasClass('active')) saveDataUmum();
-        let dataIndex = $(".form-wizard.active").attr("data-index");
-        if(dataIndex > 0){
-            $(".form-wizard[data-index="+dataIndex+"] input[type=file]").each(function(){
-                const inputFile = $(this);
-                if(inputFile.prop('files')[0] != null){
-                    saveTempFile(inputFile);
-                }
-            })
-        }
-
-        cekValueKosong(dataIndex);
     });
 
     function sendFile(dataIndex){
@@ -61,7 +46,7 @@
             processData: false,
             contentType: false,
             success: (res) => {
-                inputData.val('');
+                //inputData.val('');
                 inputData.siblings('.filename').html(res.data.filename);
                 inputData.attr('data-id', res.data.file_id);
                 fillTempFile(inputFile + `input[data-id="${res.data.file_id}"]`);
@@ -88,8 +73,6 @@
             method: 'POST',
             data: data,
             success(res) {
-                ////console.log('-----temp nasabah-----');
-                ////console.log(res);
                 $("#id_dagulir_temp").val(res.data.id);
                 $("#dagulir-tab input[type=file]").each(function() {
                     const inputFile = $(this);
@@ -116,7 +99,6 @@
             data['id_dagulir_temp'] = $("#id_dagulir_temp").val();
         });
 
-        console.log(data);
         $.ajax({
             url: '{{ route('dagulir.temp.jawaban') }}',
             method: 'POST',
@@ -134,8 +116,6 @@
             }
         })
     }
-
-    $('#kabupaten').trigger('change');
 
     // Fill temporary file with empty picture
     const selectors = [];

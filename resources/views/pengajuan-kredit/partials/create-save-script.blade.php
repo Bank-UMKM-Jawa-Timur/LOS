@@ -177,8 +177,6 @@
         });
     }
 
-    $('#kabupaten').trigger('change');
-
     // Fill temporary file with empty picture
     const selectors = [];
 

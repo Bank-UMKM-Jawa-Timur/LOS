@@ -14,6 +14,16 @@ return [
         7 => 'Dibatalkan',
         8 => 'Ditindaklanjuti'
     ],
+    'status_color' => [
+        1 => 'text-black',
+        2 => 'text-black',
+        3 => 'text-green-500',
+        4 => 'text-red-500',
+        5 => 'text-gray-500',
+        6 => 'text-green-500',
+        7 => 'text-red-500',
+        8 => 'text-secondary'
+    ],
     'jenis_usaha' => [
         1 => 'Sektor Pertanian',
         2 => 'Sektor Peternakan',
