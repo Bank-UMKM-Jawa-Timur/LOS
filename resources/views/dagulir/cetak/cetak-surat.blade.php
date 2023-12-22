@@ -89,13 +89,26 @@
                 {{ $dataNasabah->nik }}
             </td>
         </tr>
+        @php
+        $stp = "";
+            if ($dataNasabah->status_pernikahan == 1) {
+                $stp = "Belum Menikah";
+            } else if ($dataNasabah->status_pernikahan == 2) {
+                $stp = "Menikah";
+            } else if ($dataNasabah->status_pernikahan == 3) {
+                $stp = "Duda";
+            } else if ($dataNasabah->status_pernikahan == 4) {
+                $stp = "Janda";
+            }
+
+        @endphp
         <tr>
             <td style="width: 40%" >
                 <label>Tempat, Tanggal Lahir / Status</label>
             </td>
             <td>:</td>
             <td style="padding-left: 17px">
-                {{ $dataNasabah->tempat_lahir }}, {{ date_format(date_create($dataNasabah->tanggal_lahir), 'd/m/Y') }} / {{ $dataNasabah->status }}</span>
+                {{ $dataNasabah->tempat_lahir }}, {{ date_format(date_create($dataNasabah->tanggal_lahir), 'd/m/Y') }} / {{ $stp }}</span>
             </td>
         </tr>
         <tr>

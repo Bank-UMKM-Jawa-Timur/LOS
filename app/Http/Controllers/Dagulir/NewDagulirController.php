@@ -2304,6 +2304,7 @@ class NewDagulirController extends Controller
         $param['komentar'] = KomentarModel::where('id_pengajuan', $id)->first();
         $param['jenis_usaha'] = config('dagulir.jenis_usaha');
 
+        // return $dataNasabah;
         return view('dagulir.cetak.cetak-surat', $param);
     }
 
