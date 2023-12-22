@@ -53,11 +53,11 @@
         </div>
         <div class="body-pages">
             <div class="table-wrapper border bg-white mt-8">
-                <form action="{{ route('master-dana.update',$update_data != null ? $update_data->id : 1) }}" method="POST">
+                <form action="{{ route('master-dana.update',$dana_modal != null ? $dana_modal->id : 1) }}" method="POST">
                     @csrf
                     <div class="p-5 w-full space-y-5">
                         <div class="flex justify-end text-xs text-gray-500">
-                            Terakhir update : {{ \Carbon\Carbon::parse($update_data != null ? $update_data->updated_at : '')->translatedFormat('d F Y H:i:s') }}
+                            Terakhir update : {{ \Carbon\Carbon::parse($dana_modal != null ? $dana_modal->updated_at : '')->translatedFormat('d F Y H:i:s') }}
 
                         </div>
                         <div class="form-group-2 mb-4">
@@ -66,7 +66,7 @@
                                 <input type="text" name="dana_modal"
                                     class="form-input @error('dana_modal') is-invalid @enderror rupiah" placeholder="Dana Modal"
                                     id="dana_modal"
-                                    value="{{ old('dana_modal',$update_data != null ? $update_data->dana_modal : '') }}">
+                                    value="{{ old('dana_modal',$dana_modal != null ? $dana_modal->dana_modal : '') }}">
                                 @error('dana_modal')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -79,7 +79,7 @@
                                     class="form-input @error('dana_idle') is-invalid @enderror bg-gray-100 rupiah" placeholder="Dana Idle"
                                     id="dana_idle"
                                     readonly
-                                    value="{{ old('dana_idle',$update_data != null ? $update_data->dana_idle : '') }}">
+                                    value="{{ old('dana_idle',$dana_modal != null ? $dana_idle : '') }}">
                                 @error('dana_idle')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -88,7 +88,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="flex justify-end">
+                    <div class="flex justify-end p-3">
                         <div class="mx-2">
                             <button type="reset" class="px-5 py-2 border rounded bg-white text-gray-500" >Batal</button>
                         </div>

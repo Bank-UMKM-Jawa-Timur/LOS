@@ -511,7 +511,8 @@ class NewDagulirController extends Controller
                 }
             }
             //untuk upload file dari temp
-            $tempFiles = JawabanTemp::where('type', 'file')->where('id_temporary_calon_nasabah', $request->id_nasabah)->get();
+            $idTemp = $request->id_dagulir_temp;
+            $tempFiles = JawabanTemp::where('type', 'file')->where('temporary_dagulir_id', $idTemp)->get();
             foreach ($tempFiles as $tempFile) {
                 if (!array_key_exists($tempFile->id_jawaban, $request->upload_file)) {
                     $tempPath = public_path("upload/temp/{$tempFile->id_jawaban}/{$tempFile->opsi_text}");
@@ -676,6 +677,11 @@ class NewDagulirController extends Controller
 
             // Log Pengajuan Baru
             $namaNasabah = $pengajuan->nama;
+
+            // Delete data Draft
+            JawabanTemp::where('temporary_dagulir_id', $request->id_dagulir_temp)->delete();
+            JawabanTempModel::where('temporary_dagulir_id', $request->id_dagulir_temp)->delete();
+            PengajuanDagulirTemp::where('id', $request->id_dagulir_temp)->delete();
 
             $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan proses pembuatan data pengajuan atas nama ' . $namaNasabah . '.', $id_pengajuan, Auth::user()->id, Auth::user()->nip);
 
@@ -1601,8 +1607,6 @@ class NewDagulirController extends Controller
             $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user,$allFilter);
             $pengajuan_sipde = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user, $allFilter, 'sipde');
         }
-
-        // return $pengajuan_dagulir;
         return view('dagulir.index',[
             'data' => $pengajuan_dagulir,
             'data_sipde' => $pengajuan_sipde,
@@ -1718,7 +1722,8 @@ class NewDagulirController extends Controller
 
                             // HIT update status analisa endpoint dagulir
                             if ($nasabah->status != 2) {
-                                $lampiran_analisa = lampiranAnalisa();
+                                $filename = public_path('cetak_surat/'.$pengajuan->id.'.'.'pdf');
+                                $lampiran_analisa = lampiranAnalisa($filename);
                                 $analisa = $this->updateStatus($kode_pendaftaran, 2, $lampiran_analisa);
                                 if (is_array($analisa)) {
                                     // Fail block
@@ -1760,7 +1765,7 @@ class NewDagulirController extends Controller
                             return redirect()->route('dagulir.pengajuan.index')->withStatus('Berhasil menyetujui pengajuan.');
                         }
                         else {
-                            // return $storeSIPDE;
+                            return $storeSIPDE;
                             DB::rollBack();
                             // toast('Your Post as been submited!','success');
                             alert()->error('Peringatan', $storeSIPDE)->autoClose(5000);
@@ -1797,7 +1802,8 @@ class NewDagulirController extends Controller
 
                             // HIT update status analisa endpoint dagulir
                             if ($nasabah->status != 2) {
-                                $lampiran_analisa = lampiranAnalisa();
+                                $filename = public_path('cetak_surat/'.$pengajuan->id.'.'.'pdf');
+                                $lampiran_analisa = lampiranAnalisa($filename);
                                 $analisa = $this->updateStatus($kode_pendaftaran, 2, $lampiran_analisa);
                                 if (is_array($analisa)) {
                                     // Fail block
@@ -1906,7 +1912,8 @@ class NewDagulirController extends Controller
 
                         // HIT update status analisa endpoint dagulir
                         if ($nasabah->status != 2) {
-                            $lampiran_analisa = lampiranAnalisa();
+                            $filename = public_path('cetak_surat/'.$pengajuan->id.'.'.'pdf');
+                            $lampiran_analisa = lampiranAnalisa($filename);
                             $analisa = $this->updateStatus($kode_pendaftaran, 2, $lampiran_analisa);
                             if (is_array($analisa)) {
                                 // Fail block
@@ -1974,28 +1981,7 @@ class NewDagulirController extends Controller
         }
     }
 
-    function CetakPDF($id) {
-        $pengajuan = PengajuanModel::find($id);
-        $param['dataAspek'] = ItemModel::select('*')->where('level',1)->get();
-        $param['dataNasabah'] = PengajuanDagulir::find($pengajuan->dagulir_id);
-        $param['dataUmum'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit')->find($id);
-        $param['komentar'] = KomentarModel::where('id_pengajuan', $id)->first();
 
-        $param['jenis_usaha'] = config('dagulir.jenis_usaha');
-
-
-        $pdf = Pdf::loadview('dagulir.pengajuan-kredit.cetak.cetak-surat',$param);
-
-        $fileName =  time().'.'. 'pdf' ;
-        $pdf->save(public_path() . '/' . $fileName);
-
-        $pdf = public_path($fileName);
-        $file = "data:@file/pdf;base64,".base64_encode(file_get_contents($pdf));
-
-        // remove white space
-        $result = trim($file, "\n\r\t\v\x00");
-        return $result;
-    }
     function CetakPK($id) {
         $count = DB::table('log_cetak_kkb')
         ->where('id_pengajuan', $id)
@@ -2288,20 +2274,32 @@ class NewDagulirController extends Controller
     {
         $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->get();
         $dataNasabah = DB::table('pengajuan_dagulir')->select('pengajuan_dagulir.*', 'kabupaten.id as kabupaten_id', 'kabupaten.kabupaten', 'kecamatan.id as kecamatan_id', 'kecamatan.id_kabupaten', 'kecamatan.kecamatan', 'desa.id as desa_id', 'desa.id_kabupaten', 'desa.id_kecamatan', 'desa.desa')
-        ->join('kabupaten', 'kabupaten.id', 'pengajuan_dagulir.kotakab_ktp')
-        ->join('kecamatan', 'kecamatan.id', 'pengajuan_dagulir.kec_ktp')
-        ->join('desa', 'desa.id', 'pengajuan_dagulir.desa_ktp')
-        ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
-        ->where('pengajuan.id', $id)
-        ->first();
+                        ->join('kabupaten', 'kabupaten.id', 'pengajuan_dagulir.kotakab_ktp')
+                        ->join('kecamatan', 'kecamatan.id', 'pengajuan_dagulir.kec_ktp')
+                        ->join('desa', 'desa.id', 'pengajuan_dagulir.desa_ktp')
+                        ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
+                        ->where('pengajuan.id', $id)
+                        ->first();
         $param['dataNasabah'] = $dataNasabah;
         $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit')
-        ->find($id);
+                            ->find($id);
         $param['komentar'] = KomentarModel::where('id_pengajuan', $id)->first();
         $param['jenis_usaha'] = config('dagulir.jenis_usaha');
 
+        $pdf = Pdf::loadview('dagulir.pengajuan-kredit.cetak.cetak-surat',$param);
+
+
+        $fileName = $param['dataUmum']->id.'.'. 'pdf' ;
+        $filePath = public_path() . '/cetak_surat';
+        if (!File::isDirectory($filePath)) {
+            File::makeDirectory($filePath, 493, true);
+        }
+        $pdf->save($filePath.'/'.$fileName);
+
         return view('dagulir.cetak.cetak-surat', $param);
     }
+
+
 
     public function edit($id) {
         /**
