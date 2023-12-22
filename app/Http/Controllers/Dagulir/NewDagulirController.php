@@ -511,7 +511,8 @@ class NewDagulirController extends Controller
                 }
             }
             //untuk upload file dari temp
-            $tempFiles = JawabanTemp::where('type', 'file')->where('id_temporary_calon_nasabah', $request->id_nasabah)->get();
+            $idTemp = $request->id_dagulir_temp;
+            $tempFiles = JawabanTemp::where('type', 'file')->where('temporary_dagulir_id', $idTemp)->get();
             foreach ($tempFiles as $tempFile) {
                 if (!array_key_exists($tempFile->id_jawaban, $request->upload_file)) {
                     $tempPath = public_path("upload/temp/{$tempFile->id_jawaban}/{$tempFile->opsi_text}");
@@ -676,6 +677,11 @@ class NewDagulirController extends Controller
 
             // Log Pengajuan Baru
             $namaNasabah = $pengajuan->nama;
+
+            // Delete data Draft
+            JawabanTemp::where('temporary_dagulir_id', $request->id_dagulir_temp)->delete();
+            JawabanTempModel::where('temporary_dagulir_id', $request->id_dagulir_temp)->delete();
+            PengajuanDagulirTemp::where('id', $request->id_dagulir_temp)->delete();
 
             $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan proses pembuatan data pengajuan atas nama ' . $namaNasabah . '.', $id_pengajuan, Auth::user()->id, Auth::user()->nip);
 

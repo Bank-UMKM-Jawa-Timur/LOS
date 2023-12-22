@@ -72,7 +72,10 @@ class="sticky top-0 border-b z-50 p-3 font-poppins w-full bg-white"
       class="dropdown-account account-info mr-3 cursor-pointer flex gap-5"
     >
     @php
-      $name_karyawan = App\Http\Controllers\DashboardController::getKaryawan();
+      $karyawan = App\Http\Controllers\DashboardController::getDataKaryawan();
+      $name_karyawan = $karyawan['nama'];
+      $cabang = $karyawan['cabang'];
+      $role = auth()->user()->role;
     @endphp
       <div class="avatar text-center">
         <img
@@ -95,7 +98,11 @@ class="sticky top-0 border-b z-50 p-3 font-poppins w-full bg-white"
         <p
           class="font-poppins font-semibold text-xs text-gray-400 tracking-tighter"
         >
-          {{auth()->user()->role}}
+          @if ($role == 'PBO' || $role == 'PBP' || $role == 'Pincab')
+            {{$role}} - {{$cabang}}
+          @else
+            {{$role}}
+          @endif
         </p>
       </div>
     </div>
