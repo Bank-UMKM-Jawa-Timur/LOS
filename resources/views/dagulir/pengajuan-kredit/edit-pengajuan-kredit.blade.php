@@ -366,6 +366,9 @@ $dataIndex = match ($skema) {
                                             @elseif ($item->opsi_jawaban == 'file')
                                                 <div class="form-group">
                                                     <div class="input-box">
+                                                        <label for="">
+                                                            {{ $item->nama }}
+                                                        </label>
                                                         <input type="hidden" name="id_file_text[]"
                                                             value="{{ $item->id }}">
                                                         <input type="hidden" name="skor_penyelia_text[]"
