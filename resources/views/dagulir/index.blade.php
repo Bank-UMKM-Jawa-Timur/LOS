@@ -19,12 +19,14 @@
         $('#form').submit()
     })
     $('#pincetar-button').on('click', function () { 
+        $('#tambah-pengajuan').show();
         $('#search_tab').remove();
         $('#search-pincetar').append(`
             <input type="hidden" id="search_tab" name="search_tab" value="pincetar" />
         `);
     })
     $('#sipde-button').on('click', function () { 
+        $('#tambah-pengajuan').hide();
         $('#search_tab').remove();
         $('#search-sipde').append(`
             <input type="hidden" id="search_tab" name="search_tab" value="sipde" />
@@ -76,13 +78,15 @@
                     </span>
                     <span class="ml-3 text-sm"> Draft </span>
                 </a>
-                <a href="{{ route('dagulir.pengajuan.create') }}"
-                    class="px-7 py-2 rounded flex justify-center items-center font-semibold bg-theme-primary border text-white">
-                    <span class="mt-1 mr-3">
-                    <iconify-icon icon="fa6-solid:plus"></iconify-icon>
-                    </span>
-                    <span class="ml-1 text-sm"> Tambah pengajuan</span>
-                </a>
+                @if (Request()->query('search_tab') != "sipde")
+                    <a href="{{ route('dagulir.pengajuan.create') }}"
+                        class="px-7 py-2 rounded flex justify-center items-center font-semibold bg-theme-primary border text-white" id="tambah-pengajuan">
+                        <span class="mt-1 mr-3">
+                        <iconify-icon icon="fa6-solid:plus"></iconify-icon>
+                        </span>
+                        <span class="ml-1 text-sm"> Tambah pengajuan</span>
+                    </a>
+                @endif
             </div>
         @endif
       </div>
