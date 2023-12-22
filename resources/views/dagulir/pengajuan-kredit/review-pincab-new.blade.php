@@ -1,3 +1,4 @@
+@include('components.new.modal.loading')
 @extends('layouts.tailwind-template')
 @section('content')
     <section class="p-5 overflow-y-auto mt-5">
@@ -1037,7 +1038,7 @@
                     <button class="btn-cancel" type="button" data-dismiss-id="modal-confirm">
                         Batal
                     </button>
-                    <button type="submit" class="btn-submit">Tolak</button>
+                    <button type="submit" class="btn-submit btn-simpan-confirm">Tolak</button>
                 </div>
             </form>
         </div>
@@ -1088,7 +1089,7 @@
                     <button class="btn-cancel" type="button" data-dismiss-id="modal-approve">
                         Batal
                     </button>
-                    <button type="submit" class="btn-submit">Setujui</button>
+                    <button type="submit" class="btn-submit btn-simpan-aprrove">Setujui</button>
                 </div>
             </form>
         </div>
@@ -1097,6 +1098,15 @@
 
 @push('script-inject')
     <script>
+        $('.btn-simpan-aprrove').on('click', function(){
+            $("#modal-approve").addClass("hidden");
+            $("#preload-data").removeClass("hidden");
+        })
+        $('.btn-simpan-confirm').on('click', function(){
+            $("#modal-confirm").addClass("hidden");
+            $("#preload-data").removeClass("hidden");
+        })
+
         $(".accordion-header").click(function() {
             // Toggle the visibility of the next element with class 'accordion-content'
             $(this).next(".accordion-content").slideToggle();

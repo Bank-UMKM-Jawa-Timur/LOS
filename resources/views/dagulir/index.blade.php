@@ -465,7 +465,7 @@
                                                             @if ($item->pengajuan->id_pincab)
                                                                 @if (!$item->pengajuan->komentar->id_pincab)
                                                                     <a href="{{ route('dagulir.detailjawaban_pincab', $item->pengajuan->id) }}"
-                                                                        class="cursor-pointer w-full">
+                                                                        class="cursor-pointer w-full review-pincab">
                                                                         <li class="item-tb-dropdown">
                                                                             Review
                                                                         </li>
@@ -917,6 +917,9 @@
     })
 
     $('.review-penyelia').on('click', function(){
+        $("#preload-data").removeClass("hidden");
+    })
+    $('.review-pincab').on('click', function(){
         $("#preload-data").removeClass("hidden");
     })
     $('.submit-confirmation-modal').on('click', function(){
