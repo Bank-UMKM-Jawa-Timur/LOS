@@ -204,7 +204,7 @@ class NewDagulirController extends Controller
         if ($role == 'Staf Analis Kredit') {
             $param['pageTitle'] = "Dashboard";
             $param['multipleFiles'] = $this->isMultipleFiles;
-    
+
             $param['dataDesa'] = Desa::all();
             $param['dataKecamatan'] = Kecamatan::all();
             $param['dataKabupaten'] = Kabupaten::all();
@@ -218,12 +218,12 @@ class NewDagulirController extends Controller
             $param['itemNIB'] = ItemModel::where('nama', 'Dokumen NIB')->first();
             $param['itemNPWP'] = ItemModel::where('nama', 'Dokumen NPWP')->first();
             $param['itemSKU'] = ItemModel::where('nama', 'Dokumen Surat Keterangan Usaha')->first();
-    
+
             $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
             $param['dataMerk'] = MerkModel::all();
             $param['jenis_usaha'] = config('dagulir.jenis_usaha');
             $param['tipe'] = config('dagulir.tipe_pengajuan');
-    
+
             if ($request->has('dagulir')) {
                 $param['dataUmumNasabah'] = PengajuanDagulir::select(
                                                                 'pengajuan_dagulir.*',
@@ -241,7 +241,7 @@ class NewDagulirController extends Controller
                                         )
                                         ->find($param['dataUmumNasabah']->id_pengajuan);
                 $param['dataUmum'] = $pengajuan;
-    
+
                 $param['kec_ktp'] = Kecamatan::find($param['dataUmumNasabah']->kec_ktp)->kecamatan;
                 $param['kab_ktp'] = Kabupaten::find($param['dataUmumNasabah']->kotakab_ktp)->kabupaten;
                 $param['desa_ktp'] = '';
@@ -253,7 +253,7 @@ class NewDagulirController extends Controller
                 $param['kec_usaha'] = Kecamatan::find($param['dataUmumNasabah']->kec_usaha)->kecamatan;
                 $param['kab_usaha'] = Kabupaten::find($param['dataUmumNasabah']->kotakab_usaha)->kabupaten;
                 $param['alamat_usaha'] = $param['dataUmumNasabah']->alamat_usaha;
-    
+
                 $param['allKab'] = Kabupaten::get();
                 $param['allKec'] = Kecamatan::where('id_kabupaten', $param['dataUmumNasabah']->kotakab_ktp)->get();
                 $param['allDesa'] = Desa::where('id_kecamatan', $param['dataUmumNasabah']->kec_ktp)->get();
@@ -266,7 +266,7 @@ class NewDagulirController extends Controller
                     ->where('nama', 'SLIK')
                     ->first();
             }
-    
+
             return view('dagulir.pengajuan-kredit.add-pengajuan-kredit', $param);
         }
         else {
@@ -1587,7 +1587,7 @@ class NewDagulirController extends Controller
         // paginate
         $search = $request->get('q');
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
-        $page = $request->has('page') ? $request->get('page') : 1;
+        $page = $request->has('page') ? $request->get('page') : 10;
         if ($role == 'Staf Analis Kredit') {
             $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user,$allFilter);
             $pengajuan_sipde = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user, $allFilter, 'sipde');
@@ -1601,7 +1601,6 @@ class NewDagulirController extends Controller
             $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user,$allFilter);
             $pengajuan_sipde = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user, $allFilter, 'sipde');
         }
-
         return view('dagulir.index',[
             'data' => $pengajuan_dagulir,
             'data_sipde' => $pengajuan_sipde,

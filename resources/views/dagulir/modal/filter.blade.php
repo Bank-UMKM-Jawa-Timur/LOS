@@ -15,14 +15,16 @@
         <div class="form-group-2 mb-4">
           <div class="input-box">
             <label for="">Tanggal Awal</label>
-            <input type="date" name="tAwal" id="tAwal" class="form-input" value="{{ Request()->query('tAwal') }}">
+            <input type="date" name="tAwal" id="tAwal" class="form-input" value="{{ Request()->query('tAwal') }}" required="required">
+            <small id="reqAwal" class="form-text text-theme-primary hidden">Tanggal Awal Tidak Boleh Kosong!</small>
           </div>
           <div class="input-box">
             <label for="tAkhir">Tanggal Akhir</label>
             <input type="date" name="tAkhir" id="tAkhir" class="form-input"
-              value="{{ Request()->query('tAkhir') }}" />
+              value="{{ Request()->query('tAkhir') }}" required="required">
             <small id="errorAkhir" class="form-text text-theme-primary hidden">Tanggal akhir tidak boleh kurang
               dari tanggal awal</small>
+              <small id="reqAkhir" class="form-text text-theme-primary hidden">Tanggal Akhir Tidak Boleh Kosong!</small>
           </div>
         </div>
         <div class="form-group-2 mb-4">
@@ -30,7 +32,7 @@
             <div class="input-box">
               <label for="">Cabang</label>
               <select name="cbg" class="form-select" id="cabang">
-                <option value="090900909" selected>-- Pilih Cabang --</option>
+                <option value="" selected>-- Pilih Cabang --</option>
               </select>
             </div>
           @endif
@@ -69,13 +71,6 @@
               <option value="Ditolak" {{ Request()->query('sts') == "Ditolak" ? 'selected' : '' }}>Ditolak</option>
             </select>
           </div>
-        </div>
-        <div class="modal-info">
-          <p>
-            isi form berikut untuk memfilter sebagian data untuk ditampilkan
-            tiap perbulan, pertahun atau perhari di setiap cabang dan juga
-            lainya.
-          </p>
         </div>
       </form>
     </div>
