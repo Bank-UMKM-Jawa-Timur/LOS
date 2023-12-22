@@ -108,7 +108,7 @@ class DashboardController extends Controller
                 return $data;
         }
 
-        $cabang = Cabang::select('kode_cabang, cabang AS nama_cabang')
+        $cabang = Cabang::select('kode_cabang', 'cabang AS nama_cabang')
                         ->where('id', Auth::user()->id_cabang)
                         ->first();
         $data = [

@@ -11,6 +11,7 @@
 @include('dagulir.modal.approval')
 @include('dagulir.modal.approvalSipde')
 @include('dagulir.modal.kembalikan')
+@include('dagulir.modal.lanjutkan-penyelia')
 @endsection
 
 @push('script-inject')
@@ -342,9 +343,13 @@
                                                 <ul class="dropdown-tb-menu hidden">
                                                     @if (Auth::user()->role == 'Staf Analis Kredit' && $item->pengajuan->posisi == 'Proses Input Data')
                                                         <li class="item-tb-dropdown">
-                                                            <a href="#"
-                                                            onclick="showTindakLanjut({{ $item->pengajuan->id }},'penyelia kredit')"
-                                                            class="cursor-pointer">Tindak lanjut Review Penyelia</a>
+                                                            @if ($item->pengajuan->id_penyelia == null)
+                                                                <a href="#"
+                                                                onclick="showTindakLanjut({{ $item->pengajuan->id }},'penyelia kredit')"
+                                                                class="cursor-pointer">Tindak lanjut Review Penyelia</a>
+                                                            @else
+                                                                <a href="javascript:void(0)" data-target="#confirmationModalPenyelia" data-id-pengajuan="{{$item->pengajuan->id}}" data-id-penyelia="{{ $item->pengajuan->id_penyelia }}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown confirmationModalPenyelia">Lanjutkan Ke Penyelia</a>
+                                                            @endif
                                                         </li>
                                                         <li class="item-tb-dropdown">
                                                             <a href="{{route('dagulir.edit', $item->pengajuan->id)}}"
@@ -985,6 +990,19 @@
         } else {
             $("#errorAkhir").hide();
         }
+    })
+
+    $(".confirmationModalPenyelia").on("click", function(){
+        var target = $(this).data('target');
+        var id_pengajuan = $(this).data('id-pengajuan');
+        var nama = $(this).data('nama');
+        var id_penyelia = $(this).data('id-penyelia');
+        console.log(target);
+        
+        $(`${target} #id-pengajuan`).val(id_pengajuan)
+        $(`${target} #id-penyelia`).val(id_penyelia)
+        $(`${target} #nama`).html(nama)
+        $(target).removeClass('hidden');
     })
     </script>
 @endpush
