@@ -349,7 +349,7 @@
                                                         <li class="item-tb-dropdown" onclick="showTindakLanjut({{ $item->pengajuan->id }},'penyelia kredit')">
                                                             <a href="#" class="cursor-pointer">Tindak lanjut Review Penyelia</a>
                                                         </li>
-                                                        <a class="w-full cursor-pointer" href="{{ route('dagulir.edit', $item->pengajuan->id) }}">
+                                                        <a class="w-full cursor-pointer edit-pengajuan" href="{{ route('dagulir.edit', $item->pengajuan->id) }}">
                                                             <li class="item-tb-dropdown">
                                                                 Edit
                                                             </li>
@@ -926,6 +926,9 @@
         $("#preload-data").removeClass("hidden");
     })
     $('.submit-confirmation-modal-staff').on('click', function(){
+        $("#preload-data").removeClass("hidden");
+    })
+    $('.edit-pengajuan').on('click', function(){
         $("#preload-data").removeClass("hidden");
     })
 
