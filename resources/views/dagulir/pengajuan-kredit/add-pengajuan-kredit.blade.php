@@ -1638,7 +1638,6 @@ $dataIndex = match ($skema) {
                 console.log(nullValue);
                 e.preventDefault()
             } else {
-                console.log('oke');
                 $("#preload-data").removeClass("hidden");
             }
         }

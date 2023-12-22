@@ -24,7 +24,7 @@
                     Batal
                 </button>
                 <input type="hidden" name="id_pengajuan" id="id_pengajuan" value="">
-                <button type="submit" class="btn-submit">iya</button>
+                <button type="submit" class="btn-submit submit-confirmation-modal">iya</button>
             </div>
         </form>
     </div>

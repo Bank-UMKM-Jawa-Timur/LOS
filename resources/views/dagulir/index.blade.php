@@ -11,6 +11,7 @@
 @include('dagulir.modal.approval')
 @include('dagulir.modal.approvalSipde')
 @include('dagulir.modal.kembalikan')
+@include('components.new.modal.loading')
 @endsection
 
 @push('script-inject')
@@ -379,20 +380,20 @@
                                                             @if ($item->pengajuan->komentar)
                                                                 @if (!$item->pengajuan->komentar->id_penyelia)
                                                                     <a href="{{ route('dagulir.detailjawaban', $item->pengajuan->id) }}"
-                                                                        class="cursor-pointer w-full">
+                                                                        class="cursor-pointer w-full review-penyelia">
                                                                         <li class="item-tb-dropdown">
                                                                             Review
                                                                         </li>
                                                                     </a>
                                                                 @else
-                                                                    <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown w-full">
+                                                                    <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown w-full send-to-pincab">
                                                                         <li class="item-tb-dropdown">
                                                                             Lanjutkan Ke Pincab
                                                                         </li>
                                                                     </a>
                                                                 @endif
                                                             @endif
-                                                            <li class="item-tb-dropdown kembalikan-modal cursor-pointer"
+                                                            <li class="item-tb-dropdown kembalikan-modal cursor-pointer send-to-staff"
                                                                 data-id="{{ $item->pengajuan->id }}" data-backto="staf" >
                                                                 <a href="#">Kembalikan ke Staff</a>
                                                             </li>
@@ -889,6 +890,16 @@
         // Set form variables
         $('#modal-kembalikan #id_pengajuan').val(id)
         $('#modal-kembalikan #backto').val(backto)
+    })
+
+    $('.review-penyelia').on('click', function(){
+        $("#preload-data").removeClass("hidden");
+    })
+    $('.submit-confirmation-modal').on('click', function(){
+        $("#preload-data").removeClass("hidden");
+    })
+    $('.submit-confirmation-modal-staff').on('click', function(){
+        $("#preload-data").removeClass("hidden");
     })
 
     $('.show-upload-sppk').on('click', function() {
