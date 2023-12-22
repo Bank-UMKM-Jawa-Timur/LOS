@@ -864,7 +864,7 @@
             var namaHtml = nama.toLowerCase();
             var idPengajuan = $('#modalConfirmPincab').data('id_pengajuan');
             console.log(idPengajuan);
-            $('#nama_pengajuan').html(namaHtml);
+            $('#nama_pengajuan').html(namaHtml.toUpperCase());
             $('[name="id_pengajuan"]').val(idPengajuan);
         });
     }
