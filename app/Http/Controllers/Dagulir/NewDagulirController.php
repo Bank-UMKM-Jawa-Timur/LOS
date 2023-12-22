@@ -1598,9 +1598,10 @@ class NewDagulirController extends Controller
             $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Pincab', $id_user,$allFilter);
             $pengajuan_sipde = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user, $allFilter, 'sipde');
         } else {
-            $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user,$allFilter);
-            $pengajuan_sipde = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user, $allFilter, 'sipde');
+            $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Administrator', $id_user,$allFilter);
+            $pengajuan_sipde = $this->repo->get($search,$limit,$page, 'Administrator', $id_user, $allFilter, 'sipde');
         }
+
         return view('dagulir.index',[
             'data' => $pengajuan_dagulir,
             'data_sipde' => $pengajuan_sipde,
