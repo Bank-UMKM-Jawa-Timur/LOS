@@ -10,11 +10,19 @@ use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 use App\Exports\DataNominatif;
+use App\Repository\DashboardRepository;
 use Maatwebsite\Excel\Facades\Excel;
 
 class DashboardController extends Controller
 {
-    public function index()
+    private $repo;
+
+    public function __construct()
+    {
+        $this->repo = new DashboardRepository;
+    }
+
+    public function index(Request $request)
     {
         $param['pageTitle'] = "Analisa Kredit";
         if (Auth::user()->password_change_at == null) {
@@ -76,6 +84,12 @@ class DashboardController extends Controller
                 ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
                 ->get();
         }
+
+        $param['dataCard'] = $this->repo->getCount($request);
+        $param['dataYear'] = $this->repo->getDataYear();
+        $param['dataPosisi'] = $this->repo->getDataPosisi($request);
+        $param['dataSkema'] = $this->repo->getDataSkema($request);
+        // return $param['dataYear'];
         return view('dashboard', $param);
     }
 
