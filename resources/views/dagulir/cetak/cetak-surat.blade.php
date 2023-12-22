@@ -244,6 +244,14 @@
                                     <td>:</td>
                                     <td>{{ $itemTextDua->opsi_text }}%</td>
                                 </tr>
+                            @elseif($item->is_rupiah == 1)
+                                <tr>
+                                    <td style="width: 40%; padding-left: 33px">{{  $item->nama }}</td>
+                                    <td>:</td>
+                                    <td>
+                                        {{ "Rp " . number_format($itemTextDua->opsi_text,2,',','.') }}
+                                    </td>
+                                </tr>
                             @else
                                 @if ($item->nama == 'NPWP')
                                     <tr>

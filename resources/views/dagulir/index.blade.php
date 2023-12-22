@@ -942,6 +942,15 @@
         $(`#${target}`).removeClass('hidden');
     })
 
+    $('.simpan-sppk').on('click', function(){
+        $("#uploadSPPKModal").addClass("hidden");
+        $("#preload-data").removeClass("hidden");
+    })
+    $('.simpan-pk').on('click', function(){
+        $("#uploadPKModal").addClass("hidden");
+        $("#preload-data").removeClass("hidden");
+    })
+
     $('.show-upload-pk').on('click', function() {
         const target = $(this).data('target')
         const id = $(this).data('id')

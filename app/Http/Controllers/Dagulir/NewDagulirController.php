@@ -2305,6 +2305,7 @@ class NewDagulirController extends Controller
         $param['jenis_usaha'] = config('dagulir.jenis_usaha');
 
         // return $dataNasabah;
+        // return $param['dataAspek'];
         return view('dagulir.cetak.cetak-surat', $param);
     }
 
