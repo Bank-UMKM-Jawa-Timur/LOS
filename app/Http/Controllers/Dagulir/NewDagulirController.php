@@ -1214,7 +1214,7 @@ class NewDagulirController extends Controller
         }
     }
 
-    public function storeSipde($id_pengajuan) {
+    public function storeSipde($id_pengajuan, $plafon=null, $tenor=null) {
         DB::beginTransaction();
         try {
             $pengajuan = PengajuanModel::with('pendapatPerAspek')->find($id_pengajuan);
@@ -1227,9 +1227,9 @@ class NewDagulirController extends Controller
                 "tanggal_lahir" => $pengajuan_dagulir->tanggal_lahir,
                 "telp" => $pengajuan_dagulir->telp,
                 "jenis_usaha" => $pengajuan_dagulir->jenis_usaha,
-                "nominal_pengajuan" => $pengajuan_dagulir->nominal,
+                "nominal_pengajuan" => $plafon ? $plafon : $pengajuan_dagulir->nominal,
                 "tujuan_penggunaan" => $pengajuan_dagulir->tujuan_penggunaan,
-                "jangka_waktu" => $pengajuan_dagulir->jangka_waktu,
+                "jangka_waktu" => $tenor ? $tenor : $pengajuan_dagulir->jangka_waktu,
                 "ket_agunan" => $pengajuan_dagulir->ket_agunan,
                 "kode_bank_pusat" => '01-BPR',
                 "kode_bank_cabang" => $pengajuan_dagulir->kode_bank_cabang,
@@ -1693,7 +1693,7 @@ class NewDagulirController extends Controller
                         $namaNasabah = $nasabah->nama;
                     if ($nasabah->from_apps == 'pincetar') {
                         // HIT Pengajuan endpoint dagulir
-                        $storeSIPDE = $this->storeSipde($id);
+                        $storeSIPDE = $this->storeSipde($id,$plafon_acc, $tenor_acc);
                         $kode_pendaftaran = false;
                         if (is_array($storeSIPDE)) {
                             $kode_pendaftaran = array_key_exists('kode_pendaftaran', $storeSIPDE) ? $storeSIPDE['kode_pendaftaran'] : false;
@@ -1707,14 +1707,14 @@ class NewDagulirController extends Controller
                                     // Fail block
                                     if ($survei['message'] != 'Update Status Gagal. Anda tidak bisa mengubah status, karena status saat ini adalah SURVEY') {
                                         DB::rollBack();
-                                        alert()->error('Peringatan', $survei);
+                                        alert()->error('Peringatan(API)', $survei);
                                         return redirect()->back();
                                     }
                                 }
                                 else {
                                     if ($survei != 200) {
                                         DB::rollBack();
-                                        alert()->error('Peringatan', $survei);
+                                        alert()->error('Peringatan(API)', $survei);
                                         return redirect()->back();
                                     }
                                 }
@@ -1729,13 +1729,13 @@ class NewDagulirController extends Controller
                                 if (is_array($analisa)) {
                                     // Fail block
                                     DB::rollBack();
-                                    alert()->error('Peringatan', $analisa);
+                                    alert()->error('Peringatan(API)', $analisa);
                                     return redirect()->back();
                                 }
                                 else {
                                     if ($survei != 200 || $survei != '200') {
                                         DB::rollBack();
-                                        alert()->error('Peringatan', $analisa);
+                                        alert()->error('Peringatan(API)', $analisa);
                                         return redirect()->back();
                                     }
                                 }
@@ -1748,13 +1748,13 @@ class NewDagulirController extends Controller
                                 if (is_array($setuju)) {
                                     // Fail block
                                     DB::rollBack();
-                                    alert()->error('Peringatan', $setuju);
+                                    alert()->error('Peringatan(API)', $setuju);
                                     return redirect()->back();
                                 }
                                 else {
                                     if ($setuju != 200) {
                                         DB::rollBack();
-                                        alert()->error('Peringatan', $setuju);
+                                        alert()->error('Peringatan(API)', $setuju);
                                         return redirect()->back();
                                     }
                                 }
@@ -1766,11 +1766,9 @@ class NewDagulirController extends Controller
                             return redirect()->route('dagulir.pengajuan.index')->withStatus('Berhasil menyetujui pengajuan.');
                         }
                         else {
-                            return $storeSIPDE;
                             DB::rollBack();
-                            // toast('Your Post as been submited!','success');
-                            alert()->error('Peringatan', $storeSIPDE)->autoClose(5000);
-                            Alert::error('Error','Terjadi kesalahan');
+                            alert()->error('Error API', $storeSIPDE)->autoClose(5000);
+                            Alert::error('Error API', $storeSIPDE);
                             return redirect()->back();
 
                         }
@@ -1787,14 +1785,14 @@ class NewDagulirController extends Controller
                                     // Fail block
                                     if ($survei['message'] != 'Update Status Gagal. Anda tidak bisa mengubah status, karena status saat ini adalah SURVEY') {
                                         DB::rollBack();
-                                        alert()->error('Peringatan', $survei);
+                                        alert()->error('Peringatan(API)', $survei);
                                         return redirect()->back();
                                     }
                                 }
                                 else {
                                     if ($survei != 200) {
                                         DB::rollBack();
-                                        alert()->error('Peringatan', $survei);
+                                        alert()->error('Peringatan(API)', $survei);
                                         return redirect()->back();
                                     }
                                 }
@@ -1809,13 +1807,13 @@ class NewDagulirController extends Controller
                                 if (is_array($analisa)) {
                                     // Fail block
                                     DB::rollBack();
-                                    alert()->error('Peringatan', $analisa);
+                                    alert()->error('Peringatan(API)', $analisa);
                                     return redirect()->back();
                                 }
                                 else {
                                     if ($survei != 200 || $survei != '200') {
                                         DB::rollBack();
-                                        alert()->error('Peringatan', $analisa);
+                                        alert()->error('Peringatan(API)', $analisa);
                                         return redirect()->back();
                                     }
                                 }
@@ -1828,13 +1826,13 @@ class NewDagulirController extends Controller
                                 if (is_array($setuju)) {
                                     // Fail block
                                     DB::rollBack();
-                                    alert()->error('Peringatan', $setuju);
+                                    alert()->error('Peringatan(API)', $setuju);
                                     return redirect()->back();
                                 }
                                 else {
                                     if ($setuju != 200) {
                                         DB::rollBack();
-                                        alert()->error('Peringatan', $setuju);
+                                        alert()->error('Peringatan(API)', $setuju);
                                         return redirect()->back();
                                     }
                                 }
@@ -1897,14 +1895,14 @@ class NewDagulirController extends Controller
                                 // Fail block
                                 if ($survei['message'] != 'Update Status Gagal. Anda tidak bisa mengubah status, karena status saat ini adalah SURVEY') {
                                     DB::rollBack();
-                                    alert()->error('Peringatan survei', $survei);
+                                    alert()->error('Peringatan(API)', $survei);
                                     return redirect()->back();
                                 }
                             }
                             else {
                                 if ($survei != 200) {
                                     DB::rollBack();
-                                    alert()->error('Peringatan survei', $survei);
+                                    alert()->error('Peringatan(API)', $survei);
                                     return redirect()->back()->withError($survei);
                                 }
                             }
@@ -1919,13 +1917,13 @@ class NewDagulirController extends Controller
                             if (is_array($analisa)) {
                                 // Fail block
                                 DB::rollBack();
-                                alert()->error('Peringatananalisa', $analisa);
+                                alert()->error('Peringatan(API)', $analisa);
                                 return redirect()->back();
                             }
                             else {
                                 if ($analisa != 200 || $analisa != '200') {
                                     DB::rollBack();
-                                    alert()->error('Peringatananalisa', $analisa);
+                                    alert()->error('Peringatan(API)', $analisa);
                                     return redirect()->back();
                                 }
                             }
@@ -1938,13 +1936,13 @@ class NewDagulirController extends Controller
                             if (is_array($ditolak)) {
                                 // Fail block
                                 DB::rollBack();
-                                alert()->error('Peringatanditolak', $ditolak);
+                                alert()->error('Peringatan(API)', $ditolak);
                                 return redirect()->back();
                             }
                             else {
                                 if ($ditolak != 200) {
                                     DB::rollBack();
-                                    alert()->error('Peringatanditolak', $ditolak);
+                                    alert()->error('Peringatan(API)', $ditolak);
                                     return redirect()->back();
                                 }
                             }
@@ -1958,7 +1956,7 @@ class NewDagulirController extends Controller
                     }
                     else {
                         DB::rollBack();
-                        alert()->error('Peringatan', $storeSIPDE);
+                        alert()->error('Peringatan(API)', $storeSIPDE);
                         return redirect()->back();
                     }
 
@@ -2298,8 +2296,6 @@ class NewDagulirController extends Controller
         $pdf->save($filePath.'/'.$fileName);
         return view('dagulir.cetak.cetak-surat', $param);
     }
-
-
 
     public function edit($id) {
         /**
