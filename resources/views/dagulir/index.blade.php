@@ -364,10 +364,6 @@
                                                             </li>
                                                         </a>
                                                         @endif
-                                                        {{-- <li class="item-tb-dropdown">
-                                                            <a href="{{route('dagulir.edit', $item->pengajuan->id)}}"
-                                                            class="cursor-pointer">Edit</a>
-                                                        </li> --}}
                                                         <a class="w-full cursor-pointer edit-pengajuan" href="{{ route('dagulir.edit', $item->pengajuan->id) }}">
                                                             <li class="item-tb-dropdown">
                                                                 Edit

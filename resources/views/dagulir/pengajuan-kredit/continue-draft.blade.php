@@ -122,6 +122,7 @@ $dataIndex = match ($skema) {
                                                 </div>
                                             </div>
 
+                                            <div class="form-group" id="space_nib"></div>
                                             <div class="form-group" id="nib">
                                                 <div class="input-box">
                                                     <label for="">NIB</label>
@@ -134,7 +135,7 @@ $dataIndex = match ($skema) {
                                             </div>
                                             <div class="form-group" id="docNIB">
                                                 <div class="input-box">
-                                                    <label for="">{{ $itemNIB->nama }}</label>
+                                                    <label for="">{{ $itemNIB->nama }}</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
                                                     <input type="hidden" name="id_item_file[{{ $itemNIB->id }}]" value="{{ $itemNIB->id }}"
                                                         id="docNIB_id">
                                                     <input type="file" name="upload_file[{{ $itemNIB->id }}]" data-id="{{ temporary_dagulir($duTemp->id, $itemNIB->id)?->id }}"
@@ -164,7 +165,7 @@ $dataIndex = match ($skema) {
 
                                             <div class="form-group" id="docSKU">
                                                 <div class="input-box">
-                                                    <label for="">{{ $itemSKU->nama }}</label>
+                                                    <label for="">{{ $itemSKU->nama }}</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
                                                     <input type="hidden" name="id_item_file[{{ $itemSKU->id }}]" value="{{ $itemSKU->id }}"
                                                         id="docSKU_id">
                                                     <input type="file" name="upload_file[{{ $itemSKU->id }}]" id="surat_keterangan_usaha_file"
@@ -193,7 +194,7 @@ $dataIndex = match ($skema) {
                                             </div>
                                             <div class="form-group" id="docNPWP">
                                                 <div class="input-box">
-                                                    <label for="">{{ $itemNPWP->nama }}</label>
+                                                    <label for="">{{ $itemNPWP->nama }}</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
                                                     <input type="hidden" name="id_item_file[{{ $itemNPWP->id }}]" value="{{ $itemNPWP->id }}"
                                                         id="docNPWP_id">
                                                     <input type="file" name="upload_file[{{ $itemNPWP->id }}]" id="npwp_file" data-id="{{ temporary_dagulir($duTemp->id, $itemNPWP->id)?->id }}"
@@ -303,7 +304,7 @@ $dataIndex = match ($skema) {
                                                 @elseif ($item->opsi_jawaban == 'file')
                                                     <div class="form-group">
                                                         <div class="input-box">
-                                                            <label for="">{{ $item->nama }}</label>
+                                                            <label for="">{{ $item->nama }}</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp, .pdf)</small>
                                                             {{-- <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" --}} {{--
                                                                             id="{{ $idLevelDua }}"> --}}
                                                             <input type="hidden" name="id_item_file[{{ $item->id }}]" value="{{ $item->id }}"
@@ -492,7 +493,7 @@ $dataIndex = match ($skema) {
                                                         @elseif ($itemTiga->opsi_jawaban == 'file')
                                                             <div class="form-group file-wrapper item-{{ $itemTiga->id }}">
                                                                 <div class="input-box">
-                                                                    <label for="">{{ $itemTiga->nama }}</label>
+                                                                    <label for="">{{ $itemTiga->nama }}</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
                                                                     <div class="input-box mb-4">
                                                                         <div class="flex gap-4">
                                                                             <input type="hidden" name="id_item_file[{{ $itemTiga->id }}][]"
@@ -1268,7 +1269,7 @@ $dataIndex = match ($skema) {
                                 </div>
                                 @empty
                                 <div class="form-group file-wrapper item-${valItem.id}">
-                                    <label for="">${valItem.nama}</label>
+                                    <label for="">${valItem.nama}</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
                                     <div class="input-box mb-4">
                                         <div class="flex gap-4">
                                             <input type="hidden" name="id_item_file[${valItem.id}][]" value="${valItem.id}" id="">
@@ -1392,6 +1393,7 @@ $dataIndex = match ($skema) {
         let ijinUsaha = $(this).val();
         $('#npwpsku').hide();
         if (ijinUsaha == 'nib') {
+            $('#space_nib').show();
             $('#npwpsku').hide();
             $('#surat_keterangan_usaha').hide();
             $('#surat_keterangan_usaha_id').attr('disabled', true);
@@ -1428,6 +1430,7 @@ $dataIndex = match ($skema) {
             $('#docNPWP_text').val('');
             $('#docNPWP_upload_file').removeAttr('disabled');
         } else if (ijinUsaha == 'surat_keterangan_usaha') {
+            $('#space_nib').hide();
             $('#npwpsku').show();
             $('#nib').hide();
             $('#nib_id').attr('disabled', true);
@@ -1468,6 +1471,7 @@ $dataIndex = match ($skema) {
             $('#docNPWP_text').val('');
             $('#docNPWP_upload_file').attr('disabled', true);
         } else if (ijinUsaha == 'tidak_ada_legalitas_usaha') {
+            $('#space_nib').hide();
             $('#npwpsku').hide();
             $('#nib').hide();
             $('#nib_id').attr('disabled', true);
@@ -1509,6 +1513,7 @@ $dataIndex = match ($skema) {
             $('#docNPWP_text').val('');
             $('#docNPWP_upload_file').attr('disabled', true);
         } else {
+            $('#space_nib').show();
             $('#npwpsku').hide();
             $('#nib').hide();
             $('#nib_id').attr('disabled', true);
@@ -1522,22 +1527,24 @@ $dataIndex = match ($skema) {
             $('#docNIB_text').val('');
             $('#docNIB_upload_file').attr('disabled', true);
 
+            $('#docSKU').hide();
+
             $('#surat_keterangan_usaha').hide();
             $('#surat_keterangan_usaha_id').attr('disabled', true);
             $('#surat_keterangan_usaha_text').attr('disabled', true);
             $('#surat_keterangan_usaha_text').val('');
             $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
 
-            $('#npwp').show();
-            $('#npwp_id').removeAttr('disabled');
-            $('#npwp_text').removeAttr('disabled');
-            $('#npwp_opsi_jawaban').removeAttr('disabled');
+            $('#npwp').hide();
+            $('#npwp_id').attr('disabled', true);
+            $('#npwp_text').attr('disabled', true);
+            $('#npwp_opsi_jawaban').attr('disabled', true);
 
-            $('#docNPWP').show();
-            $('#docNPWP_id').removeAttr('disabled');
-            $('#docNPWP_text').removeAttr('disabled');
+            $('#docNPWP').hide();
+            $('#docNPWP_id').attr('disabled', true);
+            $('#docNPWP_text').attr('disabled', true);
             $('#docNPWP_text').val('');
-            $('#docNPWP_upload_file').removeAttr('disabled');
+            $('#docNPWP_upload_file').attr('disabled', true);
         }
     });
     // end milih ijin usaha
