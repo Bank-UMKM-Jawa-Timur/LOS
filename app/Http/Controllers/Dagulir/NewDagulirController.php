@@ -2027,6 +2027,7 @@ class NewDagulirController extends Controller
         ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
         ->where('pengajuan.id', $id)
         ->first();
+        // return $dataNasabah;
 
         $param['dataNasabah'] = $dataNasabah;
 
@@ -2037,6 +2038,9 @@ class NewDagulirController extends Controller
             ->where('id', $param['dataUmum']->id_cabang)
             ->first();
 
+        $param['bulan'] = date('m', strtotime($dataNasabah->tanggal));
+        $param['tahun'] = date('Y', strtotime($dataNasabah->tanggal));
+
         $param['tglCetak'] = DB::table('log_cetak_kkb')
         ->where('id_pengajuan', $id)
         ->first();
@@ -2045,6 +2049,7 @@ class NewDagulirController extends Controller
         $kodePenyelia = $dataNasabah->id_penyelia;
         $param['dataPincab'] = User::where('id', $kodePincab)->get();
         $param['dataPenyelia'] = User::where('id', $kodePenyelia)->get();
+        // return ['Pincab' => $param['dataPincab'], 'penyelia' => $param['dataPenyelia']];
 
         $indexBulan = intval(date('m', strtotime($param['tglCetak']->tgl_cetak_pk))) - 1;
         $param['tgl'] = date('d', strtotime($param['tglCetak']->tgl_cetak_pk)) . ' ' . $this->bulan[$indexBulan] . ' ' . date('Y', strtotime($param['tglCetak']->tgl_cetak_pk));
@@ -2085,6 +2090,7 @@ class NewDagulirController extends Controller
         // return $dataNasabah;
         $param['dataNasabah'] = $dataNasabah;
 
+
         $dataUmum =
         DB::table('pengajuan_dagulir')->select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang')
         ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
@@ -2102,6 +2108,10 @@ class NewDagulirController extends Controller
         ->where('id_pengajuan', $id)
         ->first();
         $param['tglCetak'] = $tglCetak;
+
+        $param['bulan'] = date('d', strtotime($dataNasabah->tanggal));
+        $param['tahun'] = date('Y', strtotime($dataNasabah->tanggal));
+
 
         $kodePincab = $dataNasabah->id_pincab;
         $kodePenyelia = $dataNasabah->id_penyelia;
