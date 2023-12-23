@@ -294,4 +294,5 @@ class DashboardRepository
             'data_terendah' => $dataTerendah
         ];
     }
+
 }

@@ -89,13 +89,26 @@
                 {{ $dataNasabah->nik }}
             </td>
         </tr>
+        @php
+        $stp = "";
+            if ($dataNasabah->status_pernikahan == 1) {
+                $stp = "Belum Menikah";
+            } else if ($dataNasabah->status_pernikahan == 2) {
+                $stp = "Menikah";
+            } else if ($dataNasabah->status_pernikahan == 3) {
+                $stp = "Duda";
+            } else if ($dataNasabah->status_pernikahan == 4) {
+                $stp = "Janda";
+            }
+
+        @endphp
         <tr>
             <td style="width: 40%" >
                 <label>Tempat, Tanggal Lahir / Status</label>
             </td>
             <td>:</td>
             <td style="padding-left: 17px">
-                {{ $dataNasabah->tempat_lahir }}, {{ date_format(date_create($dataNasabah->tanggal_lahir), 'd/m/Y') }} / {{ $dataNasabah->status }}</span>
+                {{ $dataNasabah->tempat_lahir }}, {{ date_format(date_create($dataNasabah->tanggal_lahir), 'd/m/Y') }} / {{ $stp }}</span>
             </td>
         </tr>
         <tr>
@@ -230,6 +243,14 @@
                                     <td style="width: 40%; padding-left: 33px">{{  $item->nama }}</td>
                                     <td>:</td>
                                     <td>{{ $itemTextDua->opsi_text }}%</td>
+                                </tr>
+                            @elseif($item->is_rupiah == 1)
+                                <tr>
+                                    <td style="width: 40%; padding-left: 33px">{{  $item->nama }}</td>
+                                    <td>:</td>
+                                    <td>
+                                        {{ "Rp " . number_format($itemTextDua->opsi_text,2,',','.') }}
+                                    </td>
                                 </tr>
                             @else
                                 @if ($item->nama == 'NPWP')

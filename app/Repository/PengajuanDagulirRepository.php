@@ -151,45 +151,40 @@ class PengajuanDagulirRepository
                 'pengajuan' => function ($query) {
                     $query->with('komentar');
                 }
-            ])->when($search, function ($query, $search) {
-                $query->where('kode_pendaftaran', 'like', "%$search%")
-                    ->orWhere('nama', 'like', "%$search%");
-            })
-                ->whereHas('pengajuan', function ($query) use ($id_user, $filter, $cabang) {
-                    // $query->where('pengajuan.id_pincab', $id_user)
-                    $query->when(isset($filter['tAwal']) && isset($filter['tAkhir']), function ($query) use ($filter) {
-                        return $query->whereBetween('pengajuan.tanggal', [$filter['tAwal'], $filter['tAkhir']]);
-                    })
-                        ->when(isset($filter['pss']), function ($query) use ($filter) {
-                        return $query->where('pengajuan.posisi', $filter['pss']);
-                    })
-                        ->when(isset($filter['score']), function ($query) use ($filter) {
-                        return $query->where(function ($query2) use ($filter) {
-                            $query2->whereRaw('FLOOR(pengajuan.average_by_sistem) = ?', $filter['score'])
-                                ->orWhereRaw('FLOOR(pengajuan.average_by_penyelia) = ?', $filter['score']);
-                        });
-                    })
-                        ->when(isset($filter['sts']), function ($query) use ($filter) {
-                        if ($filter['sts'] == 'Selesai' || $filter['sts'] == 'Ditolak') {
-                            return $query->where('pengajuan.posisi', $filter['sts']);
-                        } else {
-                            return $query->where('pengajuan.posisi', '<>', 'Selesai')
-                                ->where('pengajuan.posisi', '<>', 'Ditolak');
-                        }
+            ])
+            ->whereHas('pengajuan', function ($query) use ($id_user, $filter, $cabang) {
+                $query->when(isset($filter['tAwal']) && isset($filter['tAkhir']), function ($query) use ($filter) {
+                    return $query->whereBetween('pengajuan.tanggal', [$filter['tAwal'], $filter['tAkhir']]);
+                })
+                ->when(isset($filter['pss']), function ($query) use ($filter) {
+                    return $query->where('pengajuan.posisi', $filter['pss']);
+                })
+                ->when(isset($filter['score']), function ($query) use ($filter) {
+                    return $query->where(function ($query2) use ($filter) {
+                        $query2->whereRaw('FLOOR(pengajuan.average_by_sistem) = ?', $filter['score'])
+                            ->orWhereRaw('FLOOR(pengajuan.average_by_penyelia) = ?', $filter['score']);
                     });
                 })
-                ->where('pengajuan_dagulir.from_apps', $from_apps)
-                ->when($search, function ($query, $search) use ($from_apps) {
-                    $query->where(function ($query) use ($search) {
-                        $query->where('kode_pendaftaran', 'like', "%$search%")
-                            ->orWhere('nama', 'like', "%$search%");
-                    })
-                    ->where('pengajuan_dagulir.from_apps', $from_apps);
+                ->when(isset($filter['sts']), function ($query) use ($filter) {
+                    if ($filter['sts'] == 'Selesai' || $filter['sts'] == 'Ditolak') {
+                        return $query->where('pengajuan.posisi', $filter['sts']);
+                    } else {
+                        return $query->where('pengajuan.posisi', '<>', 'Selesai')
+                            ->where('pengajuan.posisi', '<>', 'Ditolak');
+                    }
+                });
+            })
+            ->where('pengajuan_dagulir.from_apps', $from_apps)
+            ->when($search, function ($query, $search) use ($from_apps) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('kode_pendaftaran', 'like', "%$search%")
+                        ->orWhere('nama', 'like', "%$search%");
                 })
-                ->latest()
-                ->select('pengajuan_dagulir.*')
-                ->where('pengajuan_dagulir.from_apps', $from_apps)
-                ->paginate($limit);
+                ->where('pengajuan_dagulir.from_apps', $from_apps);
+            })
+            ->latest()
+            ->select('pengajuan_dagulir.*')
+            ->paginate($limit);
                 // ->when($search, function ($query, $search) {
                 //     $query->where('kode_pendaftaran', 'like', "%$search%")
                 //         ->orWhere('nama', 'like', "%$search%");
