@@ -766,7 +766,7 @@
                                                                             src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
                                                                             width="100%" height="800px"></iframe>
                                                                 @else
-                                                                    <img src="{{ asset('..') . '/up load/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                    <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
                                                                         alt="" width="800px">
                                                                 @endif
                                                             @elseif ($item->opsi_jawaban == 'number' && $item->id != 143)
@@ -1072,7 +1072,7 @@
                                                                                     src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}"
                                                                                     width="100%" height="800px"></iframe>
                                                                             @else
-                                                                                <img  class="border-2 border-gray-500"" class="object-contain" src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}"
+                                                                                <img  class="border-2 border-gray-500" class="object-contain" src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}"
                                                                                     alt=""  width="100%" height="800px">
                                                                             @endif
                                                                             {{-- Rupiah data tiga --}}
@@ -1171,15 +1171,17 @@
                                                 @endforeach --}}
                                                 @foreach ($dataOptionTiga as $itemOptionTiga)
                                                     @if ($itemOptionTiga->option == '-')
-                                                        <div class="form-group-1 col-span-2 pl-2">
-                                                            <div>
-                                                                <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
-                                                                    <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
-                                                                        {{$itemTiga->nama}} :
-                                                                    </h2>
+                                                        @if ($itemTiga->id != 110)
+                                                            <div class="form-group-1 col-span-2 pl-2">
+                                                                <div>
+                                                                    <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
+                                                                        <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
+                                                                            {{$itemTiga->nama}} :
+                                                                        </h2>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                        @endif
                                                     @endif
                                                 @endforeach
 
@@ -1778,6 +1780,14 @@
                         <div class="pb-10 space-y-3">
                             <h2 class="text-4xl font-bold tracking-tighter text-theme-primary">Pendapat dan Usulan</h2>
                         </div>
+                        @php
+                            $dataKomentar = \App\Models\KomentarModel::select('id','id_pengajuan','komentar_pincab','id_pincab','komentar_staff','id_staff','komentar_penyelia','id_penyelia')
+                                    ->where('id_pengajuan',$dataUmum->id)
+                                    ->first();
+                            $dataPlafon = \App\Models\PlafonUsulan::select('id','id_pengajuan','plafon_usulan_penyelia','jangka_waktu_usulan_penyelia')
+                                    ->where('id_pengajuan',$dataUmum->id)
+                                    ->first();
+                        @endphp
                         <div class="self-start bg-white w-full border">
                             {{-- <div class="p-5 border-b">
                                 <h2 class="font-bold text-lg tracking-tighter">
@@ -1798,17 +1808,18 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        {{-- UWWW --}}
                                         <div class="form-group-2 pl-2">
                                             <div class="input-box">
                                                 <label for="">Plafon Usulan Penyelia</label>
-                                                <input type="text" name="plafon_usulan_penyelia" class="form-input rupiah" value="">
+                                                <input type="text" name="plafon_usulan_penyelia" class="form-input rupiah" value="{{ $dataPlafon->plafon_usulan_penyelia != null ? number_format($dataPlafon->plafon_usulan_penyelia, 0, ',', '.') : '' }}">
                                             </div>
 
                                             <div class="input-box">
                                                 <label for="">Jangka Waktu Usulan Penyelia</label>
                                                 <div class="flex items-center">
                                                     <div class="flex-1">
-                                                        <input type="number" name="jangka_waktu_usulan_penyelia" class="form-input"  value="">
+                                                        <input type="number" name="jangka_waktu_usulan_penyelia" class="form-input"  value="{{ $dataPlafon->jangka_waktu_usulan_penyelia != null ? $dataPlafon->jangka_waktu_usulan_penyelia : '' }}">
                                                     </div>
                                                     <div class="flex-shrink-0 mt-2.5rem">
                                                         <span class="form-input bg-gray-100">Bulan</span>
@@ -1820,10 +1831,10 @@
                                             <label for="">Pendapat dan Usulan Penyelia</label>
                                             <textarea name="komentar_penyelia_keseluruhan"
                                                 class="form-input @error('komentar_penyelia_keseluruhan') is-invalid @enderror" id="komentar_penyelia_keseluruhan" cols="30"
-                                                rows="4" placeholder="Pendapat dan Usulan Penyelia"></textarea>
+                                                rows="4" placeholder="Pendapat dan Usulan Penyelia">{{ $dataKomentar->komentar_penyelia != null ? $dataKomentar->komentar_penyelia : '' }}</textarea>
                                             @error('komentar_penyelia_keseluruhan')
                                                 <div class="invalid-feedback">
-                                                    {{ $message }}
+                                                    {{ $message }} 
                                                 </div>
                                             @enderror
                                         </div>
