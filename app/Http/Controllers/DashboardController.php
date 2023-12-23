@@ -89,7 +89,8 @@ class DashboardController extends Controller
         $param['dataYear'] = $this->repo->getDataYear();
         $param['dataPosisi'] = $this->repo->getDataPosisi($request);
         $param['dataSkema'] = $this->repo->getDataSkema($request);
-        // return $param['dataYear'];
+        $param['dataRangking'] = $this->repo->getRangking($request);
+
         return view('dashboard', $param);
     }
 
