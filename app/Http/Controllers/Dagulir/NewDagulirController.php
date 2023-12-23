@@ -2059,7 +2059,10 @@ class NewDagulirController extends Controller
         ->where('id_jawaban', 140)
         ->first() ?? '0';
 
-        return view('dagulir.cetak.cetak-pk', $param);
+        $pdf = PDF::loadView('dagulir.cetak.cetak-pk', $param);
+
+        return $pdf->download('PK-' . $dataNasabah->nama . '.pdf');
+        // return view('dagulir.cetak.cetak-pk', $param);
     }
     public function cetakSPPk($id)
     {
@@ -2126,7 +2129,10 @@ class NewDagulirController extends Controller
             ->where('id_jawaban', 140)
             ->first() ?? '0';
 
-        return view('dagulir.cetak.cetak-sppk', $param);
+        $pdf = PDF::loadView('dagulir.cetak.cetak-sppk', $param);
+
+        return $pdf->download('SPPK-' . $dataNasabah->nama . '.pdf');
+        // return view('dagulir.cetak.cetak-sppk', $param);
     }
 
     public function kembalikanDataKePosisiSebelumnya(Request $request){
