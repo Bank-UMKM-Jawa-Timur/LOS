@@ -1785,24 +1785,26 @@ class NewDagulirController extends Controller
                         $delay = 1500000; // 1.5 sec
                         if ($kode_pendaftaran) {
                             // HIT update status survei endpoint dagulir
-                            $survei = $this->updateStatus($kode_pendaftaran, 1);
-                            if ($currentPosisi == 'Pincab') {
-                                if (is_array($survei)) {
-                                    // Fail block
-                                    if ($survei['message'] != 'Update Status Gagal. Anda tidak bisa mengubah status, karena status saat ini adalah SURVEY') {
-                                        DB::rollBack();
-                                        alert()->error('Peringatan(API)', $survei);
-                                        return redirect()->back();
+                            if ($nasabah->status != 1) {
+                                $survei = $this->updateStatus($kode_pendaftaran, 1);
+                                if ($currentPosisi == 'Pincab') {
+                                    if (is_array($survei)) {
+                                        // Fail block
+                                        if ($survei['message'] != 'Update Status Gagal. Anda tidak bisa mengubah status, karena status saat ini adalah SURVEY') {
+                                            DB::rollBack();
+                                            alert()->error('Peringatan(API)', $survei);
+                                            return redirect()->back();
+                                        }
                                     }
-                                }
-                                else {
-                                    if ($survei != 200) {
-                                        DB::rollBack();
-                                        alert()->error('Peringatan(API)', $survei);
-                                        return redirect()->back();
+                                    else {
+                                        if ($survei != 200) {
+                                            DB::rollBack();
+                                            alert()->error('Peringatan(API)', $survei);
+                                            return redirect()->back();
+                                        }
                                     }
+                                    usleep($delay);
                                 }
-                                usleep($delay);
                             }
 
                             // HIT update status analisa endpoint dagulir
@@ -1871,7 +1873,7 @@ class NewDagulirController extends Controller
         }
     }
 
-    public function decPengajuan($id)
+    public function decPengajuan($id, Request $request)
     {
         ini_set('max_execution_time', 120);
         DB::beginTransaction();
@@ -1885,7 +1887,18 @@ class NewDagulirController extends Controller
                     $pengajuan->tanggal_review_pincab = date(now());
                     $pengajuan->update();
 
-                    $nasabah = PengajuanDagulir::select('nama')->find($pengajuan->dagulir_id);
+                    $plafonUsulan = PlafonUsulan::where('id_pengajuan', $id)->first();
+                    $plafon_acc = intval(str_replace('.','', $request->get('nominal_disetujui')));
+                    $tenor_acc = intval($request->get('jangka_waktu_disetujui'));
+
+                    if ($plafonUsulan) {
+                        $plafonUsulan->plafon_usulan_pincab = $plafon_acc;
+                        $plafonUsulan->jangka_waktu_usulan_pincab = $tenor_acc;
+                        $plafonUsulan->updated_at = date('Y-m-d H:i:s');
+                        $plafonUsulan->update();
+                    }
+
+                    $nasabah = PengajuanDagulir::select('kode_pendaftaran', 'nama', 'status')->find($pengajuan->dagulir_id);
                     if ($nasabah->kode_pendaftaran) {
                         $kode_pendaftaran = $nasabah->kode_pendaftaran;
                         $storeSIPDE = 'success';
@@ -1901,24 +1914,26 @@ class NewDagulirController extends Controller
 
                     if ($kode_pendaftaran) {
                         // HIT update status survei endpoint dagulir
-                        $survei = $this->updateStatus($kode_pendaftaran, 1);
-                        if ($currentPosisi == 'Pincab') {
-                            if (is_array($survei)) {
-                                // Fail block
-                                if ($survei['message'] != 'Update Status Gagal. Anda tidak bisa mengubah status, karena status saat ini adalah SURVEY') {
-                                    DB::rollBack();
-                                    alert()->error('Peringatan(API)', $survei);
-                                    return redirect()->back();
+                        if ($nasabah->status != 1) {
+                            $survei = $this->updateStatus($kode_pendaftaran, 1);
+                            if ($currentPosisi == 'Pincab') {
+                                if (is_array($survei)) {
+                                    // Fail block
+                                    if ($survei['message'] != 'Update Status Gagal. Anda tidak bisa mengubah status, karena status saat ini adalah SURVEY') {
+                                        DB::rollBack();
+                                        alert()->error('Peringatan(API)', $survei);
+                                        return redirect()->back();
+                                    }
                                 }
-                            }
-                            else {
-                                if ($survei != 200) {
-                                    DB::rollBack();
-                                    alert()->error('Peringatan(API)', $survei);
-                                    return redirect()->back()->withError($survei);
+                                else {
+                                    if ($survei != 200) {
+                                        DB::rollBack();
+                                        alert()->error('Peringatan(API)', $survei);
+                                        return redirect()->back()->withError($survei);
+                                    }
                                 }
+                                usleep($delay);
                             }
-                            usleep($delay);
                         }
 
                         // HIT update status analisa endpoint dagulir
@@ -2012,6 +2027,7 @@ class NewDagulirController extends Controller
         ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
         ->where('pengajuan.id', $id)
         ->first();
+        // return $dataNasabah;
 
         $param['dataNasabah'] = $dataNasabah;
 
@@ -2022,6 +2038,9 @@ class NewDagulirController extends Controller
             ->where('id', $param['dataUmum']->id_cabang)
             ->first();
 
+        $param['bulan'] = date('m', strtotime($dataNasabah->tanggal));
+        $param['tahun'] = date('Y', strtotime($dataNasabah->tanggal));
+
         $param['tglCetak'] = DB::table('log_cetak_kkb')
         ->where('id_pengajuan', $id)
         ->first();
@@ -2030,6 +2049,7 @@ class NewDagulirController extends Controller
         $kodePenyelia = $dataNasabah->id_penyelia;
         $param['dataPincab'] = User::where('id', $kodePincab)->get();
         $param['dataPenyelia'] = User::where('id', $kodePenyelia)->get();
+        // return ['Pincab' => $param['dataPincab'], 'penyelia' => $param['dataPenyelia']];
 
         $indexBulan = intval(date('m', strtotime($param['tglCetak']->tgl_cetak_pk))) - 1;
         $param['tgl'] = date('d', strtotime($param['tglCetak']->tgl_cetak_pk)) . ' ' . $this->bulan[$indexBulan] . ' ' . date('Y', strtotime($param['tglCetak']->tgl_cetak_pk));
@@ -2070,6 +2090,7 @@ class NewDagulirController extends Controller
         // return $dataNasabah;
         $param['dataNasabah'] = $dataNasabah;
 
+
         $dataUmum =
         DB::table('pengajuan_dagulir')->select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang')
         ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
@@ -2087,6 +2108,10 @@ class NewDagulirController extends Controller
         ->where('id_pengajuan', $id)
         ->first();
         $param['tglCetak'] = $tglCetak;
+
+        $param['bulan'] = date('d', strtotime($dataNasabah->tanggal));
+        $param['tahun'] = date('Y', strtotime($dataNasabah->tanggal));
+
 
         $kodePincab = $dataNasabah->id_pincab;
         $kodePenyelia = $dataNasabah->id_penyelia;
@@ -2208,7 +2233,9 @@ class NewDagulirController extends Controller
                         ->update([
                             'pk' => $filenamePK,
                     ]);
-                    $realisasi = $this->updateStatus($kode_pendaftaran, 5);
+                    $plafon = PlafonUsulan::where('id_pengajuan',$id)->first();
+                    $pengajuan = PengajuanModel::with('dagulir')->find($id);
+                    $realisasi = $this->updateStatus($kode_pendaftaran, 5, null, $plafon->jangka_waktu_usulan_pincab, $plafon->plafon_usulan_pincab);
 
                     if (is_array($realisasi)) {
                         DB::rollBack();
@@ -2227,8 +2254,6 @@ class NewDagulirController extends Controller
                                     if (!is_array($update_selesai)) {
                                         if ($update_selesai == 200) {
                                             // insert to dd loan
-                                            $plafon = PlafonUsulan::where('id_pengajuan',$id)->first();
-                                            $pengajuan = PengajuanModel::with('dagulir')->find($id);
                                             if ($pengajuan && $plafon) {
                                                 $loan = new MasterDDLoan;
                                                 $loan->id_cabang = $request->get('cabang');

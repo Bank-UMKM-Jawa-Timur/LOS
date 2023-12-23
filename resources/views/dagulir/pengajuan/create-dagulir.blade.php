@@ -138,7 +138,7 @@
         </div>
         <div class="form-group-2">
             <div class="input-box">
-                <label for="ktp_nasabah" id="foto-nasabah">Foto Nasabah</label><small class="text-red-500 font-bold">*</small>
+                <label for="ktp_nasabah" id="foto-nasabah">Foto Nasabah</label><small class="text-red-500 font-bold">* (.jpg, .jpeg, .png, .webp)</small>
                 <input type="file" accept="image/png, image/gif, image/jpeg" name="foto_nasabah" class="form-input limit-size-2 only-image" />
                 <span class="error-limit text-red-500" style="display: none; margin-top: 0;">
                     Maximum upload file size is 2 MB
@@ -166,7 +166,7 @@
                 />
             </div>
             <div class="input-box" id="ktp-nasabah">
-                <label for="ktp_nasabah" id="label-ktp-nasabah">Foto KTP Nasabah</label><small class="text-red-500 font-bold">*</small>
+                <label for="ktp_nasabah" id="label-ktp-nasabah">Foto KTP Nasabah</label><small class="text-red-500 font-bold">* (.jpg, .jpeg, .png, .webp)</small>
                 <div class="flex gap-4">
                     <input type="file" name="ktp_nasabah" class="form-input limit-size-2 only-image" accept="image/png, image/gif, image/jpeg" />
                 </div>
@@ -185,7 +185,7 @@
                 />
             </div>
             <div class="input-box hidden" id="ktp-pasangan">
-                <label for="ktp_pasangan" id="">Foto KTP Pasangan</label><small class="text-red-500 font-bold">*</small>
+                <label for="ktp_pasangan" id="">Foto KTP Pasangan</label><small class="text-red-500 font-bold">* (.jpg, .jpeg, .png, .webp)</small>
                 <div class="flex gap-4">
                     <input type="file" name="ktp_pasangan" class="form-input limit-size-2 only-image" accept="image/png, image/gif, image/jpeg"/>
                 </div>
@@ -300,7 +300,7 @@
                 @endif
             </div>
             <div class="input-box">
-                <label for="">{{ $itemP->nama }}</label><small class="text-red-500 font-bold">*</small>
+                <label for="">{{ $itemP->nama }}</label><small class="text-red-500 font-bold">* (Pdf)</small>
                 <input type="hidden" name="id_item_file[{{ $itemP->id }}]" value="{{ $itemP->id }}" id="">
                 <input type="file" accept="application/pdf" name="upload_file[{{ $itemP->id }}]" id="file_slik" data-id=""
                     placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-input limit-size-slik only-pdf">

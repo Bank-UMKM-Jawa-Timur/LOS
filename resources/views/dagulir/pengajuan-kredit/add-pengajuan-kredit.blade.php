@@ -135,7 +135,7 @@ $dataIndex = match ($skema) {
                                             </div>
                                             <div class="form-group" id="docNIB">
                                                 <div class="input-box">
-                                                    <label for="">{{ $itemNIB->nama }}</label>
+                                                    <label for="">{{ $itemNIB->nama }} <small class="text-red-500 font-bold">(.jpg, .jpeg, .png, .webp)</small></label>
                                                     <input type="hidden" name="id_item_file[{{ $itemNIB->id }}]" value="{{ $itemNIB->id }}"
                                                         id="docNIB_id">
                                                     <input type="file" name="upload_file[{{ $itemNIB->id }}]" data-id=""
@@ -167,7 +167,7 @@ $dataIndex = match ($skema) {
 
                                             <div class="form-group" id="docSKU">
                                                 <div class="input-box">
-                                                    <label for="">{{ $itemSKU->nama }}</label>
+                                                    <label for="">{{ $itemSKU->nama }} <small class="text-red-500 font-bold">(.jpg, .jpeg, .png, .webp)</small></label>
                                                     <input type="hidden" name="id_item_file[{{ $itemSKU->id }}]" value="{{ $itemSKU->id }}"
                                                         id="docSKU_id">
                                                     <input type="file" name="upload_file[{{ $itemSKU->id }}]" id="surat_keterangan_usaha_file"
@@ -197,7 +197,7 @@ $dataIndex = match ($skema) {
                                             </div>
                                             <div class="form-group" id="docNPWP">
                                                 <div class="input-box">
-                                                    <label for="">{{ $itemNPWP->nama }}</label>
+                                                    <label for="">{{ $itemNPWP->nama }} <small class="text-red-500 font-bold">(.jpg, .jpeg, .png, .webp)</small></label>
                                                     <input type="hidden" name="id_item_file[{{ $itemNPWP->id }}]" value="{{ $itemNPWP->id }}"
                                                         id="docNPWP_id">
                                                     <input type="file" name="upload_file[{{ $itemNPWP->id }}]" id="npwp_file" data-id=""
@@ -308,10 +308,10 @@ $dataIndex = match ($skema) {
                                                 @elseif ($item->opsi_jawaban == 'file')
                                                     <div class="form-group">
                                                         <div class="input-box">
-                                                            <label for="">{{ $item->nama }}</label><small class="text-red-500 font-bold">*</small>
+                                                            <label for="">{{ $item->nama }}</label><small class="text-red-500 font-bold">* (.jpg, .jpeg, .png, .webp, .pdf)</small>
                                                             <input type="hidden" name="id_item_file[{{ $item->id }}]" value="{{ $item->id }}"
                                                                 id="">
-                                                            <input type="file" name="upload_file[{{ $item->id }}]" id="{{ $idLevelDua }}"
+                                                            <input type="file" name="upload_file[{{ $item->id }}] image-pdf" id="{{ $idLevelDua }}"
                                                                 data-id="" placeholder="Masukkan informasi {{ $item->nama }}"
                                                                 class="form-input limit-size {{$item->only_accept}}"
                                                                 >
@@ -496,7 +496,7 @@ $dataIndex = match ($skema) {
                                                         @elseif ($itemTiga->opsi_jawaban == 'file')
                                                             <div class="form-group file-wrapper item-{{ $itemTiga->id }}">
                                                                 <div class="input-box">
-                                                                    <label for="">{{ $itemTiga->nama }}</label><small class="text-red-500 font-bold">*</small>
+                                                                    <label for="">{{ $itemTiga->nama }}</label><small class="text-red-500 font-bold">* (.jpg, .jpeg, .png, .webp)</small>
                                                                     <div class="input-box mb-4">
                                                                         <div class="flex gap-4">
                                                                             <input type="hidden" name="id_item_file[{{ $itemTiga->id }}][]"
@@ -1986,7 +1986,7 @@ $dataIndex = match ($skema) {
                             if (valItem.nama == 'Foto') {
                                 $('#bukti_pemilikan_jaminan_tambahan').append(`
                                     <div class="form-group input-box file-wrapper item-${valItem.id}">
-                                        <label for="">${valItem.nama}</label>
+                                        <label for="">${valItem.nama}</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
                                         <div class="input-box mb-4">
                                             <div class="flex gap-4">
                                                 <input type="hidden" name="id_item_file[${valItem.id}][]"

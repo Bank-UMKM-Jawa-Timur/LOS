@@ -1,3 +1,4 @@
+@include('dagulir.pengajuan-kredit.modal.loading-post-review-penyelia')
 @extends('layouts.tailwind-template')
 
 @section('modal')
@@ -648,10 +649,12 @@
                                 {{-- SLIK --}}
                                 <hr>
                                 <div class="flex justify-between">
-                                    <button type="button"
-                                        class="px-5 py-2 border rounded bg-white text-gray-500">
-                                        Kembali
-                                    </button>
+                                    <a href="{{route('dagulir.pengajuan.index')}}">
+                                        <button type="button"
+                                            class="px-5 py-2 border rounded bg-white text-gray-500">
+                                            Kembali
+                                        </button>
+                                    </a>
                                     <button type="button"
                                         class="px-5 py-2 next-tab border rounded bg-theme-primary text-white">
                                         Selanjutnya
@@ -1801,11 +1804,12 @@
                                         </div>
                                     @endif
                                     <div class="flex justify-between">
-                                        <button type="button"
-                                          class="px-5 py-2 border rounded bg-white text-gray-500"
-                                        >
-                                          Kembali
-                                        </button>
+                                        <a href="{{route('dagulir.pengajuan.index')}}">
+                                            <button type="button"
+                                            class="px-5 py-2 border rounded bg-white text-gray-500">
+                                            Kembali
+                                            </button>
+                                        </a>
                                         <div>
                                           <button type="button"
                                           class="px-5 prev-tab py-2 border rounded bg-theme-secondary text-white"
@@ -1860,14 +1864,14 @@
                                         <div class="form-group-2 pl-2">
                                             <div class="input-box">
                                                 <label for="">Plafon Usulan Penyelia</label>
-                                                <input type="text" name="plafon_usulan_penyelia" class="form-input rupiah" value="{{ $dataPlafon->plafon_usulan_penyelia != null ? number_format($dataPlafon->plafon_usulan_penyelia, 0, ',', '.') : '' }}">
+                                                <input type="text" name="plafon_usulan_penyelia" class="form-input rupiah" value="{{ $dataPlafon?->plafon_usulan_penyelia != null ? number_format($dataPlafon?->plafon_usulan_penyelia, 0, ',', '.') : '' }}">
                                             </div>
 
                                             <div class="input-box">
                                                 <label for="">Jangka Waktu Usulan Penyelia</label>
                                                 <div class="flex items-center">
                                                     <div class="flex-1">
-                                                        <input type="number" name="jangka_waktu_usulan_penyelia" class="form-input"  value="{{ $dataPlafon->jangka_waktu_usulan_penyelia != null ? $dataPlafon->jangka_waktu_usulan_penyelia : '' }}">
+                                                        <input type="number" name="jangka_waktu_usulan_penyelia" class="form-input"  value="{{ $dataPlafon?->jangka_waktu_usulan_penyelia != null ? $dataPlafon?->jangka_waktu_usulan_penyelia : '' }}">
                                                     </div>
                                                     <div class="flex-shrink-0 mt-2.5rem">
                                                         <span class="form-input bg-gray-100">Bulan</span>
@@ -1879,7 +1883,7 @@
                                             <label for="">Pendapat dan Usulan Penyelia</label>
                                             <textarea name="komentar_penyelia_keseluruhan"
                                                 class="form-input @error('komentar_penyelia_keseluruhan') is-invalid @enderror" id="komentar_penyelia_keseluruhan" cols="30"
-                                                rows="4" placeholder="Pendapat dan Usulan Penyelia">{{ $dataKomentar->komentar_penyelia != null ? $dataKomentar->komentar_penyelia : '' }}</textarea>
+                                                rows="4" placeholder="Pendapat dan Usulan Penyelia">{{ $dataKomentar?->komentar_penyelia != null ? $dataKomentar?->komentar_penyelia : '' }}</textarea>
                                             @error('komentar_penyelia_keseluruhan')
                                                 <div class="invalid-feedback">
                                                     {{ $message }} 
@@ -2121,9 +2125,11 @@
                                 </div>
                                 @endif
                                 <div class="flex justify-between">
-                                    <button class="px-5 py-2 border rounded bg-white text-gray-500">
-                                        Kembali
-                                    </button>
+                                    <a href="{{route('dagulir.pengajuan.index')}}">
+                                        <button type="button" class="px-5 py-2 border rounded bg-white text-gray-500">
+                                            Kembali
+                                        </button>
+                                    </a>
                                     <div>
                                         <button class="px-5 py-2 border rounded bg-theme-secondary text-white">
                                             Sebelumnya
@@ -2210,6 +2216,9 @@
                             })
                             e.preventDefault()
                         }
+                        else{
+                            $("#preload-data-review-penyelia").removeClass("hidden");
+                        }
                     }
                 }
             }
@@ -2238,6 +2247,10 @@
                         })
                         e.preventDefault()
                     }
+                    else
+                    {
+                        $("#preload-data-review-penyelia").removeClass("hidden");
+                    }
                 }
             }
             else if (role == 'PBP') {
@@ -2262,6 +2275,9 @@
                         })
                         e.preventDefault()
                     }
+                    else{
+                            $("#preload-data-review-penyelia").removeClass("hidden");
+                        }
                 }
             }
             else {
@@ -2421,6 +2437,10 @@
                 text: "Field Pendapat dan usulan harus diisi"
             })
             e.preventDefault()
+        }
+        else
+        {
+            $("#preload-data-review-penyelia").removeClass("hidden");
         }
     })
     // End Validation
