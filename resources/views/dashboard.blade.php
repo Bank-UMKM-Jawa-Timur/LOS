@@ -148,148 +148,40 @@
                 <div class="body-card w-full box">
                     <div class="lg:flex grid grid-cols-1 gap-5 w-full mt-5 box-border">
                         <div class="card-wrapper space-y-2 w-full box-border">
-                            <div class="card border flex gap-4 p-2 w-full">
-                                <button class="px-5 py-2 rounded bg-green-400">
-                                    <h2 class="text-lg font-bold text-white">1</h2>
-                                </button>
-                                <div class="content w-full">
-                                    <h2 class="text-lg font-semibold text-theme-secondary">
-                                        Surabaya
-                                    </h2>
-                                    <p class="text-sm font-semibold text-gray-400">001</p>
+                            @foreach ($dataRangking['data_tertinggi'] as $item)
+                                <div class="card border flex gap-4 p-2 w-full">
+                                    <button class="px-5 py-2 rounded bg-green-400">
+                                        <h2 class="text-lg font-bold text-white">1</h2>
+                                    </button>
+                                    <div class="content w-full">
+                                        <h2 class="text-lg font-semibold text-theme-secondary">
+                                            {{ $item->cabang }}
+                                        </h2>
+                                        <p class="text-sm font-semibold text-gray-400">{{ $item->kode_cabang }}</p>
+                                    </div>
+                                    <div class="total pr-3">
+                                        <h2 class="text-theme-secondary font-bold mt-3">{{ $item->total }}</h2>
+                                    </div>
                                 </div>
-                                <div class="total pr-3">
-                                    <h2 class="text-theme-secondary font-bold mt-3">24</h2>
-                                </div>
-                            </div>
-                            <div class="card border flex gap-4 p-2 w-full">
-                                <button class="px-5 py-2 rounded bg-green-400">
-                                    <h2 class="text-lg font-bold text-white">2</h2>
-                                </button>
-                                <div class="content w-full">
-                                    <h2 class="text-lg font-semibold text-theme-secondary">
-                                        Malang
-                                    </h2>
-                                    <p class="text-sm font-semibold text-gray-400">008</p>
-                                </div>
-                                <div class="total pr-3">
-                                    <h2 class="text-theme-secondary font-bold mt-3">221</h2>
-                                </div>
-                            </div>
-                            <div class="card border flex gap-4 p-2 w-full">
-                                <button class="px-5 py-2 rounded bg-green-400">
-                                    <h2 class="text-lg font-bold text-white">3</h2>
-                                </button>
-                                <div class="content w-full">
-                                    <h2 class="text-lg font-semibold text-theme-secondary">
-                                        Pemekasan
-                                    </h2>
-                                    <p class="text-sm font-semibold text-gray-400">002</p>
-                                </div>
-                                <div class="total pr-3">
-                                    <h2 class="text-theme-secondary font-bold mt-3">200</h2>
-                                </div>
-                            </div>
-                            <div class="card border flex gap-4 p-2 w-full">
-                                <button class="px-5 py-2 rounded bg-green-400">
-                                    <h2 class="text-lg font-bold text-white">4</h2>
-                                </button>
-                                <div class="content w-full">
-                                    <h2 class="text-lg font-semibold text-theme-secondary">
-                                        Banyuwangi
-                                    </h2>
-                                    <p class="text-sm font-semibold text-gray-400">004</p>
-                                </div>
-                                <div class="total pr-3">
-                                    <h2 class="text-theme-secondary font-bold mt-3">120</h2>
-                                </div>
-                            </div>
-                            <div class="card border flex gap-4 p-2 w-full">
-                                <button class="px-5 py-2 rounded bg-green-400">
-                                    <h2 class="text-lg font-bold text-white">5</h2>
-                                </button>
-                                <div class="content w-full">
-                                    <h2 class="text-lg font-semibold text-theme-secondary">
-                                        Blitar
-                                    </h2>
-                                    <p class="text-sm font-semibold text-gray-400">010</p>
-                                </div>
-                                <div class="total pr-3">
-                                    <h2 class="text-theme-secondary font-bold mt-3">80</h2>
-                                </div>
-                            </div>
+                            @endforeach
                         </div>
                         <div class="card-wrapper w-full space-y-2 box-border">
-                            <div class="card border flex gap-4 p-2 w-full box-border">
-                                <button class="px-5 py-2 rounded bg-red-500">
-                                    <h2 class="text-lg font-bold text-white">1</h2>
-                                </button>
-                                <div class="content w-full">
-                                    <h2 class="text-lg font-semibold text-theme-secondary">
-                                        Jember
-                                    </h2>
-                                    <p class="text-sm font-semibold text-gray-400">024</p>
+                            @foreach ($dataRangking['data_terendah'] as $item)
+                                <div class="card border flex gap-4 p-2 w-full box-border">
+                                    <button class="px-5 py-2 rounded bg-red-500">
+                                        <h2 class="text-lg font-bold text-white">1</h2>
+                                    </button>
+                                    <div class="content w-full">
+                                        <h2 class="text-lg font-semibold text-theme-secondary">
+                                            {{ $item->cabang }}
+                                        </h2>
+                                        <p class="text-sm font-semibold text-gray-400">{{ $item->kode_cabang }}</p>
+                                    </div>
+                                    <div class="total pr-3">
+                                        <h2 class="text-theme-secondary font-bold mt-3">{{ $item->total }}</h2>
+                                    </div>
                                 </div>
-                                <div class="total pr-3">
-                                    <h2 class="text-theme-secondary font-bold mt-3">20</h2>
-                                </div>
-                            </div>
-                            <div class="card border flex gap-4 p-2 w-full box-border">
-                                <button class="px-5 py-2 rounded bg-red-500">
-                                    <h2 class="text-lg font-bold text-white">2</h2>
-                                </button>
-                                <div class="content w-full">
-                                    <h2 class="text-lg font-semibold text-theme-secondary">
-                                        Probolinggo
-                                    </h2>
-                                    <p class="text-sm font-semibold text-gray-400">006</p>
-                                </div>
-                                <div class="total pr-3">
-                                    <h2 class="text-theme-secondary font-bold mt-3">31</h2>
-                                </div>
-                            </div>
-                            <div class="card border flex gap-4 p-2 w-full">
-                                <button class="px-5 py-2 rounded bg-red-500">
-                                    <h2 class="text-lg font-bold text-white">3</h2>
-                                </button>
-                                <div class="content w-full">
-                                    <h2 class="text-lg font-semibold text-theme-secondary">
-                                        Bondowoso
-                                    </h2>
-                                    <p class="text-sm font-semibold text-gray-400">029</p>
-                                </div>
-                                <div class="total pr-3">
-                                    <h2 class="text-theme-secondary font-bold mt-3">12</h2>
-                                </div>
-                            </div>
-                            <div class="card border flex gap-4 p-2 w-full">
-                                <button class="px-5 py-2 rounded bg-red-500">
-                                    <h2 class="text-lg font-bold text-white">4</h2>
-                                </button>
-                                <div class="content w-full">
-                                    <h2 class="text-lg font-semibold text-theme-secondary">
-                                        Situbondo
-                                    </h2>
-                                    <p class="text-sm font-semibold text-gray-400">027</p>
-                                </div>
-                                <div class="total pr-3">
-                                    <h2 class="text-theme-secondary font-bold mt-3">21</h2>
-                                </div>
-                            </div>
-                            <div class="card border flex gap-4 p-2 w-full">
-                                <button class="px-5 py-2 rounded bg-red-500">
-                                    <h2 class="text-lg font-bold text-white">5</h2>
-                                </button>
-                                <div class="content w-full">
-                                    <h2 class="text-lg font-semibold text-theme-secondary">
-                                        Lumajang
-                                    </h2>
-                                    <p class="text-sm font-semibold text-gray-400">005</p>
-                                </div>
-                                <div class="total pr-3">
-                                    <h2 class="text-theme-secondary font-bold mt-3">22</h2>
-                                </div>
-                            </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>

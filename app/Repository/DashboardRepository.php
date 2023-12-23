@@ -265,4 +265,33 @@ class DashboardRepository
         
         return $data->first();
     }
+
+    public function getRangking(Request $request){
+        $total_cabang = DB::table('cabang')->where('kode_cabang', '!=', '000')->count();
+
+        $dataTertinggi = DB::table('cabang')
+            ->leftJoin('pengajuan', 'cabang.id', 'pengajuan.id_cabang')
+            ->selectRaw('IFNULL(COUNT(pengajuan.id), 0) AS total, cabang.kode_cabang, cabang.cabang')
+            ->where('cabang.kode_cabang', '!=', '000')
+            ->groupBy('cabang.kode_cabang', 'cabang.cabang')
+            ->orderByRaw('total DESC, cabang.kode_cabang ASC')
+            ->limit(5)
+            ->get();
+            
+        $dataTerendah = DB::table('cabang')
+            ->leftJoin('pengajuan', 'cabang.id', 'pengajuan.id_cabang')
+            ->selectRaw('IFNULL(COUNT(pengajuan.id), 0) AS total, cabang.kode_cabang, cabang.cabang')
+            ->where('cabang.kode_cabang', '!=', '000')
+            // ->where('pengajuan.posisi', 'Selesai')
+            ->whereNull('pengajuan.deleted_at')
+            ->groupBy('cabang.kode_cabang', 'cabang.cabang')
+            ->orderByRaw('total ASC, cabang.kode_cabang ASC') // Ubah ke ASC untuk mengambil data terendah
+            ->limit(5)
+            ->get();
+
+        return [
+            'data_tertinggi' => $dataTertinggi,
+            'data_terendah' => $dataTerendah
+        ];
+    }
 }
