@@ -390,7 +390,6 @@
 
                                     @else
                                         {{--  skor  --}}
-                                        <span>Test</span>
                                     @endif
                                 @endif
                                 <div class="form-group-1">
