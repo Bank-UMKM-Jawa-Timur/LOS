@@ -1,11 +1,14 @@
 <?php
 
+use App\Models\JawabanModel;
 use App\Models\JawabanTemp;
 use App\Models\JawabanTempModel;
+use App\Models\JawabanTextModel;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
+// Temporary
 if(!function_exists('temporary')) {
     function temporary($nId, $id, bool $multiple = false) {
         $temp = JawabanTemp::where('id_jawaban', $id)
@@ -69,6 +72,83 @@ if(!function_exists('temporary_usulan_dagulir')){
         return $temp->first();
     }
 }
+// END Temporary
+// Edit
+if(!function_exists('edit')) {
+    function edit($pengajuan_id, $id_jawaban, bool $multiple = false) {
+        $data = JawabanTextModel::where('id_jawaban', $id_jawaban)
+            ->where('id_pengajuan', $pengajuan_id)
+            ->orderBy('id', 'desc');
+
+        if($multiple) return $data->get();
+        return $data->first();
+    }
+}
+
+if(!function_exists('edit_select')){
+    function edit_select(int $id, int $id_pengajuan){
+        $data = JawabanModel::where('id_jawaban', $id)
+            ->where('id_pengajuan', $id_pengajuan)
+            ->orderBy('id', 'desc');
+
+        return $data->first();
+    }
+}
+
+if(!function_exists('edit_usulan')){
+    function edit_usulan(int $id, int $id_pengajuan){
+        $data = DB::table('pendapat_dan_usulan_per_aspek')
+            ->where('id_pengajuan', $id_pengajuan)
+            ->where('id_aspek', $id)
+            ->orderBy('id', 'desc');
+
+        return $data->first();
+    }
+}
+
+if(!function_exists('edit_dagulir')) {
+    function edit_dagulir($id_pengajuan, $id, bool $multiple = false) {
+        $data = JawabanTextModel::where('id_jawaban', $id)
+            ->where('id_pengajuan', $id_pengajuan)
+            ->orderBy('id', 'desc');
+
+        if($multiple) return $data->get();
+        return $data->first();
+    }
+}
+
+if(!function_exists('edit_text_dagulir')) {
+    function edit_text_dagulir($id_pengajuan, $id, bool $multiple = false) {
+        $data = JawabanTextModel::where('id_jawaban', $id)
+            ->where('id_pengajuan', $id_pengajuan)
+            ->orderBy('id', 'desc');
+
+        if($multiple) return $data->get();
+        return $data->first();
+    }
+}
+
+if(!function_exists('edit_select_dagulir')){
+    function edit_select_dagulir(int $id, int $id_pengajuan){
+        $data = JawabanModel::where('id_jawaban', $id)
+            ->where('id_pengajuan', $id_pengajuan)
+            ->orderBy('id', 'desc');
+
+        return $data->first();
+    }
+}
+
+if(!function_exists('edit_usulan_dagulir')){
+    function edit_usulan_dagulir(int $id, int $nId){
+        $data = DB::table('pendapat_dan_usulan_per_aspek')
+            ->where('id_pengajuan', $nId)
+            ->where('id_aspek', $id)
+            ->orderBy('id', 'desc');
+
+        return $data->first();
+    }
+}
+// END Edit
 
 if (!function_exists('sipde_token')) {
     function sipde_token() {
