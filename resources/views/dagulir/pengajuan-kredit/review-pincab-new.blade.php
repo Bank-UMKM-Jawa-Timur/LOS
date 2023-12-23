@@ -407,40 +407,43 @@
                                                 @endphp
                                                 @foreach ($dataDetailJawabanText as $itemTextTiga)
                                                     @if ($itemTextTiga->nama != 'Ratio Tenor Asuransi')
-                                                        <div class="field-review">
-                                                            <div class="field-name">
-                                                                @if ($itemTiga->opsi_jawaban == 'file')
-                                                                    @if ($jumlahDataDetailJawabanText > 1)
-                                                                        <h6 for="">{{ $itemTextTiga->nama }} {{$loop->iteration}}</h6>
+                                                        @if ($itemTextTiga->opsi_text == "Tanah" || $itemTextTiga->opsi_text == "Kendaraan Bermotor" || $itemTextTiga->opsi_text == "Tanah dan Bangunan")
+                                                        @else
+                                                            <div class="field-review">
+                                                                <div class="field-name">
+                                                                    @if ($itemTiga->opsi_jawaban == 'file')
+                                                                        @if ($jumlahDataDetailJawabanText > 1)
+                                                                            <h6 for="">{{ $itemTextTiga->nama }} {{$loop->iteration}}</h6>
+                                                                        @else
+                                                                            <h6 for="">{{ $itemTextTiga->nama }}</h6>
+                                                                        @endif
                                                                     @else
-                                                                        <h6 for="">{{ $itemTextTiga->nama }}</h6>
+                                                                            <h6 for="">{{ $itemTextTiga->nama }}</h6>
                                                                     @endif
-                                                                @else
-                                                                        <h6 for="">{{ $itemTextTiga->nama }}</h6>
-                                                                @endif
-                                                            </div>
-                                                            <div class="field-answer">
-                                                                @if ($itemTiga->opsi_jawaban == 'file')
-                                                                    @php
-                                                                        $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text);
-                                                                    @endphp
-                                                                    @if ($file_parts['extension'] == 'pdf')
-                                                                        <iframe
-                                                                            style="border: 5px solid #dc3545;"
-                                                                            src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}"
-                                                                            width="100%" height="800px"></iframe>
+                                                                </div>
+                                                                <div class="field-answer">
+                                                                    @if ($itemTiga->opsi_jawaban == 'file')
+                                                                        @php
+                                                                            $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text);
+                                                                        @endphp
+                                                                        @if ($file_parts['extension'] == 'pdf')
+                                                                            <iframe
+                                                                                style="border: 5px solid #dc3545;"
+                                                                                src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}"
+                                                                                width="100%" height="800px"></iframe>
+                                                                        @else
+                                                                            <img style="border: 5px solid #dc3545;" src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}"
+                                                                                alt="" width="800px">
+                                                                        @endif
+                                                                        {{-- Rupiah data tiga --}}
+                                                                    @elseif ($itemTextTiga->is_rupiah)
+                                                                        <p>Rp. {{ number_format((int) $itemTextTiga->opsi_text, 0, ',', '.') }}</p>
                                                                     @else
-                                                                        <img style="border: 5px solid #dc3545;" src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}"
-                                                                            alt="" width="800px">
+                                                                        <p>{{ $itemTiga->opsi_jawaban == 'persen' ? $itemTextTiga->opsi_text : $itemTextTiga->opsi_text  }}{{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</p>
                                                                     @endif
-                                                                    {{-- Rupiah data tiga --}}
-                                                                @elseif ($itemTextTiga->is_rupiah)
-                                                                    <p>Rp. {{ number_format((int) $itemTextTiga->opsi_text, 0, ',', '.') }}</p>
-                                                                @else
-                                                                    <p>{{ $itemTiga->opsi_jawaban == 'persen' ? $itemTextTiga->opsi_text : $itemTextTiga->opsi_text  }}{{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</p>
-                                                                @endif
+                                                                </div>
                                                             </div>
-                                                        </div>
+                                                        @endif
 
                                                         <input type="hidden" class="form-input mb-3" placeholder="Masukkan komentar"
                                                             name="komentar_penyelia" value="{{ $itemTextTiga->nama }}" disabled>

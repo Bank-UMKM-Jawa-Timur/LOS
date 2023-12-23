@@ -1097,18 +1097,21 @@
                                                                                 @endif
                                                                             @endif
                                                                         @else
-                                                                            <div class="field-review">
-                                                                                <div class="field-name">
-                                                                                    <label for="">{{ $itemTextTiga->nama }} </label>
+                                                                            @if ($itemTextTiga->opsi_text == "Tanah" || $itemTextTiga->opsi_text == "Kendaraan Bermotor" || $itemTextTiga->opsi_text == "Tanah dan Bangunan")
+                                                                            @else
+                                                                                <div class="field-review">
+                                                                                    <div class="field-name">
+                                                                                        <label for="">{{ $itemTextTiga->nama }}</label>
+                                                                                    </div>
+                                                                                    <div class="field-answer">
+                                                                                        @if ($itemTiga->is_rupiah == 1)
+                                                                                            <p>Rp. {{ number_format((int) $itemTextTiga->opsi_text, 0, ',', '.') }}</p>
+                                                                                        @else
+                                                                                            <p>{{ $itemTiga->opsi_jawaban == 'persen' ? $itemTextTiga->opsi_text : $itemTextTiga->opsi_text  }}{{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</p>
+                                                                                        @endif
+                                                                                    </div>
                                                                                 </div>
-                                                                                <div class="field-answer">
-                                                                                    @if ($itemTiga->is_rupiah == 1)
-                                                                                        <p>Rp. {{ number_format((int) $itemTextTiga->opsi_text, 0, ',', '.') }}</p>
-                                                                                    @else
-                                                                                        <p>{{ $itemTiga->opsi_jawaban == 'persen' ? $itemTextTiga->opsi_text : $itemTextTiga->opsi_text  }}{{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</p>
-                                                                                    @endif
-                                                                                </div>
-                                                                            </div>
+                                                                            @endif
                                                                             @if ($item->is_commentable == 'Ya')
                                                                                 @if (Auth::user()->role != 'Pincab')
                                                                                     <div class="input-k-bottom">
