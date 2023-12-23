@@ -26,6 +26,7 @@ use App\Http\Controllers\Dagulir\NewDagulirController;
 use App\Http\Controllers\Dagulir\master\NewUserController;
 use App\Http\Controllers\KreditProgram\DashboardKreditProgramController;
 use App\Http\Controllers\KreditProgram\MasterDanaController;
+use App\Http\Controllers\NotificationController;
 use RealRashid\SweetAlert\Facades\Alert;
 
 /*
@@ -46,6 +47,10 @@ Route::get('/', function () {
 
 Route::get('tes-skor', [PengajuanKreditController::class, 'tesskor'])->name('tesskor');
 Route::post('tes-skor', [PengajuanKreditController::class, 'countScore'])->name('tesskor.store');
+
+Route::get('/coming-soon', function(){
+    return view('under-construction.index');
+})->name('coming-soon');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/detail-pengajuan-new/tes', function () {
@@ -140,20 +145,30 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 Route::post('pengajuan-kredit/tempJawaban', [NewDagulirController::class, "tempJawaban"])->name('jawaban');
                 Route::get('pengajuan-kredit/continue-draft/{id}', [NewDagulirController::class, 'continueDraft'])->name('continue');
                 Route::get('pengajuan-kredit/lanjutkan-draft', [NewDagulirController::class, 'showContinueDraft'])->name('continue-draft');
-                Route::get('pengajuan-kredit/list-draft-dagulir', [NewDagulirController::class, "listDraftDagulir"])->name('list-draft-dagulir');
+                Route::get('pengajuan-kredit/list-draft-dagulir', [NewDagulirController::class, "indexTemp"])->name('list-draft-dagulir');
+                Route::post('pengajuan-kredit/deleteDraft/{id}', [NewDagulirController::class, 'deleteDraft'])->name('deleteDraft');
+            });
+
+        Route::prefix('/notification')
+            ->name('notification.')
+            ->group(function() {
+                Route::get('', [NotificationController::class, 'index'])->name('index');
+                Route::post('/hapus', [NotificationController::class, 'delete'])->name('delete');
+                Route::post('/get-detail', [NotificationController::class, 'getDetail'])->name('getDetail');
             });
     });
     Route::middleware(['KreditProgram'])->group(function () {
             // Dashboard Dana
-            Route::get('dashboard-dana',[DashboardKreditProgramController::class,'index'])->name('dashboard.dana');
+            Route::get('dashboard-dana',[DashboardKreditProgramController::class,'index'])->name('dana.dashboard');
             // Master Dana
             Route::prefix('master-dana')->group(function () {
                 // master dana modal
                 Route::get('/',[MasterDanaController::class,'index'])->name('master-dana.index');
-                Route::post('/update/{id}',[MasterDanaController::class,'update'])->name('master-dana.update');
+                Route::post('update/{id}',[MasterDanaController::class,'update'])->name('master-dana.update');
                 // master dana cabang
-                Route::get('/dana-cabang',[MasterDanaController::class,'danaCabang'])->name('master-dana.cabang.index');
-                Route::post('/store-cabang',[MasterDanaController::class,'storeCabang'])->name('master-dana.store-cabang');
+                Route::get('dana-cabang',[MasterDanaController::class,'danaCabang'])->name('master-dana.cabang.index');
+                Route::post('store-cabang',[MasterDanaController::class,'storeCabang'])->name('master-dana.store-cabang');
+                Route::post('store-dana',[MasterDanaController::class,'storeDana'])->name('master-dana.store-dana');
                 // master alih dana
                 Route::get('alih-dana',[MasterDanaController::class,'alihDana'])->name('master-dana.alih-dana');
                 Route::post('alih-dana/post',[MasterDanaController::class,'alihDanaPost'])->name('master-dana.alih-dana.post');

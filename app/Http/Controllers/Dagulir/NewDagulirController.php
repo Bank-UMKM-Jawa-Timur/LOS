@@ -25,6 +25,7 @@ use App\Models\JawabanModel;
 use App\Models\JawabanTemp;
 use App\Models\JawabanTempModel;
 use App\Models\LogPengajuan;
+use App\Models\MasterDDLoan;
 use App\Models\MerkModel;
 use App\Models\PengajuanDagulir;
 use App\Models\PengajuanDagulirTemp;
@@ -199,72 +200,79 @@ class NewDagulirController extends Controller
     }
 
     public function create(Request $request) {
-        $param['pageTitle'] = "Dashboard";
-        $param['multipleFiles'] = $this->isMultipleFiles;
+        $role = auth()->user()->role;
+        if ($role == 'Staf Analis Kredit') {
+            $param['pageTitle'] = "Dashboard";
+            $param['multipleFiles'] = $this->isMultipleFiles;
 
-        $param['dataDesa'] = Desa::all();
-        $param['dataKecamatan'] = Kecamatan::all();
-        $param['dataKabupaten'] = Kabupaten::all();
-        $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->where('nama', '!=', 'Data Umum')->get();
-        $param['itemSlik'] = ItemModel::with('option')->where('nama', 'SLIK')->first();
-        $param['itemSP'] = ItemModel::where('nama', 'Surat Permohonan')->first();
-        $param['itemP'] = ItemModel::where('nama', 'Laporan SLIK')->first();
-        $param['itemKTPSu'] = ItemModel::where('nama', 'Foto KTP Suami')->first();
-        $param['itemKTPIs'] = ItemModel::where('nama', 'Foto KTP Istri')->first();
-        $param['itemKTPNas'] = ItemModel::where('nama', 'Foto KTP Nasabah')->first();
-        $param['itemNIB'] = ItemModel::where('nama', 'Dokumen NIB')->first();
-        $param['itemNPWP'] = ItemModel::where('nama', 'Dokumen NPWP')->first();
-        $param['itemSKU'] = ItemModel::where('nama', 'Dokumen Surat Keterangan Usaha')->first();
+            $param['dataDesa'] = Desa::all();
+            $param['dataKecamatan'] = Kecamatan::all();
+            $param['dataKabupaten'] = Kabupaten::all();
+            $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->where('nama', '!=', 'Data Umum')->get();
+            $param['itemSlik'] = ItemModel::with('option')->where('nama', 'SLIK')->first();
+            $param['itemSP'] = ItemModel::where('nama', 'Surat Permohonan')->first();
+            $param['itemP'] = ItemModel::where('nama', 'Laporan SLIK')->first();
+            $param['itemKTPSu'] = ItemModel::where('nama', 'Foto KTP Suami')->first();
+            $param['itemKTPIs'] = ItemModel::where('nama', 'Foto KTP Istri')->first();
+            $param['itemKTPNas'] = ItemModel::where('nama', 'Foto KTP Nasabah')->first();
+            $param['itemNIB'] = ItemModel::where('nama', 'Dokumen NIB')->first();
+            $param['itemNPWP'] = ItemModel::where('nama', 'Dokumen NPWP')->first();
+            $param['itemSKU'] = ItemModel::where('nama', 'Dokumen Surat Keterangan Usaha')->first();
 
-        $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
-        $param['dataMerk'] = MerkModel::all();
-        $param['jenis_usaha'] = config('dagulir.jenis_usaha');
-        $param['tipe'] = config('dagulir.tipe_pengajuan');
+            $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
+            $param['dataMerk'] = MerkModel::all();
+            $param['jenis_usaha'] = config('dagulir.jenis_usaha');
+            $param['tipe'] = config('dagulir.tipe_pengajuan');
 
-        if ($request->has('dagulir')) {
-            $param['dataUmumNasabah'] = PengajuanDagulir::select(
-                                                            'pengajuan_dagulir.*',
-                                                            'p.id AS id_pengajuan'
-                                                        )
-                                                        ->join('pengajuan AS p', 'p.dagulir_id', 'pengajuan_dagulir.id')
-                                                        ->find($request->dagulir);
-            $pengajuan = PengajuanModel::select(
-                                        'pengajuan.id',
-                                        'pengajuan.tanggal',
-                                        'pengajuan.posisi',
-                                        'pengajuan.tanggal_review_penyelia',
-                                        'pengajuan.dagulir_id',
-                                        'pengajuan.skema_kredit'
-                                    )
-                                    ->find($param['dataUmumNasabah']->id_pengajuan);
-            $param['dataUmum'] = $pengajuan;
+            if ($request->has('dagulir')) {
+                $param['dataUmumNasabah'] = PengajuanDagulir::select(
+                                                                'pengajuan_dagulir.*',
+                                                                'p.id AS id_pengajuan'
+                                                            )
+                                                            ->join('pengajuan AS p', 'p.dagulir_id', 'pengajuan_dagulir.id')
+                                                            ->find($request->dagulir);
+                $pengajuan = PengajuanModel::select(
+                                            'pengajuan.id',
+                                            'pengajuan.tanggal',
+                                            'pengajuan.posisi',
+                                            'pengajuan.tanggal_review_penyelia',
+                                            'pengajuan.dagulir_id',
+                                            'pengajuan.skema_kredit'
+                                        )
+                                        ->find($param['dataUmumNasabah']->id_pengajuan);
+                $param['dataUmum'] = $pengajuan;
 
-            $param['kec_ktp'] = Kecamatan::find($param['dataUmumNasabah']->kec_ktp)->kecamatan;
-            $param['kab_ktp'] = Kabupaten::find($param['dataUmumNasabah']->kotakab_ktp)->kabupaten;
-            $param['desa_ktp'] = '';
-            if ($param['dataUmumNasabah']->desa_ktp != null) {
-                $param['desa_ktp'] = Desa::find($param['dataUmumNasabah']->desa_ktp)->desa;
+                $param['kec_ktp'] = Kecamatan::find($param['dataUmumNasabah']->kec_ktp)->kecamatan;
+                $param['kab_ktp'] = Kabupaten::find($param['dataUmumNasabah']->kotakab_ktp)->kabupaten;
+                $param['desa_ktp'] = '';
+                if ($param['dataUmumNasabah']->desa_ktp != null) {
+                    $param['desa_ktp'] = Desa::find($param['dataUmumNasabah']->desa_ktp)->desa;
+                }
+                $param['kec_dom'] = Kecamatan::find($param['dataUmumNasabah']->kec_dom)->kecamatan;
+                $param['kab_dom'] = Kabupaten::find($param['dataUmumNasabah']->kotakab_dom)->kabupaten;
+                $param['kec_usaha'] = Kecamatan::find($param['dataUmumNasabah']->kec_usaha)->kecamatan;
+                $param['kab_usaha'] = Kabupaten::find($param['dataUmumNasabah']->kotakab_usaha)->kabupaten;
+                $param['alamat_usaha'] = $param['dataUmumNasabah']->alamat_usaha;
+
+                $param['allKab'] = Kabupaten::get();
+                $param['allKec'] = Kecamatan::where('id_kabupaten', $param['dataUmumNasabah']->kotakab_ktp)->get();
+                $param['allDesa'] = Desa::where('id_kecamatan', $param['dataUmumNasabah']->kec_ktp)->get();
+                $param['allKecDom'] = Kecamatan::where('id_kabupaten', $param['dataUmumNasabah']->kotakab_dom)->get();
+                $param['allKecUsaha'] = Kecamatan::where('id_kabupaten', $param['dataUmumNasabah']->kotakab_usaha)->get();
+                $param['itemSlikData'] = ItemModel::join('option as o', 'o.id_item', 'item.id')
+                    ->join('jawaban as j', 'j.id_jawaban', 'o.id')
+                    ->join('pengajuan as p', 'p.id', 'j.id_pengajuan')
+                    ->where('p.id', $param['dataUmumNasabah']->id_pengajuan)
+                    ->where('nama', 'SLIK')
+                    ->first();
             }
-            $param['kec_dom'] = Kecamatan::find($param['dataUmumNasabah']->kec_dom)->kecamatan;
-            $param['kab_dom'] = Kabupaten::find($param['dataUmumNasabah']->kotakab_dom)->kabupaten;
-            $param['kec_usaha'] = Kecamatan::find($param['dataUmumNasabah']->kec_usaha)->kecamatan;
-            $param['kab_usaha'] = Kabupaten::find($param['dataUmumNasabah']->kotakab_usaha)->kabupaten;
-            $param['alamat_usaha'] = $param['dataUmumNasabah']->alamat_usaha;
 
-            $param['allKab'] = Kabupaten::get();
-            $param['allKec'] = Kecamatan::where('id_kabupaten', $param['dataUmumNasabah']->kotakab_ktp)->get();
-            $param['allDesa'] = Desa::where('id_kecamatan', $param['dataUmumNasabah']->kec_ktp)->get();
-            $param['allKecDom'] = Kecamatan::where('id_kabupaten', $param['dataUmumNasabah']->kotakab_dom)->get();
-            $param['allKecUsaha'] = Kecamatan::where('id_kabupaten', $param['dataUmumNasabah']->kotakab_usaha)->get();
-            $param['itemSlikData'] = ItemModel::join('option as o', 'o.id_item', 'item.id')
-                ->join('jawaban as j', 'j.id_jawaban', 'o.id')
-                ->join('pengajuan as p', 'p.id', 'j.id_pengajuan')
-                ->where('p.id', $param['dataUmumNasabah']->id_pengajuan)
-                ->where('nama', 'SLIK')
-                ->first();
+            return view('dagulir.pengajuan-kredit.add-pengajuan-kredit', $param);
         }
-
-        return view('dagulir.pengajuan-kredit.add-pengajuan-kredit', $param);
+        else {
+            alert()->error('Peringatan', 'Anda tidak memilik hak akses');
+            return redirect()->back();
+        }
     }
 
     public function store(Request $request)
@@ -503,7 +511,8 @@ class NewDagulirController extends Controller
                 }
             }
             //untuk upload file dari temp
-            $tempFiles = JawabanTemp::where('type', 'file')->where('id_temporary_calon_nasabah', $request->id_nasabah)->get();
+            $idTemp = $request->id_dagulir_temp;
+            $tempFiles = JawabanTemp::where('type', 'file')->where('temporary_dagulir_id', $idTemp)->get();
             foreach ($tempFiles as $tempFile) {
                 if (!array_key_exists($tempFile->id_jawaban, $request->upload_file)) {
                     $tempPath = public_path("upload/temp/{$tempFile->id_jawaban}/{$tempFile->opsi_text}");
@@ -669,6 +678,11 @@ class NewDagulirController extends Controller
             // Log Pengajuan Baru
             $namaNasabah = $pengajuan->nama;
 
+            // Delete data Draft
+            JawabanTemp::where('temporary_dagulir_id', $request->id_dagulir_temp)->delete();
+            JawabanTempModel::where('temporary_dagulir_id', $request->id_dagulir_temp)->delete();
+            PengajuanDagulirTemp::where('id', $request->id_dagulir_temp)->delete();
+
             $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan proses pembuatan data pengajuan atas nama ' . $namaNasabah . '.', $id_pengajuan, Auth::user()->id, Auth::user()->nip);
 
             DB::commit();
@@ -722,11 +736,13 @@ class NewDagulirController extends Controller
                 return redirect()->back();
             }
         } catch (Exception $e) {
+            alert()->error('error', $e->getMessage());
             DB::rollBack();
-            return redirect()->back()->withError('Terjadi kesalahan.');
+            return redirect()->back();
         } catch (QueryException $e) {
+            alert()->error('error', $e->getMessage());
             DB::rollBack();
-            return redirect()->back()->withError('Terjadi kesalahan');
+            return redirect()->back();
         }
     }
 
@@ -761,12 +777,21 @@ class NewDagulirController extends Controller
                         } else
                             $totalDataNull++;
                     }
-                    // get skor ratio coverage opsi
-                    $jawaban = JawabanModel::select('id', 'skor')
-                                            ->where('id_pengajuan', $request->id_pengajuan)
-                                            ->where('id_jawaban', 158) // 158  = id_option ratio coverage opsi
-                                            ->first();
                     $total_input_data = (count($request->skor_penyelia) - $totalDataNull);
+                    // get skor ratio coverage opsi
+                    $jawaban = ItemModel::select(
+                                            'item.id AS item_id',
+                                            'j.id_jawaban',
+                                            'j.skor',
+                                            'j.skor_penyelia',
+                                            'j.skor_pbo',
+                                            'j.skor_pbp'
+                                        )
+                                        ->join('option AS o', 'o.id_item', 'item.id')
+                                        ->join('jawaban AS j', 'j.id_jawaban', 'o.id')
+                                        ->where('j.id_pengajuan', $request->id_pengajuan)
+                                        ->where('item.id', 132) // id item ratio coverage opsi
+                                        ->first();
                     if ($jawaban) {
                         $sum_select += $jawaban->skor;
                         $total_input_data++;
@@ -970,12 +995,17 @@ class NewDagulirController extends Controller
                 return redirect()->route('dagulir.pengajuan.index');
             } catch (Exception $e) {
                 DB::rollBack();
-                return redirect()->back()->withError('Terjadi kesalahan.' . $e->getMessage());
+                alert()->error('error', $e->getMessage());
+
+                return redirect()->back();
             } catch (QueryException $e) {
                 DB::rollBack();
-                return redirect()->back()->withError('Terjadi kesalahan.' . $e->getMessage());
+                alert()->error('error', $e->getMessage());
+
+                return redirect()->back();
             }
         } else {
+            alert()->error('error', 'Tidak memiliki hak akses.');
             return redirect()->back()->withError('Tidak memiliki hak akses.');
         }
     }
@@ -1175,7 +1205,7 @@ class NewDagulirController extends Controller
                 $log = [];
             }
             $param['logPengajuan'] = $log;
-
+            $param['rolesPemroses'] = $this->repo->getDataPemroses($nasabah);
 
             return view('dagulir.pengajuan-kredit.review-pincab-new', $param);
 
@@ -1218,7 +1248,7 @@ class NewDagulirController extends Controller
                 // "jenis_badan_hukum" => "Berbadan Hukum",
                 "tempat_berdiri" => $pengajuan_dagulir->tempat_berdiri,
                 "tanggal_berdiri" => $pengajuan_dagulir->tanggal_berdiri,
-                "email" => $pengajuan_dagulir->email,
+                "email" => $pengajuan_dagulir->email ? $pengajuan_dagulir->email : "",
                 "nama_pj" => $pengajuan_dagulir->nama_pj_ketua ??  null,
             ];
             $pengajuan_dagulir = Http::withHeaders([
@@ -1239,8 +1269,8 @@ class NewDagulirController extends Controller
                     if ($dagulir)
                         $namaNasabah = $dagulir->nama;
 
-                    // $role = Auth::user()->role;
-                    // $this->logPengajuan->store($role . ' dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' mengirimkan data dagulir dengan pengajuan atas nama ' . $namaNasabah, $pengajuan->id, Auth::user()->id, Auth::user()->nip);
+                    $role = Auth::user()->role;
+                    $this->logPengajuan->store($role . ' dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' mengirimkan data dagulir dengan pengajuan atas nama ' . $namaNasabah, $pengajuan->id, Auth::user()->id, Auth::user()->nip);
 
                     DB::commit();
 
@@ -1253,19 +1283,19 @@ class NewDagulirController extends Controller
                 else {
                     return $pengajuan_dagulir['data']['message'];
                 }
-                // return redirect()->route('dagulir.index')->withStatus('Berhasil mengirimkan data.');
+                // return redirect()->route('dagulir.pengajuan.index')->withStatus('Berhasil mengirimkan data.');
             }
             else {
                 $message = 'Terjadi kesalahan.';
                 if (array_key_exists('error', $pengajuan_dagulir)) $message .= ' '.$pengajuan_dagulir['error'];
 
                 return $message;
-                // return redirect()->route('dagulir.index')->withError($message);
+                // return redirect()->route('dagulir.pengajuan.index')->withError($message);
             }
         } catch (\Exception $e) {
             DB::rollBack();
             return $e->getMessage();
-            // return redirect()->route('dagulir.index')->withError($e->getMessage());
+            // return redirect()->route('dagulir.pengajuan.index')->withError($e->getMessage());
         }
     }
 
@@ -1558,22 +1588,24 @@ class NewDagulirController extends Controller
         $param['cabang'] = DB::table('cabang')
             ->get();
         $role = auth()->user()->role;
+
+        $allFilter = $request->all();
         // paginate
         $search = $request->get('q');
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
-        $page = $request->has('page') ? $request->get('page') : 1;
+        $page = $request->has('page') ? $request->get('page') : 10;
         if ($role == 'Staf Analis Kredit') {
-            $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user);
-            $pengajuan_sipde = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user, 'sipde');
+            $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user,$allFilter);
+            $pengajuan_sipde = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user, $allFilter, 'sipde');
         } elseif ($role == 'Penyelia Kredit') {
-            $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Penyelia Kredit', $id_user);
-            $pengajuan_sipde = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user, 'sipde');
+            $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Penyelia Kredit', $id_user,$allFilter);
+            $pengajuan_sipde = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user, $allFilter, 'sipde');
         } elseif ($role == 'Pincab') {
-            $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Pincab', $id_user);
-            $pengajuan_sipde = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user, 'sipde');
+            $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Pincab', $id_user,$allFilter);
+            $pengajuan_sipde = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user, $allFilter, 'sipde');
         } else {
-            $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user);
-            $pengajuan_sipde = $this->repo->get($search,$limit,$page, 'Staf Analis Kredit', $id_user, 'sipde');
+            $pengajuan_dagulir = $this->repo->get($search,$limit,$page, 'Administrator', $id_user,$allFilter);
+            $pengajuan_sipde = $this->repo->get($search,$limit,$page, 'Administrator', $id_user, $allFilter, 'sipde');
         }
 
         return view('dagulir.index',[
@@ -1591,7 +1623,7 @@ class NewDagulirController extends Controller
             if ($pengajuan) {
                 if ($komentar->komentar_penyelia == null) {
                     alert()->warning('Waning','Data pengajuan belum di review,tidak dapat melanjutkan ke pincab.');
-                    return redirect()->route('dagulir.index');
+                    return redirect()->route('dagulir.pengajuan.index');
                 }
                 $pincab = User::select('id')
                         ->where('id_cabang', $pengajuan->id_cabang)
@@ -1612,23 +1644,23 @@ class NewDagulirController extends Controller
                 }
             } else {
                 alert()->error('Error','Data pengajuan tidak ditemukan');
-                return back()->withError('Data pengajuan tidak ditemukan.');
+                return back();
             }
         } catch (Exception $e) {
-            return redirect()->back()->withError('Terjadi kesalahan.');
+            return redirect()->back();
         } catch (QueryException $e) {
             return redirect()->back()->withError('Terjadi kesalahan');
-        }
+        };
     }
 
     public function accPengajuan($id, Request $request)
     {
+        ini_set('max_execution_time', 120);
         DB::beginTransaction();
         try {
             if (auth()->user()->role == 'Pincab') {
                 $pengajuan = PengajuanModel::find($id);
                 $currentPosisi = $pengajuan->posisi;
-                $komentarPincab = KomentarModel::where('id_pengajuan', $id)->first();
                 if ($pengajuan) {
                     $idKomentar = KomentarModel::where('id_pengajuan', $pengajuan->id)->first();
                     KomentarModel::where('id', $idKomentar->id)->update(
@@ -1655,14 +1687,13 @@ class NewDagulirController extends Controller
                         $plafonUsulan->update();
                     }
 
-                    $nasabah = PengajuanDagulir::select('kode_pendaftaran', 'status', 'nama', 'nominal', 'jangka_waktu', 'from_apps')->find($pengajuan->dagulir_id);
+                    $nasabah = PengajuanDagulir::select('kode_pendaftaran', 'status', 'nama', 'email', 'nominal', 'jangka_waktu', 'from_apps')->find($pengajuan->dagulir_id);
                     $namaNasabah = 'undifined';
                     if ($nasabah)
                         $namaNasabah = $nasabah->nama;
                     if ($nasabah->from_apps == 'pincetar') {
                         // HIT Pengajuan endpoint dagulir
                         $storeSIPDE = $this->storeSipde($id);
-
                         $kode_pendaftaran = false;
                         if (is_array($storeSIPDE)) {
                             $kode_pendaftaran = array_key_exists('kode_pendaftaran', $storeSIPDE) ? $storeSIPDE['kode_pendaftaran'] : false;
@@ -1692,7 +1723,8 @@ class NewDagulirController extends Controller
 
                             // HIT update status analisa endpoint dagulir
                             if ($nasabah->status != 2) {
-                                $lampiran_analisa = lampiranAnalisa();
+                                $filename = public_path('cetak_surat/'.$pengajuan->id.'.'.'pdf');
+                                $lampiran_analisa = lampiranAnalisa($filename);
                                 $analisa = $this->updateStatus($kode_pendaftaran, 2, $lampiran_analisa);
                                 if (is_array($analisa)) {
                                     // Fail block
@@ -1731,12 +1763,16 @@ class NewDagulirController extends Controller
                             DB::commit();
                             event(new EventMonitoring('menyetujui pengajuan'));
                             Alert::success('success', 'Berhasil menyetujui pengajuan');
-                            return redirect()->route('dagulir.index')->withStatus('Berhasil menyetujui pengajuan.');
+                            return redirect()->route('dagulir.pengajuan.index')->withStatus('Berhasil menyetujui pengajuan.');
                         }
                         else {
+                            return $storeSIPDE;
                             DB::rollBack();
-                            alert()->error('Error', $storeSIPDE);
+                            // toast('Your Post as been submited!','success');
+                            alert()->error('Peringatan', $storeSIPDE)->autoClose(5000);
+                            Alert::error('Error','Terjadi kesalahan');
                             return redirect()->back();
+
                         }
                     }
                     else {
@@ -1767,7 +1803,8 @@ class NewDagulirController extends Controller
 
                             // HIT update status analisa endpoint dagulir
                             if ($nasabah->status != 2) {
-                                $lampiran_analisa = lampiranAnalisa();
+                                $filename = public_path('cetak_surat/'.$pengajuan->id.'.'.'pdf');
+                                $lampiran_analisa = lampiranAnalisa($filename);
                                 $analisa = $this->updateStatus($kode_pendaftaran, 2, $lampiran_analisa);
                                 if (is_array($analisa)) {
                                     // Fail block
@@ -1806,7 +1843,7 @@ class NewDagulirController extends Controller
                             DB::commit();
                             event(new EventMonitoring('menyetujui pengajuan'));
                             Alert::success('success', 'Berhasil menyetujui pengajuan');
-                            return redirect()->route('dagulir.index')->withStatus('Berhasil menyetujui pengajuan.');
+                            return redirect()->route('dagulir.pengajuan.index');
                         }
                         else {
                             DB::rollBack();
@@ -1832,87 +1869,107 @@ class NewDagulirController extends Controller
 
     public function decPengajuan($id)
     {
+        ini_set('max_execution_time', 120);
         DB::beginTransaction();
         try {
             $pengajuan = PengajuanModel::find($id);
             $currentPosisi = $pengajuan->posisi;
             $komentarPincab = KomentarModel::where('id_pengajuan', $id)->first();
             if (auth()->user()->role == 'Pincab') {
-                if ($komentarPincab->komentar_pincab != null) {
+                if ($currentPosisi == 'Pincab') {
                     $pengajuan->posisi = "Ditolak";
                     $pengajuan->tanggal_review_pincab = date(now());
                     $pengajuan->update();
 
                     $nasabah = PengajuanDagulir::select('nama')->find($pengajuan->dagulir_id);
+                    $storeSIPDE = $this->storeSipde($id);
+                    $kode_pendaftaran = false;
+                    if (is_array($storeSIPDE)) {
+                        $kode_pendaftaran = array_key_exists('kode_pendaftaran', $storeSIPDE) ? $storeSIPDE['kode_pendaftaran'] : false;
+                    }
                     $delay = 1500000; // 1.5 sec
 
-                    // HIT update status survei endpoint dagulir
-                    $survei = $this->updateStatus($nasabah->kode_pendaftaran, 1);
-                    if ($currentPosisi == 'Pincab') {
-                        if (is_array($survei)) {
-                            // Fail block
-                            if ($survei['message'] != 'Update Status Gagal. Anda tidak bisa mengubah status, karena status saat ini adalah SURVEY') {
+                    if ($kode_pendaftaran) {
+                        // HIT update status survei endpoint dagulir
+                        $survei = $this->updateStatus($kode_pendaftaran, 1);
+                        if ($currentPosisi == 'Pincab') {
+                            if (is_array($survei)) {
+                                // Fail block
+                                if ($survei['message'] != 'Update Status Gagal. Anda tidak bisa mengubah status, karena status saat ini adalah SURVEY') {
+                                    DB::rollBack();
+                                    alert()->error('Peringatan survei', $survei);
+                                    return redirect()->back();
+                                }
+                            }
+                            else {
+                                if ($survei != 200) {
+                                    DB::rollBack();
+                                    alert()->error('Peringatan survei', $survei);
+                                    return redirect()->back()->withError($survei);
+                                }
+                            }
+                            usleep($delay);
+                        }
+
+                        // HIT update status analisa endpoint dagulir
+                        if ($nasabah->status != 2) {
+                            $filename = public_path('cetak_surat/'.$pengajuan->id.'.'.'pdf');
+                            $lampiran_analisa = lampiranAnalisa($filename);
+                            $analisa = $this->updateStatus($kode_pendaftaran, 2, $lampiran_analisa);
+                            if (is_array($analisa)) {
+                                // Fail block
                                 DB::rollBack();
-                                return redirect()->back()->withError($survei);
+                                alert()->error('Peringatananalisa', $analisa);
+                                return redirect()->back();
+                            }
+                            else {
+                                if ($analisa != 200 || $analisa != '200') {
+                                    DB::rollBack();
+                                    alert()->error('Peringatananalisa', $analisa);
+                                    return redirect()->back();
+                                }
+                            }
+                            usleep($delay);
+                        }
+
+                        // HIT update status ditolak endpoint dagulir
+                        if ($nasabah->status != 3) {
+                            $ditolak = $this->updateStatus($kode_pendaftaran, 4);
+                            if (is_array($ditolak)) {
+                                // Fail block
+                                DB::rollBack();
+                                alert()->error('Peringatanditolak', $ditolak);
+                                return redirect()->back();
+                            }
+                            else {
+                                if ($ditolak != 200) {
+                                    DB::rollBack();
+                                    alert()->error('Peringatanditolak', $ditolak);
+                                    return redirect()->back();
+                                }
                             }
                         }
-                        else {
-                            if ($survei != 200) {
-                                DB::rollBack();
-                                return redirect()->back()->withError($survei);
-                            }
-                        }
-                        usleep($delay);
+
+                        $namaNasabah = 'undifined';
+                        if ($nasabah)
+                            $namaNasabah = $nasabah->nama;
+
+                        $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menolak pengajuan atas nama ' . $namaNasabah . '.', $id, Auth::user()->id, Auth::user()->nip);
                     }
-
-                    // HIT update status analisa endpoint dagulir
-                    if ($nasabah->status != 2) {
-                        $lampiran_analisa = lampiranAnalisa();
-                        $analisa = $this->updateStatus($nasabah->kode_pendaftaran, 2, $lampiran_analisa);
-                        if (is_array($analisa)) {
-                            // Fail block
-                            DB::rollBack();
-                            return redirect()->back()->withError($analisa);
-                        }
-                        else {
-                            if ($survei != 200 || $survei != '200') {
-                                DB::rollBack();
-                                return redirect()->back()->withError($analisa);
-                            }
-                        }
-                        usleep($delay);
+                    else {
+                        DB::rollBack();
+                        alert()->error('Peringatan', $storeSIPDE);
+                        return redirect()->back();
                     }
-
-                    // HIT update status ditolak endpoint dagulir
-                    if ($nasabah->status != 3) {
-                        $ditolak = $this->updateStatus($nasabah->kode_pendaftaran, 3);
-                        if (is_array($ditolak)) {
-                            // Fail block
-                            DB::rollBack();
-                            return redirect()->back()->withError($ditolak);
-                        }
-                        else {
-                            if ($ditolak != 200) {
-                                DB::rollBack();
-                                return redirect()->back()->withError($ditolak);
-                            }
-                        }
-                    }
-
-                    $namaNasabah = 'undifined';
-                    if ($nasabah)
-                        $namaNasabah = $nasabah->nama;
-
-                    $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menolak pengajuan atas nama ' . $namaNasabah . '.', $id, Auth::user()->id, Auth::user()->nip);
 
                     DB::commit();
 
                     event(new EventMonitoring('tolak pengajuan'));
                     Alert::success('success', 'Berhasil menolak pengajuan');
-                    return redirect()->route('dagulir.index');
+                    return redirect()->route('dagulir.pengajuan.index');
                 } else {
-                    alert()->error('Error','Belum di review Pincab');
-                    return redirect()->back()->withError('Belum di review Pincab.');
+                    alert()->error('Error','Posisi data belum sampai Pincab');
+                    return redirect()->back();
                 }
             } else {
                 alert()->error('Error','Tidak memiliki hak akses');
@@ -1920,32 +1977,12 @@ class NewDagulirController extends Controller
             }
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->withError($e->getMessage());
+            alert()->error('Error', $e->getMessage());
+            return redirect()->back();
         }
     }
 
-    function CetakPDF($id) {
-        $pengajuan = PengajuanModel::find($id);
-        $param['dataAspek'] = ItemModel::select('*')->where('level',1)->get();
-        $param['dataNasabah'] = PengajuanDagulir::find($pengajuan->dagulir_id);
-        $param['dataUmum'] = PengajuanModel::select('pengajuan.id','pengajuan.tanggal','pengajuan.posisi','pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit')->find($id);
-        $param['komentar'] = KomentarModel::where('id_pengajuan', $id)->first();
 
-        $param['jenis_usaha'] = config('dagulir.jenis_usaha');
-
-
-        $pdf = Pdf::loadview('dagulir.pengajuan-kredit.cetak.cetak-surat',$param);
-
-        $fileName =  time().'.'. 'pdf' ;
-        $pdf->save(public_path() . '/' . $fileName);
-
-        $pdf = public_path($fileName);
-        $file = "data:@file/pdf;base64,".base64_encode(file_get_contents($pdf));
-
-        // remove white space
-        $result = trim($file, "\n\r\t\v\x00");
-        return $result;
-    }
     function CetakPK($id) {
         $count = DB::table('log_cetak_kkb')
         ->where('id_pengajuan', $id)
@@ -2136,6 +2173,7 @@ class NewDagulirController extends Controller
                     break;
                     // File PK Handler
                 case 'PK':
+                    ini_set('max_execution_time', 120);
                     $message = 'File PK berhasil diupload';
                     $kode_pendaftaran = $request->get('kode_pendaftaran');
                     $folderPK = public_path() . '/upload/' . $id . '/pk/';
@@ -2148,6 +2186,7 @@ class NewDagulirController extends Controller
                         mkdir($folderPK, 0755, true);
                     }
                     $filePK->move($folderPK, $filenamePK);
+
                     DB::table('log_cetak_kkb')
                     ->where('id_pengajuan', $id)
                     ->update([
@@ -2174,8 +2213,22 @@ class NewDagulirController extends Controller
                                 if ($upload == 200) {
                                     // Update to SELESAI
                                     $update_selesai = $this->updateStatus($kode_pendaftaran, 6);
+
                                     if (!is_array($update_selesai)) {
                                         if ($update_selesai == 200) {
+                                            // insert to dd loan
+                                            $plafon = PlafonUsulan::where('id_pengajuan',$id)->first();
+                                            $pengajuan = PengajuanModel::with('dagulir')->find($id);
+                                            if ($pengajuan && $plafon) {
+                                                $loan = new MasterDDLoan;
+                                                $loan->id_cabang = $request->get('cabang');
+                                                $loan->no_loan = $request->get('no_loan');
+                                                $loan->kode_pendaftaran = $pengajuan->dagulir->kode_pendaftaran;
+                                                $loan->plafon = $plafon->plafon_usulan_pincab;
+                                                $loan->jangka_waktu = $plafon->jangka_waktu_usulan_pincab;
+                                                $loan->baki_debet = $plafon->plafon_usulan_pincab;
+                                                $loan->save();
+                                            }
                                             DB::commit();
                                             Alert::success('success', $message);
                                             return redirect()->route('dagulir.pengajuan.index');
@@ -2222,20 +2275,31 @@ class NewDagulirController extends Controller
     {
         $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->get();
         $dataNasabah = DB::table('pengajuan_dagulir')->select('pengajuan_dagulir.*', 'kabupaten.id as kabupaten_id', 'kabupaten.kabupaten', 'kecamatan.id as kecamatan_id', 'kecamatan.id_kabupaten', 'kecamatan.kecamatan', 'desa.id as desa_id', 'desa.id_kabupaten', 'desa.id_kecamatan', 'desa.desa')
-        ->join('kabupaten', 'kabupaten.id', 'pengajuan_dagulir.kotakab_ktp')
-        ->join('kecamatan', 'kecamatan.id', 'pengajuan_dagulir.kec_ktp')
-        ->join('desa', 'desa.id', 'pengajuan_dagulir.desa_ktp')
-        ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
-        ->where('pengajuan.id', $id)
-        ->first();
+                        ->join('kabupaten', 'kabupaten.id', 'pengajuan_dagulir.kotakab_ktp')
+                        ->join('kecamatan', 'kecamatan.id', 'pengajuan_dagulir.kec_ktp')
+                        ->join('desa', 'desa.id', 'pengajuan_dagulir.desa_ktp')
+                        ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
+                        ->where('pengajuan.id', $id)
+                        ->first();
         $param['dataNasabah'] = $dataNasabah;
         $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit')
-        ->find($id);
+                            ->find($id);
         $param['komentar'] = KomentarModel::where('id_pengajuan', $id)->first();
         $param['jenis_usaha'] = config('dagulir.jenis_usaha');
 
+        $pdf = Pdf::loadview('dagulir.pengajuan-kredit.cetak.cetak-surat',$param);
+
+
+        $fileName = $param['dataUmum']->id.'.'. 'pdf' ;
+        $filePath = public_path() . '/cetak_surat';
+        if (!File::isDirectory($filePath)) {
+            File::makeDirectory($filePath, 493, true);
+        }
+        $pdf->save($filePath.'/'.$fileName);
         return view('dagulir.cetak.cetak-surat', $param);
     }
+
+
 
     public function edit($id) {
         /**
@@ -2400,13 +2464,13 @@ class NewDagulirController extends Controller
         try {
             $updatePengajuan = PengajuanModel::find($id);
             $dagulir = PengajuanDagulir::find($updatePengajuan->dagulir_id);
-            $uniqueEmail = $request->get('email') != '' && $request->get('email') != $dagulir->email ? '|unique:pengajuan_dagulir,email' : '';
+            $uniqueEmail = $request->get('email') != '' && $request->get('email') != $dagulir->email ? 'unique:pengajuan_dagulir,email' : '';
             $uniqueNIK = $request->get('nik_nasabah') != '' && $request->get('nik_nasabah') != $dagulir->nik ? '|unique:pengajuan_dagulir,nik' : '';
             $uniqueTelp = $request->get('telp') != '' && $request->get('telp') != $dagulir->telp ? '|unique:pengajuan_dagulir,telp' : '';
             $find = array('Rp.', '.', ',');
             $request->validate([
                 'nama_lengkap' => 'required',
-                'email' => 'required'.$uniqueEmail,
+                'email' => $uniqueEmail,
                 'nik_nasabah' => 'required'.$uniqueNIK,
                 'tempat_lahir' => 'required',
                 'tanggal_lahir' => 'required',
@@ -2858,7 +2922,7 @@ class NewDagulirController extends Controller
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
         $page = $request->has('page') ? $request->get('page') : 1;
         $data = $this->repo->getDraftData($search, $limit, $page, $id_user);
-        return view('dagulir.pengajuan-kredit.index-draft', compact($data));
+        return view('dagulir.pengajuan-kredit.index-draft', compact('data'));
     }
 
     public function continueDraft($id)
@@ -3216,12 +3280,44 @@ class NewDagulirController extends Controller
     public function tempFile(Request $request)
     {
         $dagulir = PengajuanDagulirTemp::find($request->id_dagulir_temp);
-        $data = TemporaryService::saveFileDagulir(
-            $dagulir,
-            $request->answer_id,
-            $request->file_id,
-            $request->file('file')
-        );
+        $temp = DB::table('temporary_jawaban_text')
+                    ->where('temporary_dagulir_id'. $request->dagulir_temp)
+                    ->where('id_jawaban', $request->answer_id)
+                    ->first();
+        if (!$temp) {
+            // Belum pernah save temp
+            $data = TemporaryService::saveFileDagulir(
+                $dagulir,
+                $request->answer_id,
+                $request->file_id,
+                $request->file('file')
+            );
+        }
+        else {
+            // Sudah pernah save temp
+            $req_file = $request->file('file');
+            $current_filename = $temp->opsi_text;
+            $aID = $request->answer_id;
+            $path = public_path("upload/temp/{$aID}/");
+            if ($current_filename != $req_file->getClientOriginalName()) {
+                // Update file
+                @unlink($path . $temp->opsi_text);
+                DB::table('temporary_jawaban_text')
+                    ->where('temporary_dagulir_id'. $request->dagulir_temp)
+                    ->where('id_jawaban', $request->answer_id)
+                    ->update(['opsi_text' => $req_file->getClientOriginalName()]);
+                $data = [
+                    'filename' => $req_file->getClientOriginalName(),
+                    'file_id' => $temp->id,
+                ];
+            }
+            else {
+                $data = [
+                    'filename' => $temp->opsi_jawaban,
+                    'file_id' => $temp->id,
+                ];
+            }
+        }
 
         return response()->json([
             'statusCode' => 200,
@@ -3241,5 +3337,25 @@ class NewDagulirController extends Controller
 
     public function listDraftDagulir(){
         return view('dagulir.pengajuan-kredit.index-draft');
+    }
+
+    public function deleteDraft($id){
+        DB::beginTransaction();
+        try{
+            $pengajuanTemp = PengajuanDagulirTemp::find($id);
+            $pengajuanTemp->delete();
+            DB::commit();
+
+            Alert::success('Berhasil', 'Berhasil menghapus data draft');
+            return redirect()->back();
+        } catch (Exception $e){
+            DB::rollBack();
+            Alert::error('Terjadi kesalahan', $e->getMessage());
+            return redirect()->back();
+        } catch(QueryException $e){
+            DB::rollBack();
+            Alert::error('Terjadi kesalahan', $e->getMessage());
+            return redirect()->back();
+        }
     }
 }

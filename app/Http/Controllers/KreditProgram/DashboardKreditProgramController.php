@@ -10,8 +10,8 @@ use Illuminate\Http\Request;
 class DashboardKreditProgramController extends Controller
 {
     function index() {
-        $total_modal = MasterDana::latest()->first()->dana_modal;
-        $total_idle = MasterDana::latest()->first()->dana_idle;
+        $total_modal = MasterDana::latest()->first()->dana_modal ?? 0;
+        $total_idle = MasterDana::latest()->first()->dana_idle ?? 0;
         $total_baket = DanaCabang::latest()->sum('baki_debet');
         return view('dagulir.master-dana.dashboard',[
             'total_modal' => $total_modal,

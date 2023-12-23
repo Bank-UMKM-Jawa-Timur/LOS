@@ -2,100 +2,160 @@
 @include('components.new.modal.loading')
 @push('script-inject')
     <script>
+    $(document).ready(function() {
         $('#page_length').on('change', function() {
-            $('#form').submit()
-        })
-        $('.rupiah').keyup(function(e) {
-            var input = $(this).val()
-            $(this).val(formatrupiah(input))
+            $('#form').submit();
         });
-        $(document).ready(function() {
-            // get data dari
-            $("#pesan").hide();
-            $('#dari_cabang').on('change',function(params) {
-                var dari = $(this).val();
-                if (dari) {
-                    // get dana current
-                    $.ajax({
-                        type: "GET",
-                        url:"{{ route('master-dana.dari') }}",
-                        data:{
-                            id:dari
-                        },
-                        success:function(res){
-                            console.log(res);
-                            $('#dana_dari').val(formatrupiah(res));
-                        }
-                    })
-                    // get cabang lawan
-                    $.ajax({
-                        type: "GET",
-                        url: "{{ route('master-dana.lawan') }}",
-                        dataType: 'JSON',
-                        data:{
-                            id:dari
-                        },
-                        success: function(res) {
-                            console.log(res);
-                            if (res.length > 0) {
-                                $("#ke_cabang").empty();
-                                $("#ke_cabang").append('<option>---Pilih Cabang---</option>');
-                                $.each(res, function(index, cabang) {
-                                    $('#ke_cabang').append(`
-                                        <option value="${cabang.id}">${cabang.cabang}</option>
-                                    `);
-                                });
 
-                                $('#ke_cabang').trigger('change');
-                            } else {
-                                $("#ke_cabang").empty();
-                            }
-                        }
-                    });
-                }
-            })
-            // get data sampai
-            $('#ke_cabang').on('change',function(params) {
-                var lawan = $('#dari_cabang').val()
+        $('.rupiah').on('input', function(e) {
+            var input = $(this).val();
+            $(this).val(formatrupiah(input));
+        });
+
+        $("#pesan").hide();
+
+        $('#dari_cabang').on('change', function(params) {
+            var dari = $(this).val();
+
+            if (dari) {
                 $.ajax({
                     type: "GET",
-                    url:"{{ route('master-dana.ke') }}",
-                    data:{
-                        id:$(this).val(),
+                    url: "{{ route('master-dana.dari') }}",
+                    data: {
+                        id: dari
                     },
-                    success:function(res){
-                        console.log(res);
-                        $('#dana_ke').val(formatrupiah(res));
+                    success: function(res) {
+                        let dana_modal = res.dana_modal;
+                        let dana_idle = res.dana_idle;
+                        dana_dari_sebelum(dana_modal,dana_idle);
                     }
-                })
-            })
+                });
 
-            $('#jumlah_dana_dari').keyup(function() {
-                hitung()
-            })
-        })
+                $.ajax({
+                    type: "GET",
+                    url: "{{ route('master-dana.lawan') }}",
+                    dataType: 'JSON',
+                    data: {
+                        id: dari
+                    },
+                    success: function(res) {
+                        if (res.length > 0) {
+                            $("#ke_cabang").empty();
+                            $("#ke_cabang").append('<option>---Pilih Cabang---</option>');
+
+                            $.each(res, function(index, cabang) {
+                                $('#ke_cabang').append(`
+                                    <option value="${cabang.id}">${cabang.cabang}</option>
+                                `);
+                            });
+
+                            $('#ke_cabang').trigger('change');
+                        } else {
+                            $("#ke_cabang").empty();
+                        }
+                    }
+                });
+            }
+        });
+
+        $('#ke_cabang').on('change', function(params) {
+            $.ajax({
+                type: "GET",
+                url: "{{ route('master-dana.ke') }}",
+                data: {
+                    id: $(this).val(),
+                },
+                success: function(res) {
+                    let dana_modal_ke = res.dana_modal;
+                    let dana_idle_ke = res.dana_idle;
+                    dana_ke_sebelum(dana_modal_ke,dana_idle_ke);
+                }
+            });
+        });
+
+        $('#jumlah_dana').on('keyup', function() {
+            hitung();
+        });
+
+        function dana_dari_sebelum(modal, idle) {
+            $('#dana_modal_sebelum_dari').val(modal);
+            $('#dana_idle_sebelum_dari').val(idle);
+
+            var dana_modal_sebelum_dari = document.getElementById("dana_modal_sebelum_dari");
+            dana_modal_sebelum_dari.value = formatrupiah(dana_modal_sebelum_dari.value);
+
+            var dana_idle_sebelum_dari = document.getElementById("dana_idle_sebelum_dari");
+            dana_idle_sebelum_dari.value = formatrupiah(dana_idle_sebelum_dari.value);
+        }
+
+        function dana_ke_sebelum(modal, idle) {
+            $('#dana_modal_sebelum_ke').val(modal);
+            var dana_modal_sebelum_ke = document.getElementById("dana_modal_sebelum_ke");
+            dana_modal_sebelum_ke.value = formatrupiah(dana_modal_sebelum_ke.value);
+            $('#dana_idle_sebelum_ke').val(idle);
+            var dana_idle_sebelum_ke = document.getElementById("dana_idle_sebelum_ke");
+            dana_idle_sebelum_ke.value = formatrupiah(dana_idle_sebelum_ke.value);
+        }
         // get total
         function hitung() {
-            let total_tersedia = parseInt($('#dana_dari').val().split('.').join(''));
-            let jumlah = parseInt($('#jumlah_dana_dari').val().split('.').join(''));
-            console.log(`${total_tersedia} - ${jumlah}`);
-            if (total_tersedia < jumlah) {
+            let jumlah = isNaN(parseInt($('#jumlah_dana').val().replace(/\./g, ''))) ? 0 : parseInt($('#jumlah_dana').val().replace(/\./g, ''));
+            // dana dari
+            let dana_sebelum = isNaN(parseInt($('#dana_modal_sebelum_dari').val().replace(/\./g, ''))) ? 0 : parseInt($('#dana_modal_sebelum_dari').val().replace(/\./g, ''))
+            let dana_sebelum_idle = isNaN(parseInt($('#dana_idle_sebelum_dari').val().replace(/\./g, ''))) ? 0 : parseInt($('#dana_idle_sebelum_dari').val().replace(/\./g, ''))
+            // dana ke
+            let dana_sebelum_ke = isNaN(parseInt($('#dana_modal_sebelum_ke').val().replace(/\./g, ''))) ? 0 : parseInt($('#dana_modal_sebelum_ke').val().replace(/\./g, ''))
+            let dana_sebelum_ke_idle = isNaN(parseInt($('#dana_idle_sebelum_ke').val().replace(/\./g, ''))) ? 0 : parseInt($('#dana_idle_sebelum_ke').val().replace(/\./g, ''))
+            // hitung
+            // dari
+            let total_dana_modal_dari = dana_sebelum - jumlah;
+            let total_dana_idle_dari = dana_sebelum_idle - jumlah;
+            // ke
+            let total_dana_modal_ke = jumlah + dana_sebelum_ke;
+            let total_dana_idle_ke = jumlah + dana_sebelum_ke_idle;
+            if (total_dana_modal_dari < 0) {
                 $("#pesan").show();
-                setTimeout(function() { $("#pesan").hide(); }, 5000);
-
+                $('#dana_modal_setelah_dari').val(total_dana_modal_dari);
+                $('#dana_idle_setelah_dari').val(total_dana_idle_dari);
+                $('#dana_modal_setelah_ke').val(0);
+                $('#dana_idle_setelah_ke').val(0);
+                var dana_modal_setelah_dari = document.getElementById("dana_modal_setelah_dari");
+                dana_modal_setelah_dari.value = formatrupiah(dana_modal_setelah_dari.value);
+                var dana_idle_setelah_dari = document.getElementById("dana_idle_setelah_dari");
+                dana_idle_setelah_dari.value = formatrupiah(dana_idle_setelah_dari.value);
             }else{
-                total(jumlah)
                 $("#pesan").hide();
+                $('#dana_modal_setelah_dari').val(total_dana_modal_dari);
+                $('#dana_idle_setelah_dari').val(total_dana_idle_dari);
+                $('#dana_modal_setelah_ke').val(total_dana_modal_ke);
+                $('#dana_idle_setelah_ke').val(total_dana_idle_ke);
 
+                var dana_modal_setelah_dari = document.getElementById("dana_modal_setelah_dari");
+                dana_modal_setelah_dari.value = formatrupiah(dana_modal_setelah_dari.value);
+                var dana_idle_setelah_dari = document.getElementById("dana_idle_setelah_dari");
+                dana_idle_setelah_dari.value = formatrupiah(dana_idle_setelah_dari.value);
+                var dana_modal_setelah_ke = document.getElementById("dana_modal_setelah_ke");
+                dana_modal_setelah_ke.value = formatrupiah(dana_modal_setelah_ke.value);
+                var dana_idle_setelah_ke = document.getElementById("dana_idle_setelah_ke");
+                dana_idle_setelah_ke.value = formatrupiah(dana_idle_setelah_ke.value);
             }
+
+
+
+
         }
 
         function total(jumlah) {
-            let total_ke = parseInt($('#dana_ke').val().split('.').join(''));
+            let total_ke = parseInt($('#dana_ke').val().replace(/\./g, ''));
+            console.log(total_ke);
             let total_akhir = jumlah + total_ke;
+
             $('#total_dana').val(total_akhir);
+
+            var total_dana = document.getElementById("total_dana");
+            total_dana.value = formatrupiah(total_dana.value);
         }
 
+         // formatrupiah();
         function formatrupiah(angka, prefix) {
             var number_string = angka.replace(/[^,\d]/g, '').toString(),
                 split = number_string.split(','),
@@ -112,7 +172,7 @@
             rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
             return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
         }
-
+    });
     </script>
 @endpush
 @section('content')
@@ -152,7 +212,7 @@
                                 @enderror
                             </div>
                             <div class="input-box">
-                                <label for="">Ke</label>
+                                <label for="">Tujuan</label>
                                 <select name="cabang_ke" id="ke_cabang" class="form-select">
                                     <option value="0">Pilih Cabang</option>
                                 </select>
@@ -163,31 +223,60 @@
                                 @enderror
                             </div>
                         </div>
+                        <div class="flex flex-nowrap align-middle items-center w-full">
+                            <div class="flex-initial w-64">
+                                <small class="text-xs font-bold text-red-500">Sebelum Dana Alihkan </small>
+
+                            </div>
+                            <div class="w-full">
+                                <hr class="w-full h-px my-8 mx-2 bg-gray-200 border-0 dark:bg-gray-700">
+                            </div>
+                        </div>
+                        <div class="form-group-2">
+                            <div class="input-box">
+                                <label for="">Dana Modal</label>
+                                <input type="text" name="dana_modal_sebelum_dari"
+                                    class="form-input bg-gray-100 rupiah" placeholder="Dana yang tersedia"
+                                    id="dana_modal_sebelum_dari"
+                                    readonly
+                                >
+                            </div>
+                            <div class="input-box">
+                                <label for="">Dana Modal</label>
+                                <input type="text" name="dana_modal_sebelum_ke"
+                                    class="form-input bg-gray-100 rupiah" placeholder="Dana yang tersedia"
+                                    id="dana_modal_sebelum_ke"
+                                    readonly
+                                >
+                            </div>
+                        </div>
                         <div class="form-group-2 mb-4">
                             <div class="input-box">
-                                <label for="">Dana yang tersedia</label>
-                                <input type="text" name="dana_dari"
+                                <label for="">Dana Idle</label>
+                                <input type="text" name="dana_idle_sebelum_dari"
                                     class="form-input bg-gray-100 rupiah" placeholder="Dana yang tersedia"
-                                    id="dana_dari"
+                                    id="dana_idle_sebelum_dari"
                                     readonly
                                 >
-                                <span id="eror"></span>
                             </div>
                             <div class="input-box">
-                                <label for="">Dana yang tersedia</label>
-                                <input type="text" name="dana_ke"
+                                <label for="">Dana Idle</label>
+                                <input type="text" name="dana_idle_sebelum_ke"
                                     class="form-input bg-gray-100 rupiah" placeholder="Dana yang tersedia"
-                                    id="dana_ke"
+                                    id="dana_idle_sebelum_ke"
                                     readonly
                                 >
                             </div>
+                        </div>
+                        <hr>
+                        <div class="form-group-1">
                             <div class="input-box">
                                 <label for="">Jumlah</label>
-                                <input type="text" name="dana_idle"
-                                    class="form-input @error('jumlah_dana_dari') is-invalid @enderror rupiah" placeholder="Jumlah Dana"
-                                    id="jumlah_dana_dari"
-                                    value="{{ old('jumlah_dana_dari') }}">
-                                @error('jumlah_dana_dari')
+                                <input type="text" name="jumlah_dana"
+                                    class="form-input @error('jumlah_dana') is-invalid @enderror rupiah" placeholder="Jumlah Dana"
+                                    id="jumlah_dana"
+                                    value="{{ old('jumlah_dana') }}">
+                                @error('jumlah_dana')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
@@ -196,27 +285,59 @@
                                     <small class="text-red-400">Maaf dana tidak mencukupi</small>
                                 </div>
                             </div>
+                        </div>
+                        <div class="flex flex-nowrap align-middle items-center w-full">
+                            <div class="flex-initial w-64">
+                                <small class="text-xs font-bold text-red-500">Setelah Dana Alihkan </small>
+
+                            </div>
+                            <div class="w-full">
+                                <hr class="w-full h-px my-8 mx-2 bg-gray-200 border-0 dark:bg-gray-700">
+                            </div>
+                        </div>
+                        <div class="form-group-2">
                             <div class="input-box">
-                                <label for="">Total Dana</label>
-                                <input type="text" name="total_dana"
-                                    class="form-input bg-gray-100 @error('total_dana') is-invalid @enderror rupiah" placeholder="Jumlah Dana"
-                                    id="total_dana"
+                                <label for="">Dana Modal</label>
+                                <input type="text" name="dana_modal_setelah_dari"
+                                    class="form-input bg-gray-100 rupiah" placeholder="Dana yang tersedia"
+                                    id="dana_modal_setelah_dari"
                                     readonly
-                                    value="{{ old('total_dana') }}">
-                                @error('total_dana')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
+                                >
+                            </div>
+                            <div class="input-box">
+                                <label for="">Dana Modal</label>
+                                <input type="text" name="dana_modal_setelah_ke"
+                                    class="form-input bg-gray-100 rupiah" placeholder="Dana yang tersedia"
+                                    id="dana_modal_setelah_ke"
+                                    readonly
+                                >
+                            </div>
+                        </div>
+                        <div class="form-group-2 mb-4">
+                            <div class="input-box">
+                                <label for="">Dana Idle</label>
+                                <input type="text" name="dana_idle_setelah_dari"
+                                    class="form-input bg-gray-100 rupiah" placeholder="Dana yang tersedia"
+                                    id="dana_idle_setelah_dari"
+                                    readonly
+                                >
+                            </div>
+                            <div class="input-box">
+                                <label for="">Dana Idle</label>
+                                <input type="text" name="dana_idle_setelah_ke"
+                                    class="form-input bg-gray-100 rupiah" placeholder="Dana yang tersedia"
+                                    id="dana_idle_setelah_ke"
+                                    readonly
+                                >
                             </div>
                         </div>
                     </div>
-                    <div class="flex justify-end">
+                    <div class="flex justify-end p-3">
                         <div class="mx-2">
                             <button type="reset" class="px-5 py-2 border rounded bg-white text-gray-500" >Batal</button>
                         </div>
-                        <div>
-                            <button type="submit" class="px-5 py-2 border rounded bg-theme-primary text-white">update</button>
+                        <div class="">
+                            <button type="submit" class="px-5 py-2 border rounded bg-theme-primary text-white">Simpan</button>
                         </div>
                     </div>
                 </form>

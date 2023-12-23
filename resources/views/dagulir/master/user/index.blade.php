@@ -110,8 +110,7 @@
                                                         class="dropdown-item">
                                                         Edit
                                                     </a> --}}
-                                                    <a class="w-full cursor-pointer" href="javascript:void(0)"
-                                                        data-id_user="{{$item->id}}"
+                                                    <a href="javascript:void(0)" class="cursor-pointer w-full" data-id_user="{{$item->id}}"
                                                         data-nip="{{$item->nip ?? '-'}}"
                                                         data-nama="{{$item->name}}"
                                                         data-email="{{$item->email}}"
@@ -131,8 +130,8 @@
                                                         </li>
                                                     </a>
                                                     @endif
-                                                    <a class="w-full cursor-pointer reset-password"
-                                                        href="javascript:void(0)">
+                                                    <a href="javascript:void(0)" class="w-full cursor-pointer"
+                                                        onclick="resetPassword('{{ $item->name }}', '{{ $item->id }}')">
                                                         <li class="item-tb-dropdown">
                                                             Reset Password
                                                         </li>

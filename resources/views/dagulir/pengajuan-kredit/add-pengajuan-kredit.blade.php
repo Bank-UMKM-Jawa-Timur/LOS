@@ -122,14 +122,14 @@ $dataIndex = match ($skema) {
                                                     </div>
                                                 </div>
                                             </div>
-
+                                            <div class="form-group" id="space_nib"></div>
                                             <div class="form-group" id="nib">
                                                 <div class="input-box">
                                                     <label for="">NIB</label>
                                                     <input type="hidden" name="id_level[77]" value="77" id="nib_id">
                                                     <input type="hidden" name="opsi_jawaban[77]" value="input text" id="nib_opsi_jawaban">
                                                     <input type="text" maxlength="255" name="informasi[77]" id="nib_text"
-                                                        placeholder="Masukkan informasi" class="form-input" disabled="disabled">
+                                                        placeholder="Masukkan informasi" class="form-input bg-white" disabled>
 
                                                 </div>
                                             </div>
@@ -139,7 +139,7 @@ $dataIndex = match ($skema) {
                                                     <input type="hidden" name="id_item_file[{{ $itemNIB->id }}]" value="{{ $itemNIB->id }}"
                                                         id="docNIB_id">
                                                     <input type="file" name="upload_file[{{ $itemNIB->id }}]" data-id=""
-                                                        placeholder="Masukkan informasi {{ $itemNIB->nama }}" class="form-input limit-size"
+                                                        placeholder="Masukkan informasi {{ $itemNIB->nama }}" class="form-input limit-size bg-white only-image"
                                                         id="file_nib" disabled="true">
                                                     <span class="text-red-500 m-0" style="display: none" id="docNIB_text">Besaran file
                                                         tidak boleh lebih dari 5 MB</span>
@@ -159,8 +159,8 @@ $dataIndex = match ($skema) {
                                                     <input type="hidden" name="opsi_jawaban[78]" value="input text"
                                                         id="surat_keterangan_usaha_opsi_jawaban">
                                                     <input type="text" maxlength="255" name="informasi[78]" id="surat_keterangan_usaha_text"
-                                                        placeholder="Masukkan informasi" class="form-input"
-                                                        disabled="disabled"
+                                                        placeholder="Masukkan informasi" class="form-input bg-white"
+                                                        disabled
                                                     >
                                                 </div>
                                             </div>
@@ -172,8 +172,8 @@ $dataIndex = match ($skema) {
                                                         id="docSKU_id">
                                                     <input type="file" name="upload_file[{{ $itemSKU->id }}]" id="surat_keterangan_usaha_file"
                                                         data-id="" placeholder="Masukkan informasi {{ $itemSKU->nama }}"
-                                                        class="form-input limit-size"
-                                                        disabled="disabled">
+                                                        class="form-input limit-size bg-white only-image"
+                                                        disabled>
                                                     <span class="text-red-500 m-0" style="display: none" id="docSKU_text">Besaran file
                                                         tidak boleh lebih dari 5 MB</span>
                                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
@@ -192,7 +192,7 @@ $dataIndex = match ($skema) {
                                                     <input type="hidden" name="id_level[79]" value="79" id="npwp_id">
                                                     <input type="hidden" name="opsi_jawaban[79]" value="input text" id="npwp_opsi_jawaban">
                                                     <input type="text" maxlength="20" name="informasi[79]" id="npwp_text"
-                                                        placeholder="Masukkan informasi" class="form-input">
+                                                        placeholder="Masukkan informasi" class="form-input bg-white">
                                                 </div>
                                             </div>
                                             <div class="form-group" id="docNPWP">
@@ -201,7 +201,7 @@ $dataIndex = match ($skema) {
                                                     <input type="hidden" name="id_item_file[{{ $itemNPWP->id }}]" value="{{ $itemNPWP->id }}"
                                                         id="docNPWP_id">
                                                     <input type="file" name="upload_file[{{ $itemNPWP->id }}]" id="npwp_file" data-id=""
-                                                        placeholder="Masukkan informasi {{ $itemNPWP->nama }}" class="form-input limit-size">
+                                                        placeholder="Masukkan informasi {{ $itemNPWP->nama }}" class="form-input limit-size bg-white only-image">
                                                     <span class="text-red-500 m-0" style="display: none" id="docNPWP_text">Besaran file
                                                         tidak boleh lebih dari 5 MB</span>
                                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
@@ -292,7 +292,7 @@ $dataIndex = match ($skema) {
                                                                         value="{{ $item->opsi_jawaban }}" id="">
                                                                     <input type="hidden" name="id_level[{{ $item->id }}]" value="{{ $item->id }}"
                                                                         id="">
-                                                                    <input type="number" step="any" name="informasi[{{ $item->id }}]"
+                                                                    <input type="number" min="0" step="any" name="informasi[{{ $item->id }}]"
                                                                         id="{{ $idLevelDua }}" placeholder="Masukkan informasi {{ $item->nama }}"
                                                                         class="form-input" aria-label="Recipient's username" aria-describedby="basic-addon2"
                                                                         onkeydown="return event.keyCode !== 69">
@@ -309,13 +309,11 @@ $dataIndex = match ($skema) {
                                                     <div class="form-group">
                                                         <div class="input-box">
                                                             <label for="">{{ $item->nama }}</label><small class="text-red-500 font-bold">*</small>
-                                                            {{-- <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" --}} {{--
-                                                                            id="{{ $idLevelDua }}"> --}}
                                                             <input type="hidden" name="id_item_file[{{ $item->id }}]" value="{{ $item->id }}"
                                                                 id="">
                                                             <input type="file" name="upload_file[{{ $item->id }}]" id="{{ $idLevelDua }}"
                                                                 data-id="" placeholder="Masukkan informasi {{ $item->nama }}"
-                                                                class="form-input limit-size"
+                                                                class="form-input limit-size {{$item->only_accept}}"
                                                                 >
                                                             <span class="text-red-500 m-0" style="display: none">Maximum upload file size is 15
                                                                 MB</span>
@@ -480,7 +478,7 @@ $dataIndex = match ($skema) {
                                                                                     value="{{ $itemTiga->opsi_jawaban }}" id="">
                                                                                 <input type="hidden" name="id_level[{{ $itemTiga->id }}]"
                                                                                     value="{{ $itemTiga->id }}" id="">
-                                                                                    <input type="number" step="any" name="informasi[{{ $itemTiga->id }}]"
+                                                                                    <input type="number" min="0" step="any" name="informasi[{{ $itemTiga->id }}]"
                                                                                         id="{{ $idLevelTiga }}"
                                                                                         placeholder="Masukkan informasi {{ $itemTiga->nama }}"
                                                                                         class="form-input {{$itemTiga->readonly ? 'bg-gray-100' : ''}}"
@@ -506,7 +504,7 @@ $dataIndex = match ($skema) {
                                                                             <input type="file" name="upload_file[{{ $itemTiga->id }}][]"
                                                                                 id="{{ $idLevelTiga }}" data-id=""
                                                                                 placeholder="Masukkan informasi {{ $itemTiga->nama }}"
-                                                                                class="form-input limit-size file-usaha" accept="image/*">
+                                                                                class="form-input limit-size file-usaha {{$itemTiga->only_accept}}" accept="image/*">
                                                                             <span class="text-red-500 m-0" style="display: none">Maximum upload
                                                                                 file size is 15 MB</span>
                                                                             <span class="filename" style="display: inline;"></span>
@@ -666,7 +664,7 @@ $dataIndex = match ($skema) {
                                                                                     value="{{ $itemEmpat->opsi_jawaban }}" id="">
                                                                                 <input type="hidden" name="id_level[{{ $itemEmpat->id }}]"
                                                                                     value="{{ $itemEmpat->id }}" id="">
-                                                                                <input type="number" step="any" name="informasi[{{ $itemEmpat->id }}]"
+                                                                                <input type="number" min="0" step="any" name="informasi[{{ $itemEmpat->id }}]"
                                                                                     id="{{ $idLevelEmpat }}"
                                                                                     placeholder="Masukkan informasi {{ $itemEmpat->nama }}" class="form-input"
                                                                                     aria-label="Recipient's username" aria-describedby="basic-addon2"
@@ -690,7 +688,7 @@ $dataIndex = match ($skema) {
                                                                         <input type="file" id="{{ $idLevelEmpat }}"
                                                                             name="upload_file[{{ $itemEmpat->id }}]" data-id=""
                                                                             placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
-                                                                            class="form-input limit-size">
+                                                                            class="form-input limit-size {{$itemEmpat->only_accept}}">
                                                                         <span class="text-red-500 m-0" style="display: none">Maximum upload file
                                                                             size is 5 MB</span>
                                                                         <span class="filename" style="display: inline;"></span>
@@ -758,7 +756,7 @@ $dataIndex = match ($skema) {
                                         <label for="">Pendapat dan Usulan {{ $value->nama }}</label>
                                         <input type="hidden" name="id_aspek[{{ $value->id }}]" value="{{ $value->id }}">
                                         <textarea name="pendapat_per_aspek[{{ $value->id }}]"
-                                            class="form-input @error('pendapat_per_aspek') is-invalid @enderror" id="{{  str_replace(' ', '_', strtolower($value->nama)) }}" maxlength="255"
+                                            class="form-input @error('pendapat_per_aspek') is-invalid @enderror" id="{{ str_replace(' ', '_', strtolower($value->nama)) }}" maxlength="255"
                                             cols="30" rows="4" placeholder="Pendapat Per Aspek"></textarea>
                                         @error('pendapat_per_aspek')
                                             <div class="invalid-feedback">
@@ -767,11 +765,13 @@ $dataIndex = match ($skema) {
                                         @enderror
                                     </div>
                                     <div class="flex justify-between">
-                                        <button type="button"
-                                          class="px-5 py-2 border rounded bg-white text-gray-500"
-                                        >
-                                          Kembali
-                                        </button>
+                                        <a href="{{route('dagulir.pengajuan.index')}}">
+                                            <button type="button"
+                                                class="px-5 py-2 border rounded bg-white text-gray-500"
+                                                >
+                                                Kembali
+                                            </button>
+                                        </a>
                                         <div>
                                           <button type="button"
                                           class="px-5 prev-tab py-2 border rounded bg-theme-secondary text-white"
@@ -783,7 +783,6 @@ $dataIndex = match ($skema) {
                                         >
                                           Selanjutnya
                                         </button>
-                                        {{-- <button type="submit" class="px-5 py-2 border rounded bg-green-600 text-white btn-simpan hidden" id="submit">Simpan </button> --}}
                                         </div>
                                     </div>
                                 </div>
@@ -810,11 +809,13 @@ $dataIndex = match ($skema) {
                                     </div>
                                 </div>
                                 <div class="flex justify-between">
-                                        <button type="button"
-                                          class="px-5 py-2 border rounded bg-white text-gray-500"
-                                        >
-                                          Kembali
-                                        </button>
+                                        <a href="{{route('dagulir.pengajuan.index')}}">
+                                            <button type="button"
+                                                class="px-5 py-2 border rounded bg-white text-gray-500"
+                                                >
+                                                Kembali
+                                            </button>
+                                        </a>
                                         <div>
                                           <button type="button"
                                           class="px-5 prev-tab py-2 border rounded bg-theme-secondary text-white"
@@ -856,11 +857,9 @@ $dataIndex = match ($skema) {
         `
         });
     @endif
-    let dataAspekArr;
-    var nullValue = [];
+    let nullValue = [];
     $(document).ready(function() {
         countFormPercentage()
-        // dataAspekArr = <?php echo json_encode($dataAspek); ?>;
     });
 
     @if (!\Request::has('dagulir'))
@@ -1150,16 +1149,15 @@ $dataIndex = match ($skema) {
         }
     });
 
-
-
     // End Validation
     function formPercentage(tabId) {
         var form = `#${tabId}`;
-        // var form = `#aspek-jaminan-tab`;
+        // var form = `#aspek-keuangan-tab`;
         var inputFile = $(form + " input[type=file]")
         var inputText = $(form + " input[type=text]")
         var inputNumber = $(form + " input[type=number]")
         var inputDate = $(form + " input[type=date]")
+        var InputEmail = $(form + " input[type=email]")
         var inputHidden = $(form + " input[type=hidden]")
         var select = $(form + " select")
         var textarea = $(form + " textarea")
@@ -1178,7 +1176,36 @@ $dataIndex = match ($skema) {
             var formGroup = inputBox.parent();
             if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden'))
                 totalInput++
-            var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
+            var isNull = (v.value == '' || $.trim(v.value) == '' || $.trim(v.value) == '')
+            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
+                totalInputNull++;
+                if ($(this).attr('id') != undefined) {
+                    nullValue.push($(this).attr('id').toString().replaceAll("_", " "))
+                }
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).is(":checked") && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
+                totalInputFilled++;
+                if ($(this).attr('id') != undefined) {
+                    let val = $(this).attr("id").toString().replaceAll("_", " ");
+                    for (var i = 0; i < nullValue.length; i++) {
+                        while (nullValue[i] == val) {
+                            nullValue.splice(i, 1)
+                            break;
+                        }
+                    }
+                }
+            } else if (!$(this).is(':checked')) {
+                totalInputChecked++;
+            }
+        })
+
+        $.each(InputEmail, function(i, v) {
+            if ($(this).prop('readonly'))
+                totalInputReadOnly++;
+            var inputBox = $(this).closest('.input-box');
+            var formGroup = inputBox.parent();
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden'))
+                totalInput++
+            var isNull = (v.value == '' || $.trim(v.value) == '' || $.trim(v.value) == '')
             if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputNull++;
                 if ($(this).attr('id') != undefined) {
@@ -1226,7 +1253,8 @@ $dataIndex = match ($skema) {
             var formGroup = inputBox.parent();
             if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden'))
                 totalInput++
-            var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
+            // var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
+            var isNull = (v.value == '' || $.trim(v.value) == '')
             if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputNull++;
                 if ($(this).attr('id') != undefined) {
@@ -1362,9 +1390,9 @@ $dataIndex = match ($skema) {
                 }
             }
         })
-        var totalReadHidden = (totalInputHidden + totalInputReadOnly)
+        var totalReadHidden = (totalInputHidden + totalInputReadOnly);
         var total = totalInput + totalInputChecked;
-        percent = (totalInputFilled / (totalInput - totalInputReadOnly)) * 100
+        percent = (totalInputFilled / (totalInput - totalInputReadOnly)) * 100;
         return parseInt(percent)
     }
 
@@ -1541,17 +1569,8 @@ $dataIndex = match ($skema) {
         var parent = $(this).closest('.input-box')
         parent.remove()
     })
-    function formatNpwp(value) {
-        if (typeof value === 'string') {
-            return value.replace(/(\d{2})(\d{3})(\d{3})(\d{1})(\d{3})(\d{3})/, '$1.$2.$3.$4-$5.$6');
-        }
-    }
-    // NPWP format
-    $(document).on('keyup', '#npwp_text', function() {
-        var input = $(this).val().replace(/\D/g, '');
-        $(this).val(formatNpwp(input))
-    })
     $(".btn-simpan-data").on('click', function(e) {
+        console.log(nullValue);
         if ($('#komentar_staff').val() == '') {
             Swal.fire({
                 icon: 'error',
@@ -1607,12 +1626,10 @@ $dataIndex = match ($skema) {
                     title: 'Oops...',
                     html: '<ul>'+message+'</ul>'
                 })
+                console.log(nullValue);
                 e.preventDefault()
             } else {
-                // $("#loadingModal").modal({
-                //     keyboard: false
-                // });
-                // $("#loadingModal").modal("show");
+                $("#preload-data").removeClass("hidden");
             }
         }
     })
@@ -1679,73 +1696,73 @@ $dataIndex = match ($skema) {
 
     var x = 1;
 
-    $("#status").change(function() {
-        let value = $(this).val();
-        $("#foto-ktp-istri").empty();
-        $("#foto-ktp-suami").empty();
-        $("#foto-ktp-nasabah").empty();
-        $("#foto-ktp-istri").removeClass('form-group');
-        $("#foto-ktp-suami").removeClass('form-group');
-        $("#foto-ktp-nasabah").removeClass('form-group');
+    // $("#status").change(function() {
+    //     let value = $(this).val();
+    //     $("#foto-ktp-istri").empty();
+    //     $("#foto-ktp-suami").empty();
+    //     $("#foto-ktp-nasabah").empty();
+    //     $("#foto-ktp-istri").removeClass('form-group');
+    //     $("#foto-ktp-suami").removeClass('form-group');
+    //     $("#foto-ktp-nasabah").removeClass('form-group');
 
-        if (value == "menikah") {
-            $("#foto-ktp-istri").addClass('form-group')
-            $("#foto-ktp-suami").addClass('form-group')
-            $("#foto-ktp-istri").append(`
-                <label for="">{{ $itemKTPIs->nama }}</label>
-                <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
-                <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-input limit-size" id="foto_ktp_istri">
-                <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
-                @if (isset($key) && $errors->has('dataLevelDua.' . $key))
-                    <div class="invalid-feedback">
-                        {{ $errors->first('dataLevelDua.' . $key) }}
-                    </div>
-                @endif
-                <span class="filename" style="display: inline;"></span>
-            `)
-            $("#foto-ktp-suami").append(`
-                    <label for="">{{ $itemKTPSu->nama }}</label>
-                    <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
-                    <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-input limit-size" id="foto_ktp_suami">
-                    <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
-                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
-                        <div class="invalid-feedback">
-                            {{ $errors->first('dataLevelDua.' . $key) }}
-                        </div>
-                    @endif
-                    <span class="filename" style="display: inline;"></span>
-            `);
-        } else {
-            $("#foto-ktp-nasabah").addClass('form-group-1')
-            $("#foto-ktp-nasabah").append(`
-                @isset($itemKTPNas)
-                <label for="">{{ $itemKTPNas->nama }}</label>
-                <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
-                <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-input limit-size" id="foto_ktp_nasabah">
-                <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
-                @if (isset($key) && $errors->has('dataLevelDua.' . $key))
-                    <div class="invalid-feedback">
-                        {{ $errors->first('dataLevelDua.' . $key) }}
-                    </div>
-                @endif
-                <span class="filename" style="display: inline;"></span>
-                @endisset
-            `)
-        }
-        $('.limit-size').on('change', function() {
-            var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-            if (size > 5) {
-                $(this).next().css({
-                    "display": "block"
-                });
-                this.value = ''
-            } else {
-                $(this).next().css({
-                    "display": "none"
-                });
-            }
-        })
-    });
+    //     if (value == "menikah") {
+    //         $("#foto-ktp-istri").addClass('form-group')
+    //         $("#foto-ktp-suami").addClass('form-group')
+    //         $("#foto-ktp-istri").append(`
+    //             <label for="">{{ $itemKTPIs->nama }}</label>
+    //             <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
+    //             <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-input limit-size" id="foto_ktp_istri">
+    //             <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+    //             @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+    //                 <div class="invalid-feedback">
+    //                     {{ $errors->first('dataLevelDua.' . $key) }}
+    //                 </div>
+    //             @endif
+    //             <span class="filename" style="display: inline;"></span>
+    //         `)
+    //         $("#foto-ktp-suami").append(`
+    //                 <label for="">{{ $itemKTPSu->nama }}</label>
+    //                 <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
+    //                 <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-input limit-size" id="foto_ktp_suami">
+    //                 <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+    //                 @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+    //                     <div class="invalid-feedback">
+    //                         {{ $errors->first('dataLevelDua.' . $key) }}
+    //                     </div>
+    //                 @endif
+    //                 <span class="filename" style="display: inline;"></span>
+    //         `);
+    //     } else {
+    //         $("#foto-ktp-nasabah").addClass('form-group-1')
+    //         $("#foto-ktp-nasabah").append(`
+    //             @isset($itemKTPNas)
+    //             <label for="">{{ $itemKTPNas->nama }}</label>
+    //             <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
+    //             <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-input limit-size" id="foto_ktp_nasabah">
+    //             <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+    //             @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+    //                 <div class="invalid-feedback">
+    //                     {{ $errors->first('dataLevelDua.' . $key) }}
+    //                 </div>
+    //             @endif
+    //             <span class="filename" style="display: inline;"></span>
+    //             @endisset
+    //         `)
+    //     }
+    //     $('.limit-size').on('change', function() {
+    //         var size = (this.files[0].size / 1024 / 1024).toFixed(2)
+    //         if (size > 5) {
+    //             $(this).next().css({
+    //                 "display": "block"
+    //             });
+    //             this.value = ''
+    //         } else {
+    //             $(this).next().css({
+    //                 "display": "none"
+    //             });
+    //         }
+    //     })
+    // });
 
     //cek apakah opsi yg dipilih memiliki sub column
     $('.cek-sub-column').change(function(e) {
@@ -1838,7 +1855,7 @@ $dataIndex = match ($skema) {
                                 <div class="form-group aspek_jaminan_kategori_jaminan_utama">
                                     <label>${valItem.nama}</label>
                                     <input type="hidden" name="id_item_file[${valItem.id}]" value="${valItem.id}" id="" class="input">
-                                    <input type="file" name="upload_file[${valItem.id}]" data-id="" class="form-input limit-size">
+                                    <input type="file" name="upload_file[${valItem.id}]" data-id="" class="form-input limit-size only-image">
                                     <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                                     <span class="filename" style="display: inline;"></span>
                                 </div>`);
@@ -1960,7 +1977,7 @@ $dataIndex = match ($skema) {
                                     <input type="hidden" name="opsi_jawaban[${valItem.id}]"
                                         value="${valItem.opsi_jawaban}" id="" class="input">
                                     <input type="text" maxlength="255" id="atas_nama" name="informasi[${valItem.id}]" placeholder="Masukkan informasi"
-                                        class="form-input input" value="${response.dataJawaban[i]}">
+                                        class="form-input input" value="">
                                 </div>
                             `);
                         } else {
@@ -1976,7 +1993,7 @@ $dataIndex = match ($skema) {
                                                     value="${valItem.id}" id="">
                                                 <input type="file" id="${valItem.nama.toString().replaceAll(" ", "_")}"
                                                     name="upload_file[${valItem.id}][]" data-id=""
-                                                    placeholder="Masukkan informasi ${valItem.nama}" class="form-input limit-size">
+                                                    placeholder="Masukkan informasi ${valItem.nama}" class="form-input limit-size only-image">
                                                 <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
                                                 <span class="filename" style="display: inline;"></span>
                                                 <div class="flex gap-2 multiple-action">
@@ -1996,8 +2013,11 @@ $dataIndex = match ($skema) {
                                         i] != "") {
                                     if (kategoriJaminan != 'Kendaraan Bermotor') {
                                         isCheck =
-                                            "<input type='checkbox' class='checkKategori' checked>"
+                                            "<input type='checkbox' class='checkKategori'>"
                                         isDisabled = ""
+                                    }
+                                    if (valItem.nama != 'BPKB No') {
+                                        isDisabled = "disabled"
                                     }
                                 }
                                 $('#bukti_pemilikan_jaminan_tambahan').append(`
@@ -2007,7 +2027,7 @@ $dataIndex = match ($skema) {
                                         <input type="hidden" name="opsi_jawaban[${valItem.id}]"
                                             value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
                                         <input type="text" maxlength="255" id="${valItem.nama.toString().replaceAll(" ", "_")}" name="informasi[${valItem.id}]" placeholder="Masukkan informasi"
-                                            class="form-input input" ${isDisabled} value="${response.dataJawaban[i]}">
+                                            class="form-input input" ${isDisabled} value="">
                                     </div>
                                 `);
                             }
@@ -2079,6 +2099,7 @@ $dataIndex = match ($skema) {
         let ijinUsaha = $(this).val();
         $('#npwpsku').hide();
         if (ijinUsaha == 'nib') {
+            $('#space_nib').show();
             $('#npwpsku').hide();
             $('#surat_keterangan_usaha').hide();
             $('#surat_keterangan_usaha_id').attr('disabled', true);
@@ -2115,6 +2136,7 @@ $dataIndex = match ($skema) {
             $('#docNPWP_text').val('');
             $('#docNPWP_upload_file').removeAttr('disabled');
         } else if (ijinUsaha == 'surat_keterangan_usaha') {
+            $('#space_nib').hide();
             $('#npwpsku').show();
             $('#nib').hide();
             $('#nib_id').attr('disabled', true);
@@ -2155,6 +2177,7 @@ $dataIndex = match ($skema) {
             $('#docNPWP_text').val('');
             $('#docNPWP_upload_file').attr('disabled', true);
         } else if (ijinUsaha == 'tidak_ada_legalitas_usaha') {
+            $('#space_nib').hide();
             $('#npwpsku').hide();
             $('#nib').hide();
             $('#nib_id').attr('disabled', true);
@@ -2196,12 +2219,15 @@ $dataIndex = match ($skema) {
             $('#docNPWP_text').val('');
             $('#docNPWP_upload_file').attr('disabled', true);
         } else {
+            $('#space_nib').show();
             $('#npwpsku').hide();
             $('#nib').hide();
             $('#nib_id').attr('disabled', true);
             $('#nib_text').attr('disabled', true);
             $('#nib_text').val('');
             $('#nib_opsi_jawaban').attr('disabled', true);
+
+            $('#docSKU').hide();
 
             $('#docNIB').hide();
             $('#docNIB_id').attr('disabled', true);
@@ -2215,16 +2241,16 @@ $dataIndex = match ($skema) {
             $('#surat_keterangan_usaha_text').val('');
             $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
 
-            $('#npwp').show();
-            $('#npwp_id').removeAttr('disabled');
-            $('#npwp_text').removeAttr('disabled');
-            $('#npwp_opsi_jawaban').removeAttr('disabled');
+            $('#npwp').hide();
+            $('#npwp_id').attr('disabled', true);
+            $('#npwp_text').attr('disabled', true);
+            $('#npwp_opsi_jawaban').attr('disabled', true);
 
-            $('#docNPWP').show();
-            $('#docNPWP_id').removeAttr('disabled');
-            $('#docNPWP_text').removeAttr('disabled');
+            $('#docNPWP').hide();
+            $('#docNPWP_id').attr('disabled', true);
+            $('#docNPWP_text').attr('disabled', true);
             $('#docNPWP_text').val('');
-            $('#docNPWP_upload_file').removeAttr('disabled');
+            $('#docNPWP_upload_file').attr('disabled', true);
         }
     });
     // end milih ijin usaha
@@ -2259,16 +2285,44 @@ $dataIndex = match ($skema) {
         }
     });
 
-    function formatNpwp(value) {
-        if (typeof value === 'string') {
-            return value.replace(/(\d{2})(\d{3})(\d{3})(\d{1})(\d{3})(\d{3})/, '$1.$2.$3.$4-$5.$6');
+
+    // function formatNpwp(value) {
+    //     if (typeof value === 'string') {
+    //         return value.replace(/(\d{2})(\d{3})(\d{3})(\d{1})(\d{3})(\d{3})/, '$1.$2.$3.$4-$5.$6');
+    //     }
+    // }
+    // NPWP format
+    // $(document).on('keyup', '#npwp_text', function() {
+    //     var input = $(this).val()
+    //     $(this).val(formatNpwp(input))
+    // })
+    const NPWP = document.getElementById("npwp_text")
+
+    NPWP.oninput = (e) => {
+        e.target.value = autoFormatNPWP(e.target.value);
+    }
+    function autoFormatNPWP(NPWPString) {
+        try {
+            var cleaned = ("" + NPWPString).replace(/\D/g, "");
+            var match = cleaned.match(/(\d{0,2})?(\d{0,3})?(\d{0,3})?(\d{0,1})?(\d{0,3})?(\d{0,3})$/);
+            return [
+                    match[1],
+                    match[2] ? ".": "",
+                    match[2],
+                    match[3] ? ".": "",
+                    match[3],
+                    match[4] ? ".": "",
+                    match[4],
+                    match[5] ? "-": "",
+                    match[5],
+                    match[6] ? ".": "",
+                    match[6]].join("")
+
+        } catch(err) {
+            return "";
         }
     }
-    // NPWP format
-    $(document).on('keyup', '#npwp_text', function() {
-        var input = $(this).val()
-        $(this).val(formatNpwp(input))
-    })
+
 
     //triger hitung ratio coverage
     $('#thls').change(function(e) {
@@ -2447,6 +2501,7 @@ $dataIndex = match ($skema) {
     $('.limit-size').on('change', function() {
         var size = (this.files[0].size / 1024 / 1024).toFixed(2)
         if (size > 5) {
+            $(this).next().html('Maximum upload file size is 5 MB')
             $(this).next().css({
                 "display": "block"
             });
@@ -2461,6 +2516,7 @@ $dataIndex = match ($skema) {
     $('.limit-size-2').on('change', function() {
         var size = (this.files[0].size / 1024 / 1024).toFixed(2)
         if (size > 2) {
+            $(this).parent().parent().find('.error-limit').html('Maximum upload file size is 2 MB')
             $(this).parent().parent().find('.error-limit').css({
                 "display": "block"
             });
@@ -2475,6 +2531,7 @@ $dataIndex = match ($skema) {
     $('.limit-size-slik').on('change', function() {
         var size = (this.files[0].size / 1024 / 1024).toFixed(2)
         if (size > 10) {
+            $(this).next().html('Maximum upload file size is 10 MB')
             $(this).next().css({
                 "display": "block"
             });
@@ -2486,6 +2543,52 @@ $dataIndex = match ($skema) {
         }
     })
     // End Limit Upload
+    // Only Accept file validation
+    $(".only-image").on('change', function() {
+        if (!this.files[0].type.includes('image')) {
+            $(this).val('')
+            $(this).next().html('Hanya boleh memilih berkas berupa gambar(.jpg, .jpeg, .png, .webp)')
+            $(this).next().css({
+                "display": "block"
+            });
+        }
+        else {
+            $(this).next().css({
+                "display": "none"
+            });
+        }
+    })
+
+    $(".only-pdf").on('change', function() {
+        if (!this.files[0].type.includes('pdf')) {
+            $(this).val('')
+            $(this).next().html('Hanya boleh memilih berkas berupa pdf.')
+            $(this).next().css({
+                "display": "block"
+            });
+        }
+        else {
+            $(this).next().css({
+                "display": "none"
+            });
+        }
+    })
+
+    $(".image-pdf").on('change', function() {
+        if (!this.files[0].type.includes('image') && !this.files[0].type.includes('pdf')) {
+            $(this).val('')
+            $(this).next().html('Hanya boleh memilih berkas berupa pdf dan gambar(.jpg, .jpeg, .png, .webp)')
+            $(this).next().css({
+                "display": "block"
+            });
+        }
+        else {
+            $(this).next().css({
+                "display": "none"
+            });
+        }
+    })
+    // END Only Accept file validation
     var slik = document.getElementById("file_slik");
     var selectedFile;
 

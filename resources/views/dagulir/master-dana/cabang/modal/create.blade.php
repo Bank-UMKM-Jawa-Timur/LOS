@@ -6,7 +6,7 @@
                     Perlimpahan Dana Cabang
                 </h2>
             </div>
-            <button type="button" data-dismiss-id="modal-add-kabupaten">
+            <button type="button" data-dismiss-id="modal-add-cabang">
                 <iconify-icon icon="iconamoon:close-bold" class="text-2xl"></iconify-icon>
             </button>
         </div>
@@ -16,7 +16,7 @@
                 <div class="form-group-1 mb-4">
                     <div class="input-box">
                         <label for="">Cabang </label>
-                        <select name="cabang" id="" class="form-select">
+                        <select name="cabang" id="" class="form-select select2">
                             <option value="">Pilih Cabang</option>
                             @foreach ($cabang as $item)
                                 <option value="{{ $item->id }}">{{ $item->cabang }}</option>
@@ -29,11 +29,11 @@
                         @enderror
                     </div>
                     <div class="input-box">
-                        <label for="">Dana Idle</label>
-                        <input type="text" name="dana_idle"
-                            class="form-input @error('dana_idle') is-invalid @enderror rupiah" placeholder="Dana Idle"
-                            value="{{ old('dana_idle') }}">
-                        @error('dana_idle')
+                        <label for="">Dana Modal</label>
+                        <input type="text" name="dana_modal"
+                            class="form-input @error('dana_modal') is-invalid @enderror rupiah" placeholder="Dana Modal"
+                            value="{{ old('dana_modal') }}">
+                        @error('dana_modal')
                             <div class="invalid-feedback">
                                 {{ $message }}
                             </div>
@@ -43,7 +43,7 @@
                 </div>
             </div>
             <div class="modal-footer justify-end">
-                <button type="button" class="btn-cancel" data-dismiss-id="modal-add-kabupaten">
+                <button type="button" class="btn-cancel" data-dismiss-id="modal-add-cabang">
                     Batal
                 </button>
                 <button type="submit" class="btn-submit">Simpan</button>
