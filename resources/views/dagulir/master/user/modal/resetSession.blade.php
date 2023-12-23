@@ -20,7 +20,7 @@
                     Batal
                 </button>
                 <input type="hidden" id="id" name="id">
-                <button type="submit" class="btn-submit">Simpan</button>
+                <button type="submit" class="btn-submit">Reset</button>
             </div>
         </div>
     </form>

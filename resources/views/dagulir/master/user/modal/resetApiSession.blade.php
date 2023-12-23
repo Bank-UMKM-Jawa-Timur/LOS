@@ -20,7 +20,7 @@
                 <button class="btn-cancel" type="button" data-dismiss-id="resetApiSessionModal">
                     Batal
                 </button>
-                <button type="submit" class="btn-submit">Simpan</button>
+                <button type="submit" class="btn-submit">Reset</button>
             </div>
         </div>
     </form>
