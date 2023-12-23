@@ -1,3 +1,4 @@
+@include('dagulir.pengajuan-kredit.modal.loading-post-review-penyelia')
 @extends('layouts.tailwind-template')
 
 @section('modal')
@@ -750,7 +751,7 @@
                                                             {{ $item->opsi_jawaban == 'file' ? 'col-span-1 order-2' : 'col-span-1 order-3' }}
                                                             {{ $item->nama === "Kebutuhan Kredit" ||
                                                                 $item->nama === "Persentase Net Income" ||
-                                                                $item->nama === "Installment" || $item->nama === "Repayment Capacity" ? 
+                                                                $item->nama === "Installment" || $item->nama === "Repayment Capacity" ?
                                                                 'col-span-2 order-3' : '' }}
                                                             {{ $item->nama === "Jumlah Orang yang menjalankan usaha" ?  'col-span-1 order-3' : '' }}">
                                                         <div class="col-md-12 space-y-4 order">
@@ -2151,6 +2152,9 @@
                             })
                             e.preventDefault()
                         }
+                        else{
+                            $("#preload-data-review-penyelia").removeClass("hidden");
+                        }
                     }
                 }
             }
@@ -2179,6 +2183,10 @@
                         })
                         e.preventDefault()
                     }
+                    else
+                    {
+                        $("#preload-data-review-penyelia").removeClass("hidden");
+                    }
                 }
             }
             else if (role == 'PBP') {
@@ -2203,6 +2211,9 @@
                         })
                         e.preventDefault()
                     }
+                    else{
+                            $("#preload-data-review-penyelia").removeClass("hidden");
+                        }
                 }
             }
             else {
@@ -2362,6 +2373,10 @@
                 text: "Field Pendapat dan usulan harus diisi"
             })
             e.preventDefault()
+        }
+        else
+        {
+            $("#preload-data-review-penyelia").removeClass("hidden");
         }
     })
     // End Validation

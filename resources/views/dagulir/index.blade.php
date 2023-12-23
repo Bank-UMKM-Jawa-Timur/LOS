@@ -11,6 +11,7 @@
 @include('dagulir.modal.approval')
 @include('dagulir.modal.approvalSipde')
 @include('dagulir.modal.kembalikan')
+@include('components.new.modal.loading')
 @include('dagulir.modal.lanjutkan-penyelia')
 @endsection
 
@@ -330,7 +331,11 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <p class="@if (array_key_exists(intval($item->status), $status_color)) {{$status_color[intval($item->status)]}} @endif"> {{ array_key_exists(intval($item->status), $status) ? $status[intval($item->status)] : 'Tidak ditemukan' }}</p>
+                                        <p class="
+                                            {{-- @if (array_key_exists(intval($item->status), $status_color))
+                                                {{$status_color[intval($item->status)]}}
+                                            @endif --}}
+                                            "> {{ array_key_exists(intval($item->status), $status) ? $status[intval($item->status)] : 'Tidak ditemukan' }}</p>
                                     </td>
                                     <td>
                                         <div class="flex">
@@ -359,6 +364,11 @@
                                                             <a href="{{route('dagulir.edit', $item->pengajuan->id)}}"
                                                             class="cursor-pointer">Edit</a>
                                                         </li>
+                                                        <a class="w-full cursor-pointer edit-pengajuan" href="{{ route('dagulir.edit', $item->pengajuan->id) }}">
+                                                            <li class="item-tb-dropdown">
+                                                                Edit
+                                                            </li>
+                                                        </a>
                                                     @endif
                                                     @if (Auth::user()->role == 'Staf Analis Kredit' && $item->pengajuan->posisi == 'Selesai')
                                                         @php
@@ -368,24 +378,32 @@
                                                         @endphp
 
                                                         @if ($tglCetak == null || !$tglCetak->tgl_cetak_sppk)
-                                                            <li class="item-tb-dropdown">
-                                                                <a target="_blank" href="{{ route('dagulir.cetak-sppk-dagulir', $item->pengajuan->id) }}" class="dropdown-item">Cetak SPPK</a>
-                                                            </li>
+                                                            <a target="_blank" href="{{ route('dagulir.cetak-sppk-dagulir', $item->pengajuan->id) }}" class="dropdown-item w-full">
+                                                                <li class="item-tb-dropdown">
+                                                                    Cetak SPPK
+                                                                </li>
+                                                            </a>
                                                         @elseif (!$item->pengajuan->sppk && $tglCetak->tgl_cetak_sppk)
-                                                            <li class="item-tb-dropdown">
-                                                                <a href="#" class="dropdown-item show-upload-sppk" data-toggle="modal"
-                                                                    data-target="uploadSPPKModal" data-id="{{ $item->pengajuan->id }}"
-                                                                    data-kode_pendaftaran="{{$item->kode_pendaftaran}}">Upload File SPPK</a>
-                                                            </li>
+                                                            <a href="#" class="dropdown-item show-upload-sppk w-full" data-toggle="modal"
+                                                            data-target="uploadSPPKModal" data-id="{{ $item->pengajuan->id }}"
+                                                            data-kode_pendaftaran="{{$item->kode_pendaftaran}}">
+                                                                <li class="item-tb-dropdown">
+                                                                    Upload File SPPK
+                                                                </li>
+                                                            </a>
                                                         @elseif (!$tglCetak->tgl_cetak_pk && $item->pengajuan->sppk && $tglCetak->tgl_cetak_sppk )
-                                                            <li class="item-tb-dropdown">
-                                                                <a target="_blank" href="{{ route('dagulir.cetak-pk-dagulir', $item->pengajuan->id) }}" class="dropdown-item">Cetak PK</a>
-                                                            </li>
+                                                            <a target="_blank" href="{{ route('dagulir.cetak-pk-dagulir', $item->pengajuan->id) }}" class="dropdown-item w-full">
+                                                                <li class="item-tb-dropdown">
+                                                                    Cetak PK
+                                                                </li>
+                                                            </a>
                                                         @elseif (!$item->pengajuan->pk && $tglCetak->tgl_cetak_pk && $item->pengajuan->sppk)
-                                                            <li class="item-tb-dropdown">
-                                                                <a href="#" class="dropdown-item show-upload-pk" data-toggle="modal" data-target="uploadPKModal"
-                                                                    data-id="{{ $item->pengajuan->id }}" data-kode_pendaftaran="{{$item->kode_pendaftaran}}">Upload File PK</a>
-                                                            </li>
+                                                            <a href="#" class="dropdown-item show-upload-pk w-full" data-toggle="modal" data-target="uploadPKModal"
+                                                            data-id="{{ $item->pengajuan->id }}" data-kode_pendaftaran="{{$item->kode_pendaftaran}}">
+                                                                <li class="item-tb-dropdown">
+                                                                    Upload File PK
+                                                                </li>
+                                                            </a>
                                                         @endif
                                                     @endif
                                                     @if ((Auth()->user()->role == 'Penyelia Kredit'))
@@ -399,7 +417,7 @@
                                                                     <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->pengajuan->id}}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown">Lanjutkan Ke Pincab</a>
                                                                 </li>
                                                             @endif
-                                                            <li class="item-tb-dropdown kembalikan-modal" cursor-pointer
+                                                            <li class="item-tb-dropdown kembalikan-modal cursor-pointer send-to-staff"
                                                                 data-id="{{ $item->pengajuan->id }}" data-backto="staf" >
                                                                 <a href="#">Kembalikan ke Staff</a>
                                                             </li>
@@ -416,7 +434,9 @@
                                                             </li>
                                                             <li class="item-tb-dropdown kembalikan-modal" cursor-pointer
                                                                 data-id="{{ $item->pengajuan->id }}" data-backto="penyelia">
-                                                                <a href="#">Kembalikan ke Penyelia</a>
+                                                                <a href="#">
+                                                                    Kembalikan ke Penyelia
+                                                                </a>
                                                             </li>
                                                         @endif
                                                     @elseif ((Auth()->user()->role == 'PBP'))
@@ -443,15 +463,19 @@
                                                                 </li>
                                                                 <li class="item-tb-dropdown kembalikan-modal" cursor-pointer
                                                                     data-id="{{ $item->pengajuan->id }}" data-backto="{{$item->pengajuan->id_pbp ? 'pbp' : 'penyelia'}}">
-                                                                    <a href="#">Kembalikan ke {{$item->pengajuan->id_pbp ? 'PBP' : 'Penyelia'}}</a>
+                                                                    <a href="#">
+                                                                        Kembalikan ke {{$item->pengajuan->id_pbp ? 'PBP' : 'Penyelia'}}
+                                                                    </a>
                                                                 </li>
                                                             @endif
                                                         @endif
                                                     @else
-                                                        <li class="item-tb-dropdown">
-                                                            <a href="{{ route('dagulir.cetak-surat', $item->pengajuan->id) }}"
-                                                                class="cursor-pointer" target="_blank">Cetak</a>
-                                                        </li>
+                                                        <a href="{{ route('dagulir.cetak-surat', $item->pengajuan->id) }}"
+                                                            class="cursor-pointer w-full" target="_blank">
+                                                            <li class="item-tb-dropdown">
+                                                                Cetak
+                                                            </li>
+                                                        </a>
                                                     @endif
                                                 </ul>
                                             </div>
@@ -882,6 +906,22 @@
         $('#modal-kembalikan #backto').val(backto)
     })
 
+    $('.review-penyelia').on('click', function(){
+        $("#preload-data").removeClass("hidden");
+    })
+    $('.review-pincab').on('click', function(){
+        $("#preload-data").removeClass("hidden");
+    })
+    $('.submit-confirmation-modal').on('click', function(){
+        $("#preload-data").removeClass("hidden");
+    })
+    $('.submit-confirmation-modal-staff').on('click', function(){
+        $("#preload-data").removeClass("hidden");
+    })
+    $('.edit-pengajuan').on('click', function(){
+        $("#preload-data").removeClass("hidden");
+    })
+
     $('.show-upload-sppk').on('click', function() {
         const target = $(this).data('target')
         const id = $(this).data('id')
@@ -893,6 +933,15 @@
         $(`#${target} #token`).val(token)
         $(`#${target} #btn-cetak-file`).attr('href', url_cetak)
         $(`#${target}`).removeClass('hidden');
+    })
+
+    $('.simpan-sppk').on('click', function(){
+        $("#uploadSPPKModal").addClass("hidden");
+        $("#preload-data").removeClass("hidden");
+    })
+    $('.simpan-pk').on('click', function(){
+        $("#uploadPKModal").addClass("hidden");
+        $("#preload-data").removeClass("hidden");
     })
 
     $('.show-upload-pk').on('click', function() {
@@ -924,7 +973,7 @@
         }
     });
 
-    $('#btn-filter').on('click', function (e) { 
+    $('#btn-filter').on('click', function (e) {
         e.preventDefault()
         let tAwal = document.getElementById('tAwal');
         let tAkhir = document.getElementById('tAkhir');
@@ -960,7 +1009,7 @@
 
         $.ajax({
             type: "GET",
-            url: "/api/v1/get-cabang", 
+            url: "/api/v1/get-cabang",
             headers: {
                 'token': token,
             },
@@ -991,7 +1040,7 @@
         var nama = $(this).data('nama');
         var id_penyelia = $(this).data('id-penyelia');
         console.log(target);
-        
+
         $(`${target} #id-pengajuan`).val(id_pengajuan)
         $(`${target} #id-penyelia`).val(id_penyelia)
         $(`${target} #nama`).html(nama)

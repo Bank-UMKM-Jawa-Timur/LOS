@@ -30,7 +30,7 @@
                 <button class="btn-cancel" type="button" data-dismiss-id="modal-kembalikan">
                     Batal
                 </button>
-                <button type="submit" class="btn-submit">Setujui</button>
+                <button type="submit" class="btn-submit submit-confirmation-modal-staff">Setujui</button>
             </div>
         </form>
     </div>
