@@ -808,7 +808,7 @@
                                                                                 @endif
                                                                             </div>
                                                                         </div>
-                                                                @else
+                                                                    @else
                                                                     <div class="field-review">
                                                                         <div class="field-name">
                                                                             <label for="">{{ $item->nama }}</label>
@@ -822,7 +822,6 @@
                                                                         </div>
                                                                     </div>
                                                                 @endif
-
                                                                 @if ($itemTextDua->is_commentable)
                                                                     @if (Auth::user()->role != 'Pincab')
                                                                         <input type="hidden" name="id_item[]" value="{{ $item->id }}">
@@ -917,7 +916,7 @@
                                                     @if (in_array($itemJawaban->id, $data))
                                                         @if (isset($data))
                                                         <div class="row {{ $item->is_hide ? 'hidden' : ''}} {{ $item->nama === "Jumlah Kompetitor" ||  $item->nama === "Cara Penjualan" || $item->nama === "Sistem Pemasaran"   ? 'col-span-2' : ''}} {{ $item->nama === "Strategi Pemasaran" ? 'form-group-1' : '' }} {{ $item->nama === "Hubungan Dengan Supplier" ? 'col-span-2' : ''}} {{ $item->nama === "Usaha Dilakukan Sejak" ? 'col-span-2' : '' }} {{ $item->nama === "Badan Usaha" ? 'col-span-1' : ''  }}">
-                                                            <div class="col-md-12">
+                                                            <div class="col-md-12 {{ $item->is_commentable == 'Ya' ? 'border' : ''}}">
                                                                 @if (!$item->is_hide)
                                                                 <div class="{{ $item->nama === "Badan Usaha" || $item->nama === "Jumlah Orang yang menjalankan usaha" || $item->nama === "Strategi Pemasaran"  ? 'form-group-1' : 'form-group-2'}}">
                                                                     <div class="field-review">
@@ -937,7 +936,7 @@
                                                                                 value="{{ $itemJawaban->id }}">
                                                                             <div class="flex pl-2">
                                                                                     <div class="flex-1 w-64">
-                                                                                        <label for="">Komentar</label>
+                                                                                        <label for="" class="text-sm font-semibold">Komentar</label>
                                                                                         <input type="text" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400 komentar"
                                                                                             name="komentar_penyelia[]" placeholder="Masukkan Komentar"
                                                                                             value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
@@ -2560,7 +2559,7 @@
                 items: 5
             },
             1000: {
-                items: 8
+                items: 10
             }
         }
     })
