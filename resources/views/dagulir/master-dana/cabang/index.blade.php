@@ -1,8 +1,26 @@
-@include('dagulir.master-dana.cabang.modal.create')
 @extends('layouts.tailwind-template')
 @include('components.new.modal.loading')
+
+@section('modal')
+@include('dagulir.master-dana.cabang.modal.create')
+@include('dagulir.master-dana.cabang.modal.tambah-modal')
+@endsection
+
 @push('script-inject')
 <script>
+    $(document).ready(function() {
+        $('.show-tambah').off('click').on('click', function() {
+            const target = $(this).data('target');
+            const id = $(this).data('id');
+            const id_cabang = $(this).data('cabang');
+            const nama = $(this).data('nama');
+
+            $(`#${target} #nama_cabang`).val(nama);
+            $(`#${target} #cabang`).val(id_cabang);
+            $(`#${target} #id`).val(id);
+            $(`#${target}`).removeClass('hidden');
+        })
+    })
     $('#page_length').on('change', function() {
         $('#form').submit()
     })
@@ -99,6 +117,7 @@
                                 <th>Plafon Akumulasi</th>
                                 <th>Baki Debet</th>
                                 <th>Tanggal</th>
+                                <th>Aksi</th>
                             </thead>
                             <tbody>
                                 @php
@@ -114,9 +133,20 @@
                                         <td>{{ $item->cabang->cabang }}</td>
                                         <td>{{ number_format($item->dana_modal,0, ",", ".") }}</td>
                                         <td>{{ number_format($item->dana_idle,0, ",", ".") }}</td>
-                                        <td>{{ number_format($item->plafon_akumulasi,0, ",", ".") }}</td>
+                                        <td>{{ number_format($item->loan_sum_plafon,0, ",", ".") }}</td>
                                         <td>{{ number_format($item->baki_debet,0, ",", ".") }}</td>
                                         <td>{{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y') }}</td>
+                                        <td>
+                                            @if ($status == true)
+                                                <button
+                                                    type="button"
+                                                    class="btn bg-red-500 text-white show-tambah open-modal"
+                                                    data-id="{{ $item->id }}"
+                                                    data-cabang="{{ $item->id_cabang }}"
+                                                    data-nama="{{ $item->cabang->cabang }}"
+                                                    data-target="modal-tambah-modal"
+                                                >Tambah Dana Modal</button></td>
+                                            @endif
                                     </tr>
                                 @endforeach
                             </tbody>
