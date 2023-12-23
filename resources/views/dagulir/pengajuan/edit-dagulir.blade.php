@@ -134,7 +134,7 @@
             <div class="input-box">
                 <label for="ktp_nasabah" id="foto-nasabah">Foto Nasabah</label>
                 @if ($data->foto_nasabah)
-                    <a class="text-theme-primary underline underline-offset-4 cursor-pointer btn-file-preview"
+                    <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
                         data-title="Foto Nasabah" data-filepath="{{asset('../upload')}}/{{$id_pengajuan}}/{{$data->id}}/{{$data->foto_nasabah}}">Preview</a>
                 @endif
                 <div class="flex gap-4">
@@ -177,7 +177,7 @@
             <div class="input-box" id="ktp-nasabah">
                 <label for="ktp_nasabah" id="label-ktp-nasabah">Foto KTP Nasabah</label>
                 @if ($data->foto_ktp)
-                    <a class="text-theme-primary underline underline-offset-4 cursor-pointer btn-file-preview"
+                    <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
                         data-title="Foto Nasabah" data-filepath="{{asset('../upload')}}/{{$id_pengajuan}}/{{$data->id}}/{{$data->foto_ktp}}">Preview</a>
                 @endif
                 <div class="flex gap-4">
@@ -207,7 +207,7 @@
             <div class="input-box hidden" id="ktp-pasangan">
                 <label for="ktp_pasangan" id="">Foto KTP Pasangan</label>
                 @if ($data->foto_pasangan)
-                    <a class="text-theme-primary underline underline-offset-4 cursor-pointer btn-file-preview"
+                    <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
                         data-title="Foto KTP Pasangan" data-filepath="{{asset('../upload')}}/{{$id_pengajuan}}/{{$data->id}}/{{$data->foto_pasangan}}">Preview</a>
                 @endif
                 <div class="flex gap-4">
@@ -246,7 +246,7 @@
                 <label for="">{{ $itemP->nama }}</label>
                 @if ($jawabanLaporanSlik)
                     @if ($jawabanLaporanSlik->opsi_text)
-                        <a class="text-theme-primary underline underline-offset-4 cursor-pointer btn-file-preview"
+                        <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
                             data-title="{{$itemP->nama}}" data-filepath="{{asset('../upload')}}/{{$id_pengajuan}}/{{$jawabanLaporanSlik->id_jawaban}}/{{$jawabanLaporanSlik->opsi_text}}">Preview</a>
                     @endif
                 @endif
@@ -570,11 +570,12 @@
             </div>
         </div>
         <div class="flex justify-between">
-            <button type="button"
-            class="px-5 py-2 border rounded bg-white text-gray-500"
-            >
-            Kembali
-            </button>
+            <a href="{{route('dagulir.pengajuan.index')}}">
+                <button type="button"
+                class="px-5 py-2 border rounded bg-white text-gray-500">
+                Kembali
+                </button>
+            </a>
             <button type="button"
             class="px-5 py-2 next-tab border rounded bg-theme-primary text-white"
             >
