@@ -263,17 +263,21 @@ class NewUserController extends Controller
 
     function resetPassword($id)
     {
-        $user = User::findOrFail($id);
+        $id_user = Request()->id_user;
+        $user = User::where('id',$id_user)->first();
         try {
             $user->password = \Hash::make('12345678');
             $user->password_change_at = null;
             $user->save();
         } catch (Exception $e) {
+            alert()->error('Error','Terjadi Kesalahan.');
             return redirect()->back()->withError('Terjadi Kesalahan.' . $e);
         } catch (Exception $e) {
+            alert()->error('Error','Terjadi Kesalahan.');
             return redirect()->back()->withError('Terjadi Kesalahan.' . $e);
         }
 
+        alert()->success('Berhasil', 'Password berhasil di reset.');
         return back()->withStatus('Password berhasil di-reset.');
     }
 

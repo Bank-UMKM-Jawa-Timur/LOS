@@ -1,6 +1,7 @@
 @include('dagulir.master.user.modal.create')
 @include('dagulir.master.user.modal.edit')
 @include('dagulir.master.user.modal.delete')
+@include('dagulir.master.user.modal.resetPassword')
 @extends('layouts.tailwind-template')
 @include('components.new.modal.loading')
 @push('script-inject')
@@ -110,28 +111,29 @@
                                                         class="dropdown-item">
                                                         Edit
                                                     </a> --}}
-                                                    <a href="javascript:void(0)" class="cursor-pointer w-full" data-id_user="{{$item->id}}"
+                                                    <a href="javascript:void(0)" class="cursor-pointer w-full edit-user"
+                                                        data-target="modal-edit-user"
+                                                        data-id_user="{{$item->id}}"
                                                         data-nip="{{$item->nip ?? '-'}}"
                                                         data-nama="{{$item->name}}"
                                                         data-email="{{$item->email}}"
                                                         data-role="{{$item->role}}"
-                                                        data-cabang="{{$item->cabang->cabang}}" id="edit-user">
+                                                        data-cabang="{{$item->cabang->cabang}}">
                                                         <li class="item-tb-dropdown">
                                                             Edit
                                                         </li>
                                                     </a>
                                                     @if (auth()->user()->id != $item->id)
-                                                    <a class="w-full cursor-pointer" href="javascript:void(0)"
+                                                    <a class="w-full cursor-pointer hapus-user" href="javascript:void(0)"
                                                         data-id_user="{{$item->id}}"
                                                         data-nama="{{$item->name}}"
-                                                        id="hapus-user">
+                                                        data-target="modal-hapus-user">
                                                         <li class="item-tb-dropdown">
                                                             Hapus
                                                         </li>
                                                     </a>
                                                     @endif
-                                                    <a href="javascript:void(0)" class="w-full cursor-pointer"
-                                                        onclick="resetPassword('{{ $item->name }}', '{{ $item->id }}')">
+                                                    <a href="javascript:void(0)" class="w-full cursor-pointer reset-password" data-target="modal-reset-pass" data-id_user="{{$item->id}}" data-nama="{{$item->name}}">
                                                         <li class="item-tb-dropdown">
                                                             Reset Password
                                                         </li>
@@ -161,48 +163,43 @@
 @endsection
 @push('script-inject')
 <script>
-    function resetPassword(name, id) {
-        Swal.fire({
-            title: 'Perhatian!!',
-            text: "Apakah anda yakin mereset password " + name + " ?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#112042',
-            cancelButtonColor: '#d33',
-            cancelButtonText: 'Batal',
-            confirmButtonText: 'ResetPassword',
-            reverseButtons: true
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $("#resetPasswordForm" + id).submit()
-            }
-        })
-    }
 
-    $('#edit-user').on('click', function(){
-        var id_user = $(this).data("id_user");
-        var nip = $(this).data("nip");
-        var nama = $(this).data("nama");
-        var email = $(this).data("email");
-        var role = $(this).data("role");
-        var cabang = $(this).data("cabang");
+    $('.edit-user').on('click', function(){
+        const id_user = $(this).data("id_user");
+        const nip = $(this).data("nip");
+        const nama = $(this).data("nama");
+        const email = $(this).data("email");
+        const role = $(this).data("role");
+        const cabang = $(this).data("cabang");
+        const target = $(this).data("target");
 
-        $('.id-user').val(id_user);
-        $('.nip-edit').val(nip);
-        $('.name-edit').val(nama);
-        $('.email-edit').val(email);
+        $(`#${target} .id-user`).val(id_user);
+        $(`#${target} .nip-edit`).val(nip);
+        $(`#${target} .name-edit`).val(nama);
+        $(`#${target} .email-edit`).val(email);
 
-        $('#modal-edit-user').removeClass('hidden')
+        $(`#${target}`).removeClass('hidden')
+    });
+
+    $('.reset-password').on('click', function(){
+        console.log('Masuk');
+        const id_user = $(this).data("id_user");
+        const nama = $(this).data("nama");
+        const target = $(this).data("target");
+
+        $(`#${target} .id-user`).val(id_user);
+        $(`#${target} .nama`).html(nama);
+
+        $(`#${target}`).removeClass('hidden');
     });
 
     $('.hapus-user').on('click', function(){
-        console.log('masuk coy');
-        var id_user = $(this).data("id_user");
-        var nama = $(this).data("nama");
+        const id_user = $(this).data("id_user");
+        const nama = $(this).data("nama");
 
-        $('#id-user-delete').val(id_user);
-        $('#nama').val(nama);
-        $('#modal-hapus-user').removeClass('hidden')
+        $(`#${target} #id-user-delete`).val(id_user);
+        $(`#${target} #nama`).html(nama);
+        $(`#${target}`).removeClass('hidden')
     });
 </script>
 @endpush
