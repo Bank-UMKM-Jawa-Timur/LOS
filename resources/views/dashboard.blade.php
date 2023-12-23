@@ -148,10 +148,14 @@
                 <div class="body-card w-full box">
                     <div class="lg:flex grid grid-cols-1 gap-5 w-full mt-5 box-border">
                         <div class="card-wrapper space-y-2 w-full box-border">
+                            @php
+                                $indexTertinggi = 1;
+                                $indexTerendah = 28;
+                            @endphp
                             @foreach ($dataRangking['data_tertinggi'] as $item)
                                 <div class="card border flex gap-4 p-2 w-full">
                                     <button class="px-5 py-2 rounded bg-green-400">
-                                        <h2 class="text-lg font-bold text-white">1</h2>
+                                        <h2 class="text-lg font-bold text-white">{{ $indexTertinggi++ }}</h2>
                                     </button>
                                     <div class="content w-full">
                                         <h2 class="text-lg font-semibold text-theme-secondary">
@@ -169,7 +173,7 @@
                             @foreach ($dataRangking['data_terendah'] as $item)
                                 <div class="card border flex gap-4 p-2 w-full box-border">
                                     <button class="px-5 py-2 rounded bg-red-500">
-                                        <h2 class="text-lg font-bold text-white">1</h2>
+                                        <h2 class="text-lg font-bold text-white">{{ $indexTerendah++ }}</h2>
                                     </button>
                                     <div class="content w-full">
                                         <h2 class="text-lg font-semibold text-theme-secondary">
