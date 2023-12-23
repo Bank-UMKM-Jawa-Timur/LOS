@@ -46,7 +46,7 @@ class NewUserController extends Controller
                 $getUser->where('email', 'LIKE', "%{$search}%")->orWhere('name', 'LIKE', "%{$search}%")
                 ->orWhere('nip', 'LIKE', "%{$search}%");
             }
-
+            $this->param['allCab'] = Cabang::get();
             $this->param['data'] = $getUser->paginate($limit);
         } catch (\Illuminate\Database\QueryException $e) {
             return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
@@ -144,22 +144,24 @@ class NewUserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = User::findOrFail($id);
-        $validatedData = $request->validate(
-            [
-                'nip' => 'sometimes|nullable|unique:users,nip,' . $user->id,
-                'name' => 'required',
-                'email' => [
-                    'required',
-                    Rule::unique('users')->ignore($user->id),
-                ],
-                'role' => 'required',
-                'id_cabang' => 'present',
-            ],
-            [
-                'email.unique' => 'Email sudah di gunakan'
-            ]
-        );
+        $id_user = $request->get('id_user');
+        $user = User::findOrFail($id_user);
+        // $validatedData = $request->validate(
+        // [
+        //     'nip' => 'sometimes|nullable|unique:users,nip,' . $user->id,
+        //     'name' => 'required',
+        //     'email' => [
+        //         'required',
+        //         Rule::unique('users')->ignore($user->id),
+        //     ],
+        //     'role' => 'required',
+        //     'id_cabang' => 'present',
+        // ],
+        // [
+        //     'email.unique' => 'Email sudah di gunakan'
+        //     ]
+        // );
+            // return $user;
         try {
             $user->nip = $request->get('nip');
             $user->name = $request->get('name');
@@ -168,12 +170,15 @@ class NewUserController extends Controller
             $user->id_cabang = $request['id_cabang'];
             $user->save();
         } catch (\Exception $e) {
+            alert()->error('Error','Terjadi Kesalahan.');
             return redirect()->back()->withError('Terjadi kesalahan.');
         } catch (\Illuminate\Database\QueryException $e) {
+            alert()->error('Error','Terjadi Kesalahan.');
             return redirect()->back()->withError('Terjadi kesalahan.');
         }
 
-        return redirect()->route('user.index')->withStatus('Data berhasil diperbarui.');
+        alert()->success('Berhasil', 'Data berhasil diperbarui.');
+        return redirect()->route('dagulir.master.user.index')->withStatus('Data berhasil diperbarui.');
     }
 
     /**
@@ -184,15 +189,20 @@ class NewUserController extends Controller
      */
     public function destroy($id)
     {
+        return Request()->all();
+        $id_user = Request()->get('id_user');
         try {
-            $user = User::findOrFail($id);
+            $user = User::findOrFail($id_user);
             $user->delete();
         } catch (Exception $e) {
+            alert()->error('Error','Terjadi Kesalahan.');
             return back()->withError('Terjadi kesalahan.');
         } catch (QueryException $e) {
+            alert()->error('Error','Terjadi Kesalahan.');
             return back()->withError('Terjadi kesalahan.');
         }
 
+        alert()->success('Berhasil', 'Data berhasil dihapus.');
         return redirect()->route('dagulir.master.user.index')->withStatus('Data berhasil dihapus.');
     }
 
@@ -318,7 +328,7 @@ class NewUserController extends Controller
                 ->delete();
 
             alert()->success('Berhasil','Berhasil menghapus session.');
-            return redirect()->route('dagulir.master.user.index');
+            return redirect()->route('dagulir.master.index-session');
         } catch (Exception $e) {
             return redirect()->back()->withError('Terjadi Kesalahan.' . $e);
         } catch (Exception $e) {

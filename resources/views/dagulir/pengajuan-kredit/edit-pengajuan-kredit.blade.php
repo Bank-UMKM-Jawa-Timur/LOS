@@ -367,13 +367,9 @@ $dataIndex = match ($skema) {
                                             @elseif ($item->opsi_jawaban == 'file')
                                                 <div class="form-group">
                                                     <div class="input-box">
-                                                        <label for="{{ $idLevelDua }}">{{$item->nama}}</label>
-                                                        @if ($item)
-                                                            @if ($item->jawaban)
-                                                                <a class="text-theme-primary underline underline-offset-4 cursor-pointer btn-file-preview"
-                                                                    data-title="Foto Nasabah" data-filepath="{{asset('../upload')}}/{{$dataPengajuan->id}}/{{$item?->id}}/{{$item?->jawaban->opsi_text}}">Preview</a>
-                                                            @endif
-                                                        @endif
+                                                        <label for="">
+                                                            {{ $item->nama }}
+                                                        </label>
                                                         <input type="hidden" name="id_file_text[]"
                                                             value="{{ $item->id }}">
                                                         <input type="hidden" name="skor_penyelia_text[]"
@@ -385,6 +381,7 @@ $dataIndex = match ($skema) {
                                                         <input type="file" name="upload_file[{{ $item->id }}]" id="{{ $idLevelDua }}"
                                                             data-id="" placeholder="Masukkan informasi {{ $item->nama }}"
                                                             class="form-input limit-size" value="{{old('upload_file['.$item->id.']', $item->jawaban->opsi_text)}}">
+                                                            {{-- class="form-input limit-size" value=""> --}}
                                                         <span class="text-red-500 m-0" style="display: none">Maximum upload file size is 15
                                                             MB</span>
                                                         <span class="filename" style="display: inline;"></span>
@@ -584,7 +581,8 @@ $dataIndex = match ($skema) {
                                                                             id="{{ $idLevelTiga }}" data-id=""
                                                                             placeholder="Masukkan informasi {{ $itemTiga->nama }}"
                                                                             class="form-input limit-size file-usaha" accept="image/*"
-                                                                            value="{{old('upload_file['.$itemTiga->id.']', $itemTiga->jawaban ? $itemTiga->jawaban->opsi_text : '')}}">
+                                                                            value="{{old('upload_file['.$itemTiga->id.']', $itemTiga->jawaban->opsi_text)}}">
+                                                                            {{-- value=""> --}}
                                                                         <span class="text-red-500 m-0" style="display: none">Maximum upload
                                                                             file size is 15 MB</span>
                                                                         <span class="filename" style="display: inline;"></span>
@@ -860,11 +858,12 @@ $dataIndex = match ($skema) {
                                         @enderror
                                     </div>
                                     <div class="flex justify-between">
-                                        <button type="button"
-                                          class="px-5 py-2 border rounded bg-white text-gray-500"
-                                        >
-                                          Kembali
-                                        </button>
+                                        <a href="{{route('dagulir.pengajuan.index')}}">
+                                            <button type="button"
+                                              class="px-5 py-2 border rounded bg-white text-gray-500">
+                                              Kembali
+                                            </button>
+                                        </a>
                                         <div>
                                           <button type="button"
                                           class="px-5 prev-tab py-2 border rounded bg-theme-secondary text-white"
@@ -904,9 +903,11 @@ $dataIndex = match ($skema) {
                                     </div>
                                 </div>
                                 <div class="flex justify-between">
-                                    <button class="px-5 py-2 border rounded bg-white text-gray-500">
-                                        Kembali
-                                    </button>
+                                    <a href="{{route('dagulir.pengajuan.index')}}">
+                                        <button class="px-5 py-2 border rounded bg-white text-gray-500">
+                                            Kembali
+                                        </button>
+                                    </a>
                                     <div>
                                         <button type="button" class="px-5 py-2 border rounded bg-theme-secondary text-white">
                                             Sebelumnya

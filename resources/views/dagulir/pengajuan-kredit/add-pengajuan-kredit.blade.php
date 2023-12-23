@@ -122,7 +122,7 @@ $dataIndex = match ($skema) {
                                                     </div>
                                                 </div>
                                             </div>
-
+                                            <div class="form-group" id="space_nib"></div>
                                             <div class="form-group" id="nib">
                                                 <div class="input-box">
                                                     <label for="">NIB</label>
@@ -1157,7 +1157,7 @@ $dataIndex = match ($skema) {
         var inputText = $(form + " input[type=text]")
         var inputNumber = $(form + " input[type=number]")
         var inputDate = $(form + " input[type=date]")
-        var inputEmail = $(form + " input[type=email]")
+        var InputEmail = $(form + " input[type=email]")
         var inputHidden = $(form + " input[type=hidden]")
         var select = $(form + " select")
         var textarea = $(form + " textarea")
@@ -1198,7 +1198,7 @@ $dataIndex = match ($skema) {
             }
         })
 
-        $.each(inputEmail, function(i, v) {
+        $.each(InputEmail, function(i, v) {
             if ($(this).prop('readonly'))
                 totalInputReadOnly++;
             var inputBox = $(this).closest('.input-box');
@@ -1390,9 +1390,9 @@ $dataIndex = match ($skema) {
                 }
             }
         })
-        var totalReadHidden = (totalInputHidden + totalInputReadOnly)
+        var totalReadHidden = (totalInputHidden + totalInputReadOnly);
         var total = totalInput + totalInputChecked;
-        percent = (totalInputFilled / (totalInput - totalInputReadOnly)) * 100
+        percent = (totalInputFilled / (totalInput - totalInputReadOnly)) * 100;
         return parseInt(percent)
     }
 
@@ -1569,17 +1569,8 @@ $dataIndex = match ($skema) {
         var parent = $(this).closest('.input-box')
         parent.remove()
     })
-    function formatNpwp(value) {
-        if (typeof value === 'string') {
-            return value.replace(/(\d{2})(\d{3})(\d{3})(\d{1})(\d{3})(\d{3})/, '$1.$2.$3.$4-$5.$6');
-        }
-    }
-    // NPWP format
-    $(document).on('keyup', '#npwp_text', function() {
-        var input = $(this).val().replace(/\D/g, '');
-        $(this).val(formatNpwp(input))
-    })
     $(".btn-simpan-data").on('click', function(e) {
+        console.log(nullValue);
         if ($('#komentar_staff').val() == '') {
             Swal.fire({
                 icon: 'error',
@@ -1638,10 +1629,7 @@ $dataIndex = match ($skema) {
                 console.log(nullValue);
                 e.preventDefault()
             } else {
-                // $("#loadingModal").modal({
-                //     keyboard: false
-                // });
-                // $("#loadingModal").modal("show");
+                $("#preload-data").removeClass("hidden");
             }
         }
     })
@@ -2111,6 +2099,7 @@ $dataIndex = match ($skema) {
         let ijinUsaha = $(this).val();
         $('#npwpsku').hide();
         if (ijinUsaha == 'nib') {
+            $('#space_nib').show();
             $('#npwpsku').hide();
             $('#surat_keterangan_usaha').hide();
             $('#surat_keterangan_usaha_id').attr('disabled', true);
@@ -2147,6 +2136,7 @@ $dataIndex = match ($skema) {
             $('#docNPWP_text').val('');
             $('#docNPWP_upload_file').removeAttr('disabled');
         } else if (ijinUsaha == 'surat_keterangan_usaha') {
+            $('#space_nib').hide();
             $('#npwpsku').show();
             $('#nib').hide();
             $('#nib_id').attr('disabled', true);
@@ -2187,6 +2177,7 @@ $dataIndex = match ($skema) {
             $('#docNPWP_text').val('');
             $('#docNPWP_upload_file').attr('disabled', true);
         } else if (ijinUsaha == 'tidak_ada_legalitas_usaha') {
+            $('#space_nib').hide();
             $('#npwpsku').hide();
             $('#nib').hide();
             $('#nib_id').attr('disabled', true);
@@ -2228,12 +2219,15 @@ $dataIndex = match ($skema) {
             $('#docNPWP_text').val('');
             $('#docNPWP_upload_file').attr('disabled', true);
         } else {
+            $('#space_nib').show();
             $('#npwpsku').hide();
             $('#nib').hide();
             $('#nib_id').attr('disabled', true);
             $('#nib_text').attr('disabled', true);
             $('#nib_text').val('');
             $('#nib_opsi_jawaban').attr('disabled', true);
+
+            $('#docSKU').hide();
 
             $('#docNIB').hide();
             $('#docNIB_id').attr('disabled', true);
@@ -2247,16 +2241,16 @@ $dataIndex = match ($skema) {
             $('#surat_keterangan_usaha_text').val('');
             $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
 
-            $('#npwp').show();
-            $('#npwp_id').removeAttr('disabled');
-            $('#npwp_text').removeAttr('disabled');
-            $('#npwp_opsi_jawaban').removeAttr('disabled');
+            $('#npwp').hide();
+            $('#npwp_id').attr('disabled', true);
+            $('#npwp_text').attr('disabled', true);
+            $('#npwp_opsi_jawaban').attr('disabled', true);
 
-            $('#docNPWP').show();
-            $('#docNPWP_id').removeAttr('disabled');
-            $('#docNPWP_text').removeAttr('disabled');
+            $('#docNPWP').hide();
+            $('#docNPWP_id').attr('disabled', true);
+            $('#docNPWP_text').attr('disabled', true);
             $('#docNPWP_text').val('');
-            $('#docNPWP_upload_file').removeAttr('disabled');
+            $('#docNPWP_upload_file').attr('disabled', true);
         }
     });
     // end milih ijin usaha
@@ -2291,16 +2285,44 @@ $dataIndex = match ($skema) {
         }
     });
 
-    function formatNpwp(value) {
-        if (typeof value === 'string') {
-            return value.replace(/(\d{2})(\d{3})(\d{3})(\d{1})(\d{3})(\d{3})/, '$1.$2.$3.$4-$5.$6');
+
+    // function formatNpwp(value) {
+    //     if (typeof value === 'string') {
+    //         return value.replace(/(\d{2})(\d{3})(\d{3})(\d{1})(\d{3})(\d{3})/, '$1.$2.$3.$4-$5.$6');
+    //     }
+    // }
+    // NPWP format
+    // $(document).on('keyup', '#npwp_text', function() {
+    //     var input = $(this).val()
+    //     $(this).val(formatNpwp(input))
+    // })
+    const NPWP = document.getElementById("npwp_text")
+
+    NPWP.oninput = (e) => {
+        e.target.value = autoFormatNPWP(e.target.value);
+    }
+    function autoFormatNPWP(NPWPString) {
+        try {
+            var cleaned = ("" + NPWPString).replace(/\D/g, "");
+            var match = cleaned.match(/(\d{0,2})?(\d{0,3})?(\d{0,3})?(\d{0,1})?(\d{0,3})?(\d{0,3})$/);
+            return [
+                    match[1],
+                    match[2] ? ".": "",
+                    match[2],
+                    match[3] ? ".": "",
+                    match[3],
+                    match[4] ? ".": "",
+                    match[4],
+                    match[5] ? "-": "",
+                    match[5],
+                    match[6] ? ".": "",
+                    match[6]].join("")
+
+        } catch(err) {
+            return "";
         }
     }
-    // NPWP format
-    $(document).on('keyup', '#npwp_text', function() {
-        var input = $(this).val()
-        $(this).val(formatNpwp(input))
-    })
+
 
     //triger hitung ratio coverage
     $('#thls').change(function(e) {

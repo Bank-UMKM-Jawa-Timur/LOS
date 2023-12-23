@@ -777,7 +777,7 @@
                                                                             @if ($item->is_rupiah == 1)
                                                                                 <p>Rp. {{ number_format((int) $itemTextDua->opsi_text, 0, ',', '.') }}</p>
                                                                             @else
-                                                                                <p>{{ $itemTextDua->opsi_text }}</p>
+                                                                                <p>{{ $itemTextDua->opsi_text }} sss</p>
                                                                             @endif
                                                                         </div>
                                                                     </div>
@@ -808,7 +808,7 @@
                                                                                 @endif
                                                                             </div>
                                                                         </div>
-                                                                @else
+                                                                    @else
                                                                     <div class="field-review">
                                                                         <div class="field-name">
                                                                             <label for="">{{ $item->nama }}</label>
@@ -822,7 +822,6 @@
                                                                         </div>
                                                                     </div>
                                                                 @endif
-
                                                                 @if ($itemTextDua->is_commentable)
                                                                     @if (Auth::user()->role != 'Pincab')
                                                                         <input type="hidden" name="id_item[]" value="{{ $item->id }}">
@@ -917,7 +916,7 @@
                                                     @if (in_array($itemJawaban->id, $data))
                                                         @if (isset($data))
                                                         <div class="row {{ $item->is_hide ? 'hidden' : ''}} {{ $item->nama === "Jumlah Kompetitor" ||  $item->nama === "Cara Penjualan" || $item->nama === "Sistem Pemasaran"   ? 'col-span-2' : ''}} {{ $item->nama === "Strategi Pemasaran" ? 'form-group-1' : '' }} {{ $item->nama === "Hubungan Dengan Supplier" ? 'col-span-2' : ''}} {{ $item->nama === "Usaha Dilakukan Sejak" ? 'col-span-2' : '' }} {{ $item->nama === "Badan Usaha" ? 'col-span-1' : ''  }}">
-                                                            <div class="col-md-12">
+                                                            <div class="col-md-12 {{ $item->is_commentable == 'Ya' ? 'border p-3 bg-gray-50' : ''}}">
                                                                 @if (!$item->is_hide)
                                                                 <div class="{{ $item->nama === "Badan Usaha" || $item->nama === "Jumlah Orang yang menjalankan usaha" || $item->nama === "Strategi Pemasaran"  ? 'form-group-1' : 'form-group-2'}}">
                                                                     <div class="field-review">
@@ -936,20 +935,20 @@
                                                                             <input type="hidden" name="id_option[]"
                                                                                 value="{{ $itemJawaban->id }}">
                                                                             <div class="flex pl-2">
-                                                                                    <div class="flex-1 w-64">
-                                                                                        <label for="">Komentar</label>
-                                                                                        <input type="text" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400 komentar"
+                                                                                    <div class="flex-1 w-64 space-y-3">
+                                                                                        <label for="" class="text-sm font-semibold">Komentar</label>
+                                                                                        <input type="text" class="w-full bg-transparent px-4 py-3 border-b-2 focus:border-red-500 border-gray-400 outline-none  komentar"
                                                                                             name="komentar_penyelia[]" placeholder="Masukkan Komentar"
                                                                                             value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                                     </div>
                                                                                     <div class="flex-3 w-5"></div>
-                                                                                    <div class="flex-2 w-16">
+                                                                                    <div class="flex-2 w-16 space-y-3">
                                                                                         @php
                                                                                             $skorInput2 = null;
                                                                                             $skorInput2 = $getSkorPenyelia->skor_penyelia ? $getSkorPenyelia->skor_penyelia : $itemJawaban->skor;
                                                                                         @endphp
-                                                                                        <label for="">Skor</label>
-                                                                                        <input type="number" class="w-full px-3 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400" placeholder=""
+                                                                                        <label for="" class="text-sm font-semibold">Skor</label>
+                                                                                        <input type="number" class="w-full font-bold appearance-none border rounded-md px-3 py-3 bg-transparent border-gray-400 outline-none  focus:border-red-500" placeholder=""
                                                                                             name="skor_penyelia[]"
                                                                                             min="0"
                                                                                             max="4"
@@ -1051,7 +1050,11 @@
                                                     @endphp
                                                     @foreach ($dataDetailJawabanText as $itemTextTiga)
                                                         @if ($itemTextTiga->nama != 'Ratio Tenor Asuransi')
-                                                            <div class="{{ $itemTiga->opsi_jawaban == 'file' ? 'col-span-1 p-2' : 'form-group-1 col-span-1' }} {{ $itemTextTiga->nama === "Modal (awal) Sendiri" || $itemTextTiga->nama === "Modal Pinjaman" ? 'col-span-1 form-group-1' : '' }}">
+                                                            <div class="{{ $itemTiga->opsi_jawaban == 'file' ? 'col-span-1 p-2' : 'form-group-1 col-span-1' }} 
+                                                                        {{ $itemTextTiga->nama === "NIB" ?'form-group-2 col-span-2' : '' }} 
+                                                                        {{ $itemTextTiga->nama === "Modal (awal) Sendiri" || 
+                                                                        $itemTextTiga->nama === "Modal Pinjaman" ? 'col-span-1 form-group-1' : '' }}
+                                                                        ">
                                                                 <div class="space-y-5">
                                                                         @if ($itemTiga->opsi_jawaban == 'file')
                                                                             @php
@@ -1072,7 +1075,7 @@
                                                                                     src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}"
                                                                                     width="100%" height="800px"></iframe>
                                                                             @else
-                                                                                <img  class="border-2 border-gray-500"" class="object-contain" src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}"
+                                                                                <img  class="border-2 border-gray-500" class="object-contain" src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}"
                                                                                     alt=""  width="100%" height="800px">
                                                                             @endif
                                                                             {{-- Rupiah data tiga --}}
@@ -1171,22 +1174,24 @@
                                                 @endforeach --}}
                                                 @foreach ($dataOptionTiga as $itemOptionTiga)
                                                     @if ($itemOptionTiga->option == '-')
-                                                        <div class="form-group-1 col-span-2 pl-2">
-                                                            <div>
-                                                                <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
-                                                                    <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
-                                                                        {{$itemTiga->nama}} :
-                                                                    </h2>
+                                                        @if ($itemTiga->id != 110)
+                                                            <div class="form-group-1 col-span-2 pl-2">
+                                                                <div>
+                                                                    <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
+                                                                        <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
+                                                                            {{$itemTiga->nama}} :
+                                                                        </h2>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                        @endif
                                                     @endif
                                                 @endforeach
 
                                                 @if (count($dataJawabanLevelTiga) != 0)
                                                     @if ($itemTiga->nama == 'Ratio Tenor Asuransi Opsi')
                                                     @else
-                                                        <div class="form-group-2 col-span-2">
+                                                        <div class="form-group-2 col-span-2 {{ $item->is_commentable == 'Ya' || $itemTiga->is_commentable == 'Ya' ? 'border p-3 bg-gray-50' : ''}}">
                                                             @foreach ($dataJawabanLevelTiga as $key => $itemJawabanLevelTiga)
                                                                 @php
                                                                     $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
@@ -1243,14 +1248,14 @@
                                                                                 <div class="flex pl-2">
                                                                                     <div class="flex-1 w-64">
                                                                                         <label for="">Komentar </label>
-                                                                                        <input type="text" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400 komentar"
+                                                                                        <input type="text" class="w-full bg-transparent px-4 py-3 border-b-2 focus:border-red-500 border-gray-400 outline-none  komentar"
                                                                                             name="komentar_penyelia[]" placeholder="Masukkan Komentar"
                                                                                             value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                                     </div>
                                                                                     <div class="flex-3 w-5"></div>
                                                                                     <div class="flex-2 w-16">
                                                                                         <label for="">Skor</label>
-                                                                                        <input type="number" class="w-full px-3 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400"
+                                                                                        <input type="number" class="w-full font-bold appearance-none border rounded-md px-3 py-3 bg-transparent border-gray-400 outline-none  focus:border-red-500"
                                                                                             min="0"
                                                                                             max="4"
                                                                                             name="skor_penyelia[]"
@@ -1778,6 +1783,14 @@
                         <div class="pb-10 space-y-3">
                             <h2 class="text-4xl font-bold tracking-tighter text-theme-primary">Pendapat dan Usulan</h2>
                         </div>
+                        @php
+                            $dataKomentar = \App\Models\KomentarModel::select('id','id_pengajuan','komentar_pincab','id_pincab','komentar_staff','id_staff','komentar_penyelia','id_penyelia')
+                                    ->where('id_pengajuan',$dataUmum->id)
+                                    ->first();
+                            $dataPlafon = \App\Models\PlafonUsulan::select('id','id_pengajuan','plafon_usulan_penyelia','jangka_waktu_usulan_penyelia')
+                                    ->where('id_pengajuan',$dataUmum->id)
+                                    ->first();
+                        @endphp
                         <div class="self-start bg-white w-full border">
                             {{-- <div class="p-5 border-b">
                                 <h2 class="font-bold text-lg tracking-tighter">
@@ -1798,17 +1811,18 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        {{-- UWWW --}}
                                         <div class="form-group-2 pl-2">
                                             <div class="input-box">
                                                 <label for="">Plafon Usulan Penyelia</label>
-                                                <input type="text" name="plafon_usulan_penyelia" class="form-input rupiah" value="">
+                                                <input type="text" name="plafon_usulan_penyelia" class="form-input rupiah" value="{{ $dataPlafon->plafon_usulan_penyelia != null ? number_format($dataPlafon->plafon_usulan_penyelia, 0, ',', '.') : '' }}">
                                             </div>
 
                                             <div class="input-box">
                                                 <label for="">Jangka Waktu Usulan Penyelia</label>
                                                 <div class="flex items-center">
                                                     <div class="flex-1">
-                                                        <input type="number" name="jangka_waktu_usulan_penyelia" class="form-input"  value="">
+                                                        <input type="number" name="jangka_waktu_usulan_penyelia" class="form-input"  value="{{ $dataPlafon->jangka_waktu_usulan_penyelia != null ? $dataPlafon->jangka_waktu_usulan_penyelia : '' }}">
                                                     </div>
                                                     <div class="flex-shrink-0 mt-2.5rem">
                                                         <span class="form-input bg-gray-100">Bulan</span>
@@ -1820,10 +1834,10 @@
                                             <label for="">Pendapat dan Usulan Penyelia</label>
                                             <textarea name="komentar_penyelia_keseluruhan"
                                                 class="form-input @error('komentar_penyelia_keseluruhan') is-invalid @enderror" id="komentar_penyelia_keseluruhan" cols="30"
-                                                rows="4" placeholder="Pendapat dan Usulan Penyelia"></textarea>
+                                                rows="4" placeholder="Pendapat dan Usulan Penyelia">{{ $dataKomentar->komentar_penyelia != null ? $dataKomentar->komentar_penyelia : '' }}</textarea>
                                             @error('komentar_penyelia_keseluruhan')
                                                 <div class="invalid-feedback">
-                                                    {{ $message }}
+                                                    {{ $message }} 
                                                 </div>
                                             @enderror
                                         </div>

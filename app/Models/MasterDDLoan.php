@@ -17,4 +17,8 @@ class MasterDDLoan extends Model
         'jangka_waktu',
         'baki_debet',
     ];
+
+    public function angsuran() {
+        return $this->belongsTo(MasterDDAngsuran::class,'id_dd_loan');
+    }
 }
