@@ -1,7 +1,11 @@
-@include('dagulir.master-dana.cabang.modal.create')
-@include('dagulir.master-dana.cabang.modal.tambah-modal')
 @extends('layouts.tailwind-template')
 @include('components.new.modal.loading')
+
+@section('modal')
+@include('dagulir.master-dana.cabang.modal.create')
+@include('dagulir.master-dana.cabang.modal.tambah-modal')
+@endsection
+
 @push('script-inject')
 <script>
     $(document).ready(function() {
@@ -136,7 +140,7 @@
                                             @if ($status == true)
                                                 <button
                                                     type="button"
-                                                    class="btn bg-red-500 text-white show-tambah"
+                                                    class="btn bg-red-500 text-white show-tambah open-modal"
                                                     data-id="{{ $item->id }}"
                                                     data-cabang="{{ $item->id_cabang }}"
                                                     data-nama="{{ $item->cabang->cabang }}"
