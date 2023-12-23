@@ -1873,7 +1873,7 @@ class NewDagulirController extends Controller
         }
     }
 
-    public function decPengajuan($id)
+    public function decPengajuan($id, Request $request)
     {
         ini_set('max_execution_time', 120);
         DB::beginTransaction();
@@ -1886,6 +1886,17 @@ class NewDagulirController extends Controller
                     $pengajuan->posisi = "Ditolak";
                     $pengajuan->tanggal_review_pincab = date(now());
                     $pengajuan->update();
+
+                    $plafonUsulan = PlafonUsulan::where('id_pengajuan', $id)->first();
+                    $plafon_acc = intval(str_replace('.','', $request->get('nominal_disetujui')));
+                    $tenor_acc = intval($request->get('jangka_waktu_disetujui'));
+
+                    if ($plafonUsulan) {
+                        $plafonUsulan->plafon_usulan_pincab = $plafon_acc;
+                        $plafonUsulan->jangka_waktu_usulan_pincab = $tenor_acc;
+                        $plafonUsulan->updated_at = date('Y-m-d H:i:s');
+                        $plafonUsulan->update();
+                    }
 
                     $nasabah = PengajuanDagulir::select('kode_pendaftaran', 'nama', 'status')->find($pengajuan->dagulir_id);
                     if ($nasabah->kode_pendaftaran) {
