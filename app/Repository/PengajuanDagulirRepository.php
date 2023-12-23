@@ -316,8 +316,8 @@ class PengajuanDagulirRepository
     {
         $data = null;
         $data = PengajuanDagulirTemp::where('user_id', $id_user)
-            ->where(function ($query) use ($search) {
-                $query->orWhere('nama', 'like', "%$search%");
+            ->where(function($query) use ($search) {
+                $query->orWhere('nama','like', "%$search%");
             })
             ->paginate($limit);
 
