@@ -10,13 +10,14 @@
                 <iconify-icon icon="iconamoon:close-bold" class="text-2xl"></iconify-icon>
             </button>
         </div>
-        <form action="{{ route('master-dana.store-cabang') }}" method="POST">
+        <form action="{{ route('master-dana.store-dana') }}" method="POST">
         @csrf
             <div class="modal-body">
                 <div class="form-group-1 mb-4">
                     <div class="input-box">
                         <label for="">Cabang </label>
                         <input type="hidden" name="cabang" id="cabang">
+                        <input type="hidden" name="id" id="id">
                         <input type="text" class="form-input bg-gray-200" id="nama_cabang" name="nama_cabang" readonly >
                     </div>
                     <div class="input-box">

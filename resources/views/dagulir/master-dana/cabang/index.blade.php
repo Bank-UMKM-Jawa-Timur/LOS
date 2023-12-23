@@ -8,9 +8,11 @@
         $('.show-tambah').off('click').on('click', function() {
             const target = $(this).data('target');
             const id = $(this).data('id');
+            const id_cabang = $(this).data('cabang');
             const nama = $(this).data('nama');
 
             $(`#${target} #nama_cabang`).val(nama);
+            $(`#${target} #cabang`).val(id_cabang);
             $(`#${target} #id`).val(id);
             $(`#${target}`).removeClass('hidden');
         })
@@ -136,6 +138,7 @@
                                                     type="button"
                                                     class="btn bg-red-500 text-white show-tambah"
                                                     data-id="{{ $item->id }}"
+                                                    data-cabang="{{ $item->id_cabang }}"
                                                     data-nama="{{ $item->cabang->cabang }}"
                                                     data-target="modal-tambah-modal"
                                                 >Tambah Dana Modal</button></td>

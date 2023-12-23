@@ -2,7 +2,7 @@
 @include('components.new.modal.loading')
 @push('script-inject')
     <script>
-      $(document).ready(function() {
+    $(document).ready(function() {
         $('#page_length').on('change', function() {
             $('#form').submit();
         });
@@ -80,11 +80,21 @@
         function dana_dari_sebelum(modal, idle) {
             $('#dana_modal_sebelum_dari').val(modal);
             $('#dana_idle_sebelum_dari').val(idle);
+
+            var dana_modal_sebelum_dari = document.getElementById("dana_modal_sebelum_dari");
+            dana_modal_sebelum_dari.value = formatrupiah(dana_modal_sebelum_dari.value);
+
+            var dana_idle_sebelum_dari = document.getElementById("dana_idle_sebelum_dari");
+            dana_idle_sebelum_dari.value = formatrupiah(dana_idle_sebelum_dari.value);
         }
 
         function dana_ke_sebelum(modal, idle) {
             $('#dana_modal_sebelum_ke').val(modal);
+            var dana_modal_sebelum_ke = document.getElementById("dana_modal_sebelum_ke");
+            dana_modal_sebelum_ke.value = formatrupiah(dana_modal_sebelum_ke.value);
             $('#dana_idle_sebelum_ke').val(idle);
+            var dana_idle_sebelum_ke = document.getElementById("dana_idle_sebelum_ke");
+            dana_idle_sebelum_ke.value = formatrupiah(dana_idle_sebelum_ke.value);
         }
         // get total
         function hitung() {
@@ -108,12 +118,25 @@
                 $('#dana_idle_setelah_dari').val(total_dana_idle_dari);
                 $('#dana_modal_setelah_ke').val(0);
                 $('#dana_idle_setelah_ke').val(0);
+                var dana_modal_setelah_dari = document.getElementById("dana_modal_setelah_dari");
+                dana_modal_setelah_dari.value = formatrupiah(dana_modal_setelah_dari.value);
+                var dana_idle_setelah_dari = document.getElementById("dana_idle_setelah_dari");
+                dana_idle_setelah_dari.value = formatrupiah(dana_idle_setelah_dari.value);
             }else{
                 $("#pesan").hide();
                 $('#dana_modal_setelah_dari').val(total_dana_modal_dari);
                 $('#dana_idle_setelah_dari').val(total_dana_idle_dari);
                 $('#dana_modal_setelah_ke').val(total_dana_modal_ke);
                 $('#dana_idle_setelah_ke').val(total_dana_idle_ke);
+
+                var dana_modal_setelah_dari = document.getElementById("dana_modal_setelah_dari");
+                dana_modal_setelah_dari.value = formatrupiah(dana_modal_setelah_dari.value);
+                var dana_idle_setelah_dari = document.getElementById("dana_idle_setelah_dari");
+                dana_idle_setelah_dari.value = formatrupiah(dana_idle_setelah_dari.value);
+                var dana_modal_setelah_ke = document.getElementById("dana_modal_setelah_ke");
+                dana_modal_setelah_ke.value = formatrupiah(dana_modal_setelah_ke.value);
+                var dana_idle_setelah_ke = document.getElementById("dana_idle_setelah_ke");
+                dana_idle_setelah_ke.value = formatrupiah(dana_idle_setelah_ke.value);
             }
 
 
@@ -150,11 +173,6 @@
             return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
         }
     });
-
-
-
-
-
     </script>
 @endpush
 @section('content')
