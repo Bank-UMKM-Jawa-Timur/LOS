@@ -254,8 +254,7 @@ function getDataLevel($data)
 }
 
 function lampiranAnalisa($fileName) {
-    $pdf = public_path($fileName);
-    $file = "data:@file/pdf;base64,".base64_encode(file_get_contents($pdf));
+    $file = "data:@application/pdf;base64,".base64_encode(file_get_contents($fileName));
     // remove white space
     $result = trim($file, "\n\r\t\v\x00");
     return $result;
