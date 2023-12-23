@@ -18,7 +18,7 @@
             <strong>Terjadi kesalahan!</strong> {{ session('error') }}
         @endif
 
-        <div class="body-pages review-pengajuan">
+        <div class="body-pages review-pincab">
             <div class="container mx-auto p-3 bg-white">
                 <div class="accordion-section">
                     <div class="accordion-header rounded pl-3 border border-theme-primary/5 relative mb-4">
@@ -390,7 +390,6 @@
 
                                     @else
                                         {{--  skor  --}}
-                                        <span>Test</span>
                                     @endif
                                 @endif
                                 <div class="form-group-1">
@@ -408,40 +407,43 @@
                                                 @endphp
                                                 @foreach ($dataDetailJawabanText as $itemTextTiga)
                                                     @if ($itemTextTiga->nama != 'Ratio Tenor Asuransi')
-                                                        <div class="field-review">
-                                                            <div class="field-name">
-                                                                @if ($itemTiga->opsi_jawaban == 'file')
-                                                                    @if ($jumlahDataDetailJawabanText > 1)
-                                                                        <h6 for="">{{ $itemTextTiga->nama }} {{$loop->iteration}}</h6>
+                                                        @if ($itemTextTiga->opsi_text == "Tanah" || $itemTextTiga->opsi_text == "Kendaraan Bermotor" || $itemTextTiga->opsi_text == "Tanah dan Bangunan")
+                                                        @else
+                                                            <div class="field-review">
+                                                                <div class="field-name">
+                                                                    @if ($itemTiga->opsi_jawaban == 'file')
+                                                                        @if ($jumlahDataDetailJawabanText > 1)
+                                                                            <h6 for="">{{ $itemTextTiga->nama }} {{$loop->iteration}}</h6>
+                                                                        @else
+                                                                            <h6 for="">{{ $itemTextTiga->nama }}</h6>
+                                                                        @endif
                                                                     @else
-                                                                        <h6 for="">{{ $itemTextTiga->nama }}</h6>
+                                                                            <h6 for="">{{ $itemTextTiga->nama }}</h6>
                                                                     @endif
-                                                                @else
-                                                                        <h6 for="">{{ $itemTextTiga->nama }}</h6>
-                                                                @endif
-                                                            </div>
-                                                            <div class="field-answer">
-                                                                @if ($itemTiga->opsi_jawaban == 'file')
-                                                                    @php
-                                                                        $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text);
-                                                                    @endphp
-                                                                    @if ($file_parts['extension'] == 'pdf')
-                                                                        <iframe
-                                                                            style="border: 5px solid #dc3545;"
-                                                                            src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}"
-                                                                            width="100%" height="800px"></iframe>
+                                                                </div>
+                                                                <div class="field-answer">
+                                                                    @if ($itemTiga->opsi_jawaban == 'file')
+                                                                        @php
+                                                                            $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text);
+                                                                        @endphp
+                                                                        @if ($file_parts['extension'] == 'pdf')
+                                                                            <iframe
+                                                                                style="border: 5px solid #dc3545;"
+                                                                                src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}"
+                                                                                width="100%" height="800px"></iframe>
+                                                                        @else
+                                                                            <img style="border: 5px solid #dc3545;" src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}"
+                                                                                alt="" width="800px">
+                                                                        @endif
+                                                                        {{-- Rupiah data tiga --}}
+                                                                    @elseif ($itemTextTiga->is_rupiah)
+                                                                        <p>Rp. {{ number_format((int) $itemTextTiga->opsi_text, 0, ',', '.') }}</p>
                                                                     @else
-                                                                        <img style="border: 5px solid #dc3545;" src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemTiga->id . '/' . $itemTextTiga->opsi_text }}"
-                                                                            alt="" width="800px">
+                                                                        <p>{{ $itemTiga->opsi_jawaban == 'persen' ? $itemTextTiga->opsi_text : $itemTextTiga->opsi_text  }}{{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</p>
                                                                     @endif
-                                                                    {{-- Rupiah data tiga --}}
-                                                                @elseif ($itemTextTiga->is_rupiah)
-                                                                    <p>Rp. {{ number_format((int) $itemTextTiga->opsi_text, 0, ',', '.') }}</p>
-                                                                @else
-                                                                    <p>{{ $itemTiga->opsi_jawaban == 'persen' ? $itemTextTiga->opsi_text : $itemTextTiga->opsi_text  }}{{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</p>
-                                                                @endif
+                                                                </div>
                                                             </div>
-                                                        </div>
+                                                        @endif
 
                                                         <input type="hidden" class="form-input mb-3" placeholder="Masukkan komentar"
                                                             name="komentar_penyelia" value="{{ $itemTextTiga->nama }}" disabled>
@@ -1077,13 +1079,13 @@
                     <div class="space-y-3">
                         <div class="form-group-1">
                             <div class="input-box">
-                                <label for="">Nominal Disetujui</label>
+                                <label for="">Plafon Disetujui</label>
                                 <input type="text" class="form-input rupiah" name="nominal_disetujui" id="nominal_disetujui" required>
                             </div>
                         </div>
                         <div class="form-group-1">
                             <div class="input-box">
-                                <label for="">Jangka Waktu Disetujui (Bulan)</label>
+                                <label for="">Tenor Disetujui (Bulan)</label>
                                 <div class="flex items-center">
                                     <div class="flex-1">
                                         <input type="number" class="form-input" name="jangka_waktu_disetujui" id="jangka_waktu_disetujui" required>
@@ -1121,7 +1123,6 @@
         $(".accordion-header").click(function() {
             // Toggle the visibility of the next element with class 'accordion-content'
             $(this).next(".accordion-content").slideToggle();
-            // $(this).find(".accordion-icon").toggleClass("rotate-180");
         });
 
         $(document).on('click', '#btn-dec', function() {
@@ -1157,12 +1158,57 @@
             rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
             return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
         }
+
+        $('#modal-approve #nominal_disetujui').on('change', function() {
+            limitJangkaWaktu()
+        })
+        $('#modal-approve #jangka_waktu_disetujui').on('change', function() {
+            limitJangkaWaktu()
+        })
+
+        function limitJangkaWaktu() {
+            var nominal = $('#modal-approve #nominal_disetujui').val()
+            nominal = nominal != '' ? nominal.replaceAll('.','') : 0
+            var limit = 100000000
+            if (parseInt(nominal) <= limit) {
+                var jangka_waktu = $('#modal-approve #jangka_waktu_disetujui').val()
+                if (jangka_waktu != '') {
+                    jangka_waktu = parseInt(jangka_waktu)
+                    if (jangka_waktu > 36) {
+                        $('.jangka_waktu_error').removeClass('hidden')
+                        $('.jangka_waktu_error').html('Jangka waktu maksimal 36 bulan.')
+                    }
+                    else {
+                        $('.jangka_waktu_error').addClass('hidden')
+                        $('.jangka_waktu_error').html('')
+                    }
+                }
+            }
+            else if (parseInt(nominal) > limit) {
+                var jangka_waktu = $('#modal-approve #jangka_waktu_disetujui').val()
+                if (jangka_waktu != '') {
+                    jangka_waktu = parseInt(jangka_waktu)
+                    if (jangka_waktu <= 36) {
+                        $('.jangka_waktu_error').removeClass('hidden')
+                        $('.jangka_waktu_error').html('Jangka waktu harus lebih dari 36 bulan.')
+                    }
+                    else {
+                        $('.jangka_waktu_error').addClass('hidden')
+                        $('.jangka_waktu_error').html('')
+                    }
+                }
+            }
+            else {
+                $('.jangka_waktu_error').addClass('hidden')
+                $('.jangka_waktu_error').html('')
+            }
+        }
     </script>
     <script>
         lightbox.option({
-          'resizeDuration': 200,
-          'wrapAround': true,
-          'maxWidth': 5000,
+            'resizeDuration': 200,
+            'wrapAround': true,
+            'maxWidth': 5000,
         })
     </script>
 @endpush

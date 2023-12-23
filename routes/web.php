@@ -164,10 +164,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::prefix('master-dana')->group(function () {
                 // master dana modal
                 Route::get('/',[MasterDanaController::class,'index'])->name('master-dana.index');
-                Route::post('/update/{id}',[MasterDanaController::class,'update'])->name('master-dana.update');
+                Route::post('update/{id}',[MasterDanaController::class,'update'])->name('master-dana.update');
                 // master dana cabang
-                Route::get('/dana-cabang',[MasterDanaController::class,'danaCabang'])->name('master-dana.cabang.index');
-                Route::post('/store-cabang',[MasterDanaController::class,'storeCabang'])->name('master-dana.store-cabang');
+                Route::get('dana-cabang',[MasterDanaController::class,'danaCabang'])->name('master-dana.cabang.index');
+                Route::post('store-cabang',[MasterDanaController::class,'storeCabang'])->name('master-dana.store-cabang');
+                Route::post('store-dana',[MasterDanaController::class,'storeDana'])->name('master-dana.store-dana');
                 // master alih dana
                 Route::get('alih-dana',[MasterDanaController::class,'alihDana'])->name('master-dana.alih-dana');
                 Route::post('alih-dana/post',[MasterDanaController::class,'alihDanaPost'])->name('master-dana.alih-dana.post');
