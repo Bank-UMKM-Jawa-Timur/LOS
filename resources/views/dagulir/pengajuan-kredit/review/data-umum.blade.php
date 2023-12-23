@@ -255,9 +255,17 @@
             <div class="field-answer">
                 {{-- <p>{{ $dataNasabah->id_slik ? $dataNasabah->id_slik : '-' }}</p> --}}
                 <p> {{ $itemSlik?->option }}</p>
+                <div class="field-review mr-5 mt-5">
+                    <div class="field-name">
+                        <label for="">Skor </label>
+                    </div>
+                    <div class="field-answer">
+                        <p>
+                            <span class="field-skor"> {{ $itemSlik?->skor }}</span>
+                        </p>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="field-review">
         </div>
     </div>
     <div class="form-group-1">
