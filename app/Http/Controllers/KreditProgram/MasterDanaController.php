@@ -140,7 +140,7 @@ class MasterDanaController extends Controller
             $total_idle_current = $current->dana_modal - $total;
             if ($total_idle_current <= formatNumber($request->get('dana_modal'))) {
                 alert()->warning('warning','Dana yang tersedia tidak mencukupi.');
-                return redirect()->route('master-dana.cabang.index');
+                return redirect()->back();
             }
             // dana cabang
             $repo = new MasterDanaRepository;
