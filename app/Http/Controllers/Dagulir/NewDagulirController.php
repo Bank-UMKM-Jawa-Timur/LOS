@@ -1785,24 +1785,26 @@ class NewDagulirController extends Controller
                         $delay = 1500000; // 1.5 sec
                         if ($kode_pendaftaran) {
                             // HIT update status survei endpoint dagulir
-                            $survei = $this->updateStatus($kode_pendaftaran, 1);
-                            if ($currentPosisi == 'Pincab') {
-                                if (is_array($survei)) {
-                                    // Fail block
-                                    if ($survei['message'] != 'Update Status Gagal. Anda tidak bisa mengubah status, karena status saat ini adalah SURVEY') {
-                                        DB::rollBack();
-                                        alert()->error('Peringatan(API)', $survei);
-                                        return redirect()->back();
+                            if ($nasabah->status != 1) {
+                                $survei = $this->updateStatus($kode_pendaftaran, 1);
+                                if ($currentPosisi == 'Pincab') {
+                                    if (is_array($survei)) {
+                                        // Fail block
+                                        if ($survei['message'] != 'Update Status Gagal. Anda tidak bisa mengubah status, karena status saat ini adalah SURVEY') {
+                                            DB::rollBack();
+                                            alert()->error('Peringatan(API)', $survei);
+                                            return redirect()->back();
+                                        }
                                     }
-                                }
-                                else {
-                                    if ($survei != 200) {
-                                        DB::rollBack();
-                                        alert()->error('Peringatan(API)', $survei);
-                                        return redirect()->back();
+                                    else {
+                                        if ($survei != 200) {
+                                            DB::rollBack();
+                                            alert()->error('Peringatan(API)', $survei);
+                                            return redirect()->back();
+                                        }
                                     }
+                                    usleep($delay);
                                 }
-                                usleep($delay);
                             }
 
                             // HIT update status analisa endpoint dagulir
@@ -1885,7 +1887,7 @@ class NewDagulirController extends Controller
                     $pengajuan->tanggal_review_pincab = date(now());
                     $pengajuan->update();
 
-                    $nasabah = PengajuanDagulir::select('nama')->find($pengajuan->dagulir_id);
+                    $nasabah = PengajuanDagulir::select('kode_pendaftaran', 'nama', 'status')->find($pengajuan->dagulir_id);
                     if ($nasabah->kode_pendaftaran) {
                         $kode_pendaftaran = $nasabah->kode_pendaftaran;
                         $storeSIPDE = 'success';
@@ -1901,24 +1903,26 @@ class NewDagulirController extends Controller
 
                     if ($kode_pendaftaran) {
                         // HIT update status survei endpoint dagulir
-                        $survei = $this->updateStatus($kode_pendaftaran, 1);
-                        if ($currentPosisi == 'Pincab') {
-                            if (is_array($survei)) {
-                                // Fail block
-                                if ($survei['message'] != 'Update Status Gagal. Anda tidak bisa mengubah status, karena status saat ini adalah SURVEY') {
-                                    DB::rollBack();
-                                    alert()->error('Peringatan(API)', $survei);
-                                    return redirect()->back();
+                        if ($nasabah->status != 1) {
+                            $survei = $this->updateStatus($kode_pendaftaran, 1);
+                            if ($currentPosisi == 'Pincab') {
+                                if (is_array($survei)) {
+                                    // Fail block
+                                    if ($survei['message'] != 'Update Status Gagal. Anda tidak bisa mengubah status, karena status saat ini adalah SURVEY') {
+                                        DB::rollBack();
+                                        alert()->error('Peringatan(API)', $survei);
+                                        return redirect()->back();
+                                    }
                                 }
-                            }
-                            else {
-                                if ($survei != 200) {
-                                    DB::rollBack();
-                                    alert()->error('Peringatan(API)', $survei);
-                                    return redirect()->back()->withError($survei);
+                                else {
+                                    if ($survei != 200) {
+                                        DB::rollBack();
+                                        alert()->error('Peringatan(API)', $survei);
+                                        return redirect()->back()->withError($survei);
+                                    }
                                 }
+                                usleep($delay);
                             }
-                            usleep($delay);
                         }
 
                         // HIT update status analisa endpoint dagulir
