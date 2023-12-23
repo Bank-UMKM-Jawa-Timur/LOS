@@ -18,7 +18,7 @@
             <strong>Terjadi kesalahan!</strong> {{ session('error') }}
         @endif
 
-        <div class="body-pages review-pengajuan">
+        <div class="body-pages review-pincab">
             <div class="container mx-auto p-3 bg-white">
                 <div class="accordion-section">
                     <div class="accordion-header rounded pl-3 border border-theme-primary/5 relative mb-4">

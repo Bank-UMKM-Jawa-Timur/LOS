@@ -34,7 +34,7 @@
             @yield('content')
         </div>
     </div>
-    @include('components.new.modal.logout');
+    @include('components.new.modal.logout')
     @include('sweetalert::alert', ['cdn' => "https://cdn.jsdelivr.net/npm/sweetalert2@9"])
 </body>
     {{-- javascript plugins --}}
