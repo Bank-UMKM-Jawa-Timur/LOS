@@ -74,7 +74,8 @@ if (!function_exists('sipde_token')) {
     function sipde_token() {
         $filePath = storage_path('app/response.json');
         $json = json_decode(file_get_contents($filePath), true);
-        if ($json['token'] == "") {
+        $date = Carbon::now()->toDateTimeString();
+        if ($json['token'] == "" || $date >= $json['exp']) {
             $response = Http::post(config('dagulir.host').'/login', [
                 'username' => config('dagulir.username'),
                 'password' => config('dagulir.password'),
@@ -87,9 +88,7 @@ if (!function_exists('sipde_token')) {
                 'token' => $json['token'],
             ];
         }
-        $filePath = storage_path('app/response.json');
-        $json = json_decode(file_get_contents($filePath), true);
-        $date = Carbon::now()->toDateTimeString();
+        
         if ($date >= $json['exp']) {
             sipde_token();
         }else{
