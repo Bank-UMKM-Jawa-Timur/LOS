@@ -992,7 +992,7 @@
             $('#title-table').html('Dagulir')
             $('#add-pengajuan').removeClass('hidden');
         }else{
-            $('#title-table').html('SIPDe')
+            $('#title-table').html('Dagulir')
             $('#add-pengajuan').addClass('hidden');
         }
     });

@@ -1,4 +1,3 @@
-@include('dagulir.pengajuan-kredit.modal.loading-post-review-penyelia')
 @extends('layouts.tailwind-template')
 
 @section('modal')
@@ -748,13 +747,17 @@
                                                 @endphp
                                                 @foreach ($dataDetailJawabanText as $itemTextDua)
                                                     <div class="row
-                                                            {{ $item->opsi_jawaban == 'file' ? 'col-span-1 order-2' : 'col-span-1 order-3' }}
+                                                            {{ $item->opsi_jawaban == 'file' ? 'col-span-1 order-2' : '' }}
+
+                                                            {{ $item->nama == "NPWP" ||  $item->nama == "Ijin Usaha" ? 'col-span-1 order-2' : '' }}
                                                             {{ $item->nama === "Kebutuhan Kredit" ||
                                                                 $item->nama === "Persentase Net Income" ||
                                                                 $item->nama === "Installment" || $item->nama === "Repayment Capacity" ?
-                                                                'col-span-2 order-3' : '' }}
+                                                                'col-span-1 order-3' : ''  }}
+                                                                {{ $item->nama === 'Perhitungan Installment' ?  'col-span-2 order-2' : '' }}
                                                             {{ $item->nama === "Jumlah Orang yang menjalankan usaha" ?  'col-span-1 order-3' : '' }}">
-                                                        <div class="col-md-12 space-y-4 order">
+                                                        <div class="col-md-12 space-y-4 order
+                                                        ">
                                                             @if ($item->opsi_jawaban == 'file')
                                                                 <b>{{ $item->nama }} :</b>
                                                                 @php
@@ -778,7 +781,7 @@
                                                                             @if ($item->is_rupiah == 1)
                                                                                 <p>Rp. {{ number_format((int) $itemTextDua->opsi_text, 0, ',', '.') }}</p>
                                                                             @else
-                                                                                <p>{{ $itemTextDua->opsi_text }} sss</p>
+                                                                                <p>{{ $itemTextDua->opsi_text }}</p>
                                                                             @endif
                                                                         </div>
                                                                     </div>
@@ -1051,9 +1054,9 @@
                                                     @endphp
                                                     @foreach ($dataDetailJawabanText as $itemTextTiga)
                                                         @if ($itemTextTiga->nama != 'Ratio Tenor Asuransi')
-                                                            <div class="{{ $itemTiga->opsi_jawaban == 'file' ? 'col-span-1 p-2' : 'form-group-1 col-span-1' }} 
-                                                                        {{ $itemTextTiga->nama === "NIB" ?'form-group-2 col-span-2' : '' }} 
-                                                                        {{ $itemTextTiga->nama === "Modal (awal) Sendiri" || 
+                                                            <div class="{{ $itemTiga->opsi_jawaban == 'file' ? 'col-span-1 p-2 order-3' : 'form-group-1 col-span-1' }}
+                                                                        {{ $itemTextTiga->nama === "NIB" ?'form-group-2 col-span-2' : '' }}
+                                                                        {{ $itemTextTiga->nama === "Modal (awal) Sendiri" ||
                                                                         $itemTextTiga->nama === "Modal Pinjaman" ? 'col-span-1 form-group-1' : '' }}
                                                                         ">
                                                                 <div class="space-y-5">
@@ -1298,123 +1301,161 @@
                                                                     ->join('item', 'jawaban_text.id_jawaban', 'item.id')
                                                                     ->where('jawaban_text.id_pengajuan', $dataUmum->id)
                                                                     ->where('jawaban_text.id_jawaban', $itemEmpat->id)
+                                                                    ->orderBy('id_jawaban')
                                                                     ->get();
                                                             @endphp
+                                                            @if ($itemEmpat->id == 148)
+                                                                @php
+                                                                    $gridClass = 'grid-cols-1';
+                                                                    if (count($dataDetailJawabanTextEmpat) > 1) {
+                                                                        $gridClass = 'grid-cols-2';
+                                                                    }
+                                                                    if (count($dataDetailJawabanTextEmpat) > 2) {
+                                                                        $gridClass = 'grid-cols-3';
+                                                                    }
+                                                                @endphp
+                                                                <div class="row grid col-span-2 {{$gridClass}}">
+                                                                    @foreach ($dataDetailJawabanTextEmpat as $itemTextEmpat)
+                                                                        <div class="foto">
+                                                                            @if (intval($itemTextEmpat->opsi_text) > 1)
+                                                                                <b class="pl-2">{{ $itemTextEmpat->nama }}</b>
+                                                                                @php
+                                                                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text);
+                                                                                @endphp
+                                                                                @if ($file_parts['extension'] == 'pdf')
+                                                                                    <div class="pl-2">
+                                                                                        <iframe
+                                                                                            src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
+                                                                                            width="100%" height="400"></iframe>
+                                                                                    </div>
+                                                                                @else
+                                                                                    <div class="pl-2">
+                                                                                        <img style="border: 5px solid #c2c7cf"
+                                                                                            src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
+                                                                                            alt="" class="w-full">
+                                                                                    </div>
+                                                                                @endif
+                                                                            @else
+                                                                                @php
+                                                                                    $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text);
+                                                                                @endphp
+                                                                                @if ($file_parts['extension'] == 'pdf')
+                                                                                    <div class="pl-2">
+                                                                                        <iframe
+                                                                                            src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
+                                                                                            width="100%" height="500px"></iframe>
+                                                                                    </div>
+                                                                                @else
+                                                                                    <div class="pl-2">
+                                                                                        <img style="border: 5px solid #c2c7cf"
+                                                                                            src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
+                                                                                            alt="" width="500px">
+                                                                                    </div>
+                                                                                @endif
+                                                                            @endif
+                                                                        </div>
+                                                                    @endforeach
+                                                                </div>
+                                                            @endif
                                                             @foreach ($dataDetailJawabanTextEmpat as $itemTextEmpat)
                                                                 <div class="row">
-                                                                    {{-- <div class="form-group-1 mb-0"> --}}
-                                                                        {{-- INI --}}
-                                                                        {{-- <h6 class="font-medium text-sm" for="">{{ $itemTextEmpat->nama }}</h6> --}}
-                                                                        @if ($itemEmpat->opsi_jawaban == 'file')
-                                                                                    @if (intval($itemTextEmpat->opsi_text) > 1)
-                                                                                        <b class="pl-2">{{ $itemTextEmpat->nama }}</b>
-                                                                                        @php
-                                                                                            $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text);
-                                                                                        @endphp
-                                                                                        @if ($file_parts['extension'] == 'pdf')
-                                                                                            <div class="pl-2">
-                                                                                                <iframe
-                                                                                                    src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
-                                                                                                    width="100%" height="400"></iframe>
-                                                                                            </div>
-                                                                                        @else
-                                                                                            <div class="pl-2">
-                                                                                                <img style="border: 5px solid #c2c7cf"
-                                                                                                    src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
-                                                                                                    alt="" width="400">
-                                                                                            </div>
-                                                                                        @endif
-                                                                                    @else
-                                                                                        @php
-                                                                                            $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text);
-                                                                                        @endphp
-                                                                                        @if ($file_parts['extension'] == 'pdf')
-                                                                                            <div class="pl-2">
-                                                                                                <iframe
-                                                                                                    src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
-                                                                                                    width="100%" height="500px"></iframe>
-                                                                                            </div>
-                                                                                        @else
-                                                                                            <div class="pl-2">
-                                                                                                <img style="border: 5px solid #c2c7cf"
-                                                                                                    src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
-                                                                                                    alt="" width="500px">
-                                                                                            </div>
-                                                                                        @endif
-                                                                                    @endif
-                                                                                    {{-- Rupiah data empat --}}
-                                                                                @elseif ($itemEmpat->opsi_jawaban == 'number' && $itemEmpat->id != 130)
-                                                                                    <div class="jawaban-responsive border-b p-2 font-medium">
-                                                                                        <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
-                                                                                            <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban: </span>
-                                                                                            <h4 class="font-bold">Rp. {{ number_format((int) $itemTextEmpat->opsi_text, 0, ',', '.') }}</h4>
+                                                                    <div class="foto">
+                                                                        @if ($itemEmpat->id != 148)
+                                                                            @if ($itemEmpat->opsi_jawaban == 'file')
+                                                                                @if (intval($itemTextEmpat->opsi_text) > 1)
+                                                                                    <b class="pl-2">{{ $itemTextEmpat->nama }}</b>
+                                                                                    @php
+                                                                                        $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text);
+                                                                                    @endphp
+                                                                                    @if ($file_parts['extension'] == 'pdf')
+                                                                                        <div class="pl-2">
+                                                                                            <iframe
+                                                                                                src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
+                                                                                                width="100%" height="400"></iframe>
                                                                                         </div>
-                                                                                    </div>
-                                                                                    @if ($itemTextEmpat->is_commentable == 'Ya')
-                                                                                        @if (Auth::user()->role != 'Pincab')
-                                                                                            <div class="input-k-bottom">
-                                                                                                <input type="hidden" name="id_item[]"
-                                                                                                    value="{{ $item->id }}">
-                                                                                                <input type="text"
-                                                                                                    class="form-input komentar"
-                                                                                                    name="komentar_penyelia[]"
-                                                                                                    placeholder="Masukkan Komentar">
-                                                                                            </div>
-                                                                                        @endif
+                                                                                    @else
+                                                                                        <div class="pl-2">
+                                                                                            <img style="border: 5px solid #c2c7cf"
+                                                                                                src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
+                                                                                                alt="" class="w-full">
+                                                                                        </div>
                                                                                     @endif
                                                                                 @else
-                                                                                    <div class="field-review">
-                                                                                        <div class="field-name">
-                                                                                            <label for="">{{ $itemTextEmpat->nama }}</label>
+                                                                                    @php
+                                                                                        $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text);
+                                                                                    @endphp
+                                                                                    @if ($file_parts['extension'] == 'pdf')
+                                                                                        <div class="pl-2">
+                                                                                            <iframe
+                                                                                                src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
+                                                                                                width="100%" height="500px"></iframe>
                                                                                         </div>
-                                                                                        <div class="field-answer">
-                                                                                            <p>
-                                                                                                @if ($itemEmpat->is_rupiah == 1)
-                                                                                                    Rp. {{ number_format((int) $itemTextEmpat->opsi_text, 0, ',', '.') }}
-                                                                                                @else
-                                                                                                    {{ $itemTextEmpat->opsi_text }}
-                                                                                                @endif
-
-                                                                                                @if ($itemEmpat->opsi_jawaban == 'persen')
-                                                                                                    %
-                                                                                                @elseif($itemEmpat->id == 130)
-                                                                                                    Bulan
-                                                                                                @else
-                                                                                                @endif
-                                                                                            </p>
+                                                                                    @else
+                                                                                        <div class="pl-2">
+                                                                                            <img style="border: 5px solid #c2c7cf"
+                                                                                                src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $itemEmpat->id . '/' . $itemTextEmpat->opsi_text }}"
+                                                                                                alt="" width="500px">
                                                                                         </div>
-                                                                                    </div>
-                                                                                    {{-- <div class="jawaban-responsive p-2 font-medium">
-                                                                                        <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
-                                                                                            <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban 09: </span>
-                                                                                            <h4 class="font-bold">
-                                                                                                {{ $itemTextEmpat->opsi_text }}
-                                                                                                    @if ($itemEmpat->opsi_jawaban == 'persen')
-                                                                                                        %
-                                                                                                    @elseif($itemEmpat->id == 130)
-                                                                                                        Bulan
-                                                                                                    @else
-                                                                                                    @endif
-                                                                                            </h4>
-                                                                                        </div>
-                                                                                    </div> --}}
-                                                                                    @if ($itemTextEmpat->is_commentable == 'Ya')
-                                                                                        @if (Auth::user()->role != 'Pincab')
-                                                                                            <div class="input-k-bottom">
-                                                                                                <input type="hidden" name="id_item[]"
-                                                                                                    value="{{ $item->id }}">
-                                                                                                <input type="text"
-                                                                                                    class="form-input komentar"
-                                                                                                    name="komentar_penyelia[]"
-                                                                                                    placeholder="Masukkan Komentar">
-                                                                                            </div>
-                                                                                        @endif
                                                                                     @endif
                                                                                 @endif
+                                                                            {{-- Rupiah data empat --}}
+                                                                            @elseif ($itemEmpat->opsi_jawaban == 'number' && $itemEmpat->id != 130)
+                                                                                <div class="jawaban-responsive border-b p-2 font-medium">
+                                                                                    <div class="bg-blue-50 border-b border-gray-500 text-gray-700 px-4 py-3 flex items-center" role="alert">
+                                                                                        <span class="text-sm font-semibold text-gray-400 mx-3">Jawaban: </span>
+                                                                                        <h4 class="font-bold">Rp. {{ number_format((int) $itemTextEmpat->opsi_text, 0, ',', '.') }}</h4>
+                                                                                    </div>
+                                                                                </div>
+                                                                                @if ($itemTextEmpat->is_commentable == 'Ya')
+                                                                                    @if (Auth::user()->role != 'Pincab')
+                                                                                        <div class="input-k-bottom">
+                                                                                            <input type="hidden" name="id_item[]"
+                                                                                                value="{{ $item->id }}">
+                                                                                            <input type="text"
+                                                                                                class="form-input komentar"
+                                                                                                name="komentar_penyelia[]"
+                                                                                                placeholder="Masukkan Komentar">
+                                                                                        </div>
+                                                                                    @endif
+                                                                                @endif
+                                                                            @else
+                                                                                <div class="field-review">
+                                                                                    <div class="field-name">
+                                                                                        <label for="">{{ $itemTextEmpat->nama }}</label>
+                                                                                    </div>
+                                                                                    <div class="field-answer">
+                                                                                        <p>
+                                                                                            @if ($itemEmpat->is_rupiah == 1)
+                                                                                                Rp. {{ number_format((int) $itemTextEmpat->opsi_text, 0, ',', '.') }}
+                                                                                            @else
+                                                                                                {{ $itemTextEmpat->opsi_text }}
+                                                                                            @endif
 
-                                                                    {{-- </div> --}}
+                                                                                            @if ($itemEmpat->opsi_jawaban == 'persen')
+                                                                                                %
+                                                                                            @elseif($itemEmpat->id == 130)
+                                                                                                Bulan
+                                                                                            @else
+                                                                                            @endif
+                                                                                        </p>
+                                                                                    </div>
+                                                                                </div>
+                                                                                @if ($itemTextEmpat->is_commentable == 'Ya')
+                                                                                    @if (Auth::user()->role != 'Pincab')
+                                                                                        <div class="input-k-bottom">
+                                                                                            <input type="hidden" name="id_item[]"
+                                                                                                value="{{ $item->id }}">
+                                                                                            <input type="text"
+                                                                                                class="form-input komentar"
+                                                                                                name="komentar_penyelia[]"
+                                                                                                placeholder="Masukkan Komentar">
+                                                                                        </div>
+                                                                                    @endif
+                                                                                @endif
+                                                                            @endif
+                                                                        @endif
+                                                                    </div>
                                                                 </div>
-
                                                                 <input type="hidden" class="form-input mb-3"
                                                                     placeholder="Masukkan komentar" name="komentar_penyelia"
                                                                     value="{{ $itemTextEmpat->nama }}" disabled>
@@ -1841,7 +1882,7 @@
                                                 rows="4" placeholder="Pendapat dan Usulan Penyelia">{{ $dataKomentar?->komentar_penyelia != null ? $dataKomentar?->komentar_penyelia : '' }}</textarea>
                                             @error('komentar_penyelia_keseluruhan')
                                                 <div class="invalid-feedback">
-                                                    {{ $message }} 
+                                                    {{ $message }}
                                                 </div>
                                             @enderror
                                         </div>
@@ -2169,9 +2210,6 @@
                             })
                             e.preventDefault()
                         }
-                        else{
-                            $("#preload-data-review-penyelia").removeClass("hidden");
-                        }
                     }
                 }
             }
@@ -2200,10 +2238,6 @@
                         })
                         e.preventDefault()
                     }
-                    else
-                    {
-                        $("#preload-data-review-penyelia").removeClass("hidden");
-                    }
                 }
             }
             else if (role == 'PBP') {
@@ -2228,9 +2262,6 @@
                         })
                         e.preventDefault()
                     }
-                    else{
-                            $("#preload-data-review-penyelia").removeClass("hidden");
-                        }
                 }
             }
             else {
@@ -2390,10 +2421,6 @@
                 text: "Field Pendapat dan usulan harus diisi"
             })
             e.preventDefault()
-        }
-        else
-        {
-            $("#preload-data-review-penyelia").removeClass("hidden");
         }
     })
     // End Validation
