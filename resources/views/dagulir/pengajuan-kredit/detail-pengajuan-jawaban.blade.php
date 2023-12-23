@@ -1,4 +1,3 @@
-@include('dagulir.pengajuan-kredit.modal.loading-post-review-penyelia')
 @extends('layouts.tailwind-template')
 
 @section('modal')
@@ -751,7 +750,7 @@
                                                             {{ $item->opsi_jawaban == 'file' ? 'col-span-1 order-2' : 'col-span-1 order-3' }}
                                                             {{ $item->nama === "Kebutuhan Kredit" ||
                                                                 $item->nama === "Persentase Net Income" ||
-                                                                $item->nama === "Installment" || $item->nama === "Repayment Capacity" ?
+                                                                $item->nama === "Installment" || $item->nama === "Repayment Capacity" ? 
                                                                 'col-span-2 order-3' : '' }}
                                                             {{ $item->nama === "Jumlah Orang yang menjalankan usaha" ?  'col-span-1 order-3' : '' }}">
                                                         <div class="col-md-12 space-y-4 order">
@@ -917,7 +916,7 @@
                                                     @if (in_array($itemJawaban->id, $data))
                                                         @if (isset($data))
                                                         <div class="row {{ $item->is_hide ? 'hidden' : ''}} {{ $item->nama === "Jumlah Kompetitor" ||  $item->nama === "Cara Penjualan" || $item->nama === "Sistem Pemasaran"   ? 'col-span-2' : ''}} {{ $item->nama === "Strategi Pemasaran" ? 'form-group-1' : '' }} {{ $item->nama === "Hubungan Dengan Supplier" ? 'col-span-2' : ''}} {{ $item->nama === "Usaha Dilakukan Sejak" ? 'col-span-2' : '' }} {{ $item->nama === "Badan Usaha" ? 'col-span-1' : ''  }}">
-                                                            <div class="col-md-12 {{ $item->is_commentable == 'Ya' ? 'border' : ''}}">
+                                                            <div class="col-md-12 {{ $item->is_commentable == 'Ya' ? 'border p-3 bg-gray-50' : ''}}">
                                                                 @if (!$item->is_hide)
                                                                 <div class="{{ $item->nama === "Badan Usaha" || $item->nama === "Jumlah Orang yang menjalankan usaha" || $item->nama === "Strategi Pemasaran"  ? 'form-group-1' : 'form-group-2'}}">
                                                                     <div class="field-review">
@@ -936,20 +935,20 @@
                                                                             <input type="hidden" name="id_option[]"
                                                                                 value="{{ $itemJawaban->id }}">
                                                                             <div class="flex pl-2">
-                                                                                    <div class="flex-1 w-64">
+                                                                                    <div class="flex-1 w-64 space-y-3">
                                                                                         <label for="" class="text-sm font-semibold">Komentar</label>
-                                                                                        <input type="text" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400 komentar"
+                                                                                        <input type="text" class="w-full bg-transparent px-4 py-3 border-b-2 focus:border-red-500 border-gray-400 outline-none  komentar"
                                                                                             name="komentar_penyelia[]" placeholder="Masukkan Komentar"
                                                                                             value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                                     </div>
                                                                                     <div class="flex-3 w-5"></div>
-                                                                                    <div class="flex-2 w-16">
+                                                                                    <div class="flex-2 w-16 space-y-3">
                                                                                         @php
                                                                                             $skorInput2 = null;
                                                                                             $skorInput2 = $getSkorPenyelia->skor_penyelia ? $getSkorPenyelia->skor_penyelia : $itemJawaban->skor;
                                                                                         @endphp
-                                                                                        <label for="">Skor</label>
-                                                                                        <input type="number" class="w-full px-3 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400" placeholder=""
+                                                                                        <label for="" class="text-sm font-semibold">Skor</label>
+                                                                                        <input type="number" class="w-full font-bold appearance-none border rounded-md px-3 py-3 bg-transparent border-gray-400 outline-none  focus:border-red-500" placeholder=""
                                                                                             name="skor_penyelia[]"
                                                                                             min="0"
                                                                                             max="4"
@@ -1051,7 +1050,11 @@
                                                     @endphp
                                                     @foreach ($dataDetailJawabanText as $itemTextTiga)
                                                         @if ($itemTextTiga->nama != 'Ratio Tenor Asuransi')
-                                                            <div class="{{ $itemTiga->opsi_jawaban == 'file' ? 'col-span-1 p-2' : 'form-group-1 col-span-1' }} {{ $itemTextTiga->nama === "NIB" ?'form-group-2 col-span-2' : '' }} {{ $itemTextTiga->nama === "Modal (awal) Sendiri" || $itemTextTiga->nama === "Modal Pinjaman" ? 'col-span-1 form-group-1' : '' }}">
+                                                            <div class="{{ $itemTiga->opsi_jawaban == 'file' ? 'col-span-1 p-2' : 'form-group-1 col-span-1' }} 
+                                                                        {{ $itemTextTiga->nama === "NIB" ?'form-group-2 col-span-2' : '' }} 
+                                                                        {{ $itemTextTiga->nama === "Modal (awal) Sendiri" || 
+                                                                        $itemTextTiga->nama === "Modal Pinjaman" ? 'col-span-1 form-group-1' : '' }}
+                                                                        ">
                                                                 <div class="space-y-5">
                                                                         @if ($itemTiga->opsi_jawaban == 'file')
                                                                             @php
@@ -1186,7 +1189,7 @@
                                                 @if (count($dataJawabanLevelTiga) != 0)
                                                     @if ($itemTiga->nama == 'Ratio Tenor Asuransi Opsi')
                                                     @else
-                                                        <div class="form-group-2 col-span-2">
+                                                        <div class="form-group-2 col-span-2 {{ $item->is_commentable == 'Ya' || $itemTiga->is_commentable == 'Ya' ? 'border p-3 bg-gray-50' : ''}}">
                                                             @foreach ($dataJawabanLevelTiga as $key => $itemJawabanLevelTiga)
                                                                 @php
                                                                     $dataDetailJawaban = \App\Models\JawabanPengajuanModel::select('id', 'id_jawaban', 'skor', 'skor_penyelia')
@@ -1243,14 +1246,14 @@
                                                                                 <div class="flex pl-2">
                                                                                     <div class="flex-1 w-64">
                                                                                         <label for="">Komentar </label>
-                                                                                        <input type="text" class="w-full px-4 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400 komentar"
+                                                                                        <input type="text" class="w-full bg-transparent px-4 py-3 border-b-2 focus:border-red-500 border-gray-400 outline-none  komentar"
                                                                                             name="komentar_penyelia[]" placeholder="Masukkan Komentar"
                                                                                             value="{{ isset($getKomentar->komentar) ? $getKomentar->komentar : '' }}">
                                                                                     </div>
                                                                                     <div class="flex-3 w-5"></div>
                                                                                     <div class="flex-2 w-16">
                                                                                         <label for="">Skor</label>
-                                                                                        <input type="number" class="w-full px-3 py-2 border-b-2 border-gray-400 outline-none  focus:border-gray-400"
+                                                                                        <input type="number" class="w-full font-bold appearance-none border rounded-md px-3 py-3 bg-transparent border-gray-400 outline-none  focus:border-red-500"
                                                                                             min="0"
                                                                                             max="4"
                                                                                             name="skor_penyelia[]"
@@ -2151,9 +2154,6 @@
                             })
                             e.preventDefault()
                         }
-                        else{
-                            $("#preload-data-review-penyelia").removeClass("hidden");
-                        }
                     }
                 }
             }
@@ -2182,10 +2182,6 @@
                         })
                         e.preventDefault()
                     }
-                    else
-                    {
-                        $("#preload-data-review-penyelia").removeClass("hidden");
-                    }
                 }
             }
             else if (role == 'PBP') {
@@ -2210,9 +2206,6 @@
                         })
                         e.preventDefault()
                     }
-                    else{
-                            $("#preload-data-review-penyelia").removeClass("hidden");
-                        }
                 }
             }
             else {
@@ -2372,10 +2365,6 @@
                 text: "Field Pendapat dan usulan harus diisi"
             })
             e.preventDefault()
-        }
-        else
-        {
-            $("#preload-data-review-penyelia").removeClass("hidden");
         }
     })
     // End Validation
@@ -2574,7 +2563,7 @@
                 items: 5
             },
             1000: {
-                items: 8
+                items: 10
             }
         }
     })
