@@ -387,7 +387,7 @@
                 />
             </div>
             <div class="input-box">
-                <label for="">Jangka Waktu</label><small class="text-red-500 font-bold">*</small>
+                <label for="">Tenor</label><small class="text-red-500 font-bold">*</small>
                 <div class="flex items-center">
                     <div class="flex-1">
                         <input
