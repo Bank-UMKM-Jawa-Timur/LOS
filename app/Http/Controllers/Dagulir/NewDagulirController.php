@@ -604,7 +604,6 @@ class NewDagulirController extends Controller
             if ($avgResult > 0 && $avgResult <= 2) {
                 $status = "merah";
             } elseif ($avgResult > 2 && $avgResult <= 3) {
-                // $updateData->status = "kuning";
                 $status = "kuning";
             } elseif ($avgResult > 3) {
                 $status = "hijau";
@@ -635,17 +634,6 @@ class NewDagulirController extends Controller
                     }
                 }
             }
-
-            if (!$statusSlik) {
-                $updateData->posisi = 'Proses Input Data';
-                $updateData->status_by_sistem = $status;
-                $updateData->average_by_sistem = $avgResult;
-            } else {
-                $updateData->posisi = 'Ditolak';
-                $updateData->status_by_sistem = "merah";
-                $updateData->average_by_sistem = "1.0";
-            }
-            $updateData->update();
 
             //save pendapat per aspek
             foreach ($request->get('id_aspek') as $key => $value) {
@@ -684,6 +672,111 @@ class NewDagulirController extends Controller
             PengajuanDagulirTemp::where('id', $request->id_dagulir_temp)->delete();
 
             $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan proses pembuatan data pengajuan atas nama ' . $namaNasabah . '.', $id_pengajuan, Auth::user()->id, Auth::user()->nip);
+
+            if (!$statusSlik) {
+                $updateData->posisi = 'Proses Input Data';
+                $updateData->status_by_sistem = $status;
+                $updateData->average_by_sistem = $avgResult;
+            } else {
+                $cetak_lampiran_analisa = $this->cetakLampiranAnalisa($id_pengajuan);
+                $lampiran_analisa = null;
+                if ($cetak_lampiran_analisa['status'] == 'success') {
+                    $lampiran_analisa = "data:@application/pdf;base64,".base64_encode(file_get_contents($cetak_lampiran_analisa['filepath']));
+                }
+
+                $updateData->posisi = 'Ditolak';
+                $updateData->status_by_sistem = "merah";
+                $updateData->average_by_sistem = "1.0";
+                $plafonUsulan = PlafonUsulan::where('id_pengajuan', $id_pengajuan)->first();
+                $plafon_acc = intval(str_replace('.','', $request->get('nominal_disetujui')));
+                $tenor_acc = intval($request->get('jangka_waktu_disetujui'));
+
+                $nasabah = PengajuanDagulir::select('kode_pendaftaran', 'nama', 'status')->find($pengajuan->dagulir_id);
+                if ($nasabah->kode_pendaftaran) {
+                    $kode_pendaftaran = $nasabah->kode_pendaftaran;
+                    $storeSIPDE = 'success';
+                }
+                else {
+                    // HIT Pengajuan endpoint dagulir
+                    $storeSIPDE = $this->storeSipde($id_pengajuan);
+                    if (is_array($storeSIPDE)) {
+                        $kode_pendaftaran = array_key_exists('kode_pendaftaran', $storeSIPDE) ? $storeSIPDE['kode_pendaftaran'] : false;
+                    }
+                }
+                $delay = 1500000; // 1.5 sec
+
+                if ($kode_pendaftaran) {
+                    // HIT update status survei endpoint dagulir
+                    if ($nasabah->status != 1) {
+                        $survei = $this->updateStatus($kode_pendaftaran, 1);
+                        if (is_array($survei)) {
+                            // Fail block
+                            if ($survei['message'] != 'Update Status Gagal. Anda tidak bisa mengubah status, karena status saat ini adalah SURVEY') {
+                                DB::rollBack();
+                                alert()->error('Peringatan(API)', $survei);
+                                return redirect()->back();
+                            }
+                        }
+                        else {
+                            if ($survei != 200) {
+                                DB::rollBack();
+                                alert()->error('Peringatan(API)', $survei);
+                                return redirect()->back()->withError($survei);
+                            }
+                        }
+                        usleep($delay);
+                    }
+
+                    // HIT update status analisa endpoint dagulir
+                    if ($nasabah->status != 2) {
+                        $analisa = $this->updateStatus($kode_pendaftaran, 2, $lampiran_analisa);
+                        if (is_array($analisa)) {
+                            // Fail block
+                            DB::rollBack();
+                            alert()->error('Peringatan(API)', $analisa);
+                            return redirect()->back();
+                        }
+                        else {
+                            if ($analisa != 200 || $analisa != '200') {
+                                DB::rollBack();
+                                alert()->error('Peringatan(API)', $analisa);
+                                return redirect()->back();
+                            }
+                        }
+                        usleep($delay);
+                    }
+
+                    // HIT update status ditolak endpoint dagulir
+                    if ($nasabah->status != 3) {
+                        $ditolak = $this->updateStatus($kode_pendaftaran, 4);
+                        if (is_array($ditolak)) {
+                            // Fail block
+                            DB::rollBack();
+                            alert()->error('Peringatan(API)', $ditolak);
+                            return redirect()->back();
+                        }
+                        else {
+                            if ($ditolak != 200) {
+                                DB::rollBack();
+                                alert()->error('Peringatan(API)', $ditolak);
+                                return redirect()->back();
+                            }
+                        }
+                    }
+
+                    $namaNasabah = 'undifined';
+                    if ($nasabah)
+                        $namaNasabah = $nasabah->nama;
+
+                    $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menolak pengajuan atas nama ' . $namaNasabah . '.', $id_pengajuan, Auth::user()->id, Auth::user()->nip);
+                }
+                else {
+                    DB::rollBack();
+                    alert()->error('Peringatan(API)', $storeSIPDE);
+                    return redirect()->back();
+                }
+            }
+            $updateData->update();
 
             DB::commit();
             event(new EventMonitoring('store pengajuan'));
@@ -1245,7 +1338,6 @@ class NewDagulirController extends Controller
                 "tipe_pengajuan" => $pengajuan_dagulir->tipe,
                 "npwp" => $pengajuan_dagulir->npwp,
                 "jenis_badan_hukum" => $pengajuan_dagulir->jenis_badan_hukum,
-                // "jenis_badan_hukum" => "Berbadan Hukum",
                 "tempat_berdiri" => $pengajuan_dagulir->tempat_berdiri,
                 "tanggal_berdiri" => $pengajuan_dagulir->tanggal_berdiri,
                 "email" => $pengajuan_dagulir->email ? $pengajuan_dagulir->email : "",
@@ -1283,19 +1375,16 @@ class NewDagulirController extends Controller
                 else {
                     return $pengajuan_dagulir['data']['message'];
                 }
-                // return redirect()->route('dagulir.pengajuan.index')->withStatus('Berhasil mengirimkan data.');
             }
             else {
                 $message = 'Terjadi kesalahan.';
                 if (array_key_exists('error', $pengajuan_dagulir)) $message .= ' '.$pengajuan_dagulir['error'];
 
                 return $message;
-                // return redirect()->route('dagulir.pengajuan.index')->withError($message);
             }
         } catch (\Exception $e) {
             DB::rollBack();
             return $e->getMessage();
-            // return redirect()->route('dagulir.pengajuan.index')->withError($e->getMessage());
         }
     }
 
@@ -2027,7 +2116,6 @@ class NewDagulirController extends Controller
         ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
         ->where('pengajuan.id', $id)
         ->first();
-        // return $dataNasabah;
 
         $param['dataNasabah'] = $dataNasabah;
 
@@ -2049,7 +2137,6 @@ class NewDagulirController extends Controller
         $kodePenyelia = $dataNasabah->id_penyelia;
         $param['dataPincab'] = User::where('id', $kodePincab)->get();
         $param['dataPenyelia'] = User::where('id', $kodePenyelia)->get();
-        // return ['Pincab' => $param['dataPincab'], 'penyelia' => $param['dataPenyelia']];
 
         $indexBulan = intval(date('m', strtotime($param['tglCetak']->tgl_cetak_pk))) - 1;
         $param['tgl'] = date('d', strtotime($param['tglCetak']->tgl_cetak_pk)) . ' ' . $this->bulan[$indexBulan] . ' ' . date('Y', strtotime($param['tglCetak']->tgl_cetak_pk));
@@ -2236,8 +2323,8 @@ class NewDagulirController extends Controller
                     ]);
                     DB::table('pengajuan')
                     ->where('id', $id)
-                        ->update([
-                            'pk' => $filenamePK,
+                    ->update([
+                        'pk' => $filenamePK,
                     ]);
                     $plafon = PlafonUsulan::where('id_pengajuan',$id)->first();
                     $pengajuan = PengajuanModel::with('dagulir')->find($id);
@@ -2330,7 +2417,6 @@ class NewDagulirController extends Controller
 
         $pdf = Pdf::loadview('dagulir.pengajuan-kredit.cetak.cetak-surat',$param);
 
-
         $fileName = $param['dataUmum']->id.'.'. 'pdf' ;
         $filePath = public_path() . '/cetak_surat';
         if (!File::isDirectory($filePath)) {
@@ -2338,6 +2424,50 @@ class NewDagulirController extends Controller
         }
         $pdf->save($filePath.'/'.$fileName);
         return view('dagulir.cetak.cetak-surat', $param);
+    }
+
+    public function cetakLampiranAnalisa($id_pengajuan) {
+        $status = '';
+        $message = '';
+        $filepath = null;
+        try {
+            $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->get();
+            $dataNasabah = DB::table('pengajuan_dagulir')->select('pengajuan_dagulir.*', 'kabupaten.id as kabupaten_id', 'kabupaten.kabupaten', 'kecamatan.id as kecamatan_id', 'kecamatan.id_kabupaten', 'kecamatan.kecamatan', 'desa.id as desa_id', 'desa.id_kabupaten', 'desa.id_kecamatan', 'desa.desa')
+                            ->join('kabupaten', 'kabupaten.id', 'pengajuan_dagulir.kotakab_ktp')
+                            ->join('kecamatan', 'kecamatan.id', 'pengajuan_dagulir.kec_ktp')
+                            ->join('desa', 'desa.id', 'pengajuan_dagulir.desa_ktp')
+                            ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
+                            ->where('pengajuan.id', $id_pengajuan)
+                            ->first();
+            $param['dataNasabah'] = $dataNasabah;
+            $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit')
+                                ->find($id_pengajuan);
+            $param['komentar'] = KomentarModel::where('id_pengajuan', $id_pengajuan)->first();
+            $param['jenis_usaha'] = config('dagulir.jenis_usaha');
+
+            $pdf = Pdf::loadview('dagulir.pengajuan-kredit.cetak.cetak-surat',$param);
+
+            $fileName = $param['dataUmum']->id.'.'. 'pdf' ;
+            $filePath = public_path('cetak_surat');
+            if (!File::isDirectory($filePath)) {
+                File::makeDirectory($filePath, 493, true);
+            }
+            $pdf->save($filePath.'/'.$fileName);
+            $filepath = $filePath.'\\'.$fileName;
+
+            $status = 'success';
+            $message = 'Successfully get file';
+        } catch (\Exception $e) {
+            $status = 'failed';
+            $message = $e->getMessage();
+        } finally {
+            $data = [
+                'status' => $status,
+                'message' => $message,
+                'filepath' => $filepath
+            ];
+            return $data;
+        }
     }
 
     public function edit($id) {
