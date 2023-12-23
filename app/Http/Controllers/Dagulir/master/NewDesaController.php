@@ -158,6 +158,16 @@ class NewDesaController extends Controller
         $desa = Desa::where('id',$id_desa)->first();
 
         try {
+            $data = Desa::where('desa', 'LIKE', "%{$request->desa}%")
+            ->where('id_kecamatan', 'LIKE', "%{$request->id_kecamatan}%")
+            ->Where('id_kabupaten', 'LIKE', "%{$request->id_kabupaten}%")
+            ->first();
+
+            if ($data) {
+                alert()->error('error', 'Kecamatan sudah ada.');
+                return back()->withError('Terjadi kesalahan.');
+            }
+            
             $desa->desa = $request->get('desa');
             $desa->id_kecamatan = $request->get('id_kecamatan');
             $desa->id_kabupaten = $request->get('id_kabupaten');
@@ -183,15 +193,16 @@ class NewDesaController extends Controller
     public function destroy($id)
     {
         try {
-            $desa = Desa::findOrFail($id);
+            $id_desa = Request()->id_desa;
+            $desa = Desa::where('id',$id_desa)->first();
             $desa->delete();
         } catch (Exception $e) {
             return back()->withError('Terjadi kesalahan.');
         } catch (QueryException $e) {
             return back()->withError('Terjadi kesalahan.');
         }
-
-        return redirect()->route('desa.index')->withStatus('Data berhasil dihapus.');
+        alert()->success('Berhasil', 'Data berhasil dihapus.');
+        return back();
     }
 
     public function kecamatanByKabupaten($id){

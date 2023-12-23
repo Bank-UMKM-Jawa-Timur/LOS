@@ -1,5 +1,6 @@
 @include('dagulir.master.desa.modal.create')
 @include('dagulir.master.desa.modal.edit')
+@include('dagulir.master.desa.modal.delete')
 @extends('layouts.tailwind-template')
 @include('components.new.modal.loading')
 @push('script-inject')
@@ -100,8 +101,8 @@
                                                 data-target="modal-edit-desa">
                                                 <iconify-icon icon="uil:edit" class="icon"></iconify-icon>
                                             </a>
-                                            <a href="javascript:void(0)" class="btn-delete show-hapus-cabang"
-                                                data-target="modalhapuscabang" data-id="{{ $item->id }}desa">
+                                            <a href="javascript:void(0)" class="btn-delete show-hapus-desa"
+                                                data-target="modalhapusdesa" data-id="{{ $item->id }}">
                                                 <iconify-icon class="icon" icon="ic:baseline-delete"></iconify-icon>
                                             </a>
                                         </td>
@@ -141,6 +142,14 @@
 
             $(`#${target} #kabupaten_select option[value="${id_kabupaten}"]`).prop('selected', true);
             $(`#${target} #kecamatan_select option[value="${id_kecamatan}"]`).prop('selected', true);
+        })
+        $('.show-hapus-desa').off('click').on('click', function() {
+            const target = $(this).data('target');
+            const id_desa = $(this).data('id');
+
+            $(`#${target} #id`).val(id_desa);
+
+            $(`#${target}`).removeClass('hidden');
         })
     </script>
 @endpush
