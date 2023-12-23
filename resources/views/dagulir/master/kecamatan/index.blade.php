@@ -1,10 +1,50 @@
 @include('dagulir.master.kecamatan.modal.create')
+@include('dagulir.master.kecamatan.modal.edit')
+@include('dagulir.master.kecamatan.modal.delete')
 @extends('layouts.tailwind-template')
 @include('components.new.modal.loading')
 @push('script-inject')
     <script>
         $('#page_length').on('change', function() {
             $('#form').submit()
+        })
+        // edit
+        $('.show-edit').off('click').on('click', function() {
+            const target = $(this).data('target');
+            const id = $(this).data('id');
+            const id_kab = $(this).data('kab')
+            console.log(id_kab);
+            const nama = $(this).data('nama');
+            // set value
+            $(`#${target} #id`).val(id);
+            $(`#${target} #kecamatan`).val(nama);
+
+            $(`#${target}`).removeClass('hidden');
+            $.ajax({
+                type: "GET",
+                url: "{{ route('dagulir.master.get.kabupaten') }}",
+                success:function(res){
+                    $("#kabupaten").empty();
+                    $.each(res,function (index, param) {
+                        $('#kabupaten').append(`
+                            <option value="${param.id}"  ${param.id == parseInt(id_kab) ? 'selected' : ''}>${param.kabupaten}</option>
+                        `);
+                    })
+                }
+            })
+        })
+        // hapus
+        $('.show-hapus').off('click').on('click',function() {
+            const target = $(this).data('target');
+            const id = $(this).data('id');
+
+            var url = '{{ url('') }}'
+            var deleteUrl = url + '/dagulir/master/kecamatan/' + id;
+
+            $('#form-delete').attr('action', deleteUrl);
+            $('#form-delete').attr('method', 'POST');
+
+            $(`#${target}`).removeClass('hidden');
         })
     </script>
 @endpush
@@ -59,7 +99,7 @@
                         </div>
                         <div class="right-layout lg:w-auto w-full">
                             <div class="input-search flex gap-2">
-                                <input type="search" placeholder="Cari nama usaha... " name="q" id="q"
+                                <input type="search" placeholder="Cari kata kunci... " name="q" id="q"
                                     class="w-full px-8 outline-none text-sm p-3 border"
                                     value="{{ isset($_GET['q']) ? $_GET['q'] : '' }}" />
                                 <button class="px-5 py-2 bg-theme-primary rounded text-white text-lg">
@@ -73,6 +113,7 @@
                             <thead>
                                 <th class="text-center">No</th>
                                 <th>Kecamatan</th>
+                                <th>Kabupaten</th>
                                 <th>Aksi</th>
                             </thead>
                             <tbody>
@@ -87,13 +128,27 @@
                                     <tr>
                                         <td>{{ $i++ }}</td>
                                         <td>{{ $item->kecamatan }}</td>
+                                        <td>{{ $item->kabupaten != null ? $item->kabupaten->kabupaten : '-' }}</td>
                                         <td>
-                                            <button class="btn-edit">
+                                            <a
+                                                href="javascript:void(0)"
+                                                class="btn-edit show-edit"
+                                                data-id="{{ $item->id }}"
+                                                data-nama="{{ $item->kecamatan }}"
+                                                data-kab="{{ $item->kabupaten != null ? $item->kabupaten->id : null }}"
+                                                data-target="modalEdit"
+
+                                            >
                                                 <iconify-icon icon="uil:edit" class="icon"></iconify-icon>
-                                            </button>
-                                            <button class="btn-delete">
+                                            </a>
+                                            <a
+                                                href="javascript:void(0)"
+                                                class="btn-delete show-hapus"
+                                                data-target="modalhapus"
+                                                data-id="{{ $item->id }}"
+                                            >
                                                 <iconify-icon class="icon" icon="ic:baseline-delete"></iconify-icon>
-                                            </button>
+                                            </a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -114,26 +169,3 @@
         </div>
     </section>
 @endsection
-@push('custom-script')
-    <script>
-        function resetPassword(name, id) {
-            Swal.fire({
-                title: 'Perhatian!!',
-                text: "Apakah anda yakin mereset password " + name + " ?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#112042',
-                cancelButtonColor: '#d33',
-                cancelButtonText: 'Batal',
-                confirmButtonText: 'ResetPassword',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $("#resetPasswordForm" + id).submit()
-                }
-            })
-        }
-
-
-    </script>
-@endpush

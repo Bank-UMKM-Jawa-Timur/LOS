@@ -19,7 +19,7 @@ $(".dropdown-account").on("click", function (e) {
   e.stopPropagation();
 });
 $(".toggle-dp-menu").on("click", function (e) {
-  $(".dropdown-menu-link").toggleClass("hidden");
+  $(this).nextAll(".dropdown-menu-link:first").toggleClass("hidden");
   e.stopPropagation();
 });
 $(".toggle-menu").on("click", function (e) {
@@ -70,6 +70,15 @@ $(document).keyup(function (e) {
       $(".modal-layout").addClass("hidden");
     }, 400);
   }
+}); // notification toggle
+
+$(".toggle-notification").click(function (e) {
+  $(".notification-list").toggleClass("hidden");
+  e.stopPropagation();
+});
+$(document).click(function (e) {
+  if (e.target.closest(".notification-list")) return;
+  $(".notification-list").addClass("hidden");
 });
 $("[data-dismiss-id]").on("click", function () {
   var dismissId = $(this).data("dismiss-id");

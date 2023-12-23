@@ -1,4 +1,5 @@
 @include('dagulir.master.cabang.modal.create')
+@include('dagulir.master.cabang.modal.delete')
 @include('dagulir.master.cabang.modal.edit')
 @extends('layouts.tailwind-template')
 @include('components.new.modal.loading')
@@ -60,7 +61,7 @@
                         </div>
                         <div class="right-layout lg:w-auto w-full">
                             <div class="input-search flex gap-2">
-                                <input type="search" placeholder="Cari nama usaha... " name="q" id="q"
+                                <input type="search" placeholder="Cari... " name="q" id="q"
                                     class="w-full px-8 outline-none text-sm p-3 border"
                                     value="{{ isset($_GET['q']) ? $_GET['q'] : '' }}" />
                                 <button class="px-5 py-2 bg-theme-primary rounded text-white text-lg">
@@ -94,33 +95,18 @@
                                         <td>{{ $item->cabang }}</td>
                                         <td>{{ $item->email }}</td>
                                         <td>{{ $item->alamat }}</td>
-                                        <td>
-                                            <button class="btn-edit" data-id="{{ $item->id }}">
+                                        <td class="m-2">
+                                            <a href="javascript:void(0)" class="btn-edit show-edit-cabang" data-id="{{ $item->id }}"
+                                                data-kode_cabang="{{$item->kode_cabang}}" data-cabang="{{$item->cabang}}"
+                                                data-email="{{$item->email}}" data-alamat="{{$item->alamat}}"
+                                                data-target="modal-edit-cabang"
+                                                >
                                                 <iconify-icon icon="uil:edit" class="icon"></iconify-icon>
-                                            </button>
-                                            <button class="btn-delete">
+                                            </a>
+                                            <a href="javascript:void(0)" class="btn-delete show-hapus-cabang"
+                                                data-target="modalhapuscabang" data-id="{{ $item->id }}">
                                                 <iconify-icon class="icon" icon="ic:baseline-delete"></iconify-icon>
-                                            </button>
-                                            {{-- <div class="flex">
-                                                <div class="dropdown-tb">
-                                                            <a href="{{ route('cabang.edit', $item->id) }}" class="mr-2">
-                                                                <button type="button" id="PopoverCustomT-1" class="btn btn-rgb-primary btn-sm"
-                                                                    data-toggle="tooltip" title="Edit" data-placement="top"><span
-                                                                        class="fa fa-edit fa-sm"></span></button>
-                                                            </a>
-                                                            <form action="{{ route('cabang.destroy', $item->id) }}" method="post">
-                                                                @csrf
-                                                                @method('delete')
-                                                                <button type="button" class="btn btn-rgb-danger btn-sm" data-toggle="tooltip"
-                                                                    title="Hapus" data-placement="top"
-                                                                    onclick="confirm('{{ __('Apakah anda yakin ingin menghapus?') }}') ? this.parentElement.submit() : ''">
-                                                                    <span class="fa fa-trash fa-sm"></span>
-                                                                </button>
-                                                            </form>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div> --}}
+                                            </a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -141,26 +127,37 @@
         </div>
     </section>
 @endsection
-@push('custom-script')
+@push('script-inject')
     <script>
-        function resetPassword(name, id) {
-            Swal.fire({
-                title: 'Perhatian!!',
-                text: "Apakah anda yakin mereset password " + name + " ?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#112042',
-                cancelButtonColor: '#d33',
-                cancelButtonText: 'Batal',
-                confirmButtonText: 'ResetPassword',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $("#resetPasswordForm" + id).submit()
-                }
-            })
+        function generateCsrfToken() {
+            return '{{ csrf_token() }}';
         }
 
+        $('.show-edit-cabang').off('click').on('click', function() {
+            const target = $(this).data('target')
+            const id_cabang = $(this).data('id')
+            console.log('id_cabang:', id_cabang);
+            const kode_cabang = $(this).data('kode_cabang')
+            const cabang = $(this).data('cabang')
+            const email = $(this).data('email')
+            const alamat = $(this).data('alamat')
 
+            $(`#${target} #kode_cabang`).val(kode_cabang)
+            $(`#${target} #cabang`).val(cabang)
+            $(`#${target} #email`).val(email)
+            $(`#${target} #alamat`).val(alamat)
+            $(`#${target} #id`).val(id_cabang)
+            $(`#${target}`).removeClass('hidden');
+        })
+        $('.show-hapus-cabang').off('click').on('click', function() {
+            const target = $(this).data('target')
+            $(`#${target}`).removeClass('hidden');
+            var cabangId = $(this).data('id');
+            var url = '{{ url('') }}'
+            var deleteUrl = url + '/dagulir/master/cabang/' + cabangId;
+
+            $('#form-delete-cabang').attr('action', deleteUrl);
+            $('#form-delete-cabang').attr('method', 'POST'); // Diubah ke POST untuk Laravel
+        })
     </script>
 @endpush

@@ -14,5 +14,7 @@ class JawabanTempModel extends Model
     protected $fillable = [
         'id_jawaban',
         'skor',
+        'temporary_dagulir_id',
+        'id_temporary_calon_nasabah'
     ];
 }
