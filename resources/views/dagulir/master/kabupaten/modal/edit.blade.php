@@ -1,5 +1,4 @@
 <div class="modal-layout hidden" id="modal-edit-kabupaten">
-
     <div class="modal modal-sm bg-white">
         <div class="modal-head">
             <div class="title">
@@ -31,7 +30,7 @@
                 </div>
             </div>
             <div class="modal-footer justify-end">
-                <button class="btn-cancel" type="button" data-dismiss-id="modal-edit-cabang">
+                <button class="btn-cancel" type="button" data-dismiss-id="modal-edit-kabupaten">
                     Batal
                 </button>
                 <button type="submit" class="btn-submit">Simpan</button>

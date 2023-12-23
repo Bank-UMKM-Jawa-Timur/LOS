@@ -1,22 +1,24 @@
-<div class="modal-layout hidden" id="modal-add-desa">
+<div class="modal-layout hidden" id="modal-edit-desa">
     <div class="modal modal-sm bg-white">
         <div class="modal-head">
             <div class="title">
                 <h2 class="font-bold text-lg tracking-tighter text-theme-text">
-                    Tambah Desa
+                    Edit Desa
                 </h2>
             </div>
-            <button data-dismiss-id="modal-add-desa">
+            <button data-dismiss-id="modal-edit-desa">
                 <iconify-icon icon="iconamoon:close-bold" class="text-2xl"></iconify-icon>
             </button>
         </div>
-        <form action="{{ route('dagulir.master.desa.store') }}" method="POST">
+        <form action="{{ route('dagulir.master.desa.update', 1) }}" method="POST">
             @csrf
+            @method('PUT')
+            <input type="hidden" name="id_desa" id="id">
             <div class="modal-body">
                 <div class="form-group-1 mb-4">
                     <div class="input-box">
                         <label for="desa">Nama Desa</label>
-                        <input type="text" name="desa" class="form-input" />
+                        <input type="text" name="desa" id="desa" class="form-input" required/>
                     </div>
                 </div>
                 <div class="form-group-2">
@@ -43,7 +45,7 @@
                 </div>
             </div>
             <div class="modal-footer justify-end">
-                <button class="btn-cancel" type="button" data-dismiss-id="modal-add-desa">
+                <button class="btn-cancel" type="button" data-dismiss-id="modal-edit-desa">
                     Batal
                 </button>
                 <button class="btn-submit" type="submit">Simpan</button>

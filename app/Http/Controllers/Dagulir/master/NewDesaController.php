@@ -89,14 +89,27 @@ class NewDesaController extends Controller
 
         $validated = $request->validated();
         try {
+            $data = Desa::where('desa', 'LIKE', "%{$request->desa}%")
+            ->where('id_kecamatan', 'LIKE', "%{$request->id_kecamatan}%")
+            ->Where('id_kabupaten', 'LIKE', "%{$request->id_kabupaten}%")
+            ->first();
+
+            if ($data) {
+                alert()->error('error', 'Kecamatan sudah ada.');
+                return back()->withError('Terjadi kesalahan.');
+            }
+
             $desa = new desa;
             $desa->id_kabupaten = $validated['id_kabupaten'];
             $desa->id_kecamatan = $validated['id_kecamatan'];
             $desa->desa = $validated['desa'];
             $desa->save();
+
         } catch (Exception $e) {
+            alert()->error('error', 'Terjadi kesalahan.');
             return back()->withError('Terjadi kesalahan.');
         } catch (QueryException $e) {
+            alert()->error('error', 'Terjadi kesalahan.');
             return back()->withError('Terjadi kesalahan.');
         }
         alert()->success('Berhasil','Berhasil menambahkan data.');
@@ -141,15 +154,8 @@ class NewDesaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $desa = Desa::findOrFail($id);
-
-        $validatedData = $request->validate(
-            [
-                'desa' => 'required',
-                'id_kabupaten' => 'required',
-                'id_kecamatan' => 'required',
-            ],
-        );
+        $id_desa = $request->id_desa;
+        $desa = Desa::where('id',$id_desa)->first();
 
         try {
             $desa->desa = $request->get('desa');
@@ -157,12 +163,15 @@ class NewDesaController extends Controller
             $desa->id_kabupaten = $request->get('id_kabupaten');
             $desa->save();
         } catch (\Exception $e) {
+            alert()->error('error', 'Terjadi kesalahan.');
             return redirect()->back()->withError('Terjadi kesalahan.');
         } catch (\Illuminate\Database\QueryException $e) {
+            alert()->error('error', 'Terjadi kesalahan.');
             return redirect()->back()->withError('Terjadi kesalahan.');
         }
 
-        return redirect()->route('desa.index')->withStatus('Data berhasil diperbarui.');
+        alert()->success('Berhasil', 'Berhasil mengganti data');
+        return back();
     }
 
     /**
@@ -183,6 +192,12 @@ class NewDesaController extends Controller
         }
 
         return redirect()->route('desa.index')->withStatus('Data berhasil dihapus.');
+    }
+
+    public function kecamatanByKabupaten($id){
+        $data = Kecamatan::where('id_kabupaten', $id)->get();
+
+        return json_encode($data);
     }
 
     public function getDesaByKecamatanId($id)

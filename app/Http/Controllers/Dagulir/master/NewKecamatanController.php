@@ -44,7 +44,8 @@ class NewKecamatanController extends Controller
             }
 
             $this->param['data'] = $getKecamatan->paginate($limit);
-            $this->param['allKab'] = Kabupaten::get();
+            $this->param['allKab'] = Kabupaten::all();
+            // return $this->param['allKab'];
         } catch (\Illuminate\Database\QueryException $e) {
             return back()->withError('Terjadi Kesalahan : ' . $e->getMessage());
         } catch (Exception $e) {
@@ -87,6 +88,16 @@ class NewKecamatanController extends Controller
 
         $validated = $request->validated();
         try {
+
+            $data =  Kecamatan::where('kecamatan','LIKE', "%{$request->kecamatan}%")
+            ->Where('id_kabupaten','LIKE', "%{$request->kabupaten}%")
+            ->first();
+
+            if ($data) {
+                alert()->error('error', 'Kecamatan sudah ada.');
+                return back()->withError('Terjadi kesalahan.');
+            }
+
             $kecamatan = new kecamatan;
             $kecamatan->kecamatan = $validated['kecamatan'];
             $kecamatan->id_kabupaten = $validated['id_kabupaten'];
