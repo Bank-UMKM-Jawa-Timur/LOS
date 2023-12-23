@@ -2223,7 +2223,9 @@ class NewDagulirController extends Controller
                         ->update([
                             'pk' => $filenamePK,
                     ]);
-                    $realisasi = $this->updateStatus($kode_pendaftaran, 5);
+                    $plafon = PlafonUsulan::where('id_pengajuan',$id)->first();
+                    $pengajuan = PengajuanModel::with('dagulir')->find($id);
+                    $realisasi = $this->updateStatus($kode_pendaftaran, 5, null, $plafon->jangka_waktu_usulan_pincab, $plafon->plafon_usulan_pincab);
 
                     if (is_array($realisasi)) {
                         DB::rollBack();
@@ -2242,8 +2244,6 @@ class NewDagulirController extends Controller
                                     if (!is_array($update_selesai)) {
                                         if ($update_selesai == 200) {
                                             // insert to dd loan
-                                            $plafon = PlafonUsulan::where('id_pengajuan',$id)->first();
-                                            $pengajuan = PengajuanModel::with('dagulir')->find($id);
                                             if ($pengajuan && $plafon) {
                                                 $loan = new MasterDDLoan;
                                                 $loan->id_cabang = $request->get('cabang');
