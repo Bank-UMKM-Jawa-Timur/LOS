@@ -748,11 +748,11 @@
                                                 @foreach ($dataDetailJawabanText as $itemTextDua)
                                                     <div class="row
                                                             {{ $item->opsi_jawaban == 'file' ? 'col-span-1 order-2' : '' }}
-                                                            
+
                                                             {{ $item->nama == "NPWP" ||  $item->nama == "Ijin Usaha" ? 'col-span-1 order-2' : '' }}
                                                             {{ $item->nama === "Kebutuhan Kredit" ||
                                                                 $item->nama === "Persentase Net Income" ||
-                                                                $item->nama === "Installment" || $item->nama === "Repayment Capacity" ? 
+                                                                $item->nama === "Installment" || $item->nama === "Repayment Capacity" ?
                                                                 'col-span-1 order-3' : ''  }}
                                                                 {{ $item->nama === 'Perhitungan Installment' ?  'col-span-2 order-2' : '' }}
                                                             {{ $item->nama === "Jumlah Orang yang menjalankan usaha" ?  'col-span-1 order-3' : '' }}">
@@ -1054,9 +1054,9 @@
                                                     @endphp
                                                     @foreach ($dataDetailJawabanText as $itemTextTiga)
                                                         @if ($itemTextTiga->nama != 'Ratio Tenor Asuransi')
-                                                            <div class="{{ $itemTiga->opsi_jawaban == 'file' ? 'col-span-1 p-2 order-3' : 'form-group-1 col-span-1' }} 
-                                                                        {{ $itemTextTiga->nama === "NIB" ?'form-group-2 col-span-2' : '' }} 
-                                                                        {{ $itemTextTiga->nama === "Modal (awal) Sendiri" || 
+                                                            <div class="{{ $itemTiga->opsi_jawaban == 'file' ? 'col-span-1 p-2 order-3' : 'form-group-1 col-span-1' }}
+                                                                        {{ $itemTextTiga->nama === "NIB" ?'form-group-2 col-span-2' : '' }}
+                                                                        {{ $itemTextTiga->nama === "Modal (awal) Sendiri" ||
                                                                         $itemTextTiga->nama === "Modal Pinjaman" ? 'col-span-1 form-group-1' : '' }}
                                                                         ">
                                                                 <div class="space-y-5">
@@ -1860,14 +1860,14 @@
                                         <div class="form-group-2 pl-2">
                                             <div class="input-box">
                                                 <label for="">Plafon Usulan Penyelia</label>
-                                                <input type="text" name="plafon_usulan_penyelia" class="form-input rupiah" value="{{ $dataPlafon->plafon_usulan_penyelia != null ? number_format($dataPlafon->plafon_usulan_penyelia, 0, ',', '.') : '' }}">
+                                                <input type="text" name="plafon_usulan_penyelia" class="form-input rupiah" value="{{ $dataPlafon?->plafon_usulan_penyelia != null ? number_format($dataPlafon?->plafon_usulan_penyelia, 0, ',', '.') : '' }}">
                                             </div>
 
                                             <div class="input-box">
                                                 <label for="">Jangka Waktu Usulan Penyelia</label>
                                                 <div class="flex items-center">
                                                     <div class="flex-1">
-                                                        <input type="number" name="jangka_waktu_usulan_penyelia" class="form-input"  value="{{ $dataPlafon->jangka_waktu_usulan_penyelia != null ? $dataPlafon->jangka_waktu_usulan_penyelia : '' }}">
+                                                        <input type="number" name="jangka_waktu_usulan_penyelia" class="form-input"  value="{{ $dataPlafon?->jangka_waktu_usulan_penyelia != null ? $dataPlafon?->jangka_waktu_usulan_penyelia : '' }}">
                                                     </div>
                                                     <div class="flex-shrink-0 mt-2.5rem">
                                                         <span class="form-input bg-gray-100">Bulan</span>
@@ -1879,10 +1879,10 @@
                                             <label for="">Pendapat dan Usulan Penyelia</label>
                                             <textarea name="komentar_penyelia_keseluruhan"
                                                 class="form-input @error('komentar_penyelia_keseluruhan') is-invalid @enderror" id="komentar_penyelia_keseluruhan" cols="30"
-                                                rows="4" placeholder="Pendapat dan Usulan Penyelia">{{ $dataKomentar->komentar_penyelia != null ? $dataKomentar->komentar_penyelia : '' }}</textarea>
+                                                rows="4" placeholder="Pendapat dan Usulan Penyelia">{{ $dataKomentar?->komentar_penyelia != null ? $dataKomentar?->komentar_penyelia : '' }}</textarea>
                                             @error('komentar_penyelia_keseluruhan')
                                                 <div class="invalid-feedback">
-                                                    {{ $message }} 
+                                                    {{ $message }}
                                                 </div>
                                             @enderror
                                         </div>
