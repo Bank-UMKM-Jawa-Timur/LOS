@@ -159,8 +159,5 @@
             $('#form-delete-cabang').attr('action', deleteUrl);
             $('#form-delete-cabang').attr('method', 'POST'); // Diubah ke POST untuk Laravel
         })
-
-
-
     </script>
 @endpush
