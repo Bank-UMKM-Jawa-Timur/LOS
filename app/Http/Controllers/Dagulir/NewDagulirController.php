@@ -1729,7 +1729,7 @@ class NewDagulirController extends Controller
 
                             // HIT update status analisa endpoint dagulir
                             if ($nasabah->status != 2) {
-                                $filename = public_path('cetak_surat/'.$pengajuan->id.'.'.'pdf');
+                                $filename =  public_path() . "/cetak_surat/$id.pdf";
                                 $lampiran_analisa = lampiranAnalisa($filename);
                                 $analisa = $this->updateStatus($kode_pendaftaran, 2, $lampiran_analisa);
                                 if (is_array($analisa)) {
@@ -1807,7 +1807,7 @@ class NewDagulirController extends Controller
 
                             // HIT update status analisa endpoint dagulir
                             if ($nasabah->status != 2) {
-                                $filename = public_path('cetak_surat/'.$pengajuan->id.'.'.'pdf');
+                                $filename =  public_path() . "/cetak_surat/$id.pdf";
                                 $lampiran_analisa = lampiranAnalisa($filename);
                                 $analisa = $this->updateStatus($kode_pendaftaran, 2, $lampiran_analisa);
                                 if (is_array($analisa)) {
