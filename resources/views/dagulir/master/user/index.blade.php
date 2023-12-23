@@ -182,7 +182,6 @@
     });
 
     $('.reset-password').on('click', function(){
-        console.log('Masuk');
         const id_user = $(this).data("id_user");
         const nama = $(this).data("nama");
         const target = $(this).data("target");
@@ -196,8 +195,9 @@
     $('.hapus-user').on('click', function(){
         const id_user = $(this).data("id_user");
         const nama = $(this).data("nama");
+        const target = $(this).data("target");
 
-        $(`#${target} #id-user-delete`).val(id_user);
+        $(`#${target} .id-user`).val(id_user);
         $(`#${target} #nama`).html(nama);
         $(`#${target}`).removeClass('hidden')
     });

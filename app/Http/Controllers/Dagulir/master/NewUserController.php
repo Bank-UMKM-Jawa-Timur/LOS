@@ -189,10 +189,10 @@ class NewUserController extends Controller
      */
     public function destroy($id)
     {
-        return Request()->all();
-        $id_user = Request()->get('id_user');
+        // return Request()->all();
+        $id_user = Request()->get('id_user_delete');
         try {
-            $user = User::findOrFail($id_user);
+            $user = User::where('id',$id_user)->first();
             $user->delete();
         } catch (Exception $e) {
             alert()->error('Error','Terjadi Kesalahan.');
