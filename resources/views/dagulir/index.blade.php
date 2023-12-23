@@ -360,10 +360,6 @@
                                                                 <a href="javascript:void(0)" data-target="#confirmationModalPenyelia" data-id-pengajuan="{{$item->pengajuan->id}}" data-id-penyelia="{{ $item->pengajuan->id_penyelia }}" data-nama="{{$item->nama}}" class="cursor-pointer item-dropdown confirmationModalPenyelia">Lanjutkan Ke Penyelia</a>
                                                             @endif
                                                         </li>
-                                                        <li class="item-tb-dropdown">
-                                                            <a href="{{route('dagulir.edit', $item->pengajuan->id)}}"
-                                                            class="cursor-pointer">Edit</a>
-                                                        </li>
                                                         <a class="w-full cursor-pointer edit-pengajuan" href="{{ route('dagulir.edit', $item->pengajuan->id) }}">
                                                             <li class="item-tb-dropdown">
                                                                 Edit
