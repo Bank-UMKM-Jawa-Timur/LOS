@@ -45,7 +45,6 @@
             width: 100%;
             padding-top: 5%;
         }
-
     </style>
 </head>
 @php

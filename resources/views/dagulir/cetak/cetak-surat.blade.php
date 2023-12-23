@@ -49,7 +49,7 @@
                 <label>Nama</label>
             </td>
             <td>:</td>
-            <td style="padding-left: 17px">
+            <td>
                 {{ $dataNasabah->nama }}
             </td>
         </tr>
@@ -58,7 +58,7 @@
                 <label>Alamat KTP</label>
             </td>
             <td>:</td>
-            <td style="padding-left: 17px">
+            <td>
                 {{ $dataNasabah->alamat_ktp }}
             </td>
         </tr>
@@ -67,7 +67,7 @@
                 <label>Alamat Domisili</label>
             </td>
             <td>:</td>
-            <td style="padding-left: 17px">
+            <td>
                 {{ $dataNasabah->alamat_dom }}
             </td>
         </tr>
@@ -76,7 +76,7 @@
                 <label>Alamat Usaha</label>
             </td>
             <td>:</td>
-            <td style="padding-left: 17px">
+            <td>
                 {{ $dataNasabah->alamat_usaha }}
             </td>
         </tr>
@@ -85,7 +85,7 @@
                 <label>NIK</label>
             </td>
             <td>:</td>
-            <td style="padding-left: 17px">
+            <td>
                 {{ $dataNasabah->nik }}
             </td>
         </tr>
@@ -107,7 +107,7 @@
                 <label>Tempat, Tanggal Lahir / Status</label>
             </td>
             <td>:</td>
-            <td style="padding-left: 17px">
+            <td>
                 {{ $dataNasabah->tempat_lahir }}, {{ date_format(date_create($dataNasabah->tanggal_lahir), 'd/m/Y') }} / {{ $stp }}</span>
             </td>
         </tr>
@@ -116,7 +116,7 @@
                 <label>Jenis Usaha</label>
             </td>
             <td>:</td>
-            <td style="padding-left: 17px">
+            <td>
                 @foreach ($jenis_usaha as $key => $value)
                     @php
                         $isSelected = ($dataNasabah->jenis_usaha == $key) ? 'selected' : '';
@@ -136,7 +136,7 @@
                 <label>Jumlah Kredit Yang Diminta</label>
             </td>
             <td>:</td>
-            <td style="padding-left: 17px">
+            <td>
                 {{ "Rp " . number_format($dataNasabah->nominal,2,',','.') }}
             </td>
         </tr>
@@ -145,7 +145,7 @@
                 <label>Tujuan Kredit</label>
             </td>
             <td>:</td>
-            <td style="padding-left: 17px">
+            <td>
                 {{ $dataNasabah->tujuan_penggunaan }}
             </td>
         </tr>
@@ -154,25 +154,25 @@
                 <label>Jaminan Yang Disediakan</label>
             </td>
             <td>:</td>
-            <td style="padding-left: 17px">
+            <td>
                 {{ strtoupper($dataNasabah->ket_agunan) }}
             </td>
         </tr>
         <tr>
-            <td style="width: 40%; vertical-align: top" >
+            <td>
                 <label>Hubungan Dengan Bank</label>
             </td>
             <td style="vertical-align: top">:</td>
-            <td style="padding-left: 17px; vertical-align: top">
+            <td>
                 {{ $dataNasabah->hubungan_bank }}
             </td>
         </tr>
         <tr>
-            <td style="width: 40%; vertical-align: top" >
+            <td>
                 <label>Hasil Verifikasi Karakter Umum</label>
             </td>
             <td style="vertical-align: top">:</td>
-            <td style="padding-left: 17px; vertical-align: top">
+            <td>
                 {{ $dataNasabah->hasil_verifikasi }}
             </td>
         </tr>
@@ -274,7 +274,7 @@
                         $dataOption = \App\Models\OptionModel::where('option',"=","-")->where('id_item',$item->id)->get();
 
                         // check level 3
-                        $dataLevelTiga = \App\Models\ItemModel::select('id','nama','opsi_jawaban','level','id_parent')->where('level',3)->where('id_parent',$item->id)->get();
+                        $dataLevelTiga = \App\Models\ItemModel::where('level',3)->where('id_parent',$item->id)->get();
                     @endphp
                     @if (count($dataJawaban) != 0)
                         @if ($item->nama == 'Badan Usaha')
@@ -728,7 +728,7 @@
                                             <tr>
                                                 <td style="width: 40%; padding-left: 33px">{{ $itemTiga->nama }}</td>
                                                 <td>: </td>
-                                                <td>{{ $itemTextTiga->opsi_text }}</td>
+                                                <td>{{ $itemTiga->is_rupiah ? number_format($itemTextTiga->opsi_text, 0 , ',', '.') : $itemTextTiga->opsi_text }}</td>
                                             </tr>
                                         @endif
                                     @endforeach
