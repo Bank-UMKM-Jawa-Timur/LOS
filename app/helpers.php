@@ -143,6 +143,7 @@ if(!function_exists('edit_usulan_dagulir')){
         $data = DB::table('pendapat_dan_usulan_per_aspek')
             ->where('id_pengajuan', $nId)
             ->where('id_aspek', $id)
+            ->whereNotNull('id_staf')
             ->orderBy('id', 'desc');
 
         return $data->first();

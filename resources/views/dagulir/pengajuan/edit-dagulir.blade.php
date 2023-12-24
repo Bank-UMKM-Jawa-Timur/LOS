@@ -1,37 +1,3 @@
-@push('script-inject')
-    <script>
-        $('#jangka_waktu').on('change', function() {
-            limitJangkaWaktu()
-        })
-        $('#jumlah_kredit').on('change', function() {
-            limitJangkaWaktu()
-        })
-
-        function limitJangkaWaktu() {
-            var nominal = $('#jumlah_kredit').val()
-            nominal = nominal != '' ? nominal.replaceAll('.','') : 0
-            var limit = 50000000
-            if (parseInt(nominal) > limit) {
-                var jangka_waktu = $('#jangka_waktu').val()
-                if (jangka_waktu != '') {
-                    jangka_waktu = parseInt(jangka_waktu)
-                    if (jangka_waktu <= 36) {
-                        $('.jangka_waktu_error').removeClass('hidden')
-                        $('.jangka_waktu_error').html('Jangka waktu harus lebih dari 36 bulan.')
-                    }
-                    else {
-                        $('.jangka_waktu_error').addClass('hidden')
-                        $('.jangka_waktu_error').html('')
-                    }
-                }
-            }
-            else {
-                $('.jangka_waktu_error').addClass('hidden')
-                $('.jangka_waktu_error').html('')
-            }
-        }
-    </script>
-@endpush
 <div class="pb-10 space-y-3">
     <h2 class="text-4xl font-bold tracking-tighter text-theme-primary">Dagulir</h2>
     <p class="font-semibold text-gray-400">Edit Pengajuan</p>
@@ -115,14 +81,14 @@
         <div class="form-group-2">
             <div class="input-box">
                 <label for="ktp_nasabah" id="foto-nasabah">Foto Nasabah</label>
-                @if ($data->foto_nasabah)
+                @if ($duTemp->foto_nasabah)
                     <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
-                        data-title="Foto Nasabah" data-filepath="{{asset('../upload')}}/{{$id_pengajuan}}/{{$data->id}}/{{$data->foto_nasabah}}">Preview</a>
+                        data-title="Foto Nasabah" data-filepath="{{asset('../upload')}}/{{$pengajuan?->id}}/{{$duTemp->id}}/{{$duTemp->foto_nasabah}}">Preview</a>
                 @endif
                 <div class="flex gap-4">
-                    <input type="file" name="foto_nasabah" class="form-input limit-size-2" data-id=""/>
+                    <input type="file" name="foto_nasabah" class="form-input limit-size-2" value="{{$duTemp->foto_nasabah}}"/>
                 </div>
-                <span class="filename" style="display: inline;">{{ $duTemp?->foto_nasabah }}</span>
+                {{--  <span class="filename" style="display: inline;">{{ $duTemp?->foto_nasabah }}</span>  --}}
                 <span class="error-limit text-red-500" style="display: none; margin-top: 0;">Maximum upload file
                     size is 2 MB</span>
             </div>
@@ -149,14 +115,14 @@
             </div>
             <div class="input-box" id="ktp-nasabah">
                 <label for="ktp_nasabah" id="label-ktp-nasabah">Foto KTP Nasabah</label>
-                @if ($data->foto_ktp)
+                @if ($duTemp->foto_ktp)
                     <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
-                        data-title="Foto Nasabah" data-filepath="{{asset('../upload')}}/{{$id_pengajuan}}/{{$data->id}}/{{$data->foto_ktp}}">Preview</a>
+                        data-title="Foto Nasabah" data-filepath="{{asset('../upload')}}/{{$pengajuan?->id}}/{{$duTemp->id}}/{{$duTemp->foto_ktp}}">Preview</a>
                 @endif
                 <div class="flex gap-4">
-                    <input type="file" name="ktp_nasabah" class="form-input limit-size-2" data-id="{{ $duTemp?->id }}"/>
+                    <input type="file" name="ktp_nasabah" class="form-input limit-size-2" data-id="{{ $duTemp?->id }}" value="{{$duTemp?->foto_ktp}}"/>
                 </div>
-                <span class="filename" style="display: inline;">{{ $duTemp->foto_ktp }}</span>
+                {{--  <span class="filename" style="display: inline;">{{ $duTemp->foto_ktp }}</span>  --}}
                 <span class="text-red-500" style="display: none; margin-top: 0;">Maximum upload file
                     size is 2 MB</span>
             </div>
@@ -173,14 +139,14 @@
             </div>
             <div class="input-box hidden" id="ktp-pasangan">
                 <label for="ktp_pasangan" id="">Foto KTP Pasangan</label>
-                @if ($data->foto_pasangan)
+                @if ($duTemp->foto_pasangan)
                     <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
-                        data-title="Foto KTP Pasangan" data-filepath="{{asset('../upload')}}/{{$id_pengajuan}}/{{$data->id}}/{{$data->foto_pasangan}}">Preview</a>
+                        data-title="Foto KTP Pasangan" data-filepath="{{asset('../upload')}}/{{$pengajuan?->id}}/{{$duTemp->id}}/{{$duTemp->foto_pasangan}}">Preview</a>
                 @endif
                 <div class="flex gap-4">
-                    <input type="file" name="ktp_pasangan" class="form-input limit-size-2" data-id="{{ $duTemp->id }}"/>
+                    <input type="file" name="ktp_pasangan" class="form-input limit-size-2" data-id="{{ $duTemp->id }}" value="{{$duTemp->foto_pasangan}}"/>
                 </div>
-                <span class="filename" style="display: inline;">{{ $duTemp?->foto_pasangan }}</span>
+                {{--  <span class="filename" style="display: inline;">{{ $duTemp?->foto_pasangan }}</span>  --}}
                 <span class="text-red-500" style="display: none; margin-top: 0;">Maximum upload file
                     size is 2 MB</span>
             </div>
@@ -208,21 +174,27 @@
             </div>
             <div class="input-box">
                 <label for="">{{ $itemP->nama }}</label>
+                @php
+                    $fileLapSlik = "";
+                @endphp
                 @if ($jawabanLaporanSlik)
                     @if ($jawabanLaporanSlik->opsi_text)
+                        @php
+                            $fileLapSlik = $jawabanLaporanSlik->opsi_text;
+                        @endphp
                         <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
-                            data-title="{{$itemP->nama}}" data-filepath="{{asset('../upload')}}/{{$id_pengajuan}}/{{$jawabanLaporanSlik->id_jawaban}}/{{$jawabanLaporanSlik->opsi_text}}">Preview</a>
+                            data-title="{{$itemP->nama}}" data-filepath="{{asset('../upload')}}/{{$pengajuan?->id}}/{{$jawabanLaporanSlik->id_jawaban}}/{{$jawabanLaporanSlik->opsi_text}}">Preview</a>
                     @endif
                 @endif
                 <input type="hidden" name="id_item_file[{{ $itemP->id }}]" value="{{ $itemP->id }}" id="">
                 <input type="file" name="upload_file[{{ $itemP->id }}]" id="file_slik" data-id="{{ temporary_dagulir($duTemp->id, $itemP->id)?->id }}"
-                    placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-input limit-size-slik">
+                    placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-input limit-size-slik" value="{{$fileLapSlik}}">
                 @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                 <div class="invalid-feedback">
                     {{ $errors->first('dataLevelDua.' . $key) }}
                 </div>
                 @endif
-                <span class="filename" style="display: inline;">{{ temporary_dagulir($duTemp->id, $itemP->id)?->opsi_text }}</span>
+                {{--  <span class="filename" style="display: inline;">{{ edit_dagulir($duTemp->id, $itemP->id)?->opsi_text }}</span>  --}}
                 {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
             </div>
             <span class="text-red-500 m-0" style="display: none">Maximum upload file
@@ -243,12 +215,18 @@
                     <label for="">Kecamatan KTP</label>
                     <select name="kecamatan_sesuai_ktp" id="kecamatan" class="form-select @error('kec') is-invalid @enderror select2">
                         <option value="0"> --- Pilih Kecamatan --- </option>
+                        @foreach ($dataKecamatan as $item)
+                            <option value="{{ $item->id }}" {{ $item->id == $duTemp?->kec_ktp ? 'selected' : '' }}>{{ $item->kecamatan }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="input-box">
                     <label for="">Desa KTP</label>
                     <select name="desa" id="desa" class="form-select @error('desa') is-invalid @enderror select2">
                         <option value="0"> --- Pilih Desa --- </option>
+                        @foreach ($dataDesa as $item)
+                            <option value="{{ $item->id }}" {{ $item->id == $duTemp?->desa_ktp ? 'selected' : '' }}>{{ $item->desa }}</option>
+                        @endforeach
                     </select>
                 </div>
         </div>
@@ -336,7 +314,7 @@
                 />
             </div>
             <div class="input-box">
-                <label for="">Jangka Waktu</label>
+                <label for="">Tenor</label>
                 <div class="flex items-center">
                     <div class="flex-1">
                         <input
