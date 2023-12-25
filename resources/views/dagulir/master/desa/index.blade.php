@@ -140,7 +140,19 @@
 
             $(`#${target}`).removeClass('hidden');
 
-            $(`#${target} #kabupaten_select option[value="${id_kabupaten}"]`).prop('selected', true);
+            $.ajax({
+                type: "GET",
+                url: "{{ route('dagulir.master.get.kabupaten') }}",
+                success:function(res){
+                    $(`#${target} #kabupaten_select`).empty();
+                    $.each(res,function (index, param) {
+                        console.log(param);
+                        $(`#${target} s#kabupaten_select`).append(`
+                            <option value="${param.id}"  ${param.id == id_kabupaten ? 'selected' : ''}>${param.kabupaten}</option>
+                        `);
+                    })
+                }
+            })
             $(`#${target} #kecamatan_select option[value="${id_kecamatan}"]`).prop('selected', true);
         })
         $('.show-hapus-desa').off('click').on('click', function() {

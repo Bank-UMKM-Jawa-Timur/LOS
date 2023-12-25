@@ -198,7 +198,7 @@ class NewKecamatanController extends Controller
             return back()->withError('Terjadi kesalahan.');
         }
 
-        alert()->success('Berhasil','Berhasil berhasil dihapus.');
+        alert()->success('Berhasil','Data berhasil dihapus.');
         return redirect()->route('dagulir.master.kecamatan.index');
     }
 
