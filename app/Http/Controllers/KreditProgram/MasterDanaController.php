@@ -27,11 +27,13 @@ class MasterDanaController extends Controller
         $repo = new MasterDanaRepository;
         $total_dana = 0;
         $total_idle = 0;
+        $total = 0;
         foreach ($repo->getMasterDD() as $key => $value) {
             $total_dana += $value->dana_modal;
             $total_idle += $value->dana_idle;
+            $total = $total_dana + $total_idle;
         }
-        $total_idle_current = $update_data->dana_modal - $total_dana + $total_idle;
+        $total_idle_current = $update_data->dana_modal - $total;
         $update_data->dana_idle = $total_idle_current;
         $update_data->update();
 
@@ -54,11 +56,13 @@ class MasterDanaController extends Controller
                 $repo = new MasterDanaRepository;
                 $total_dana = 0;
                 $total_idle = 0;
+                $total = 0;
                 foreach ($repo->getMasterDD() as $key => $value) {
                     $total_dana += $value->dana_modal;
                     $total_idle += $value->dana_idle;
+                    $total = $total_dana + $total_idle;
                 }
-                $total_idle_current = $total_current_modal - $total_dana + $total_idle;
+                $total_idle_current = $total_current_modal - $total;
 
                 $update->dana_modal = $total_current_modal;
                 $update->dana_idle = $total_idle_current;
@@ -98,7 +102,7 @@ class MasterDanaController extends Controller
         }
         $total_idle_current = $total_dana;
         $total_dana = MasterDana::first()->dana_modal;
-        if ($total_dana > $total_idle_current ) {
+        if ($total_idle_current <= $total_dana) {
             $status = true;
         }
 
@@ -115,6 +119,65 @@ class MasterDanaController extends Controller
         ]);
     }
 
+    function storeDana(Request $request) {
+        $request->validate([
+            'cabang' => 'required',
+            'dana_modal' => 'required'
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $current = MasterDana::first();
+            $repo = new MasterDanaRepository;
+            $total_dana = 0;
+            $total_idle = 0;
+            $total = 0;
+            foreach ($repo->getMasterDD() as $key => $value) {
+                $total_dana += $value->dana_modal;
+                $total_idle += $value->dana_idle;
+                $total = $total_dana + $total_idle;
+            }
+            $total_idle_current = $current->dana_modal - $total;
+            if ($total_idle_current <= formatNumber($request->get('dana_modal'))) {
+                alert()->warning('warning','Dana yang tersedia tidak mencukupi.');
+                return redirect()->route('master-dana.cabang.index');
+            }
+            // dana cabang
+            $repo = new MasterDanaRepository;
+            $data = $repo->getDari($request->get('cabang'));
+            $current_dana_modal = $data->dana_modal + formatNumber($request->get('dana_modal'));
+            $current_dana_idle = $data->dana_idle + formatNumber($request->get('dana_modal'));
+            $update = DanaCabang::find($request->get('id'));
+            $update->dana_modal = $current_dana_modal;
+            $update->dana_idle = $current_dana_idle;
+            $update->update();
+            // Update total idle master dana
+            $repo = new MasterDanaRepository;
+            $total_dana = 0;
+            $total_idle = 0;
+            $total = 0;
+            foreach ($repo->getMasterDD() as $key => $value) {
+                $total_dana += $value->dana_modal;
+                $total_idle += $value->dana_idle;
+                $total = $total_dana + $total_idle;
+            }
+            $total_idle_current = $current->dana_modal - $total;
+            $current->dana_idle = $total_idle_current;
+            $current->update();
+            DB::commit();
+            alert()->success('Berhasil','Berhasil menambahkan data');
+            return redirect()->route('master-dana.cabang.index');
+        } catch (Exception $th) {
+            return $th;
+            alert()->error('error','Terjadi Kesalahan');
+            return redirect()->route('master-dana.index');
+        } catch (QueryException $th){
+            return $th;
+            alert()->error('error','Terjadi Kesalahan');
+            return redirect()->route('master-dana.index');
+        }
+    }
+
     function storeCabang(Request $request) {
         $request->validate([
             'cabang' => 'required',
@@ -127,14 +190,15 @@ class MasterDanaController extends Controller
             $repo = new MasterDanaRepository;
             $total_dana = 0;
             $total_idle = 0;
+            $total = 0;
             foreach ($repo->getMasterDD() as $key => $value) {
                 $total_dana += $value->dana_modal;
                 $total_idle += $value->dana_idle;
+                $total = $total_dana + $total_idle;
             }
-            $total_idle_current = $current->dana_modal - $total_dana + $total_idle;
-
+            $total_idle_current = $current->dana_modal - $total;
             if ($total_idle_current < formatNumber($request->get('dana_modal'))) {
-                alert()->warning('Warning','Dana yang tersedia tidak mencukupi.');
+                alert()->warning('warning','Dana yang tersedia tidak mencukupi.');
                 return redirect()->route('master-dana.cabang.index');
             }
 
@@ -160,11 +224,13 @@ class MasterDanaController extends Controller
                 $repo = new MasterDanaRepository;
                 $total_dana = 0;
                 $total_idle = 0;
+                $total = 0;
                 foreach ($repo->getMasterDD() as $key => $value) {
                     $total_dana += $value->dana_modal;
                     $total_idle += $value->dana_idle;
+                    $total = $total_dana + $total_idle;
                 }
-                $total_idle_current = $current->dana_modal - $total_dana + $total_idle;
+                $total_idle_current = $current->dana_modal - $total;
                 $current->dana_idle = $total_idle_current;
                 $current->update();
             }

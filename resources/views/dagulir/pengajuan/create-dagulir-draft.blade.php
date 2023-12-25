@@ -114,7 +114,7 @@
         </div>
         <div class="form-group-2">
             <div class="input-box">
-                <label for="ktp_nasabah" id="foto-nasabah">Foto Nasabah</label>
+                <label for="ktp_nasabah" id="foto-nasabah">Foto Nasabah</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
                 <div class="flex gap-4">
                     <input type="file" name="foto_nasabah" class="form-input limit-size-2" data-id=""/>
                 </div>
@@ -144,7 +144,7 @@
                 />
             </div>
             <div class="input-box" id="ktp-nasabah">
-                <label for="ktp_nasabah" id="label-ktp-nasabah">Foto KTP Nasabah</label>
+                <label for="ktp_nasabah" id="label-ktp-nasabah">Foto KTP Nasabah</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
                 <div class="flex gap-4">
                     <input type="file" name="ktp_nasabah" class="form-input limit-size-2" data-id="{{ $duTemp?->id }}"/>
                 </div>
@@ -164,7 +164,7 @@
                 />
             </div>
             <div class="input-box hidden" id="ktp-pasangan">
-                <label for="ktp_pasangan" id="">Foto KTP Pasangan</label>
+                <label for="ktp_pasangan" id="">Foto KTP Pasangan</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
                 <div class="flex gap-4">
                     <input type="file" name="ktp_pasangan" class="form-input limit-size-2" data-id="{{ $duTemp->id }}"/>
                 </div>
@@ -195,7 +195,7 @@
                 @endif
             </div>
             <div class="input-box">
-                <label for="">{{ $itemP->nama }}</label>
+                <label for="">{{ $itemP->nama }}</label><small class="text-red-500 font-bold"> (.pdf)</small>
                 <input type="hidden" name="id_item_file[{{ $itemP->id }}]" value="{{ $itemP->id }}" id="">
                 <input type="file" name="upload_file[{{ $itemP->id }}]" id="file_slik" data-id="{{ temporary_dagulir($duTemp->id, $itemP->id)?->id }}"
                     placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-input limit-size-slik">

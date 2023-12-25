@@ -2,7 +2,7 @@
 @include('components.new.modal.loading')
 @push('script-inject')
     <script>
-      $(document).ready(function() {
+    $(document).ready(function() {
         $('#page_length').on('change', function() {
             $('#form').submit();
         });
@@ -16,7 +16,6 @@
 
         $('#dari_cabang').on('change', function(params) {
             var dari = $(this).val();
-
             if (dari) {
                 $.ajax({
                     type: "GET",
@@ -80,11 +79,21 @@
         function dana_dari_sebelum(modal, idle) {
             $('#dana_modal_sebelum_dari').val(modal);
             $('#dana_idle_sebelum_dari').val(idle);
+
+            var dana_modal_sebelum_dari = document.getElementById("dana_modal_sebelum_dari");
+            dana_modal_sebelum_dari.value = formatrupiah(dana_modal_sebelum_dari.value);
+
+            var dana_idle_sebelum_dari = document.getElementById("dana_idle_sebelum_dari");
+            dana_idle_sebelum_dari.value = formatrupiah(dana_idle_sebelum_dari.value);
         }
 
         function dana_ke_sebelum(modal, idle) {
             $('#dana_modal_sebelum_ke').val(modal);
+            var dana_modal_sebelum_ke = document.getElementById("dana_modal_sebelum_ke");
+            dana_modal_sebelum_ke.value = formatrupiah(dana_modal_sebelum_ke.value);
             $('#dana_idle_sebelum_ke').val(idle);
+            var dana_idle_sebelum_ke = document.getElementById("dana_idle_sebelum_ke");
+            dana_idle_sebelum_ke.value = formatrupiah(dana_idle_sebelum_ke.value);
         }
         // get total
         function hitung() {
@@ -108,16 +117,33 @@
                 $('#dana_idle_setelah_dari').val(total_dana_idle_dari);
                 $('#dana_modal_setelah_ke').val(0);
                 $('#dana_idle_setelah_ke').val(0);
+                var dana_modal_setelah_dari = document.getElementById("dana_modal_setelah_dari");
+                dana_modal_setelah_dari.value = formatrupiah(dana_modal_setelah_dari.value);
+                var dana_idle_setelah_dari = document.getElementById("dana_idle_setelah_dari");
+                dana_idle_setelah_dari.value = formatrupiah(dana_idle_setelah_dari.value);
+                $('#total_idle_setelah').addClass('hidden');
+                $('#total_modal_setelah').addClass('hidden');
+                $('#pesan_dana').removeClass('hidden');
             }else{
                 $("#pesan").hide();
                 $('#dana_modal_setelah_dari').val(total_dana_modal_dari);
                 $('#dana_idle_setelah_dari').val(total_dana_idle_dari);
                 $('#dana_modal_setelah_ke').val(total_dana_modal_ke);
                 $('#dana_idle_setelah_ke').val(total_dana_idle_ke);
+
+                var dana_modal_setelah_dari = document.getElementById("dana_modal_setelah_dari");
+                dana_modal_setelah_dari.value = formatrupiah(dana_modal_setelah_dari.value);
+                var dana_idle_setelah_dari = document.getElementById("dana_idle_setelah_dari");
+                dana_idle_setelah_dari.value = formatrupiah(dana_idle_setelah_dari.value);
+                var dana_modal_setelah_ke = document.getElementById("dana_modal_setelah_ke");
+                dana_modal_setelah_ke.value = formatrupiah(dana_modal_setelah_ke.value);
+                var dana_idle_setelah_ke = document.getElementById("dana_idle_setelah_ke");
+                dana_idle_setelah_ke.value = formatrupiah(dana_idle_setelah_ke.value);
+
+                $('#total_idle_setelah').removeClass('hidden');
+                $('#total_modal_setelah').removeClass('hidden');
+                $('#pesan_dana').addClass('hidden');
             }
-
-
-
 
         }
 
@@ -150,11 +176,6 @@
             return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
         }
     });
-
-
-
-
-
     </script>
 @endpush
 @section('content')
@@ -207,11 +228,11 @@
                         </div>
                         <div class="flex flex-nowrap align-middle items-center w-full">
                             <div class="flex-initial w-64">
-                                <small class="text-xs font-bold text-red-500">Sebelum Dana Alihkan </small>
+                                <small class="text-xs font-bold text-red-500">Sebelum Alihkan Dana </small>
 
                             </div>
                             <div class="w-full">
-                                <hr class="w-full h-px my-8 mx-2 bg-gray-200 border-0 dark:bg-gray-700">
+                                <hr class="w-full h-px my-8 mx-2 border-0 bg-gray-200">
                             </div>
                         </div>
                         <div class="form-group-2">
@@ -253,9 +274,9 @@
                         <hr>
                         <div class="form-group-1">
                             <div class="input-box">
-                                <label for="">Jumlah</label>
+                                <label for="">Dana Yang Dipindahkan</label>
                                 <input type="text" name="jumlah_dana"
-                                    class="form-input @error('jumlah_dana') is-invalid @enderror rupiah" placeholder="Jumlah Dana"
+                                    class="form-input @error('jumlah_dana') is-invalid @enderror rupiah" placeholder="Masukkan Nominal Dana"
                                     id="jumlah_dana"
                                     value="{{ old('jumlah_dana') }}">
                                 @error('jumlah_dana')
@@ -270,11 +291,11 @@
                         </div>
                         <div class="flex flex-nowrap align-middle items-center w-full">
                             <div class="flex-initial w-64">
-                                <small class="text-xs font-bold text-red-500">Setelah Dana Alihkan </small>
+                                <small class="text-xs font-bold text-red-500">Setelah Alihkan Dana </small>
 
                             </div>
                             <div class="w-full">
-                                <hr class="w-full h-px my-8 mx-2 bg-gray-200 border-0 dark:bg-gray-700">
+                                <hr class="w-full h-px my-8 mx-2 border-0 0 bg-gray-200">
                             </div>
                         </div>
                         <div class="form-group-2">
@@ -286,13 +307,24 @@
                                     readonly
                                 >
                             </div>
-                            <div class="input-box">
+                            <div class="input-box" id="total_modal_setelah">
                                 <label for="">Dana Modal</label>
                                 <input type="text" name="dana_modal_setelah_ke"
                                     class="form-input bg-gray-100 rupiah" placeholder="Dana yang tersedia"
                                     id="dana_modal_setelah_ke"
                                     readonly
                                 >
+                            </div>
+                            <div class="align-top mt-10 hidden" id="pesan_dana">
+                                <div class="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50" role="alert">
+                                    <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                      <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                                    </svg>
+                                    <span class="sr-only">Info</span>
+                                    <div>
+                                      <span class="font-medium">Peringatan!</span> Dana tidak mencukupi.
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group-2 mb-4">
@@ -304,7 +336,7 @@
                                     readonly
                                 >
                             </div>
-                            <div class="input-box">
+                            <div class="input-box" id="total_idle_setelah">
                                 <label for="">Dana Idle</label>
                                 <input type="text" name="dana_idle_setelah_ke"
                                     class="form-input bg-gray-100 rupiah" placeholder="Dana yang tersedia"
@@ -312,6 +344,7 @@
                                     readonly
                                 >
                             </div>
+
                         </div>
                     </div>
                     <div class="flex justify-end p-3">

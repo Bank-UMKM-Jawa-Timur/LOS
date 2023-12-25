@@ -1,16 +1,22 @@
-@include('dagulir.master-dana.cabang.modal.create')
-@include('dagulir.master-dana.cabang.modal.tambah-modal')
 @extends('layouts.tailwind-template')
 @include('components.new.modal.loading')
+
+@section('modal')
+@include('dagulir.master-dana.cabang.modal.create')
+@include('dagulir.master-dana.cabang.modal.tambah-modal')
+@endsection
+
 @push('script-inject')
 <script>
     $(document).ready(function() {
         $('.show-tambah').off('click').on('click', function() {
             const target = $(this).data('target');
             const id = $(this).data('id');
+            const id_cabang = $(this).data('cabang');
             const nama = $(this).data('nama');
 
             $(`#${target} #nama_cabang`).val(nama);
+            $(`#${target} #cabang`).val(id_cabang);
             $(`#${target} #id`).val(id);
             $(`#${target}`).removeClass('hidden');
         })
@@ -134,8 +140,9 @@
                                             @if ($status == true)
                                                 <button
                                                     type="button"
-                                                    class="btn bg-red-500 text-white show-tambah"
+                                                    class="btn bg-red-500 text-white show-tambah open-modal"
                                                     data-id="{{ $item->id }}"
+                                                    data-cabang="{{ $item->id_cabang }}"
                                                     data-nama="{{ $item->cabang->cabang }}"
                                                     data-target="modal-tambah-modal"
                                                 >Tambah Dana Modal</button></td>
