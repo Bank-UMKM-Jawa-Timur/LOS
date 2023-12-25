@@ -51,8 +51,6 @@ class MasterDanaController extends Controller
         try {
             $update = MasterDana::find($id);
             if ($update) {
-                $current = MasterDana::find($id);
-                $total_current_modal = formatNumber($request->get('dana_modal')) + $current->dana_modal;
                 $repo = new MasterDanaRepository;
                 $total_dana = 0;
                 $total_idle = 0;
@@ -62,10 +60,11 @@ class MasterDanaController extends Controller
                     $total_idle += $value->dana_idle;
                     $total = $total_dana + $total_idle;
                 }
-                $total_idle_current = $total_current_modal - $total;
-
-                $update->dana_modal = $total_current_modal;
-                $update->dana_idle = $total_idle_current;
+                if (formatNumber($request->get('dana_modal')) <= $total) {
+                    alert()->warning('Peringatan','Dana tidak sesuai.');
+                    return redirect()->back();
+                }
+                $update->dana_modal = formatNumber($request->get('dana_modal'));
                 $update->update();
 
             }else{
