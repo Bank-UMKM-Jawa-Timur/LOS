@@ -36,7 +36,6 @@
                             </span>
                             <span class="ml-3 text-sm"> Filter </span>
                         </a>
-
                 </div> --}}
                     {{-- <button type="button" class="btn btn-sm btn-primary mb-2 ml-2" data-toggle="modal" data-target="#modal-filter">
                         <i class="fa fa-filter"></i> Filter
@@ -181,7 +180,6 @@
             $(modal).removeClass('hidden');
             $(modal).addClass('h-full');
         })
-
         $(".cancelModal", on("click", function(){
             console.log('test');
             var idModal = $(this).data('modal-id');

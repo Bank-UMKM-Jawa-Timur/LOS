@@ -91,7 +91,6 @@ class DagulirController extends Controller
         ]);
     }
 
-    // function store(DagulirRequestForm $request) {
     public function store(Request $request) {
         try {
             $find = array('Rp.', '.', ',');
@@ -294,34 +293,33 @@ class DagulirController extends Controller
     }
 
      // check status penyelia data pengajuan
-     public function checkPenyeliaKreditDagulir(Request $request)
-     {
-         try {
-             $statusPenyelia = PengajuanModel::find($request->id_pengajuan);
-             if ($statusPenyelia) {
-                 $statusPenyelia->posisi = "Review Penyelia";
-                 $statusPenyelia->id_penyelia = $request->select_penyelia;
-                 $statusPenyelia->update();
+    public function checkPenyeliaKreditDagulir(Request $request)
+    {
+        try {
+            $statusPenyelia = PengajuanModel::find($request->id_pengajuan);
+            if ($statusPenyelia) {
+                $statusPenyelia->posisi = "Review Penyelia";
+                $statusPenyelia->id_penyelia = $request->select_penyelia;
+                $statusPenyelia->update();
 
-                 // Log Pengajuan melanjutkan dan mendapatkan
-                //  $nasabah = CalonNasabah::select('id', 'nama')->where('id_pengajuan', $request->id_pengajuan)->first();
-                //  $namaNasabah = 'undifined';
-                //  if ($nasabah)
-                //      $namaNasabah = $nasabah->nama;
+                // Log Pengajuan melanjutkan dan mendapatkan
+                $nasabah = CalonNasabah::select('id', 'nama')->where('id_pengajuan', $request->id_pengajuan)->first();
+                $namaNasabah = 'undifined';
+                if ($nasabah)
+                    $namaNasabah = $nasabah->nama;
 
-                //  $penyelia = User::find($request->select_penyelia);
-                //  $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan atas nama ' . $namaNasabah . ' ke penyelia dengan NIP ' . $penyelia->nip . ' atas nama ' . $this->getNameKaryawan($penyelia->nip) . ' .', $statusPenyelia->id, Auth::user()->id, Auth::user()->nip);
-                //  $this->logPengajuan->store('Penyelia dengan NIP ' . $penyelia->nip . ' atas nama ' . $this->getNameKaryawan($penyelia->nip) . ' menerima data pengajuan atas nama ' . $namaNasabah . ' dari staf dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . '.', $statusPenyelia->id, $penyelia->id, $penyelia->nip);
-                 return redirect()->back()->withStatus('Berhasil mengganti posisi.');
-             } else {
-                 return back()->withError('Data pengajuan tidak ditemukan.');
-             }
-         } catch (Exception $e) {
-             return redirect()->back()->withError('Terjadi kesalahan.');
-         } catch (QueryException $e) {
-             return redirect()->back()->withError('Terjadi kesalahan');
-         }
-     }
+                $penyelia = User::find($request->select_penyelia);
+                $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menindak  lanjuti pengajuan atas nama ' . $namaNasabah . ' ke penyelia dengan NIP ' . $penyelia->nip . ' atas nama ' . $this->getNameKaryawan($penyelia->nip) . ' .', $statusPenyelia->id, Auth::user()->id, Auth::user()->nip);
+                return redirect()->back()->withStatus('Berhasil mengganti posisi.');
+            } else {
+                return back()->withError('Data pengajuan tidak ditemukan.');
+            }
+        } catch (Exception $e) {
+            return redirect()->back()->withError('Terjadi kesalahan.');
+        } catch (QueryException $e) {
+            return redirect()->back()->withError('Terjadi kesalahan');
+        }
+    }
 
     // send to pincab
     public function sendToPincab($id)
