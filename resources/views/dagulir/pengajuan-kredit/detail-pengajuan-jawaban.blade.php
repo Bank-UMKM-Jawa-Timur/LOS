@@ -1055,8 +1055,9 @@
                                                     @endphp
                                                     @foreach ($dataDetailJawabanText as $itemTextTiga)
                                                         @if ($itemTextTiga->nama != 'Ratio Tenor Asuransi')
-                                                            <div class="{{ $itemTiga->opsi_jawaban == 'file' ? 'col-span-1 p-2 order-3' : 'form-group-1 col-span-1' }} 
+                                                            <div class="{{ $itemTiga->opsi_jawaban !== 'file' || str_contains($itemTextTiga->nama, 'Foto Usaha') ? 'col-span-1 p-2 order' : 'col-span-1 p-2 order-3' }} 
                                                                         {{ $itemTextTiga->nama === "NIB" ?'form-group-2 col-span-1' : '' }} 
+                                                                        {{-- {{ str_contains($itemTextTiga->nama, 'Dokumen NPWP') ? 'col-span-1 p-2 order' : '' }} --}}
                                                                         {{ $itemTextTiga->nama === "Modal (awal) Sendiri" || 
                                                                         $itemTextTiga->nama === "Modal Pinjaman" ? 'col-span-1 form-group-1' : '' }}
                                                                         ">
