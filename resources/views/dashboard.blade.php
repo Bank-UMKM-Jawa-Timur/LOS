@@ -1,9 +1,13 @@
 @extends('layouts.tailwind-template')
+@include('dagulir.modal.filter-dashboard')
 @section('modal')
 @endsection
 @section('content')
-    @include('dashboard.admin')
-    {{-- @include('dashboard.dagulir') --}}
+    @if (auth()->user()->role == 'Administrator' || auth()->user()->role == 'Kredit Umum' || auth()->user()->role == 'Direksi')
+        @include('dashboard.admin')
+    @else
+        @include('dashboard.dagulir')
+    @endif
 @endsection
 
 @push('script-inject')
@@ -138,5 +142,67 @@
         optionsSkemaKredit
     );
     donut2.render();
+
+
+    $('#btn-filter').on('click', function (e) {
+        e.preventDefault()
+        let tAwal = document.getElementById('tAwal');
+        let tAkhir = document.getElementById('tAkhir');
+        console.log(tAkhir.value);
+        if ($("#form-filter")[0].checkValidity()){
+            $('#form-filter').submit()
+        }else{
+            if(tAwal.value == "" && tAkhir.value == ""){
+                $('#form-filter').submit()
+            }else if(tAwal.value == ""){
+                $("#reqAwal").show();
+            }else if(tAkhir.value == ""){
+                $("#reqAkhir").show();
+            }else{
+                $("#reqAkhir").hide();
+                $("#reqAwal").hide();
+            }
+        }
+    })
+
+    $("#tAwal").on("change", function() {
+        var result = $(this).val();
+        if (result != null) {
+            $("#tAkhir").prop("required", true)
+        }
+    });
+
+    // var token = "gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFVaNj";
+    // var cbgValue = '{{ Request()->query('cbg') }}';
+
+    // $(document).ready(function() {
+    //     $("#errorAkhir").hide();
+
+    //     $.ajax({
+    //         type: "GET",
+    //         url: "/api/v1/get-cabang",
+    //         headers: {
+    //             'token': token,
+    //         },
+    //         success: function (response) {
+    //             response.data.forEach(element => {
+    //                 $('#cabang').append(
+    //                     `<option value="${element.kode_cabang}" ${cbgValue == element.kode_cabang ? 'selected' : ''}>${element.cabang}</option>`
+    //                 );
+    //             });
+    //         }
+    //     });
+    // })
+
+    $("#tAkhir").on("change", function() {
+        var tAkhir = $(this).val();
+        var tAwal = $("#tAwal").val();
+        if (Date.parse(tAkhir) < Date.parse(tAwal)) {
+            $("#tAkhir").val('');
+            $("#errorAkhir").show();
+        } else {
+            $("#errorAkhir").hide();
+        }
+    })
     </script>
 @endpush

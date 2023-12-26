@@ -1881,14 +1881,14 @@ video {
 .w-\[40px\] {
   width: 40px;
 }
-.w-\[50\%\] {
-  width: 50%;
-}
 .w-auto {
   width: auto;
 }
 .w-full {
   width: 100%;
+}
+.w-\[50\%\] {
+  width: 50%;
 }
 .max-w-2xl {
   max-width: 42rem;
