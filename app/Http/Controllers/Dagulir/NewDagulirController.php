@@ -2425,7 +2425,11 @@ class NewDagulirController extends Controller
             File::makeDirectory($filePath, 493, true);
         }
         $pdf->save($filePath.'/'.$fileName);
-        return view('dagulir.cetak.cetak-surat', $param);
+
+        $pdf = PDF::loadView('dagulir.cetak.cetak-surat', $param);
+
+        return $pdf->download('Analisa-' . $dataNasabah->kode_pendaftaran . '.pdf');
+        // return view('dagulir.cetak.cetak-surat', $param);
     }
 
     public function cetakLampiranAnalisa($id_pengajuan) {
