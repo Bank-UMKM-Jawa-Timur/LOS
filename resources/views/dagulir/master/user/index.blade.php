@@ -1,5 +1,6 @@
 @include('dagulir.master.user.modal.create')
 @include('dagulir.master.user.modal.edit')
+@include('dagulir.master.user.modal.delete')
 @extends('layouts.tailwind-template')
 @include('components.new.modal.loading')
 @push('script-inject')
@@ -105,42 +106,36 @@
                                                         class="mt-2"></iconify-icon>
                                                 </button>
                                                 <ul class="dropdown-tb-menu hidden">
-                                                    <li class="item-tb-dropdown">
-                                                        {{-- <a href="{{ route('user.edit', $item->id) }}"
-                                                            class="dropdown-item">
+                                                    {{-- <a href="{{ route('user.edit', $item->id) }}"
+                                                        class="dropdown-item">
+                                                        Edit
+                                                    </a> --}}
+                                                    <a href="javascript:void(0)" class="cursor-pointer w-full" data-id_user="{{$item->id}}"
+                                                        data-nip="{{$item->nip ?? '-'}}"
+                                                        data-nama="{{$item->name}}"
+                                                        data-email="{{$item->email}}"
+                                                        data-role="{{$item->role}}"
+                                                        data-cabang="{{$item->cabang->cabang}}" id="edit-user">
+                                                        <li class="item-tb-dropdown">
                                                             Edit
-                                                        </a> --}}
-                                                        <a href="javascript:void(0)" data-id_user="{{$item->id}}"
-                                                            data-nip="{{$item->nip ?? '-'}}"
-                                                            data-nama="{{$item->name}}"
-                                                            data-email="{{$item->email}}"
-                                                            data-role="{{$item->role}}"
-                                                            data-cabang="{{$item->cabang->cabang}}" id="edit-user">Edit</a>
-                                                    </li>
+                                                        </li>
+                                                    </a>
                                                     @if (auth()->user()->id != $item->id)
-                                                    <li class="item-tb-dropdown">
-                                                        <form action="{{ route('user.destroy', $item->id) }}"
-                                                            method="post">
-                                                            @csrf
-                                                            @method('delete')
-                                                            <button type="button" class="dropdown-item"
-                                                                onclick="confirm('{{ __('Apakah anda yakin ingin menghapus?') }}') ? this.parentElement.submit() : ''">
-                                                                Hapus
-                                                            </button>
-                                                        </form>
-                                                    </li>
+                                                    <a class="w-full cursor-pointer" href="javascript:void(0)"
+                                                        data-id_user="{{$item->id}}"
+                                                        data-nama="{{$item->name}}"
+                                                        id="hapus-user">
+                                                        <li class="item-tb-dropdown">
+                                                            Hapus
+                                                        </li>
+                                                    </a>
                                                     @endif
-                                                    <li class="item-tb-dropdown">
-                                                        <button class="dropdown-item"
-                                                            onclick="resetPassword('{{ $item->name }}', '{{ $item->id }}')">Reset
-                                                            Password</button>
-                                                        {{-- <form action="{{ route('reset-password', $item->id) }}"
-                                                            id="resetPasswordForm{{ $item->id }}" method="post">
-                                                            @csrf --}}
-                                                            {{-- <button class="dropdown-item"
-                                                            onclick="confirm('{{ __('Apakah anda yakin mereset password?') }}') ? this.parentElement.submit() : ''">Reset Password</button> --}}
-                                                        {{-- </form> --}}
-                                                    </li>
+                                                    <a href="javascript:void(0)" class="w-full cursor-pointer"
+                                                        onclick="resetPassword('{{ $item->name }}', '{{ $item->id }}')">
+                                                        <li class="item-tb-dropdown">
+                                                            Reset Password
+                                                        </li>
+                                                    </a>
                                                 </ul>
                                             </div>
                                         </div>
@@ -164,7 +159,7 @@
     </div>
 </section>
 @endsection
-@push('custom-script')
+@push('script-inject')
 <script>
     function resetPassword(name, id) {
         Swal.fire({
@@ -184,17 +179,30 @@
         })
     }
 
-    $(document).ready(function() {
-        $('#edit-user').on('click', function(){
-            var id_user = $(this).data("id_user");
-            var nip = $(this).data("nip");
-            var nama = $(this).data("nama");
-            var email = $(this).data("email");
-            var role = $(this).data("role");
-            var cabang = $(this).data("cabang");
+    $('#edit-user').on('click', function(){
+        var id_user = $(this).data("id_user");
+        var nip = $(this).data("nip");
+        var nama = $(this).data("nama");
+        var email = $(this).data("email");
+        var role = $(this).data("role");
+        var cabang = $(this).data("cabang");
+
+        $('.id-user').val(id_user);
+        $('.nip-edit').val(nip);
+        $('.name-edit').val(nama);
+        $('.email-edit').val(email);
 
         $('#modal-edit-user').removeClass('hidden')
-        });
+    });
+
+    $('.hapus-user').on('click', function(){
+        console.log('masuk coy');
+        var id_user = $(this).data("id_user");
+        var nama = $(this).data("nama");
+
+        $('#id-user-delete').val(id_user);
+        $('#nama').val(nama);
+        $('#modal-hapus-user').removeClass('hidden')
     });
 </script>
 @endpush

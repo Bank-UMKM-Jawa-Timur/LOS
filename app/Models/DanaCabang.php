@@ -20,4 +20,9 @@ class DanaCabang extends Model
     public function cabang() {
         return $this->belongsTo(Cabang::class,'id_cabang','id');
     }
+
+    public function loan() {
+        return $this->hasMany(MasterDDLoan::class,'id_cabang','id_cabang');
+    }
 }
+

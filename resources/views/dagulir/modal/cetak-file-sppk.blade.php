@@ -31,7 +31,7 @@
                 <button class="btn-cancel" type="button" data-dismiss-id="uploadSPPKModal">
                     Batal
                 </button>
-                <button type="submit" class="btn-submit">Simpan</button>
+                <button type="submit" class="btn-submit simpan-sppk">Simpan</button>
             </div>
         </form>
     </div>

@@ -1291,7 +1291,7 @@ video {
     @media (min-width: 1024px) {
 
   .review-pincab .field-review .field-name {
-    width: 85%;
+    width: 48%;
   }
 }
     .review-pincab .field-review .field-answer {
@@ -1625,6 +1625,10 @@ video {
   margin-top: 1rem;
   margin-bottom: 1rem;
 }
+.my-8 {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
 .-ml-px {
   margin-left: -1px;
 }
@@ -1805,6 +1809,9 @@ video {
 .h-full {
   height: 100%;
 }
+.h-px {
+  height: 1px;
+}
 .h-screen {
   height: 100vh;
 }
@@ -1904,6 +1911,9 @@ video {
 .flex-auto {
   flex: 1 1 auto;
 }
+.flex-initial {
+  flex: 0 1 auto;
+}
 .flex-none {
   flex: none;
 }
@@ -1921,10 +1931,6 @@ video {
 }
 .origin-top-right {
   transform-origin: top right;
-}
-.rotate-180 {
-  --tw-rotate: 180deg;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 .scale-100 {
   --tw-scale-x: 1;
@@ -1968,8 +1974,14 @@ video {
 .grid-cols-2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
+.grid-cols-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
 .flex-wrap {
   flex-wrap: wrap;
+}
+.flex-nowrap {
+  flex-wrap: nowrap;
 }
 .items-center {
   align-items: center;
@@ -2088,6 +2100,9 @@ video {
 }
 .border {
   border-width: 1px;
+}
+.border-0 {
+  border-width: 0px;
 }
 .border-2 {
   border-width: 2px;
@@ -2235,6 +2250,9 @@ video {
 }
 .bg-theme-secondary\/90 {
   background-color: rgb(17 32 66 / 0.9);
+}
+.bg-transparent {
+  background-color: transparent;
 }
 .bg-white {
   --tw-bg-opacity: 1;
@@ -2418,6 +2436,12 @@ video {
 .text-justify {
   text-align: justify;
 }
+.align-top {
+  vertical-align: top;
+}
+.align-middle {
+  vertical-align: middle;
+}
 .font-poppins {
   font-family: 'Poppins', sans-serif;
 }
@@ -2560,6 +2584,10 @@ video {
 .text-red-600 {
   --tw-text-opacity: 1;
   color: rgb(220 38 38 / var(--tw-text-opacity));
+}
+.text-red-800 {
+  --tw-text-opacity: 1;
+  color: rgb(153 27 27 / var(--tw-text-opacity));
 }
 .text-theme-primary {
   --tw-text-opacity: 1;
@@ -2802,6 +2830,11 @@ video {
 .focus\:border-indigo-700:focus {
   --tw-border-opacity: 1;
   border-color: rgb(67 56 202 / var(--tw-border-opacity));
+}
+
+.focus\:border-red-500:focus {
+  --tw-border-opacity: 1;
+  border-color: rgb(239 68 68 / var(--tw-border-opacity));
 }
 
 .focus\:bg-gray-100:focus {

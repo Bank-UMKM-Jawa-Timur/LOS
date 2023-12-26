@@ -36,7 +36,6 @@
                             </span>
                             <span class="ml-3 text-sm"> Filter </span>
                         </a>
-                        
                 </div> --}}
                     {{-- <button type="button" class="btn btn-sm btn-primary mb-2 ml-2" data-toggle="modal" data-target="#modal-filter">
                         <i class="fa fa-filter"></i> Filter
@@ -134,13 +133,17 @@
                                                     </iconify-icon>
                                                 </button>
                                                 <ul class="dropdown-tb-menu hidden">
-                                                    <li class="item-tb-dropdown">
-                                                        <a href="{{ route('dagulir.temp.continue', $item->id) }}"
-                                                            class="dropdown-item">Lanjutkan</a>
-                                                    </li>
-                                                    <li class="item-tb-dropdown">
-                                                        <a href="javascript:void(0)" class="modalConfirmDelete" data-nama="{{$item->nama}}" data-modal-id="{{ $item->id }}">Hapus</a>
-                                                    </li>
+                                                    <a href="{{ route('dagulir.temp.continue', $item->id) }}"
+                                                        class="dropdown-item cursor-pointer w-full">
+                                                        <li class="item-tb-dropdown">
+                                                            Lanjutkan
+                                                        </li>
+                                                    </a>
+                                                    <a href="javascript:void(0)" class="modalConfirmDelete cursor-pointer w-full" data-nama="{{$item->nama}}" data-modal-id="{{ $item->id }}">
+                                                        <li class="item-tb-dropdown">
+                                                            Hapus
+                                                        </li>
+                                                    </a>
                                                 </ul>
                                             </div>
                                         </div>
@@ -177,7 +180,6 @@
             $(modal).removeClass('hidden');
             $(modal).addClass('h-full');
         })
-    
         $(".cancelModal", on("click", function(){
             console.log('test');
             var idModal = $(this).data('modal-id');
