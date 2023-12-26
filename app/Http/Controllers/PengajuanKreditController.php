@@ -2351,6 +2351,9 @@ class PengajuanKreditController extends Controller
                     ->where('id_pengajuan', $id)
                     ->first();
             }
+            $param['kec_ktp'] = Kecamatan::find($param['dataUmumNasabah']->id_kecamatan)->kecamatan;
+            $param['kab_ktp'] = Kabupaten::find($param['dataUmumNasabah']->id_kabupaten)->kabupaten;
+            $param['desa_ktp'] = Desa::find($param['dataUmumNasabah']->id_desa)->desa;
             $param['skema'] = $param['dataUmumNasabah']->skema_kredit;
             $dokumenUsaha = DB::table('item')
                 ->where('nama', 'LIKE', '%NIB%')
@@ -2371,7 +2374,7 @@ class PengajuanKreditController extends Controller
                 ->select('users.nip', 'alasan_pengembalian_data.*')
                 ->get();
 
-            return view('pengajuan-kredit.detail-pengajuan-jawaban', $param);
+            return view('new-pengajuan.detail-pengajuan-jawaban', $param);
         } else {
             return redirect()->back()->withError('Tidak memiliki hak akses.');
         }

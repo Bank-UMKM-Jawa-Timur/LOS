@@ -12,7 +12,7 @@
                     Analisa Kredit
                 </p>
                 <h2 class="font-bold tracking-tighter text-2xl text-theme-text">
-                    Analisa Kredit 
+                    Analisa Kredit
                 </h2>
             </div>
             <div class="layout lg:flex grid grid-cols-1 lg:mt-0 justify-between w-full gap-5">
@@ -36,7 +36,7 @@
                             </span>
                             <span class="ml-3 text-sm"> Filter </span>
                         </a>
-                        
+
                 </div>
                     {{-- <button type="button" class="btn btn-sm btn-primary mb-2 ml-2" data-toggle="modal" data-target="#modal-filter">
                         <i class="fa fa-filter"></i> Filter
@@ -236,7 +236,7 @@
                                             $interval = $akhir->diff($awal);
                                             $res = $interval->format('%a');
                                         @endphp
-        
+
                                         @if ($res != 0)
                                             @if ($res == 1 || $res == 2 || $res == 3)
                                                 <font class="text-green-500">{{ $res . ' hari' }}</font>
@@ -251,7 +251,7 @@
                                     @else
                                         {{ '-' }}
                                     @endif
-        
+
                                 </td>
                                 <td>
                                     @php
@@ -331,7 +331,7 @@
                                         ->where('role', 'PBO')
                                         ->whereNotNull('nip')
                                         ->first();
-                                    
+
                                     $userPBP = \App\Models\User::select('id')
                                         ->where('id_cabang', $item->id_cabang)
                                         ->where('role', 'PBP')
@@ -439,7 +439,7 @@
                 <div class="footer-table p-4">
                     <div class="flex justify-between">
                         <div class="mt-3 mr-5 text-sm font-medium text-gray-500">
-                            <p>  
+                            <p>
                                 {{ $data_pengajuan->links() }}
                                 Menampilkan
                                 {{ $data_pengajuan->firstItem() }}
