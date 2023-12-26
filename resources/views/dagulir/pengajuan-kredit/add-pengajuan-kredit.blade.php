@@ -767,7 +767,7 @@ $dataIndex = match ($skema) {
                                     <div class="flex justify-between">
                                         <a href="{{route('dagulir.pengajuan.index')}}">
                                             <button type="button"
-                                                class="px-5 py-2 border rounded bg-white text-gray-500"
+                                                class="px-5 py-2 border rounded bg-white text-gray-500 btnKembali"
                                                 >
                                                 Kembali
                                             </button>
@@ -811,7 +811,7 @@ $dataIndex = match ($skema) {
                                 <div class="flex justify-between">
                                         <a href="{{route('dagulir.pengajuan.index')}}">
                                             <button type="button"
-                                                class="px-5 py-2 border rounded bg-white text-gray-500"
+                                                class="px-5 py-2 border rounded bg-white text-gray-500 btnKembali"
                                                 >
                                                 Kembali
                                             </button>
@@ -1098,6 +1098,19 @@ $dataIndex = match ($skema) {
 
         $("#" + tabId + "-tab").addClass("active");
     });
+
+    $(".btnKembali").on("click", function(){
+        const $activeContent = $(".is-tab-content.active");
+        const $nextContent = $activeContent.next();
+        const tabId = $activeContent.attr("id")
+        const dataTab = tabId.replaceAll('-tab', '')
+        if(tabId == 'dagulir-tab'){
+            if($("input[name=nama_lengkap]").val().length > 0)
+                saveDataUmum()
+        } else{
+            saveDataTemporary(tabId)
+        }
+    })
 
     $(".next-tab").on("click", function(e) {
         const $activeContent = $(".is-tab-content.active");
