@@ -1064,7 +1064,6 @@
         var nama = $(this).data('nama');
         var id_penyelia = $(this).data('id-penyelia');
         console.log(target);
-
         $(`${target} #id-pengajuan`).val(id_pengajuan)
         $(`${target} #id-penyelia`).val(id_penyelia)
         $(`${target} #nama`).html(nama)

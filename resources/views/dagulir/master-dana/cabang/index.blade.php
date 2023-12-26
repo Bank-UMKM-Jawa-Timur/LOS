@@ -117,7 +117,9 @@
                                 <th>Plafon Akumulasi</th>
                                 <th>Baki Debet</th>
                                 <th>Tanggal</th>
+                                @if ($status === 1)
                                 <th>Aksi</th>
+                                @endif
                             </thead>
                             <tbody>
                                 @php
@@ -137,7 +139,7 @@
                                         <td>{{ number_format($item->baki_debet,0, ",", ".") }}</td>
                                         <td>{{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y') }}</td>
                                         <td>
-                                            @if ($status == true)
+                                            @if ($status === 1)
                                                 <button
                                                     type="button"
                                                     class="btn bg-red-500 text-white show-tambah open-modal"
