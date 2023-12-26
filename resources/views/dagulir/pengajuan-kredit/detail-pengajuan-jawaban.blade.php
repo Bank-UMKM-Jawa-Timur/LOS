@@ -774,10 +774,9 @@
                                                                     'col-span-1 order-3' : ''  }}
                                                                     {{ $item->nama === 'Perhitungan Installment' ?  'col-span-2 order-2' : '' }}
                                                                 {{ $item->nama === "Jumlah Orang yang menjalankan usaha" ?  'col-span-1 order-3' : '' }}">
-                                                            <div class="col-md-12 space-y-4 order
-                                                            ">
+                                                            <div class="col-md-12 space-y-4 order p-2">
                                                                 @if ($item->opsi_jawaban == 'file')
-                                                                    <b>{{ $item->nama }} :</b>
+                                                                    <b>{{ $item->nama }} : </b>
                                                                     @php
                                                                         $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
                                                                     @endphp
