@@ -115,10 +115,13 @@
         <div class="form-group-2">
             <div class="input-box">
                 <label for="ktp_nasabah" id="foto-nasabah">Foto Nasabah</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
+                @if ($duTemp->foto_nasabah)
+                    <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
+                        data-title="Foto Nasabah" data-filepath="{{asset('../upload/temp')}}/{{$duTemp->id}}/{{$duTemp->foto_nasabah}}" data-extension="{{ explode('.', $duTemp->foto_nasabah)[1] }}">Preview</a>
+                @endif
                 <div class="flex gap-4">
-                    <input type="file" name="foto_nasabah" class="form-input limit-size-2" data-id=""/>
+                    <input type="file" name="foto_nasabah" class="form-input limit-size-2" data-id="" value="{{$duTemp->foto_nasabah}}"/>
                 </div>
-                <span class="filename" style="display: inline;">{{ $duTemp?->foto_nasabah }}</span>
                 <span class="error-limit text-red-500" style="display: none; margin-top: 0;">Maximum upload file
                     size is 2 MB</span>
             </div>
@@ -145,10 +148,13 @@
             </div>
             <div class="input-box" id="ktp-nasabah">
                 <label for="ktp_nasabah" id="label-ktp-nasabah">Foto KTP Nasabah</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
+                @if ($duTemp->foto_ktp)
+                    <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
+                        data-title="Foto KTP" data-filepath="{{asset('../upload/temp')}}/{{$duTemp->id}}/{{$duTemp->foto_ktp}}" data-extension="{{ explode('.', $duTemp->foto_ktp)[1] }}">Preview</a>
+                @endif
                 <div class="flex gap-4">
-                    <input type="file" name="ktp_nasabah" class="form-input limit-size-2" data-id="{{ $duTemp?->id }}"/>
+                    <input type="file" name="ktp_nasabah" class="form-input limit-size-2" data-id="{{ $duTemp?->id }}" value="{{$duTemp->foto_ktp}}"/>
                 </div>
-                <span class="filename" style="display: inline;">{{ $duTemp->foto_ktp }}</span>
                 <span class="text-red-500" style="display: none; margin-top: 0;">Maximum upload file
                     size is 2 MB</span>
             </div>
@@ -165,10 +171,13 @@
             </div>
             <div class="input-box hidden" id="ktp-pasangan">
                 <label for="ktp_pasangan" id="">Foto KTP Pasangan</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
+                @if ($duTemp->foto_pasangan)
+                    <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
+                        data-title="Foto Pasangan" data-filepath="{{asset('../upload/temp')}}/{{$duTemp->id}}/{{$duTemp->foto_pasangan}}" data-extension="{{ explode('.', $duTemp->foto_pasangan)[1] }}">Preview</a>
+                @endif
                 <div class="flex gap-4">
-                    <input type="file" name="ktp_pasangan" class="form-input limit-size-2" data-id="{{ $duTemp->id }}"/>
+                    <input type="file" name="ktp_pasangan" class="form-input limit-size-2" data-id="{{ $duTemp->id }}" value="{{$duTemp->foto_pasangan}}"/>
                 </div>
-                <span class="filename" style="display: inline;">{{ $duTemp?->foto_pasangan }}</span>
                 <span class="text-red-500" style="display: none; margin-top: 0;">Maximum upload file
                     size is 2 MB</span>
             </div>
@@ -196,15 +205,26 @@
             </div>
             <div class="input-box">
                 <label for="">{{ $itemP->nama }}</label><small class="text-red-500 font-bold"> (.pdf)</small>
+                @php
+                    $fileLapSlik = "";
+                @endphp
+                @if ($jawabanLaporanSlik)
+                    @if ($jawabanLaporanSlik->opsi_text)
+                        @php
+                            $fileLapSlik = $jawabanLaporanSlik->opsi_text;
+                        @endphp
+                        <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
+                            data-title="{{$itemP->nama}}" data-filepath="{{asset('../upload/temp')}}/{{$jawabanLaporanSlik->id_jawaban}}/{{$jawabanLaporanSlik->opsi_text}}" data-extension="{{ explode('.', $jawabanLaporanSlik->opsi_text)[1] }}">Preview</a>
+                    @endif
+                @endif
                 <input type="hidden" name="id_item_file[{{ $itemP->id }}]" value="{{ $itemP->id }}" id="">
                 <input type="file" name="upload_file[{{ $itemP->id }}]" id="file_slik" data-id="{{ temporary_dagulir($duTemp->id, $itemP->id)?->id }}"
-                    placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-input limit-size-slik">
+                    placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-input limit-size-slik" value="{{ temporary_dagulir($duTemp->id, $itemP->id)?->opsi_text }}">
                 @if (isset($key) && $errors->has('dataLevelDua.' . $key))
                 <div class="invalid-feedback">
                     {{ $errors->first('dataLevelDua.' . $key) }}
                 </div>
                 @endif
-                <span class="filename" style="display: inline;">{{ temporary_dagulir($duTemp->id, $itemP->id)?->opsi_text }}</span>
                 {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
             </div>
             <span class="text-red-500 m-0" style="display: none">Maximum upload file

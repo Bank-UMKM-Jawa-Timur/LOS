@@ -1,6 +1,10 @@
 @include('components.new.modal.loading')
 @extends('layouts.tailwind-template')
 
+@section('modal')
+    @include('dagulir.pengajuan-kredit.modal.modal-photo-draft')
+@endsection
+
 @php
 $status = ['belum menikah', 'menikah', 'duda', 'janda'];
 
@@ -48,6 +52,7 @@ $dataIndex = match ($skema) {
             <form action="{{ route('dagulir.pengajuan.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="id_dagulir_temp" id="id_dagulir_temp" value="{{ $duTemp?->id }}">
+                <input type="hidden" name="isDraft" value="1">
                 <div class="mt-3 container mx-auto">
                     <div id="dagulir-tab" class="is-tab-content active">
                         @include('dagulir.pengajuan.create-dagulir-draft')
@@ -136,11 +141,15 @@ $dataIndex = match ($skema) {
                                             <div class="form-group" id="docNIB">
                                                 <div class="input-box">
                                                     <label for="">{{ $itemNIB->nama }}</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
+                                                    @if (temporary_dagulir($duTemp->id, $itemNIB->id))
+                                                        <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
+                                                            data-title="{{ $itemNIB->nama }}" data-filepath="{{asset('../upload/temp')}}/{{temporary_dagulir($duTemp->id, $itemNIB->id)?->id_jawaban}}/{{temporary_dagulir($duTemp->id, $itemNIB->id)?->opsi_text}}" data-extension="{{ explode('.', temporary_dagulir($duTemp->id, $itemNIB->id)?->opsi_text)[1] }}">Preview</a>
+                                                    @endif
                                                     <input type="hidden" name="id_item_file[{{ $itemNIB->id }}]" value="{{ $itemNIB->id }}"
                                                         id="docNIB_id">
                                                     <input type="file" name="upload_file[{{ $itemNIB->id }}]" data-id="{{ temporary_dagulir($duTemp->id, $itemNIB->id)?->id }}"
                                                         placeholder="Masukkan informasi {{ $itemNIB->nama }}" class="form-input limit-size"
-                                                        id="file_nib">
+                                                        id="file_nib" value="{{temporary_dagulir($duTemp->id, $itemNIB->id)?->opsi_text}}">
                                                     <span class="text-red-500 m-0" style="display: none" id="docNIB_text">Besaran file
                                                         tidak boleh lebih dari 5 MB</span>
                                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
@@ -148,7 +157,6 @@ $dataIndex = match ($skema) {
                                                             {{ $errors->first('dataLevelTiga.' . $key) }}
                                                         </div>
                                                     @endif
-                                                    <span class="filename" style="display: inline;">{{ temporary_dagulir($duTemp->id, $itemNIB->id)?->opsi_text }}</span>
                                                 </div>
                                             </div>
 
@@ -166,11 +174,15 @@ $dataIndex = match ($skema) {
                                             <div class="form-group" id="docSKU">
                                                 <div class="input-box">
                                                     <label for="">{{ $itemSKU->nama }}</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
+                                                    @if (temporary_dagulir($duTemp->id, $itemSKU->id))
+                                                        <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
+                                                            data-title="{{ $itemSKU->nama }}" data-filepath="{{asset('../upload/temp')}}/{{temporary_dagulir($duTemp->id, $itemSKU->id)?->id_jawaban}}/{{temporary_dagulir($duTemp->id, $itemSKU->id)?->opsi_text}}" data-extension="{{ explode('.', temporary_dagulir($duTemp->id, $itemSKU->id)?->opsi_text)[1] }}">Preview</a>
+                                                    @endif
                                                     <input type="hidden" name="id_item_file[{{ $itemSKU->id }}]" value="{{ $itemSKU->id }}"
                                                         id="docSKU_id">
                                                     <input type="file" name="upload_file[{{ $itemSKU->id }}]" id="surat_keterangan_usaha_file"
                                                         data-id="{{ temporary_dagulir($duTemp->id, $itemSKU->id)?->id }}" placeholder="Masukkan informasi {{ $itemSKU->nama }}"
-                                                        class="form-input limit-size">
+                                                        class="form-input limit-size" value="{{temporary_dagulir($duTemp->id, $itemSKU->id)?->opsi_text}}">
                                                     <span class="text-red-500 m-0" style="display: none" id="docSKU_text">Besaran file
                                                         tidak boleh lebih dari 5 MB</span>
                                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
@@ -178,7 +190,6 @@ $dataIndex = match ($skema) {
                                                             {{ $errors->first('dataLevelTiga.' . $key) }}
                                                         </div>
                                                     @endif
-                                                    <span class="filename" style="display: inline;">{{ temporary_dagulir($duTemp->id, $itemSKU->id)?->opsi_text }}</span>
                                                 </div>
                                             </div>
                                         @elseif($item->nama == 'NPWP')
@@ -195,10 +206,14 @@ $dataIndex = match ($skema) {
                                             <div class="form-group" id="docNPWP">
                                                 <div class="input-box">
                                                     <label for="">{{ $itemNPWP->nama }}</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
+                                                    @if (temporary_dagulir($duTemp->id, $itemNPWP->id))
+                                                        <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
+                                                            data-title="{{ $itemNPWP->nama }}" data-filepath="{{asset('../upload/temp')}}/{{temporary_dagulir($duTemp->id, $itemNPWP->id)?->id_jawaban}}/{{temporary_dagulir($duTemp->id, $itemNPWP->id)?->opsi_text}}" data-extension="{{ explode('.', temporary_dagulir($duTemp->id, $itemNPWP->id)?->opsi_text)[1] }}">Preview</a>
+                                                    @endif
                                                     <input type="hidden" name="id_item_file[{{ $itemNPWP->id }}]" value="{{ $itemNPWP->id }}"
                                                         id="docNPWP_id">
                                                     <input type="file" name="upload_file[{{ $itemNPWP->id }}]" id="npwp_file" data-id="{{ temporary_dagulir($duTemp->id, $itemNPWP->id)?->id }}"
-                                                        placeholder="Masukkan informasi {{ $itemNPWP->nama }}" class="form-input limit-size">
+                                                        placeholder="Masukkan informasi {{ $itemNPWP->nama }}" class="form-input limit-size" value="{{temporary_dagulir($duTemp->id, $itemNPWP->id)?->opsi_text}}">
                                                     <span class="text-red-500 m-0" style="display: none" id="docNPWP_text">Besaran file
                                                         tidak boleh lebih dari 5 MB</span>
                                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
@@ -206,7 +221,6 @@ $dataIndex = match ($skema) {
                                                             {{ $errors->first('dataLevelTiga.' . $key) }}
                                                         </div>
                                                     @endif
-                                                    <span class="filename" style="display: inline;">{{ temporary_dagulir($duTemp->id, $itemNPWP->id)?->opsi_text }}</span>
                                                 </div>
                                             </div>
 
@@ -305,16 +319,19 @@ $dataIndex = match ($skema) {
                                                     <div class="form-group">
                                                         <div class="input-box">
                                                             <label for="">{{ $item->nama }}</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp, .pdf)</small>
+                                                            @if (temporary_dagulir($duTemp->id, $item->id))
+                                                                <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
+                                                                    data-title="{{ $item->nama }}" data-filepath="{{asset('../upload/temp')}}/{{temporary_dagulir($duTemp->id, $item->id)?->id_jawaban}}/{{temporary_dagulir($duTemp->id, $item->id)?->opsi_text}}" data-extension="{{ explode('.', temporary_dagulir($duTemp->id, $item->id)?->opsi_text)[1] }}">Preview</a>
+                                                            @endif
                                                             {{-- <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" --}} {{--
                                                                             id="{{ $idLevelDua }}"> --}}
                                                             <input type="hidden" name="id_item_file[{{ $item->id }}]" value="{{ $item->id }}"
                                                                 id="">
                                                             <input type="file" name="upload_file[{{ $item->id }}]" id="{{ $idLevelDua }}"
                                                                 data-id="{{ temporary_dagulir($duTemp->id, $item->id)?->id }}" placeholder="Masukkan informasi {{ $item->nama }}"
-                                                                class="form-input limit-size">
+                                                                class="form-input limit-size" value="{{temporary_dagulir($duTemp->id, $item->id)?->opsi_text}}">
                                                             <span class="text-red-500 m-0" style="display: none">Maximum upload file size is 15
                                                                 MB</span>
-                                                            <span class="filename" style="display: inline;">{{ temporary_dagulir($duTemp->id, $item->id)?->opsi_text }}</span>
                                                         </div>
                                                     </div>
                                                 @elseif ($item->opsi_jawaban == 'long text')
@@ -494,6 +511,10 @@ $dataIndex = match ($skema) {
                                                             <div class="form-group file-wrapper item-{{ $itemTiga->id }}">
                                                                 <div class="input-box">
                                                                     <label for="">{{ $itemTiga->nama }}</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
+                                                                    @if (temporary_dagulir($duTemp->id, $itemTiga->id))
+                                                                        <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
+                                                                            data-title="{{ $itemTiga->nama }}" data-filepath="{{asset('../upload/temp')}}/{{temporary_dagulir($duTemp->id, $itemTiga->id)?->id_jawaban}}/{{temporary_dagulir($duTemp->id, $itemTiga->id)?->opsi_text}}" data-extension="{{ explode('.', temporary_dagulir($duTemp->id, $itemTiga->id)?->opsi_text)[1] }}">Preview</a>
+                                                                    @endif
                                                                     <div class="input-box mb-4">
                                                                         <div class="flex gap-4">
                                                                             <input type="hidden" name="id_item_file[{{ $itemTiga->id }}][]"
@@ -501,10 +522,9 @@ $dataIndex = match ($skema) {
                                                                             <input type="file" name="upload_file[{{ $itemTiga->id }}][]"
                                                                                 id="{{ $idLevelTiga }}" data-id="{{ temporary_dagulir($duTemp->id, $itemTiga->id)?->id }}"
                                                                                 placeholder="Masukkan informasi {{ $itemTiga->nama }}"
-                                                                                class="form-input limit-size file-usaha" accept="image/*">
+                                                                                class="form-input limit-size file-usaha" accept="image/*" value="{{temporary_dagulir($duTemp->id, $itemTiga->id)?->opsi_text}}">
                                                                             <span class="text-red-500 m-0" style="display: none">Maximum upload
                                                                                 file size is 15 MB</span>
-                                                                            <span class="filename" style="display: inline;">{{ temporary_dagulir($duTemp->id, $itemTiga->id)?->opsi_text }}</span>
                                                                             @if ($itemTiga->is_multiple)
                                                                                 <div class="flex gap-2 multiple-action">
                                                                                     <button type="button" class="btn-add" data-item-id="{{$itemTiga->id}}-{{strtolower(str_replace(' ', '_', $itemTiga->nama))}}">
@@ -679,16 +699,19 @@ $dataIndex = match ($skema) {
                                                                 <div class="form-group">
                                                                     <div class="input-box">
                                                                         <label for="">{{ $itemEmpat->nama }}</label>
+                                                                        @if (temporary_dagulir($duTemp->id, $itemEmpat->id))
+                                                                            <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
+                                                                                data-title="{{ $itemEmpat->nama }}" data-filepath="{{asset('../upload/temp')}}/{{temporary_dagulir($duTemp->id, $itemEmpat->id)?->id_jawaban}}/{{temporary_dagulir($duTemp->id, $itemEmpat->id)?->opsi_text}}" data-extension="{{ explode('.', temporary_dagulir($duTemp->id, $itemEmpat->id)?->opsi_text)[1] }}">Preview</a>
+                                                                        @endif
                                                                         {{-- <input type="hidden" name="opsi_jawaban[]" value="{{ $itemEmpat->opsi_jawaban }}" id=""> --}}
                                                                         <input type="hidden" name="id_item_file[{{ $itemEmpat->id }}]"
                                                                             value="{{ $itemEmpat->id }}" id="">
                                                                         <input type="file" id="{{ $idLevelEmpat }}"
                                                                             name="upload_file[{{ $itemEmpat->id }}]" data-id="{{ temporary_dagulir($duTemp->id, $itemEmpat->id)?->id }}"
                                                                             placeholder="Masukkan informasi {{ $itemEmpat->nama }}"
-                                                                            class="form-input limit-size">
+                                                                            class="form-input limit-size" value="{{temporary_dagulir($duTemp->id, $itemEmpat->id)?->opsi_text}}">
                                                                         <span class="text-red-500 m-0" style="display: none">Maximum upload file
                                                                             size is 5 MB</span>
-                                                                        <span class="filename" style="display: inline;">{{ temporary_dagulir($duTemp->id, $itemEmpat->id)?->opsi_text }}</span>
                                                                     </div>
                                                                 </div>
                                                             @elseif ($itemEmpat->opsi_jawaban == 'long text')
@@ -919,7 +942,6 @@ $dataIndex = match ($skema) {
                         {{ $errors->first('dataLevelDua.' . $key) }}
                     </div>
                 @endif
-                <span class="filename" style="display: inline;"></span>
             `)
             $("#foto-ktp-suami").append(`
                     <label for="">{{ $itemKTPSu->nama }}</label>
@@ -931,7 +953,6 @@ $dataIndex = match ($skema) {
                             {{ $errors->first('dataLevelDua.' . $key) }}
                         </div>
                     @endif
-                    <span class="filename" style="display: inline;"></span>
             `);
         } else {
             $("#foto-ktp-nasabah").addClass('form-group-1')
@@ -946,7 +967,6 @@ $dataIndex = match ($skema) {
                         {{ $errors->first('dataLevelDua.' . $key) }}
                     </div>
                 @endif
-                <span class="filename" style="display: inline;"></span>
                 @endisset
             `)
         }
@@ -1120,7 +1140,6 @@ $dataIndex = match ($skema) {
                                     <input type="hidden" name="id_item_file[${valItem.id}]" value="${valItem.id}" id="" class="input">
                                     <input type="file" name="upload_file[${valItem.id}]" data-id="" class="form-input limit-size">
                                     <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
-                                    <span class="filename" style="display: inline;"></span>
                                 </div>`);
                             } else {
                                 $('#bukti_pemilikan_jaminan_utama').append(`
@@ -1249,15 +1268,18 @@ $dataIndex = match ($skema) {
                                 @forelse (temporary_dagulir($duTemp->id, 148, true) as $tempData)
                                 <div class="form-group file-wrapper item-${valItem.id}">
                                     <label for="">${valItem.nama}</label>
+                                    @if($tempData)
+                                        <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
+                                            data-title="${valItem.nama}" data-filepath="{{asset('../upload/temp')}}/{{$tempData->id_jawaban}}/{{$tempData->opsi_text}}" data-extension="{{ explode('.', $tempData->opsi_text)[1] }}">Preview</a>
+                                    @endif
                                     <div class="input-box mb-4">
                                         <div class="flex gap-4">
                                             <input type="hidden" name="id_item_file[${valItem.id}][]" value="${valItem.id}" id="">
                                             <input type="file" name="upload_file[${valItem.id}][]" data-id="{{ $tempData->id }}"
                                                 placeholder="Masukkan informasi ${valItem.nama}"
-                                                class="form-control limit-size" id="${valItem.nama.toString().replaceAll(" ", "_").toLowerCase()}"
+                                                class="form-input limit-size" id="${valItem.nama.toString().replaceAll(" ", "_").toLowerCase()}"
                                                 value="{{$tempData->opsi_text}}">
                                                 <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
-                                            <span class="filename" style="display: inline;">{{ $tempData->opsi_text }}</span>
                                         </div>
                                         <div class="flex gap-2 multiple-action">
                                             <button type="button" class="btn-add" data-item-id="${valItem.id}-${name_lowercase}">
@@ -1279,7 +1301,6 @@ $dataIndex = match ($skema) {
                                                 placeholder="Masukkan informasi ${valItem.nama}"
                                                 class="form-control limit-size" id="${valItem.nama.toString().replaceAll(" ", "_").toLowerCase()}">
                                                 <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
-                                            <span class="filename" style="display: inline;"></span>
                                         </div>
                                         <div class="flex gap-2 multiple-action">
                                             <button type="button" class="btn-add" data-item-id="${valItem.id}-${name_lowercase}">
