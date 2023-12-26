@@ -12,19 +12,34 @@ class DashboardRepository
         $role = auth()->user()->role;
         $idUser = auth()->user()->id;
         $skema = $request->skema ?? null;
-        $tanggalAwal = $request->tanggal_awal;
-        $tanggalAkhir = $request->tanggal_akhir;
+        $tanggalAwal = $request->tAwal;
+        $tanggalAkhir = $request->tAkhir;
+        $cabang = $request->cbg;
 
         $data = DB::table('pengajuan')
             ->whereNull('deleted_at')
-            ->when($skema, function($query) use ($skema){
-                return $query->where('skema_kredit', $skema);
+            ->when($cabang, function ($query, $cabang) {
+                return $query->where('id_cabang', $cabang);
             })
             ->when($tanggalAwal, function($query) use ($tanggalAwal){
                 return $query->where('tanggal', '>=', $tanggalAwal);
             })
             ->when($tanggalAkhir, function($query) use ($tanggalAkhir){
                 return $query->where('tanggal', '<=', $tanggalAkhir);
+            })
+            ->when($skema, function($query) use ($skema){
+                return $query->where('skema_kredit', $skema);
+            })
+            ->when($request->pss, function ($query, $pss) {
+                return $query->where('pengajuan.posisi', $pss);
+            })
+            ->when($request->sts, function ($query, $sts) {
+                if ($sts == 'Selesai' || $sts == 'Ditolak') {
+                    return $query->where('pengajuan.posisi', $sts);
+                } else {
+                    return $query->where('pengajuan.posisi', '<>', 'Selesai')
+                    ->where('pengajuan.posisi', '<>', 'Ditolak');
+                }
             });
 
         if($role == 'Staf Analis Kredit'){
@@ -202,8 +217,10 @@ class DashboardRepository
     public function getDataPosisi(Request $request){
         $role = auth()->user()->role;
         $idUser = auth()->user()->id;
-        $tanggalAwal = $request->tanggal_awal ?? null;
-        $tanggalAkhir = $request->tanggal_akhir ?? null;
+        $skema = $request->skema ?? null;
+        $tanggalAwal = $request->tAwal ?? null;
+        $tanggalAkhir = $request->tAkhir ?? null;
+        $cabang = $request->cbg;
 
         $data = DB::table('pengajuan')
             ->selectRaw("CAST(sum(posisi='pincab') AS UNSIGNED) as pincab,
@@ -213,13 +230,29 @@ class DashboardRepository
                 CAST(sum(posisi='Proses Input Data') AS UNSIGNED) as staf,
                 CAST(sum(posisi='Selesai') AS UNSIGNED) as disetujui,
                 CAST(sum(posisi='ditolak') AS UNSIGNED) as ditolak")
-            ->when($tanggalAwal, function($query) use ($tanggalAwal){
-                return $query->where('tanggal', '>=', $tanggalAwal);
-            })
-            ->when($tanggalAkhir, function($query) use ($tanggalAkhir){
-                return $query->where('tanggal', '<=', $tanggalAkhir);
-            });
-        
+                ->when($cabang, function ($query, $cabang) {
+                    return $query->where('id_cabang', $cabang);
+                })
+                ->when($tanggalAwal, function($query) use ($tanggalAwal){
+                    return $query->where('tanggal', '>=', $tanggalAwal);
+                })
+                ->when($tanggalAkhir, function($query) use ($tanggalAkhir){
+                    return $query->where('tanggal', '<=', $tanggalAkhir);
+                })
+                ->when($skema, function($query) use ($skema){
+                    return $query->where('skema_kredit', $skema);
+                })
+                ->when($request->pss, function ($query, $pss) {
+                    return $query->where('pengajuan.posisi', $pss);
+                })
+                ->when($request->sts, function ($query, $sts) {
+                    if ($sts == 'Selesai' || $sts == 'Ditolak') {
+                        return $query->where('pengajuan.posisi', $sts);
+                    } else {
+                        return $query->where('pengajuan.posisi', '<>', 'Selesai')
+                        ->where('pengajuan.posisi', '<>', 'Ditolak');
+                    }
+                });
         
         if($role == 'Staf Analis Kredit'){
             $data->where('id_staf', $idUser);
@@ -239,16 +272,35 @@ class DashboardRepository
     public function getDataSkema(Request $request){
         $role = auth()->user()->role;
         $idUser = auth()->user()->id;
-        $tanggalAwal = $request->tanggal_awal;
-        $tanggalAkhir = $request->tanggal_akhir;
+        $skema = $request->skema;
+        $tanggalAwal = $request->tAwal;
+        $tanggalAkhir = $request->tAkhir;
+        $cabang = $request->cbg;
         
         $data = DB::table('pengajuan')
             ->selectRaw("sum(skema_kredit='PKPJ') as PKPJ,sum(skema_kredit='KKB') as KKB,sum(skema_kredit='Talangan Umroh') as Umroh,sum(skema_kredit='Prokesra') as Prokesra,sum(skema_kredit='Kusuma') as Kusuma, sum(skema_kredit='Dagulir') as Dagulir")
+            ->when($cabang, function ($query, $cabang) {
+                return $query->where('id_cabang', $cabang);
+            })
             ->when($tanggalAwal, function($query) use ($tanggalAwal){
                 return $query->where('tanggal', '>=', $tanggalAwal);
             })
             ->when($tanggalAkhir, function($query) use ($tanggalAkhir){
                 return $query->where('tanggal', '<=', $tanggalAkhir);
+            })
+            ->when($skema, function($query) use ($skema){
+                return $query->where('skema_kredit', $skema);
+            })
+            ->when($request->pss, function ($query, $pss) {
+                return $query->where('posisi', $pss);
+            })
+            ->when($request->sts, function ($query, $sts) {
+                if ($sts == 'Selesai' || $sts == 'Ditolak') {
+                    return $query->where('posisi', $sts);
+                } else {
+                    return $query->where('pengajuan.posisi', '<>', 'Selesai')
+                    ->where('posisi', '<>', 'Ditolak');
+                }
             });
 
         if($role == 'Staf Analis Kredit'){
@@ -270,7 +322,10 @@ class DashboardRepository
         $total_cabang = DB::table('cabang')->where('kode_cabang', '!=', '000')->count();
 
         $dataTertinggi = DB::table('cabang')
-            ->leftJoin('pengajuan', 'cabang.id', 'pengajuan.id_cabang')
+            ->leftJoin('pengajuan', function ($join) use ($request) {
+                $join->on('cabang.id', '=', 'pengajuan.id_cabang')
+                    ->whereBetween('pengajuan.tanggal', [$request->tAwal, $request->tAkhir]);
+            })
             ->selectRaw('IFNULL(COUNT(pengajuan.id), 0) AS total, cabang.kode_cabang, cabang.cabang')
             ->where('cabang.kode_cabang', '!=', '000')
             ->groupBy('cabang.kode_cabang', 'cabang.cabang')
@@ -279,7 +334,10 @@ class DashboardRepository
             ->get();
             
         $dataTerendah = DB::table('cabang')
-            ->leftJoin('pengajuan', 'cabang.id', 'pengajuan.id_cabang')
+            ->leftJoin('pengajuan', function ($join) use ($request) {
+                $join->on('cabang.id', '=', 'pengajuan.id_cabang')
+                    ->whereBetween('pengajuan.tanggal', [$request->tAwal, $request->tAkhir]);
+            })
             ->selectRaw('IFNULL(COUNT(pengajuan.id), 0) AS total, cabang.kode_cabang, cabang.cabang')
             ->where('cabang.kode_cabang', '!=', '000')
             // ->where('pengajuan.posisi', 'Selesai')
@@ -288,7 +346,6 @@ class DashboardRepository
             ->orderByRaw('total ASC, cabang.kode_cabang ASC') // Ubah ke ASC untuk mengambil data terendah
             ->limit(5)
             ->get();
-
         return [
             'data_tertinggi' => $dataTertinggi,
             'data_terendah' => $dataTerendah

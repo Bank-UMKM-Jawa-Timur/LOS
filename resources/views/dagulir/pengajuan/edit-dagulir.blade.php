@@ -14,6 +14,65 @@
         class="p-5 w-full space-y-5 "
         id="data-umum"
     >
+    <div>
+        <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+            <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+               Tipe Pengajuan :
+            </h2>
+        </div>
+    </div>
+    <div class="form-group-2">
+        <div class="input-box">
+            <label for="">Tipe Pengajuan</label>
+            <select name="tipe_pengajuan" id="tipe" class="form-select">
+                <option value="0">Tipe Pengajuan</option>
+                @foreach ($tipe as $key => $value)
+                <option value="{{ $key }}" {{ $key == $duTemp?->tipe ?? null ? 'selected' : '' }}>{{ $value }}</option>
+                @endforeach
+            </select>
+        </div>
+    </div>
+    <div class="form-group-3 hidden" id="tempat_berdiri">
+        <div id="nama_pj" class="input-box">
+            <label for="" id="label_pj"></label>
+            <input
+                type="text"
+                class="form-input"
+                placeholder="Masukkan disini .."
+                name="nama_pj"
+                value="{{ $duTemp?->nama_pj_ketua ?? null }}"
+            />
+        </div>
+        <div class="input-box">
+            <label for="">Tempat Berdiri</label>
+            <input
+                type="text"
+                class="form-input"
+                name="tempat_berdiri"
+                placeholder="Masukkan disini"
+                value="{{ $duTemp?->tempat_berdiri ?? null }}"
+
+            />
+        </div>
+        <div class="input-box">
+            <label for="">Tanggal Berdiri</label>
+            <div class="input-grouped">
+                <input
+                type="date"
+                class="form-input"
+                name="tanggal_berdiri"
+                value="{{ $duTemp?->tanggal_berdiri ?? null }}"
+                />
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+            <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+               Data Diri :
+            </h2>
+        </div>
+    </div>
         <div class="form-group-2">
             <div class="input-box">
                 <label for="">Nama Lengkap</label>
@@ -80,7 +139,7 @@
         </div>
         <div class="form-group-2">
             <div class="input-box">
-                <label for="ktp_nasabah" id="foto-nasabah">Foto Nasabah</label>
+                <label for="ktp_nasabah" id="foto-nasabah">Foto Nasabah</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
                 @if ($duTemp->foto_nasabah)
                     <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
                         data-title="Foto Nasabah" data-filepath="{{asset('../upload')}}/{{$pengajuan?->id}}/{{$duTemp->id}}/{{$duTemp->foto_nasabah}}">Preview</a>
@@ -114,7 +173,7 @@
                 />
             </div>
             <div class="input-box" id="ktp-nasabah">
-                <label for="ktp_nasabah" id="label-ktp-nasabah">Foto KTP Nasabah</label>
+                <label for="ktp_nasabah" id="label-ktp-nasabah">Foto KTP Nasabah</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
                 @if ($duTemp->foto_ktp)
                     <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
                         data-title="Foto KTP Nasabah" data-filepath="{{asset('../upload')}}/{{$pengajuan?->id}}/{{$duTemp->id}}/{{$duTemp->foto_ktp}}">Preview</a>
@@ -138,7 +197,7 @@
                 />
             </div>
             <div class="input-box hidden" id="ktp-pasangan">
-                <label for="ktp_pasangan" id="">Foto KTP Pasangan</label>
+                <label for="ktp_pasangan" id="">Foto KTP Pasangan</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
                 @if ($duTemp->foto_pasangan)
                     <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
                         data-title="Foto KTP Pasangan" data-filepath="{{asset('../upload')}}/{{$pengajuan?->id}}/{{$duTemp->id}}/{{$duTemp->foto_pasangan}}">Preview</a>
@@ -150,55 +209,6 @@
                 <span class="text-red-500" style="display: none; margin-top: 0;">Maximum upload file
                     size is 2 MB</span>
             </div>
-        </div>
-        <div class="form-group-2">
-            <div class="input-box">
-                <label for="">{{ $itemSlik->nama }}</label>
-                <select name="dataLevelDua[{{ $itemSlik->id }}]" id="dataLevelDua" class="form-select"
-                    data-id_item={{ $itemSlik->id }}>
-                    <option value=""> --Pilih Data -- </option>
-                    @foreach ($itemSlik->option as $itemJawaban)
-                    <option value="{{ $itemJawaban->skor . '-' . $itemJawaban->id }}" {{ temporary_select_dagulir($itemSlik->id,
-                        $duTemp->id)?->id_jawaban == $itemJawaban->id ? 'selected' : '' }}>
-                        {{ $itemJawaban->option }}</option>
-                    @endforeach
-                </select>
-                <div id="item{{ $itemSlik->id }}">
-
-                </div>
-                @if (isset($key) && $errors->has('dataLevelDua.' . $key))
-                <div class="invalid-feedback">
-                    {{ $errors->first('dataLevelDua.' . $key) }}
-                </div>
-                @endif
-            </div>
-            <div class="input-box">
-                <label for="">{{ $itemP->nama }}</label>
-                @php
-                    $fileLapSlik = "";
-                @endphp
-                @if ($jawabanLaporanSlik)
-                    @if ($jawabanLaporanSlik->opsi_text)
-                        @php
-                            $fileLapSlik = $jawabanLaporanSlik->opsi_text;
-                        @endphp
-                        <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
-                            data-title="{{$itemP->nama}}" data-filepath="{{asset('../upload')}}/{{$pengajuan?->id}}/{{$jawabanLaporanSlik->id_jawaban}}/{{$jawabanLaporanSlik->opsi_text}}">Preview</a>
-                    @endif
-                @endif
-                <input type="hidden" name="id_item_file[{{ $itemP->id }}]" value="{{ $itemP->id }}" id="">
-                <input type="file" name="upload_file[{{ $itemP->id }}]" id="file_slik" data-id="{{ temporary_dagulir($duTemp->id, $itemP->id)?->id }}"
-                    placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-input limit-size-slik" value="{{$fileLapSlik}}">
-                @if (isset($key) && $errors->has('dataLevelDua.' . $key))
-                <div class="invalid-feedback">
-                    {{ $errors->first('dataLevelDua.' . $key) }}
-                </div>
-                @endif
-                {{--  <span class="filename" style="display: inline;">{{ edit_dagulir($duTemp->id, $itemP->id)?->opsi_text }}</span>  --}}
-                {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
-            </div>
-            <span class="text-red-500 m-0" style="display: none">Maximum upload file
-                size is 10 MB</span>
         </div>
         <div class="form-group-3">
                 <div class="input-box">
@@ -241,6 +251,13 @@
                 >{{ $duTemp?->alamat_ktp }}</textarea>
             </div>
         </div>
+        <div>
+            <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                   Domisili :
+                </h2>
+            </div>
+        </div>
         <div class="form-group-2">
             <div class="input-box">
                 <label for="">Kota / Kabupaten Domisili</label>
@@ -272,7 +289,69 @@
                     id=""
                 >{{ $duTemp?->alamat_dom ?? null }}</textarea>
             </div>
+        </div>
+        <div>
+            <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                   File Slik :
+                </h2>
+            </div>
+        </div>
+        <div class="form-group-2">
+            <div class="input-box">
+                <label for="">{{ $itemSlik->nama }}</label>
+                <select name="dataLevelDua[{{ $itemSlik->id }}]" id="dataLevelDua" class="form-select"
+                    data-id_item={{ $itemSlik->id }}>
+                    <option value=""> --Pilih Data -- </option>
+                    @foreach ($itemSlik->option as $itemJawaban)
+                    <option value="{{ $itemJawaban->skor . '-' . $itemJawaban->id }}" {{ temporary_select_dagulir($itemSlik->id,
+                        $duTemp->id)?->id_jawaban == $itemJawaban->id ? 'selected' : '' }}>
+                        {{ $itemJawaban->option }}</option>
+                    @endforeach
+                </select>
+                <div id="item{{ $itemSlik->id }}">
 
+                </div>
+                @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                <div class="invalid-feedback">
+                    {{ $errors->first('dataLevelDua.' . $key) }}
+                </div>
+                @endif
+            </div>
+            <div class="input-box">
+                <label for="">{{ $itemP->nama }}</label><small class="text-red-500 font-bold"> (.pdf)</small>
+                @php
+                    $fileLapSlik = "";
+                @endphp
+                @if ($jawabanLaporanSlik)
+                    @if ($jawabanLaporanSlik->opsi_text)
+                        @php
+                            $fileLapSlik = $jawabanLaporanSlik->opsi_text;
+                        @endphp
+                        <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
+                            data-title="{{$itemP->nama}}" data-filepath="{{asset('../upload')}}/{{$pengajuan?->id}}/{{$jawabanLaporanSlik->id_jawaban}}/{{$jawabanLaporanSlik->opsi_text}}">Preview</a>
+                    @endif
+                @endif
+                <input type="hidden" name="id_item_file[{{ $itemP->id }}]" value="{{ $itemP->id }}" id="">
+                <input type="file" name="upload_file[{{ $itemP->id }}]" id="file_slik" data-id="{{ temporary_dagulir($duTemp->id, $itemP->id)?->id }}"
+                    placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-input limit-size-slik" value="{{$fileLapSlik}}">
+                @if (isset($key) && $errors->has('dataLevelDua.' . $key))
+                <div class="invalid-feedback">
+                    {{ $errors->first('dataLevelDua.' . $key) }}
+                </div>
+                @endif
+                {{--  <span class="filename" style="display: inline;">{{ edit_dagulir($duTemp->id, $itemP->id)?->opsi_text }}</span>  --}}
+                {{-- <span class="alert alert-danger">Maximum file upload is 5 MB</span> --}}
+            </div>
+            <span class="text-red-500 m-0" style="display: none">Maximum upload file
+                size is 10 MB</span>
+        </div>
+        <div>
+            <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                   Data Usaha :
+                </h2>
+            </div>
         </div>
         <div class="form-group-2">
             <div class="input-box">
@@ -306,7 +385,13 @@
                 >{{ $duTemp?->alamat_usaha ?? null }}</textarea>
             </div>
         </div>
-
+        <div>
+            <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                   Data Pengajuan :
+                </h2>
+            </div>
+        </div>
         <div class="form-group-2">
             <div class="input-box">
                 <label for="">Plafon</label>
@@ -365,15 +450,7 @@
         </div>
 
         <div class="form-group-2" id="form_tipe_pengajuan">
-            <div class="input-box">
-                <label for="">Tipe Pengajuan</label>
-                <select name="tipe_pengajuan" id="tipe" class="form-select">
-                    <option value="0">Tipe Pengajuan</option>
-                    @foreach ($tipe as $key => $value)
-                    <option value="{{ $key }}" {{ $key == $duTemp?->tipe ?? null ? 'selected' : '' }}>{{ $value }}</option>
-                    @endforeach
-                </select>
-            </div>
+            
             <div class="input-box">
                 <label for="">Jenis badan hukum</label>
                 <select name="jenis_badan_hukum" id="jenis_badan_hukum" class="form-select">
@@ -381,40 +458,6 @@
                     <option value="Berbadan Hukum" {{ $duTemp?->jenis_badan_hukum == 'Berbadan Hukum' ? 'selected' : '' }}>Berbadan Hukum</option>
                     <option value="Tidak Berbadan Hukum" {{ $duTemp?->jenis_badan_hukum == 'Tidak Berbadan Hukum' ? 'selected' : '' }}>Tidak Berbadan Hukum</option>
                 </select>
-            </div>
-        </div>
-        <div class="form-group-3 hidden" id="tempat_berdiri">
-            <div id="nama_pj" class="input-box">
-                <label for="" id="label_pj"></label>
-                <input
-                    type="text"
-                    class="form-input"
-                    placeholder="Masukkan disini .."
-                    name="nama_pj"
-                    value="{{ $duTemp?->nama_pj_ketua ?? null }}"
-                />
-            </div>
-            <div class="input-box">
-                <label for="">Tempat Berdiri</label>
-                <input
-                    type="text"
-                    class="form-input"
-                    name="tempat_berdiri"
-                    placeholder="Masukkan disini"
-                    value="{{ $duTemp?->tempat_berdiri ?? null }}"
-
-                />
-            </div>
-            <div class="input-box">
-                <label for="">Tanggal Berdiri</label>
-                <div class="input-grouped">
-                    <input
-                    type="date"
-                    class="form-input"
-                    name="tanggal_berdiri"
-                    value="{{ $duTemp?->tanggal_berdiri ?? null }}"
-                    />
-                </div>
             </div>
         </div>
 

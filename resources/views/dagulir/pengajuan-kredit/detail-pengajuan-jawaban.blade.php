@@ -82,6 +82,67 @@
                                     <div>
                                         <div class="w-full p-2 border-l-8 border-theme-primary bg-gray-100">
                                             <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
+                                                Tipe Pengajuan :
+                                            </h2>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group-2">
+                                    @php
+                                        $tipe = "";
+                                        $nama_pj = "";
+                                        if ($dataUmumNasabah->tipe == 2) {
+                                            $tipe = "Perorangan";
+                                        } else if ($dataUmumNasabah->tipe == 3) {
+                                            $tipe = "Badan Usaha";
+                                            $nama_pj = "Nama penanggung jawab";
+                                        } else if ($dataUmumNasabah->tipe == 4){
+                                            $tipe = "Kelompok Usaha";
+                                            $nama_pj = "Nama ketua";
+                                        } else {
+                                            $tipe = "-";
+                                            $nama_pj = "-";
+                                        }
+                                    @endphp
+                                    <div class="field-review">
+                                        <div class="field-name">
+                                            <label for="">Tipe Pengajuan</label>
+                                        </div>
+                                        <div class="field-answer">
+                                            <p>{{ $dataUmumNasabah->tipe ? $tipe : '-' }}</p>
+                                        </div>
+                                    </div>
+                                    @if ($dataUmumNasabah->tipe != 2)
+                                        <div class="field-review">
+                                            <div class="field-name">
+                                                <label for="">{{ $nama_pj }}</label>
+                                            </div>
+                                            <div class="field-answer">
+                                                <p>{{$dataUmumNasabah->nama_pj_ketua ? $dataUmumNasabah->nama_pj_ketua : '-'}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="field-review">
+                                            <div class="field-name">
+                                                <label for="">Tempat Berdiri</label>
+                                            </div>
+                                            <div class="field-answer">
+                                                <p>{{$dataUmumNasabah->tempat_berdiri ? $dataUmumNasabah->tempat_berdiri : '-'}}</p>
+                                            </div>
+                                        </div>
+                                        <div class="field-review">
+                                            <div class="field-name">
+                                                <label for="">Tanggal Berdiri</label>
+                                            </div>
+                                            <div class="field-answer">
+                                                <p>{{$dataUmumNasabah->tanggal_berdiri ? $dataUmumNasabah->tanggal_berdiri : '-'}}</p>
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="form-group-1 col-span-2 pl-0">
+                                    <div>
+                                        <div class="w-full p-2 border-l-8 border-theme-primary bg-gray-100">
+                                            <h2 class="font-semibold text-lg tracking-tighter text-theme-text">
                                                 Data Diri :
                                             </h2>
                                         </div>
@@ -449,30 +510,6 @@
                                             <p>{{ $dataUmumNasabah->ket_agunan ? $dataUmumNasabah->ket_agunan : '-' }}</p>
                                         </div>
                                     </div>
-                                    @php
-                                        $tipe = "";
-                                        $nama_pj = "";
-                                        if ($dataUmumNasabah->tipe == 2) {
-                                            $tipe = "Perorangan";
-                                        } else if ($dataUmumNasabah->tipe == 3) {
-                                            $tipe = "Badan Usaha";
-                                            $nama_pj = "Nama penanggung jawab";
-                                        } else if ($dataUmumNasabah->tipe == 4){
-                                            $tipe = "Kelompok Usaha";
-                                            $nama_pj = "Nama ketua";
-                                        } else {
-                                            $tipe = "-";
-                                            $nama_pj = "-";
-                                        }
-                                    @endphp
-                                    <div class="field-review">
-                                        <div class="field-name">
-                                            <label for="">Tipe Pengajuan</label>
-                                        </div>
-                                        <div class="field-answer">
-                                            <p>{{ $dataUmumNasabah->tipe ? $tipe : '-' }}</p>
-                                        </div>
-                                    </div>
                                     <div class="field-review">
                                         <div class="field-name">
                                             <label for="">Jenis Badan Hukum</label>
@@ -481,32 +518,6 @@
                                             <p>{{ $dataUmumNasabah->jenis_badan_hukum ? $dataUmumNasabah->jenis_badan_hukum : '-' }}</p>
                                         </div>
                                     </div>
-                                    @if ($dataUmumNasabah->tipe != 2)
-                                        <div class="field-review">
-                                            <div class="field-name">
-                                                <label for="">{{ $nama_pj }}</label>
-                                            </div>
-                                            <div class="field-answer">
-                                                <p>{{$dataUmumNasabah->nama_pj_ketua ? $dataUmumNasabah->nama_pj_ketua : '-'}}</p>
-                                            </div>
-                                        </div>
-                                        <div class="field-review">
-                                            <div class="field-name">
-                                                <label for="">Tempat Berdiri</label>
-                                            </div>
-                                            <div class="field-answer">
-                                                <p>{{$dataUmumNasabah->tempat_berdiri ? $dataUmumNasabah->tempat_berdiri : '-'}}</p>
-                                            </div>
-                                        </div>
-                                        <div class="field-review">
-                                            <div class="field-name">
-                                                <label for="">Tanggal Berdiri</label>
-                                            </div>
-                                            <div class="field-answer">
-                                                <p>{{$dataUmumNasabah->tanggal_berdiri ? $dataUmumNasabah->tanggal_berdiri : '-'}}</p>
-                                            </div>
-                                        </div>
-                                    @endif
                                     <div class="field-review">
                                         <div class="field-name">
                                             <label for="">Hubungan Bank</label>
@@ -747,12 +758,13 @@
                                                 @endphp
                                                 @foreach ($dataDetailJawabanText as $itemTextDua)
                                                     <div class="row
+                                                            {{ $itemTextDua->opsi_text === 'nib' ? 'hidden' : '' }}
                                                             {{ $item->opsi_jawaban == 'file' ? 'col-span-1 order-2' : '' }}
-
+                                                            
                                                             {{ $item->nama == "NPWP" ||  $item->nama == "Ijin Usaha" ? 'col-span-1 order-2' : '' }}
                                                             {{ $item->nama === "Kebutuhan Kredit" ||
                                                                 $item->nama === "Persentase Net Income" ||
-                                                                $item->nama === "Installment" || $item->nama === "Repayment Capacity" ?
+                                                                $item->nama === "Installment" || $item->nama === "Repayment Capacity" ? 
                                                                 'col-span-1 order-3' : ''  }}
                                                                 {{ $item->nama === 'Perhitungan Installment' ?  'col-span-2 order-2' : '' }}
                                                             {{ $item->nama === "Jumlah Orang yang menjalankan usaha" ?  'col-span-1 order-3' : '' }}">
@@ -1054,9 +1066,10 @@
                                                     @endphp
                                                     @foreach ($dataDetailJawabanText as $itemTextTiga)
                                                         @if ($itemTextTiga->nama != 'Ratio Tenor Asuransi')
-                                                            <div class="{{ $itemTiga->opsi_jawaban == 'file' ? 'col-span-1 p-2 order-3' : 'form-group-1 col-span-1' }}
-                                                                        {{ $itemTextTiga->nama === "NIB" ?'form-group-2 col-span-2' : '' }}
-                                                                        {{ $itemTextTiga->nama === "Modal (awal) Sendiri" ||
+                                                            <div class="{{ $itemTiga->opsi_jawaban !== 'file' || str_contains($itemTextTiga->nama, 'Foto Usaha') ? 'col-span-1 p-2 order' : 'col-span-1 p-2 order-3' }} 
+                                                                        {{ $itemTextTiga->nama === "NIB" ?'form-group-2 col-span-1' : '' }} 
+                                                                        {{-- {{ str_contains($itemTextTiga->nama, 'Dokumen NPWP') ? 'col-span-1 p-2 order' : '' }} --}}
+                                                                        {{ $itemTextTiga->nama === "Modal (awal) Sendiri" || 
                                                                         $itemTextTiga->nama === "Modal Pinjaman" ? 'col-span-1 form-group-1' : '' }}
                                                                         ">
                                                                 <div class="space-y-5">
@@ -1860,14 +1873,14 @@
                                         <div class="form-group-2 pl-2">
                                             <div class="input-box">
                                                 <label for="">Plafon Usulan Penyelia</label>
-                                                <input type="text" name="plafon_usulan_penyelia" class="form-input rupiah" value="{{ $dataPlafon?->plafon_usulan_penyelia != null ? number_format($dataPlafon?->plafon_usulan_penyelia, 0, ',', '.') : '' }}">
+                                                <input type="text" name="plafon_usulan_penyelia" class="form-input rupiah" value="{{ $dataPlafon->plafon_usulan_penyelia != null ? number_format($dataPlafon->plafon_usulan_penyelia, 0, ',', '.') : '' }}">
                                             </div>
 
                                             <div class="input-box">
                                                 <label for="">Jangka Waktu Usulan Penyelia</label>
                                                 <div class="flex items-center">
                                                     <div class="flex-1">
-                                                        <input type="number" name="jangka_waktu_usulan_penyelia" class="form-input"  value="{{ $dataPlafon?->jangka_waktu_usulan_penyelia != null ? $dataPlafon?->jangka_waktu_usulan_penyelia : '' }}">
+                                                        <input type="number" name="jangka_waktu_usulan_penyelia" class="form-input"  value="{{ $dataPlafon->jangka_waktu_usulan_penyelia != null ? $dataPlafon->jangka_waktu_usulan_penyelia : '' }}">
                                                     </div>
                                                     <div class="flex-shrink-0 mt-2.5rem">
                                                         <span class="form-input bg-gray-100">Bulan</span>
@@ -1879,7 +1892,7 @@
                                             <label for="">Pendapat dan Usulan Penyelia</label>
                                             <textarea name="komentar_penyelia_keseluruhan"
                                                 class="form-input @error('komentar_penyelia_keseluruhan') is-invalid @enderror" id="komentar_penyelia_keseluruhan" cols="30"
-                                                rows="4" placeholder="Pendapat dan Usulan Penyelia">{{ $dataKomentar?->komentar_penyelia != null ? $dataKomentar?->komentar_penyelia : '' }}</textarea>
+                                                rows="4" placeholder="Pendapat dan Usulan Penyelia">{{ $dataKomentar->komentar_penyelia != null ? $dataKomentar->komentar_penyelia : '' }}</textarea>
                                             @error('komentar_penyelia_keseluruhan')
                                                 <div class="invalid-feedback">
                                                     {{ $message }}
