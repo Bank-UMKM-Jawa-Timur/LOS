@@ -1887,6 +1887,9 @@ video {
 .w-full {
   width: 100%;
 }
+.w-\[50\%\] {
+  width: 50%;
+}
 .max-w-2xl {
   max-width: 42rem;
 }

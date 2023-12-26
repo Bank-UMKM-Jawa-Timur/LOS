@@ -401,7 +401,7 @@
                                                             <a href="#" class="dropdown-item show-upload-pk w-full" data-toggle="modal" data-target="uploadPKModal"
                                                             data-id="{{ $item->pengajuan->id }}" data-kode_pendaftaran="{{$item->kode_pendaftaran}}">
                                                                 <li class="item-tb-dropdown">
-                                                                    Upload File PK
+                                                                    Realisasi Kredit
                                                                 </li>
                                                             </a>
                                                         @endif
@@ -768,7 +768,7 @@
                                                             @elseif (!$item->pengajuan->pk && $tglCetak->tgl_cetak_pk && $item->pengajuan->sppk)
                                                                 <a href="#" class="w-full cursor-pointer show-upload-pk" data-toggle="modal" data-target="uploadPKModal" data-id="{{ $item->pengajuan->id }}" data-kode_pendaftaran="{{$item->kode_pendaftaran}}">
                                                                     <li class="item-tb-dropdown">
-                                                                        Upload File PK
+                                                                        Realisasi Kredit
                                                                     </li>
                                                                 </a>
                                                             @endif
@@ -857,7 +857,7 @@
                                                             @endif
                                                         @else
                                                         <a href="{{ route('dagulir.cetak-surat', $item->pengajuan->id) }}"
-                                                            class="cursor-pointer w-full cursor-pointer" target="_blank">
+                                                            class="cursor-pointer w-full" target="_blank">
                                                             <li class="item-tb-dropdown">
                                                                 Cetak
                                                             </li>

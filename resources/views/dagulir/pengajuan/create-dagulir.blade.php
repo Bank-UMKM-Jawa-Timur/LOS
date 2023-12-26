@@ -70,6 +70,56 @@
         class="p-5 w-full space-y-5 "
         id="data-umum"
     >
+    <div>
+        <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+            <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+               Tipe Pengajuan :
+            </h2>
+        </div>
+    </div>
+    <div class="input-box">
+        <label for="">Tipe Pengajuan</label><small class="text-red-500 font-bold">*</small>
+        <select name="tipe_pengajuan" id="tipe" class="form-select">
+            <option value="0">Tipe Pengajuan</option>
+            @foreach ($tipe as $key => $value)
+            <option value="{{ $key }}" {{ old('alamat_sesuai_ktp') == $key ? 'selected' : '' }}>{{ $value }}</option>
+            @endforeach
+        </select>
+    </div>
+    <div class="form-group-3 hidden" id="tempat_berdiri">
+        <div id="nama_pj" class="input-box">
+            <label for="" id="label_pj"></label>
+            <input
+                type="text"
+                class="form-input"
+                placeholder="Masukkan disini .."
+                name="nama_pj"
+                value="{{ old('nama_pj') }}"
+            />
+        </div>
+        <div class="input-box">
+            <label for="">Tempat Berdiri</label><small class="text-red-500 font-bold">*</small>
+            <input
+                type="text"
+                class="form-input"
+                name="tempat_berdiri"
+                placeholder="Masukkan disini"
+                value="{{ old('tempat_berdiri') }}"
+
+            />
+        </div>
+        <div class="input-box">
+            <label for="">Tanggal Berdiri</label><small class="text-red-500 font-bold">*</small>
+            <div class="input-grouped">
+                <input
+                type="date"
+                class="form-input"
+                name="tanggal_berdiri"
+                value="{{ old('tanggal_berdiri') }}"
+                />
+            </div>
+        </div>
+    </div>
         <div class="form-group-1 col-span-2">
             <div>
                 <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
@@ -439,15 +489,6 @@
                     <option value="Tidak Berbadan Hukum" {{ old('jenis_berbadan') == 'Tidak Berbadan Hukum' ? 'selected' : '' }}>Tidak Berbadan Hukum</option>
                 </select>
             </div>
-            <div class="input-box">
-                <label for="">Tipe Pengajuan</label><small class="text-red-500 font-bold">*</small>
-                <select name="tipe_pengajuan" id="tipe" class="form-select">
-                    <option value="0">Tipe Pengajuan</option>
-                    @foreach ($tipe as $key => $value)
-                    <option value="{{ $key }}" {{ old('alamat_sesuai_ktp') == $key ? 'selected' : '' }}>{{ $value }}</option>
-                    @endforeach
-                </select>
-            </div>
         </div>
         <div class="form-group-3 hidden" id="tempat_berdiri">
             <div id="nama_pj" class="input-box">
@@ -459,28 +500,6 @@
                     name="nama_pj"
                     value="{{ old('nama_pj') }}"
                 />
-            </div>
-            <div class="input-box">
-                <label for="">Tempat Berdiri</label><small class="text-red-500 font-bold">*</small>
-                <input
-                    type="text"
-                    class="form-input"
-                    name="tempat_berdiri"
-                    placeholder="Masukkan disini"
-                    value="{{ old('tempat_berdiri') }}"
-
-                />
-            </div>
-            <div class="input-box">
-                <label for="">Tanggal Berdiri</label><small class="text-red-500 font-bold">*</small>
-                <div class="input-grouped">
-                    <input
-                    type="date"
-                    class="form-input"
-                    name="tanggal_berdiri"
-                    value="{{ old('tanggal_berdiri') }}"
-                    />
-                </div>
             </div>
         </div>
         <div class="form-group-1">
@@ -508,7 +527,7 @@
         <div class="flex justify-between">
             <a href="{{route('dagulir.pengajuan.index')}}">
                 <button type="button"
-                    class="px-5 py-2 border rounded bg-white text-gray-500">
+                    class="px-5 py-2 border rounded bg-white text-gray-500 btnKembali">
                     Kembali
                 </button>
             </a>
