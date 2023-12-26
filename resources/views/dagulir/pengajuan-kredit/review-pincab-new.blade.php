@@ -158,11 +158,12 @@
                                                             </p>
                                                         @else
                                                             @if ($item->opsi_jawaban == "persen")
-                                                                <p>{{ $itemTextDua->opsi_text }} %</p>
+                                                                <p>{{ round(floatval($itemTextDua->opsi_text),2) }}</p>
                                                             @elseif($item->is_rupiah == 1)
                                                                 <p>Rp. {{ number_format($itemTextDua->opsi_text, 0, '.', '.') }}</p>
                                                             @else
                                                                 <p>{{ $itemTextDua->opsi_text }}</p>
+
                                                                 {{-- @if (is_numeric($itemJawaban->option) && strlen($itemJawaban->option) > 3)
                                                                     <p class="">{{ $itemTextDua->is_rupiah ? 'Rp. ' . number_format($itemTextDua->opsi_text, 0, '.', '.') : $itemTextDua->opsi_text }}</p>
                                                                 @else
@@ -439,7 +440,7 @@
                                                                     @elseif ($itemTextTiga->is_rupiah)
                                                                         <p>Rp. {{ number_format((int) $itemTextTiga->opsi_text, 0, ',', '.') }}</p>
                                                                     @else
-                                                                        <p>{{ $itemTiga->opsi_jawaban == 'persen' ? $itemTextTiga->opsi_text : $itemTextTiga->opsi_text  }}{{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</p>
+                                                                        {{-- <p>{{ $itemTiga->opsi_jawaban == 'persen' ? $itemTextTiga->opsi_text : $itemTextTiga->opsi_text  }}{{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</p> --}}
                                                                     @endif
                                                                 </div>
                                                             </div>
@@ -665,7 +666,7 @@
                                                                                 <p>{{ $itemEmpat->opsi_jawaban == 'persen' ? $itemTextEmpat->opsi_text : $itemTextEmpat->opsi_text  }}{{ $itemEmpat->opsi_jawaban == 'persen' ? '%' : '' }} {{ $itemEmpat->id == 130 ? 'Bulan' : ''}}</p>
                                                                             @endif
                                                                         </div>
-        
+
                                                                         <input type="hidden" class="form-input mb-3"
                                                                             placeholder="Masukkan komentar" name="komentar_penyelia"
                                                                             value="{{ $itemTextEmpat->nama }}" disabled>
@@ -690,7 +691,7 @@
                                                                     ->where('jawaban.id_pengajuan', $dataUmum->id)
                                                                     ->where('id_item', $itemEmpat->id)
                                                                     ->count();
-    
+
                                                                 $getKomentar = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', '=', 'detail_komentar.id_komentar')
                                                                     ->where('id_pengajuan', $dataUmum->id)
                                                                     ->where('id_item', $itemEmpat->id)
@@ -762,7 +763,7 @@
                                                                     @endif
                                                                 @endforeach
                                                             @endif
-    
+
                                                     @endif
                                                 @endforeach
                                             </div>

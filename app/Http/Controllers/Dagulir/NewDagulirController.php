@@ -1367,10 +1367,12 @@ class NewDagulirController extends Controller
                     return $response;
                 }
                 else {
+                    DB::commit();
                     return $pengajuan_dagulir['data']['message'];
                 }
             }
             else {
+                DB::commit();
                 $message = 'Terjadi kesalahan.';
                 if (array_key_exists('error', $pengajuan_dagulir)) $message .= ' '.$pengajuan_dagulir['error'];
 

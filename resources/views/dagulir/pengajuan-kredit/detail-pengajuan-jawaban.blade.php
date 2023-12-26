@@ -805,7 +805,7 @@
                                                                                 <p>{{ $itemTextDua->opsi_text }} :  {{ $item->id }}</p>
                                                                                 @else
                                                                                     @if ($item->opsi_jawaban == 'persen' || $item->nama == "Repayment Capacity")
-                                                                                        <p> {{ str_replace('_', ' ', $itemTextDua->opsi_text) }} {{ $item->opsi_jawaban == 'persen' ? '%' : '' }}</p>
+                                                                                        <p> {{ $item->opsi_jawaban == 'persen' ?  round(floatval($itemTextDua->opsi_text),2) : str_replace('_', ' ', $itemTextDua->opsi_text) }} {{ $item->opsi_jawaban == 'persen' ? '%' : '' }}</p>
                                                                                     @else
                                                                                         <p>Rp. {{ number_format((int) $itemTextDua->opsi_text, 0, ',', '.') }}</p>
                                                                                     @endif
@@ -1111,7 +1111,7 @@
                                                                                         @if ($itemTiga->is_rupiah == 1)
                                                                                             <p>Rp. {{ number_format((int) $itemTextTiga->opsi_text, 0, ',', '.') }}</p>
                                                                                         @else
-                                                                                            <p>{{ $itemTiga->opsi_jawaban == 'persen' ? $itemTextTiga->opsi_text : $itemTextTiga->opsi_text  }}{{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</p>
+                                                                                            <p>{{ $itemTiga->opsi_jawaban == 'persen' ?  round(floatval($itemTextTiga->opsi_text),2) : $itemTextTiga->opsi_text  }}{{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</p>
                                                                                         @endif
                                                                                     </div>
                                                                                 </div>
@@ -1428,7 +1428,7 @@
                                                                                             @if ($itemEmpat->is_rupiah == 1)
                                                                                                 Rp. {{ number_format((int) $itemTextEmpat->opsi_text, 0, ',', '.') }}
                                                                                             @else
-                                                                                                {{ $itemTextEmpat->opsi_text }}
+                                                                                                {{ $itemEmpat->opsi_jawaban == 'persen' ? round(floatval($itemTextEmpat->opsi_text),2) : $itemTextEmpat->opsi_text }}
                                                                                             @endif
 
                                                                                             @if ($itemEmpat->opsi_jawaban == 'persen')
