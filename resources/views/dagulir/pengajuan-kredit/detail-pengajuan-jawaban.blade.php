@@ -774,19 +774,19 @@
                                                                     'col-span-1 order-3' : ''  }}
                                                                     {{ $item->nama === 'Perhitungan Installment' ?  'col-span-2 order-2' : '' }}
                                                                 {{ $item->nama === "Jumlah Orang yang menjalankan usaha" ?  'col-span-1 order-3' : '' }}">
-                                                            <div class="col-md-12 space-y-4 order p-2">
+                                                            <div class="col-md-12 space-y-4 order">
                                                                 @if ($item->opsi_jawaban == 'file')
-                                                                    <b>{{ $item->nama }} : </b>
+                                                                    <b class="m-2">{{ $item->nama }} : </b>
                                                                     @php
                                                                         $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
                                                                     @endphp
                                                                     @if ($file_parts['extension'] == 'pdf')
                                                                             <iframe
-                                                                                class="border-4 border-gray-800"
+                                                                                class="border-4 border-gray-800 m-2"
                                                                                 src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
                                                                                 width="100%" height="800px"></iframe>
                                                                     @else
-                                                                        <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                        <img class="m-2" src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
                                                                             alt="" width="800px">
                                                                     @endif
                                                                 @elseif ($item->opsi_jawaban == 'number' && $item->id != 143)

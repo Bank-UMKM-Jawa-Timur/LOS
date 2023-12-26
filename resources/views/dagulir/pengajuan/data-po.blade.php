@@ -1,148 +1,142 @@
-<div class="pb-10 space-y-3">
-  <h2 class="text-4xl font-bold tracking-tighter text-theme-primary">Data PO</h2>
-  <p class="font-semibold text-gray-400">Tambah Pengajuan Kredit</p>
-</div>
-<div class="self-start bg-white w-full border">
-  <div class="p-5 border-b">
-    <h2 class="font-bold text-lg tracking-tighter">
-      Pengajuan Kredit
-    </h2>
-  </div>
-  <!-- Aspek umum -->
-  <div
-    class="p-5 w-full space-y-5"
-    id="aspek-umum"
-  >
-    <div class="form-group-2">
-      <div class="input-box">
-        <label for="">Ijin Usaha </label>
-        <select
-          name=""
-          class="form-select"
-          id="ijin-usaha"
-        >
-          <option value="">-- Pilih Ijin Usaha --</option>
-          <option value="nib">NIB</option>
-          <option value="sku">Surat Keterangan Usaha</option>
-          <option value="">Tidak ada legalitas usaha</option>
-        </select>
-      </div>
-      <div
-        class="input-box hidden"
-        id="have-npwp"
-      >
-        <label
-          for="is-npwp"
-          class="font-semibold text-theme-text"
-          >Memiliki NPWP</label
-        >
-        <div class="flex gap-2 rounded p-2 w-full border">
-          <input
-            type="checkbox"
-            name=""
-            class="form-check cursor-pointer"
-            id="is-npwp"
-          />
-          <label
-            for="is-npwp"
-            class="font-semibold cursor-pointer text-theme-text"
-            >IYA</label
-          >
-        </div>
-      </div>
-    </div>
-    <div
-      class="form-group-2 hidden"
-      id="sku"
-    >
-      <div class="input-box">
-        <label for="">Surat Keterangan Usaha </label>
-        <input
-          type="text"
-          class="form-input"
-          placeholder="Masukan informasi"
-        />
-      </div>
-      <div class="input-box">
-        <label for="">Dokumen Surat Keterangan Usaha </label>
-        <input
-          type="file"
-          class="form-input"
-        />
-      </div>
-    </div>
 
-    <div
-      class="form-group-2 hidden"
-      id="nib"
-    >
-      <div class="input-box">
-        <label for="">NIB </label>
-        <input
-          type="text"
-          class="form-input"
-          placeholder="Masukan informasi"
-        />
-      </div>
-      <div class="input-box">
-        <label for="">Dokumen NIB </label>
-        <input
-          type="file"
-          class="form-input"
-        />
-      </div>
+<div id="data-po-tab" class="is-tab-content">
+    <div class="pb-10 space-y-3">
+        <h2 class="text-4xl font-bold tracking-tighter text-theme-primary">Data PO</h2>
+        <p class="font-semibold text-gray-400">Tambah Pengajuan</p>
     </div>
-    <div
-      class="form-group-2 hidden"
-      id="npwp"
-    >
-      <div class="input-box">
-        <label for="">NPWP </label>
-        <input
-          type="text"
-          class="form-input"
-          placeholder="Masukan informasi"
-        />
-      </div>
-      <div class="input-box">
-        <label for="">Dokumen NPWP </label>
-        <input
-          type="file"
-          class="form-input"
-        />
-      </div>
-    </div>
-    <div class="form-group-1">
-      <div class="input-box">
-        <label for=""
-          >Pendapat dan usulan aspek managemment</label
+    <div class="self-start bg-white w-full border">
+        <div class="p-5 border-b">
+            <h2 class="font-bold text-lg tracking-tighter">
+                Data PO
+            </h2>
+        </div>
+
+        <div class="p-5 w-full space-y-5"
+            id="data-po"
         >
-        <textarea
-          name=""
-          class="form-textarea"
-          placeholder="Pendapat per aspek"
-          id=""
-        ></textarea>
-      </div>
+            <input type="hidden" name="id_data_po_temp" id="id_data_po_temp">
+            <div class="form-group-1 col-span-2">
+                <div>
+                    <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                        <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                            Jenis Kendaraan Roda 2 :
+                        </h2>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group-2">
+                <div class="form-group">
+                    <div class="input-box">
+                        <label>Merk Kendaraan</label>
+                        <input type="text" name="merk" id="merk" class="form-input @error('merk') is-invalid @enderror"
+                            placeholder="Merk kendaraan">
+                        @error('merk')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-box">
+                        <label>Tipe Kendaraan</label>
+                        <input type="text" name="tipe_kendaraan" id="tipe_kendaraan"
+                            class="form-input @error('tipe_kendaraan') is-invalid @enderror" placeholder="Tipe kendaraan">
+                        @error('tipe_kendaraan')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-box">
+                        <label for="">Tahun</label>
+                        <input type="number" name="tahun" id="tahun" class="form-input @error('tahun') is-invalid @enderror"
+                            placeholder="Tahun Kendaraan" value="" min="2000">
+                        @error('tahun')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-box">
+                        <label for="">Warna</label>
+                        <input type="text" maxlength="25" name="warna" id="warna"
+                            class="form-input @error('warna') is-invalid @enderror" placeholder="Warna Kendaraan" value="">
+                        @error('warna')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+            <div class="form-group-1 col-span-2">
+                <div>
+                    <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                        <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                            Keterangan :
+                        </h2>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group-2">
+                <div class="form-group">
+                    <div class="input-box">
+                        <label for="">Pemesanan</label>
+                        <input type="text" maxlength="255" name="pemesanan" id="pemesanan"
+                            class="form-input @error('pemesanan') is-invalid @enderror" placeholder="Pemesanan Kendaraan"
+                            value="">
+                        @error('pemesanan')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-box">
+                        <label for="">Sejumlah</label>
+                        <input type="number" name="sejumlah" id="sejumlah"
+                            class="form-input @error('sejumlah') is-invalid @enderror" placeholder="Jumlah Kendaraan"
+                            value="">
+                        @error('sejumlah')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-box">
+                        <label for="">Harga</label>
+                        <input type="text" name="harga" id="harga"
+                            class="form-input rupiah @error('harga') is-invalid @enderror" placeholder="Harga Kendaraan"
+                            value="">
+                        @error('harga')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-between">
+                <a href="{{route('dagulir.pengajuan.index')}}">
+                    <button type="button"
+                        class="px-5 py-2 border rounded bg-white text-gray-500">
+                        Kembali
+                    </button>
+                </a>
+                <button type="button"
+                class="px-5 py-2 next-tab border rounded bg-theme-primary text-white"
+                >
+                Selanjutnya
+                </button>
+            </div>
+        </div>
     </div>
-    <div class="flex justify-between">
-      <button
-        class="px-5 py-2 border rounded bg-white text-gray-500"
-      >
-        Kembali
-      </button>
-      <div>
-        <button
-        class="px-5 prev-tab py-2 border rounded bg-theme-secondary text-white"
-      >
-        Sebelumnya
-      </button>
-      <button
-        class="px-5 next-tab py-2 border rounded bg-theme-primary text-white"
-      >
-        Selanjutnya
-      </button>
-      </div>
-    </div>
-  </div>
 </div>

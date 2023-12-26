@@ -129,6 +129,7 @@
                 </div>
             </div>
         </div>
+
         <div class="form-group-2">
             <div class="input-box">
                 <label for="">Nama Lengkap</label><small class="text-red-500 font-bold">*</small>
@@ -526,7 +527,7 @@
         <div class="flex justify-between">
             <a href="{{route('dagulir.pengajuan.index')}}">
                 <button type="button"
-                    class="px-5 py-2 border rounded bg-white text-gray-500">
+                    class="px-5 py-2 border rounded bg-white text-gray-500 btnKembali">
                     Kembali
                 </button>
             </a>
