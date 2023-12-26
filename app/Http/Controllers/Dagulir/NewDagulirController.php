@@ -2463,7 +2463,7 @@ class NewDagulirController extends Controller
             return $data;
         }
     }
-
+    
     public function edit($id) {
         $param['pageTitle'] = "Dashboard";
         $param['multipleFiles'] = $this->isMultipleFiles;
