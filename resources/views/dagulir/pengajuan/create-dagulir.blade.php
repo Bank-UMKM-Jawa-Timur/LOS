@@ -507,7 +507,7 @@
         <div class="flex justify-between">
             <a href="{{route('dagulir.pengajuan.index')}}">
                 <button type="button"
-                    class="px-5 py-2 border rounded bg-white text-gray-500">
+                    class="px-5 py-2 border rounded bg-white text-gray-500 btnKembali">
                     Kembali
                 </button>
             </a>
