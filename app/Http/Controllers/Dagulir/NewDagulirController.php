@@ -604,7 +604,6 @@ class NewDagulirController extends Controller
             if ($avgResult > 0 && $avgResult <= 2) {
                 $status = "merah";
             } elseif ($avgResult > 2 && $avgResult <= 3) {
-                // $updateData->status = "kuning";
                 $status = "kuning";
             } elseif ($avgResult > 3) {
                 $status = "hijau";
@@ -635,17 +634,6 @@ class NewDagulirController extends Controller
                     }
                 }
             }
-
-            if (!$statusSlik) {
-                $updateData->posisi = 'Proses Input Data';
-                $updateData->status_by_sistem = $status;
-                $updateData->average_by_sistem = $avgResult;
-            } else {
-                $updateData->posisi = 'Ditolak';
-                $updateData->status_by_sistem = "merah";
-                $updateData->average_by_sistem = "1.0";
-            }
-            $updateData->update();
 
             //save pendapat per aspek
             foreach ($request->get('id_aspek') as $key => $value) {
@@ -685,6 +673,107 @@ class NewDagulirController extends Controller
 
             $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan proses pembuatan data pengajuan atas nama ' . $namaNasabah . '.', $id_pengajuan, Auth::user()->id, Auth::user()->nip);
 
+            if (!$statusSlik) {
+                $updateData->posisi = 'Proses Input Data';
+                $updateData->status_by_sistem = $status;
+                $updateData->average_by_sistem = $avgResult;
+            } else {
+                $cetak_lampiran_analisa = $this->cetakLampiranAnalisa($id_pengajuan);
+                $lampiran_analisa = null;
+                if ($cetak_lampiran_analisa['status'] == 'success') {
+                    $lampiran_analisa = "data:@application/pdf;base64,".base64_encode(file_get_contents($cetak_lampiran_analisa['filepath']));
+                }
+
+                $updateData->posisi = 'Ditolak';
+                $updateData->status_by_sistem = "merah";
+                $updateData->average_by_sistem = "1.0";
+
+                if ($pengajuan->kode_pendaftaran) {
+                    $kode_pendaftaran = $pengajuan->kode_pendaftaran;
+                    $storeSIPDE = 'success';
+                }
+                else {
+                    // HIT Pengajuan endpoint dagulir
+                    $storeSIPDE = $this->storeSipde($id_pengajuan);
+                    if (is_array($storeSIPDE)) {
+                        $kode_pendaftaran = array_key_exists('kode_pendaftaran', $storeSIPDE) ? $storeSIPDE['kode_pendaftaran'] : false;
+                    }
+                }
+                $delay = 1500000; // 1.5 sec
+
+                if ($kode_pendaftaran) {
+                    // HIT update status survei endpoint dagulir
+                    if ($pengajuan->status != 1) {
+                        $survei = $this->updateStatus($kode_pendaftaran, 1);
+                        if (is_array($survei)) {
+                            // Fail block
+                            if ($survei['message'] != 'Update Status Gagal. Anda tidak bisa mengubah status, karena status saat ini adalah SURVEY') {
+                                DB::rollBack();
+                                alert()->error('Peringatan(API)', $survei);
+                                return redirect()->back();
+                            }
+                        }
+                        else {
+                            if ($survei != 200) {
+                                DB::rollBack();
+                                alert()->error('Peringatan(API)', $survei);
+                                return redirect()->back()->withError($survei);
+                            }
+                        }
+                        usleep($delay);
+                    }
+
+                    // HIT update status analisa endpoint dagulir
+                    if ($pengajuan->status != 2) {
+                        $analisa = $this->updateStatus($kode_pendaftaran, 2, $lampiran_analisa);
+                        if (is_array($analisa)) {
+                            // Fail block
+                            DB::rollBack();
+                            alert()->error('Peringatan(API)', $analisa);
+                            return redirect()->back();
+                        }
+                        else {
+                            if ($analisa != 200 || $analisa != '200') {
+                                DB::rollBack();
+                                alert()->error('Peringatan(API)', $analisa);
+                                return redirect()->back();
+                            }
+                        }
+                        usleep($delay);
+                    }
+
+                    // HIT update status ditolak endpoint dagulir
+                    if ($pengajuan->status != 3) {
+                        $ditolak = $this->updateStatus($kode_pendaftaran, 4);
+                        if (is_array($ditolak)) {
+                            // Fail block
+                            DB::rollBack();
+                            alert()->error('Peringatan(API)', $ditolak);
+                            return redirect()->back();
+                        }
+                        else {
+                            if ($ditolak != 200) {
+                                DB::rollBack();
+                                alert()->error('Peringatan(API)', $ditolak);
+                                return redirect()->back();
+                            }
+                        }
+                    }
+
+                    $namaNasabah = 'undifined';
+                    if ($pengajuan)
+                        $namaNasabah = $pengajuan->nama;
+
+                    $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menolak pengajuan atas nama ' . $namaNasabah . '.', $id_pengajuan, Auth::user()->id, Auth::user()->nip);
+                }
+                else {
+                    DB::rollBack();
+                    alert()->error('Peringatan(API)', $storeSIPDE);
+                    return redirect()->back();
+                }
+            }
+            $updateData->update();
+
             DB::commit();
             event(new EventMonitoring('store pengajuan'));
 
@@ -698,11 +787,9 @@ class NewDagulirController extends Controller
             }
         } catch (Exception $e) {
             DB::rollBack();
-            return $e->getMessage();
             return redirect()->route('dagulir.pengajuan.index')->withError('Terjadi kesalahan.' . $e->getMessage());
         } catch (QueryException $e) {
             DB::rollBack();
-            return $e->getMessage();
             return redirect()->route('dagulir.pengajuan.index')->withError('Terjadi kesalahan' . $e->getMessage());
         }
     }
@@ -1245,7 +1332,6 @@ class NewDagulirController extends Controller
                 "tipe_pengajuan" => $pengajuan_dagulir->tipe,
                 "npwp" => $pengajuan_dagulir->npwp,
                 "jenis_badan_hukum" => $pengajuan_dagulir->jenis_badan_hukum,
-                // "jenis_badan_hukum" => "Berbadan Hukum",
                 "tempat_berdiri" => $pengajuan_dagulir->tempat_berdiri,
                 "tanggal_berdiri" => $pengajuan_dagulir->tanggal_berdiri,
                 "email" => $pengajuan_dagulir->email ? $pengajuan_dagulir->email : "",
@@ -1281,21 +1367,20 @@ class NewDagulirController extends Controller
                     return $response;
                 }
                 else {
+                    DB::commit();
                     return $pengajuan_dagulir['data']['message'];
                 }
-                // return redirect()->route('dagulir.pengajuan.index')->withStatus('Berhasil mengirimkan data.');
             }
             else {
+                DB::commit();
                 $message = 'Terjadi kesalahan.';
                 if (array_key_exists('error', $pengajuan_dagulir)) $message .= ' '.$pengajuan_dagulir['error'];
 
                 return $message;
-                // return redirect()->route('dagulir.pengajuan.index')->withError($message);
             }
         } catch (\Exception $e) {
             DB::rollBack();
             return $e->getMessage();
-            // return redirect()->route('dagulir.pengajuan.index')->withError($e->getMessage());
         }
     }
 
@@ -1729,8 +1814,14 @@ class NewDagulirController extends Controller
 
                             // HIT update status analisa endpoint dagulir
                             if ($nasabah->status != 2) {
-                                $filename =  public_path() . "/cetak_surat/$id.pdf";
-                                $lampiran_analisa = lampiranAnalisa($filename);
+                                // $filename =  public_path() . "/cetak_surat/$id.pdf";
+                                // $lampiran_analisa = lampiranAnalisa($filename);
+                                $cetak_lampiran_analisa = $this->cetakLampiranAnalisa($id);
+                                $lampiran_analisa = null;
+                                if ($cetak_lampiran_analisa['status'] == 'success') {
+                                    $lampiran_analisa = "data:@application/pdf;base64,".base64_encode(file_get_contents($cetak_lampiran_analisa['filepath']));
+                                }
+
                                 $analisa = $this->updateStatus($kode_pendaftaran, 2, $lampiran_analisa);
                                 if (is_array($analisa)) {
                                     // Fail block
@@ -2027,7 +2118,6 @@ class NewDagulirController extends Controller
         ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
         ->where('pengajuan.id', $id)
         ->first();
-        // return $dataNasabah;
 
         $param['dataNasabah'] = $dataNasabah;
 
@@ -2049,7 +2139,6 @@ class NewDagulirController extends Controller
         $kodePenyelia = $dataNasabah->id_penyelia;
         $param['dataPincab'] = User::where('id', $kodePincab)->get();
         $param['dataPenyelia'] = User::where('id', $kodePenyelia)->get();
-        // return ['Pincab' => $param['dataPincab'], 'penyelia' => $param['dataPenyelia']];
 
         $indexBulan = intval(date('m', strtotime($param['tglCetak']->tgl_cetak_pk))) - 1;
         $param['tgl'] = date('d', strtotime($param['tglCetak']->tgl_cetak_pk)) . ' ' . $this->bulan[$indexBulan] . ' ' . date('Y', strtotime($param['tglCetak']->tgl_cetak_pk));
@@ -2059,7 +2148,10 @@ class NewDagulirController extends Controller
         ->where('id_jawaban', 140)
         ->first() ?? '0';
 
-        return view('dagulir.cetak.cetak-pk', $param);
+        $pdf = PDF::loadView('dagulir.cetak.cetak-pk', $param);
+
+        return $pdf->download('PK-' . $dataNasabah->nama . '.pdf');
+        // return view('dagulir.cetak.cetak-pk', $param);
     }
     public function cetakSPPk($id)
     {
@@ -2126,7 +2218,10 @@ class NewDagulirController extends Controller
             ->where('id_jawaban', 140)
             ->first() ?? '0';
 
-        return view('dagulir.cetak.cetak-sppk', $param);
+        $pdf = PDF::loadView('dagulir.cetak.cetak-sppk', $param);
+
+        return $pdf->download('SPPK-' . $dataNasabah->nama . '.pdf');
+        // return view('dagulir.cetak.cetak-sppk', $param);
     }
 
     public function kembalikanDataKePosisiSebelumnya(Request $request){
@@ -2230,8 +2325,8 @@ class NewDagulirController extends Controller
                     ]);
                     DB::table('pengajuan')
                     ->where('id', $id)
-                        ->update([
-                            'pk' => $filenamePK,
+                    ->update([
+                        'pk' => $filenamePK,
                     ]);
                     $plafon = PlafonUsulan::where('id_pengajuan',$id)->first();
                     $pengajuan = PengajuanModel::with('dagulir')->find($id);
@@ -2256,7 +2351,7 @@ class NewDagulirController extends Controller
                                             // insert to dd loan
                                             if ($pengajuan && $plafon) {
                                                 $loan = new MasterDDLoan;
-                                                $loan->id_cabang = $request->get('cabang');
+                                                $loan->id_cabang = $pengajuan->dagulir->kode_bank_cabang;
                                                 $loan->no_loan = $request->get('no_loan');
                                                 $loan->kode_pendaftaran = $pengajuan->dagulir->kode_pendaftaran;
                                                 $loan->plafon = $plafon->plafon_usulan_pincab;
@@ -2322,8 +2417,7 @@ class NewDagulirController extends Controller
         $param['komentar'] = KomentarModel::where('id_pengajuan', $id)->first();
         $param['jenis_usaha'] = config('dagulir.jenis_usaha');
 
-        $pdf = Pdf::loadview('dagulir.pengajuan-kredit.cetak.cetak-surat',$param);
-
+        $pdf = Pdf::loadview('dagulir.cetak.cetak-surat',$param);
 
         $fileName = $param['dataUmum']->id.'.'. 'pdf' ;
         $filePath = public_path() . '/cetak_surat';
@@ -2331,618 +2425,684 @@ class NewDagulirController extends Controller
             File::makeDirectory($filePath, 493, true);
         }
         $pdf->save($filePath.'/'.$fileName);
-        return view('dagulir.cetak.cetak-surat', $param);
+
+        $pdf = PDF::loadView('dagulir.cetak.cetak-surat', $param);
+
+        return $pdf->download('Analisa-' . $dataNasabah->kode_pendaftaran . '.pdf');
+        // return view('dagulir.cetak.cetak-surat', $param);
+    }
+
+    public function cetakLampiranAnalisa($id_pengajuan) {
+        $status = '';
+        $message = '';
+        $filepath = null;
+        try {
+            $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->get();
+            $dataNasabah = DB::table('pengajuan_dagulir')->select('pengajuan_dagulir.*', 'kabupaten.id as kabupaten_id', 'kabupaten.kabupaten', 'kecamatan.id as kecamatan_id', 'kecamatan.id_kabupaten', 'kecamatan.kecamatan', 'desa.id as desa_id', 'desa.id_kabupaten', 'desa.id_kecamatan', 'desa.desa')
+                            ->join('kabupaten', 'kabupaten.id', 'pengajuan_dagulir.kotakab_ktp')
+                            ->join('kecamatan', 'kecamatan.id', 'pengajuan_dagulir.kec_ktp')
+                            ->join('desa', 'desa.id', 'pengajuan_dagulir.desa_ktp')
+                            ->join('pengajuan', 'pengajuan.dagulir_id', 'pengajuan_dagulir.id')
+                            ->where('pengajuan.id', $id_pengajuan)
+                            ->first();
+            $param['dataNasabah'] = $dataNasabah;
+            $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit')
+                                ->find($id_pengajuan);
+            $param['komentar'] = KomentarModel::where('id_pengajuan', $id_pengajuan)->first();
+            $param['jenis_usaha'] = config('dagulir.jenis_usaha');
+
+            $pdf = Pdf::loadview('dagulir.pengajuan-kredit.cetak.cetak-surat',$param);
+
+            $fileName = $param['dataUmum']->id.'.'. 'pdf' ;
+            $filePath = public_path('cetak_surat');
+            if (!File::isDirectory($filePath)) {
+                File::makeDirectory($filePath, 493, true);
+            }
+            $pdf->save($filePath.'/'.$fileName);
+            $filepath = $filePath.'/'.$fileName;
+
+            $status = 'success';
+            $message = 'Successfully get file';
+        } catch (\Exception $e) {
+            $status = 'failed';
+            $message = $e->getMessage();
+        } finally {
+            $data = [
+                'status' => $status,
+                'message' => $message,
+                'filepath' => $filepath
+            ];
+            return $data;
+        }
     }
 
     public function edit($id) {
-        /**
-         * 1. Load Data Umum
-         * 2. Load Data per Aspek (include jawaban)
-        */
-        $pengajuanRepo = new PengajuanRepository;
-        $data = $pengajuanRepo->getWithJawaban($id);
-        $param['dataPengajuan'] = $data;
+        $param['pageTitle'] = "Dashboard";
+        $param['multipleFiles'] = $this->isMultipleFiles;
 
+        $param['dataDesa'] = Desa::all();
+        $param['dataKecamatan'] = Kecamatan::all();
         $param['dataKabupaten'] = Kabupaten::all();
-        $param['dataKecamatan'] = Kecamatan::where('id_kabupaten', $data->dagulir->kotakab_ktp)->get();
-        $param['dataDesa'] = Desa::where('id_kecamatan', $data->dagulir->kec_ktp)->get();
-        $param['dataKecamatanDomisili'] = Kecamatan::where('id_kabupaten', $data->dagulir->kotakab_dom)->get();
-        $param['dataKecamatanUsaha'] = Kecamatan::where('id_kabupaten', $data->dagulir->kotakab_usaha)->get();
-        $dataAspek = ItemModel::select('*')->where('level', 1)->where('nama', '!=', 'Data Umum')->get();
-        foreach ($dataAspek as $key => $value) {
-            // Pendapat per aspek
-            $pendapat = PendapatPerAspek::select('id', 'pendapat_per_aspek')->where('id_pengajuan', $id)
-                                        ->whereNotNull('id_staf')
-                                        ->where('id_aspek', $value->id)
-                                        ->first();
-            $value->pendapat = $pendapat;
-            // check level 2
-            $dataLevelDua = ItemModel::where('level', 2)
-                                    ->where('id_parent', $value->id)
-                                    ->get();
-
-            foreach ($dataLevelDua as $key2 => $lev2) {
-                // Get jawaban text
-                $jawaban = JawabanTextModel::where('id_pengajuan', $id)
-                                                ->where('id_jawaban', $lev2->id)
-                                                ->first();
-                $lev2->jawaban = $jawaban;
-                // Get jawaban option
-                $dataJawaban = OptionModel::where('option', '!=', '-')
-                                            ->where('id_item', $lev2->id)
-                                            ->get();
-                foreach ($dataJawaban as $answer) {
-                    $jawaban = JawabanModel::where('id_pengajuan', $id)
-                                            ->where('id_jawaban', $answer->id)
-                                            ->first();
-                    $answer->jawaban = $jawaban;
-                }
-                $dataOption = OptionModel::where('option', '=', '-')
-                    ->where('id_item', $lev2->id)
-                    ->get();
-                // check level 3
-                $dataLevelTiga = ItemModel::where('level', 3)
-                    ->where('id_parent', $lev2->id)
-                    ->get();
-
-                foreach ($dataLevelTiga as $lev3) {
-                    // Get jawaban text
-                    $jawaban = JawabanTextModel::where('id_pengajuan', $id)
-                                                ->where('id_jawaban', $lev3->id)
-                                                ->first();
-                    $lev3->jawaban = $jawaban;
-
-                    // check jawaban level tiga
-                    $dataJawabanLevelTiga = OptionModel::where('option', '!=', '-')
-                                                        ->where('id_item', $lev3->id)
-                                                        ->get();
-                    foreach ($dataJawabanLevelTiga as $answer) {
-                        $jawaban = JawabanModel::where('id_pengajuan', $id)
-                                        ->where('id_jawaban', $answer->id)
-                                        ->first();
-                        $answer->jawaban = $jawaban;
-                    }
-                    $dataOptionTiga = OptionModel::where('option', '=', '-')
-                                                ->where('id_item', $lev3->id)
-                                                ->get();
-
-                    // check level empat
-                    $dataLevelEmpat = ItemModel::where('level', 4)
-                                            ->where('id_parent', $lev3->id)
-                                            ->get();
-                    foreach ($dataLevelEmpat as $lev4) {
-                        $jawaban = JawabanTextModel::where('id_pengajuan', $id)
-                                                    ->where('id_jawaban', $lev4->id)
-                                                    ->first();
-                        $lev4->jawaban = $jawaban;
-                        // check level empat
-                        $dataJawabanLevelEmpat = OptionModel::where('option', '!=', '-')
-                                                            ->where('id_item', $lev4->id)
-                                                            ->get();
-                        foreach ($dataJawabanLevelEmpat as $answer) {
-                            $jawaban = JawabanModel::where('id_pengajuan', $id)
-                                            ->where('id_jawaban', $answer->id)
-                                            ->first();
-                            $answer->jawaban = $jawaban;
-                        }
-                        $dataOptionEmpat = OptionModel::where('option', '=', '-')
-                                                        ->where('id_item', $lev4->id)
-                                                        ->get();
-                        $lev4->dataJawabanLevelEmpat = $dataJawabanLevelEmpat;
-                        $lev4->dataOptionEmpat = $dataOptionEmpat;
-                    }
-
-                    $lev3->dataJawabanLevelTiga = $dataJawabanLevelTiga;
-                    $lev3->dataOptionTiga = $dataOptionTiga;
-                    $lev3->dataLevelEmpat = $dataLevelEmpat;
-                }
-
-                $lev2->dataJawaban = $dataJawaban;
-                $lev2->dataOption = $dataOption;
-                $lev2->dataLevelTiga = $dataLevelTiga;
-            }
-
-            $value->dataLevelDua = $dataLevelDua;
-        }
-
-        $param['pendapat'] = KomentarModel::select('id', 'komentar_staff')
-                                        ->where('id_pengajuan', $id)
-                                        ->orderBy('id', 'DESC')
-                                        ->first();
-        $param['dataAspek'] = $dataAspek;
+        $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->where('nama', '!=', 'Data Umum')->get();
         $param['itemSlik'] = ItemModel::with('option')->where('nama', 'SLIK')->first();
         $param['itemSP'] = ItemModel::where('nama', 'Surat Permohonan')->first();
         $param['itemP'] = ItemModel::where('nama', 'Laporan SLIK')->first();
+        $param['itemKTPSu'] = ItemModel::where('nama', 'Foto KTP Suami')->first();
+        $param['itemKTPIs'] = ItemModel::where('nama', 'Foto KTP Istri')->first();
         $param['itemKTPNas'] = ItemModel::where('nama', 'Foto KTP Nasabah')->first();
         $param['itemNIB'] = ItemModel::where('nama', 'Dokumen NIB')->first();
-        if ($param['itemNIB']) {
-            $jawaban = JawabanTextModel::where('id_pengajuan', $id)
-                                        ->where('id_jawaban', $param['itemNIB']->id)
-                                        ->first();
-            $param['itemNIB']->jawaban = $jawaban;
-        }
         $param['itemNPWP'] = ItemModel::where('nama', 'Dokumen NPWP')->first();
-        if ($param['itemNPWP']) {
-            $jawaban = JawabanTextModel::where('id_pengajuan', $id)
-                                        ->where('id_jawaban', $param['itemNPWP']->id)
-                                        ->first();
-            $param['itemNPWP']->jawaban = $jawaban;
-        }
         $param['itemSKU'] = ItemModel::where('nama', 'Dokumen Surat Keterangan Usaha')->first();
-        if ($param['itemSKU']) {
-            $jawaban = JawabanTextModel::where('id_pengajuan', $id)
-                                        ->where('id_jawaban', $param['itemSKU']->id)
-                                        ->first();
-            $param['itemSKU']->jawaban = $jawaban;
-        }
+
+        $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
+        $param['dataMerk'] = MerkModel::all();
+        $param['jenis_usaha'] = config('dagulir.jenis_usaha');
+        $param['tipe'] = config('dagulir.tipe_pengajuan');
+        $pengajuan = PengajuanModel::find($id);
+        $dagulir_id = $pengajuan->dagulir_id;
+        $dagulir = PengajuanDagulir::find($dagulir_id);
+        $param['duTemp'] = $dagulir;
+        $param['pengajuan'] = $pengajuan;
+        $param['dataKabupaten'] = Kabupaten::all();
+        $param['dataKecamatan'] = Kecamatan::where('id_kabupaten', $dagulir->kotakab_ktp)->get();
+        $param['dataDesa'] = Desa::where('id_kecamatan', $dagulir->kec_ktp)->get();
+        $param['dataKecamatanDomisili'] = Kecamatan::where('id_kabupaten', $dagulir->kotakab_dom)->get();
+        $param['dataKecamatanUsaha'] = Kecamatan::where('id_kabupaten', $dagulir->kotakab_usaha)->get();
         $param['jawabanSlik'] = JawabanModel::select('id', 'id_jawaban', 'skor')
                                             ->where('id_pengajuan', $id)
                                             ->whereIn('id_jawaban', [71,72,73,74])
                                             ->first();
-        $param['jawabanLaporanSlik'] = \App\Models\JawabanTextModel::where('id_pengajuan', $data->id)
+        $param['jawabanLaporanSlik'] = \App\Models\JawabanTextModel::where('id_pengajuan', $id)
                                             ->where('id_jawaban', 146)
                                             ->first();
-        $param['dataDetailJawaban'] = JawabanPengajuanModel::select('id', 'id_jawaban')
-                                                ->where('id_pengajuan', $id)
-                                                ->get();
-        $param['jenis_usaha'] = config('dagulir.jenis_usaha');
-        $param['tipe'] = config('dagulir.tipe_pengajuan');
+        $param['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
+        $param['komentar'] = KomentarModel::where('id_pengajuan', $id)->first();
 
-        return view('dagulir.pengajuan-kredit.edit-pengajuan-kredit', $param);
+
+        return view('dagulir.pengajuan-kredit.edit', $param);
     }
 
     public function update(Request $request, $id)
     {
+        $statusSlik = false;
+        $find = array('Rp ', '.', ',');
+
+        $pengajuanModel = PengajuanModel::find($id);
         DB::beginTransaction();
         try {
-            $updatePengajuan = PengajuanModel::find($id);
-            $dagulir = PengajuanDagulir::find($updatePengajuan->dagulir_id);
-            $uniqueEmail = $request->get('email') != '' && $request->get('email') != $dagulir->email ? 'unique:pengajuan_dagulir,email' : '';
-            $uniqueNIK = $request->get('nik_nasabah') != '' && $request->get('nik_nasabah') != $dagulir->nik ? '|unique:pengajuan_dagulir,nik' : '';
-            $uniqueTelp = $request->get('telp') != '' && $request->get('telp') != $dagulir->telp ? '|unique:pengajuan_dagulir,telp' : '';
             $find = array('Rp.', '.', ',');
-            $request->validate([
-                'nama_lengkap' => 'required',
-                'email' => $uniqueEmail,
-                'nik_nasabah' => 'required'.$uniqueNIK,
-                'tempat_lahir' => 'required',
-                'tanggal_lahir' => 'required',
-                'telp' => 'required'.$uniqueTelp,
-                'jenis_usaha' => 'required',
-                'nominal_pengajuan' => 'required',
-                'tujuan_penggunaan' => 'required',
-                'jangka_waktu' => 'required',
-                'status' => 'required|not_in:0',
-                'desa' => 'required|not_in:0',
-                'kecamatan_sesuai_ktp' => 'required|not_in:0',
-                'kode_kotakab_ktp' => 'required|not_in:0',
-                'alamat_sesuai_ktp' => 'required',
-                'kecamatan_domisili' => 'required|not_in:0',
-                'kode_kotakab_domisili' => 'required|not_in:0',
-                'alamat_domisili' => 'required',
-                'kecamatan_usaha' => 'required|not_in:0',
-                'kode_kotakab_usaha' => 'required|not_in:0',
-                'alamat_usaha' => 'required',
-                'tipe_pengajuan' => 'required|not_in:0',
-                'jenis_badan_hukum' => 'required|not_in:0',
-                'ket_agunan' => 'required|not_in:0'
-            ]);
-            $updatePengajuan->id_cabang = auth()->user()->id_cabang;
-            $updatePengajuan->progress_pengajuan_data = $request->progress;
-            $updatePengajuan->save();
-            $id_pengajuan = $updatePengajuan->id;
-
-            $find = array('Rp.', '.', ',');
-
-            $dagulir->kode_pendaftaran = null;
-            $dagulir->nama = $request->get('nama_lengkap');
-            $dagulir->email = $request->get('email');
-            $dagulir->nik = $request->get('nik_nasabah');
-            $dagulir->nama_pj_ketua = $request->has('nama_pj') ? $request->get('nama_pj') : null;
-            $dagulir->tempat_lahir =  $request->get('tempat_lahir');
-            $dagulir->tanggal_lahir = $request->get('tanggal_lahir');
-            $dagulir->telp = $request->get('telp');
-            $dagulir->jenis_usaha = $request->get('jenis_usaha');
-            $dagulir->ket_agunan = $request->get('ket_agunan');
-            $dagulir->hubungan_bank = $request->get('hub_bank');
-            $dagulir->hasil_verifikasi = $request->get('hasil_verifikasi');
-            $dagulir->nominal = formatNumber($request->get('nominal_pengajuan'));
-            $dagulir->tujuan_penggunaan = $request->get('tujuan_penggunaan');
-            $dagulir->jangka_waktu = $request->get('jangka_waktu');
-            $dagulir->kode_bank_pusat = 1;
-            $dagulir->kode_bank_cabang = auth()->user()->id_cabang;
-            $dagulir->desa_ktp = $request->get('desa');
-            $dagulir->kec_ktp = $request->get('kecamatan_sesuai_ktp');
-            $dagulir->kotakab_ktp = $request->get('kode_kotakab_ktp');
-            $dagulir->alamat_ktp = $request->get('alamat_sesuai_ktp');
-            $dagulir->kec_dom = $request->get('kecamatan_domisili');
-            $dagulir->kotakab_dom = $request->get('kode_kotakab_domisili');
-            $dagulir->alamat_dom = $request->get('alamat_domisili');
-            $dagulir->kec_usaha = $request->get('kecamatan_usaha');
-            $dagulir->kotakab_usaha = $request->get('kode_kotakab_usaha');
-            $dagulir->alamat_usaha = $request->get('alamat_usaha');
-            $dagulir->tipe = $request->get('tipe_pengajuan');
-            $npwp = null;
-            if ($request->informasi) {
-                if (array_key_exists('79', $request->informasi)) {
-                    $npwp = str_replace(['.','-'], '', $request->informasi[79]);
-                }
-            }
-            $dagulir->npwp = $npwp;
-            $dagulir->jenis_badan_hukum = $request->get('jenis_badan_hukum');
-            $dagulir->tempat_berdiri = $request->get('tempat_berdiri');
-            $dagulir->tanggal_berdiri = $request->get('tanggal_berdiri');
-            $dagulir->tanggal = now();
-            $dagulir->user_id = Auth::user()->id;
-            $dagulir->status = 8;
-            $dagulir->status_pernikahan = $request->get('status');
-            $dagulir->nik_pasangan = $request->has('nik_pasangan') ? $request->get('nik_pasangan') : null;
-            $dagulir->created_at = now();
-            $dagulir->from_apps = 'pincetar';
-            $dagulir->save();
-
-            $finalArray = array();
-            $finalArray_text = array();
-            $rata_rata = array();
-
-            if (!isset($request->id_kategori_jaminan_tambahan)) {
-                $dataJawabanText = new JawabanTextModel;
-                $dataJawabanText->id_jawaban = 110;
-                $dataJawabanText->id_pengajuan = $id_pengajuan;
-                $dataJawabanText->opsi_text = $request->kategori_jaminan_tambahan;
-                $dataJawabanText->save();
-            } else {
-                $dataJawabanText = JawabanTextModel::where('id_pengajuan', $id_pengajuan)
-                                                    ->where('id', $request->id_kategori_jaminan_tambahan)
-                                                    ->first();
-                if ($dataJawabanText) {
-                    $dataJawabanText->opsi_text = $request->kategori_jaminan_tambahan;
-                    $dataJawabanText->save();
-                }
-            }
-
-            if ($request->ijin_usaha == 'tidak_ada_legalitas_usaha') {
-                $dokumenUsaha = DB::table('item')
-                    ->where('nama', 'LIKE', '%NIB%')
-                    ->orWhere('nama', 'LIKE', '%Surat Keterangan Usaha%')
-                    ->orWhere('nama', 'LIKE', '%NPWP%')
-                    ->get();
-                foreach ($dokumenUsaha as $idDoc) {
-                    DB::table('jawaban_text')
-                        ->where('id_pengajuan', $id_pengajuan)
-                        ->where('id_jawaban', $idDoc->id)
-                        ->delete();
-                }
-            }
-            if ($request->isNpwp == 0) {
-                $dokumenUsaha = DB::table('item')
-                    ->orWhere('nama', 'LIKE', '%NPWP%')
-                    ->get();
-                foreach ($dokumenUsaha as $idDoc) {
-                    DB::table('jawaban_text')
-                        ->where('id_pengajuan', $id_pengajuan)
-                        ->where('id_jawaban', $idDoc->id)
-                        ->delete();
-                }
-            }
-            // ijin usaha
-            $jawabanIjinUsaha = JawabanTextModel::where('id_pengajuan', $id_pengajuan)->where('id_jawaban', 76)->first();
-            if ($jawabanIjinUsaha) {
-                $jawabanIjinUsaha->id_pengajuan = $id_pengajuan;
-                $jawabanIjinUsaha->id_jawaban =  76;
-                $jawabanIjinUsaha->opsi_text = $request->ijin_usaha;
-                $jawabanIjinUsaha->save();
+            if ($request->has('dagulir_id')) {
+                $pengajuan = PengajuanDagulir::find($request->dagulir_id);
             }
             else {
-                $dataJawabanText = new JawabanTextModel;
-                $dataJawabanText->id_pengajuan = $id_pengajuan;
-                $dataJawabanText->id_jawaban =  76;
-                $dataJawabanText->opsi_text = $request->ijin_usaha;
-                $dataJawabanText->save();
-            }
-
-            if (count($request->file()) > 0) {
-                foreach ($request->file('update_file') as $key => $value) {
-                    if (
-                        str_contains($value->getMimeType(), 'text') ||
-                        str_contains($value->getMimeType(), 'x-empty')
-                    ) continue;
-
-                    if ($request->id_update_file[$key] != null) {
-                        $image = $value;
-                        $imageName = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
-
-                        $imageLama = JawabanTextModel::where('id_jawaban', $request->get('id_update_file')[$key])
-                            ->select('opsi_text', 'id_jawaban')
-                            ->where('opsi_text', '!=', null)
-                            ->orderBy('id', 'desc')
-                            ->get();
-                        // return $imageLama;
-                        foreach ($imageLama as $imageKey => $imageValue) {
-                            $pathLama = public_path() . '/upload/' . $id_pengajuan . '/' . $imageValue->id_jawaban . '/' . $imageValue->opsi_text;
-                            File::delete($pathLama);
-                        }
-
-                        $filePath = public_path() . '/upload/' . $id_pengajuan . '/' . $request->id_file_text[$key];
-                        // $filePath = public_path() . '/upload';
-                        if (!File::isDirectory($filePath)) {
-                            File::makeDirectory($filePath, 493, true);
-                        }
-
-                        $image->move($filePath, $imageName);
-
-                        $imgUpdate = DB::table('jawaban_text');
-                        $imgUpdate->where('id', $request->get('id_update_file')[$key])->update(['opsi_text' => $imageName]);
-                    } else {
-                        $image = $request->file('update_file')[$key];
-                        $imageName = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
-
-                        $filePath = public_path() . '/upload/' . $id_pengajuan . '/' . $request->id_file_text[$key];
-
-                        if (!File::isDirectory($filePath)) {
-                            File::makeDirectory($filePath, 493, true);
-                        }
-
-                        $image->move($filePath, $imageName);
-
-                        $dataJawabanText = new JawabanTextModel;
-                        $dataJawabanText->id_pengajuan = $id_pengajuan;
-                        $dataJawabanText->id_jawaban =  $request->id_file_text[$key];
-                        $dataJawabanText->opsi_text = $imageName;
-                        $dataJawabanText->save();
+                $pengajuan = PengajuanDagulir::find($pengajuanModel->dagulir_id);
+                $pengajuan->nama = $request->get('nama_lengkap');
+                $pengajuan->email = $request->get('email');
+                $pengajuan->nik = $request->get('nik_nasabah');
+                $pengajuan->tempat_lahir =  $request->get('tempat_lahir');
+                $pengajuan->tanggal_lahir = $request->get('tanggal_lahir');
+                $pengajuan->telp = $request->get('telp');
+                $pengajuan->jenis_usaha = $request->get('jenis_usaha');
+                $pengajuan->ket_agunan = $request->get('ket_agunan');
+                $pengajuan->nominal = formatNumber($request->get('nominal_pengajuan'));
+                $pengajuan->jangka_waktu = $request->get('jangka_waktu');
+                $pengajuan->kode_bank_pusat = 1;
+                $pengajuan->kode_bank_cabang = auth()->user()->id_cabang;
+                $pengajuan->kec_ktp = $request->get('kecamatan_sesuai_ktp');
+                $pengajuan->kotakab_ktp = $request->get('kode_kotakab_ktp');
+                $pengajuan->kec_dom = $request->get('kecamatan_domisili');
+                $pengajuan->kotakab_dom = $request->get('kode_kotakab_domisili');
+                $pengajuan->alamat_dom = $request->get('alamat_domisili');
+                $pengajuan->tujuan_penggunaan = $request->get('tujuan_penggunaan');
+                $pengajuan->alamat_ktp = $request->get('alamat_sesuai_ktp');
+                $pengajuan->kec_usaha = $request->get('kecamatan_usaha');
+                $pengajuan->kotakab_usaha = $request->get('kode_kotakab_usaha');
+                $pengajuan->alamat_usaha = $request->get('alamat_usaha');
+                $pengajuan->tipe = $request->get('tipe_pengajuan');
+                $npwp = null;
+                if ($request->informasi) {
+                    if (array_key_exists('79', $request->informasi)) {
+                        $npwp = str_replace(['.','-'], '', $request->informasi[79]);
                     }
+                }
+                $pengajuan->npwp = $npwp;
+                $pengajuan->jenis_badan_hukum = $request->get('jenis_badan_hukum');
+                $pengajuan->tanggal = now();
+                $pengajuan->status = 8;
+                $pengajuan->from_apps = 'pincetar';
+            }
+            $pengajuan->nama_pj_ketua = $request->has('nama_pj') ? $request->get('nama_pj') : null;
+            $pengajuan->hubungan_bank = $request->get('hub_bank');
+            $pengajuan->hasil_verifikasi = $request->get('hasil_verifikasi');
+            $pengajuan->desa_ktp = $request->get('desa');
+            $pengajuan->tempat_berdiri = $request->get('tempat_berdiri');
+            $pengajuan->tanggal_berdiri = $request->get('tanggal_berdiri');
+            $pengajuan->user_id = Auth::user()->id;
+            $pengajuan->status_pernikahan = $request->get('status');
+            $pengajuan->nik_pasangan = $request->has('nik_pasangan') ? $request->get('nik_pasangan') : null;
+            $pengajuan->created_at = now();
+            $pengajuan->save();
+
+            $dagulir_id = $pengajuan->id;
+
+            $id_pengajuan = $pengajuanModel->id;
+
+            $update_pengajuan = PengajuanDagulir::find($pengajuan->id);
+            // foto nasabah
+            if ($request->has('foto_nasabah')) {
+                // Delete current image
+                $current = $update_pengajuan->foto_nasabah;
+                $path_file = public_path("upload/$id_pengajuan/{$dagulir_id}/").$current;
+                if (file_exists($path_file)) {
+                    @unlink($path_file);
+                }
+
+                // Update new image
+                $image = $request->file('foto_nasabah');
+                $fileNameNasabah = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
+                $filePath = public_path() . '/upload/' . $id_pengajuan. '/' . $dagulir_id;
+                if (!File::isDirectory($filePath)) {
+                    File::makeDirectory($filePath, 493, true);
+                }
+                $image->move($filePath, $fileNameNasabah);
+                $update_pengajuan->foto_nasabah = $fileNameNasabah;
+
+            }
+            if ($request->has('ktp_pasangan')) {
+                // Delete current image
+                $current = $update_pengajuan->ktp_pasangan;
+                $path_file = public_path("upload/$id_pengajuan/{$dagulir_id}/").$current;
+                if (file_exists($path_file)) {
+                    @unlink($path_file);
+                }
+
+                // Update new image
+                $image = $request->file('ktp_pasangan');
+                $fileNamePasangan = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
+                $filePath = public_path() . '/upload/' . $id_pengajuan. '/' . $dagulir_id;
+                if (!File::isDirectory($filePath)) {
+                    File::makeDirectory($filePath, 493, true);
+                }
+                $image->move($filePath, $fileNamePasangan);
+                $update_pengajuan->foto_pasangan = $fileNamePasangan;
+
+            }
+            if ($request->has('ktp_nasabah')) {
+                // Delete current image
+                $current = $update_pengajuan->ktp_nasabah;
+                $path_file = public_path("upload/$id_pengajuan/{$dagulir_id}/").$current;
+                if (file_exists($path_file)) {
+                    @unlink($path_file);
+                }
+
+                // Update new image
+                $image = $request->file('ktp_nasabah');
+                $fileNameKtpNasabah = auth()->user()->id . '-' . time() . '-' . $image->getClientOriginalName();
+                $filePath = public_path() . '/upload/' . $id_pengajuan. '/' . $dagulir_id;
+                if (!File::isDirectory($filePath)) {
+                    File::makeDirectory($filePath, 493, true);
+                }
+                $image->move($filePath, $fileNameKtpNasabah);
+                $update_pengajuan->foto_ktp = $fileNameKtpNasabah;
+
+            }
+            // ktp nasabah
+            $update_pengajuan->update();
+
+            $oldAnswer = JawabanTextModel::select('jawaban_text.*')
+                                        ->join('item', 'item.id', 'jawaban_text.id_jawaban')
+                                        ->where('jawaban_text.id_pengajuan', $id_pengajuan)
+                                        ->where('item.opsi_jawaban', '!=', 'file')
+                                        ->pluck('jawaban_text.id_jawaban')
+                                        ->toArray();
+            $oldFileAnswer = JawabanTextModel::select('jawaban_text.*')
+                                        ->join('item', 'item.id', 'jawaban_text.id_jawaban')
+                                        ->where('jawaban_text.id_pengajuan', $id_pengajuan)
+                                        ->where('item.opsi_jawaban', 'file')
+                                        ->pluck('jawaban_text.id_jawaban')
+                                        ->toArray();
+
+            // jawaban ijin usaha
+            if ($request->has('ijin_usaha')) {
+                $answer = JawabanTextModel::where('id_pengajuan', $id_pengajuan)
+                                        ->where('id_jawaban', 76)
+                                        ->first();
+                if ($answer) {
+                    $answer->opsi_text = $request->ijin_usaha;
+                    $answer->updated_at = now();
+                    $answer->save();
+                }
+                else {
+                    JawabanTextModel::create([
+                                        'id_pengajuan' => $id_pengajuan,
+                                        'id_jawaban' => 76,
+                                        'opsi_text' => $request->ijin_usaha,
+                                        'created_at' => now(),
+                                        'updated_at' => now(),
+                                    ]);
+                }
+            }
+            // jawaban kategori jaminan tambahan
+            if ($request->has('kategori_jaminan_tambahan')) {
+                $answer = JawabanTextModel::where('id_pengajuan', $id_pengajuan)
+                                ->where('id_jawaban', 110)
+                                ->first();
+                if ($answer) {
+                    $answer->opsi_text = $request->kategori_jaminan_tambahan;
+                    $answer->updated_at = now();
+                    $answer->save();
+                }
+                else {
+                    JawabanTextModel::create([
+                                        'id_pengajuan' => $id_pengajuan,
+                                        'id_jawaban' => 110,
+                                        'opsi_text' => $request->kategori_jaminan_tambahan,
+                                        'created_at' => now(),
+                                        'updated_at' => now(),
+                                    ]);
                 }
             }
 
-            // Delete multiple deleted file
-            array_map(
-                fn ($fileId) => JawabanTextModel::find($fileId)?->delete(),
-                $request->id_delete_file ?? []
-            );
-
-            foreach ($request->id_jawaban_text as $key => $value) {
-                if ($value) {
-                    if (array_key_exists($key, $request->informasi) && array_key_exists($key, $request->id_text)) {
-                        if ($request->id_jawaban_text[$key] != null && $request->informasi[$key] != null) {
-                            if ($request->informasi[$key] == null) continue;
-
-                            if ($request->id_jawaban_text[$key] == null && $request->informasi[$key] != null) {
-                                if (isset($request->id_text[$key]) && isset($request->informasi[$key])) {
-                                    // dd($request->id_jawaban_text)
-                                    $data_baru = new JawabanTextModel();
-                                    $data_baru->id_pengajuan = $id_pengajuan;
-                                    $data_baru->id_jawaban = $request->id_text[$key];
-                                    if ($request->id_text[$key] == '131' || $request->id_text[$key] == '143' || $request->id_text[$key] == '90' || $request->id_text[$key] == '138') {
-                                        $data_baru->opsi_text = $request->informasi[$key];
-                                    } else {
-                                        $data_baru->opsi_text = str_replace($find, "", $request->informasi[$key]);
-                                    }
-                                    $data_baru->skor_penyelia = null;
-                                    $data_baru->skor = null;
-                                    $data_baru->save();
+            //untuk jawaban yg teks, number, persen, long text
+            if ($request->id_level) {
+                $newAnswer = [];
+                foreach ($request->id_level as $key => $value) {
+                    array_push($newAnswer, $value);
+                    if (in_array($value, $oldAnswer)) {
+                        // Update answer
+                        if ($value != null) {
+                            $dataJawabanText = JawabanTextModel::where('id_pengajuan', $id_pengajuan)
+                                                                ->where('id_jawaban', $value)
+                                                                ->first();
+                            if ($dataJawabanText) {
+                                if ($request->get('id_level')[$key] != '131' && $request->get('id_level')[$key] != '143' && $request->get('id_level')[$key] != '90' && $request->get('id_level')[$key] != '138') {
+                                    $dataJawabanText->opsi_text = str_replace($find, '', $request->get('informasi')[$key]);
+                                } else {
+                                    $dataJawabanText->opsi_text = $request->get('informasi')[$key];
                                 }
-                            } else {
-                                $skor[$key] = $request->skor_penyelia_text[$key];
-                                // ccd
-                                // ddd($request->id_text[27]);
-                                if (isset($request->id_text[$key]) && isset($request->informasi[$key])) {
-                                    $skor = array();
-                                    if ($request->skor_penyelia_text[$key] == 'null') {
-                                        $skor[$key] = null;
-                                    } else {
-                                        $skor[$key] = $request->skor_penyelia_text[$key];
-                                    }
-                                    array_push($finalArray_text, array(
-                                        'id_pengajuan' => $id_pengajuan,
-                                        'id_jawaban' => $request->id_text[$key],
-                                        'opsi_text' => ($request->id_text[$key] != '131' && $request->id_text[$key] != '143' && $request->id_text[$key] != '90' && $request->id_text[$key] != '138') ? str_replace($find, "", $request->informasi[$key]) : $request->informasi[$key],
-                                        'skor_penyelia' => $skor[$key],
-                                        'updated_at' => date("Y-m-d H:i:s"),
-                                    ));
-                                }
+                                $dataJawabanText->save();
                             }
                         }
                     }
+                    else {
+                        // Insert answer
+                        if ($value != null) {
+                            $dataJawabanText = new JawabanTextModel;
+                            $dataJawabanText->id_pengajuan = $id_pengajuan;
+                            $dataJawabanText->id_jawaban = $request->get('id_level')[$key];
+                            if ($request->get('id_level')[$key] != '131' && $request->get('id_level')[$key] != '143' && $request->get('id_level')[$key] != '90' && $request->get('id_level')[$key] != '138') {
+                                $dataJawabanText->opsi_text = str_replace($find, '', $request->get('informasi')[$key]);
+                            } else {
+                                $dataJawabanText->opsi_text = $request->get('informasi')[$key];
+                            }
+                            $dataJawabanText->save();
+                        }
+                    }
                 }
-            };
+            }
 
-            // data Level dua
+            // untuk upload file baru
+            $newFileAnswer = [];
+            if ($request->has('upload_file')) {
+                foreach ($request->upload_file as $key => $value) {
+                    if (is_array($value)) {
+                        foreach ($value as $key2 => $value2) {
+                            array_push($newFileAnswer, $key);
+                            if (in_array($key, $oldFileAnswer)) {
+                                $answer = JawabanTextModel::where('id_pengajuan', $id_pengajuan)
+                                                        ->where('id_jawaban', $key)
+                                                        ->first();
+                                // Delete current image
+                                $current = $answer->opsi_text;
+                                $path_file = public_path("upload/$id_pengajuan/{$key}/").$current;
+                                if (file_exists($path_file)) {
+                                    @unlink($path_file);
+                                }
+
+                                // Update new image
+                                $filename = auth()->user()->id . '-' . time() . '-' . $value2->getClientOriginalName();
+                                $relPath = "upload/{$id_pengajuan}/{$key}";
+                                $path = public_path("upload/{$id_pengajuan}/{$key}/");
+
+                                File::isDirectory(public_path($relPath)) or File::makeDirectory(public_path($relPath), recursive: true);
+                                $value2->move($path, $filename);
+                                // Update answer
+                                $answer->opsi_text = $filename;
+                                $answer->save();
+                            }
+                            else {
+                                $filename = auth()->user()->id . '-' . time() . '-' . $value2->getClientOriginalName();
+                                $relPath = "upload/{$id_pengajuan}/{$key}";
+                                $path = public_path("upload/{$id_pengajuan}/{$key}/");
+
+                                File::isDirectory(public_path($relPath)) or File::makeDirectory(public_path($relPath), recursive: true);
+                                $value2->move($path, $filename);
+                                // Insert answer
+                                JawabanTextModel::create([
+                                    'id_pengajuan' => $id_pengajuan,
+                                    'id_jawaban' => $key,
+                                    'opsi_text' => $filename,
+                                    'skor_penyelia' => null,
+                                    'skor_pbp' => null,
+                                    'skor' => null,
+                                ]);
+                            }
+                        }
+                    } else {
+                        array_push($newFileAnswer, $key);
+                        if (in_array($key, $oldFileAnswer)) {
+                            $answer = JawabanTextModel::where('id_pengajuan', $id_pengajuan)
+                                                        ->where('id_jawaban', $key)
+                                                        ->first();
+                            // Delete current image
+                            $current = $answer->opsi_text;
+                            $path_file = public_path("upload/$id_pengajuan/{$key}/").$current;
+                            if (file_exists($path_file)) {
+                                @unlink($path_file);
+                            }
+
+                            // Update new image
+                            $filename = auth()->user()->id . '-' . time() . '-' . $value->getClientOriginalName();
+                            $relPath = "upload/{$id_pengajuan}/{$key}";
+                            $path = public_path("upload/{$id_pengajuan}/{$key}/");
+
+                            File::isDirectory(public_path($relPath)) or File::makeDirectory(public_path($relPath), recursive: true);
+                            $value->move($path, $filename);
+                            // Update answer
+                            $answer->opsi_text = $filename;
+                            $answer->save();
+                        }
+                        else {
+                            $filename = auth()->user()->id . '-' . time() . '-' . $value->getClientOriginalName();
+                            $relPath = "upload/{$id_pengajuan}/{$key}";
+                            $path = public_path("upload/{$id_pengajuan}/{$key}/");
+
+                            File::isDirectory(public_path($relPath)) or File::makeDirectory(public_path($relPath), recursive: true);
+                            $value->move($path, $filename);
+                            // Insert answer
+                            JawabanTextModel::create([
+                                'id_pengajuan' => $id_pengajuan,
+                                'id_jawaban' => $key,
+                                'opsi_text' => $filename,
+                                'skor_penyelia' => null,
+                                'skor_pbp' => null,
+                                'skor' => null,
+                            ]);
+                        }
+                    }
+                }
+            }
+
+            /**
+             * Find score average
+             * 1. declare array variable needs
+             * 2. remove empty data from array
+             * 3. merge array variables to one array
+             * 4. sum score
+             * 5. find average score
+             */
+
+            // item level 2
+            $dataLev2 = [];
             if ($request->dataLevelDua != null) {
-                $data = $request->dataLevelDua;
-                $result_dua = array_values(array_filter($data));
-                foreach ($result_dua as $key => $value) {
-                    $data_level_dua = getDataLevel($value);
-                    $skor[$key] = $data_level_dua[0];
-                    $id_jawaban[$key] = $data_level_dua[1];
-                    // if ($skor[$key] != 'kosong') {
-                    if ($skor[$key] != 'kosong') {
-                        array_push($rata_rata, $skor[$key]);
-                    } else {
-                        $skor[$key] = null;
-                    }
-                    array_push(
-                        $finalArray,
-                        array(
-                            'id_pengajuan' => $id_pengajuan,
-                            'id_jawaban' => $id_jawaban[$key],
-                            'skor' => $skor[$key],
-                            'updated_at' => date("Y-m-d H:i:s"),
-                        )
-                    );
-                }
+                $dataLev2 = $request->dataLevelDua;
             }
 
-            // data level tiga
+            // item level 3
+            $dataLev3 = [];
             if ($request->dataLevelTiga != null) {
-                $data = $request->dataLevelTiga;
-                $result_tiga = array_values(array_filter($data));
-                foreach ($result_tiga as $key => $value) {
-                    $data_level_tiga = getDataLevel($value);
-                    $skor[$key] = $data_level_tiga[0];
-                    $id_jawaban[$key] = $data_level_tiga[1];
-                    if ($skor[$key] != 'kosong') {
-                        array_push($rata_rata, $skor[$key]);
-                    } else {
-                        $skor[$key] = null;
-                    }
-                    array_push(
-                        $finalArray,
-                        array(
-                            'id_pengajuan' => $id_pengajuan,
-                            'id_jawaban' => $id_jawaban[$key],
-                            'skor' => $skor[$key],
-                            'updated_at' => date("Y-m-d H:i:s"),
-                        )
-                    );
-                }
+                // item level 3
+                $dataLev3 = $request->dataLevelTiga;
+                unset($dataLev3[134]);
             }
 
-            // data level empat
+            // item level 4
+            $dataLev4 = [];
             if ($request->dataLevelEmpat != null) {
-                $data = $request->dataLevelEmpat;
-                $result_empat = array_values(array_filter($data));
-                foreach ($result_empat as $key => $value) {
-                    $data_level_empat = getDataLevel($value);
-                    $skor[$key] = $data_level_empat[0];
-                    $id_jawaban[$key] = $data_level_empat[1];
-                    if ($skor[$key] != 'kosong')
-                        array_push($rata_rata, $skor[$key]);
-                    else if ($skor[$key] == 'kosong')
-                        array_push($rata_rata, 1);
-                    else
-                        $skor[$key] = null;
+                $dataLev4 = $request->dataLevelEmpat;
+            }
 
-                    array_push(
-                        $finalArray,
-                        array(
-                            'id_pengajuan' => $id_pengajuan,
-                            'id_jawaban' => $id_jawaban[$key],
-                            'skor' => $skor[$key],
-                            'updated_at' => date("Y-m-d H:i:s"),
-                        )
-                    );
-                }
+            $mergedDataLevel = array_merge($dataLev2, $dataLev3, $dataLev4);
+            // sum score
+            $totalScore = 0;
+            $totalDataNull = 0;
+            $arrTes = [];
+            $oldIdScore = JawabanModel::where('id_pengajuan', $id_pengajuan)->pluck('id_jawaban')->toArray();
+            $newIdScore = [];
+            for ($i = 0; $i < count($mergedDataLevel); $i++) {
+                if ($mergedDataLevel[$i]) {
+                    // jika data tersedia
+                    $data = getDataLevel($mergedDataLevel[$i]);
+                    array_push($arrTes, $data);
+                    if (is_numeric($data[0])) {
+                        if ($data[0] > 0) {
+                            if (array_key_exists(1, $data)) {
+                                if ($data[1] == 71 || $data[1] == 186) {
+                                    if ($data[0] == '1') {
+                                        $statusSlik = true;
+                                    }
+                                }
+                            }
+                            $totalScore += $data[0];
+                        }
+                        else {
+                            $totalDataNull++;
+                        }
+                    } else
+                        $totalDataNull++;
+                    if (isset($data[1])) {
+                        array_push($newIdScore, $data[1]);
+                    }
+                } else
+                    $totalDataNull++;
             }
-            // get skor ratio coverage opsi
-            $jawaban = JawabanModel::select('id', 'id_jawaban', 'skor')
-                                ->where('id_pengajuan', $id_pengajuan)
-                                ->where('id_jawaban', 158) // 158  = id_option ratio coverage opsi
-                                ->first();
-            if ($jawaban) {
-                array_push($rata_rata, $jawaban->skor);
-                array_push(
-                    $finalArray,
-                    array(
-                        'id_pengajuan' => $id_pengajuan,
-                        'id_jawaban' => $jawaban->id_jawaban,
-                        'skor' => $jawaban->skor,
-                        'updated_at' => date("Y-m-d H:i:s"),
-                    )
-                );
-            }
-            $average = array_sum($rata_rata) / count($rata_rata);
-            $result = round($average, 2);
+            // find avg
+            $avgResult = round($totalScore / (count($mergedDataLevel) - $totalDataNull), 2);
             $status = "";
             $updateData = PengajuanModel::find($id_pengajuan);
-            if ($result > 0 && $result <= 1) {
+            if ($avgResult > 0 && $avgResult <= 2) {
                 $status = "merah";
-            } elseif ($result >= 2 && $result <= 3) {
-                // $updateData->status = "kuning";
+            } elseif ($avgResult > 2 && $avgResult <= 3) {
                 $status = "kuning";
-            } elseif ($result > 3) {
+            } elseif ($avgResult > 3) {
                 $status = "hijau";
             } else {
                 $status = "merah";
             }
-            for ($i = 0; $i < count($finalArray); $i++) {
-                /*
-                1. variabel a = query select k table jawaban where(id, id_jawaban)
-                2. jika variabel a itu ada maka proses update
-                3. jika variabel a itu null maka insert / data baru
-                */
-                $data = DB::table('jawaban');
 
-                if (!empty($request->id[$i])) {
-                    if (is_numeric($finalArray[$i]['skor']))
-                        $data->where('id', $request->id[$i])->update($finalArray[$i]);
-                    else {
-                        $data->where('id', $request->id[$i])->update([
-                            'id_pengajuan' => $finalArray[$i]['id_pengajuan'],
-                            'id_jawaban' => $finalArray[$i]['id_jawaban'],
-                            'skor' => is_numeric($finalArray[$i]['skor']) ? $finalArray[$i]['skor'] : null,
-                            'updated_at' => $finalArray[$i]['updated_at'],
-                        ]);
+            for ($i = 0; $i < count($mergedDataLevel); $i++) {
+                if ($mergedDataLevel[$i] != null) {
+                    $data = getDataLevel($mergedDataLevel[$i]);
+                    if (is_numeric($data[0])) {
+                        if ($data[0] > 0) {
+                            if (array_key_exists(1, $data)) {
+                                $answer = JawabanPengajuanModel::where('id_pengajuan', $id_pengajuan)
+                                                                ->where('id_jawaban', $data[1])
+                                                                ->first();
+                                if ($answer) {
+                                    $answer->skor = $data[0];
+                                    $answer->save();
+                                }
+                                else {
+                                    JawabanPengajuanModel::insert([
+                                        'id_pengajuan' => $id_pengajuan,
+                                        'id_jawaban' => $data[1],
+                                        'skor' => $data[0],
+                                    ]);
+                                }
+                            }
+                        }
+                    } else {
+                        if (array_key_exists(1, $data)) {
+                            $answer = JawabanPengajuanModel::where('id_pengajuan', $id_pengajuan)
+                                                            ->where('id_jawaban', $data[1])
+                                                            ->first();
+                            if ($answer) {
+                                $answer->id_jawaban = $data[1];
+                                $answer->save();
+                            }
+                            else {
+                                JawabanPengajuanModel::insert([
+                                    'id_pengajuan' => $id_pengajuan,
+                                    'id_jawaban' => $data[1]
+                                ]);
+                            }
+                        }
                     }
-                } else {
-                    $data->insert($finalArray[$i]);
+                }
+            }
+            // Delete unuse score
+            for ($i=0; $i < count($oldIdScore); $i++) {
+                if (!in_array($oldIdScore[$i], $newIdScore)) {
+                    JawabanPengajuanModel::where('id_pengajuan', $id_pengajuan)
+                                        ->where('id_jawaban', $oldIdScore[$i])
+                                        ->delete();
                 }
             }
 
-            for ($i = 0; $i < count($request->id_text); $i++) {
-                /*
-                1. variabel a = query select k table jawaban where(id, id_jawaban)
-                2. jika variabel a itu ada maka proses update
-                3. jika variabel a itu null maka insert / data baru
-                */
-                $data = DB::table('jawaban_text');
-                if (array_key_exists($i, $request->id_jawaban_text) && array_key_exists($i, $request->id_text)) {
-                    $index = $request->id_text[$i];
-                    if ($request->id_jawaban_text[$i] != null && $request->id_text[$i] != null) {
-                        $data->where('id', $request->get('id_jawaban_text')[$i])->update(['opsi_text' => ($request->id_text[$i] != '131' && $request->id_text[$i] != '143' && $request->id_text[$i] != '90' && $request->id_text[$i] != '138') ? str_replace($find, "", $request->informasi[$index]) : $request->informasi[$index]]);
-                    }
-                }
-            }
-
-            foreach ($request->pendapat_per_aspek as $key => $value) {
-                $data = DB::table('pendapat_dan_usulan_per_aspek');
-                if ($value != null) {
-                    $data->where('id', $request->get('id_aspek')[$key])->update(['pendapat_per_aspek' => $value]);
-                } else {
-                    $data->insert([
-                        'id_pengajuan' => $id_pengajuan,
-                        'id_staf' => auth()->user()->id,
-                        'id_penyelia' => null,
-                        'id_pincab' => null,
-                        'id_aspek' => $request->get('id_aspek')[$key],
-                        'pendapat_per_aspek' => $value,
-                        'created_at' => date('Y-m-d H:i:s')
-                    ]);
-                }
-            }
-            if ($request->get('id_komentar_staff_text') != null) {
-                $id_komentar_staff = $request->get('id_komentar_staff_text');
-                $updateKomentar = KomentarModel::find($id_komentar_staff);
-                $updateKomentar->komentar_staff = $request->get('komentar_staff');
-                $updateKomentar->update();
+            if (!$statusSlik) {
+                $updateData->posisi = 'Proses Input Data';
+                $updateData->status_by_sistem = $status;
+                $updateData->average_by_sistem = $avgResult;
             } else {
-                $addKomentar = new KomentarModel;
-                $addKomentar->id_pengajuan = $id_pengajuan;
+                $cetak_lampiran_analisa = $this->cetakLampiranAnalisa($id_pengajuan);
+                $lampiran_analisa = null;
+                if ($cetak_lampiran_analisa['status'] == 'success') {
+                    $lampiran_analisa = "data:@application/pdf;base64,".base64_encode(file_get_contents($cetak_lampiran_analisa['filepath']));
+                }
+
+                $updateData->posisi = 'Ditolak';
+                $updateData->status_by_sistem = "merah";
+                $updateData->average_by_sistem = "1.0";
+
+                if ($pengajuan->kode_pendaftaran) {
+                    $kode_pendaftaran = $pengajuan->kode_pendaftaran;
+                    $storeSIPDE = 'success';
+                }
+                else {
+                    // HIT Pengajuan endpoint dagulir
+                    $storeSIPDE = $this->storeSipde($id_pengajuan);
+                    if (is_array($storeSIPDE)) {
+                        $kode_pendaftaran = array_key_exists('kode_pendaftaran', $storeSIPDE) ? $storeSIPDE['kode_pendaftaran'] : false;
+                    }
+                }
+                $delay = 1500000; // 1.5 sec
+
+                if ($kode_pendaftaran) {
+                    // HIT update status survei endpoint dagulir
+                    if ($pengajuan->status != 1) {
+                        $survei = $this->updateStatus($kode_pendaftaran, 1);
+                        if (is_array($survei)) {
+                            // Fail block
+                            if ($survei['message'] != 'Update Status Gagal. Anda tidak bisa mengubah status, karena status saat ini adalah SURVEY') {
+                                DB::rollBack();
+                                alert()->error('Peringatan(API)', $survei);
+                                return redirect()->back();
+                            }
+                        }
+                        else {
+                            if ($survei != 200) {
+                                DB::rollBack();
+                                alert()->error('Peringatan(API)', $survei);
+                                return redirect()->back()->withError($survei);
+                            }
+                        }
+                        usleep($delay);
+                    }
+
+                    // HIT update status analisa endpoint dagulir
+                    if ($pengajuan->status != 2) {
+                        $analisa = $this->updateStatus($kode_pendaftaran, 2, $lampiran_analisa);
+                        if (is_array($analisa)) {
+                            // Fail block
+                            DB::rollBack();
+                            alert()->error('Peringatan(API)', $analisa);
+                            return redirect()->back();
+                        }
+                        else {
+                            if ($analisa != 200 || $analisa != '200') {
+                                DB::rollBack();
+                                alert()->error('Peringatan(API)', $analisa);
+                                return redirect()->back();
+                            }
+                        }
+                        usleep($delay);
+                    }
+
+                    // HIT update status ditolak endpoint dagulir
+                    if ($pengajuan->status != 3) {
+                        $ditolak = $this->updateStatus($kode_pendaftaran, 4);
+                        if (is_array($ditolak)) {
+                            // Fail block
+                            DB::rollBack();
+                            alert()->error('Peringatan(API)', $ditolak);
+                            return redirect()->back();
+                        }
+                        else {
+                            if ($ditolak != 200) {
+                                DB::rollBack();
+                                alert()->error('Peringatan(API)', $ditolak);
+                                return redirect()->back();
+                            }
+                        }
+                    }
+
+                    $namaNasabah = 'undifined';
+                    if ($pengajuan)
+                        $namaNasabah = $pengajuan->nama;
+
+                    $this->logPengajuan->store('Pincab dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' menolak pengajuan atas nama ' . $namaNasabah . '.', $id_pengajuan, Auth::user()->id, Auth::user()->nip);
+                }
+                else {
+                    DB::rollBack();
+                    alert()->error('Peringatan(API)', $storeSIPDE);
+                    return redirect()->back();
+                }
+            }
+            $updateData->update();
+
+            //save pendapat per aspek
+            foreach ($request->get('id_aspek') as $key => $value) {
+                if ($request->get('pendapat_per_aspek')[$key] != '') {
+                    $addPendapat = PendapatPerAspek::where('id_pengajuan', $id_pengajuan)
+                                                    ->whereNotNull('id_staf')
+                                                    ->where('id_aspek', $value)
+                                                    ->first();
+                    $addPendapat->pendapat_per_aspek = $request->get('pendapat_per_aspek')[$key];
+                    $addPendapat->save();
+                }
+            }
+
+            if ($request->get('komentar_staff') != '') {
+                $addKomentar = KomentarModel::where('id_pengajuan', $id_pengajuan)
+                                            ->first();
                 $addKomentar->komentar_staff = $request->get('komentar_staff');
-                $addKomentar->id_staff = Auth::user()->id;
                 $addKomentar->save();
             }
 
-            $updateData->posisi = 'Proses Input Data';
-            $updateData->status_by_sistem = $status;
-            $updateData->average_by_sistem = $result;
-            $updateData->update();
+            // Log Pengajuan Baru
+            $namaNasabah = $pengajuan->nama;
 
-            // Log Edit Pengajuan
-            $namaNasabah = $request->get('nama_lengkap');
-
-            $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' melakukan proses perubahan data pengajuan atas nama ' . $namaNasabah, $id, Auth::user()->id, Auth::user()->nip);
+            $this->logPengajuan->store('Staff dengan NIP ' . Auth::user()->nip . ' atas nama ' . $this->getNameKaryawan(Auth::user()->nip) . ' memperbarui data pengajuan atas nama ' . $namaNasabah . '.', $id_pengajuan, Auth::user()->id, Auth::user()->nip);
 
             DB::commit();
-            Alert::success('success', 'Berhasil memperbarui data');
-            return redirect()->route('dagulir.pengajuan.index');
+            event(new EventMonitoring('store pengajuan'));
+
+            if (!$statusSlik){
+                Alert::success('Success', 'Data berhasil disimpan.');
+                return redirect()->route('dagulir.pengajuan.index');
+            }
+            else {
+                alert()->info('Informasi', 'Pengajuan ditolak.');
+                return redirect()->route('dagulir.pengajuan.index');
+            }
         } catch (Exception $e) {
             DB::rollBack();
-            alert()->error('Terjadi Kesalahan', $e->getMessage());
-            return redirect()->back();
+            return $e->getMessage();
+            return redirect()->route('dagulir.pengajuan.index')->withError('Terjadi kesalahan.' . $e->getMessage());
         } catch (QueryException $e) {
             DB::rollBack();
-            alert()->error('Terjadi Kesalahan', $e->getMessage());
-            return redirect()->back();
+            return redirect()->route('dagulir.pengajuan.index')->withError('Terjadi kesalahan' . $e->getMessage());
         }
     }
 
@@ -2991,15 +3151,9 @@ class NewDagulirController extends Controller
         $param['jenis_usaha'] = config('dagulir.jenis_usaha');
         $param['tipe'] = config('dagulir.tipe_pengajuan');
         $param['duTemp'] = TemporaryService::getNasabahDataDagulir($request->tempId);
-        // return $param['duTemp'];
 
         $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
 
-        // dump($param['dataAspek']);
-        // dump($param['itemSlik']);
-        // dump($param['itemSP']);
-        // dump($param['dataPertanyaanSatu']);
-        // dd($param['itemP']);
         return view('dagulir.pengajuan-kredit.continue-draft', $param);
     }
 

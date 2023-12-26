@@ -1,4 +1,6 @@
 @include('dagulir.master.desa.modal.create')
+@include('dagulir.master.desa.modal.edit')
+@include('dagulir.master.desa.modal.delete')
 @extends('layouts.tailwind-template')
 @include('components.new.modal.loading')
 @push('script-inject')
@@ -24,7 +26,7 @@
                     <button data-modal-id="modal-add-desa"
                         class="open-modal px-7 py-2 rounded flex justify-center items-center font-semibold bg-theme-primary border text-white">
                         <span class="mt-1 mr-3">
-                        <iconify-icon icon="ph:plus-bold"></iconify-icon>
+                            <iconify-icon icon="ph:plus-bold"></iconify-icon>
                         </span>
                         <span class="ml-1 text-sm"> Tambah </span>
                     </button>
@@ -92,12 +94,17 @@
                                         <td>{{ $item->kecamatan->kecamatan }}</td>
                                         <td>{{ $item->kabupaten != null ? $item->kabupaten->kabupaten : '-' }}</td>
                                         <td>
-                                            <button class="btn-edit">
+                                            <a href="javascript:void(0)" class="btn-edit show-edit-desa"
+                                                data-id="{{ $item->id }}" data-desa="{{ $item->desa }}"
+                                                data-kecamatan_id="{{ $item->kecamatan->id }}"
+                                                data-kabupaten_id="{{ $item->kabupaten->id }}"
+                                                data-target="modal-edit-desa">
                                                 <iconify-icon icon="uil:edit" class="icon"></iconify-icon>
-                                            </button>
-                                            <button class="btn-delete">
+                                            </a>
+                                            <a href="javascript:void(0)" class="btn-delete show-hapus-desa"
+                                                data-target="modalhapusdesa" data-id="{{ $item->id }}">
                                                 <iconify-icon class="icon" icon="ic:baseline-delete"></iconify-icon>
-                                            </button>
+                                            </a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -118,26 +125,43 @@
         </div>
     </section>
 @endsection
-@push('custom-script')
+@push('script-inject')
     <script>
-        function resetPassword(name, id) {
-            Swal.fire({
-                title: 'Perhatian!!',
-                text: "Apakah anda yakin mereset password " + name + " ?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#112042',
-                cancelButtonColor: '#d33',
-                cancelButtonText: 'Batal',
-                confirmButtonText: 'ResetPassword',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $("#resetPasswordForm" + id).submit()
+        $('.show-edit-desa').off('click').on('click', function() {
+            console.log('masuk');
+            const target = $(this).data('target');
+            const id_desa = $(this).data('id');
+            const desa = $(this).data('desa');
+            const id_kecamatan = $(this).data('id_kecamatan');
+            const id_kabupaten = $(this).data('id_kabupaten');
+
+            $(`#${target} #id`).val(id_desa);
+            $(`#${target} #desa`).val(desa);
+
+            $(`#${target}`).removeClass('hidden');
+
+            $.ajax({
+                type: "GET",
+                url: "{{ route('dagulir.master.get.kabupaten') }}",
+                success:function(res){
+                    $(`#${target} #kabupaten_select`).empty();
+                    $.each(res,function (index, param) {
+                        console.log(param);
+                        $(`#${target} s#kabupaten_select`).append(`
+                            <option value="${param.id}"  ${param.id == id_kabupaten ? 'selected' : ''}>${param.kabupaten}</option>
+                        `);
+                    })
                 }
             })
-        }
+            $(`#${target} #kecamatan_select option[value="${id_kecamatan}"]`).prop('selected', true);
+        })
+        $('.show-hapus-desa').off('click').on('click', function() {
+            const target = $(this).data('target');
+            const id_desa = $(this).data('id');
 
+            $(`#${target} #id`).val(id_desa);
 
+            $(`#${target}`).removeClass('hidden');
+        })
     </script>
 @endpush

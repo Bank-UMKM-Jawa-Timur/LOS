@@ -87,6 +87,13 @@ class NewKabupatenController extends Controller
 
         $validated = $request->validated();
         try {
+            $data =  Kabupaten::where('kabupaten','LIKE', "%{$request->kabupaten}%")->first();
+
+            if ($data) {
+                alert()->error('error', 'Kabupaten sudah ada.');
+                return back()->withError('Terjadi kesalahan.');
+            }
+
             $kabupaten = new kabupaten;
             $kabupaten->kabupaten = $validated['kabupaten'];
             $kabupaten->save();
@@ -178,7 +185,7 @@ class NewKabupatenController extends Controller
         try {
             $kabupaten = Kabupaten::findOrFail($id);
             $kabupaten->delete();
-            alert()->success('Berhasil','Data berhasil diperbarui.');
+            alert()->success('Berhasil','Data berhasil dihapus.');
             return redirect()->route('dagulir.master.kabupaten.index');
         } catch (Exception $e) {
             return back()->withError('Terjadi kesalahan.');

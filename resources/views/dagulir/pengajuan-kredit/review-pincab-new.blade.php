@@ -158,11 +158,12 @@
                                                             </p>
                                                         @else
                                                             @if ($item->opsi_jawaban == "persen")
-                                                                <p>{{ $itemTextDua->opsi_text }} %</p>
+                                                                <p>{{ round(floatval($itemTextDua->opsi_text),2) }}</p>
                                                             @elseif($item->is_rupiah == 1)
                                                                 <p>Rp. {{ number_format($itemTextDua->opsi_text, 0, '.', '.') }}</p>
                                                             @else
                                                                 <p>{{ $itemTextDua->opsi_text }}</p>
+
                                                                 {{-- @if (is_numeric($itemJawaban->option) && strlen($itemJawaban->option) > 3)
                                                                     <p class="">{{ $itemTextDua->is_rupiah ? 'Rp. ' . number_format($itemTextDua->opsi_text, 0, '.', '.') : $itemTextDua->opsi_text }}</p>
                                                                 @else
@@ -372,7 +373,7 @@
                                                                             <div class="field-answer">
                                                                                 <h6>
                                                                                     @if (count($getKomentarPenyelia) > 0)
-                                                                                        {{ strlen($getKomentarPenyelia[$key]?->komentar) > 0 ? $getKomentarPenyelia[$key]?->komenta ?? '-' : '-' }}
+                                                                                        {{ strlen($getKomentarPenyelia[$key]?->komentar) > 0 ? $getKomentarPenyelia[$key]?->komentar ?? '-' : '-' }}
                                                                                     @endif
                                                                                 </h6>
                                                                             </div>
@@ -439,7 +440,7 @@
                                                                     @elseif ($itemTextTiga->is_rupiah)
                                                                         <p>Rp. {{ number_format((int) $itemTextTiga->opsi_text, 0, ',', '.') }}</p>
                                                                     @else
-                                                                        <p>{{ $itemTiga->opsi_jawaban == 'persen' ? $itemTextTiga->opsi_text : $itemTextTiga->opsi_text  }}{{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</p>
+                                                                        {{-- <p>{{ $itemTiga->opsi_jawaban == 'persen' ? $itemTextTiga->opsi_text : $itemTextTiga->opsi_text  }}{{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</p> --}}
                                                                     @endif
                                                                 </div>
                                                             </div>
@@ -592,7 +593,7 @@
                                                                                                     <div class="field-answer">
                                                                                                         <h6>
                                                                                                             @if (count($getKomentarPenyelia3) > 0)
-                                                                                                                {{ strlen($getKomentarPenyelia3[$key]?->komentar) > 0 ? $getKomentarPenyelia3[$key]?->komenta ?? '-' : '-' }}
+                                                                                                                {{ strlen($getKomentarPenyelia3[$key]?->komentar) > 0 ? $getKomentarPenyelia3[$key]?->komentar ?? '-' : '-' }}
                                                                                                             @endif
                                                                                                         </h6>
                                                                                                     </div>
@@ -665,7 +666,7 @@
                                                                                 <p>{{ $itemEmpat->opsi_jawaban == 'persen' ? $itemTextEmpat->opsi_text : $itemTextEmpat->opsi_text  }}{{ $itemEmpat->opsi_jawaban == 'persen' ? '%' : '' }} {{ $itemEmpat->id == 130 ? 'Bulan' : ''}}</p>
                                                                             @endif
                                                                         </div>
-        
+
                                                                         <input type="hidden" class="form-input mb-3"
                                                                             placeholder="Masukkan komentar" name="komentar_penyelia"
                                                                             value="{{ $itemTextEmpat->nama }}" disabled>
@@ -690,7 +691,7 @@
                                                                     ->where('jawaban.id_pengajuan', $dataUmum->id)
                                                                     ->where('id_item', $itemEmpat->id)
                                                                     ->count();
-    
+
                                                                 $getKomentar = \App\Models\DetailKomentarModel::join('komentar', 'komentar.id', '=', 'detail_komentar.id_komentar')
                                                                     ->where('id_pengajuan', $dataUmum->id)
                                                                     ->where('id_item', $itemEmpat->id)
@@ -762,7 +763,7 @@
                                                                     @endif
                                                                 @endforeach
                                                             @endif
-    
+
                                                     @endif
                                                 @endforeach
                                             </div>
@@ -1079,13 +1080,13 @@
                     <div class="space-y-3">
                         <div class="form-group-1">
                             <div class="input-box">
-                                <label for="">Nominal Disetujui</label>
+                                <label for="">Plafon Disetujui</label>
                                 <input type="text" class="form-input rupiah" name="nominal_disetujui" id="nominal_disetujui" required>
                             </div>
                         </div>
                         <div class="form-group-1">
                             <div class="input-box">
-                                <label for="">Jangka Waktu Disetujui (Bulan)</label>
+                                <label for="">Tenor Disetujui (Bulan)</label>
                                 <div class="flex items-center">
                                     <div class="flex-1">
                                         <input type="number" class="form-input" name="jangka_waktu_disetujui" id="jangka_waktu_disetujui" required>
@@ -1123,7 +1124,6 @@
         $(".accordion-header").click(function() {
             // Toggle the visibility of the next element with class 'accordion-content'
             $(this).next(".accordion-content").slideToggle();
-            // $(this).find(".accordion-icon").toggleClass("rotate-180");
         });
 
         $(document).on('click', '#btn-dec', function() {
@@ -1159,12 +1159,57 @@
             rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
             return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
         }
+
+        $('#modal-approve #nominal_disetujui').on('change', function() {
+            limitJangkaWaktu()
+        })
+        $('#modal-approve #jangka_waktu_disetujui').on('change', function() {
+            limitJangkaWaktu()
+        })
+
+        function limitJangkaWaktu() {
+            var nominal = $('#modal-approve #nominal_disetujui').val()
+            nominal = nominal != '' ? nominal.replaceAll('.','') : 0
+            var limit = 100000000
+            if (parseInt(nominal) <= limit) {
+                var jangka_waktu = $('#modal-approve #jangka_waktu_disetujui').val()
+                if (jangka_waktu != '') {
+                    jangka_waktu = parseInt(jangka_waktu)
+                    if (jangka_waktu > 36) {
+                        $('.jangka_waktu_error').removeClass('hidden')
+                        $('.jangka_waktu_error').html('Jangka waktu maksimal 36 bulan.')
+                    }
+                    else {
+                        $('.jangka_waktu_error').addClass('hidden')
+                        $('.jangka_waktu_error').html('')
+                    }
+                }
+            }
+            else if (parseInt(nominal) > limit) {
+                var jangka_waktu = $('#modal-approve #jangka_waktu_disetujui').val()
+                if (jangka_waktu != '') {
+                    jangka_waktu = parseInt(jangka_waktu)
+                    if (jangka_waktu <= 36) {
+                        $('.jangka_waktu_error').removeClass('hidden')
+                        $('.jangka_waktu_error').html('Jangka waktu harus lebih dari 36 bulan.')
+                    }
+                    else {
+                        $('.jangka_waktu_error').addClass('hidden')
+                        $('.jangka_waktu_error').html('')
+                    }
+                }
+            }
+            else {
+                $('.jangka_waktu_error').addClass('hidden')
+                $('.jangka_waktu_error').html('')
+            }
+        }
     </script>
     <script>
         lightbox.option({
-          'resizeDuration': 200,
-          'wrapAround': true,
-          'maxWidth': 5000,
+            'resizeDuration': 200,
+            'wrapAround': true,
+            'maxWidth': 5000,
         })
     </script>
 @endpush

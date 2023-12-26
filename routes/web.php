@@ -128,11 +128,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::resource('tipe', NewTipeController::class);
             Route::resource('master-item', NewItemController::class);
 
+            Route::get('/kecamatan-by-kabupaten/{id}', [NewDesaController::class, 'kecamatanByKabupaten'])->name('kecamatan-by-kabupaten');
+
             Route::get('/reset-sessions', [NewUserController::class, 'indexSession'])->name('index-session');
             Route::post('/reset-session-post', [NewUserController::class, 'resetSession'])->name('reset-session');
 
             Route::get('/reset-api-sessions', [NewUserController::class, 'indexAPISession'])->name('index-api-session');
             Route::post('/reset-api-session/post', [NewUserController::class, 'resetAPISession'])->name('reset-api-session');
+
+            Route::post('/reset-password/{id}', [NewUserController::class, 'resetPassword'])->name('reset-password');
         });
 
         Route::get('pengajuan-kredir/cetak-surat/{id}',[NewDagulirController::class,"CetakPDF"])->name('pengajuan.cetak-pdf');
@@ -228,7 +232,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('pengajuan-kredit/continue-draft', [PengajuanKreditController::class, 'continueDraft'])->name('pengajuan-kredit.continue');
     Route::get('lanjutkan-draft', [PengajuanKreditController::class, 'showContinueDraft'])->name('pengajuan-kredit.continue-draft');
     Route::get('user-json/{role}', [PengajuanKreditController::class, 'getUserJson'])->name('get_user_json');
-    Route::post('post-skema-kredit/{tempId}', [PengajuanKreditController::class, 'saveSkemaKreditDraft'])->name('save-skema-kredit-draft');
+        Route::post('post-skema-kredit/{tempId}', [PengajuanKreditController::class, 'saveSkemaKreditDraft'])->name('save-skema-kredit-draft');
 
     // master item
     Route::get('/master-item/addEditItem', [MasterItemController::class, 'addEditItem']);

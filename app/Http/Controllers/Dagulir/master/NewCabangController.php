@@ -41,7 +41,10 @@ class NewCabangController extends Controller
             $getCabang = Cabang::orderBy('kode_cabang', 'ASC');
 
             if ($search) {
-                $getCabang->where('kode_cabang', 'LIKE', "%{$search}%")->orWhere('cabang', 'LIKE', "%{$search}%");
+                $getCabang->where('kode_cabang', 'LIKE', "%{$search}%")
+                ->orWhere('cabang', 'LIKE', "%{$search}%")
+                ->orWhere('alamat', 'LIKE', "%{$search}%")
+                ->orWhere('email', 'LIKE', "%{$search}%");
             }
 
             $this->param['data'] = $getCabang->paginate($limit);

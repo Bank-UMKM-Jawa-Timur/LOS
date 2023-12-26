@@ -61,7 +61,7 @@
                 </div>
             </div>
             <div class="modal-footer justify-end">
-                <button class="btn-cancel" data-dismiss-id="modal-add-cabang">
+                <button class="btn-cancel" type="button" data-dismiss-id="modal-add-cabang">
                     Batal
                 </button>
                 <button type="submit" class="btn-submit">Simpan</button>

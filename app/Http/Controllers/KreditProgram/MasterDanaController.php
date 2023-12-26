@@ -51,8 +51,6 @@ class MasterDanaController extends Controller
         try {
             $update = MasterDana::find($id);
             if ($update) {
-                $current = MasterDana::find($id);
-                $total_current_modal = formatNumber($request->get('dana_modal')) + $current->dana_modal;
                 $repo = new MasterDanaRepository;
                 $total_dana = 0;
                 $total_idle = 0;
@@ -62,10 +60,11 @@ class MasterDanaController extends Controller
                     $total_idle += $value->dana_idle;
                     $total = $total_dana + $total_idle;
                 }
-                $total_idle_current = $total_current_modal - $total;
-
-                $update->dana_modal = $total_current_modal;
-                $update->dana_idle = $total_idle_current;
+                if (formatNumber($request->get('dana_modal')) <= $total) {
+                    alert()->warning('Peringatan','Dana tidak sesuai.');
+                    return redirect()->back();
+                }
+                $update->dana_modal = formatNumber($request->get('dana_modal'));
                 $update->update();
 
             }else{
@@ -74,6 +73,7 @@ class MasterDanaController extends Controller
                 $insert->dana_modal = formatNumber($request->get('dana_modal'));
                 $insert->save();
             }
+
             alert()->success('Berhasil','Data berhasil diperbarui!')->autoclose(1500);
             return redirect()->route('master-dana.index');
         } catch (Exception $th) {
@@ -94,7 +94,7 @@ class MasterDanaController extends Controller
         }
         $getCabang = $query->get();
 
-        $status = false;
+        $status = 0;
         $repo = new MasterDanaRepository;
         $total_dana = 0;
         foreach ($repo->getMasterDD() as $key => $value) {
@@ -103,7 +103,7 @@ class MasterDanaController extends Controller
         $total_idle_current = $total_dana;
         $total_dana = MasterDana::first()->dana_modal;
         if ($total_idle_current <= $total_dana) {
-            $status = true;
+            $status = 1;
         }
 
         $limit = $request->has('page_length') ? $request->get('page_length') : 10;
@@ -139,6 +139,7 @@ class MasterDanaController extends Controller
             }
             $total_idle_current = $current->dana_modal - $total;
             if ($total_idle_current <= formatNumber($request->get('dana_modal'))) {
+                DB::commit();
                 alert()->warning('warning','Dana yang tersedia tidak mencukupi.');
                 return redirect()->route('master-dana.cabang.index');
             }
@@ -198,11 +199,13 @@ class MasterDanaController extends Controller
             }
             $total_idle_current = $current->dana_modal - $total;
             if ($total_idle_current < formatNumber($request->get('dana_modal'))) {
+                DB::commit();
                 alert()->warning('warning','Dana yang tersedia tidak mencukupi.');
                 return redirect()->route('master-dana.cabang.index');
             }
 
             if ($check_dana) {
+                DB::commit();
                 alert()->warning('Warning','Dana sudah tersedia.');
                 return redirect()->route('master-dana.cabang.index');
             }else{
@@ -261,7 +264,8 @@ class MasterDanaController extends Controller
         ]);
         try {
             if (formatNumber($request->get('dana_modal_setelah_dari')) < 0) {
-                alert()->error('error','Dana tidak mencukupi.');
+                DB::commit();
+                alert()->warning('Perhatian','Dana tidak mencukupi.');
                 return redirect()->route('master-dana.alih-dana');
             }
             $update_cabang_dari = DanaCabang::where('id_cabang',$request->get('cabang_dari'))->first();
@@ -276,6 +280,7 @@ class MasterDanaController extends Controller
 
             $cabang_dari = Cabang::find($request->get('cabang_dari'))->cabang;
             $cabang_ke = Cabang::find($request->get('cabang_ke'))->cabang;
+            DB::commit();
             alert()->success('Berhasil','Berhasil melakukan perpindahan dana dari cabang : '.$cabang_dari.' ke cabang :'.$cabang_ke.'');
             return redirect()->route('master-dana.alih-dana');
         } catch (Exception $e) {
