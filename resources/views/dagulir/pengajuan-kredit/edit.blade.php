@@ -1,6 +1,8 @@
 @include('components.new.modal.loading')
 @extends('layouts.tailwind-template')
-
+@section('modal')
+    @include('dagulir.pengajuan-kredit.modal.modal-photo')
+@endsection
 @php
 $status = ['belum menikah', 'menikah', 'duda', 'janda'];
 
@@ -136,11 +138,19 @@ $dataIndex = match ($skema) {
                                             <div class="form-group" id="docNIB">
                                                 <div class="input-box">
                                                     <label for="">{{ $itemNIB->nama }}</label>
+                                                    @php
+                                                        $file = edit_text_dagulir($pengajuan->id, $itemNIB->id)?->opsi_text;
+                                                    @endphp
+                                                    @if ($file)
+                                                        <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
+                                                            data-title="{{$itemNIB->nama}}" data-filepath="{{asset('../upload')}}/{{$pengajuan?->id}}/{{$itemNIB->id}}/{{$file}}">Preview</a>
+                                                    @endif
                                                     <input type="hidden" name="id_item_file[{{ $itemNIB->id }}]" value="{{ $itemNIB->id }}"
                                                         id="docNIB_id">
                                                     <input type="file" name="upload_file[{{ $itemNIB->id }}]" data-id="{{ edit_text_dagulir($pengajuan->id, $itemNIB->id)?->id }}"
                                                         placeholder="Masukkan informasi {{ $itemNIB->nama }}" class="form-input limit-size"
-                                                        id="file_nib">
+                                                        id="file_nib"
+                                                        value="{{$file}}">
                                                     <span class="text-red-500 m-0" style="display: none" id="docNIB_text">Besaran file
                                                         tidak boleh lebih dari 5 MB</span>
                                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
@@ -166,11 +176,19 @@ $dataIndex = match ($skema) {
                                             <div class="form-group" id="docSKU">
                                                 <div class="input-box">
                                                     <label for="">{{ $itemSKU->nama }}</label>
+                                                    @php
+                                                        $file = edit_text_dagulir($pengajuan->id, $itemSKU->id)?->opsi_text;
+                                                    @endphp
+                                                    @if ($file)
+                                                        <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
+                                                            data-title="Dokumen Surat Keterangan Usaha" data-filepath="{{asset('../upload')}}/{{$pengajuan?->id}}/{{$itemSKU->id}}/{{$file}}">Preview</a>
+                                                    @endif
                                                     <input type="hidden" name="id_item_file[{{ $itemSKU->id }}]" value="{{ $itemSKU->id }}"
                                                         id="docSKU_id">
                                                     <input type="file" name="upload_file[{{ $itemSKU->id }}]" id="surat_keterangan_usaha_file"
                                                         data-id="{{ edit_text_dagulir($pengajuan->id, $itemSKU->id)?->id }}" placeholder="Masukkan informasi {{ $itemSKU->nama }}"
-                                                        class="form-input limit-size">
+                                                        class="form-input limit-size"
+                                                        value="{{$file}}">
                                                     <span class="text-red-500 m-0" style="display: none" id="docSKU_text">Besaran file
                                                         tidak boleh lebih dari 5 MB</span>
                                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
@@ -195,10 +213,18 @@ $dataIndex = match ($skema) {
                                             <div class="form-group" id="docNPWP">
                                                 <div class="input-box">
                                                     <label for="">{{ $itemNPWP->nama }}</label>
+                                                    @php
+                                                        $file = edit_text_dagulir($pengajuan->id, $itemNPWP ->id)?->opsi_text;
+                                                    @endphp
+                                                    @if ($file)
+                                                        <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
+                                                            data-title="{{ $itemNPWP->nama }}" data-filepath="{{asset('../upload')}}/{{$pengajuan?->id}}/{{$itemNPWP ->id}}/{{$file}}">Preview</a>
+                                                    @endif
                                                     <input type="hidden" name="id_item_file[{{ $itemNPWP->id }}]" value="{{ $itemNPWP->id }}"
                                                         id="docNPWP_id">
                                                     <input type="file" name="upload_file[{{ $itemNPWP->id }}]" id="npwp_file" data-id="{{ edit_text_dagulir($pengajuan->id, $itemNPWP->id)?->id }}"
-                                                        placeholder="Masukkan informasi {{ $itemNPWP->nama }}" class="form-input limit-size">
+                                                        placeholder="Masukkan informasi {{ $itemNPWP->nama }}" class="form-input limit-size"
+                                                        value="{{$file}}">
                                                     <span class="text-red-500 m-0" style="display: none" id="docNPWP_text">Besaran file
                                                         tidak boleh lebih dari 5 MB</span>
                                                     @if (isset($key) && $errors->has('dataLevelTiga.' . $key))
@@ -304,6 +330,13 @@ $dataIndex = match ($skema) {
                                                 <div class="form-group">
                                                     <div class="input-box">
                                                         <label for="">{{ $item->nama }}</label>
+                                                        @php
+                                                            $file = edit_text_dagulir($pengajuan->id, $itemNIB->id)?->opsi_text;
+                                                        @endphp
+                                                        @if ($file)
+                                                            <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
+                                                                data-title="{{$item->nama}}" data-filepath="{{asset('../upload')}}/{{$pengajuan?->id}}/{{$itemNIB->id}}/{{$file}}">Preview</a>
+                                                        @endif
                                                         {{-- <input type="hidden" name="opsi_jawaban[]" value="{{ $item->opsi_jawaban }}" --}} {{--
                                                                         id="{{ $idLevelDua }}"> --}}
                                                         <input type="hidden" name="id_item_file[{{ $item->id }}]" value="{{ $item->id }}"
@@ -492,29 +525,57 @@ $dataIndex = match ($skema) {
                                                         <div class="form-group file-wrapper item-{{ $itemTiga->id }}">
                                                             <div class="input-box">
                                                                 <label for="">{{ $itemTiga->nama }}</label>
-                                                                <div class="input-box mb-4">
-                                                                    <div class="flex gap-4">
-                                                                        <input type="hidden" name="id_item_file[{{ $itemTiga->id }}][]"
-                                                                            value="{{ $itemTiga->id }}" id="">
-                                                                        <input type="file" name="upload_file[{{ $itemTiga->id }}][]"
-                                                                            id="{{ $idLevelTiga }}" data-id="{{ edit_text_dagulir($pengajuan->id, $itemTiga->id)?->id }}"
-                                                                            placeholder="Masukkan informasi {{ $itemTiga->nama }}"
-                                                                            class="form-input limit-size file-usaha" accept="image/*">
-                                                                        <span class="text-red-500 m-0" style="display: none">Maximum upload
-                                                                            file size is 15 MB</span>
-                                                                        @if ($itemTiga->is_multiple)
-                                                                            <div class="flex gap-2 multiple-action">
-                                                                                <button type="button" class="btn-add" data-item-id="{{$itemTiga->id}}-{{strtolower(str_replace(' ', '_', $itemTiga->nama))}}">
-                                                                                    <iconify-icon icon="fluent:add-16-filled" class="mt-2"></iconify-icon>
-                                                                                </button>
-                                                                                <button type="button" class="btn-minus hidden" data-item-id="{{$itemTiga->id}}-{{strtolower(str_replace(' ', '_', $itemTiga->nama))}}">
-                                                                                    <iconify-icon icon="lucide:minus" class="mt-2"></iconify-icon>
-                                                                                </button>
-                                                                            </div>
+                                                                @php
+                                                                    $is_multiple = $itemTiga->is_multiple;
+                                                                    $files = edit_text_dagulir($pengajuan->id, $itemTiga->id, $is_multiple);
+                                                                @endphp
+                                                                @if ($is_multiple)
+                                                                    @foreach ($files as $f)
+                                                                        @if ($f)
+                                                                            <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
+                                                                                data-title="{{$itemTiga->nama}}" data-filepath="{{asset('../upload')}}/{{$pengajuan?->id}}/{{$itemTiga->id}}/{{$f->opsi_text}}">Preview</a>
                                                                         @endif
+                                                                        <div class="input-box mb-4">
+                                                                            <div class="flex gap-4">
+                                                                                <input type="hidden" name="id_item_file[{{ $itemTiga->id }}][]"
+                                                                                    value="{{ $itemTiga->id }}" id="">
+                                                                                <input type="file" name="upload_file[{{ $itemTiga->id }}][]"
+                                                                                    id="{{ $idLevelTiga }}" data-id="{{ $f->id }}"
+                                                                                    placeholder="Masukkan informasi {{ $itemTiga->nama }}"
+                                                                                    class="form-input limit-size file-usaha" accept="image/*"
+                                                                                    value="{{$f->opsi_text}}">
+                                                                                <span class="text-red-500 m-0" style="display: none">Maximum upload
+                                                                                    file size is 15 MB</span>
+                                                                                <div class="flex gap-2 multiple-action">
+                                                                                    <button type="button" class="btn-add" data-item-id="{{$itemTiga->id}}-{{strtolower(str_replace(' ', '_', $itemTiga->nama))}}">
+                                                                                        <iconify-icon icon="fluent:add-16-filled" class="mt-2"></iconify-icon>
+                                                                                    </button>
+                                                                                    <button type="button" class="btn-minus hidden" data-item-id="{{$itemTiga->id}}-{{strtolower(str_replace(' ', '_', $itemTiga->nama))}}">
+                                                                                        <iconify-icon icon="lucide:minus" class="mt-2"></iconify-icon>
+                                                                                    </button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    @endforeach
+                                                                @else
+                                                                    @if ($files)
+                                                                        <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
+                                                                            data-title="{{$itemTiga->nama}}" data-filepath="{{asset('../upload')}}/{{$pengajuan?->id}}/{{$itemTiga->id}}/{{$files->opsi_text}}">Preview</a>
+                                                                    @endif
+                                                                    <div class="input-box mb-4">
+                                                                        <div class="flex gap-4">
+                                                                            <input type="hidden" name="id_item_file[{{ $itemTiga->id }}][]"
+                                                                                value="{{ $itemTiga->id }}" id="">
+                                                                            <input type="file" name="upload_file[{{ $itemTiga->id }}][]"
+                                                                                id="{{ $idLevelTiga }}" data-id="{{ edit_text_dagulir($pengajuan->id, $itemTiga->id)?->id }}"
+                                                                                placeholder="Masukkan informasi {{ $itemTiga->nama }}"
+                                                                                class="form-input limit-size file-usaha" accept="image/*"
+                                                                                value="{{$files->opsi_text}}">
+                                                                            <span class="text-red-500 m-0" style="display: none">Maximum upload
+                                                                                file size is 15 MB</span>
+                                                                        </div>
                                                                     </div>
-                                                                    {{--  <span class="filename" style="display: inline;">{{ edit_text_dagulir($pengajuan->id, $itemTiga->id)?->opsi_text }}</span>  --}}
-                                                                </div>
+                                                                @endif
                                                             </div>
                                                         </div>
                                                     @elseif ($itemTiga->opsi_jawaban == 'long text')

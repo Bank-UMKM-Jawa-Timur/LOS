@@ -10,22 +10,8 @@
     function limitJangkaWaktu() {
         var nominal = $('#jumlah_kredit').val()
         nominal = nominal != '' ? nominal.replaceAll('.','') : 0
-        var limit = 100000000
-        if (parseInt(nominal) <= limit) {
-            var jangka_waktu = $('#jangka_waktu').val()
-            if (jangka_waktu != '') {
-                jangka_waktu = parseInt(jangka_waktu)
-                if (jangka_waktu > 36) {
-                    $('.jangka_waktu_error').removeClass('hidden')
-                    $('.jangka_waktu_error').html('Jangka waktu maksimal 36 bulan.')
-                }
-                else {
-                    $('.jangka_waktu_error').addClass('hidden')
-                    $('.jangka_waktu_error').html('')
-                }
-            }
-        }
-        else if (parseInt(nominal) > limit) {
+        var limit = 50000000
+        if (parseInt(nominal) > limit) {
             var jangka_waktu = $('#jangka_waktu').val()
             if (jangka_waktu != '') {
                 jangka_waktu = parseInt(jangka_waktu)
@@ -48,10 +34,20 @@
 <script>
     //var isPincetar = "{{Request::url()}}".includes('pincetar');
     let dataAspekArr;
-    $('#docSKU').hide();
-    $('#surat_keterangan_usaha').hide();
-    $('#nib').hide();
-    $('#docNIB').hide();
+    const ijin_usaha = $('#ijin_usaha').val()
+    if (ijin_usaha == 'nib') {
+        $('#docSKU').hide();
+        $('#surat_keterangan_usaha').hide();
+    }
+
+    if (ijin_usaha == 'surat_keterangan_usaha') {
+        $('#nib').hide();
+        $('#docNIB').hide();
+    }
+
+    if (ijin_usaha == 'surat_keterangan_usaha') {
+        $('#npwpsku').show()
+    }
     //make input readonly
     $('#ratio_coverage').attr('readonly', true);
     $('#ratio_tenor_asuransi').attr('readonly', true);
@@ -77,74 +73,6 @@
 
     var x = 1;
 
-    $("#status").change(function() {
-        let value = $(this).val();
-        $("#foto-ktp-istri").empty();
-        $("#foto-ktp-suami").empty();
-        $("#foto-ktp-nasabah").empty();
-        $("#foto-ktp-istri").removeClass('form-group');
-        $("#foto-ktp-suami").removeClass('form-group');
-        $("#foto-ktp-nasabah").removeClass('form-group');
-
-        if (value == "menikah") {
-            $("#foto-ktp-istri").addClass('form-group')
-            $("#foto-ktp-suami").addClass('form-group')
-            $("#foto-ktp-istri").append(`
-                <label for="">{{ $itemKTPIs->nama }}</label>
-                <input type="hidden" name="id_item_file[{{ $itemKTPIs->id }}]" value="{{ $itemKTPIs->id }}" id="">
-                <input type="file" name="upload_file[{{ $itemKTPIs->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPIs->nama }}" class="form-input limit-size" id="foto_ktp_istri">
-                <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
-                @if (isset($key) && $errors->has('dataLevelDua.' . $key))
-                    <div class="invalid-feedback">
-                        {{ $errors->first('dataLevelDua.' . $key) }}
-                    </div>
-                @endif
-                <span class="filename" style="display: inline;"></span>
-            `)
-            $("#foto-ktp-suami").append(`
-                    <label for="">{{ $itemKTPSu->nama }}</label>
-                    <input type="hidden" name="id_item_file[{{ $itemKTPSu->id }}]" value="{{ $itemKTPSu->id }}" id="">
-                    <input type="file" name="upload_file[{{ $itemKTPSu->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPSu->nama }}" class="form-input limit-size" id="foto_ktp_suami">
-                    <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
-                    @if (isset($key) && $errors->has('dataLevelDua.' . $key))
-                        <div class="invalid-feedback">
-                            {{ $errors->first('dataLevelDua.' . $key) }}
-                        </div>
-                    @endif
-                    <span class="filename" style="display: inline;"></span>
-            `);
-        } else {
-            $("#foto-ktp-nasabah").addClass('form-group-1')
-            $("#foto-ktp-nasabah").append(`
-                @isset($itemKTPNas)
-                <label for="">{{ $itemKTPNas->nama }}</label>
-                <input type="hidden" name="id_item_file[{{ $itemKTPNas->id }}]" value="{{ $itemKTPNas->id }}" id="">
-                <input type="file" name="upload_file[{{ $itemKTPNas->id }}]" data-id="" placeholder="Masukkan informasi {{ $itemKTPNas->nama }}" class="form-input limit-size" id="foto_ktp_nasabah">
-                <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
-                @if (isset($key) && $errors->has('dataLevelDua.' . $key))
-                    <div class="invalid-feedback">
-                        {{ $errors->first('dataLevelDua.' . $key) }}
-                    </div>
-                @endif
-                <span class="filename" style="display: inline;"></span>
-                @endisset
-            `)
-        }
-        $('.limit-size').on('change', function() {
-            var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-            if (size > 5) {
-                $(this).next().css({
-                    "display": "block"
-                });
-                this.value = ''
-            } else {
-                $(this).next().css({
-                    "display": "none"
-                });
-            }
-        })
-    });
-
     $('#kabupaten').change(function() {
         var kabID = $(this).val();
         if (kabID) {
@@ -153,8 +81,7 @@
                 url: "{{ route('getKecamatan') }}?kabID=" + kabID,
                 dataType: 'JSON',
                 success: function(res) {
-                    console.log('kecamatan');
-                    console.log(res);
+                    //    //console.log(res);
                     if (res) {
                         $("#kecamatan").empty();
                         $("#desa").empty();
@@ -162,7 +89,7 @@
                         $("#desa").append('<option value="0">---Pilih Desa---</option>');
                         $.each(res, function(nama, kode) {
                             $('#kecamatan').append(`
-                                <option value="${kode}" ${kode == {{ $duTemp?->kec_ktp ?? 'null' }} ? 'selected' : '' }>${nama}</option>
+                                <option value="${kode}">${nama}</option>
                             `);
                         });
 
@@ -194,7 +121,7 @@
                         $("#desa").append('<option value="0">---Pilih Desa---</option>');
                         $.each(res, function(nama, kode) {
                             $('#desa').append(`
-                                <option value="${kode}" ${kode == {{ $duTemp?->desa_ktp ?? 'null' }} ? 'selected' : '' }>${nama}</option>
+                                <option value="${kode}">${nama}</option>
                             `);
                         });
                     } else {
@@ -378,7 +305,7 @@
 
         $.ajax({
             type: "get",
-            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}&idCalonNasabah={{ $pengajuan?->id }}`,
+            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}`,
             dataType: "json",
             success: function(response) {
                 if (kategoriJaminan != "Tidak Memiliki Jaminan Tambahan") {
@@ -386,14 +313,16 @@
                     $("#jaminan_tambahan").show()
                     // add item by kategori
                     $('#select_kategori_jaminan_tambahan').append(`
-                        <label for="">${response.item.nama}</label>
-                        <select name="dataLevelEmpat[${response.item.id}]" id="itemByKategori" class="form-input cek-sub-column"
-                            data-id_item="${response.item.id}">
-                            <option value=""> --Pilih Opsi -- </option>
-                            </select>
+                        <div class="input-box">
+                            <label for="">${response.item.nama}</label>
+                            <select name="dataLevelEmpat[${response.item.id}]" id="itemByKategori" class="form-input cek-sub-column"
+                                data-id_item="${response.item.id}">
+                                <option value=""> --Pilih Opsi -- </option>
+                                </select>
 
-                        <div id="item${response.item.id}">
+                            <div id="item${response.item.id}">
 
+                            </div>
                         </div>
                     `);
                     // add opsi dari item
@@ -426,52 +355,28 @@
                             name_lowercase = name_lowercase.replaceAll(' ', '_')
                             if (valItem.nama == 'Foto') {
                                 $('#bukti_pemilikan_jaminan_tambahan').append(`
-                                @forelse (edit_dagulir($pengajuan->id, 148, true) as $tempData)
-                                <div class="form-group file-wrapper item-${valItem.id}">
-                                    <label for="">${valItem.nama}</label>
-                                    <div class="input-box mb-4">
-                                        <div class="flex gap-4">
-                                            <input type="hidden" name="id_item_file[${valItem.id}][]" value="${valItem.id}" id="">
-                                            <input type="file" name="upload_file[${valItem.id}][]" data-id="{{ $tempData->id }}"
-                                                placeholder="Masukkan informasi ${valItem.nama}"
-                                                class="form-control limit-size" id="${valItem.nama.toString().replaceAll(" ", "_").toLowerCase()}"
-                                                value="{{$tempData->opsi_text}}">
-                                                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
-                                            <span class="filename" style="display: inline;">{{ $tempData->opsi_text }}</span>
-                                        </div>
-                                        <div class="flex gap-2 multiple-action">
-                                            <button type="button" class="btn-add" data-item-id="${valItem.id}-${name_lowercase}">
-                                                <iconify-icon icon="fluent:add-16-filled" class="mt-2"></iconify-icon>
-                                            </button>
-                                            <button type="button" class="btn-minus hidden" data-item-id="${valItem.id}-${name_lowercase}">
-                                                <iconify-icon icon="lucide:minus" class="mt-2"></iconify-icon>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                @empty
-                                <div class="form-group file-wrapper item-${valItem.id}">
-                                    <label for="">${valItem.nama}</label>
-                                    <div class="input-box mb-4">
-                                        <div class="flex gap-4">
-                                            <input type="hidden" name="id_item_file[${valItem.id}][]" value="${valItem.id}" id="">
-                                            <input type="file" name="upload_file[${valItem.id}][]" data-id=""
-                                                placeholder="Masukkan informasi ${valItem.nama}"
-                                                class="form-control limit-size" id="${valItem.nama.toString().replaceAll(" ", "_").toLowerCase()}">
-                                                <span class="invalid-tooltip" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
-                                            <span class="filename" style="display: inline;"></span>
-                                        </div>
-                                        <div class="flex gap-2 multiple-action">
-                                            <button type="button" class="btn-add" data-item-id="${valItem.id}-${name_lowercase}">
-                                                <iconify-icon icon="fluent:add-16-filled" class="mt-2"></iconify-icon>
-                                            </button>
-                                            <button type="button" class="btn-minus hidden" data-item-id="${valItem.id}-${name_lowercase}">
-                                                <iconify-icon icon="lucide:minus" class="mt-2"></iconify-icon>
-                                            </button>
+                                    <div class="form-group file-wrapper item-${valItem.id}">
+                                        <label for="">${valItem.nama}</label>
+                                        <div class="input-box mb-4">
+                                            <div class="flex gap-4">
+                                                <input type="hidden" name="id_item_file[${valItem.id}][]"
+                                                    value="${valItem.id}" id="">
+                                                <input type="file" id="${valItem.nama.toString().replaceAll(" ", "_")}"
+                                                    name="upload_file[${valItem.id}][]" data-id=""
+                                                    placeholder="Masukkan informasi ${valItem.nama}" class="form-input limit-size">
+                                                <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                                                <span class="filename" style="display: inline;"></span>
+                                                <div class="flex gap-2 multiple-action">
+                                                    <button type="button" class="btn-add" data-item-id="${valItem.id}-${name_lowercase}">
+                                                        <iconify-icon icon="fluent:add-16-filled" class="mt-2"></iconify-icon>
+                                                    </button>
+                                                    <button type="button" class="btn-minus hidden" data-item-id="${valItem.id}-${name_lowercase}">
+                                                        <iconify-icon icon="lucide:minus" class="mt-2"></iconify-icon>
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                @endforelse
                                 `);
                             } else {
                                 if (response.dataJawaban[i] != null && response.dataJawaban[
@@ -515,14 +420,16 @@
                     var skor = 0;
                     var opt = 0;
                     $('#select_kategori_jaminan_tambahan').append(`
-                        <label for="">${response.item.nama}</label>
-                        <select name="dataLevelEmpat[${response.item.id}]" id="itemByKategori" class="form-input cek-sub-column"
-                            data-id_item="${response.item.id}">
-                            <option value=""> --Pilih Opsi -- </option>
-                            </select>
+                        <div class="input-box">
+                            <label for="">${response.item.nama}</label>
+                            <select name="dataLevelEmpat[${response.item.id}]" id="itemByKategori" class="form-input cek-sub-column"
+                                data-id_item="${response.item.id}">
+                                <option value=""> --Pilih Opsi -- </option>
+                                </select>
 
-                        <div id="item${response.item.id}">
+                            <div id="item${response.item.id}">
 
+                            </div>
                         </div>
                     `);
                     // add opsi dari item
@@ -541,21 +448,163 @@
                 }
             }
         })
-        // Limit Upload
-        $('.limit-size').on('change', function() {
-            var size = (this.files[0].size / 1024 / 1024).toFixed(2)
-            if (size > 5) {
-                $(this).next().css({
-                    "display": "block"
-                });
-                this.value = ''
-            } else {
-                $(this).next().css({
-                    "display": "none"
-                });
+    });
+    $(document).ready(function() {
+        //clear item
+        $('#select_kategori_jaminan_tambahan').empty();
+
+        // clear bukti pemilikan
+        $('#bukti_pemilikan_jaminan_tambahan').empty();
+
+        //get item by kategori
+        let kategoriJaminan = $('#kategori_jaminan_tambahan').val();
+
+        $.ajax({
+            type: "get",
+            url: `${urlGetItemByKategori}?kategori=${kategoriJaminan}`,
+            dataType: "json",
+            success: function(response) {
+                if (kategoriJaminan != "Tidak Memiliki Jaminan Tambahan") {
+                    $("#select_kategori_jaminan_tambahan").show()
+                    $("#jaminan_tambahan").show()
+                    // add item by kategori
+                    $('#select_kategori_jaminan_tambahan').append(`
+                        <div class="input-box">
+                            <label for="">${response.item.nama}</label>
+                            <select name="dataLevelEmpat[${response.item.id}]" id="itemByKategori" class="form-input cek-sub-column"
+                                data-id_item="${response.item.id}">
+                                <option value=""> --Pilih Opsi -- </option>
+                                </select>
+
+                            <div id="item${response.item.id}">
+
+                            </div>
+                        </div>
+                    `);
+                    // add opsi dari item
+                    $.each(response.item.option, function(i, valOption) {
+                        // //console.log(valOption.skor);
+                        $('#itemByKategori').append(`
+                        <option value="${valOption.skor}-${valOption.id}" ${(response.dataSelect == valOption.id) ? 'selected' : ''}>
+                        ${valOption.option}
+                        </option>`);
+                    });
+
+                    // add item bukti pemilikan
+                    var isCheck = kategoriJaminan != 'Kendaraan Bermotor' ?
+                        "<input type='checkbox' class='checkKategori'>" : ""
+                    var isDisabled = kategoriJaminan != 'Kendaraan Bermotor' ? 'disabled' : ''
+                    $.each(response.itemBuktiPemilikan, function(i, valItem) {
+                        if (valItem.nama == 'Atas Nama') {
+                            $('#bukti_pemilikan_jaminan_tambahan').append(`
+                                <div class="form-group aspek_jaminan_kategori">
+                                    <label>${valItem.nama}</label>
+                                    <input type="hidden" name="id_level[${valItem.id}]" value="${valItem.id}" id="" class="input">
+                                    <input type="hidden" name="opsi_jawaban[${valItem.id}]"
+                                        value="${valItem.opsi_jawaban}" id="" class="input">
+                                    <input type="text" maxlength="255" id="atas_nama" name="informasi[${valItem.id}]" placeholder="Masukkan informasi"
+                                        class="form-input input" value="${response.dataJawaban[i]}">
+                                </div>
+                            `);
+                        } else {
+                            var name_lowercase = valItem.nama.toLowerCase();
+                            name_lowercase = name_lowercase.replaceAll(' ', '_')
+                            if (valItem.nama == 'Foto') {
+                                $('#bukti_pemilikan_jaminan_tambahan').append(`
+                                    <div class="form-group file-wrapper item-${valItem.id}">
+                                        <label for="">${valItem.nama}</label>
+                                        <div class="input-box mb-4">
+                                            <div class="flex gap-4">
+                                                <input type="hidden" name="id_item_file[${valItem.id}][]"
+                                                    value="${valItem.id}" id="">
+                                                <input type="file" id="${valItem.nama.toString().replaceAll(" ", "_")}"
+                                                    name="upload_file[${valItem.id}][]" data-id=""
+                                                    placeholder="Masukkan informasi ${valItem.nama}" class="form-input limit-size">
+                                                <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
+                                                <span class="filename" style="display: inline;"></span>
+                                                <div class="flex gap-2 multiple-action">
+                                                    <button type="button" class="btn-add" data-item-id="${valItem.id}-${name_lowercase}">
+                                                        <iconify-icon icon="fluent:add-16-filled" class="mt-2"></iconify-icon>
+                                                    </button>
+                                                    <button type="button" class="btn-minus hidden" data-item-id="${valItem.id}-${name_lowercase}">
+                                                        <iconify-icon icon="lucide:minus" class="mt-2"></iconify-icon>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `);
+                            } else {
+                                if (response.dataJawaban[i] != null && response.dataJawaban[
+                                        i] != "") {
+                                    if (kategoriJaminan != 'Kendaraan Bermotor') {
+                                        isCheck =
+                                            "<input type='checkbox' class='checkKategori' checked>"
+                                        isDisabled = ""
+                                    }
+                                }
+                                $('#bukti_pemilikan_jaminan_tambahan').append(`
+                                    <div class="form-group aspek_jaminan_kategori">
+                                        <label>${isCheck} ${valItem.nama}</label>
+                                        <input type="hidden" name="id_level[${valItem.id}]" value="${valItem.id}" id="" class="input" ${isDisabled}>
+                                        <input type="hidden" name="opsi_jawaban[${valItem.id}]"
+                                            value="${valItem.opsi_jawaban}" id="" class="input" ${isDisabled}>
+                                        <input type="text" maxlength="255" id="${valItem.nama.toString().replaceAll(" ", "_")}" name="informasi[${valItem.id}]" placeholder="Masukkan informasi"
+                                            class="form-input input" ${isDisabled} value="${response.dataJawaban[i]}">
+                                    </div>
+                                `);
+                            }
+                        }
+                    });
+
+                    $(".checkKategori").click(function() {
+                        var input = $(this).closest('.form-group').find(".input")
+                        // var input_id = $(this).closest('.form-group').find("input_id").last()
+                        // var input_opsi_jawaban = $(this).closest('.form-group').find("input_opsi_jawaban").last()
+                        if ($(this).is(':checked')) {
+                            input.prop('disabled', false)
+                            // input_id.prop('disabled',false)
+                            // input_opsi_jawaban.prop('disabled',false)
+                        } else {
+                            input.val('')
+                            input.prop('disabled', true)
+                            // input_id.prop('disabled',true)
+                            // input_opsi_jawaban.prop('disabled',true)
+                        }
+                    })
+                } else {
+                    var skor = 0;
+                    var opt = 0;
+                    $('#select_kategori_jaminan_tambahan').append(`
+                        <div class="input-box">
+                            <label for="">${response.item.nama}</label>
+                            <select name="dataLevelEmpat[${response.item.id}]" id="itemByKategori" class="form-input cek-sub-column"
+                                data-id_item="${response.item.id}">
+                                <option value=""> --Pilih Opsi -- </option>
+                                </select>
+
+                            <div id="item${response.item.id}">
+
+                            </div>
+                        </div>
+                    `);
+                    // add opsi dari item
+                    $.each(response.item.option, function(i, valOption) {
+                        skor = valOption.skor;
+                        opt = valOption.id;
+                        // //console.log(valOption.skor);
+                        $('#itemByKategori').append(`
+                        <option value="${valOption.skor}-${valOption.id}" selected>
+                        ${valOption.option}
+                        </option>`);
+                    });
+                    $("#itemByKategori").val(skor + '-' + opt);
+                    $("#select_kategori_jaminan_tambahan").hide()
+                    $("#jaminan_tambahan").hide()
+                }
             }
         })
-    });
+    })
     // end item kategori jaminan tambahan cek apakah milih tanah, kendaraan bermotor, atau tanah dan bangunan
 
     // milih ijin usaha
@@ -573,6 +622,7 @@
     $('#docNPWP_upload_file').attr('disabled', true);
     $('#ijin_usaha').change(function(e) {
         let ijinUsaha = $(this).val();
+        $('#isNpwp').prop('checked', false)
         $('#npwpsku').hide();
         if (ijinUsaha == 'nib') {
             $('#npwpsku').hide();
@@ -600,12 +650,14 @@
             $('#file_nib').removeAttr('disabled');
 
             $('#npwp').show();
+            console.log('show npwp')
             $('#npwp_id').removeAttr('disabled');
             $('#npwp_text').removeAttr('disabled');
             $('#npwp_opsi_jawaban').removeAttr('disabled');
             $('#npwp_file').removeAttr('disabled');
 
             $('#docNPWP').show();
+            console.log('show npwp')
             $('#docNPWP_id').removeAttr('disabled');
             $('#docNPWP_text').removeAttr('disabled');
             $('#docNPWP_text').val('');
@@ -630,9 +682,7 @@
             $('#surat_keterangan_usaha_id').removeAttr('disabled');
             $('#surat_keterangan_usaha_text').removeAttr('disabled');
             $('#surat_keterangan_usaha_file').removeAttr('disabled');
-            var sku_val = "{{$sku}}"
-            if (sku_val == '')
-                $('#surat_keterangan_usaha_text').val('');
+            $('#surat_keterangan_usaha_text').val('');
             $('#surat_keterangan_usaha_opsi_jawaban').removeAttr('disabled');
 
             $('#docSKU').show();
@@ -652,7 +702,7 @@
             $('#docNPWP_text').attr('disabled', true);
             $('#docNPWP_text').val('');
             $('#docNPWP_upload_file').attr('disabled', true);
-        } else if (ijinUsaha == 'tidak_ada_legalitas_usaha') {
+        } else {
             $('#npwpsku').hide();
             $('#nib').hide();
             $('#nib_id').attr('disabled', true);
@@ -693,36 +743,6 @@
             $('#docNPWP_text').attr('disabled', true);
             $('#docNPWP_text').val('');
             $('#docNPWP_upload_file').attr('disabled', true);
-        } else {
-            $('#npwpsku').hide();
-            $('#nib').hide();
-            $('#nib_id').attr('disabled', true);
-            $('#nib_text').attr('disabled', true);
-            $('#nib_text').val('');
-            $('#nib_opsi_jawaban').attr('disabled', true);
-
-            $('#docNIB').hide();
-            $('#docNIB_id').attr('disabled', true);
-            $('#docNIB_text').attr('disabled', true);
-            $('#docNIB_text').val('');
-            $('#docNIB_upload_file').attr('disabled', true);
-
-            $('#surat_keterangan_usaha').hide();
-            $('#surat_keterangan_usaha_id').attr('disabled', true);
-            $('#surat_keterangan_usaha_text').attr('disabled', true);
-            $('#surat_keterangan_usaha_text').val('');
-            $('#surat_keterangan_usaha_opsi_jawaban').attr('disabled', true);
-
-            $('#npwp').show();
-            $('#npwp_id').removeAttr('disabled');
-            $('#npwp_text').removeAttr('disabled');
-            $('#npwp_opsi_jawaban').removeAttr('disabled');
-
-            $('#docNPWP').show();
-            $('#docNPWP_id').removeAttr('disabled');
-            $('#docNPWP_text').removeAttr('disabled');
-            $('#docNPWP_text').val('');
-            $('#docNPWP_upload_file').removeAttr('disabled');
         }
     });
     // end milih ijin usaha
@@ -1155,7 +1175,7 @@
                         $("#kecamatan").append('<option>---Pilih Kecamatan---</option>');
                         $.each(res, function(nama, kode) {
                             $('#kecamatan').append(`
-                                <option value="${kode}" ${kode == {{ $duTemp?->kec_ktp ?? 'null' }} ? 'selected' : '' }>${nama}</option>
+                                <option value="${kode}">${nama}</option>
                             `);
                         });
 
@@ -1182,7 +1202,7 @@
                         $("#kecamatan_domisili").append('<option>---Pilih Kecamatan---</option>');
                         $.each(res, function(nama, kode) {
                             $('#kecamatan_domisili').append(`
-                                <option value="${kode}" ${kode == {{ $duTemp?->kec_dom ?? null }} ? 'selected' : ''}>${nama}</option>
+                                <option value="${kode}">${nama}</option>
                             `);
                         });
 
@@ -1209,7 +1229,7 @@
                         $("#kecamatan_usaha").append('<option>---Pilih Kecamatan---</option>');
                         $.each(res, function(nama, kode) {
                             $('#kecamatan_usaha').append(`
-                                <option value="${kode}" ${kode == {{ $duTemp?->kec_usaha ?? null }} ? 'selected' : ''}>${nama}</option>
+                                <option value="${kode}">${nama}</option>
                             `);
                         });
 
@@ -1257,6 +1277,54 @@
             }
         }
     })
+
+    function validatePhoneNumber(input) {
+        var phoneNumber = input.value.replace(/\D/g, '');
+
+        if (phoneNumber.length > 15) {
+            phoneNumber = phoneNumber.substring(0, 15);
+        }
+
+        input.value = phoneNumber;
+    }
+
+    function validateNIK(input) {
+        var nikNumber = input.value.replace(/\D/g, '');
+
+        if (nikNumber.length > 16) {
+            nikNumber = nikNumber.substring(0, 16);
+        }
+
+        input.value = nikNumber;
+    }
+
+    $(document).ready(function() {
+        var inputRupiah = $('.rupiah')
+        $.each(inputRupiah, function(i, obj) {
+            $(this).val(formatrupiah(obj.value))
+        })
+    })
+
+    $('.rupiah').keyup(function(e) {
+        var input = $(this).val()
+        $(this).val(formatrupiah(input))
+    });
+    function formatrupiah(angka, prefix) {
+        var number_string = angka.replace(/[^,\d]/g, '').toString(),
+            split = number_string.split(','),
+            sisa = split[0].length % 3,
+            rupiah = split[0].substr(0, sisa),
+            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+        // tambahkan titik jika yang di input sudah menjadi angka ribuan
+        if (ribuan) {
+            separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
+        }
+
+        rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+        return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
+    }
 
     $("#usaha").on("change", function() {
         if ($(this).val() == "tanah") {
@@ -1385,53 +1453,8 @@
         }
     });
 
-    function validatePhoneNumber(input) {
-        var phoneNumber = input.value.replace(/\D/g, '');
-
-        if (phoneNumber.length > 15) {
-            phoneNumber = phoneNumber.substring(0, 15);
-        }
-
-        input.value = phoneNumber;
-    }
-
-    function validateNIK(input) {
-        var nikNumber = input.value.replace(/\D/g, '');
-
-        if (nikNumber.length > 16) {
-            nikNumber = nikNumber.substring(0, 16);
-        }
-
-        input.value = nikNumber;
-    }
-
-    $('.rupiah').keyup(function(e) {
-        var input = $(this).val()
-        $(this).val(formatrupiah(input))
-    });
-    function formatrupiah(angka, prefix) {
-        var number_string = angka.replace(/[^,\d]/g, '').toString(),
-            split = number_string.split(','),
-            sisa = split[0].length % 3,
-            rupiah = split[0].substr(0, sisa),
-            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-
-        // tambahkan titik jika yang di input sudah menjadi angka ribuan
-        if (ribuan) {
-            separator = sisa ? '.' : '';
-            rupiah += separator + ribuan.join('.');
-        }
-
-        rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-        return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
-    }
-
     $( document ).ready(function() {
         countFormPercentage()
-        $(".rupiah").trigger('keyup')
-        $("#ijin_usaha").trigger('change')
-        $("#kabupaten_domisili").trigger('change')
-        $("#kabupaten_usaha").trigger('change')
     });
 
     function countFormPercentage() {
@@ -1473,7 +1496,6 @@
         const $nextContent = $activeContent.next();
         const tabId = $activeContent.attr("id")
         const dataTab = tabId.replaceAll('-tab', '')
-        
         // Set percentage
         var percentage = formPercentage(tabId)
         $('.tab-wrapper').find(`[data-tab=${dataTab}]`).find('.percentage').html(`${percentage}%`)
@@ -1518,14 +1540,17 @@
 
     function formPercentage(tabId) {
         var form = `#${tabId}`;
+        // var form = `#aspek-keuangan-tab`;
         var inputFile = $(form + " input[type=file]")
         var inputText = $(form + " input[type=text]")
         var inputNumber = $(form + " input[type=number]")
         var inputDate = $(form + " input[type=date]")
+        var inputEmail = $(form + " input[type=email]")
         var inputHidden = $(form + " input[type=hidden]")
         var select = $(form + " select")
         var textarea = $(form + " textarea")
         var totalInput = 0;
+        var totalInputChecked = 0;
         var totalInputNull = 0;
         var totalInputFilled = 0;
         var totalInputHidden = 0;
@@ -1536,13 +1561,59 @@
             if ($(this).prop('readonly'))
                 totalInputReadOnly++;
             var inputBox = $(this).closest('.input-box');
-            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
+            var formGroup = inputBox.parent();
+            var isHidden = formGroup.css('display') == 'none'
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && !isHidden)
                 totalInput++
-            var isNull = (v.value == '' || v.value == '0')
-            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+            var isNull = (v.value == '' && $.trim(v.value) == '')
+            if ((isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && !isHidden) {
                 totalInputNull++;
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
+                if ($(this).attr('id') != undefined) {
+                    nullValue.push($(this).attr('id').toString().replaceAll("_", " "))
+                }
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).is(":checked") && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && !isHidden) {
                 totalInputFilled++;
+                if ($(this).attr('id') != undefined) {
+                    let val = $(this).attr("id").toString().replaceAll("_", " ");
+                    for (var i = 0; i < nullValue.length; i++) {
+                        while (nullValue[i] == val) {
+                            nullValue.splice(i, 1)
+                            break;
+                        }
+                    }
+                }
+            } else if (!$(this).is(':checked')) {
+                totalInputChecked++;
+            }
+        })
+
+        $.each(inputEmail, function(i, v) {
+            if ($(this).prop('readonly'))
+                totalInputReadOnly++;
+            var inputBox = $(this).closest('.input-box');
+            var formGroup = inputBox.parent();
+            var isHidden = formGroup.css('display') == 'none'
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && !isHidden)
+                totalInput++
+            var isNull = (v.value == '' && $.trim(v.value) == '' && $.trim(v.value) == '')
+            if ((isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && !isHidden) {
+                totalInputNull++;
+                if ($(this).attr('id') != undefined) {
+                    nullValue.push($(this).attr('id').toString().replaceAll("_", " "))
+                }
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).is(":checked") && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && !isHidden) {
+                totalInputFilled++;
+                if ($(this).attr('id') != undefined) {
+                    let val = $(this).attr("id").toString().replaceAll("_", " ");
+                    for (var i = 0; i < nullValue.length; i++) {
+                        while (nullValue[i] == val) {
+                            nullValue.splice(i, 1)
+                            break;
+                        }
+                    }
+                }
+            } else if (!$(this).is(':checked')) {
+                totalInputChecked++;
             }
         })
 
@@ -1550,8 +1621,18 @@
             if ($(this).prop('readonly'))
                 totalInputReadOnly++;
             var inputBox = $(this).closest('.input-box');
-            if ((!$(this).prop('disabled') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+            var formGroup = inputBox.parent();
+            if ((!$(this).prop('disabled') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputHidden++;
+                if ($(this).attr('id') != undefined) {
+                    let val = $(this).attr("id").toString().replaceAll("_", " ");
+                    for (var i = 0; i < nullValue.length; i++) {
+                        while (nullValue[i] == val) {
+                            nullValue.splice(i, 1)
+                            break;
+                        }
+                    }
+                }
             }
         })
 
@@ -1559,13 +1640,27 @@
             if ($(this).prop('readonly'))
                 totalInputReadOnly++;
             var inputBox = $(this).closest('.input-box');
-            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
+            var formGroup = inputBox.parent();
+            var isHidden = formGroup.css('display') == 'none'
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && !isHidden)
                 totalInput++
-            var isNull = (v.value == '' || v.value == '0' || $(this).prop('defaultValue') == '')
-            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+            var isNull = (v.value == '' && $.trim(v.value) == '' && ($(this).prop('defaultValue') == '' || !$(this).prop('defaultValue')))
+            if ((isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden')) {
                 totalInputNull++;
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
+                if ($(this).attr('id') != undefined) {
+                    nullValue.push($(this).attr('id').toString().replaceAll("_", " "))
+                }
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && !isHidden) {
                 totalInputFilled++;
+                if ($(this).attr('id') != undefined) {
+                    let val = $(this).attr("id").toString().replaceAll("_", " ");
+                    for (var i = 0; i < nullValue.length; i++) {
+                        while (nullValue[i] == val) {
+                            nullValue.splice(i, 1)
+                            break;
+                        }
+                    }
+                }
             }
         })
 
@@ -1573,13 +1668,27 @@
             if ($(this).prop('readonly'))
                 totalInputReadOnly++;
             var inputBox = $(this).closest('.input-box');
-            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
+            var formGroup = inputBox.parent();
+            var isHidden = formGroup.css('display') == 'none'
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && !isHidden)
                 totalInput++
-            var isNull = (v.value == '' || v.value == '0') && !$(this).prop('readonly')
-            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+            var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '') && !$(this).prop('readonly') && !$(this).prop('hidden')
+            if ((isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && !isHidden) {
                 totalInputNull++;
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
+                if ($(this).attr('id') != undefined) {
+                    nullValue.push($(this).attr('id').toString().replaceAll("_", " "))
+                }
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && !isHidden) {
                 totalInputFilled++;
+                if ($(this).attr('id') != undefined) {
+                    let val = $(this).attr("id").toString().replaceAll("_", " ");
+                    for (var i = 0; i < nullValue.length; i++) {
+                        while (nullValue[i] == val) {
+                            nullValue.splice(i, 1)
+                            break;
+                        }
+                    }
+                }
             }
         })
 
@@ -1587,13 +1696,27 @@
             if ($(this).prop('readonly'))
                 totalInputReadOnly++;
             var inputBox = $(this).closest('.input-box');
-            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
+            var formGroup = inputBox.parent();
+            var isHidden = formGroup.css('display') == 'none'
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && !isHidden)
                 totalInput++
-            var isNull = (v.value == '' || v.value == '0')
-            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+            var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
+            if ((isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && !isHidden) {
                 totalInputNull++;
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
+                if ($(this).attr('id') != undefined) {
+                    nullValue.push($(this).attr('id').toString().replaceAll("_", " "))
+                }
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && !isHidden) {
                 totalInputFilled++;
+                if ($(this).attr('id') != undefined) {
+                    let val = $(this).attr("id").toString().replaceAll("_", " ");
+                    for (var i = 0; i < nullValue.length; i++) {
+                        while (nullValue[i] == val) {
+                            nullValue.splice(i, 1)
+                            break;
+                        }
+                    }
+                }
             }
         })
 
@@ -1601,13 +1724,31 @@
             if ($(this).prop('readonly'))
                 totalInputReadOnly++;
             var inputBox = $(this).closest('.input-box');
-            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
+            var formGroup = inputBox.parent();
+            var isHidden = formGroup.css('display') == 'none'
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && !isHidden)
                 totalInput++
-            var isNull = (v.value == '' || v.value == '0')
-            if ((isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+            var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
+            if ((isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && !isHidden) {
                 totalInputNull++;
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
+                if ($(this).attr('id') != undefined) {
+                    var val = $(this).attr('id').toString()
+                    if (val != "persentase_kebutuhan_kredit_opsi" && val != "ratio_tenor_asuransi_opsi" && val != "ratio_coverage_opsi") {
+                        nullValue.push(val.replaceAll("_", " "))
+                    }
+                }
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && !isHidden) {
                 totalInputFilled++;
+
+                if ($(this).attr('id') != undefined) {
+                    let val = $(this).attr("id").toString().replaceAll("_", " ");
+                    for (var i = 0; i < nullValue.length; i++) {
+                        while (nullValue[i] == val) {
+                            nullValue.splice(i, 1)
+                            break;
+                        }
+                    }
+                }
             }
         })
 
@@ -1615,18 +1756,36 @@
             if ($(this).prop('readonly'))
                 totalInputReadOnly++;
             var inputBox = $(this).closest('.input-box');
-            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden'))
+            var formGroup = inputBox.parent();
+            var isHidden = formGroup.css('display') == 'none'
+            if (!$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && !isHidden)
                 totalInput++
-            var isNull = (v.value == '' || v.value == '0')
-            if ((v.value == '' && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden')) {
+            var isNull = (v.value == '' || v.value == '0' || $.trim(v.value) == '')
+            if ((isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden')) && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && !isHidden) {
                 totalInputNull++;
-            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden')) {
+                if ($(this).attr('id') != undefined) {
+                    let val =  $(this).attr('id').toString().replaceAll("_", " ");
+                    if (val != 'komentar staff') {
+                        nullValue.push($(this).attr('id').toString().replaceAll("_", " "))
+
+                    }
+                }
+            } else if (!isNull && !$(this).prop('disabled') && !$(this).prop('readonly') && !$(this).prop('hidden') && !$(this).hasClass('hidden') && !inputBox.hasClass('hidden') && !formGroup.hasClass('hidden') && !isHidden) {
                 totalInputFilled++;
+                if ($(this).attr('id') != undefined) {
+                    let val = $(this).attr("id").toString().replaceAll("_", " ");
+                    for (var i = 0; i < nullValue.length; i++) {
+                        while (nullValue[i] == val) {
+                            nullValue.splice(i, 1)
+                            break;
+                        }
+                    }
+                }
             }
         })
-
-        var totalReadHidden = (totalInputHidden + totalInputReadOnly)
-        percent = (totalInputFilled / (totalInput - totalInputReadOnly)) * 100
+        var totalReadHidden = (totalInputHidden + totalInputReadOnly);
+        var total = totalInput + totalInputChecked;
+        percent = (totalInputFilled / (totalInput - totalInputReadOnly)) * 100;
 
         return parseInt(percent)
     }

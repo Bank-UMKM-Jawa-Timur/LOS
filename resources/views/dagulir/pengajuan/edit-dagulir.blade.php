@@ -117,7 +117,7 @@
                 <label for="ktp_nasabah" id="label-ktp-nasabah">Foto KTP Nasabah</label>
                 @if ($duTemp->foto_ktp)
                     <a class="text-theme-primary underline underline-offset-4 cursor-pointer open-modal btn-file-preview"
-                        data-title="Foto Nasabah" data-filepath="{{asset('../upload')}}/{{$pengajuan?->id}}/{{$duTemp->id}}/{{$duTemp->foto_ktp}}">Preview</a>
+                        data-title="Foto KTP Nasabah" data-filepath="{{asset('../upload')}}/{{$pengajuan?->id}}/{{$duTemp->id}}/{{$duTemp->foto_ktp}}">Preview</a>
                 @endif
                 <div class="flex gap-4">
                     <input type="file" name="ktp_nasabah" class="form-input limit-size-2" data-id="{{ $duTemp?->id }}" value="{{$duTemp?->foto_ktp}}"/>
@@ -256,6 +256,9 @@
                 <label for="">Kecamatan Domisili</label>
                 <select name="kecamatan_domisili" id="kecamatan_domisili" class="form-select @error('kecamatan_domisili') is-invalid @enderror select2">
                     <option value="0"> --- Pilih Kecamatan --- </option>
+                    @foreach ($dataKecamatanDomisili as $item)
+                        <option value="{{ $item->id }}" {{ $item->id == $duTemp?->kec_dom ? 'selected' : '' }}>{{ $item->kecamatan }}</option>
+                    @endforeach
                 </select>
             </div>
         </div>
@@ -286,6 +289,9 @@
                 <label for="">Kecamatan Usaha</label>
                 <select name="kecamatan_usaha" id="kecamatan_usaha" class="form-select @error('kecamatan_usaha') is-invalid @enderror select2">
                     <option value="0"> --- Pilih Kecamatan --- </option>
+                    @foreach ($dataKecamatanUsaha as $item)
+                        <option value="{{ $item->id }}" {{ $item->id == $duTemp?->kec_usaha ? 'selected' : '' }}>{{ $item->kecamatan }}</option>
+                    @endforeach
                 </select>
             </div>
         </div>

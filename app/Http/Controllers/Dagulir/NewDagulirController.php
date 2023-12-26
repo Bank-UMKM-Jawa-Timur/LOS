@@ -2420,212 +2420,6 @@ class NewDagulirController extends Controller
         return view('dagulir.cetak.cetak-surat', $param);
     }
 
-    // public function edit($id) {
-    //     /**
-    //      * 1. Load Data Umum
-    //      * 2. Load Data per Aspek (include jawaban)
-    //     */
-    //     $pengajuanRepo = new PengajuanRepository;
-    //     $data = $pengajuanRepo->getWithJawaban($id);
-    //     $param['dataPengajuan'] = $data;
-
-    //     $param['dataKabupaten'] = Kabupaten::all();
-    //     $param['dataKecamatan'] = Kecamatan::where('id_kabupaten', $data->dagulir->kotakab_ktp)->get();
-    //     $param['dataDesa'] = Desa::where('id_kecamatan', $data->dagulir->kec_ktp)->get();
-    //     $param['dataKecamatanDomisili'] = Kecamatan::where('id_kabupaten', $data->dagulir->kotakab_dom)->get();
-    //     $param['dataKecamatanUsaha'] = Kecamatan::where('id_kabupaten', $data->dagulir->kotakab_usaha)->get();
-    //     $dataAspek = ItemModel::select('*')->where('level', 1)->where('nama', '!=', 'Data Umum')->get();
-    //     foreach ($dataAspek as $key => $value) {
-    //         // Pendapat per aspek
-    //         $pendapat = PendapatPerAspek::select('id', 'pendapat_per_aspek')->where('id_pengajuan', $id)
-    //                                     ->whereNotNull('id_staf')
-    //                                     ->where('id_aspek', $value->id)
-    //                                     ->first();
-    //         $value->pendapat = $pendapat;
-    //         // check level 2
-    //         $dataLevelDua = ItemModel::where('level', 2)
-    //                                 ->where('id_parent', $value->id)
-    //                                 ->get();
-
-    //         foreach ($dataLevelDua as $key2 => $lev2) {
-    //             // Get jawaban text
-    //             $jawaban = JawabanTextModel::where('id_pengajuan', $id)
-    //                                         ->where('id_jawaban', $lev2->id)
-    //                                         ->first();
-    //             $lev2->jawaban = $jawaban;
-    //             // Get jawaban option
-    //             $dataJawaban = OptionModel::where('option', '!=', '-')
-    //                                         ->where('id_item', $lev2->id)
-    //                                         ->get();
-    //             foreach ($dataJawaban as $answer) {
-    //                 $jawaban = JawabanModel::where('id_pengajuan', $id)
-    //                                         ->where('id_jawaban', $answer->id)
-    //                                         ->first();
-    //                 $answer->jawaban = $jawaban;
-    //             }
-    //             $dataOption = OptionModel::where('option', '=', '-')
-    //                 ->where('id_item', $lev2->id)
-    //                 ->get();
-    //             // check level 3
-    //             $dataLevelTiga = ItemModel::where('level', 3)
-    //                 ->where('id_parent', $lev2->id)
-    //                 ->get();
-
-    //             foreach ($dataLevelTiga as $lev3) {
-    //                 // Get jawaban text
-    //                 if ($lev3->is_multiple) {
-    //                     // Foto Usaha
-    //                     $jawaban = JawabanTextModel::where('id_pengajuan', $id)
-    //                                                 ->where('id_jawaban', $lev3->id)
-    //                                                 ->get();
-    //                 }
-    //                 else {
-    //                     $jawaban = JawabanTextModel::where('id_pengajuan', $id)
-    //                                                 ->where('id_jawaban', $lev3->id)
-    //                                                 ->first();
-    //                 }
-    //                 $lev3->jawaban = $jawaban;
-
-    //                 // check jawaban level tiga
-    //                 $dataJawabanLevelTiga = OptionModel::where('option', '!=', '-')
-    //                                                     ->where('id_item', $lev3->id)
-    //                                                     ->get();
-    //                 foreach ($dataJawabanLevelTiga as $answer) {
-    //                     $jawaban = JawabanModel::where('id_pengajuan', $id)
-    //                                     ->where('id_jawaban', $answer->id)
-    //                                     ->first();
-    //                     $answer->jawaban = $jawaban;
-    //                 }
-    //                 $dataOptionTiga = OptionModel::where('option', '=', '-')
-    //                                             ->where('id_item', $lev3->id)
-    //                                             ->get();
-
-    //                 // check level empat
-    //                 $dataLevelEmpat = ItemModel::where('level', 4)
-    //                                         ->where('id_parent', $lev3->id)
-    //                                         ->get();
-    //                 foreach ($dataLevelEmpat as $lev4) {
-    //                     $jawaban = JawabanTextModel::where('id_pengajuan', $id)
-    //                                                 ->where('id_jawaban', $lev4->id)
-    //                                                 ->first();
-    //                     $lev4->jawaban = $jawaban;
-    //                     // check level empat
-    //                     $dataJawabanLevelEmpat = OptionModel::where('option', '!=', '-')
-    //                                                         ->where('id_item', $lev4->id)
-    //                                                         ->get();
-    //                     foreach ($dataJawabanLevelEmpat as $answer) {
-    //                         $jawaban = JawabanModel::where('id_pengajuan', $id)
-    //                                         ->where('id_jawaban', $answer->id)
-    //                                         ->first();
-    //                         $answer->jawaban = $jawaban;
-    //                     }
-    //                     $dataOptionEmpat = OptionModel::where('option', '=', '-')
-    //                                                     ->where('id_item', $lev4->id)
-    //                                                     ->get();
-    //                     $lev4->dataJawabanLevelEmpat = $dataJawabanLevelEmpat;
-    //                     $lev4->dataOptionEmpat = $dataOptionEmpat;
-    //                 }
-
-    //                 // $is_option_answer = false;
-    //                 // if ($dataLevelEmpat) {
-    //                 //     foreach ($dataLevelEmpat as $v4) {
-    //                 //         if ($v4->opsi_jawaban == 'option') {
-    //                 //             $is_option_answer = true;
-    //                 //             break;
-    //                 //         }
-    //                 //     }
-    //                 // }
-    //                 // if ($is_option_answer) {
-    //                 //     // Get jawaban option
-    //                 //     $option = ItemModel::where('id_parent', $lev3->id)
-    //                 //                         ->pluck('id');
-    //                 //     $jawaban = JawabanModel::select('jawaban.*', 'item.nama AS nama_item')
-    //                 //                         ->join('item', 'item.id', 'jawaban.id_jawaban')
-    //                 //                         ->where('id_pengajuan', $id)
-    //                 //                         ->whereIn('id_jawaban', $option)
-    //                 //                         ->first();
-    //                 //     $lev3->jawaban = $jawaban;
-    //                 // }
-
-    //                 $lev3->dataJawabanLevelTiga = $dataJawabanLevelTiga;
-    //                 $lev3->dataOptionTiga = $dataOptionTiga;
-    //                 $lev3->dataLevelEmpat = $dataLevelEmpat;
-    //             }
-
-    //             $lev2->dataJawaban = $dataJawaban;
-    //             $lev2->dataOption = $dataOption;
-    //             $lev2->dataLevelTiga = $dataLevelTiga;
-    //         }
-
-    //         $value->dataLevelDua = $dataLevelDua;
-    //     }
-
-    //     $param['pendapat'] = KomentarModel::select('id', 'komentar_staff')
-    //                                     ->where('id_pengajuan', $id)
-    //                                     ->orderBy('id', 'DESC')
-    //                                     ->first();
-    //     $param['dataAspek'] = $dataAspek;
-    //     $param['itemSlik'] = ItemModel::with('option')->where('nama', 'SLIK')->first();
-    //     $param['itemSP'] = ItemModel::where('nama', 'Surat Permohonan')->first();
-    //     $param['itemP'] = ItemModel::where('nama', 'Laporan SLIK')->first();
-    //     $param['itemKTPNas'] = ItemModel::where('nama', 'Foto KTP Nasabah')->first();
-    //     $param['itemNIBTeks'] = ItemModel::where('nama', 'NIB')->first();
-    //     if ($param['itemNIBTeks']) {
-    //         $jawaban = JawabanTextModel::where('id_pengajuan', $id)
-    //                                     ->where('id_jawaban', $param['itemNIBTeks']->id)
-    //                                     ->first();
-    //         $param['itemNIBTeks']->jawaban = $jawaban;
-    //     }
-    //     $param['itemNIB'] = ItemModel::where('nama', 'Dokumen NIB')->first();
-    //     if ($param['itemNIB']) {
-    //         $jawaban = JawabanTextModel::where('id_pengajuan', $id)
-    //                                     ->where('id_jawaban', $param['itemNIB']->id)
-    //                                     ->first();
-    //         $param['itemNIB']->jawaban = $jawaban;
-    //     }
-    //     $param['itemNPWPTeks'] = ItemModel::where('nama', 'NPWP')->first();
-    //     if ($param['itemNPWPTeks']) {
-    //         $jawaban = JawabanTextModel::where('id_pengajuan', $id)
-    //                                     ->where('id_jawaban', $param['itemNPWPTeks']->id)
-    //                                     ->first();
-    //         $param['itemNPWPTeks']->jawaban = $jawaban;
-    //     }
-    //     $param['itemNPWP'] = ItemModel::where('nama', 'Dokumen NPWP')->first();
-    //     if ($param['itemNPWP']) {
-    //         $jawaban = JawabanTextModel::where('id_pengajuan', $id)
-    //                                     ->where('id_jawaban', $param['itemNPWP']->id)
-    //                                     ->first();
-    //         $param['itemNPWP']->jawaban = $jawaban;
-    //     }
-    //     $param['itemSKUTeks'] = ItemModel::where('nama', 'Surat Keterangan Usaha')->first();
-    //     if ($param['itemSKUTeks']) {
-    //         $jawaban = JawabanTextModel::where('id_pengajuan', $id)
-    //                                     ->where('id_jawaban', $param['itemSKUTeks']->id)
-    //                                     ->first();
-    //         $param['itemSKUTeks']->jawaban = $jawaban;
-    //     }
-    //     $param['itemSKU'] = ItemModel::where('nama', 'Dokumen Surat Keterangan Usaha')->first();
-    //     if ($param['itemSKU']) {
-    //         $jawaban = JawabanTextModel::where('id_pengajuan', $id)
-    //                                     ->where('id_jawaban', $param['itemSKU']->id)
-    //                                     ->first();
-    //         $param['itemSKU']->jawaban = $jawaban;
-    //     }
-    //     $param['jawabanSlik'] = JawabanModel::select('id', 'id_jawaban', 'skor')
-    //                                         ->where('id_pengajuan', $id)
-    //                                         ->whereIn('id_jawaban', [71,72,73,74])
-    //                                         ->first();
-    //     $param['jawabanLaporanSlik'] = \App\Models\JawabanTextModel::where('id_pengajuan', $data->id)
-    //                                         ->where('id_jawaban', 146)
-    //                                         ->first();
-    //     $param['dataDetailJawaban'] = JawabanPengajuanModel::select('id', 'id_jawaban')
-    //                                             ->where('id_pengajuan', $id)
-    //                                             ->get();
-    //     $param['jenis_usaha'] = config('dagulir.jenis_usaha');
-    //     $param['tipe'] = config('dagulir.tipe_pengajuan');
-
-    //     return view('dagulir.pengajuan-kredit.edit-pengajuan-kredit', $param);
-    // }
     public function cetakLampiranAnalisa($id_pengajuan) {
         $status = '';
         $message = '';
@@ -2720,8 +2514,9 @@ class NewDagulirController extends Controller
     {
         $statusSlik = false;
         $find = array('Rp ', '.', ',');
-// return $request;
+
         $pengajuanModel = PengajuanModel::find($id);
+return $request;
         DB::beginTransaction();
         try {
             $find = array('Rp.', '.', ',');
@@ -2940,9 +2735,9 @@ class NewDagulirController extends Controller
             if ($request->has('upload_file')) {
                 foreach ($request->upload_file as $key => $value) {
                     if (is_array($value)) {
-                        for ($i = 0; $i < count($value); $i++) {
+                        foreach ($value as $key2 => $value2) {
                             array_push($newFileAnswer, $key);
-                            if (in_array($key, $oldAnswer)) {
+                            if (in_array($key, $oldFileAnswer)) {
                                 $answer = JawabanTextModel::where('id_pengajuan', $id_pengajuan)
                                                         ->where('id_jawaban', $key)
                                                         ->first();
@@ -2954,23 +2749,23 @@ class NewDagulirController extends Controller
                                 }
     
                                 // Update new image
-                                $filename = auth()->user()->id . '-' . time() . '-' . $value[$i]->getClientOriginalName();
+                                $filename = auth()->user()->id . '-' . time() . '-' . $value2->getClientOriginalName();
                                 $relPath = "upload/{$id_pengajuan}/{$key}";
                                 $path = public_path("upload/{$id_pengajuan}/{$key}/");
     
                                 File::isDirectory(public_path($relPath)) or File::makeDirectory(public_path($relPath), recursive: true);
-                                $value[$i]->move($path, $filename);
+                                $value2->move($path, $filename);
                                 // Update answer
                                 $answer->opsi_text = $filename;
                                 $answer->save();
                             }
                             else {
-                                $filename = auth()->user()->id . '-' . time() . '-' . $value[$i]->getClientOriginalName();
+                                $filename = auth()->user()->id . '-' . time() . '-' . $value2->getClientOriginalName();
                                 $relPath = "upload/{$id_pengajuan}/{$key}";
                                 $path = public_path("upload/{$id_pengajuan}/{$key}/");
     
                                 File::isDirectory(public_path($relPath)) or File::makeDirectory(public_path($relPath), recursive: true);
-                                $value[$i]->move($path, $filename);
+                                $value2->move($path, $filename);
                                 // Insert answer
                                 JawabanTextModel::create([
                                     'id_pengajuan' => $id_pengajuan,
@@ -2984,7 +2779,7 @@ class NewDagulirController extends Controller
                         }
                     } else {
                         array_push($newFileAnswer, $key);
-                        if (in_array($key, $oldAnswer)) {
+                        if (in_array($key, $oldFileAnswer)) {
                             $answer = JawabanTextModel::where('id_pengajuan', $id_pengajuan)
                                                         ->where('id_jawaban', $key)
                                                         ->first();
