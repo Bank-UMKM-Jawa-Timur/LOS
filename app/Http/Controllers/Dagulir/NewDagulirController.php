@@ -2345,7 +2345,7 @@ class NewDagulirController extends Controller
                                             // insert to dd loan
                                             if ($pengajuan && $plafon) {
                                                 $loan = new MasterDDLoan;
-                                                $loan->id_cabang = $request->get('cabang');
+                                                $loan->id_cabang = $pengajuan->dagulir->kode_bank_cabang;
                                                 $loan->no_loan = $request->get('no_loan');
                                                 $loan->kode_pendaftaran = $pengajuan->dagulir->kode_pendaftaran;
                                                 $loan->plafon = $plafon->plafon_usulan_pincab;
