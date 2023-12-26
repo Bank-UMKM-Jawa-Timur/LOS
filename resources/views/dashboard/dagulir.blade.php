@@ -33,73 +33,6 @@
             </div>
         </div>
     </div>
-    <div class="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-4 lg:gap-2 justify-center mt-5">
-        <div class="card p-5 w-full border bg-white h-[127px]">
-            <div class="flex gap-5">
-                <div>
-                    <button class="w-20 h-20 p-5 rounded-full bg-[#9334EA]/20">
-                        <iconify-icon icon="pajamas:chart" class="text-3xl mt-1 text-[#9334EA]"></iconify-icon>
-                    </button>
-                </div>
-                <div class="mt-3">
-                    <h2 class="text-theme-text text-3xl font-bold tracking-tighter">
-                        {{ $dataCard['total'] }}
-                    </h2>
-                    <p class="text-gray-500 text-sm tracking-tighter">
-                        Total Pengajuan
-                    </p>
-                </div>
-            </div>
-        </div>
-        <div class="card p-5 w-full border bg-white h-[127px]">
-            <div class="flex gap-5">
-                <div>
-                    <button class="w-20 h-20 p-5 rounded-full bg-[#39B568]/20">
-                        <iconify-icon icon="icon-park-outline:check-one" class="text-3xl mt-1 text-[#39B568]">
-                        </iconify-icon>
-                    </button>
-                </div>
-                <div class="mt-3">
-                    <h2 class="text-theme-text text-3xl font-bold tracking-tighter">
-                        {{ $dataCard['selesai'] }}
-                    </h2>
-                    <p class="text-gray-500 text-sm tracking-tighter">
-                        Disetujui
-                    </p>
-                </div>
-            </div>
-        </div>
-        <div class="card p-5 w-full border bg-white h-[127px]">
-            <div class="flex gap-5">
-                <div>
-                    <button class="w-20 h-20 p-5 rounded-full bg-[#DC3545]/20">
-                        <iconify-icon icon="uil:file-times-alt" class="text-3xl mt-1 text-[#DC3545]"></iconify-icon>
-                    </button>
-                </div>
-                <div class="mt-3">
-                    <h2 class="text-theme-text text-3xl font-bold tracking-tighter">
-                        {{ $dataCard['ditolak'] }}
-                    </h2>
-                    <p class="text-gray-500 text-sm tracking-tighter">Ditolak</p>
-                </div>
-            </div>
-        </div>
-        <div class="card p-5 w-full border bg-white h-[127px]">
-            <div class="flex gap-5">
-                <div>
-                    <button class="w-20 h-20 p-5 rounded-full bg-[#E8A525]/20">
-                        <iconify-icon icon="ps:clock" class="text-3xl mt-1 text-[#E8A525]"></iconify-icon>
-                    </button>
-                </div>
-                <div class="mt-3">
-                    <h2 class="text-theme-text text-3xl font-bold tracking-tighter">
-                        {{ $dataCard['proses'] }}
-                    </h2>
-                    <p class="text-gray-500 text-sm tracking-tighter">Diproses</p>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="lg:flex relative gap-2 mt-3">
         <div class="card bg-white p-0 lg:w-2/4 w-full rounded-md box-border border">
             <div class="p-3 pl-5 pt-5">
@@ -109,7 +42,7 @@
             </div>
             <div id="chart-total-pengajuan" class="w-full"></div>
         </div>
-        <div class="card bg-white p-5 lg:mt-0 mt-4 lg:w-2/4 border rounded-md w-full">
+        {{-- <div class="card bg-white p-5 lg:mt-0 mt-4 lg:w-2/4 border rounded-md w-full">
             <div class="head flex justify-between gap-5">
                 <div class="title">
                     <h2 class="font-semibold tracking-tighter text-lg text-theme-text">
@@ -183,6 +116,107 @@
                             </div>
                         @endforeach
                     </div>
+                </div>
+            </div>
+        </div> --}}
+        <div class="grid lg:grid-cols-2 grid-cols-1 gap-2 w-[50%]">
+            <div class="card p-5 w-full border bg-white h-[127px]">
+                <div class="flex gap-5">
+                    <div>
+                        <button class="w-20 h-20 p-5 rounded-full bg-[#9334EA]/20">
+                            <iconify-icon icon="pajamas:chart" class="text-3xl mt-1 text-[#9334EA]"></iconify-icon>
+                        </button>
+                    </div>
+                    <div class="mt-3">
+                        <h2 class="text-theme-text text-3xl font-bold tracking-tighter">
+                            {{ $dataCard['total'] }}
+                        </h2>
+                        <p class="text-gray-500 text-sm tracking-tighter">
+                            Total Pengajuan
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="card p-5 w-full border bg-white h-[127px]">
+                <div class="flex gap-5">
+                    <div>
+                        <button class="w-20 h-20 p-5 rounded-full bg-[#39B568]/20">
+                            <iconify-icon icon="icon-park-outline:check-one" class="text-3xl mt-1 text-[#39B568]">
+                            </iconify-icon>
+                        </button>
+                    </div>
+                    <div class="mt-3">
+                        <h2 class="text-theme-text text-3xl font-bold tracking-tighter">
+                            {{ $dataCard['selesai'] }}
+                        </h2>
+                        <p class="text-gray-500 text-sm tracking-tighter">
+                            Disetujui
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="card p-5 w-full border bg-white h-[127px]">
+                <div class="flex gap-5">
+                    <div>
+                        <button class="w-20 h-20 p-5 rounded-full bg-[#DC3545]/20">
+                            <iconify-icon icon="uil:file-times-alt" class="text-3xl mt-1 text-[#DC3545]"></iconify-icon>
+                        </button>
+                    </div>
+                    <div class="mt-3">
+                        <h2 class="text-theme-text text-3xl font-bold tracking-tighter">
+                            {{ $dataCard['ditolak'] }}
+                        </h2>
+                        <p class="text-gray-500 text-sm tracking-tighter">Ditolak</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card p-5 w-full border bg-white h-[127px]">
+                <div class="flex gap-5">
+                    <div>
+                        <button class="w-20 h-20 p-5 rounded-full bg-[#E8A525]/20">
+                            <iconify-icon icon="ps:clock" class="text-3xl mt-1 text-[#E8A525]"></iconify-icon>
+                        </button>
+                    </div>
+                    <div class="mt-3">
+                        <h2 class="text-theme-text text-3xl font-bold tracking-tighter">
+                            {{ $dataCard['proses'] }}
+                        </h2>
+                        <p class="text-gray-500 text-sm tracking-tighter">Diproses</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-4 w-full lg:gap-2 justify-center mt-2">
+        <div class="card p-5 w-full border bg-white h-[127px]">
+            <div class="flex gap-5">
+                <div>
+                    <button class="w-20 h-20 p-5 rounded-full bg-[#9334EA]/20">
+                        <iconify-icon icon="pajamas:chart" class="text-3xl mt-1 text-[#9334EA]"></iconify-icon>
+                    </button>
+                </div>
+                <div class="mt-3">
+                    <h2 class="text-theme-text text-3xl font-bold tracking-tighter">
+                        {{ $dataCard['total'] }}
+                    </h2>
+                    <p class="text-gray-500 text-sm tracking-tighter">
+                        Total Pengajuan
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="card p-5 w-full border bg-white h-[127px]">
+            <div class="flex gap-5">
+                <div>
+                    <button class="w-20 h-20 p-5 rounded-full bg-[#E8A525]/20">
+                        <iconify-icon icon="ps:clock" class="text-3xl mt-1 text-[#E8A525]"></iconify-icon>
+                    </button>
+                </div>
+                <div class="mt-3">
+                    <h2 class="text-theme-text text-3xl font-bold tracking-tighter">
+                        {{ $dataCard['proses'] }}
+                    </h2>
+                    <p class="text-gray-500 text-sm tracking-tighter">Diproses</p>
                 </div>
             </div>
         </div>

@@ -1291,7 +1291,7 @@ video {
     @media (min-width: 1024px) {
 
   .review-pincab .field-review .field-name {
-    width: 85%;
+    width: 48%;
   }
 }
     .review-pincab .field-review .field-answer {
@@ -1881,6 +1881,9 @@ video {
 .w-\[40px\] {
   width: 40px;
 }
+.w-\[50\%\] {
+  width: 50%;
+}
 .w-auto {
   width: auto;
 }
@@ -1978,8 +1981,8 @@ video {
 .grid-cols-2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
-.flex-row {
-  flex-direction: row;
+.grid-cols-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 .flex-wrap {
   flex-wrap: wrap;
@@ -2255,6 +2258,9 @@ video {
 .bg-theme-secondary\/90 {
   background-color: rgb(17 32 66 / 0.9);
 }
+.bg-transparent {
+  background-color: transparent;
+}
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
@@ -2262,9 +2268,6 @@ video {
 .bg-yellow-100 {
   --tw-bg-opacity: 1;
   background-color: rgb(254 249 195 / var(--tw-bg-opacity));
-}
-.bg-transparent {
-  background-color: transparent;
 }
 .bg-cover {
   background-size: cover;

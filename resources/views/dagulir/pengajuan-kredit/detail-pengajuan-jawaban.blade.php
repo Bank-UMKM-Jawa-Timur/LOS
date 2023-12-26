@@ -747,6 +747,7 @@
                                                 @endphp
                                                 @foreach ($dataDetailJawabanText as $itemTextDua)
                                                     <div class="row
+                                                            {{ $itemTextDua->opsi_text === 'nib' ? 'hidden' : '' }}
                                                             {{ $item->opsi_jawaban == 'file' ? 'col-span-1 order-2' : '' }}
                                                             
                                                             {{ $item->nama == "NPWP" ||  $item->nama == "Ijin Usaha" ? 'col-span-1 order-2' : '' }}
@@ -1055,7 +1056,7 @@
                                                     @foreach ($dataDetailJawabanText as $itemTextTiga)
                                                         @if ($itemTextTiga->nama != 'Ratio Tenor Asuransi')
                                                             <div class="{{ $itemTiga->opsi_jawaban == 'file' ? 'col-span-1 p-2 order-3' : 'form-group-1 col-span-1' }} 
-                                                                        {{ $itemTextTiga->nama === "NIB" ?'form-group-2 col-span-2' : '' }} 
+                                                                        {{ $itemTextTiga->nama === "NIB" ?'form-group-2 col-span-1' : '' }} 
                                                                         {{ $itemTextTiga->nama === "Modal (awal) Sendiri" || 
                                                                         $itemTextTiga->nama === "Modal Pinjaman" ? 'col-span-1 form-group-1' : '' }}
                                                                         ">
