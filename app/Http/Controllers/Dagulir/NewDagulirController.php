@@ -2467,40 +2467,6 @@ class NewDagulirController extends Controller
     }
 
     public function edit($id) {
-        /**
-         * 1. Load Data Umum
-         * 2. Load Data per Aspek (include jawaban)
-        */
-        $pengajuanRepo = new PengajuanRepository;
-        $data = $pengajuanRepo->getWithJawaban($id);
-        $param['dataPengajuan'] = $data;
-
-            $pdf = Pdf::loadview('dagulir.pengajuan-kredit.cetak.cetak-surat',$param);
-
-            $fileName = $param['dataUmum']->id.'.'. 'pdf' ;
-            $filePath = public_path('cetak_surat');
-            if (!File::isDirectory($filePath)) {
-                File::makeDirectory($filePath, 493, true);
-            }
-            $pdf->save($filePath.'/'.$fileName);
-            $filepath = $filePath.'\\'.$fileName;
-
-            $status = 'success';
-            $message = 'Successfully get file';
-        } catch (\Exception $e) {
-            $status = 'failed';
-            $message = $e->getMessage();
-        } finally {
-            $data = [
-                'status' => $status,
-                'message' => $message,
-                'filepath' => $filepath
-            ];
-            return $data;
-        }
-    }
-    
-    public function edit($id) {
         $param['pageTitle'] = "Dashboard";
         $param['multipleFiles'] = $this->isMultipleFiles;
 
@@ -2552,7 +2518,6 @@ class NewDagulirController extends Controller
         $find = array('Rp ', '.', ',');
 
         $pengajuanModel = PengajuanModel::find($id);
-return $request;
         DB::beginTransaction();
         try {
             $find = array('Rp.', '.', ',');
@@ -2783,12 +2748,12 @@ return $request;
                                 if (file_exists($path_file)) {
                                     @unlink($path_file);
                                 }
-    
+
                                 // Update new image
                                 $filename = auth()->user()->id . '-' . time() . '-' . $value2->getClientOriginalName();
                                 $relPath = "upload/{$id_pengajuan}/{$key}";
                                 $path = public_path("upload/{$id_pengajuan}/{$key}/");
-    
+
                                 File::isDirectory(public_path($relPath)) or File::makeDirectory(public_path($relPath), recursive: true);
                                 $value2->move($path, $filename);
                                 // Update answer
@@ -2799,7 +2764,7 @@ return $request;
                                 $filename = auth()->user()->id . '-' . time() . '-' . $value2->getClientOriginalName();
                                 $relPath = "upload/{$id_pengajuan}/{$key}";
                                 $path = public_path("upload/{$id_pengajuan}/{$key}/");
-    
+
                                 File::isDirectory(public_path($relPath)) or File::makeDirectory(public_path($relPath), recursive: true);
                                 $value2->move($path, $filename);
                                 // Insert answer
@@ -2825,12 +2790,12 @@ return $request;
                             if (file_exists($path_file)) {
                                 @unlink($path_file);
                             }
-    
+
                             // Update new image
                             $filename = auth()->user()->id . '-' . time() . '-' . $value->getClientOriginalName();
                             $relPath = "upload/{$id_pengajuan}/{$key}";
                             $path = public_path("upload/{$id_pengajuan}/{$key}/");
-    
+
                             File::isDirectory(public_path($relPath)) or File::makeDirectory(public_path($relPath), recursive: true);
                             $value->move($path, $filename);
                             // Update answer
@@ -2841,7 +2806,7 @@ return $request;
                             $filename = auth()->user()->id . '-' . time() . '-' . $value->getClientOriginalName();
                             $relPath = "upload/{$id_pengajuan}/{$key}";
                             $path = public_path("upload/{$id_pengajuan}/{$key}/");
-    
+
                             File::isDirectory(public_path($relPath)) or File::makeDirectory(public_path($relPath), recursive: true);
                             $value->move($path, $filename);
                             // Insert answer
@@ -2977,7 +2942,7 @@ return $request;
                 }
             }
             // Delete unuse score
-            for ($i=0; $i < count($oldIdScore); $i++) { 
+            for ($i=0; $i < count($oldIdScore); $i++) {
                 if (!in_array($oldIdScore[$i], $newIdScore)) {
                     JawabanPengajuanModel::where('id_pengajuan', $id_pengajuan)
                                         ->where('id_jawaban', $oldIdScore[$i])
