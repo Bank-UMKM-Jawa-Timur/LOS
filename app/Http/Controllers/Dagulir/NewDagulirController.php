@@ -2411,7 +2411,7 @@ class NewDagulirController extends Controller
         $param['komentar'] = KomentarModel::where('id_pengajuan', $id)->first();
         $param['jenis_usaha'] = config('dagulir.jenis_usaha');
 
-        $pdf = Pdf::loadview('dagulir.pengajuan-kredit.cetak.cetak-surat',$param);
+        $pdf = Pdf::loadview('dagulir.cetak.cetak-surat',$param);
 
         $fileName = $param['dataUmum']->id.'.'. 'pdf' ;
         $filePath = public_path() . '/cetak_surat';
@@ -2449,7 +2449,7 @@ class NewDagulirController extends Controller
                 File::makeDirectory($filePath, 493, true);
             }
             $pdf->save($filePath.'/'.$fileName);
-            $filepath = $filePath.'\\'.$fileName;
+            $filepath = $filePath.'/'.$fileName;
 
             $status = 'success';
             $message = 'Successfully get file';
