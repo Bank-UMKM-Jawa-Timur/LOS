@@ -329,6 +329,12 @@
     .table-wrapper-tab .tab-content.active {
         @apply block;
     }
+    .btn-detail {
+        @apply absolute right-0 rounded-tl-md flex gap-2 px-5 py-1 text-gray-500 bg-gray-50 transition-all text-sm font-semibold border-t border-l hover:bg-theme-primary hover:text-white bottom-0;
+    }
+    .btn-detail iconify-icon {
+        @apply text-sm mt-[2px];
+    }
 }
 
 @keyframes scale-in {
