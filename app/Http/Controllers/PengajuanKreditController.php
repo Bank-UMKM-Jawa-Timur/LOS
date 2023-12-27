@@ -24,8 +24,10 @@ use App\Models\JawabanTemp;
 use App\Models\JawabanTempModel;
 use App\Models\LogPengajuan;
 use App\Models\MerkModel;
+use App\Models\PlafonUsulan;
 use App\Models\TipeModel;
 use App\Models\User;
+use App\Repository\PengajuanDagulirRepository;
 use App\Services\TemporaryService;
 use DateTime;
 use Exception;
@@ -45,6 +47,7 @@ class PengajuanKreditController extends Controller
 {
     private $isMultipleFiles = [];
     private $logPengajuan;
+    private $repo;
 
     public function __construct()
     {
@@ -52,6 +55,7 @@ class PengajuanKreditController extends Controller
         $this->isMultipleFiles = [
             'Foto Usaha'
         ];
+        $this->repo = new PengajuanDagulirRepository;
     }
 
     public function fixScore()
@@ -2873,11 +2877,15 @@ class PengajuanKreditController extends Controller
         $param['itemSP'] = ItemModel::where('level', 1)->where('nama', '=', 'Data Umum')->first();
 
         $param['dataNasabah'] = CalonNasabah::select('calon_nasabah.*', 'kabupaten.id as kabupaten_id', 'kabupaten.kabupaten', 'kecamatan.id as kecamatan_id', 'kecamatan.id_kabupaten', 'kecamatan.kecamatan', 'desa.id as desa_id', 'desa.id_kabupaten', 'desa.id_kecamatan', 'desa.desa')
-            ->join('kabupaten', 'kabupaten.id', 'calon_nasabah.id_kabupaten')
-            ->join('kecamatan', 'kecamatan.id', 'calon_nasabah.id_kecamatan')
-            ->join('desa', 'desa.id', 'calon_nasabah.id_desa')
-            ->where('calon_nasabah.id_pengajuan', $id)
-            ->first();
+                ->join('kabupaten', 'kabupaten.id', 'calon_nasabah.id_kabupaten')
+                ->join('kecamatan', 'kecamatan.id', 'calon_nasabah.id_kecamatan')
+                ->join('desa', 'desa.id', 'calon_nasabah.id_desa')
+                ->where('calon_nasabah.id_pengajuan', $id)
+                ->first();
+        $param['dataKecamatan'] = Kecamatan::find($param['dataNasabah']->id_kecamatan);
+        $param['dataKabupaten'] = Kabupaten::find($param['dataNasabah']->id_kabupaten);
+        $param['dataDesa'] = Desa::find($param['dataNasabah']->id_desa);
+
         $param['dataUmum'] = PengajuanModel::select('pengajuan.id', 'pengajuan.tanggal', 'pengajuan.posisi', 'pengajuan.tanggal_review_penyelia', 'pengajuan.id_cabang', 'pengajuan.skema_kredit', 'pengajuan.average_by_sistem', 'pengajuan.average_by_penyelia', 'pengajuan.average_by_pbo', 'pengajuan.average_by_pbp')
             ->find($id);
         $param['comment'] = KomentarModel::where('id_pengajuan', $id)->first();
@@ -2888,6 +2896,20 @@ class PengajuanKreditController extends Controller
                                                             ->get();
 
         $param['pendapatDanUsulan'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff', 'komentar_penyelia', 'komentar_pincab', 'komentar_pbo', 'komentar_pbp')->first();
+
+        $param['pendapatDanUsulan'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_staff', 'komentar_penyelia', 'komentar_pincab', 'komentar_pbo', 'komentar_pbp')->first();
+        $param['plafonUsulan'] = PlafonUsulan::where('id_pengajuan', $id)->select(
+            'plafon_usulan_penyelia',
+            'jangka_waktu_usulan_penyelia',
+            'plafon_usulan_pbo',
+            'jangka_waktu_usulan_pbo',
+            'plafon_usulan_pbp',
+            'jangka_waktu_usulan_pbp',
+            'plafon_usulan_pincab',
+            'jangka_waktu_usulan_pincab'
+            )->first();
+        $param['pendapatDanUsulanStaf'] = KomentarModel::select('komentar_staff')->where('id_pengajuan', $id)->first();
+        $param['pendapatDanUsulanPenyelia'] = KomentarModel::where('id_pengajuan', $id)->select('komentar_penyelia')->first();
         if ($param['dataUmum']->skema_kredit == 'KKB') {
             $param['dataPO'] = DB::table('data_po')
                 ->where('id_pengajuan', $id)
@@ -2930,6 +2952,7 @@ class PengajuanKreditController extends Controller
         }
         // dd($log[0]['tgl']);
         $param['logPengajuan'] = $log;
+        $param['rolesPemroses'] = $this->repo->getDataPemroses($param['dataNasabah']);
 
         return view('pengajuan-kredit.detail-komentar-pengajuan', $param);
     }

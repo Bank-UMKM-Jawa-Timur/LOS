@@ -1,4 +1,4 @@
-<div class="modal-layout hidden" data-modal-backdrop="static"  id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-layout-no-backdrop hidden" data-modal-backdrop="static"  id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal modal-sm bg-white" role="document">
         <form action="" >
             <div class="modal-content">
