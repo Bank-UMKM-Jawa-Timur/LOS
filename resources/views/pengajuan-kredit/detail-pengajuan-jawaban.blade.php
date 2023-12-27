@@ -76,11 +76,7 @@
                             <p class="font-semibold text-gray-400">Review Pengajuan</p>
                         </div>
                         <div class="self-start bg-white w-full border">
-                            {{-- <div class="p-5 border-b">
-                                <h2 class="font-bold text-lg tracking-tighter">
-                                    Pengajuan Masuk
-                                </h2>
-                            </div> --}}
+                           
                             <div class="p-5 w-full space-y-5" id="data-umum">
                                 <div class="form-group-1 col-span-2 pl-2">
                                     <div>
@@ -91,28 +87,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                {{-- <h4 class="font-bold text-lg tracking-tighter ml-2">
-                                    Data Diri
-                                </h4>
-                                <hr> --}}
-                                {{-- <div class="form-group-2">
-                                    <div class="p-4 bg-white border border-gray-200 rounded-lg dark:bg-gray-200">
-                                        <div class="font-bold field-name">
-                                            <label for="">Nama Lengkap</label>
-                                        </div>
-                                        <div class="pt-2">
-                                            <label for="">Jawaban : <label class="pl-3 font-medium">10,00</label></label>
-                                        </div>
-                                    </div>
-                                    <div class="p-4 bg-white border border-gray-200 rounded-lg dark:bg-gray-200">
-                                        <div class="font-bold field-name">
-                                            <label for="">Nama Lengkap</label>
-                                        </div>
-                                        <div class="pt-2">
-                                            <label for="">Jawaban : <label class="pl-3 font-medium">10,00</label></label>
-                                        </div>
-                                    </div>
-                                </div> --}}
+                              
                                 <div class="form-group-2">
                                     <div class="field-review">
                                         <div class="field-name">
