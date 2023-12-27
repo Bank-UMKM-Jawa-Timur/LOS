@@ -1378,6 +1378,41 @@ video {
     .table-wrapper-tab .tab-content.active {
   display: block;
 }
+    .btn-detail {
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  display: flex;
+  gap: 0.5rem;
+  border-top-left-radius: 0.375rem;
+  border-top-width: 1px;
+  border-left-width: 1px;
+  --tw-bg-opacity: 1;
+  background-color: rgb(249 250 251 / var(--tw-bg-opacity));
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  --tw-text-opacity: 1;
+  color: rgb(107 114 128 / var(--tw-text-opacity));
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+    .btn-detail:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(220 53 69 / var(--tw-bg-opacity));
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+    .btn-detail iconify-icon {
+  margin-top: 2px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
 
 *, ::before, ::after {
   --tw-border-spacing-x: 0;
@@ -1881,17 +1916,11 @@ video {
 .w-\[40px\] {
   width: 40px;
 }
-.w-\[50\%\] {
-  width: 50%;
-}
 .w-auto {
   width: auto;
 }
 .w-full {
   width: 100%;
-}
-.w-\[50\%\] {
-  width: 50%;
 }
 .max-w-2xl {
   max-width: 42rem;

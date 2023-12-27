@@ -320,11 +320,18 @@ class DashboardRepository
 
     public function getRangking(Request $request){
         $total_cabang = DB::table('cabang')->where('kode_cabang', '!=', '000')->count();
+        $tanggalAwal = $request->tAwal;
+        $tanggalAkhir = $request->tAkhir;
 
         $dataTertinggi = DB::table('cabang')
-            ->leftJoin('pengajuan', function ($join) use ($request) {
+            ->leftJoin('pengajuan', function ($join) use ($tanggalAwal,$tanggalAkhir) {
                 $join->on('cabang.id', '=', 'pengajuan.id_cabang')
-                    ->whereBetween('pengajuan.tanggal', [$request->tAwal, $request->tAkhir]);
+                    ->when($tanggalAwal, function($query) use ($tanggalAwal){
+                        return $query->where('tanggal', '>=', $tanggalAwal);
+                    })
+                    ->when($tanggalAkhir, function($query) use ($tanggalAkhir){
+                        return $query->where('tanggal', '<=', $tanggalAkhir);
+                    });
             })
             ->selectRaw('IFNULL(COUNT(pengajuan.id), 0) AS total, cabang.kode_cabang, cabang.cabang')
             ->where('cabang.kode_cabang', '!=', '000')
@@ -334,9 +341,14 @@ class DashboardRepository
             ->get();
             
         $dataTerendah = DB::table('cabang')
-            ->leftJoin('pengajuan', function ($join) use ($request) {
+            ->leftJoin('pengajuan', function ($join) use ($tanggalAwal,$tanggalAkhir) {
                 $join->on('cabang.id', '=', 'pengajuan.id_cabang')
-                    ->whereBetween('pengajuan.tanggal', [$request->tAwal, $request->tAkhir]);
+                    ->when($tanggalAwal, function($query) use ($tanggalAwal){
+                        return $query->where('tanggal', '>=', $tanggalAwal);
+                    })
+                    ->when($tanggalAkhir, function($query) use ($tanggalAkhir){
+                        return $query->where('tanggal', '<=', $tanggalAkhir);
+                    });
             })
             ->selectRaw('IFNULL(COUNT(pengajuan.id), 0) AS total, cabang.kode_cabang, cabang.cabang')
             ->where('cabang.kode_cabang', '!=', '000')
