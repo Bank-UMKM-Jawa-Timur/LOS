@@ -206,6 +206,11 @@
                                     $tipe_pengajuan = config('dagulir.tipe_pengajuan');
                                 @endphp
                                 @forelse ($data as $item)
+                                @php
+                                    $tglCetak = DB::table('log_cetak_kkb')
+                                                    ->where('id_pengajuan', $item->pengajuan->id)
+                                                    ->first();
+                                @endphp
                                 <tr>
                                     <td>{{ $i++ }}</td>
                                     <td>{{ $item->kode_pendaftaran != null ? $item->kode_pendaftaran : '-' }}</td>
@@ -235,7 +240,6 @@
                                     <td>
                                         @if ($item->pengajuan->posisi == 'Selesai')
                                             {{$item->tenor}} Bulan
-
                                         @else
                                             {{$item->jangka_waktu}} Bulan
                                         @endif
@@ -325,17 +329,19 @@
                                         @endif
                                     </td>
                                     <td>
-                                        {{$item->pengajuan->posisi}}
+                                        @if ($item->pengajuan->pk && $item->pengajuan->posisi == 'Selesai')
+                                            {{$item->pengajuan->posisi}}
+                                        @else
+                                            {{$item->pengajuan->posisi == 'Selesai' ? 'Disetujui' : $item->pengajuan->posisi}}
+                                        @endif
                                         @if ($item->pengajuan->posisi != 'Selesai' && $item->pengajuan->posisi != 'Ditolak')
                                             <p class="text-red-500">{{ $item->nama_pemroses }}</p>
                                         @endif
                                     </td>
                                     <td>
-                                        <p class="
-                                            {{-- @if (array_key_exists(intval($item->status), $status_color))
-                                                {{$status_color[intval($item->status)]}}
-                                            @endif --}}
-                                            "> {{ array_key_exists(intval($item->status), $status) ? $status[intval($item->status)] : 'Tidak ditemukan' }}</p>
+                                        <p class="">
+                                            {{ array_key_exists(intval($item->status), $status) ? $status[intval($item->status)] : 'Tidak ditemukan' }}
+                                        </p>
                                     </td>
                                     <td>
                                         <div class="flex">
@@ -371,12 +377,6 @@
                                                         </a>
                                                     @endif
                                                     @if (Auth::user()->role == 'Staf Analis Kredit' && $item->pengajuan->posisi == 'Selesai')
-                                                        @php
-                                                            $tglCetak = DB::table('log_cetak_kkb')
-                                                                ->where('id_pengajuan', $item->pengajuan->id)
-                                                                ->first();
-                                                        @endphp
-
                                                         @if ($tglCetak == null || !$tglCetak->tgl_cetak_sppk)
                                                             <a target="_blank" href="{{ route('dagulir.cetak-sppk-dagulir', $item->pengajuan->id) }}" class="dropdown-item w-full">
                                                                 <li class="item-tb-dropdown">
@@ -401,7 +401,7 @@
                                                             <a href="#" class="dropdown-item show-upload-pk w-full" data-toggle="modal" data-target="uploadPKModal"
                                                             data-id="{{ $item->pengajuan->id }}" data-kode_pendaftaran="{{$item->kode_pendaftaran}}">
                                                                 <li class="item-tb-dropdown">
-                                                                    Upload File PK
+                                                                    Realisasi Kredit
                                                                 </li>
                                                             </a>
                                                         @endif
@@ -602,7 +602,7 @@
                                         </td>
                                         <td>
                                             @if ($item->tipe)
-                                            {{array_key_exists(intval($item->tipe), $tipe_pengajuan) ? $tipe_pengajuan[intval($item->tipe)] : 'Tidak ditemukan'}}
+                                                {{array_key_exists(intval($item->tipe), $tipe_pengajuan) ? $tipe_pengajuan[intval($item->tipe)] : 'Tidak ditemukan'}}
                                             @else
                                                 Tidak ada
                                             @endif
@@ -768,7 +768,7 @@
                                                             @elseif (!$item->pengajuan->pk && $tglCetak->tgl_cetak_pk && $item->pengajuan->sppk)
                                                                 <a href="#" class="w-full cursor-pointer show-upload-pk" data-toggle="modal" data-target="uploadPKModal" data-id="{{ $item->pengajuan->id }}" data-kode_pendaftaran="{{$item->kode_pendaftaran}}">
                                                                     <li class="item-tb-dropdown">
-                                                                        Upload File PK
+                                                                        Realisasi Kredit
                                                                     </li>
                                                                 </a>
                                                             @endif
@@ -857,7 +857,7 @@
                                                             @endif
                                                         @else
                                                         <a href="{{ route('dagulir.cetak-surat', $item->pengajuan->id) }}"
-                                                            class="cursor-pointer w-full cursor-pointer" target="_blank">
+                                                            class="cursor-pointer w-full" target="_blank">
                                                             <li class="item-tb-dropdown">
                                                                 Cetak
                                                             </li>

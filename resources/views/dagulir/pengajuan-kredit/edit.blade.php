@@ -124,7 +124,8 @@ $dataIndex = match ($skema) {
                                                     </div>
                                                 </div>
                                             </div>
-
+                                            
+                                            <div class="form-group" id="space_nib"></div>
                                             <div class="form-group" id="nib">
                                                 <div class="input-box">
                                                     <label for="">NIB</label>
@@ -137,7 +138,7 @@ $dataIndex = match ($skema) {
                                             </div>
                                             <div class="form-group" id="docNIB">
                                                 <div class="input-box">
-                                                    <label for="">{{ $itemNIB->nama }}</label>
+                                                    <label for="">{{ $itemNIB->nama }}</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
                                                     @php
                                                         $file = edit_text_dagulir($pengajuan->id, $itemNIB->id)?->opsi_text;
                                                     @endphp
@@ -175,7 +176,7 @@ $dataIndex = match ($skema) {
 
                                             <div class="form-group" id="docSKU">
                                                 <div class="input-box">
-                                                    <label for="">{{ $itemSKU->nama }}</label>
+                                                    <label for="">{{ $itemSKU->nama }}</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
                                                     @php
                                                         $file = edit_text_dagulir($pengajuan->id, $itemSKU->id)?->opsi_text;
                                                     @endphp
@@ -212,7 +213,7 @@ $dataIndex = match ($skema) {
                                             </div>
                                             <div class="form-group" id="docNPWP">
                                                 <div class="input-box">
-                                                    <label for="">{{ $itemNPWP->nama }}</label>
+                                                    <label for="">{{ $itemNPWP->nama }}</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
                                                     @php
                                                         $file = edit_text_dagulir($pengajuan->id, $itemNPWP ->id)?->opsi_text;
                                                     @endphp
@@ -329,7 +330,7 @@ $dataIndex = match ($skema) {
                                             @elseif ($item->opsi_jawaban == 'file')
                                                 <div class="form-group">
                                                     <div class="input-box">
-                                                        <label for="">{{ $item->nama }}</label>
+                                                        <label for="">{{ $item->nama }}</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp, .pdf)</small>
                                                         @php
                                                             $file = edit_text_dagulir($pengajuan->id, $itemNIB->id)?->opsi_text;
                                                         @endphp

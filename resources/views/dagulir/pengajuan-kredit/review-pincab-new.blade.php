@@ -373,7 +373,7 @@
                                                                             <div class="field-answer">
                                                                                 <h6>
                                                                                     @if (count($getKomentarPenyelia) > 0)
-                                                                                        {{ strlen($getKomentarPenyelia[$key]?->komentar) > 0 ? $getKomentarPenyelia[$key]?->komenta ?? '-' : '-' }}
+                                                                                        {{ strlen($getKomentarPenyelia[$key]?->komentar) > 0 ? $getKomentarPenyelia[$key]?->komentar ?? '-' : '-' }}
                                                                                     @endif
                                                                                 </h6>
                                                                             </div>
@@ -440,7 +440,7 @@
                                                                     @elseif ($itemTextTiga->is_rupiah)
                                                                         <p>Rp. {{ number_format((int) $itemTextTiga->opsi_text, 0, ',', '.') }}</p>
                                                                     @else
-                                                                        {{-- <p>{{ $itemTiga->opsi_jawaban == 'persen' ? $itemTextTiga->opsi_text : $itemTextTiga->opsi_text  }}{{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</p> --}}
+                                                                        <p>{{ $itemTiga->opsi_jawaban == 'persen' ? $itemTextTiga->opsi_text : $itemTextTiga->opsi_text  }}{{ $itemTiga->opsi_jawaban == 'persen' ? '%' : '' }}</p>
                                                                     @endif
                                                                 </div>
                                                             </div>
@@ -593,7 +593,7 @@
                                                                                                     <div class="field-answer">
                                                                                                         <h6>
                                                                                                             @if (count($getKomentarPenyelia3) > 0)
-                                                                                                                {{ strlen($getKomentarPenyelia3[$key]?->komentar) > 0 ? $getKomentarPenyelia3[$key]?->komenta ?? '-' : '-' }}
+                                                                                                                {{ strlen($getKomentarPenyelia3[$key]?->komentar) > 0 ? $getKomentarPenyelia3[$key]?->komentar ?? '-' : '-' }}
                                                                                                             @endif
                                                                                                         </h6>
                                                                                                     </div>

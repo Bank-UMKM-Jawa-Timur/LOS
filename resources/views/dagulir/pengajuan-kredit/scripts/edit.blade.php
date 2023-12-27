@@ -223,7 +223,7 @@
                             if (valItem.nama == 'Foto') {
                                 $('#bukti_pemilikan_jaminan_utama').append(`
                                 <div class="form-group aspek_jaminan_kategori_jaminan_utama">
-                                    <label>${valItem.nama}</label>
+                                    <label>${valItem.nama}</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
                                     <input type="hidden" name="id_item_file[${valItem.id}]" value="${valItem.id}" id="" class="input">
                                     <input type="file" name="upload_file[${valItem.id}]" data-id="" class="form-input limit-size">
                                     <span class="text-red-500 m-0" style="display: none">Besaran file tidak boleh lebih dari 5 MB</span>
@@ -356,7 +356,7 @@
                             if (valItem.nama == 'Foto') {
                                 $('#bukti_pemilikan_jaminan_tambahan').append(`
                                     <div class="form-group file-wrapper item-${valItem.id}">
-                                        <label for="">${valItem.nama}</label>
+                                        <label for="">${valItem.nama}</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
                                         <div class="input-box mb-4">
                                             <div class="flex gap-4">
                                                 <input type="hidden" name="id_item_file[${valItem.id}][]"
@@ -512,7 +512,7 @@
                             if (valItem.nama == 'Foto') {
                                 $('#bukti_pemilikan_jaminan_tambahan').append(`
                                     <div class="form-group file-wrapper item-${valItem.id}">
-                                        <label for="">${valItem.nama}</label>
+                                        <label for="">${valItem.nama}</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
                                         <div class="input-box mb-4">
                                             <div class="flex gap-4">
                                                 <input type="hidden" name="id_item_file[${valItem.id}][]"
@@ -625,6 +625,7 @@
         $('#isNpwp').prop('checked', false)
         $('#npwpsku').hide();
         if (ijinUsaha == 'nib') {
+            $('#space_nib').show();
             $('#npwpsku').hide();
             $('#surat_keterangan_usaha').hide();
             $('#surat_keterangan_usaha_id').attr('disabled', true);
@@ -663,6 +664,7 @@
             $('#docNPWP_text').val('');
             $('#docNPWP_upload_file').removeAttr('disabled');
         } else if (ijinUsaha == 'surat_keterangan_usaha') {
+            $('#space_nib').hide();
             $('#npwpsku').show();
             $('#nib').hide();
             $('#nib_id').attr('disabled', true);
@@ -703,6 +705,7 @@
             $('#docNPWP_text').val('');
             $('#docNPWP_upload_file').attr('disabled', true);
         } else {
+            $('#space_nib').hide();
             $('#npwpsku').hide();
             $('#nib').hide();
             $('#nib_id').attr('disabled', true);
@@ -717,6 +720,8 @@
             $('#docNIB_file').attr('disabled', true);
             $('#docNIB_text').val('');
             $('#docNIB_upload_file').attr('disabled', true);
+
+            $('#docSKU').hide();
 
             $('#surat_keterangan_usaha').hide();
             $('#surat_keterangan_usaha_id').attr('disabled', true);
