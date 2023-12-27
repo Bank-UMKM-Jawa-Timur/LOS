@@ -57,10 +57,10 @@
                     <div class="form-group-2">
                         <div class="input-box">
                             <label for="">Nama</label>
-                            <input type="text" name="nama" class="form-control @error('nama') is-invalid @enderror"
+                            <input type="text" name="nama" class="form-input @error('nama') is-invalid @enderror"
                                 placeholder="Nama Item" value="{{ old('nama') }}">
                             <div class="flex gap-2" id="komentar">
-                                <input type="checkbox" name="" class="form-check" id="is-comment" />
+                                <input type="checkbox" name="is-comment" class="form-check" id="is-comment" />
                                 <label for="is-comment">Dapat Dikomentari</label>
                             </div>
                         </div>
@@ -77,9 +77,9 @@
                                 <option value="file">Upload File</option>
                             </select>
                             <div class="flex gap-2">
-                                <input class="form-check-input" type="checkbox" value="1" id="status_skor"
+                                <input class="form-check" type="checkbox" value="1" id="status_skor"
                                     name="status_skor" checked>
-                                <label for="is-skored">Perhitungan Skor</label>
+                                <label for="status_skor">Perhitungan Skor</label>
                             </div>
                         </div>
                     </div>
@@ -131,7 +131,7 @@
                                             <td>
                                                 @if ($key == 0)
                                                     <div class="flex gap-2">
-                                                        <button class="btn-add mt-10 plus">
+                                                        <button class="btn-add mt-10 plus" type="button">
                                                             <iconify-icon icon="fluent:add-12-filled" class="mt-3"></iconify-icon>
                                                         </button>
                                                         {{-- <a class="addDetail" class="btn p-3" href=""><i class="fa fa-plus-square text-primary p-3" style="font-size: 24px"></i></a> --}}
@@ -190,7 +190,7 @@
                                             </div>
                                         </td> --}}
                                         <td>
-                                            <button class="btn-add plus">
+                                            <button class="btn-add plus" type="button">
                                                 <iconify-icon icon="fluent:add-12-filled" class="mt-3"></iconify-icon>
                                             </button>
                                         </td>
@@ -198,41 +198,6 @@
                                 @endif
                             </tbody>
                         </table>
-                        {{-- <div class="form-group-4">
-                            <div class="input-box">
-                                <label for="">Opsi</label>
-                                <input type="text" class="form-input" name="" placeholder="Nama Opsi"
-                                    id="" />
-                            </div>
-                            <div class="input-box">
-                                <label for="">Skor</label>
-                                <input type="text" class="form-input" name="" placeholder="Skor" id="" />
-                            </div>
-                            <div>
-                                <button class="btn-add mt-10">
-                                    <iconify-icon icon="fluent:add-12-filled" class="mt-3"></iconify-icon>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="form-group-4">
-                            <div class="input-box">
-                                <label for="">Opsi</label>
-                                <input type="text" class="form-input" name="" id=""
-                                    placeholder="Nama Opsi" />
-                            </div>
-                            <div class="input-box">
-                                <label for="">Skor</label>
-                                <input type="text" class="form-input" name="" placeholder="Skor" id="" />
-                            </div>
-                            <div class="flex gap-2">
-                                <button class="btn-add mt-10">
-                                    <iconify-icon icon="fluent:add-12-filled" class="mt-3"></iconify-icon>
-                                </button>
-                                <button class="btn-minus mt-10">
-                                    <iconify-icon icon="tabler:minus" class="mt-3"></iconify-icon>
-                                </button>
-                            </div>
-                        </div> --}}
                     </div>
                     <div class="mt-5">
                         <div class="flex gap-5">
@@ -256,7 +221,7 @@
 
         $("#level").change(function() {
             var id_level = $(this).val();
-            if (id_level === "1") {
+            if (id_level == "1") {
                 $('#itemTurunan1Div').addClass("hidden");
                 $('#itemTurunan2Div').addClass("hidden");
                 $('#itemTurunan3Div').addClass("hidden");
@@ -272,22 +237,10 @@
                 $('#opsi').addClass("hidden");
                 $('#item_turunan_tiga').addClass("hidden");
                 $('#item_turunan_tiga').prop('disabled', true)
-            } else {
-                $('#itemTurunan1').prop('disabled', false);
-                $('#itemTurunan2').prop('disabled', false);
-                $('#opsi_name').prop('disabled', false);
-                $('#skor').prop('disabled', false);
-                $('#opsi').removeClass("hidden");
-                $('#form_opsi').removeClass("hidden");
-                $('#dapat_dikomentari').removeClass("hidden");
-                $('#status_skor_item').removeClass("hidden");
-                $('#status_skor').removeAttr('disabled');
-                $('#opsi_jawaban').prop('disabled', false);
             }
             $('#opsi_jawaban').change(function(e) {
                 e.preventDefault();
-                let opsi_jawaban = $(this).val();
-                console.log(opsi_jawaban);
+                let opsi_jawaban = $(`#opsi_jawaban`).find(":selected").val();
                 if (opsi_jawaban == "option") {
                     $('#opsi').removeClass("hidden");
                     $('#status_skor_item').removeClass("hidden");
@@ -302,7 +255,7 @@
                     $('#skor').prop('disabled', true);
                 }
             })
-            if (id_level == "2") {
+            if (id_level == "2" || opsi_jawaban == "option") {
                 $('#itemTurunan1Div').removeClass("hidden");
                 $('#itemTurunan2Div').addClass("hidden");
                 $('#itemTurunan3Div').addClass("hidden");
@@ -315,7 +268,7 @@
                 } else {
                     $('#itemTurunan1').empty();
                 }
-            } else if (id_level == "3") {
+            } else if (id_level == "3" || opsi_jawaban == "option") {
                 $('#itemTurunan1Div').removeClass("hidden");
                 $('#itemTurunan2Div').removeClass("hidden");
                 $('#itemTurunan3Div').addClass("hidden");
@@ -329,7 +282,7 @@
                     turunanDua(id_turunan);
                 })
                 addOption()
-            } else if (id_level == 4) {;
+            } else if (id_level == "4" || opsi_jawaban == "option") {
                 addOption();
                 turunanSatu(id_level);
                 $('#itemTurunan1Div').removeClass("hidden");
@@ -350,10 +303,19 @@
                     turunanTiga(id_turunan)
                 })
             } else {
-
+                $('#itemTurunan1').prop('disabled', false);
+                $('#itemTurunan2').prop('disabled', false);
+                $('#opsi_name').prop('disabled', false);
+                $('#skor').prop('disabled', false);
+                $('#opsi').removeClass("hidden");
+                $('#form_opsi').removeClass("hidden");
+                $('#dapat_dikomentari').removeClass("hidden");
+                $('#status_skor_item').removeClass("hidden");
+                $('#status_skor').removeAttr('disabled');
+                $('#opsi_jawaban').prop('disabled', false);
             }
-
         });
+
         // tambah ajax 1
         function turunanSatu(id_level) {
             $.ajax({
@@ -438,10 +400,10 @@
                                 </td>\
                             <td class="">\
                                 <div class="flex gap-2">\
-                                    <button class="btn-add mt-10 plus">\
+                                    <button class="btn-add mt-10 plus" type="button">\
                                         <iconify-icon icon="fluent:add-12-filled" class="mt-3"></iconify-icon>\
                                     </button>\
-                                    <button class="btn-minus mt-10 minus">\
+                                    <button class="btn-minus mt-10 minus" type="button">\
                                         <iconify-icon icon="tabler:minus" class="mt-3"></iconify-icon>\
                                     </button>\
                                 </div>\
@@ -455,10 +417,10 @@
 
         $('#status_skor').change(function(e) {
             if ($(this).is(":checked")) {
-                $('.skor_option').removeAttr('readonly');
+                $('.skor_option').removeAttr('readonly').removeClass("bg-gray-100");
             } else {
                 $('.skor_option').val('');
-                $('.skor_option').attr('readonly', true);
+                $('.skor_option').attr('readonly', true).addClass("bg-gray-100");
             }
             $('#status_skor').val($(this).is(':checked'));
         });
