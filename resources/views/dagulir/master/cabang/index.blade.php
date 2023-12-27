@@ -159,5 +159,38 @@
             $('#form-delete-cabang').attr('action', deleteUrl);
             $('#form-delete-cabang').attr('method', 'POST'); // Diubah ke POST untuk Laravel
         })
+
+        $(`#modal-add-cabang .btn-submit`).on('click', function(e){
+            const kode_cabang = $(`kode-cabang-add`).val()
+            const cabang = $(`cabang-add`).val()
+            const email = $(`email-add`).val()
+            const alamat = $(`alamat-add`).val()
+
+            if (kode_cabang == '') {
+                e.preventDefault();
+                alertError("Kode Cabang Harus di isi")
+            }
+            else if (cabang == '') {
+                e.preventDefault();
+                alertError("Nama Cabang Harus di isi")
+            }
+            else if (email == '') {
+                e.preventDefault();
+                alertError("Email Cabang Harus di isi")
+            }
+            else if (alamat == '') {
+                e.preventDefault();
+                alertError("Alamat Cabang Harus di isi")
+            }
+        })
+
+
+        function alertError(message){
+            Swal.fire({
+                title: "Peringatan!",
+                text: message,
+                icon: "error"
+            });
+        }
     </script>
 @endpush

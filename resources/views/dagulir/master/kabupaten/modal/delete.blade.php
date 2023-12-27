@@ -10,9 +10,10 @@
                 <iconify-icon icon="iconamoon:close-bold" class="text-2xl"></iconify-icon>
             </button>
         </div>
-        <form id="form-delete" method="POST">
+        <form action="{{route('dagulir.master.kabupaten.destroy', 1)}}" method="POST">
             @method('delete')
             @csrf
+            <input type="hidden" name="id" id="id">
             <div class="modal-body">
                 <p>Apakah Anda yakin ingin menghapus data ini?</p>
             </div>
