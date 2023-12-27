@@ -1291,7 +1291,7 @@ video {
     @media (min-width: 1024px) {
 
   .review-pincab .field-review .field-name {
-    width: 85%;
+    width: 48%;
   }
 }
     .review-pincab .field-review .field-answer {
@@ -1881,6 +1881,9 @@ video {
 .w-\[40px\] {
   width: 40px;
 }
+.w-\[50\%\] {
+  width: 50%;
+}
 .w-auto {
   width: auto;
 }
@@ -1932,10 +1935,6 @@ video {
 .origin-top-right {
   transform-origin: top right;
 }
-.rotate-180 {
-  --tw-rotate: 180deg;
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
 .scale-100 {
   --tw-scale-x: 1;
   --tw-scale-y: 1;
@@ -1978,8 +1977,8 @@ video {
 .grid-cols-2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
-.flex-row {
-  flex-direction: row;
+.grid-cols-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 .flex-wrap {
   flex-wrap: wrap;
@@ -2173,6 +2172,10 @@ video {
 .border-transparent {
   border-color: transparent;
 }
+.border-green-500 {
+  --tw-border-opacity: 1;
+  border-color: rgb(34 197 94 / var(--tw-border-opacity));
+}
 .bg-\[\#39B568\]\/20 {
   background-color: rgb(57 181 104 / 0.2);
 }
@@ -2255,6 +2258,9 @@ video {
 .bg-theme-secondary\/90 {
   background-color: rgb(17 32 66 / 0.9);
 }
+.bg-transparent {
+  background-color: transparent;
+}
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
@@ -2263,8 +2269,11 @@ video {
   --tw-bg-opacity: 1;
   background-color: rgb(254 249 195 / var(--tw-bg-opacity));
 }
-.bg-transparent {
-  background-color: transparent;
+.bg-theme-primary\/5 {
+  background-color: rgb(220 53 69 / 0.05);
+}
+.bg-green-500\/5 {
+  background-color: rgb(34 197 94 / 0.05);
 }
 .bg-cover {
   background-size: cover;
@@ -2440,6 +2449,9 @@ video {
 .text-justify {
   text-align: justify;
 }
+.align-top {
+  vertical-align: top;
+}
 .align-middle {
   vertical-align: middle;
 }
@@ -2585,6 +2597,10 @@ video {
 .text-red-600 {
   --tw-text-opacity: 1;
   color: rgb(220 38 38 / var(--tw-text-opacity));
+}
+.text-red-800 {
+  --tw-text-opacity: 1;
+  color: rgb(153 27 27 / var(--tw-text-opacity));
 }
 .text-theme-primary {
   --tw-text-opacity: 1;
@@ -2906,11 +2922,6 @@ video {
   .dark\:bg-gray-200 {
     --tw-bg-opacity: 1;
     background-color: rgb(229 231 235 / var(--tw-bg-opacity));
-  }
-
-  .dark\:bg-gray-700 {
-    --tw-bg-opacity: 1;
-    background-color: rgb(55 65 81 / var(--tw-bg-opacity));
   }
 
   .dark\:bg-gray-800 {

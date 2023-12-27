@@ -701,41 +701,33 @@ class PengajuanKreditController extends Controller
      */
     public function create(Request $request)
     {
-        // $currentUrl = 'pincetar';
-        // $isPincetar = str_contains($currentUrl, 'pincetar') ? 1 : 0;
-        // if ($request->skema == 'KKB' && $isPincetar) {
-        //     return redirect()->route('pengajuan-kredit.create');
-        // } else {
-            // return 'else';
-            $param['pageTitle'] = "Dashboard";
-            $param['multipleFiles'] = $this->isMultipleFiles;
+        $param['pageTitle'] = "Dashboard";
+        $param['multipleFiles'] = $this->isMultipleFiles;
 
-            $param['dataDesa'] = Desa::all();
-            $param['dataKecamatan'] = Kecamatan::all();
-            $param['dataKabupaten'] = Kabupaten::all();
-            $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->where('nama', '!=', 'Data Umum')->get();
-            $param['itemSlik'] = ItemModel::with('option')->where('nama', 'SLIK')->first();
-            $param['itemSP'] = ItemModel::where('nama', 'Surat Permohonan')->first();
-            $param['itemP'] = ItemModel::where('nama', 'Laporan SLIK')->first();
-            $param['itemKTPSu'] = ItemModel::where('nama', 'Foto KTP Suami')->first();
-            $param['itemKTPIs'] = ItemModel::where('nama', 'Foto KTP Istri')->first();
-            $param['itemKTPNas'] = ItemModel::where('nama', 'Foto KTP Nasabah')->first();
-            $param['itemNIB'] = ItemModel::where('nama', 'Dokumen NIB')->first();
-            $param['itemNPWP'] = ItemModel::where('nama', 'Dokumen NPWP')->first();
-            $param['itemSKU'] = ItemModel::where('nama', 'Dokumen Surat Keterangan Usaha')->first();
+        $param['dataDesa'] = Desa::all();
+        $param['dataKecamatan'] = Kecamatan::all();
+        $param['dataKabupaten'] = Kabupaten::all();
+        $param['dataAspek'] = ItemModel::select('*')->where('level', 1)->where('nama', '!=', 'Data Umum')->get();
+        $param['itemSlik'] = ItemModel::with('option')->where('nama', 'SLIK')->first();
+        $param['itemSP'] = ItemModel::where('nama', 'Surat Permohonan')->first();
+        $param['itemP'] = ItemModel::where('nama', 'Laporan SLIK')->first();
+        $param['itemKTPSu'] = ItemModel::where('nama', 'Foto KTP Suami')->first();
+        $param['itemKTPIs'] = ItemModel::where('nama', 'Foto KTP Istri')->first();
+        $param['itemKTPNas'] = ItemModel::where('nama', 'Foto KTP Nasabah')->first();
+        $param['itemNIB'] = ItemModel::where('nama', 'Dokumen NIB')->first();
+        $param['itemNPWP'] = ItemModel::where('nama', 'Dokumen NPWP')->first();
+        $param['itemSKU'] = ItemModel::where('nama', 'Dokumen Surat Keterangan Usaha')->first();
 
-            $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
-            $param['dataMerk'] = MerkModel::all();
 
-            $param['skema'] = $request->skema;
+        $data['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
+        $param['dataMerk'] = MerkModel::all();
 
-            // dump($param['dataAspek']);
-            // dump($param['itemSlik']);
-            // dump($param['itemSP']);
-            // dump($param['dataPertanyaanSatu']);
-            // dd($param['itemP']);
-            return view('pengajuan-kredit.add-pengajuan-kredit', $param);
-        // }
+        $param['skema'] = $request->skema;
+
+        $param['jenis_usaha'] = config('dagulir.jenis_usaha');
+        $param['tipe'] = config('dagulir.tipe_pengajuan');
+        return view('pengajuan-kredit.add-pengajuan-kredit', $param);
+        // return view('new-pengajuan.add-pengajuan', $param);
     }
 
     public function checkSubColumn(Request $request)
@@ -1246,7 +1238,7 @@ class PengajuanKreditController extends Controller
             $addData->alamat_rumah = $request->alamat_rumah;
             $addData->alamat_usaha = $request->alamat_usaha;
             $addData->no_ktp = $request->no_ktp;
-            $addData->no_telp = $request->get('no_telp');
+            $addData->telp = $request->get('no_telp');
             $addData->tempat_lahir = $request->tempat_lahir;
             $addData->tanggal_lahir = $this->formatDate($request->tanggal_lahir);
             $addData->status = $request->status;
@@ -1540,17 +1532,21 @@ class PengajuanKreditController extends Controller
             DB::commit();
             event(new EventMonitoring('store pengajuan'));
 
-            if (!$statusSlik)
+            if (!$statusSlik){
+                alert()->success('Berhasil','Data berhasil disimpan.');
                 return redirect()->route('pengajuan-kredit.index')->withStatus('Data berhasil disimpan.');
-            else
+            }else{
+                alert()->error('Gagal','Pengajuan Ditolak');
                 return redirect()->route('pengajuan-kredit.index')->withError('Pengajuan ditolak');
+
+            }
         } catch (Exception $e) {
+            return $e->getMessage();
             DB::rollBack();
-            // return $e->getMessage();
             return redirect()->route('pengajuan-kredit.index')->withError('Terjadi kesalahan.' . $e->getMessage());
         } catch (QueryException $e) {
+            return $e->getMessage();
             DB::rollBack();
-            // return $e->getMessage();
             return redirect()->route('pengajuan-kredit.index')->withError('Terjadi kesalahan' . $e->getMessage());
         }
     }

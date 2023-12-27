@@ -12,8 +12,7 @@
         $('.show-edit').off('click').on('click', function() {
             const target = $(this).data('target');
             const id = $(this).data('id');
-            const id_kab = $(this).data('kab')
-            console.log(id_kab);
+            const id_kab = $(this).data('kab') 
             const nama = $(this).data('nama');
             // set value
             $(`#${target} #id`).val(id);

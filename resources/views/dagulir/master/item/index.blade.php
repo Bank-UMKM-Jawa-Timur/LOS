@@ -1,4 +1,4 @@
-@include('dagulir.master.kabupaten.modal.create')
+@include('dagulir.master.item.modal.delete')
 @extends('layouts.tailwind-template')
 @include('components.new.modal.loading')
 @push('script-inject')
@@ -13,10 +13,10 @@
         <div class="head lg:flex grid grid-cols-1 justify-between w-full font-poppins">
             <div class="heading flex-auto">
                 <p class="text-theme-primary font-semibold font-poppins text-xs">
-                    Master item
+                    Master Item
                 </p>
                 <h2 class="font-bold tracking-tighter text-2xl text-theme-text">
-                    item
+                    Item
                 </h2>
             </div>
             <div class="layout lg:flex grid grid-cols-1 lg:mt-0 mt-5 justify-end gap-5">
@@ -95,13 +95,14 @@
                                         <td>{{ $item->parent_name }}</td>
                                         <td>{{ $item->opsi_jawaban != null ? $item->opsi_jawaban : '-' }}</td>
                                         <td>{{ $item->is_commentable }}</td>
-                                        <td>
-                                            <button class="btn-edit">
+                                        <td class="m-2">
+                                            <a href="{{route('dagulir.master.master-item.edit', $item->id )}}" class="btn-edit">
                                                 <iconify-icon icon="uil:edit" class="icon"></iconify-icon>
-                                            </button>
-                                            <button class="btn-delete">
+                                            </a>
+                                            <a href="javascript:void(0)" class="btn-delete"
+                                                data-target="modalhapusitem" data-id="{{$item->id}}">
                                                 <iconify-icon class="icon" icon="ic:baseline-delete"></iconify-icon>
-                                            </button>
+                                            </a>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -122,26 +123,15 @@
         </div>
     </section>
 @endsection
-@push('custom-script')
+@push('script-inject')
     <script>
-        function resetPassword(name, id) {
-            Swal.fire({
-                title: 'Perhatian!!',
-                text: "Apakah anda yakin mereset password " + name + " ?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#112042',
-                cancelButtonColor: '#d33',
-                cancelButtonText: 'Batal',
-                confirmButtonText: 'ResetPassword',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $("#resetPasswordForm" + id).submit()
-                }
-            })
-        }
+        $(`.btn-delete`).on('click', function(){
+            const target = $(this).data('target');
+            const id = $(this).data('id');
+            console.log(id);
 
-
+            $(`#${target} #id`).val(id);
+            $(`#${target}`).removeClass('hidden');
+        })
     </script>
 @endpush

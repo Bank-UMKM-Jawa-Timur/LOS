@@ -14,9 +14,11 @@
             @csrf
             @method('DELETE')
             <input type="hidden" name="id_user_delete" class="id-user">
-            <p>Apakah anda yakin ingin menghapus user <span class="fw-bold" id="nama"></span></p>
+            <div class="modal-body">
+                <p>Apakah anda yakin ingin menghapus user <span class="fw-bold" id="nama"></span>?</p>
+            </div>
             <div class="modal-footer justify-end">
-                <button class="btn-cancel" data-dismiss-id="modal-hapus-user">
+                <button class="btn-cancel" type="button" data-dismiss-id="modal-hapus-user">
                     Batal
                 </button>
                 <button type="submit" class="btn-submit">Simpan</button>

@@ -88,7 +88,7 @@ class="sticky top-0 border-b z-50 p-3 font-poppins w-full bg-white"
         <h2
           class="font-poppins font-semibold tracking-tighter text-sm"
         >
-      
+
           @if (auth()->user()->nip)
             {{ $name_karyawan ? $name_karyawan : auth()->user()->name }}
           @else
@@ -98,7 +98,7 @@ class="sticky top-0 border-b z-50 p-3 font-poppins w-full bg-white"
         <p
           class="font-poppins font-semibold text-xs text-gray-400 tracking-tighter"
         >
-          @if ($role == 'PBO' || $role == 'PBP' || $role == 'Pincab')
+          @if ($role == 'PBO' || $role == 'PBP' || $role == 'Pincab' || $role == "Staf Analis Kredit" || $role == "Penyelia Kredit")
             {{$role}} - {{$cabang}}
           @else
             {{$role}}

@@ -7,7 +7,7 @@
     <title>Surat Perjanjian Kredit</title>
     <style>
         body{
-            font-size: 20px;
+            font-size: 15px;
             width: 215mm;
             height: 330mm;
         }
@@ -45,7 +45,6 @@
             width: 100%;
             padding-top: 5%;
         }
-
     </style>
 </head>
 @php
@@ -963,21 +962,4 @@
         </table>
     </div>
 </body>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
-<script>
-    function printPage() {
-        // Show print dialog
-        window.print();
-
-        // Generate PDF
-        const doc = new jsPDF();
-        const element = document.querySelector('.data-surat');
-        doc.html(element, {
-            callback: function (doc) {
-                doc.save('Surat Perjanjian Kredit.pdf');
-            }
-        });
-    }
-</script>
 </html>

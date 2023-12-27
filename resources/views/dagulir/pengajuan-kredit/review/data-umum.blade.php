@@ -41,7 +41,66 @@
             @endforeach
         @endif
     @endforeach
+    @php
+        $tipe = "";
+        $nama_pj = "";
+        if ($dataNasabah->tipe == 2) {
+            $tipe = "Perorangan";
+        } else if ($dataNasabah->tipe == 3) {
+            $tipe = "Badan Usaha";
+            $nama_pj = "Nama penanggung jawab";
+        } else if ($dataNasabah->tipe == 4){
+            $tipe = "Kelompok Usaha";
+            $nama_pj = "Nama ketua";
+        } else {
+            $tipe = "-";
+            $nama_pj = "-";
+        }
+    @endphp
     <div class="form-group-2">
+        <div class="form-group-1 col-span-2 pl-0">
+            <div>
+                <div class="w-full p-2 border-l-8 border-theme-primary bg-gray-100">
+                    <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                        Tipe Pengajuan :
+                    </h2>
+                </div>
+            </div>
+        </div>
+        <div class="field-review">
+            <div class="field-name">
+                <label for="">Tipe Pengajuan</label>
+            </div>
+            <div class="field-answer">
+                <p>{{$dataNasabah->tipe ? $tipe : '-'}}</p>
+            </div>
+        </div>
+        @if ($dataNasabah->tipe != 2)
+            <div class="field-review">
+                <div class="field-name">
+                    <label for="">{{ $nama_pj }}</label>
+                </div>
+                <div class="field-answer">
+                    <p>{{$dataNasabah->nama_pj_ketua ? $dataNasabah->nama_pj_ketua : '-'}}</p>
+                </div>
+            </div>
+            <div class="field-review">
+                <div class="field-name">
+                    <label for="">Tempat Berdiri</label>
+                </div>
+                <div class="field-answer">
+                    <p>{{$dataNasabah->tempat_berdiri ? $dataNasabah->tempat_berdiri : '-'}}</p>
+                </div>
+            </div>
+            <div class="field-review">
+                <div class="field-name">
+                    <label for="">Tanggal Berdiri</label>
+                </div>
+                <div class="field-answer">
+                    <p>{{$dataNasabah->tanggal_berdiri ? $dataNasabah->tanggal_berdiri : '-'}}</p>
+                </div>
+            </div>
+        @endif
         <div class="form-group-1 col-span-2 pl-0">
             <div>
                 <div class="w-full p-2 border-l-8 border-theme-primary bg-gray-100">
@@ -441,30 +500,6 @@
                 <p>{{$dataNasabah->ket_agunan ? strtolower(trans($dataNasabah->ket_agunan)) : '-'}}</p>
             </div>
         </div>
-        @php
-            $tipe = "";
-            $nama_pj = "";
-            if ($dataNasabah->tipe == 2) {
-                $tipe = "Perorangan";
-            } else if ($dataNasabah->tipe == 3) {
-                $tipe = "Badan Usaha";
-                $nama_pj = "Nama penanggung jawab";
-            } else if ($dataNasabah->tipe == 4){
-                $tipe = "Kelompok Usaha";
-                $nama_pj = "Nama ketua";
-            } else {
-                $tipe = "-";
-                $nama_pj = "-";
-            }
-        @endphp
-        <div class="field-review">
-            <div class="field-name">
-                <label for="">Tipe Pengajuan</label>
-            </div>
-            <div class="field-answer">
-                <p>{{$dataNasabah->tipe ? $tipe : '-'}}</p>
-            </div>
-        </div>
         <div class="field-review">
             <div class="field-name">
                 <label for="">Jenis badan hukum</label>
@@ -489,30 +524,4 @@
                 <p>{{$dataNasabah->hasil_verifikasi ? $dataNasabah->hasil_verifikasi : '-'}}</p>
             </div>
         </div>
-        @if ($dataNasabah->tipe != 2)
-            <div class="field-review">
-                <div class="field-name">
-                    <label for="">{{ $nama_pj }}</label>
-                </div>
-                <div class="field-answer">
-                    <p>{{$dataNasabah->nama_pj_ketua ? $dataNasabah->nama_pj_ketua : '-'}}</p>
-                </div>
-            </div>
-            <div class="field-review">
-                <div class="field-name">
-                    <label for="">Tempat Berdiri</label>
-                </div>
-                <div class="field-answer">
-                    <p>{{$dataNasabah->tempat_berdiri ? $dataNasabah->tempat_berdiri : '-'}}</p>
-                </div>
-            </div>
-            <div class="field-review">
-                <div class="field-name">
-                    <label for="">Tanggal Berdiri</label>
-                </div>
-                <div class="field-answer">
-                    <p>{{$dataNasabah->tanggal_berdiri ? $dataNasabah->tanggal_berdiri : '-'}}</p>
-                </div>
-            </div>
-        @endif
     </div>

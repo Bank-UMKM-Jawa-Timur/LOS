@@ -70,6 +70,56 @@
         class="p-5 w-full space-y-5 "
         id="data-umum"
     >
+    <div>
+        <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+            <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+               Tipe Pengajuan :
+            </h2>
+        </div>
+    </div>
+    <div class="input-box">
+        <label for="">Tipe Pengajuan</label><small class="text-red-500 font-bold">*</small>
+        <select name="tipe_pengajuan" id="tipe" class="form-select">
+            <option value="0">Tipe Pengajuan</option>
+            @foreach ($tipe as $key => $value)
+            <option value="{{ $key }}" {{ old('alamat_sesuai_ktp') == $key ? 'selected' : '' }}>{{ $value }}</option>
+            @endforeach
+        </select>
+    </div>
+    <div class="form-group-3 hidden" id="tempat_berdiri">
+        <div id="nama_pj" class="input-box">
+            <label for="" id="label_pj"></label>
+            <input
+                type="text"
+                class="form-input"
+                placeholder="Masukkan disini .."
+                name="nama_pj"
+                value="{{ old('nama_pj') }}"
+            />
+        </div>
+        <div class="input-box">
+            <label for="">Tempat Berdiri</label><small class="text-red-500 font-bold">*</small>
+            <input
+                type="text"
+                class="form-input"
+                name="tempat_berdiri"
+                placeholder="Masukkan disini"
+                value="{{ old('tempat_berdiri') }}"
+
+            />
+        </div>
+        <div class="input-box">
+            <label for="">Tanggal Berdiri</label><small class="text-red-500 font-bold">*</small>
+            <div class="input-grouped">
+                <input
+                type="date"
+                class="form-input"
+                name="tanggal_berdiri"
+                value="{{ old('tanggal_berdiri') }}"
+                />
+            </div>
+        </div>
+    </div>
         <div class="form-group-1 col-span-2">
             <div>
                 <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
@@ -79,6 +129,7 @@
                 </div>
             </div>
         </div>
+
         <div class="form-group-2">
             <div class="input-box">
                 <label for="">Nama Lengkap</label><small class="text-red-500 font-bold">*</small>
@@ -138,7 +189,7 @@
         </div>
         <div class="form-group-2">
             <div class="input-box">
-                <label for="ktp_nasabah" id="foto-nasabah">Foto Nasabah</label><small class="text-red-500 font-bold">*</small>
+                <label for="ktp_nasabah" id="foto-nasabah">Foto Nasabah</label><small class="text-red-500 font-bold">* (.jpg, .jpeg, .png, .webp)</small>
                 <input type="file" accept="image/png, image/gif, image/jpeg" name="foto_nasabah" class="form-input limit-size-2 only-image" />
                 <span class="error-limit text-red-500" style="display: none; margin-top: 0;">
                     Maximum upload file size is 2 MB
@@ -166,7 +217,7 @@
                 />
             </div>
             <div class="input-box" id="ktp-nasabah">
-                <label for="ktp_nasabah" id="label-ktp-nasabah">Foto KTP Nasabah</label><small class="text-red-500 font-bold">*</small>
+                <label for="ktp_nasabah" id="label-ktp-nasabah">Foto KTP Nasabah</label><small class="text-red-500 font-bold">* (.jpg, .jpeg, .png, .webp)</small>
                 <div class="flex gap-4">
                     <input type="file" name="ktp_nasabah" class="form-input limit-size-2 only-image" accept="image/png, image/gif, image/jpeg" />
                 </div>
@@ -185,7 +236,7 @@
                 />
             </div>
             <div class="input-box hidden" id="ktp-pasangan">
-                <label for="ktp_pasangan" id="">Foto KTP Pasangan</label><small class="text-red-500 font-bold">*</small>
+                <label for="ktp_pasangan" id="">Foto KTP Pasangan</label><small class="text-red-500 font-bold">* (.jpg, .jpeg, .png, .webp)</small>
                 <div class="flex gap-4">
                     <input type="file" name="ktp_pasangan" class="form-input limit-size-2 only-image" accept="image/png, image/gif, image/jpeg"/>
                 </div>
@@ -300,7 +351,7 @@
                 @endif
             </div>
             <div class="input-box">
-                <label for="">{{ $itemP->nama }}</label><small class="text-red-500 font-bold">*</small>
+                <label for="">{{ $itemP->nama }}</label><small class="text-red-500 font-bold">* (Pdf)</small>
                 <input type="hidden" name="id_item_file[{{ $itemP->id }}]" value="{{ $itemP->id }}" id="">
                 <input type="file" accept="application/pdf" name="upload_file[{{ $itemP->id }}]" id="file_slik" data-id=""
                     placeholder="Masukkan informasi {{ $itemP->nama }}" class="form-input limit-size-slik only-pdf">
@@ -387,7 +438,7 @@
                 />
             </div>
             <div class="input-box">
-                <label for="">Jangka Waktu</label><small class="text-red-500 font-bold">*</small>
+                <label for="">Tenor</label><small class="text-red-500 font-bold">*</small>
                 <div class="flex items-center">
                     <div class="flex-1">
                         <input
@@ -438,15 +489,6 @@
                     <option value="Tidak Berbadan Hukum" {{ old('jenis_berbadan') == 'Tidak Berbadan Hukum' ? 'selected' : '' }}>Tidak Berbadan Hukum</option>
                 </select>
             </div>
-            <div class="input-box">
-                <label for="">Tipe Pengajuan</label><small class="text-red-500 font-bold">*</small>
-                <select name="tipe_pengajuan" id="tipe" class="form-select">
-                    <option value="0">Tipe Pengajuan</option>
-                    @foreach ($tipe as $key => $value)
-                    <option value="{{ $key }}" {{ old('alamat_sesuai_ktp') == $key ? 'selected' : '' }}>{{ $value }}</option>
-                    @endforeach
-                </select>
-            </div>
         </div>
         <div class="form-group-3 hidden" id="tempat_berdiri">
             <div id="nama_pj" class="input-box">
@@ -458,28 +500,6 @@
                     name="nama_pj"
                     value="{{ old('nama_pj') }}"
                 />
-            </div>
-            <div class="input-box">
-                <label for="">Tempat Berdiri</label><small class="text-red-500 font-bold">*</small>
-                <input
-                    type="text"
-                    class="form-input"
-                    name="tempat_berdiri"
-                    placeholder="Masukkan disini"
-                    value="{{ old('tempat_berdiri') }}"
-
-                />
-            </div>
-            <div class="input-box">
-                <label for="">Tanggal Berdiri</label><small class="text-red-500 font-bold">*</small>
-                <div class="input-grouped">
-                    <input
-                    type="date"
-                    class="form-input"
-                    name="tanggal_berdiri"
-                    value="{{ old('tanggal_berdiri') }}"
-                    />
-                </div>
             </div>
         </div>
         <div class="form-group-1">
@@ -507,7 +527,7 @@
         <div class="flex justify-between">
             <a href="{{route('dagulir.pengajuan.index')}}">
                 <button type="button"
-                    class="px-5 py-2 border rounded bg-white text-gray-500">
+                    class="px-5 py-2 border rounded bg-white text-gray-500 btnKembali">
                     Kembali
                 </button>
             </a>

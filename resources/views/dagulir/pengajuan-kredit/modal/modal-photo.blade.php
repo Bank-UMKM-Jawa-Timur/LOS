@@ -17,7 +17,7 @@ id="modal-photo"
     </button>
   </div>
   <div class="modal-body">
-    <img src="{{ asset('img/no-image.jpg') }}" alt="">
+    <img id="content" src="{{ asset('img/no-image.jpg') }}" alt="">
   </div>
   <div class="modal-footer justify-end">
     <button
@@ -29,3 +29,15 @@ id="modal-photo"
   </div>
 </div>
 </div>
+@push('script-inject')
+<script>
+  $(document).on('click', '.btn-file-preview', function() {
+    console.log('tes')
+    const title = $(this).data('title')
+    const filepath = $(this).data('filepath')
+    $('#modal-photo #title h2').html(title)
+    $('#modal-photo #content').attr('src', filepath)
+    $('#modal-photo').removeClass('hidden')
+  })
+</script>
+@endpush
