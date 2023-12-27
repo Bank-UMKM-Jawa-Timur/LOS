@@ -4,7 +4,7 @@
     @include('dagulir.modal.filter')
 
     @include('dagulir.pengajuan-kredit.modal.pilih-penyelia')
-    {{-- @include('dagulir.modal.konfirmSendToPinca') --}}
+    @include('dagulir.modal.konfirmSendToPinca')
     @include('dagulir.modal.cetak-file-sppk')
     @include('dagulir.modal.cetak-file-pk')
     @include('dagulir.modal.approval')
@@ -387,21 +387,21 @@
                                                             </li>
                                                         </a>
                                                     @elseif (!$item->sppk && $tglCetak->tgl_cetak_sppk)
-                                                        <a href="#" class="w-full cursor-pointer show-upload-sppk" data-toggle="modal" data-target="uploadSPPKModal" data-id="{{ $item->id }}" data-kode_pendaftaran="{{$item->kode_pendaftaran}}">
+                                                        <a href="#" class="w-full cursor-pointer show-upload-sppk" data-toggle="modal" data-target="uploadSPPKModal" data-id="{{ $item->id }}">
                                                             <li class="item-tb-dropdown">
                                                                 Upload File SPPK
                                                             </li>
                                                         </a>
                                                     @elseif (!$tglCetak->tgl_cetak_pk && $item->sppk && $tglCetak->tgl_cetak_sppk )
-                                                        <a target="_blank" href="{{ route('dagulir.cetak-pk-dagulir', $item->id) }}" class="w-full cursor-pointer">
+                                                        <a target="_blank" href="{{ route('cetak-pk', $item->id_pengajuan) }}" class="w-full cursor-pointer">
                                                             <li class="item-tb-dropdown">
                                                                 Cetak PK
                                                             </li>
                                                         </a>
                                                     @elseif (!$item->pk && $tglCetak->tgl_cetak_pk && $item->sppk)
-                                                        <a href="#" class="w-full cursor-pointer show-upload-pk" data-toggle="modal" data-target="uploadPKModal" data-id="{{ $item->id }}" data-kode_pendaftaran="{{$item->kode_pendaftaran}}">
+                                                        <a href="#" class="w-full cursor-pointer show-upload-pk" data-toggle="modal" data-target="uploadPKModal" data-id="{{ $item->id }}">
                                                             <li class="item-tb-dropdown">
-                                                                Realisasi Kredit
+                                                                Upload PK
                                                             </li>
                                                         </a>
                                                     @endif
@@ -554,19 +554,141 @@
 
 @push('script-inject')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
-    $('#page_length').on('change', function() {
-        $('#form').submit()
+    if (document.getElementById('modalConfirmPincab')) {
+        document.getElementById('modalConfirmPincab').addEventListener('click', function () {
+            document.getElementById('confirmationModal').classList.remove('hidden');
+            document.getElementById('confirmationModal').classList.add('h-full');
+            var nama = $('#modalConfirmPincab').data('nama');
+            var namaHtml = nama.toLowerCase();
+            var idPengajuan = $('#modalConfirmPincab').data('id_pengajuan');
+            console.log(idPengajuan);
+            $('#nama_pengajuan').html(namaHtml.toUpperCase());
+            $('[name="id_pengajuan"]').val(idPengajuan);
+        });
+    }
+
+    if (document.getElementById('cancelAction')) {
+        document.getElementById('cancelAction').addEventListener('click', function () {
+            document.getElementById('confirmationModal').classList.add('hidden');
+            document.getElementById('confirmationModal').classList.remove('flex');
+        });
+    }
+
+    $(document).on('click', '.kembalikan-modal', function() {
+        const id = $(this).data('id')
+        const backto = $(this).data('backto')
+
+        // Show modal
+        $('#modal-kembalikan').removeClass('hidden')
+
+        // Set form variables
+        $('#modal-kembalikan #id_pengajuan').val(id)
+        $('#modal-kembalikan #backto').val(backto)
     })
 
-    $('#btn_filter').on('click', function () {
-        $('#form-filter').submit()
+    $('.review-penyelia').on('click', function(){
+        $("#preload-data").removeClass("hidden");
     })
+    $('.review-pincab').on('click', function(){
+        $("#preload-data").removeClass("hidden");
+    })
+    $('.submit-confirmation-modal').on('click', function(){
+        $("#preload-data").removeClass("hidden");
+    })
+    $('.submit-confirmation-modal-staff').on('click', function(){
+        $("#preload-data").removeClass("hidden");
+    })
+    $('.edit-pengajuan').on('click', function(){
+        $("#preload-data").removeClass("hidden");
+    })
+
+    $('.show-upload-sppk').on('click', function() {
+        const target = $(this).data('target')
+        const id = $(this).data('id')
+        const url_form = "{{url('/post-file')}}/"+id
+        const url_cetak = "{{url('/dagulir/cetak-sppk')}}/"+id
+        var token = generateCsrfToken()
+
+        $(`#${target} #form-sppk`).attr('action', url_form)
+        $(`#${target} #token`).val(token)
+        $(`#${target} #btn-cetak-file`).attr('href', url_cetak)
+        $(`#${target}`).removeClass('hidden');
+    })
+
+    $('.simpan-sppk').on('click', function(){
+        $("#uploadSPPKModal").addClass("hidden");
+        $("#preload-data").removeClass("hidden");
+    })
+    $('.simpan-pk').on('click', function(){
+        $("#uploadPKModal").addClass("hidden");
+        $("#preload-data").removeClass("hidden");
+    })
+
+    $('.show-upload-pk').on('click', function() {
+        const target = $(this).data('target')
+        const id = $(this).data('id')
+        const kode_pendaftaran = $(this).data('kode_pendaftaran')
+        const url_form = "{{url('/dagulir/post-file')}}/"+id
+        const url_cetak = "{{url('/dagulir/cetak-pk')}}/"+id
+        var token = generateCsrfToken()
+
+        $(`#${target} #form-pk`).attr('action', url_form)
+        $(`#${target} #token`).val(token)
+        $(`#${target} #btn-cetak-file`).attr('href', url_cetak)
+        $(`#${target} #kode_pendaftaran`).val(kode_pendaftaran)
+        $(`#${target}`).removeClass('hidden');
+    })
+    $(".tab-table-wrapper .tab-button").click(function(e) {
+        e.preventDefault();
+        var tabID = $(this).data('tab');
+        $(this).addClass('active').siblings().removeClass('active');
+        $('#tab-'+tabID).addClass('active').siblings().removeClass('active');
+
+        if(tabID == 'dagulir'){
+            $('#title-table').html('Dagulir')
+            $('#add-pengajuan').removeClass('hidden');
+        }else{
+            $('#title-table').html('Dagulir')
+            $('#add-pengajuan').addClass('hidden');
+        }
+    });
+
+    $('#btn-filter').on('click', function (e) {
+        e.preventDefault()
+        let tAwal = document.getElementById('tAwal');
+        let tAkhir = document.getElementById('tAkhir');
+        console.log(tAkhir.value);
+        if ($("#form-filter")[0].checkValidity()){
+            $('#form-filter').submit()
+        }else{
+            if(tAwal.value == "" && tAkhir.value == ""){
+                $('#form-filter').submit()
+            }else if(tAwal.value == ""){
+                $("#reqAwal").show();
+            }else if(tAkhir.value == ""){
+                $("#reqAkhir").show();
+            }else{
+                $("#reqAkhir").hide();
+                $("#reqAwal").hide();
+            }
+        }
+    })
+
+    $("#tAwal").on("change", function() {
+        var result = $(this).val();
+        if (result != null) {
+            $("#tAkhir").prop("required", true)
+        }
+    });
 
     var token = "gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFVaNj";
+    var cbgValue = '{{ Request()->query('cbg') }}';
 
-    $(document).ready(function () {
-        var cbgValue = '{{ Request()->query('cbg') }}';
+    $(document).ready(function() {
+        $("#errorAkhir").hide();
+
         $.ajax({
             type: "GET",
             url: "/api/v1/get-cabang",
@@ -574,13 +696,36 @@
                 'token': token,
             },
             success: function (response) {
-                $.map(response.data, function (item, i) {
+                response.data.forEach(element => {
                     $('#cabang').append(
-                        `<option value="${item.kode_cabang}" ${cbgValue == item.kode_cabang ? 'selected' : ''}>${item.cabang}</option>`
+                        `<option value="${element.kode_cabang}" ${cbgValue == element.kode_cabang ? 'selected' : ''}>${element.cabang}</option>`
                     );
                 });
             }
         });
-    });
-</script>
+    })
+
+    $("#tAkhir").on("change", function() {
+        var tAkhir = $(this).val();
+        var tAwal = $("#tAwal").val();
+        if (Date.parse(tAkhir) < Date.parse(tAwal)) {
+            $("#tAkhir").val('');
+            $("#errorAkhir").show();
+        } else {
+            $("#errorAkhir").hide();
+        }
+    })
+
+    $(".confirmationModalPenyelia").on("click", function(){
+        var target = $(this).data('target');
+        var id_pengajuan = $(this).data('id-pengajuan');
+        var nama = $(this).data('nama');
+        var id_penyelia = $(this).data('id-penyelia');
+        console.log(target);
+        $(`${target} #id-pengajuan`).val(id_pengajuan)
+        $(`${target} #id-penyelia`).val(id_penyelia)
+        $(`${target} #nama`).html(nama)
+        $(target).removeClass('hidden');
+    })
+    </script>
 @endpush
