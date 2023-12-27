@@ -2321,6 +2321,7 @@ class PengajuanKreditController extends Controller
                 'calon_nasabah.alamat_rumah',
                 'calon_nasabah.alamat_usaha',
                 'calon_nasabah.no_ktp',
+                'calon_nasabah.telp',
                 'calon_nasabah.tempat_lahir',
                 'calon_nasabah.tanggal_lahir',
                 'calon_nasabah.status',
