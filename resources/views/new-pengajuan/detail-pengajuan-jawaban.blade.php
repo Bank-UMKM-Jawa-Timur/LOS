@@ -214,24 +214,127 @@
                                     @endif --}}
                                 </div>
                                 <div class="form-group-2">
-                                    <div class="field-review">
-                                        <div class="field-name">
-                                            <label for="">Foto Nasabah</label>
-                                        </div>
-                                        <div class="field-answer">
-                                            <img src="{{ asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
-                                        </div>
-                                    </div>
 
-                                    <div class="field-review">
-                                        <div class="field-name">
-                                            <label for="">Foto KTP Nasabah</label>
-                                        </div>
-                                        <div class="field-answer">
-                                            <img src="{{ asset('img/no-image.png') }}" class="object-contain" width="200" height="400" alt="">
-                                            {{-- <span>{{ $dataUmumNasabah->jenis_usaha ? $dataUmumNasabah->jenis_usaha : '-' }}</span> --}}
-                                        </div>
-                                    </div>
+                                    @if ($dataUmumNasabah->status == 'menikah')
+                                        @php
+                                            $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+                                                ->where('level', 2)
+                                                ->where('id_parent', $itemKTPSu->id)
+                                                ->where('nama', 'Foto KTP Suami')
+                                                ->get();
+                                        @endphp
+                                        @foreach ($dataLevelDua as $item)
+                                            @if ($item->opsi_jawaban == 'file')
+                                                @php
+                                                    $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
+                                                        ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                                        ->where('jawaban_text.id_pengajuan', $dataUmumNasabah->id)
+                                                        ->where('jawaban_text.id_jawaban', $item->id)
+                                                        ->get();
+                                                @endphp
+                                                @foreach ($dataDetailJawabanText as $itemTextDua)
+                                                    @php
+                                                        $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmumNasabah->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                                                    @endphp
+                                                    <div class="form-group-1">
+                                                        <label for="">{{ $item->nama }}</label>
+                                                        <div class="form-group-1">
+                                                            <b>Jawaban:</b>
+                                                            <div class="mt-2">
+                                                                @if ($file_parts['extension'] == 'pdf')
+                                                                    <iframe
+                                                                        src="{{ asset('..') . '/upload/' . $dataUmumNasabah->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                        width="100%" height="400px"></iframe>
+                                                                @else
+                                                                    <img src="{{ asset('..') . '/upload/' . $dataUmumNasabah->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                        alt="" width="400px">
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            @endif
+                                        @endforeach
+                                        @php
+                                            $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+                                                ->where('level', 2)
+                                                ->where('id_parent', $itemKTPSu->id)
+                                                ->where('nama', 'Foto KTP Istri')
+                                                ->get();
+                                        @endphp
+                                        @foreach ($dataLevelDua as $item)
+                                            @if ($item->opsi_jawaban == 'file')
+                                                @php
+                                                    $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
+                                                        ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                                        ->where('jawaban_text.id_pengajuan', $dataUmumNasabah->id)
+                                                        ->where('jawaban_text.id_jawaban', $item->id)
+                                                        ->get();
+                                                @endphp
+                                                @foreach ($dataDetailJawabanText as $itemTextDua)
+                                                    @php
+                                                        $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmumNasabah->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                                                    @endphp
+                                                    <div class="form-group-1">
+                                                        <label for="">{{ $item->nama }}</label>
+                                                        <div class="form-group">
+                                                            <b>Jawaban:</b>
+                                                            <div class="mt-2">
+                                                                @if ($file_parts['extension'] == 'pdf')
+                                                                    <iframe
+                                                                        src="{{ asset('..') . '/upload/' . $dataUmumNasabah->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                        width="100%" height="400px"></iframe>
+                                                                @else
+                                                                    <img src="{{ asset('..') . '/upload/' . $dataUmumNasabah->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                        alt="" width="400px">
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            @endif
+                                        @endforeach
+                                    @else
+                                        @php
+                                            $dataLevelDua = \App\Models\ItemModel::select('id', 'nama', 'opsi_jawaban', 'level', 'id_parent', 'status_skor', 'is_commentable')
+                                                ->where('level', 2)
+                                                ->where('id_parent', $itemKTPSu->id)
+                                                ->where('nama', 'Foto KTP Nasabah')
+                                                ->get();
+                                        @endphp
+                                        @foreach ($dataLevelDua as $item)
+                                            @if ($item->opsi_jawaban == 'file')
+                                                @php
+                                                    $dataDetailJawabanText = \App\Models\JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'item.id as id_item', 'item.nama')
+                                                        ->join('item', 'jawaban_text.id_jawaban', 'item.id')
+                                                        ->where('jawaban_text.id_pengajuan', $dataUmumNasabah->id)
+                                                        ->where('jawaban_text.id_jawaban', $item->id)
+                                                        ->get();
+                                                @endphp
+                                                @foreach ($dataDetailJawabanText as $itemTextDua)
+                                                    @php
+                                                        $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmumNasabah->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
+                                                    @endphp
+                                                    <div class="form-group-1">
+                                                        <label for="">{{ $item->nama }}</label>
+                                                        <div class="form-group-1">
+                                                            <b>Jawaban:</b>
+                                                            <div class="mt-2">
+                                                                @if ($file_parts['extension'] == 'pdf')
+                                                                    <iframe
+                                                                        src="{{ asset('..') . '/upload/' . $dataUmumNasabah->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                        width="100%" height="400px"></iframe>
+                                                                @else
+                                                                    <img src="{{ asset('..') . '/upload/' . $dataUmumNasabah->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
+                                                                        alt="" width="400px"/>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            @endif
+                                        @endforeach
+                                    @endif
                                 </div>
                                 <div>
                                     <div class="p-2 border-l-8 border-theme-primary bg-gray-100">
@@ -299,7 +402,7 @@
                                     <div class="flex pl-2">
                                         <div class="flex-1 w-64 space-y-3">
                                             <label for="" class="text-sm font-semibold">Komentar</label>
-                                            <input type="text" class="w-full bg-transparent px-4 py-3 border-b-2 focus:border-red-500 border-gray-400 outline-none  komentar" 
+                                            <input type="text" class="w-full bg-transparent px-4 py-3 border-b-2 focus:border-red-500 border-gray-400 outline-none  komentar"
                                             name="komentar_penyelia[]" placeholder="Masukkan Komentar" value="{{ isset($komentarSlik->komentar) ? $komentarSlik->komentar : '' }}">
                                         </div>
                                         <div class="flex-3 w-5"></div>
@@ -358,7 +461,7 @@
                                             <label for="">Plafon</label>
                                         </div>
                                         <div class="field-answer">
-                                            <p>{{ 'Rp ' . number_format($dataUmumNasabah->nominal ? $dataUmumNasabah->nominal : 0, 2, ',', '.') }}</p>
+                                            <p>{{ 'Rp ' . number_format($dataUmumNasabah->jumlah_kredit ? $dataUmumNasabah->jumlah_kredit : 0, 2, ',', '.') }}</p>
                                         </div>
                                     </div>
                                     <div class="field-review">
@@ -366,7 +469,7 @@
                                             <label for="">Jangka Waktu</label>
                                         </div>
                                         <div class="field-answer">
-                                            <p>{{ $dataUmumNasabah->jangka_waktu ? $dataUmumNasabah->jangka_waktu : '-' }}</p>
+                                            <p>{{ $dataUmumNasabah->tenor_yang_diminta ? $dataUmumNasabah->tenor_yang_diminta : '-' }}</p>
                                         </div>
                                     </div>
                                     <div class="field-review">
@@ -374,7 +477,7 @@
                                             <label for="">Tujuan Penggunaan</label>
                                         </div>
                                         <div class="field-answer">
-                                            <p>{{ $dataUmumNasabah->tujuan_penggunaan ? $dataUmumNasabah->tujuan_penggunaan : '-' }}</p>
+                                            <p>{{ $dataUmumNasabah->tujuan_kredit ? $dataUmumNasabah->tujuan_kredit : '-' }}</p>
                                         </div>
                                     </div>
                                     <div class="field-review">
@@ -382,25 +485,10 @@
                                             <label for="">Jaminan yang Disediakan</label>
                                         </div>
                                         <div class="field-answer">
-                                            <p>{{ $dataUmumNasabah->ket_agunan ? $dataUmumNasabah->ket_agunan : '-' }}</p>
+                                            <p>{{ $dataUmumNasabah->jaminan_kredit ? $dataUmumNasabah->jaminan_kredit : '-' }}</p>
                                         </div>
                                     </div>
-                                    {{-- <div class="field-review">
-                                        <div class="field-name">
-                                            <label for="">Tipe Pengajuan</label>
-                                        </div>
-                                        <div class="field-answer">
-                                            <p>{{ $dataUmumNasabah->tipe ? $dataUmumNasabah->tipe : '-' }}</p>
-                                        </div>
-                                    </div>
-                                    <div class="field-review">
-                                        <div class="field-name">
-                                            <label for="">Jenis Badan Hukum</label>
-                                        </div>
-                                        <div class="field-answer">
-                                            <p>{{ $dataUmumNasabah->jenis_badan_hukum ? $dataUmumNasabah->jenis_badan_hukum : '-' }}</p>
-                                        </div>
-                                    </div> --}}
+
                                 </div>
                                 <div class="form-group-2">
                                     <div class="field-review">
@@ -416,7 +504,7 @@
                                             <label for="">Hasil Verifikasi</label>
                                         </div>
                                         <div class="field-answer">
-                                            <p>{{ $dataUmumNasabah->hasil_verifikasi ? $dataUmumNasabah->hasil_verifikasi : '-' }}</p>
+                                            <p>{{ $dataUmumNasabah->verifikasi_umum ? $dataUmumNasabah->verifikasi_umum : '-' }}</p>
                                         </div>
                                     </div>
                                 </div>

@@ -489,7 +489,7 @@
                                                         @endif
                                                     @endif
                                                 @else
-                                                <a href="{{ route('dagulir.cetak-surat', $item->id) }}"
+                                                <a href="{{ route('cetak', $item->id_pengajuan) }}"
                                                     class="cursor-pointer w-full" target="_blank">
                                                     <li class="item-tb-dropdown">
                                                         Cetak
