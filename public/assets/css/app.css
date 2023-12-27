@@ -644,6 +644,23 @@ video {
     padding: 1.25rem;
   }
 }
+    .modal-layout-no-backdrop {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  z-index: 99999;
+  height: 100vh;
+  width: 100%;
+  overflow-y: auto;
+  background-color: rgb(0 0 0 / 0.5);
+  padding: 0.5rem;
+}
+    @media (min-width: 1024px) {
+
+  .modal-layout-no-backdrop {
+    padding: 1.25rem;
+  }
+}
     .modal-lg {
   max-width: 100%;
 }
@@ -2907,11 +2924,6 @@ video {
   .dark\:border-gray-700 {
     --tw-border-opacity: 1;
     border-color: rgb(55 65 81 / var(--tw-border-opacity));
-  }
-
-  .dark\:bg-gray-200 {
-    --tw-bg-opacity: 1;
-    background-color: rgb(229 231 235 / var(--tw-bg-opacity));
   }
 
   .dark\:bg-gray-800 {
