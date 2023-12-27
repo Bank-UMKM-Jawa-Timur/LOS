@@ -34,7 +34,7 @@
                     <th>Diproses</th>
                 </thead>
                 <tbody>
-                    <tr>
+                    {{-- <tr>
                         <td class="title-table">Pincab</td>
                         <td>30</td>
                         <td>40</td>
@@ -68,6 +68,13 @@
                         <td>40</td>
                         <td>20</td>
                         <td>10</td>
+                    </tr> --}}
+                    <tr>
+                        <td class="title-table">{{ $dataDetailPosisi['user'] }}</td>
+                        <td>{{ $dataDetailPosisi['total'] }}</td>
+                        <td>{{ $dataDetailPosisi['selesai'] }}</td>
+                        <td>{{ $dataDetailPosisi['ditolak'] }}</td>
+                        <td>{{ $dataDetailPosisi['proses'] }}</td>
                     </tr>
                 </tbody>
             </table>

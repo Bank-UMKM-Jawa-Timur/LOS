@@ -1413,6 +1413,15 @@ video {
   font-size: 0.875rem;
   line-height: 1.25rem;
 }
+    .title-table {
+  border-right-width: 1px;
+  --tw-bg-opacity: 1;
+  background-color: rgb(249 250 251 / var(--tw-bg-opacity));
+  text-align: left;
+  font-weight: 700;
+  --tw-text-opacity: 1;
+  color: rgb(75 85 99 / var(--tw-text-opacity));
+}
 
 *, ::before, ::after {
   --tw-border-spacing-x: 0;
@@ -1771,6 +1780,9 @@ video {
 }
 .mt-\[3px\] {
   margin-top: 3px;
+}
+.mt-\[4px\] {
+  margin-top: 4px;
 }
 .mt-\[5vh\] {
   margin-top: 5vh;

@@ -5,9 +5,85 @@ namespace App\Repository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Concerns\ToArray;
 
 class DashboardRepository
 {
+    public function getDetailPosisi(Request $request){
+        $role = auth()->user()->role;
+        $idUser = auth()->user()->id;
+
+        $data = DB::table('pengajuan')
+            ->whereNull('deleted_at');
+
+        $posisiUser = '';
+        $dataAdmin = [];
+        if($role == 'Staf Analis Kredit'){
+            $posisiUser = "Staf";
+            $data->where('id_staf', $idUser);
+        } else if($role == 'Penyelia Kredit'){
+            $posisiUser = "Penyelia";
+            $data->where('id_penyelia', $idUser);
+            $data->where('posisi','Review Penyelia');
+        } else if($role == 'PBO'){
+            $posisiUser = "PBO";
+            $data->where('id_pbo', $idUser);
+            $data->where('posisi','PBO');
+        } else if($role == 'PBP'){
+            $posisiUser = "PBP";
+            $data->where('id_pbp', $idUser);
+            $data->where('posisi','PBP');
+        } else if($role == 'Pincab'){
+            $posisiUser = "Pincab";
+            $data->where('id_pincab', $idUser);
+            $data->where('posisi','Pincab');
+        }else{
+            // $data->where('id_staf', $idUser);
+            foreach ($data->get() as $item) {
+                if (condition) {
+                    # code...
+                }
+                // $dataAdmin = 
+            }
+        }
+
+        $total_proses = 0;
+        $total_selesai = 0;
+        $total_ditolak = 0;
+        $total_keseluruhan = 0;
+        foreach($data->get() as $item){
+            if($item->posisi == 'Proses Input Data' || $item->posisi == 'Review Penyelia' || $item->posisi == 'PBO' || $item->posisi == 'PBP' || $item->posisi == 'Pincab'){
+                $total_proses++;
+            } else if($item->posisi == 'Selesai'){
+                $total_selesai++;
+            } else if($item->posisi == 'Ditolak'){
+                $total_ditolak++;
+            }
+            $total_keseluruhan++;
+        }
+
+        // return $data->select(
+        //     DB::raw("(SELECT COUNT(id_staf) AS proses FROM pengajuan WHERE deleted_at IS NULL AND id_staf = $idUser AND posisi = 'Review Penyelia') as proses"),
+        //     DB::raw('COUNT(id_staf) as total')
+        //     )
+        //     ->get();
+        return ($role == 'Staf Analis Kredit' || $role == 'Penyelia Kredit' || $role == 'PBO' || $role == 'PBP' || $role == 'Pincab') ?
+        array(
+            'user' => $posisiUser,
+            'proses' => $total_proses,
+            'selesai' => $total_selesai,
+            'ditolak' => $total_ditolak,
+            'total' => $total_keseluruhan
+        ) : 
+        array(
+            'user' => "TEESS",
+            'proses' => $total_proses,
+            'selesai' => $total_selesai,
+            'ditolak' => $total_ditolak,
+            'total' => $total_keseluruhan
+        );
+        
+    }
     public function getCount(Request $request){
         $role = auth()->user()->role;
         $idUser = auth()->user()->id;
@@ -53,6 +129,7 @@ class DashboardRepository
         } else if($role == 'Pincab'){
             $data->where('id_pincab', $idUser);
         }
+
         $total_proses = 0;
         $total_selesai = 0;
         $total_ditolak = 0;
