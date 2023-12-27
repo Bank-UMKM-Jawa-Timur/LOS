@@ -203,7 +203,8 @@ class NewItemController extends Controller
         $this->param['isParent'] = $isParent;
 
         $this->param['opsi'] = OptionModel::where('id_item', $id)->get();
-        return view('master-item.edit', $this->param);
+        // return view('master-item.edit', $this->param);
+        return view('dagulir.master.item.form.edit', $this->param);
     }
 
     /**
@@ -250,10 +251,13 @@ class NewItemController extends Controller
                     }
                 }
             }
-            return redirect()->route('master-item.index')->withStatus('Berhasil mengupdate data.');
+            alert()->success('Berhasil', 'Berhasil mengupdate data.');
+            return redirect()->route('dagulir.master.master-item.index')->withStatus('Berhasil mengupdate data.');
         } catch (Exception $e) {
+            alert()->error('error', 'Terjadi Kesalahan.');
             return back()->withError('Terjadi Kesalahan.');
         } catch (QueryException $e) {
+            alert()->error('error', 'Terjadi Kesalahan.');
             return back()->withError('Terjadi Kesalahan.');
         }
     }
@@ -278,9 +282,11 @@ class NewItemController extends Controller
     public function destroy($id)
     {
         try {
-            $data = OptionModel::where('id_item', $id)->delete();
-            $deleteItem = ItemModel::find($id)->delete();
-            return redirect()->route('master-item.index')->withStatus('Berhasil menghapus data.');
+            $id_item =  Request()->id_item;
+            $data = OptionModel::where('id_item', $id_item)->delete();
+            $deleteItem = ItemModel::find($id_item)->delete();
+            alert()->success('Berhasil', 'Berhasil menghapus data.');
+            return redirect()->route('dagulir.master.master-item.index')->withStatus('Berhasil menghapus data.');
         } catch (Exception $e) {
             return $e;
             return redirect()->back()->withStatus('Terjadi Kesalahan.');
