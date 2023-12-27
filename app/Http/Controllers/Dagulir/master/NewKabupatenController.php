@@ -183,10 +183,12 @@ class NewKabupatenController extends Controller
     public function destroy($id)
     {
         try {
-            $kabupaten = Kabupaten::findOrFail($id);
+            $id_kab =  Request()->id;
+            $kabupaten = Kabupaten::where('id',$id_kab)->first();
+            // return $kabupaten;
             $kabupaten->delete();
             alert()->success('Berhasil','Data berhasil dihapus.');
-            return redirect()->route('dagulir.master.kabupaten.index');
+            return back();
         } catch (Exception $e) {
             return back()->withError('Terjadi kesalahan.');
         } catch (QueryException $e) {

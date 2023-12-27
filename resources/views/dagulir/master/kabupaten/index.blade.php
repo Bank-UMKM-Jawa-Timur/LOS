@@ -24,12 +24,7 @@
             const target = $(this).data('target');
             const id = $(this).data('id');
 
-            var url = '{{ url('') }}'
-            var deleteUrl = url + '/dagulir/master/kabupaten/' + id;
-
-            $('#form-delete').attr('action', deleteUrl);
-            $('#form-delete').attr('method', 'POST');
-
+            $(`#${target} #id`).val(id);
             $(`#${target}`).removeClass('hidden');
         })
     </script>
@@ -127,7 +122,6 @@
                                                 class="btn-delete show-hapus"
                                                 data-target="modalhapus"
                                                 data-id="{{ $item->id }}"
-
                                                 >
                                                 <iconify-icon class="icon" icon="ic:baseline-delete"></iconify-icon>
                                             </a>
