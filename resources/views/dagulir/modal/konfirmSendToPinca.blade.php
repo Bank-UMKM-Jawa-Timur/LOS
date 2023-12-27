@@ -1,7 +1,7 @@
-@foreach ($data_pengajuan as $item)
+@foreach ($data as $item)
 <div class="modal-layout hidden" id="confirmationModal">
     <div class="modal modal-sm bg-white">
-        <form action="{{ route('dagulir.check.pincab', $item->id) }}" method="POST">
+        <form action="{{ route('dagulir.check.pincab', $item->pengajuan->id) }}" method="POST">
             @csrf
             <div class="modal-head">
                 <div class="title">

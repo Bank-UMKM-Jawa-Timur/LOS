@@ -4,7 +4,7 @@
     @include('dagulir.modal.filter')
 
     @include('dagulir.pengajuan-kredit.modal.pilih-penyelia')
-    @include('dagulir.modal.konfirmSendToPinca')
+    {{-- @include('dagulir.modal.konfirmSendToPinca') --}}
     @include('dagulir.modal.cetak-file-sppk')
     @include('dagulir.modal.cetak-file-pk')
     @include('dagulir.modal.approval')
@@ -357,6 +357,12 @@
                                             </button>
                                             <ul class="dropdown-tb-menu hidden">
                                                 @if (Auth::user()->role == 'Staf Analis Kredit' && $item->posisi == 'Proses Input Data')
+                                                    <a href="{{ route('dagulir.pengajuan.edit', $item->id_pengajuan) }}"
+                                                        class="w-full cursor-pointer">
+                                                        <li class="item-tb-dropdown">
+                                                            Edit data
+                                                        </li>
+                                                    </a>
                                                     @if ($item->average_by_sistem)
                                                         @if (!$item->id_penyelia)
                                                             <a href="#" onclick="showTindakLanjut({{ $item->id }},'penyelia kredit')" class="w-full cursor-pointer">

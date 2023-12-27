@@ -201,6 +201,7 @@ class NewDagulirController extends Controller
     }
 
     public function create(Request $request) {
+        return $request;
         $role = auth()->user()->role;
         if ($role == 'Staf Analis Kredit') {
             $param['pageTitle'] = "Dashboard";
@@ -2506,15 +2507,23 @@ class NewDagulirController extends Controller
         $param['jenis_usaha'] = config('dagulir.jenis_usaha');
         $param['tipe'] = config('dagulir.tipe_pengajuan');
         $pengajuan = PengajuanModel::find($id);
-        $dagulir_id = $pengajuan->dagulir_id;
-        $dagulir = PengajuanDagulir::find($dagulir_id);
-        $param['duTemp'] = $dagulir;
+        if ($pengajuan->skema_kredit == 'Dagulir') {
+            $dagulir_id = $pengajuan->dagulir_id;
+            $dagulir = PengajuanDagulir::find($dagulir_id);
+            $param['duTemp'] = $dagulir;
+            $param['dataKabupaten'] = Kabupaten::all();
+            $param['dataKecamatan'] = Kecamatan::where('id_kabupaten', $dagulir->kotakab_ktp)->get();
+            $param['dataDesa'] = Desa::where('id_kecamatan', $dagulir->kec_ktp)->get();
+            $param['dataKecamatanDomisili'] = Kecamatan::where('id_kabupaten', $dagulir->kotakab_dom)->get();
+            $param['dataKecamatanUsaha'] = Kecamatan::where('id_kabupaten', $dagulir->kotakab_usaha)->get();
+        }else{
+            $calon = CalonNasabah::where('id_pengajuan',$id)->first();
+            $param['duTemp'] = $calon;
+            $param['dataKabupaten'] = Kabupaten::all();
+            $param['dataKecamatan'] = Kecamatan::where('id_kabupaten', $calon->id_kabupaten)->get();
+            $param['dataDesa'] = Desa::where('id_kecamatan', $calon->id_kecamatan)->get();
+        }
         $param['pengajuan'] = $pengajuan;
-        $param['dataKabupaten'] = Kabupaten::all();
-        $param['dataKecamatan'] = Kecamatan::where('id_kabupaten', $dagulir->kotakab_ktp)->get();
-        $param['dataDesa'] = Desa::where('id_kecamatan', $dagulir->kec_ktp)->get();
-        $param['dataKecamatanDomisili'] = Kecamatan::where('id_kabupaten', $dagulir->kotakab_dom)->get();
-        $param['dataKecamatanUsaha'] = Kecamatan::where('id_kabupaten', $dagulir->kotakab_usaha)->get();
         $param['jawabanSlik'] = JawabanModel::select('id', 'id_jawaban', 'skor')
                                             ->where('id_pengajuan', $id)
                                             ->whereIn('id_jawaban', [71,72,73,74])

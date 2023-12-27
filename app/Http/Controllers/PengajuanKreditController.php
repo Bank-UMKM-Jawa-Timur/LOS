@@ -1602,7 +1602,7 @@ class PengajuanKreditController extends Controller
             'calon_nasabah.alamat_rumah',
             'calon_nasabah.alamat_usaha',
             'calon_nasabah.no_ktp',
-            'calon_nasabah.no_telp',
+            'calon_nasabah.telp',
             'calon_nasabah.tempat_lahir',
             'calon_nasabah.tanggal_lahir',
             'calon_nasabah.status',
@@ -1621,6 +1621,11 @@ class PengajuanKreditController extends Controller
         )
             ->join('calon_nasabah', 'calon_nasabah.id_pengajuan', 'pengajuan.id')
             ->find($id);
+        $param['pengajuan'] = PengajuanModel::find($id);
+        $param['dataKabupaten'] = Kabupaten::all();
+        $param['dataKecamatan'] = Kecamatan::where('id_kabupaten', $param['dataUmum']->id_kecamatan)->get();
+        $param['dataDesa'] = Desa::where('id_kecamatan', $param['dataUmum']->id_kecamatan)->get();
+        $param['duTemp'] = $param['dataUmum'];
         if ($param['dataUmum']) {
             $param['dataUmum']->tanggal_lahir = $this->formatDate($param['dataUmum']->tanggal_lahir);
         }
@@ -1633,42 +1638,20 @@ class PengajuanKreditController extends Controller
             $param['dataPO'] = DB::table('data_po')
                 ->where('id_pengajuan', $id)
                 ->first();
-            // $param['dataPOMerk'] = DB::table('mst_tipe')
-            //     ->where('id', $param['dataPO']->id_type)
-            //     ->first();
         }
         $param['skema'] = $param['dataUmum']->skema_kredit;
 
-        // return JawabanTextModel::select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama', 'item.opsi_jawaban')
-        //                                 ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-        //                                 ->where('id_pengajuan', $id)
-        //                                 ->get();
-
-        // $dataSlik = JawabanPengajuanModel::where('id_pengajuan', 14)
-        //                                 ->join('option', 'option.id', 'jawaban.id_jawaban')
-        //                                 ->whereIn('option.id', [71, 72, 73, 74])
-        //                                 ->first();
-
-        // 'jawaban.id as id_jawaban','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','jawaban.skor_penyelia'
-
-        // return $param['jawabanpengajuan'] = JawabanPengajuanModel::select('jawaban.id','jawaban.id_pengajuan','jawaban.id_jawaban','jawaban.skor','option.id as id_option','option.option as name_option','option.id_item','item.id as id_item','item.nama','item.level','item.id_parent')
-        //                             ->join('option','option.id','jawaban.id_jawaban')
-        //                             ->join('item','item.id','option.id_item')
-        //                             ->where('jawaban.id_pengajuan',$id)
-        //                             ->get();
-
-        // dd($dataSlik);
-        // dump($param['itemSlik']);
-        // // dd($dataDetailJawabanText->get());
-        // $dataDetailJawabanText = \App\Models\JawabanTextModel::where('id_pengajuan', 1)
-        //                                 ->select('jawaban_text.id', 'jawaban_text.id_pengajuan', 'jawaban_text.id_jawaban', 'jawaban_text.opsi_text', 'jawaban_text.skor_penyelia', 'item.id as id_item', 'item.nama')
-        //                                 ->join('item', 'jawaban_text.id_jawaban', 'item.id')
-        //                                 ->where('id_parent', 114)
-        //                                 ->orderBy('id', 'DESC');
-
-        //                                 return $dataDetailJawabanText->get();
-
-        return view('pengajuan-kredit.edit-pengajuan-kredit', $param);
+        $param['jawabanSlik'] = JawabanModel::select('id', 'id_jawaban', 'skor')
+                ->where('id_pengajuan', $id)
+                ->whereIn('id_jawaban', [71,72,73,74])
+                ->first();
+        $param['jawabanLaporanSlik'] = \App\Models\JawabanTextModel::where('id_pengajuan', $id)
+                ->where('id_jawaban', 146)
+                ->first();
+        $param['dataPertanyaanSatu'] = ItemModel::select('id', 'nama', 'level', 'id_parent')->where('level', 2)->where('id_parent', 3)->get();
+        $param['komentar'] = KomentarModel::where('id_pengajuan', $id)->first();
+        // return view('pengajuan-kredit.edit-pengajuan-kredit', $param);
+        return view('new-pengajuan.edit-pengajuan', $param);
     }
 
     /**
