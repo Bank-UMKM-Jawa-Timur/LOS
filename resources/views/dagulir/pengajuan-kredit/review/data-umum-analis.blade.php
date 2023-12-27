@@ -19,13 +19,23 @@
                 @php
                     $file_parts = pathinfo(asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text);
                 @endphp
-                <div class="form-group-1">
+                {{-- <div class="form-group-1">
                     <div class="form-group-1 mb-0">
                         <label for="">{{ $item->nama }}</label>
                     </div>
                     <div class="form-group-1">
                         <b>Jawaban:</b>
                         <div class="mt-2">
+                        </div>
+                    </div>
+                </div> --}}
+                <div class="form-group-1">
+                    <div class="field-review">
+                        <div class="field-name">
+                            <label for="">{{ $item->nama }}</label>
+                        </div>
+                        <div class="field-answer">
+                            <p>
                             @if ($file_parts['extension'] == 'pdf')
                                 <iframe
                                     src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
@@ -34,6 +44,7 @@
                                 <img src="{{ asset('..') . '/upload/' . $dataUmum->id . '/' . $item->id . '/' . $itemTextDua->opsi_text }}"
                                     alt="" width="800px">
                             @endif
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -314,7 +325,7 @@
                 <label for="">Plafon</label>
             </div>
             <div class="field-answer">
-                <p>{{$dataNasabah->nominal ? number_format($dataNasabah->nominal, 0, ',', '.') : '-'}}</p>
+                <p>Rp. {{$dataNasabah->jumlah_kredit ? number_format($dataNasabah->jumlah_kredit, 0, ',', '.') : '-'}}</p>
             </div>
         </div>
         <div class="field-review">
@@ -322,7 +333,7 @@
                 <label for="">Tenor</label>
             </div>
             <div class="field-answer">
-                <p>{{$dataNasabah->jangka_waktu ? $dataNasabah->jangka_waktu : '-'}} Bulan</p>
+                <p>{{$dataNasabah->tenor_yang_diminta ? $dataNasabah->tenor_yang_diminta : '-'}} Bulan</p>
             </div>
         </div>
         <div class="field-review">
@@ -362,7 +373,7 @@
                 <label for="">Hasil Verifikasi</label>
             </div>
             <div class="field-answer">
-                <p>{{$dataNasabah->hasil_verifikasi ? $dataNasabah->hasil_verifikasi : '-'}}</p>
+                <p>{{$dataNasabah->verifikasi_umum ? $dataNasabah->verifikasi_umum : '-'}}</p>
             </div>
         </div>
     </div>
