@@ -128,12 +128,11 @@
 @push('script-inject')
     <script>
         $('.show-edit-desa').off('click').on('click', function() {
-            console.log('masuk');
             const target = $(this).data('target');
             const id_desa = $(this).data('id');
             const desa = $(this).data('desa');
-            const id_kecamatan = $(this).data('id_kecamatan');
-            const id_kabupaten = $(this).data('id_kabupaten');
+            const kecamatan_id = $(this).data('kecamatan_id');
+            const kabupaten_id = $(this).data('kabupaten_id');
 
             $(`#${target} #id`).val(id_desa);
             $(`#${target} #desa`).val(desa);
@@ -145,15 +144,32 @@
                 url: "{{ route('dagulir.master.get.kabupaten') }}",
                 success:function(res){
                     $(`#${target} #kabupaten_select`).empty();
-                    $.each(res,function (index, param) {
-                        console.log(param);
-                        $(`#${target} s#kabupaten_select`).append(`
-                            <option value="${param.id}"  ${param.id == id_kabupaten ? 'selected' : ''}>${param.kabupaten}</option>
+                    $(`#${target} #kabupaten_select`).append(`
+                        <option value="">-- Pilih Kabupaten --</option>
+                    `);
+                    $.each(res,function (index, item) {
+                        $(`#${target} #kabupaten_select`).append(`
+                            <option value="${item.id}"  ${item.id == kabupaten_id ? 'selected' : ''}>${item.kabupaten}</option>
                         `);
                     })
                 }
             })
-            $(`#${target} #kecamatan_select option[value="${id_kecamatan}"]`).prop('selected', true);
+            $.ajax({
+                type: "GET",
+                url: "{{ route('dagulir.master.get.kecamatan') }}",
+                success:function(res){
+                    $(`#${target} #kecamatan_select`).empty();
+                    $(`#${target} #kecamatan_select`).append(`
+                        <option value="">-- Pilih Kabupaten --</option>
+                    `);
+                    $.each(res,function (index, kec) {
+                        $(`#${target} #kecamatan_select`).append(`
+                            <option value="${kec.id}"  ${kec.id == kecamatan_id ? 'selected' : ''}>${kec.kecamatan}</option>
+                        `);
+                    })
+                }
+            })
+
         })
         $('.show-hapus-desa').off('click').on('click', function() {
             const target = $(this).data('target');

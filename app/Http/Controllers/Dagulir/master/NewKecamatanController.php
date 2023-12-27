@@ -219,4 +219,8 @@ class NewKecamatanController extends Controller
         $kabupaten = Kabupaten::get();
         return $kabupaten;
     }
+    function kecamatan() {
+        $kecamatan = Kecamatan::get();
+        return $kecamatan;
+    }
 }
