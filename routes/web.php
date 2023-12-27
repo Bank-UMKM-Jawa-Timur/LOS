@@ -127,6 +127,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::resource('merk', NewMerkController::class);
             Route::resource('tipe', NewTipeController::class);
             Route::resource('master-item', NewItemController::class);
+            Route::get('add-edit-item', [NewItemController::class, 'addEditItem'])->name('add-edit-item');
+            Route::get('data-item-satu', [NewItemController::class, 'dataItemSatu'])->name('getItemSatu');
+            Route::get('data-item-tiga', [NewItemController::class, 'dataItemtiga'])->name('getItemTiga');
+            Route::get('data-item-empat', [NewItemController::class, 'dataItemEmpat'])->name('getItemEmpat');
 
             Route::get('/kecamatan-by-kabupaten/{id}', [NewDesaController::class, 'kecamatanByKabupaten'])->name('kecamatan-by-kabupaten');
 
