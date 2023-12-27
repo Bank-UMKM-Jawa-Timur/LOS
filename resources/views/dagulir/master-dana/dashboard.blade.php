@@ -37,7 +37,7 @@
                 </div>
                 <div class="mt-3">
                     <h2 class="text-theme-text text-3xl font-bold tracking-tighter">
-                        30}
+                        30
                     </h2>
                     <p class="text-gray-500 text-sm tracking-tighter">
                         Disetujui
@@ -77,7 +77,7 @@
         </div>
     </div>
     <div class="lg:flex grid grid-cols-1 gap-5">
-        <div class="grid lg:grid-cols-1 md:grid-cols-2 grid-cols-1 gap-5 justify-center w-full">
+        <div class="grid  grid-cols-1 gap-5 justify-center w-full">
             <div class="card p-5 w-full border bg-white h-[127px]">
                 <div class="flex gap-5">
                     <div>
