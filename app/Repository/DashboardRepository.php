@@ -39,12 +39,12 @@ class DashboardRepository
             $data->where('posisi','Pincab');
         }else{
             // $data->where('id_staf', $idUser);
-            foreach ($data->get() as $item) {
-                if (condition) {
-                    # code...
-                }
-                // $dataAdmin = 
-            }
+            // foreach ($data->get() as $item) {
+            //     if (condition) {
+            //         # code...
+            //     }
+            //     // $dataAdmin = 
+            // }
         }
 
         $total_proses = 0;
