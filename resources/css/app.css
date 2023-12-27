@@ -162,7 +162,7 @@
         @apply absolute left-[%] z-40 right-[%] top-44 text-8xl font-bold;
     }
     select {
-        @apply focus:ring ring-blue-300;
+        @apply focus:ring ring-blue-300 accent-theme-primary;
     }
     /* input {
         @apply focus:ring ring-blue-300;
