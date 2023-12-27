@@ -38,6 +38,7 @@ class DashboardDetailController extends Controller
         $param['kode_cabang'] = $kode_cabang;
 
         $param['dataDetailPosisi'] = $this->repo->getDetailPosisi($request);
+
         $param['dataDetailSkema'] = $this->repo->getDataSkema($request);
 
         // dd($param);

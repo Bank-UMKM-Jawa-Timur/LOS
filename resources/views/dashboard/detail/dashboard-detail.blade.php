@@ -34,6 +34,15 @@
                     <th>Diproses</th>
                 </thead>
                 <tbody>
+                    @foreach ($dataDetailPosisi as $key => $item)
+                    <tr>
+                        <td class="title-table">{{ $key }}</td>
+                        <td>{{ $item['total_pengajuan'] }}</td>
+                        <td>{{ $item['total_selesai'] }}</td>
+                        <td>{{ $item['total_ditolak'] }}</td>
+                        <td>{{ $item['diproses'] }}</td>
+                    </tr>
+                    @endforeach
                     {{-- <tr>
                         <td class="title-table">Pincab</td>
                         <td>30</td>
@@ -69,13 +78,7 @@
                         <td>20</td>
                         <td>10</td>
                     </tr> --}}
-                    <tr>
-                        <td class="title-table">{{ $dataDetailPosisi['user'] }}</td>
-                        <td>{{ $dataDetailPosisi['total'] }}</td>
-                        <td>{{ $dataDetailPosisi['selesai'] }}</td>
-                        <td>{{ $dataDetailPosisi['ditolak'] }}</td>
-                        <td>{{ $dataDetailPosisi['proses'] }}</td>
-                    </tr>
+
                 </tbody>
             </table>
         </div>
