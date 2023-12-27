@@ -23,7 +23,7 @@
             <div class="form-group-2">
                 <div class="input-box">
                     <label for="old-password">Password Lama <span class="text-theme-primary">*</span></label>
-                    <input type="password" id="old-password" name="old-pass" class="form-input @error('old_pass') alert @endif " value="{{ old('old_pass') }}" placeholder="" />
+                    <input type="password" id="old-password" name="old_pass" class="form-input @error('old_pass') alert @endif " value="{{ old('old_pass') }}" placeholder="" />
                     @error('old_pass')
                     <small class="text-red-500">
                         {{ $message }}
@@ -41,7 +41,7 @@
                 </div>
                 <div class="input-box">
                     <label for="confirm-password">Konfirmasi Baru <span class="text-theme-primary">*</span></label>
-                    <input type="password" id="confirmation" name="confirm-password" value="{{ old('confirmation') }}" class="form-input @error('confirmation') alert @endif" placeholder="" />
+                    <input type="password" id="confirmation" name="confirmation" value="{{ old('confirmation') }}" class="form-input @error('confirmation') alert @endif" placeholder="" />
                     @error('confirmation')
                     <small class="text-red-500">
                         {{ $message }}
