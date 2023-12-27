@@ -12,15 +12,7 @@
     <!-- data umum -->
     <div
         class="p-5 w-full space-y-5 "
-        id="data-umum"
-    >
-    <div>
-        <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
-            <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
-               Tipe Pengajuan :
-            </h2>
-        </div>
-    </div>
+        id="data-umum">
     <div>
         <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
             <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
@@ -82,8 +74,6 @@
                     value="{{ old('telp', $duTemp?->telp ?? '') }}"
                 />
             </div>
-        </div>
-        <div class="form-group-2">
             <div class="input-box">
                 <label for="ktp_nasabah" id="foto-nasabah">Foto Nasabah</label><small class="text-red-500 font-bold"> (.jpg, .jpeg, .png, .webp)</small>
                 @if ($duTemp->foto_nasabah)
@@ -253,8 +243,14 @@
             <span class="text-red-500 m-0" style="display: none">Maximum upload file
                 size is 10 MB</span>
         </div>
-
-        <div class="form-group-1">
+        <div>
+            <div class="p-2 border-l-4 border-theme-primary bg-gray-100">
+                <h2 class="font-semibold text-sm tracking-tighter text-theme-text">
+                   Data Diri :
+                </h2>
+            </div>
+        </div>
+        <div class="form-group-2">
             <div class="input-box">
                 <label for="">Alamat Usaha</label>
                 <textarea
@@ -263,6 +259,15 @@
                     placeholder="Alamat Usaha"
                     id=""
                 >{{ $duTemp?->alamat_usaha ?? null }}</textarea>
+            </div>
+            <div class="input-box">
+                <label for="">Jenis Usaha</label>
+                <textarea
+                    name="alamat_usaha"
+                    class="form-textarea"
+                    placeholder="Alamat Usaha"
+                    id=""
+                >{{ $duTemp?->jenis_usaha ?? null }}</textarea>
             </div>
         </div>
         <div>
