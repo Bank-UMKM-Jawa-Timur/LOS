@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 use \App\Http\Requests\KabupatenRequest;
+use App\Models\Desa;
 use \App\Models\Kabupaten;
+use App\Models\Kecamatan;
 use Exception;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
@@ -185,10 +187,16 @@ class NewKabupatenController extends Controller
         try {
             $id_kab =  Request()->id;
             $kabupaten = Kabupaten::where('id',$id_kab)->first();
-            // return $kabupaten;
-            $kabupaten->delete();
-            alert()->success('Berhasil','Data berhasil dihapus.');
-            return back();
+            $kecamatan = Kecamatan::where('id_kabupaten', $id_kab)->count();
+            $desa = Desa::where('id_kabupaten', $id_kab)->count();
+            if ($kecamatan > 0 || $desa > 0) {
+                alert()->error('error','Data tidak bisa dihapus, karena kabupaten terdapat di kecamatan/desa.');
+                return back();
+            } else {
+                $kabupaten->delete();
+                alert()->success('Berhasil','Data berhasil dihapus.');
+                return back();
+            }
         } catch (Exception $e) {
             return back()->withError('Terjadi kesalahan.');
         } catch (QueryException $e) {
