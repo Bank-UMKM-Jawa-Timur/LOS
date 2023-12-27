@@ -52,6 +52,10 @@ Route::get('/coming-soon', function(){
     return view('under-construction.index');
 })->name('coming-soon');
 
+Route::get('/dashboard/detail', function() {
+    return view('dashboard.detail.dashboard-detail');
+});
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/detail-pengajuan-new/tes', function () {
         return view('dagulir.pengajuan-kredit.detail-pengajuan-jawaban-new');
@@ -83,6 +87,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('review-jawaban-new', function() {
             return view('dagulir.pengajuan-kredit.detail-pengajuan-jawaban-new');
         });
+
+       
 
         // Route::get('pincab-kredit/{id}', [DagulirController::class, "sendToPincab"])->name('check.pincab');
         Route::post('pincab-kredit', [NewDagulirController::class, "sendToPincab"])->name('check.pincab');

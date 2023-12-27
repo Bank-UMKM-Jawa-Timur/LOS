@@ -335,6 +335,9 @@
     .btn-detail iconify-icon {
         @apply text-sm mt-[2px];
     }
+    .title-table {
+        @apply text-left font-bold border-r text-gray-600 bg-gray-50;
+    }
 }
 
 @keyframes scale-in {
