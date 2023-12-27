@@ -17,6 +17,6 @@
         </style>
     @endif
 @endisset
-    @include('components.notification')
+   
     @include('user._form-change-password')
 @endsection

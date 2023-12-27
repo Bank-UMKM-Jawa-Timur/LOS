@@ -24,8 +24,11 @@
     {{-- wrapping all layout --}}
     <div class="layout-wrapper flex justify-center">
         {{-- sidebar --}}
+        
         <div class="layout-sidebar flex-auto">
-            @include('components.new.sidebar')
+            @if(\Request::route()->getName() != 'change_password')
+                @include('components.new.sidebar')
+            @endif
         </div>
         {{-- pages --}}
         <div class="layout-pages flex-auto w-full h-screen overflow-y-auto">

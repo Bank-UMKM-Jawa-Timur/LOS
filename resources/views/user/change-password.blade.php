@@ -1,7 +1,7 @@
 @extends('layouts.tailwind-template')
 
 @section('content')
-<section class="p-5 overflow-y-auto">
+<section class="p-5 overflow-y-auto container mx-auto">
     <div class="lg:flex grid grid-cols-1 justify-between w-full font-poppins">
         <div class="heading flex-auto">
             <p class="text-theme-primary font-semibold font-poppins text-xs">
