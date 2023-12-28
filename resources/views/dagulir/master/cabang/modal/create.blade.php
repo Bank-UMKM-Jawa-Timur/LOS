@@ -16,7 +16,7 @@
                 <div class="form-group-2 mb-4">
                     <div class="input-box">
                         <label for="">Kode Cabang</label>
-                        <input type="text" name="kode_cabang"
+                        <input type="text" name="kode_cabang" id="kode-cabang-add"
                             class="form-input @error('kode_cabang') is-invalid @enderror" placeholder="Kode Cabang"
                             value="{{ old('kode_cabang') }}">
                         @error('kode_cabang')
@@ -27,7 +27,8 @@
                     </div>
                     <div class="input-box">
                         <label for="">Kantor Cabang</label>
-                        <input type="text" name="cabang" class="form-input @error('cabang') is-invalid @enderror"
+                        <input type="text" name="cabang" id="cabang-add"
+                            class="form-input @error('cabang') is-invalid @enderror"
                             placeholder="Nama Cabang" value="{{ old('cabang') }}">
                             @error('cabang')
                                 <div class="invalid-feedback">
@@ -39,7 +40,7 @@
                 <div class="form-group-1 mb-4">
                     <div class="input-box">
                         <label for="">Email</label>
-                        <input type="email" name="email" class="form-input @error('email') is-invalid @enderror"
+                        <input type="email" name="email" id="email-add" class="form-input @error('email') is-invalid @enderror"
                             placeholder="Email" value="{{ old('email') }}">
                         @error('email')
                             <div class="invalid-feedback">
@@ -51,7 +52,7 @@
                 <div class="form-group-1 mb-4">
                     <div class="input-box">
                         <label for="">Alamat</label>
-                        <input type="text" name="alamat" class="form-input @error('alamat') is-invalid @enderror" placeholder="Alamat" value="{{old('alamat')}}">
+                        <input type="text" name="alamat" id="alamat-add" class="form-input @error('alamat') is-invalid @enderror" placeholder="Alamat" value="{{old('alamat')}}">
                         @error('alamat')
                             <div class="invalid-feedback">
                                 {{ $message }}

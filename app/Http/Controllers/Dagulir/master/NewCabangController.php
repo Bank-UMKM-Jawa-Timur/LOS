@@ -78,15 +78,42 @@ class NewCabangController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CabangRequest $request)
+    public function store(Request $request)
     {
-        $validated = $request->validated();
+        // return $request;
         try {
+            if ($request->kode_cabang == null) {
+                alert()->error('error', 'Kode Cabang harus diisi.');
+                return back();
+            }
+            if ($request->cabang == null) {
+                alert()->error('error', 'Nama Cabang harus diisi.');
+                return back();
+            }
+            if ($request->email == null) {
+                alert()->error('error', 'Email Cabang harus diisi.');
+                return back();
+            }
+            if ($request->alamat == null) {
+                alert()->error('error', 'Alamat Cabang harus diisi.');
+                return back();
+            }
+            $data = Cabang::where('kode_cabang', 'LIKE', "%{$request->kode_cabang}%")
+            ->where('cabang', 'LIKE', "%{$request->cabang}%")
+            ->Where('email', 'LIKE', "%{$request->email}%")
+            ->Where('alamat', 'LIKE', "%{$request->alamat}%")
+            ->first();
+
+            if ($data) {
+                alert()->error('error', 'Cabang sudah ada.');
+                return back();
+            }
+
             $cabang = new Cabang;
-            $cabang->kode_cabang = $validated['kode_cabang'];
-            $cabang->cabang = $validated['cabang'];
-            $cabang->email = $validated['email'];
-            $cabang->alamat = $validated['alamat'];
+            $cabang->kode_cabang = $request->kode_cabang;
+            $cabang->cabang = $request->cabang;
+            $cabang->email = $request->email;
+            $cabang->alamat = $request->alamat;
             $cabang->save();
         } catch (Exception $e) {
             return back()->withError('Terjadi kesalahan.');
