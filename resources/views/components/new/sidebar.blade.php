@@ -7,7 +7,7 @@
         </button>
     </div>
     <div class="menu mt-2 p-5 overflow-y-auto h-screen">
-        <h2 class="font-semibold text-gray-400">Menu</h2>
+        <h2 class="font-semibold text-gray-400">Menu </h2>
         <div class="mt-5 text-sm text-theme-text">
             <ul class="space-y-3">
                 @if (auth()->user()->role != 'Kredit Program' && auth()->user()->role != 'Administrator')

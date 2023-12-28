@@ -845,7 +845,6 @@ $dataIndex = match ($skema) {
 @endsection
 
 @push('script-inject')
-@push('script-inject')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     // Start Validation

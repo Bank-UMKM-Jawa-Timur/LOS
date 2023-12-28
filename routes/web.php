@@ -118,7 +118,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::middleware(['Admin'])->prefix('master')->name('master.')->group(function () {
             Route::resource('kabupaten', NewKabupatenController::class);
-            Route::get('kecamatan/data',[NewKecamatanController::class,'kabupaten'])->name('get.kabupaten');
+            Route::get('get-kabupaten',[NewKecamatanController::class,'kabupaten'])->name('get.kabupaten');
+            Route::get('get-kecamatan',[NewKecamatanController::class,'kecamatan'])->name('get.kecamatan');
             Route::resource('kecamatan', NewKecamatanController::class);
             Route::resource('desa', NewDesaController::class);
             Route::resource('cabang', NewCabangController::class);
@@ -127,8 +128,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::resource('merk', NewMerkController::class);
             Route::resource('tipe', NewTipeController::class);
             Route::resource('master-item', NewItemController::class);
+            Route::get('add-edit-item', [NewItemController::class, 'addEditItem'])->name('add-edit-item');
+            Route::get('data-item-satu', [NewItemController::class, 'dataItemSatu'])->name('getItemSatu');
+            Route::get('data-item-tiga', [NewItemController::class, 'dataItemtiga'])->name('getItemTiga');
+            Route::get('data-item-empat', [NewItemController::class, 'dataItemEmpat'])->name('getItemEmpat');
 
-            Route::get('/kecamatan-by-kabupaten/{id}', [NewDesaController::class, 'kecamatanByKabupaten'])->name('kecamatan-by-kabupaten');
 
             Route::get('/reset-sessions', [NewUserController::class, 'indexSession'])->name('index-session');
             Route::post('/reset-session-post', [NewUserController::class, 'resetSession'])->name('reset-session');

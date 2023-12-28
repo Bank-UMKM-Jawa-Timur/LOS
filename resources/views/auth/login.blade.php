@@ -152,7 +152,7 @@
                 </div>
               </div>
               <div class="copyright text-center font-semibold text-white">
-                Copyright 2022 PT. BPR Jatim
+                Copyright 2022 - {{ date('Y') }} PT. BPR Jatim
               </div>
             </div>
           </form>
