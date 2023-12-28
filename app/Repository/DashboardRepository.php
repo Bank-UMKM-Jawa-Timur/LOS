@@ -22,8 +22,21 @@ class DashboardRepository
             'id_pbp',
             'id_pincab',
             'posisi'
-        )
-        ->get();
+        );
+        
+        if($role == 'Staf Analis Kredit'){
+            $data->where('id_staf', $idUser);
+        } else if($role == 'Penyelia Kredit'){
+            $data->where('id_penyelia', $idUser);
+        } else if($role == 'PBO'){
+            $data->where('id_pbo', $idUser);
+        } else if($role == 'PBP'){
+            $data->where('id_pbp', $idUser);
+        } else if($role == 'Pincab'){
+            $data->where('id_pincab', $idUser);
+        }else{
+            $data;
+        }
 
         $processedData = [
             'staf' => ['total_pengajuan' => 0, 'total_selesai' => 0, 'total_ditolak' => 0, 'diproses' => 0],
@@ -33,271 +46,121 @@ class DashboardRepository
             'pincab' => ['total_pengajuan' => 0, 'total_selesai' => 0, 'total_ditolak' => 0, 'diproses' => 0],
         ];
 
-        foreach ($data as $value) {
+        foreach ($data->get() as $value) {
             $staffRole = '';
 
+            if (!empty($value->id_staf) && !empty($value->id_penyelia) && !empty($value->id_pincab) ) {
+                $processedData['staf']['total_pengajuan'] += 1;
+                $processedData['staf']['total_selesai'] += ($value->posisi == 'Selesai') ? 1 : 0;
+                $processedData['staf']['total_ditolak'] += ($value->posisi == 'Ditolak') ? 1 : 0;
+                $processedData['staf']['diproses'] += $value->posisi == 'Proses Input Data' ? 1 : 0;
 
-    if (!empty($value->id_staf) && !empty($value->id_penyelia) && !empty($value->id_pincab) ) {
-        $processedData['staf']['total_pengajuan'] += 1;
-        $processedData['staf']['total_selesai'] += ($value->posisi == 'Selesai') ? 1 : 0;
-        $processedData['staf']['total_ditolak'] += ($value->posisi == 'Ditolak') ? 1 : 0;
-        $processedData['staf']['diproses'] += $value->posisi == 'Proses Input Data' || $value->posisi == 'Review Penyelia' || $value->posisi == 'PBO' || $value->posisi == 'PBP' || $value->posisi == 'Pincab' ? 1 : 0;
+                $processedData['penyelia']['total_pengajuan'] += 1;
+                $processedData['penyelia']['total_selesai'] += ($value->posisi == 'Selesai') ? 1 : 0;
+                $processedData['penyelia']['total_ditolak'] += ($value->posisi == 'Ditolak') ? 1 : 0;
+                $processedData['penyelia']['diproses'] += $value->posisi == 'Proses Input Data' || $value->posisi == 'Review Penyelia' || $value->posisi == 'PBO' || $value->posisi == 'PBP' || $value->posisi == 'Pincab' ? 1 : 0;
 
-        $processedData['penyelia']['total_pengajuan'] += 1;
-        $processedData['penyelia']['total_selesai'] += ($value->posisi == 'Selesai') ? 1 : 0;
-        $processedData['penyelia']['total_ditolak'] += ($value->posisi == 'Ditolak') ? 1 : 0;
-        $processedData['penyelia']['diproses'] += $value->posisi == 'Proses Input Data' || $value->posisi == 'Review Penyelia' || $value->posisi == 'PBO' || $value->posisi == 'PBP' || $value->posisi == 'Pincab' ? 1 : 0;
+                $processedData['pincab']['total_pengajuan'] += 1;
+                $processedData['pincab']['total_selesai'] += ($value->posisi == 'Selesai') ? 1 : 0;
+                $processedData['pincab']['total_ditolak'] += ($value->posisi == 'Ditolak') ? 1 : 0;
+                $processedData['pincab']['diproses'] += $value->posisi == 'Proses Input Data' || $value->posisi == 'Review Penyelia' || $value->posisi == 'PBO' || $value->posisi == 'PBP' || $value->posisi == 'Pincab' ? 1 : 0;
+            } else {
+                if (!empty($value->id_staf)) {
+                    $staffRole = 'staf';
+                } elseif (!empty($value->id_penyelia)) {
+                    $staffRole = 'penyelia';
+                } elseif (!empty($value->id_pbo)) {
+                    $staffRole = 'pbo';
+                } elseif (!empty($value->id_pbp)) {
+                    $staffRole = 'pbp';
+                } elseif (!empty($value->id_pincab)) {
+                    $staffRole = 'pincab';
+                }
 
-        $processedData['pincab']['total_pengajuan'] += 1;
-        $processedData['pincab']['total_selesai'] += ($value->posisi == 'Selesai') ? 1 : 0;
-        $processedData['pincab']['total_ditolak'] += ($value->posisi == 'Ditolak') ? 1 : 0;
-        $processedData['pincab']['diproses'] += $value->posisi == 'Proses Input Data' || $value->posisi == 'Review Penyelia' || $value->posisi == 'PBO' || $value->posisi == 'PBP' || $value->posisi == 'Pincab' ? 1 : 0;
-    } else {
-        if (!empty($value->id_staf)) {
-            $staffRole = 'staf';
-        } elseif (!empty($value->id_penyelia)) {
-            $staffRole = 'penyelia';
-        } elseif (!empty($value->id_pbo)) {
-            $staffRole = 'pbo';
-        } elseif (!empty($value->id_pbp)) {
-            $staffRole = 'pbp';
-        } elseif (!empty($value->id_pincab)) {
-            $staffRole = 'pincab';
+                if ($staffRole) {
+                    $processedData[$staffRole]['total_pengajuan'] += 1;
+                    $processedData[$staffRole]['total_selesai'] += ($value->posisi == 'Selesai') ? 1 : 0;
+                    $processedData[$staffRole]['total_ditolak'] += ($value->posisi == 'Ditolak') ? 1 : 0;
+                    $processedData[$staffRole]['diproses'] += ($value->posisi == 'Proses Input Data') ? 1 : 0;
+                }
+            }
         }
 
-        if ($staffRole) {
-            $processedData[$staffRole]['total_pengajuan'] += 1;
-            $processedData[$staffRole]['total_selesai'] += ($value->posisi == 'Selesai') ? 1 : 0;
-            $processedData[$staffRole]['total_ditolak'] += ($value->posisi == 'Ditolak') ? 1 : 0;
-            $processedData[$staffRole]['diproses'] += ($value->posisi == 'Proses Input Data' || $value->posisi == 'Review Penyelia' || $value->posisi == 'PBO' || $value->posisi == 'PBP' || $value->posisi == 'Pincab') ? 1 : 0;
-        }
+        return $processedData;
     }
+
+    public function getDetailSkema(Request $request){
+        $role = auth()->user()->role;
+        $idUser = auth()->user()->id;
+
+        $data = DB::table('pengajuan')
+        ->select(
+            'id_staf',
+            'id_penyelia',
+            'id_pbo',
+            'id_pbp',
+            'id_pincab',
+            'posisi',
+            'skema_kredit'
+        );
+        
+        if($role == 'Staf Analis Kredit'){
+            $data->where('id_staf', $idUser);
+        } else if($role == 'Penyelia Kredit'){
+            $data->where('id_penyelia', $idUser);
+        } else if($role == 'PBO'){
+            $data->where('id_pbo', $idUser);
+        } else if($role == 'PBP'){
+            $data->where('id_pbp', $idUser);
+        } else if($role == 'Pincab'){
+            $data->where('id_pincab', $idUser);
+        }else{
+            $data;
         }
 
-    return $processedData;
-// $data = DB::table('pengajuan')
-//         ->whereNull('deleted_at')
-//         ->select(DB::raw('sum(case when posisi is not null then 1 else 0 end) as total_by_position'),
-//                  DB::raw('sum(case when id_staf is not null then 1 else 0 end) as total_by_staff_id_staf'),
-//                  DB::raw('sum(case when id_penyelia is not null then 1 else 0 end) as total_by_staff_id_penyelia'),
-//                  DB::raw('sum(case when id_pbo is not null then 1 else 0 end) as total_by_staff_id_pbo'),
-//                  DB::raw('sum(case when id_pincab is not null then 1 else 0 end) as total_by_staff_id_pincab'),
-//                   'posisi')
-//         ->groupBy('posisi')
-//         ->get();
-//         // $data->transform(function ($value) {
-//         //     $total_proses = 0;
-//         //     if ($value->posisi == 'Proses Input Data' || $value->posisi == 'Review Penyelia' || $value->posisi == 'PBO' || $value->posisi == 'PBP' || $value->posisi == 'Pincab') {
-//         //         $total_proses += $value->total_by_staff_id_staf;
-//         //         $value->total = $total_proses;
-//         //     } elseif ($value->posisi == 'Selesai') {
-//         //         $value += $value->count_posisi;
-//         //     } elseif ($value->posisi == 'Ditolak') {
-//         //         $value += $value->count_posisi;
-//         //     }
-//         //     return $value;
-//         // });
-//         $processedData = [
-//             'total_pengajuan' => 0,
-//             'total_selesai' => 0,
-//             'total_ditolak' => 0,
-//         ];
+        $processedData = [
+            'PKPJ' => ['total_pengajuan' => 0, 'total_selesai' => 0, 'total_ditolak' => 0, 'diproses' => 0],
+            'KKB' => ['total_pengajuan' => 0, 'total_selesai' => 0, 'total_ditolak' => 0, 'diproses' => 0],
+            'Talangan' => ['total_pengajuan' => 0, 'total_selesai' => 0, 'total_ditolak' => 0, 'diproses' => 0],
+            'Prokesra' => ['total_pengajuan' => 0, 'total_selesai' => 0, 'total_ditolak' => 0, 'diproses' => 0],
+            'Kusuma' => ['total_pengajuan' => 0, 'total_selesai' => 0, 'total_ditolak' => 0, 'diproses' => 0],
+            'Dagulir' => ['total_pengajuan' => 0, 'total_selesai' => 0, 'total_ditolak' => 0, 'diproses' => 0],
+        ];
 
-//         foreach ($data as $value) {
-//             if (in_array($value->posisi, ['Proses Input Data', 'Review Penyelia', 'PBO', 'PBP', 'Pincab'])) {
-//                 $processedData['total_pengajuan'] += $value->total_by_position;
-//             } elseif ($value->posisi == 'Selesai') {
-//                 $processedData['total_selesai'] += $value->total_by_position;
-//             } elseif ($value->posisi == 'Ditolak') {
-//                 $processedData['total_ditolak'] += $value->total_by_position;
-//             }
-//         }
+        foreach ($data->get() as $value) {
+            $paramSkema = '';
 
-//         return $processedData;
-    //     $results = [];
+            if($value->skema_kredit == "PKPJ") {
+                $paramSkema = "PKPJ";
+            }elseif($value->skema_kredit == "KKB"){
+                $paramSkema = "KKB";
+            }elseif($value->skema_kredit == "Talangan Umroh"){
+                $paramSkema = "Talangan";
+            }elseif($value->skema_kredit == "Prokesra"){
+                $paramSkema = "Prokesra";
+            }elseif($value->skema_kredit == "Kusuma"){
+                $paramSkema = "Kusuma";
+            }elseif($value->skema_kredit == "Dagulir"){
+                $paramSkema = "Dagulir";
+            }
 
-    // foreach ($data as $key => $value) {
-    //     // Initialize variables for each iteration
-    //     $nama = '';
-    //     $total_proses = 0;
-    //     $total_selesai = 0;
-    //     $total_ditolak = 0;
+            if (!empty($value->id_staf) && !empty($value->id_penyelia) && !empty($value->id_pincab) ) {
+                $processedData[$paramSkema]['total_pengajuan'] += 1;
+                $processedData[$paramSkema]['total_selesai'] += ($value->posisi == 'Selesai') ? 1 : 0;
+                $processedData[$paramSkema]['total_ditolak'] += ($value->posisi == 'Ditolak') ? 1 : 0;
+                $processedData[$paramSkema]['diproses'] += $value->posisi == 'Proses Input Data' || $value->posisi == 'Review Penyelia' || $value->posisi == 'PBO' || $value->posisi == 'PBP' || $value->posisi == 'Pincab' ? 1 : 0;
+            }else{
+                $processedData[$paramSkema]['total_pengajuan'] += 1;
+                $processedData[$paramSkema]['total_selesai'] += ($value->posisi == 'Selesai') ? 1 : 0;
+                $processedData[$paramSkema]['total_ditolak'] += ($value->posisi == 'Ditolak') ? 1 : 0;
+                $processedData[$paramSkema]['diproses'] += $value->posisi == 'Proses Input Data' || $value->posisi == 'Review Penyelia' || $value->posisi == 'PBO' || $value->posisi == 'PBP' || $value->posisi == 'Pincab' ? 1 : 0;
+            }
 
-    //     // Check the role and set variables accordingly
-    //     if ($value->id_staf != null) {
-    //         $nama = 'Staf';
-    //     } elseif ($value->id_penyelia != null) {
-    //         $nama = 'Penyelia';
-    //     } elseif ($value->id_pbp != null) {
-    //         $nama = 'PBP';
-    //     } elseif ($value->id_pincab != null) {
-    //         $nama = 'Pincab';
-    //     }
+        }
 
-    //     // Update totals based on posisi
-    //     if ($value->posisi == 'Proses Input Data' || $value->posisi == 'Review Penyelia' || $value->posisi == 'PBO' || $value->posisi == 'PBP' || $value->posisi == 'Pincab') {
-    //         $total_proses += $value->count_posisi;
-    //     } elseif ($value->posisi == 'Selesai') {
-    //         $total_selesai += $value->count_posisi;
-    //     } elseif ($value->posisi == 'Ditolak') {
-    //         $total_ditolak += $value->count_posisi;
-    //     }
-
-    //     // Create a single data object with total counts
-    //     $result = new \stdClass();
-    //     $result->nama = $value->id_penyelia;
-    //     $result->total_proses = $total_proses;
-    //     $result->total_selesai = $total_selesai;
-    //     $result->total_ditolak = $total_ditolak;
-    //     $results[] = $result;
-    // }
-
-    // // Return the array of results as JSON
-    // return $results;
-    // foreach ($results as $result) {
-    //     echo json_encode($result, JSON_PRETTY_PRINT) . PHP_EOL;
-    // }
-    //     $data = DB::table('pengajuan')
-    //         ->whereNull('deleted_at')
-    //         ->select( DB::raw('count(posisi) as count_posisi, posisi'))
-    //         // ->where('posisi','Ditolak')
-    //         ->groupBy('posisi')
-    //         ->where('id_staf', $idUser)->get();
-    //     foreach ($data as $key => $value) {
-    //         if ($role != 'Administrator') {
-    //             if($role == 'Staf Analis Kredit'){
-    //                 $total_proses = 0;
-    //                 $total_selesai = 0;
-    //                 $total_ditolak = 0;
-    //                 if ($value->posisi == 'Proses Input Data' || $value->posisi == 'Review Penyelia' || $value->posisi == 'PBO' || $value->posisi == 'PBP' || $value->posisi == 'Pincab') {
-    //                     $total_proses += $value->count_posisi;
-    //                 } else if($value->posisi == 'Selesai'){
-    //                     $total_selesai += $value->count_posisi;
-    //                 } else if($value->posisi == 'Ditolak'){
-    //                     $total_ditolak += $value->count_posisi;
-    //                 }
-    //                 $posisiUser = 'Staf';
-    //                 $value->nama = $posisiUser;
-    //                 $value->total_proses = $total_proses;
-    //                 $value->total_selesai = $total_selesai;
-    //                 $value->total_ditolak = $total_ditolak;
-    //             }else if($role == 'Penyelia Kredit'){
-    //                 $posisiUser = "Penyelia";
-    //                 $total_proses = 0;
-    //                 $total_selesai = 0;
-    //                 $total_ditolak = 0;
-    //                 if ($value->posisi == 'Proses Input Data' || $value->posisi == 'Review Penyelia' || $value->posisi == 'PBO' || $value->posisi == 'PBP' || $value->posisi == 'Pincab') {
-    //                     $total_proses += $value->count_posisi;
-    //                 } else if($value->posisi == 'Selesai'){
-    //                     $total_selesai += $value->count_posisi;
-    //                 } else if($value->posisi == 'Ditolak'){
-    //                     $total_ditolak += $value->count_posisi;
-    //                 }
-    //                 $posisiUser = 'Staf';
-    //                 $value->nama = $posisiUser;
-    //                 $value->total_proses = $total_proses;
-    //                 $value->total_selesai = $total_selesai;
-    //                 $value->total_ditolak = $total_ditolak;
-    //             } else if($role == 'PBO'){
-    //                 $posisiUser = "PBO";
-    //                 $total_proses = 0;
-    //                 $total_selesai = 0;
-    //                 $total_ditolak = 0;
-    //                 if ($value->posisi == 'Proses Input Data' || $value->posisi == 'Review Penyelia' || $value->posisi == 'PBO' || $value->posisi == 'PBP' || $value->posisi == 'Pincab') {
-    //                     $total_proses += $value->count_posisi;
-    //                 } else if($value->posisi == 'Selesai'){
-    //                     $total_selesai += $value->count_posisi;
-    //                 } else if($value->posisi == 'Ditolak'){
-    //                     $total_ditolak += $value->count_posisi;
-    //                 }
-    //                 $posisiUser = 'Staf';
-    //                 $value->nama = $posisiUser;
-    //                 $value->total_proses = $total_proses;
-    //                 $value->total_selesai = $total_selesai;
-    //                 $value->total_ditolak = $total_ditolak;
-    //             } else if($role == 'PBP'){
-    //                 $posisiUser = "PBP";
-    //                 $total_proses = 0;
-    //                 $total_selesai = 0;
-    //                 $total_ditolak = 0;
-    //                 if ($value->posisi == 'Proses Input Data' || $value->posisi == 'Review Penyelia' || $value->posisi == 'PBO' || $value->posisi == 'PBP' || $value->posisi == 'Pincab') {
-    //                     $total_proses += $value->count_posisi;
-    //                 } else if($value->posisi == 'Selesai'){
-    //                     $total_selesai += $value->count_posisi;
-    //                 } else if($value->posisi == 'Ditolak'){
-    //                     $total_ditolak += $value->count_posisi;
-    //                 }
-    //                 $posisiUser = 'Staf';
-    //                 $value->nama = $posisiUser;
-    //                 $value->total_proses = $total_proses;
-    //                 $value->total_selesai = $total_selesai;
-    //                 $value->total_ditolak = $total_ditolak;
-    //             }
-    //         }
-    //     }
-    //     return $data;
-
-    //     // if($role == 'Staf Analis Kredit'){
-    //     //     $posisiUser = "Staf";
-    //     //     $data->where('id_staf', $idUser);
-    //     // } else if($role == 'Penyelia Kredit'){
-    //     //     $posisiUser = "Penyelia";
-    //     //     $data->where('id_penyelia', $idUser);
-    //     //     $data->where('posisi','Review Penyelia');
-    //     // } else if($role == 'PBO'){
-    //     //     $posisiUser = "PBO";
-    //     //     $data->where('id_pbo', $idUser);
-    //     //     $data->where('posisi','PBO');
-    //     // } else if($role == 'PBP'){
-    //     //     $posisiUser = "PBP";
-    //     //     $data->where('id_pbp', $idUser);
-    //     //     $data->where('posisi','PBP');
-    //     // } else if($role == 'Pincab'){
-    //     //     $posisiUser = "Pincab";
-    //     //     $data->where('id_pincab', $idUser);
-    //     //     $data->where('posisi','Pincab');
-    //     // }else{
-
-    //     // }
-    //     if ($role != 'Admin') {
-    //         # code...
-    //     } else {
-    //         # code...
-    //     }
-
-    //     return $data->get();
-    //     $total_proses = 0;
-    //     $total_selesai = 0;
-    //     $total_ditolak = 0;
-    //     $total_keseluruhan = 0;
-    //     foreach($data->get() as $item){
-    //         if($item->posisi == 'Proses Input Data' || $item->posisi == 'Review Penyelia' || $item->posisi == 'PBO' || $item->posisi == 'PBP' || $item->posisi == 'Pincab'){
-    //             $total_proses++;
-    //         } else if($item->posisi == 'Selesai'){
-    //             $total_selesai++;
-    //         } else if($item->posisi == 'Ditolak'){
-    //             $total_ditolak++;
-    //         }
-    //         $total_keseluruhan++;
-    //     }
-
-    //     return ($role == 'Staf Analis Kredit' || $role == 'Penyelia Kredit' || $role == 'PBO' || $role == 'PBP' || $role == 'Pincab') ?
-    //     array(
-    //         'user' => $posisiUser,
-    //         'proses' => $total_proses,
-    //         'selesai' => $total_selesai,
-    //         'ditolak' => $total_ditolak,
-    //         'total' => $total_keseluruhan
-    //     ) :
-    //     array(
-    //         'user' => "TEESS",
-    //         'proses' => $total_proses,
-    //         'selesai' => $total_selesai,
-    //         'ditolak' => $total_ditolak,
-    //         'total' => $total_keseluruhan
-    //     );
-
+        return $processedData;
     }
+
     public function getCount(Request $request){
         $role = auth()->user()->role;
         $idUser = auth()->user()->id;
@@ -348,7 +211,52 @@ class DashboardRepository
         $total_selesai = 0;
         $total_ditolak = 0;
         $total_keseluruhan = 0;
+        $total_belum_ditindak_lanjuti = 0;
+        $total_sudah_ditindak_lanjuti = 0;
+        
         foreach($data->get() as $item){
+            if($role == 'Staf Analis Kredit'){
+                if($item->posisi == 'Proses Input Data'){
+                    $total_belum_ditindak_lanjuti++;
+                }else if($item->posisi == 'Selesai'){
+                }else if($item->posisi == 'Ditolak'){
+                }else{
+                    $total_sudah_ditindak_lanjuti++;
+                }
+            } else if($role == 'Penyelia Kredit'){
+                if($item->posisi == 'Review Penyelia'){
+                    $total_belum_ditindak_lanjuti++;
+                }else if($item->posisi == 'Selesai'){
+                }else if($item->posisi == 'Ditolak'){
+                }else{
+                    $total_sudah_ditindak_lanjuti++;
+                }
+            } else if($role == 'PBO'){
+                if($item->posisi == 'PBO'){
+                    $total_belum_ditindak_lanjuti++;
+                }else if($item->posisi == 'Selesai'){
+                }else if($item->posisi == 'Ditolak'){
+                }else{
+                    $total_sudah_ditindak_lanjuti++;
+                }
+            } else if($role == 'PBP'){
+                if($item->posisi == 'PBP'){
+                    $total_belum_ditindak_lanjuti++;
+                }else if($item->posisi == 'Selesai'){
+                }else if($item->posisi == 'Ditolak'){
+                }else{
+                    $total_sudah_ditindak_lanjuti++;
+                }
+            } else if($role == 'Pincab'){
+                if($item->posisi == 'Pincab'){
+                    $total_belum_ditindak_lanjuti++;
+                }else if($item->posisi == 'Selesai'){
+                }else if($item->posisi == 'Ditolak'){
+                }else{
+                    $total_sudah_ditindak_lanjuti++;
+                }
+            }
+
             if($item->posisi == 'Proses Input Data' || $item->posisi == 'Review Penyelia' || $item->posisi == 'PBO' || $item->posisi == 'PBP' || $item->posisi == 'Pincab'){
                 $total_proses++;
             } else if($item->posisi == 'Selesai'){
@@ -363,7 +271,9 @@ class DashboardRepository
             'proses' => $total_proses,
             'selesai' => $total_selesai,
             'ditolak' => $total_ditolak,
-            'total' => $total_keseluruhan
+            'total' => $total_keseluruhan,
+            'belum_ditindak_lanjuti' => $total_belum_ditindak_lanjuti,
+            'sudah_ditindak_lanjuti' => $total_sudah_ditindak_lanjuti,
         ];
     }
 

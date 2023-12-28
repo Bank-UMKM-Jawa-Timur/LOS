@@ -14,17 +14,17 @@
     </div>
     <div class="mt-4">
         <div class="tab-table-wrapper p-0">
-            <button data-tab="posisi" id="pincetar-button" class="tab-button tab-button-start active">
+            <button data-tab="posisi" id="pincetar-button" class="tab-button tab-button-start {{ Request::route()->getName() == "dashboard-detail-skema" ? '' : 'active' }} ">
                 <iconify-icon icon="material-symbols-light:shelf-position-outline" class="mt-[4px]"></iconify-icon> Posisi
             </button>
-            <button data-tab="skema" id="sipde-button" class="tab-button tab-button-end ">
+            <button data-tab="skema" id="sipde-button" class="tab-button tab-button-end {{ Request::route()->getName() == "dashboard-detail-skema" ? 'active' : '' }}">
                 <iconify-icon icon="file-icons:scheme" class="mt-[2px]"></iconify-icon> Skema
             </button>
         </div>
     </div>
     <div class="table-wrapper-tab bg-white p-5 border">
         {{-- dagulir --}}
-        <div id="tab-posisi" class="tab-content active">
+        <div id="tab-posisi" class="tab-content {{ Request::route()->getName() == "dashboard-detail-skema" ? '' : 'active' }}">
             <table class="tables border">
                 <thead>
                     <th></th>
@@ -43,46 +43,10 @@
                         <td>{{ $item['diproses'] }}</td>
                     </tr>
                     @endforeach
-                    {{-- <tr>
-                        <td class="title-table">Pincab</td>
-                        <td>30</td>
-                        <td>40</td>
-                        <td>20</td>
-                        <td>10</td>
-                    </tr>
-                    <tr>
-                        <td class="title-table">PBP</td>
-                        <td>30</td>
-                        <td>40</td>
-                        <td>20</td>
-                        <td>10</td>
-                    </tr>
-                    <tr>
-                        <td class="title-table">PBO</td>
-                        <td>30</td>
-                        <td>40</td>
-                        <td>20</td>
-                        <td>10</td>
-                    </tr>
-                    <tr>
-                        <td class="title-table">Penyelia</td>
-                        <td>30</td>
-                        <td>40</td>
-                        <td>20</td>
-                        <td>10</td>
-                    </tr>
-                    <tr>
-                        <td class="title-table">Staf</td>
-                        <td>30</td>
-                        <td>40</td>
-                        <td>20</td>
-                        <td>10</td>
-                    </tr> --}}
-
                 </tbody>
             </table>
         </div>
-        <div id="tab-skema" class="tab-content">
+        <div id="tab-skema" class="tab-content {{ Request::route()->getName() == "dashboard-detail-skema" ? 'active' : '' }}">
             <table class="tables border">
                 <thead>
                     <th></th>
@@ -92,48 +56,15 @@
                     <th>Diproses</th>
                 </thead>
                 <tbody>
+                    @foreach ($dataDetailSkema as $key => $item)
                     <tr>
-                        <td class="title-table">PKPJ</td>
-                        <td>30</td>
-                        <td>40</td>
-                        <td>20</td>
-                        <td>10</td>
+                        <td class="title-table">{{ $key }}</td>
+                        <td>{{ $item['total_pengajuan'] }}</td>
+                        <td>{{ $item['total_selesai'] }}</td>
+                        <td>{{ $item['total_ditolak'] }}</td>
+                        <td>{{ $item['diproses'] }}</td>
                     </tr>
-                    <tr>
-                        <td class="title-table">KKB</td>
-                        <td>30</td>
-                        <td>40</td>
-                        <td>20</td>
-                        <td>10</td>
-                    </tr>
-                    <tr>
-                        <td class="title-table">Talangan</td>
-                        <td>30</td>
-                        <td>40</td>
-                        <td>20</td>
-                        <td>10</td>
-                    </tr>
-                    <tr>
-                        <td class="title-table">Prokesra</td>
-                        <td>30</td>
-                        <td>40</td>
-                        <td>20</td>
-                        <td>10</td>
-                    </tr>
-                    <tr>
-                        <td class="title-table">Kusuma</td>
-                        <td>30</td>
-                        <td>40</td>
-                        <td>20</td>
-                        <td>10</td>
-                    </tr>
-                    <tr>
-                        <td class="title-table">Dagulir</td>
-                        <td>30</td>
-                        <td>40</td>
-                        <td>20</td>
-                        <td>10</td>
-                    </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>

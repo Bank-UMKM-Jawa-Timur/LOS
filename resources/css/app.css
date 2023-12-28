@@ -335,6 +335,12 @@
     .btn-detail iconify-icon {
         @apply text-sm mt-[2px];
     }
+    .btn-detail-graph {
+        @apply absolute right-0 rounded-bl-md flex gap-2 px-5 py-1 text-gray-500 bg-gray-50 transition-all text-sm font-semibold border-b border-l hover:bg-theme-primary hover:text-white top-0;
+    }
+    .btn-detail-graph iconify-icon {
+        @apply text-sm mt-[2px];
+    }
     .title-table {
         @apply text-left font-bold border-r text-gray-600 bg-gray-50;
     }

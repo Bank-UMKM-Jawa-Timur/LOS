@@ -200,13 +200,13 @@
                     </div>
                     <div class="mt-3">
                         <h2 class="text-theme-text text-3xl font-bold tracking-tighter">
-                            {{ $dataCard['total'] }}
+                            {{ $dataCard['belum_ditindak_lanjuti'] }}
                         </h2>
                         <p class="text-gray-500 text-sm tracking-tighter">
                            Belum ditindak lanjuti
                         </p>
                     </div>
-                    <a href="#" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
+                    <a href="{{ route('dashboard-detail') }}" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
                 </div>
             </div>
             <div class="card p-5 w-full border bg-white h-[127px] relative">
@@ -218,18 +218,19 @@
                     </div>
                     <div class="mt-3">
                         <h2 class="text-theme-text text-3xl font-bold tracking-tighter">
-                            {{ $dataCard['proses'] }}
+                            {{ $dataCard['sudah_ditindak_lanjuti'] }}
                         </h2>
                         <p class="text-gray-500 text-sm tracking-tighter"> Sudah ditindak lanjuti</p>
                     </div>
-                    <a href="#" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
+                    <a href="{{ route('dashboard-detail') }}" class="btn-detail"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 lg:gap-2 gap-4 justify-center mt-3">
-        <div class="card p-5 w-full border bg-white">
+        <div class="card p-5 w-full border bg-white relative">
+            
             <div class="head">
                 <h2 class="text-lg text-theme-text font-semibold tracking-tighter">
                     Posisi Pengajuan
@@ -238,8 +239,9 @@
             <div class="flex justify-center lg:mt-0 mt-5">
                 <div id="posisi-pengajuan"></div>
             </div>
+            <a href="{{ route('dashboard-detail') }}" class="btn-detail-graph"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
         </div>
-        <div class="card p-5 w-full border bg-white">
+        <div class="card p-5 w-full border bg-white relative">
             <div class="head">
                 <h2 class="text-lg text-theme-text font-semibold tracking-tighter">
                     Skema Kredit
@@ -248,6 +250,7 @@
             <div class="flex justify-center lg:mt-0 mt-5">
                 <div id="skema-kredit"></div>
             </div>
+            <a href="{{ route('dashboard-detail-skema') }}" class="btn-detail-graph"><iconify-icon icon="solar:document-outline"></iconify-icon> Detail</a>
         </div>
     </div>
 </section>

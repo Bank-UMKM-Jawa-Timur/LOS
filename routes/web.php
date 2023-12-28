@@ -59,6 +59,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/detail', [DashboardDetailController::class, 'index'])->name('dashboard-detail');
+    Route::get('/dashboard/detail/skema', [DashboardDetailController::class, 'index'])->name('dashboard-detail-skema');
     // Route::get('/dashboard/detail', function() {
     //     return view('dashboard.detail.dashboard-detail');
     // });

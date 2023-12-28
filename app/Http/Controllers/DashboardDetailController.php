@@ -39,9 +39,7 @@ class DashboardDetailController extends Controller
 
         $param['dataDetailPosisi'] = $this->repo->getDetailPosisi($request);
 
-        $param['dataDetailSkema'] = $this->repo->getDataSkema($request);
-
-        // dd($param);
+        $param['dataDetailSkema'] = $this->repo->getDetailSkema($request);
 
         return view('dashboard.detail.dashboard-detail', $param);
     }
