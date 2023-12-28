@@ -113,7 +113,7 @@
                 <div class="input-box col-md-12">
                     <label for="">No Telp</label>
                     <input type="text" name="no_telp" id="no_telp" class="form-input @error('no_telp') is-invalid @enderror"
-                        placeholder="No Telp" value="{{$dataUmum->no_telp}}" maxlength="255">
+                        placeholder="No Telp" value="{{$dataUmum->telp}}" maxlength="255">
                     @error('no_telp')
                     <div class="invalid-feedback">
                         {{ $message }}
@@ -225,7 +225,7 @@
                     </div>
                 </div>
             @else
-                <div class="form-group-1">
+                <div class="form-group-1 mt-3">
                     <div class="input-box col-md-12" id="foto-ktp-nasabah">
                         @php
                             $jawabanFotoKTPNas = \App\Models\JawabanTextModel::where('id_pengajuan', $dataUmum->id_pengajuan)
@@ -271,7 +271,7 @@
             </div>
             <div class="input-box" id="foto-ktp-nasabah">
             </div>
-            <div class="form-group-3">
+            <div class="form-group-3 mt-3">
                 <div class="input-box col-md-4">
                     <label for="">Tempat</label>
                     <input type="text" name="tempat_lahir" maxlength="255" id=""
@@ -285,8 +285,8 @@
                 </div>
                 <div class="input-box col-md-4">
                     <label for="">Tanggal Lahir</label>
-                    <input type="text" name="tanggal_lahir" id=""
-                        class="form-select datepicker @error('tanggal_lahir') is-invalid @enderror"
+                    <input type="date" name="tanggal_lahir" id=""
+                        class="form-select @error('tanggal_lahir') is-invalid @enderror"
                         value="{{ old('tanggal_lahir', $dataUmum->tanggal_lahir) }}" placeholder="dd-mm-yyyy">
                     @error('tanggal_lahir')
                         <div class="invalid-feedback">
@@ -431,13 +431,15 @@
                             <option value="{{ $i }}" {{ ($i == $dataUmum->tenor_yang_diminta) ? 'selected' : '' }}> {{ $i . ' tahun' }} </option>
                         @endfor
                     </select>  --}}
-                    <div class="input-group">
-                        <input type="text" name="tenor_yang_diminta" id="tenor_yang_diminta"
-                            class="form-input only-number @error('tenor_yang_diminta') is-invalid @enderror"
-                            aria-describedby="addon_tenor_yang_diminta" value="{{ $dataUmum->tenor_yang_diminta }}"
-                             maxlength="3" />
-                        <div class="input-group-append">
-                            <div class="input-group-text" id="addon_tenor_yang_diminta">Bulan</div>
+                    <div class="flex items-center">
+                        <div class="flex-1">
+                            <input type="text" name="tenor_yang_diminta" id="tenor_yang_diminta"
+                                class="w-full form-input only-number @error('tenor_yang_diminta') is-invalid @enderror"
+                                aria-describedby="addon_tenor_yang_diminta" value="{{ $dataUmum->tenor_yang_diminta }}"
+                                 maxlength="3" />
+                        </div>
+                        <div class="flex-shrink-0 mt-2.5rem">
+                            <span class="form-input bg-gray-100">Bulan</span>
                         </div>
                     </div>
                     @error('tenor_yang_diminta')

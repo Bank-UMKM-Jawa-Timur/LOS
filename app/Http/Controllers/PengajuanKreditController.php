@@ -1244,7 +1244,7 @@ class PengajuanKreditController extends Controller
             $addData->no_ktp = $request->no_ktp;
             $addData->telp = $request->get('no_telp');
             $addData->tempat_lahir = $request->tempat_lahir;
-            $addData->tanggal_lahir = $this->formatDate($request->tanggal_lahir);
+            $addData->tanggal_lahir = $request->tanggal_lahir;
             $addData->status = $request->status;
             $addData->sektor_kredit = $request->sektor_kredit;
             $addData->jenis_usaha = $request->jenis_usaha;
