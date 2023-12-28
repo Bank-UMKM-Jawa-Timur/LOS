@@ -108,7 +108,7 @@
         <div class="card bg-white p-0 lg:w-2/4 w-full rounded-md box-border border">
             <div class="p-3 pl-5 pt-5">
                 <h2 class="font-poppins font-semibold tracking-tighter text-lg text-theme-text">
-                    Data Pengajuan
+                    Data Pengajuan - {{ Date('Y') }}
                 </h2>
             </div>
             <div id="chart-total-pengajuan" class="w-full"></div>
