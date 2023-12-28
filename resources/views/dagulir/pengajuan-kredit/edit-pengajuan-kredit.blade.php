@@ -420,7 +420,7 @@ $dataIndex = match ($skema) {
                                             @endforeach
 
                                             @if (count($item->dataJawaban) != 0)
-                                                <div 
+                                                <div
                                                     class="{{ $idLevelDua == 'persentase_kebutuhan_kredit_opsi' || $idLevelDua == 'repayment_capacity_opsi' ? 'hidden' : 'form-group' }}">
                                                     <div class="input-box">
                                                         <label for="" id="{{ $idLevelDua . '_label' }}">{{ $item->nama }}</label>

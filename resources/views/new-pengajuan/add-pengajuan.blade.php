@@ -51,7 +51,7 @@ $dataIndex = match ($skema) {
     </nav>
     <div class="p-3">
         <div class="body-pages">
-            <form action="{{ route('pengajuan-kredit.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('dagulir.pengajuan.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @if (\Request::has('dagulir'))
                     <input type="hidden" name="dagulir_id" value="{{\Request::get('dagulir')}}">
@@ -401,8 +401,8 @@ $dataIndex = match ($skema) {
                                                                 <select name="kategori_jaminan_tambahan" id="kategori_jaminan_tambahan" class="form-input"
                                                                     >
                                                                     <option value="">-- Pilih Kategori Jaminan Tambahan --</option>
-                                                                    <option value="Tidak Memiliki Jaminan Tambahan">Tidak Memiliki Jaminan Tambahan
-                                                                    </option>
+                                                                    {{-- <option value="Tidak Memiliki Jaminan Tambahan">Tidak Memiliki Jaminan Tambahan
+                                                                    </option> --}}
                                                                     <option value="Tanah">Tanah</option>
                                                                     <option value="Kendaraan Bermotor">Kendaraan Bermotor</option>
                                                                     <option value="Tanah dan Bangunan">Tanah dan Bangunan</option>
@@ -865,6 +865,9 @@ $dataIndex = match ($skema) {
     @endif
     let nullValue = [];
     $(document).ready(function() {
+        countFormPercentage()
+    });
+    $(document).ready(function() {
         let valSkema = $("#skema_kredit").val();
         if (valSkema == null || valSkema == '') {
             $('#exampleModal').removeClass('hidden');
@@ -1156,12 +1159,12 @@ $dataIndex = match ($skema) {
         const $nextContent = $activeContent.next();
         const tabId = $activeContent.attr("id")
         const dataTab = tabId.replaceAll('-tab', '')
-        if(tabId == 'dagulir-tab'){
-            if($("input[name=nama_lengkap]").val().length > 0)
-                saveDataUmum()
-        } else{
-            saveDataTemporary(tabId)
-        }
+        // if(tabId == 'dagulir-tab'){
+        //     if($("input[name=nama_lengkap]").val().length > 0)
+        //         saveDataUmum()
+        // } else{
+        //     saveDataTemporary(tabId)
+        // }
     })
 
     $(".next-tab").on("click", function(e) {
@@ -1169,11 +1172,11 @@ $dataIndex = match ($skema) {
         const $nextContent = $activeContent.next();
         const tabId = $activeContent.attr("id")
         const dataTab = tabId.replaceAll('-tab', '')
-        if(tabId == 'dagulir-tab'){
-            saveDataUmum()
-        } else{
-            saveDataTemporary(tabId)
-        }
+        // if(tabId == 'dagulir-tab'){
+        //     saveDataUmum()
+        // } else{
+        //     saveDataTemporary(tabId)
+        // }
         // Set percentage
         var percentage = formPercentage(tabId)
         $('.tab-wrapper').find(`[data-tab=${dataTab}]`).find('.percentage').html(`${percentage}%`)
@@ -1458,7 +1461,7 @@ $dataIndex = match ($skema) {
         var totalReadHidden = (totalInputHidden + totalInputReadOnly);
         var total = totalInput + totalInputChecked;
         percent = (totalInputFilled / (totalInput - totalInputReadOnly)) * 100;
-        return parseInt(percent)
+        return parseInt(percent) > 100 ? 100 : parseInt(percent)
     }
 
     $(".toggle-side").click(function(e) {
@@ -2700,6 +2703,6 @@ $dataIndex = match ($skema) {
 
 </script>
 
-<script src="{{ asset('') }}js/custom.js"></script>
-@include('dagulir.partials.create-save-temp')
+{{-- <script src="{{ asset('') }}js/custom.js"></script> --}}
+{{-- @include('dagulir.partials.create-save-temp') --}}
 @endpush
