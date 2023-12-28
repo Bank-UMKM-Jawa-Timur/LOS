@@ -1,8 +1,17 @@
 @extends('layouts.tailwind-template')
 
 @section('modal')
-    @include('pengajuan-kredit.modal.new-modal-filter')
-    @include('pengajuan-kredit.modal.modal-kembalikan')
+    @include('dagulir.modal.filter')
+
+    @include('dagulir.pengajuan-kredit.modal.pilih-penyelia')
+    {{-- @include('dagulir.modal.konfirmSendToPinca') --}}
+    @include('dagulir.modal.cetak-file-sppk')
+    @include('dagulir.modal.cetak-file-pk')
+    @include('dagulir.modal.approval')
+    @include('dagulir.modal.approvalSipde')
+    @include('dagulir.modal.kembalikan')
+    @include('components.new.modal.loading')
+    @include('dagulir.modal.lanjutkan-penyelia')
 @endsection
 
 @section('content')
@@ -10,7 +19,7 @@
         <div class="head space-y-5 w-full font-poppins">
             <div class="heading flex-auto">
                 <p class="text-theme-primary font-semibold font-poppins text-xs">
-                    Analisa Kredit 
+                    Analisa Kredit
                 </p>
                 <h2 class="font-bold tracking-tighter text-2xl text-theme-text">
                     Analisa Kredit
@@ -37,10 +46,10 @@
                         </span>
                         <span class="ml-3 text-sm"> Filter </span>
                     </a>
-                
+
                 </div>
                 <div class="right-button gap-2 flex lg:justify-start">
-                    <a  
+                    <a
                         href="{{ route('pengajuan-kredit-draft') }}"
                         class="px-7 py-2 flex font-poppins justify-center items-center rounded font-semibold bg-white border text-theme-secondary">
                         <span class="">
@@ -131,113 +140,48 @@
                         </thead>
                         <tbody>
                             @forelse ($data_pengajuan as $item)
+                            @php
+                                $nama_pemroses = 'undifined';
+                                $user = \App\Models\User::select('nip')->where('id', $item->id_staf)->first();
+                                if ($item->posisi == 'Proses Input Data') {
+                                    $user = \App\Models\User::select('nip')->where('id', $item->id_staf)->first();
+                                } else if ($item->posisi == 'Review Penyelia') {
+                                    $user = \App\Models\User::select('nip')->where('id', $item->id_penyelia)->first();
+                                } else if ($item->posisi == 'PBO') {
+                                    $user = \App\Models\User::select('nip')->where('id', $item->id_pbo)->first();
+                                } else if ($item->posisi == 'PBP') {
+                                    $user = \App\Models\User::select('nip')->where('id', $item->id_pbp)->first();
+                                } else if ($item->posisi == 'Pincab' || $item->posisi == 'Selesai' || $item->posisi == 'Ditolak') {
+                                    $user = \App\Models\User::select('nip')->where('id', $item->id_pincab)->first();
+                                }
+
+                                if ($user)
+                                    $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
+                                else {
+                                    $check_log = \DB::table('log_pengajuan')
+                                        ->select('nip')
+                                        ->where('id_pengajuan', $item->id)
+                                        ->where('activity', 'LIKE', 'Staf%')
+                                        ->orderBy('id', 'DESC')
+                                        ->first();
+                                    if ($check_log)
+                                        $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
+                                }
+                                $item->nama_pemroses = $nama_pemroses;
+
+                            @endphp
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $item->tanggal }}</td>
                                 <td>{{ $item->nama }}</td>
                                 <td class="text-center text-sm">
-                                    @if ($item->posisi == 'Proses Input Data')
-                                        @php
-                                            $nama_pemroses = 'undifined';
-                                            $user = \App\Models\User::select('nip')->where('id', $item->id_staf)->first();
-                                            if ($user)
-                                                $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
-                                            else {
-                                                $check_log = \DB::table('log_pengajuan')
-                                                                ->select('nip')
-                                                                ->where('id_pengajuan', $item->id)
-                                                                ->where('activity', 'LIKE', 'Staf%')
-                                                                ->orderBy('id', 'DESC')
-                                                                ->first();
-                                                if ($check_log)
-                                                    $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
-                                            }
-                                        @endphp
-                                        <span>Staff</span>
-                                        <br>
-                                        <span class="text-color-soft">({{$nama_pemroses}})</span>
-                                    @elseif ($item->posisi == 'Review Penyelia')
-                                        @php
-                                            $nama_pemroses = 'undifined';
-                                            $user = \App\Models\User::select('nip')->where('id', $item->id_penyelia)->first();
-                                            if ($user)
-                                                $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
-                                            else {
-                                                $check_log = \DB::table('log_pengajuan')
-                                                                ->select('nip')
-                                                                ->where('id_pengajuan', $item->id)
-                                                                ->where('activity', 'LIKE', 'Penyelia%')
-                                                                ->orderBy('id', 'DESC')
-                                                                ->first();
-                                                if ($check_log)
-                                                    $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
-                                            }
-                                        @endphp
-                                        <span>Penyelia</span>
-                                        <br>
-                                        <span class="text-color-soft">({{$nama_pemroses}})</span>
-                                    @elseif ($item->posisi == 'PBO')
-                                        @php
-                                            $nama_pemroses = 'undifined';
-                                            $user = \App\Models\User::select('nip')->where('id', $item->id_pbo)->first();
-                                            if ($user)
-                                                $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
-                                            else {
-                                                $check_log = \DB::table('log_pengajuan')
-                                                                ->select('nip')
-                                                                ->where('id_pengajuan', $item->id)
-                                                                ->where('activity', 'LIKE', 'PBO%')
-                                                                ->orderBy('id', 'DESC')
-                                                                ->first();
-                                                if ($check_log)
-                                                    $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
-                                            }
-                                        @endphp
-                                        <span>PBO</span>
-                                        <br>
-                                        <span class="text-color-soft">({{$nama_pemroses}})</span>
-                                    @elseif ($item->posisi == 'PBP')
-                                        @php
-                                            $nama_pemroses = 'undifined';
-                                            $user = \App\Models\User::select('nip')->where('id', $item->id_pbp)->first();
-                                            if ($user)
-                                                $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
-                                            else {
-                                                $check_log = \DB::table('log_pengajuan')
-                                                                ->select('nip')
-                                                                ->where('id_pengajuan', $item->id)
-                                                                ->where('activity', 'LIKE', 'PBP%')
-                                                                ->orderBy('id', 'DESC')
-                                                                ->first();
-                                                if ($check_log)
-                                                    $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
-                                            }
-                                        @endphp
-                                        <span>PBP</span>
-                                        <br>
-                                        <span class="text-color-soft">({{$nama_pemroses}})</span>
-                                    @elseif ($item->posisi == 'Pincab')
-                                        @php
-                                            $nama_pemroses = 'undifined';
-                                            $user = \App\Models\User::select('nip')->where('id', $item->id_pincab)->first();
-                                            if ($user)
-                                                $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($user->nip);
-                                            else {
-                                                $check_log = \DB::table('log_pengajuan')
-                                                                ->select('nip')
-                                                                ->where('id_pengajuan', $item->id)
-                                                                ->where('activity', 'LIKE', 'Pincab%')
-                                                                ->orderBy('id', 'DESC')
-                                                                ->first();
-                                                if ($check_log)
-                                                    $nama_pemroses = \App\Http\Controllers\PengajuanKreditController::getKaryawanFromAPIStatic($check_log->nip);
-                                            }
-                                        @endphp
-                                        <span>Pincab</span>
-                                        <br>
-                                        <span class="text-color-soft">({{$nama_pemroses}})</span>
+                                    @if ($item->pk && $item->posisi == 'Selesai')
+                                        {{$item->posisi}}
                                     @else
-                                        <span>Selesai</span>
+                                        {{$item->posisi == 'Selesai' ? 'Disetujui' : $item->posisi}}
+                                    @endif
+                                    @if ($item->posisi != 'Selesai' && $item->posisi != 'Ditolak')
+                                        <p class="text-red-500">{{ $item->nama_pemroses }}</p>
                                     @endif
                                 </td>
                                 <td>
@@ -248,7 +192,7 @@
                                             $interval = $akhir->diff($awal);
                                             $res = $interval->format('%a');
                                         @endphp
-        
+
                                         @if ($res != 0)
                                             @if ($res == 1 || $res == 2 || $res == 3)
                                                 <font class="text-green-500">{{ $res . ' hari' }}</font>
@@ -266,64 +210,65 @@
                                 </td>
                                 <td>
                                     @php
-                                        $avgResult = $item->average_by_sistem;
-                                        if ($item->posisi == 'Review Penyelia')
-                                            $avgResult = $item->average_by_penyelia ? $item->average_by_penyelia : $item->average_by_sistem;
-                                        else if ($item->posisi == 'PBO')
-                                            $avgResult = $item->average_by_pbo ? $item->average_by_pbo : $item->average_by_penyelia;
-                                        else if ($item->posisi == 'PBP')
-                                            $avgResult = $item->average_by_pbp ? $item->average_by_pbp : $item->average_by_pbo;
-                                        else if ($item->posisi == 'Pincab') {
-                                            if (!$item->average_by_penyelia && !$item->average_by_pbo && $item->average_by_pbp)
-                                                $avgResult = $item->average_by_pbp;
-                                            else if (!$item->average_by_penyelia && $item->average_by_pbo && !$item->average_by_pbp)
-                                                $avgResult = $item->average_by_pbo;
-                                            else if ($item->average_by_penyelia && !$item->average_by_pbo && !$item->average_by_pbp)
-                                                $avgResult = $item->average_by_penyelia;
-                                        }
-                                        else if ($item->posisi == 'Ditolak') {
-                                            if (!$item->average_by_penyelia && !$item->average_by_pbo && $item->average_by_pbp)
-                                                $avgResult = $item->average_by_pbp;
-                                            else if (!$item->average_by_penyelia && $item->average_by_pbo && !$item->average_by_pbp)
-                                                $avgResult = $item->average_by_pbo;
-                                            else if ($item->average_by_penyelia && !$item->average_by_pbo && !$item->average_by_pbp)
-                                                $avgResult = $item->average_by_penyelia;
-                                        }
-                                        else if ($item->posisi == 'Selesai') {
-                                            if (!$item->average_by_penyelia && !$item->average_by_pbo && $item->average_by_pbp)
-                                                $avgResult = $item->average_by_pbp;
-                                            else if (!$item->average_by_penyelia && $item->average_by_pbo && !$item->average_by_pbp)
-                                                $avgResult = $item->average_by_pbo;
-                                            else if ($item->average_by_penyelia && !$item->average_by_pbo && !$item->average_by_pbp)
-                                                $avgResult = $item->average_by_penyelia;
-                                        }
-                                        if ($avgResult > 0 && $avgResult <= 2) {
-                                            $status = "merah";
-                                        } elseif ($avgResult > 2 && $avgResult <= 3) {
-                                            $status = "kuning";
-                                        } elseif ($avgResult > 3) {
-                                            $status = "hijau";
-                                        } else {
-                                            $status = "merah";
-                                        }
-                                    @endphp
-                                    @if ($status == 'hijau')
-                                        <font class="text-green-500">
-                                            {{ $avgResult }}
-                                        </font>
-                                    @elseif ($status == 'kuning')
-                                        <font class="text-yellow-500">
-                                            {{ $avgResult }}
-                                        </font>
-                                    @elseif ($status == 'merah')
-                                        <font class="text-red-500">
-                                            {{ $avgResult }}
-                                        </font>
-                                    @else
-                                        <font class="text-neutral-800">
-                                            {{ $avgResult }}
-                                        </font>
-                                    @endif
+                                    $avgResult = $item->average_by_sistem;
+                                    if ($item->posisi == 'Review Penyelia')
+                                        $avgResult = $item->average_by_penyelia ? $item->average_by_penyelia : $item->average_by_sistem;
+                                    else if ($item->posisi == 'PBO')
+                                        $avgResult = $item->average_by_pbo ? $item->average_by_pbo : $item->average_by_penyelia;
+                                    else if ($item->posisi == 'PBP')
+                                        $avgResult = $item->average_by_pbp ? $item->average_by_pbp : $item->average_by_pbo;
+                                    else if ($item->posisi == 'Pincab') {
+                                        if (!$item->average_by_penyelia && !$item->average_by_pbo && $item->average_by_pbp)
+                                            $avgResult = $item->average_by_pbp;
+                                        else if (!$item->average_by_penyelia && $item->average_by_pbo && !$item->average_by_pbp)
+                                            $avgResult = $item->average_by_pbo;
+                                        else if ($item->average_by_penyelia && !$item->average_by_pbo && !$item->average_by_pbp)
+                                            $avgResult = $item->average_by_penyelia;
+                                    }
+                                    else if ($item->posisi == 'Ditolak') {
+                                        if (!$item->average_by_penyelia && !$item->average_by_pbo && $item->average_by_pbp)
+                                            $avgResult = $item->average_by_pbp;
+                                        else if (!$item->average_by_penyelia && $item->average_by_pbo && !$item->average_by_pbp)
+                                            $avgResult = $item->average_by_pbo;
+                                        else if ($item->average_by_penyelia && !$item->average_by_pbo && !$item->average_by_pbp)
+                                            $avgResult = $item->average_by_penyelia;
+                                    }
+                                    else if ($item->posisi == 'Selesai') {
+                                        if (!$item->average_by_penyelia && !$item->average_by_pbo && $item->average_by_pbp)
+                                            $avgResult = $item->average_by_pbp;
+                                        else if (!$item->average_by_penyelia && $item->average_by_pbo && !$item->average_by_pbp)
+                                            $avgResult = $item->average_by_pbo;
+                                        else if ($item->average_by_penyelia && !$item->average_by_pbo && !$item->average_by_pbp)
+                                            $avgResult = $item->average_by_penyelia;
+                                    }
+                                    $status_skor = "";
+                                    if ($avgResult > 0 && $avgResult <= 2) {
+                                        $status_skor = "merah";
+                                    } elseif ($avgResult > 2 && $avgResult <= 3) {
+                                        $status_skor = "kuning";
+                                    } elseif ($avgResult > 3) {
+                                        $status_skor = "hijau";
+                                    } else {
+                                        $status_skor = "merah";
+                                    }
+                                @endphp
+                                @if ($status_skor == 'hijau')
+                                    <font class="text-green-500">
+                                        {{ $avgResult }}
+                                    </font>
+                                @elseif ($status_skor == 'kuning')
+                                    <font class="text-yellow-500">
+                                        {{ $avgResult }}
+                                    </font>
+                                @elseif ($status_skor == 'merah')
+                                    <font class="text-red-500">
+                                        {{ $avgResult }}
+                                    </font>
+                                @else
+                                    <font class="text-neutral-800">
+                                        {{ $avgResult }}
+                                    </font>
+                                @endif
                                 </td>
                                 <td>
                                     @if ($item->posisi == 'Selesai')
@@ -335,147 +280,168 @@
                                     @endif
                                 </td>
                                 <td>
-                                <div class="dropdown-tb">
-                                    @php
-                                        $userPBO = \App\Models\User::select('id')
-                                            ->where('id_cabang', $item->id_cabang)
-                                            ->where('role', 'PBO')
-                                            ->whereNotNull('nip')
-                                            ->first();
-                                        
-                                        $userPBP = \App\Models\User::select('id')
-                                            ->where('id_cabang', $item->id_cabang)
-                                            ->where('role', 'PBP')
-                                            ->whereNotNull('nip')
-                                            ->first();
-                                    @endphp
-                                    @if ($item->posisi == 'Review Penyelia')
-                                        @if (auth()->user()->id_cabang == '1')
+                                    <div class="flex">
+                                        <div class="dropdown-tb">
                                             <button
-                                                class="dropdown-tb-toggle border rounded px-4 py-2 hover:bg-gray-100 hover:text-gray-500">
-                                                <iconify-icon icon="ph:dots-three-outline-vertical-fill" class="mt-2">
-                                                </iconify-icon>
+                                            type="button"
+                                            class="dropdown-tb-toggle border rounded px-4 py-2 hover:bg-gray-100 hover:text-gray-500"
+                                            >
+                                            <iconify-icon
+                                                icon="ph:dots-three-outline-vertical-fill"
+                                                class="mt-2"
+                                            ></iconify-icon>
                                             </button>
                                             <ul class="dropdown-tb-menu hidden">
-                                                <li class="item-tb-dropdown">
-                                                    <a href="{{ route('pengajuan.detailjawaban', $item->id_pengajuan) }}">Review</a>
-                                                </li>
-                                                <li class="item-tb-dropdown open-modal" data-modal-id="modal-kembalikan-{{ $item->id }}" data-backto="Staff" >
-                                                    <a href="#">Kembalikan ke Staff</a>
-                                                </li>
-                                                @if ($userPBO)
-                                                <li class="item-tb-dropdown">
-                                                    <a href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbo">Lanjut ke PBO</a>
-                                                </li>
-                                                @else
-                                                    @if ($userPBP)
-                                                    <li class="item-tb-dropdown">
-                                                        <a  href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbp">Lanjut ke PBP</a>
-                                                    </li>
+                                                @if (Auth::user()->role == 'Staf Analis Kredit' && $item->posisi == 'Proses Input Data')
+                                                    <a href="{{ route('dagulir.pengajuan.edit', $item->id_pengajuan) }}"
+                                                        class="w-full cursor-pointer">
+                                                        <li class="item-tb-dropdown">
+                                                            Edit data
+                                                        </li>
+                                                    </a>
+                                                    @if ($item->average_by_sistem)
+                                                        @if (!$item->id_penyelia)
+                                                            <a href="#" onclick="showTindakLanjut({{ $item->id }},'penyelia kredit')" class="w-full cursor-pointer">
+                                                                <li class="item-tb-dropdown">
+                                                                    Tindak lanjut Review Penyelia
+                                                                </li>
+                                                            </a>
+                                                        @endif
                                                     @else
-                                                    <li class="item-tb-dropdown">
-                                                        <a  href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pincab">Lanjut ke Pincab</a>
-                                                    </li>
+                                                        <a href="{{route('dagulir.pengajuan.create')}}?dagulir={{$item->id}}" class="w-full cursor-pointer">
+                                                            <li class="item-tb-dropdown">
+                                                                Tindak Lanjut
+                                                            </li>
+                                                        </a>
                                                     @endif
                                                 @endif
-                                                <li class="item-tb-dropdown">
-                                                    <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
-                                                        class="dropdown-item">Cetak</a>
-                                                </li>
-                                            </ul>
-                                        @else
-                                            <button class="dropdown-tb-toggle border rounded px-4 py-2 hover:bg-gray-100 hover:text-gray-500">
-                                                <iconify-icon icon="ph:dots-three-outline-vertical-fill" class="mt-2">
-                                                </iconify-icon>
-                                            </button>
-                                            <ul class="dropdown-tb-menu hidden">
-                                                <li class="item-tb-dropdown">
-                                                    <a href="{{ route('pengajuan.detailjawaban', $item->id_pengajuan) }}">Review</a>
-                                                </li>
-                                                <li class="item-tb-dropdown open-modal" data-modal-id="modal-kembalikan-{{ $item->id }}" data-backto="Staff" >
-                                                    <a href="#">Kembalikan ke Staff</a>
-                                                </li>
-                                                @if ($userPBO)
-                                                <li class="item-tb-dropdown">
-                                                    <a href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pbo">Lanjut ke PBO</a>
-                                                </li>
-                                                @else
-                                                <li class="item-tb-dropdown">
-                                                    <a  href="{{ route('pengajuan.check.pincab', $item->id_pengajuan) }}?to=pincab">Lanjut ke Pincab</a>
-                                                </li>
+                                                @if (Auth::user()->role == 'Staf Analis Kredit' && $item->posisi == 'Selesai')
+                                                    @php
+                                                        $tglCetak = DB::table('log_cetak_kkb')
+                                                            ->where('id_pengajuan', $item->id)
+                                                            ->first();
+                                                    @endphp
+
+                                                    @if ($tglCetak == null || !$tglCetak->tgl_cetak_sppk)
+                                                        <a target="_blank" href="{{ route('dagulir.cetak-sppk-dagulir', $item->id) }}" class="w-full cursor-pointer">
+                                                            <li class="item-tb-dropdown">
+                                                                Cetak SPPK
+                                                            </li>
+                                                        </a>
+                                                    @elseif (!$item->sppk && $tglCetak->tgl_cetak_sppk)
+                                                        <a href="#" class="w-full cursor-pointer show-upload-sppk" data-toggle="modal" data-target="uploadSPPKModal" data-id="{{ $item->id }}">
+                                                            <li class="item-tb-dropdown">
+                                                                Upload File SPPK
+                                                            </li>
+                                                        </a>
+                                                    @elseif (!$tglCetak->tgl_cetak_pk && $item->sppk && $tglCetak->tgl_cetak_sppk )
+                                                        <a target="_blank" href="{{ route('cetak-pk', $item->id_pengajuan) }}" class="w-full cursor-pointer">
+                                                            <li class="item-tb-dropdown">
+                                                                Cetak PK
+                                                            </li>
+                                                        </a>
+                                                    @elseif (!$item->pk && $tglCetak->tgl_cetak_pk && $item->sppk)
+                                                        <a href="#" class="w-full cursor-pointer show-upload-pk" data-toggle="modal" data-target="uploadPKModal" data-id="{{ $item->id }}">
+                                                            <li class="item-tb-dropdown">
+                                                                Upload PK
+                                                            </li>
+                                                        </a>
+                                                    @endif
                                                 @endif
-                                                <li class="item-tb-dropdown">
-                                                    <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
-                                                        class="dropdown-item">Cetak</a>
-                                                </li>
-                                            </ul>
-                                        @endif
-                                    @elseif ($item->posisi == 'Proses Input Data')
-                                        <button
-                                            class="dropdown-tb-toggle border rounded px-4 py-2 hover:bg-gray-100 hover:text-gray-500">
-                                            <iconify-icon icon="ph:dots-three-outline-vertical-fill" class="mt-2">
-                                            </iconify-icon>
-                                        </button>
-                                        <ul class="dropdown-tb-menu hidden">
-                                            <li class="item-tb-dropdown">
-                                                <a href="{{ route('pengajuan-kredit.edit', $item->id_pengajuan) }}"
-                                                    class="dropdown-item">
-                                                    Edit data
-                                                </a>
-                                            </li>
-                                            <li class="item-tb-dropdown">
-                                                <a href="#"
-                                                    onclick="showTindakLanjut({{ $item->id_pengajuan }},'penyelia kredit')"
-                                                    class="dropdown-item">Tindak lanjut Review Penyelia</a>
-                                            </li>
-                                            <li class="item-tb-dropdown">
-                                                <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
-                                                    class="dropdown-item">Cetak</a>
-                                            </li>
-                                            @if ($item->skema_kredit == 'KKB')
-                                                <li class="item-tb-dropdown">
-                                                    <a target="_blank" href="{{ route('cetak-sppk', $item->id_pengajuan) }}"
-                                                        class="dropdown-item">Cetak SPPK</a>
-                                                </li>
-                                                <li class="item-tb-dropdown">
-                                                    <a target="_blank" href="{{ route('cetak-po', $item->id_pengajuan) }}"
-                                                        class="dropdown-item">Cetak PO</a>
-                                                </li>
-                                                <li class="item-tb-dropdown">
-                                                    <a target="_blank" href="{{ route('cetak-pk', $item->id_pengajuan) }}"
-                                                        class="dropdown-item">Cetak PK</a>
-                                                </li>
-                                            @endif
-                                        </ul>
-                                    @else
-                                        <button class="dropdown-tb-toggle border rounded px-4 py-2 hover:bg-gray-100 hover:text-gray-500">
-                                            <iconify-icon icon="ph:dots-three-outline-vertical-fill" class="mt-2">
-                                            </iconify-icon>
-                                        </button>
-                                        <ul class="dropdown-tb-menu hidden">
-                                            <li class="item-tb-dropdown">
-                                                <a target="_blank" href="{{ route('cetak', $item->id_pengajuan) }}"
-                                                    class="dropdown-item">Cetak</a>
-                                            </li>
-                                            @if ($item->posisi == "PBP")
-                                                @if ($item->id_pbo != null)
-                                                    <li class="item-tb-dropdown open-modal" data-modal-id="modal-kembalikan-{{ $item->id }}" data-backto="PBO" >
-                                                        <a href="#">Kembalikan ke PBO</a>
+                                                @if ((Auth()->user()->role == 'Penyelia Kredit'))
+                                                    @if ($item->posisi == 'Review Penyelia')
+                                                        <a href="{{ route('dagulir.detailjawaban', $item->id) }}" class="w-full cursor-pointer">
+                                                            <li class="item-tb-dropdown">
+                                                                Review
+                                                            </li>
+                                                        </a>
+                                                        <a href="#" class="w-full cursor-pointer">
+                                                            <li class="item-tb-dropdown kembalikan-modal" cursor-pointer data-id="{{ $item->id }}" data-backto="staf" >
+                                                                Kembalikan ke Staff
+                                                            </li>
+                                                        </a>
+                                                    @endif
+                                                    @if ($item->posisi == 'Review Penyelia' && $item->tanggal_review_penyelia)
+                                                        <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->id}}" data-nama="{{$item->nama}}" class="w-full cursor-pointer">
+                                                            <li class="item-tb-dropdown">
+                                                                Lanjutkan Ke Pincab
+                                                            </li>
+                                                        </a>
+                                                    @endif
+                                                @elseif ((Auth()->user()->role == 'PBO'))
+                                                    @if ($item->posisi == 'PBO' && $item->tanggal_review_penyelia
+                                                        && $item->id_pbo)
+                                                        <a href="{{ route('dagulir.detailjawaban', $item->id) }}" class="w-full cursor-pointer">
+                                                            <li class="item-tb-dropdown">
+                                                                Review
+                                                            </li>
+                                                        </a>
+                                                        <a href="#" class="w-full cursor-pointer">
+                                                            <li class="item-tb-dropdown kembalikan-modal" cursor-pointer data-id="{{ $item->id }}" data-backto="penyelia">
+                                                                Kembalikan ke Penyelia
+                                                            </li>
+                                                        </a>
+                                                    @endif
+                                                    @if ($item->posisi == 'PBO' && $item->tanggal_review_pbo
+                                                        && $item->id_pbo)
+                                                        <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->id}}" data-nama="{{$item->nama}}" class="w-full cursor-pointer">
+                                                            <li class="item-tb-dropdown">
+                                                                Lanjutkan Ke Pincab
+                                                            </li>
+                                                        </a>
+                                                    @endif
+                                                @elseif ((Auth()->user()->role == 'PBP'))
+                                                    @if ($item->posisi == 'PBP' && $item->tanggal_review_pbp
+                                                        && $item->id_pbp)
+                                                        <a href="{{ route('dagulir.detailjawaban', $item->id) }}" class="w-full cursor-pointer">
+                                                            <li class="item-tb-dropdown">
+                                                                Review
+                                                            </li>
+                                                        </a>
+                                                        <a class="w-full cursor-pointer" href="#" data-id="{{ $item->id }}" data-backto="{{$item->id_pbo ? 'pbo' : 'penyelia'}}">
+                                                            <li class="item-tb-dropdown kembalikan-modal" cursor-pointer>
+                                                                Kembalikan ke {{$item->id_pbo ? 'PBO' : 'Penyelia'}}
+                                                            </li>
+                                                        </a>
+                                                    @endif
+                                                    @if ($item->posisi == 'PBP' && $item->tanggal_review_penyelia
+                                                        && ($item->id_pbo && $item->tanggal_review_pbo)
+                                                        && ($item->id_pbp && $item->tanggal_review_pbp))
+                                                            <a href="javascript:void(0)" id="modalConfirmPincab" data-id_pengajuan="{{$item->id}}" data-nama="{{$item->nama}}" class="w-full cursor-pointer">
+                                                                <li class="item-tb-dropdown">
+                                                                    Lanjutkan Ke Pincab
+                                                                </li>
+                                                            </a>
+                                                    @endif
+                                                @elseif ((Auth()->user()->role == 'Pincab'))
+                                                    @if ($item->posisi == 'Pincab')
+                                                        @if ($item->id_pincab)
+                                                        <a href="{{ route('dagulir.detailjawaban_pincab', $item->id) }}"
+                                                            class="w-full cursor-pointer">
+                                                            <li class="item-tb-dropdown">
+                                                                    Review
+                                                            </li>
+                                                        </a>
+                                                        <a href="#" class="w-full cursor-pointer">
+                                                            <li class="item-tb-dropdown kembalikan-modal" cursor-pointer
+                                                                data-id="{{ $item->id }}" data-backto="{{$item->id_pbp ? 'pbp' : 'penyelia'}}">
+                                                                Kembalikan ke {{$item->id_pbp ? 'PBP' : 'Penyelia'}}
+                                                            </li>
+                                                        </a>
+                                                        @endif
+                                                    @endif
+                                                @else
+                                                <a href="{{ route('cetak', $item->id_pengajuan) }}"
+                                                    class="cursor-pointer w-full" target="_blank">
+                                                    <li class="item-tb-dropdown">
+                                                        Cetak
                                                     </li>
-                                                @else
-                                                <li class="item-tb-dropdown open-modal" data-modal-id="modal-kembalikan-{{ $item->id }}" data-backto="Penyelia"" >
-                                                    <a href="#">Kembalikan ke Penyelia</a>
-                                                </li>
+                                                </a>
                                                 @endif
-                                            @elseif ($item->posisi == "PBO")
-                                            <li class="item-tb-dropdown open-modal" data-modal-id="modal-kembalikan-{{ $item->id }}" data-backto="Penyelia"" >
-                                                <a href="#">Kembalikan ke Penyelia</a>
-                                            </li>
-                                            @endif
-                                        </ul>
-                                    @endif
-                            </div>
-                            </td>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </td>
                             @empty
                             <td colspan="7" class="text-center" style="background: rgba(71, 145,254,0.05) !important">Data
                                 Kosong</td>
@@ -487,7 +453,7 @@
                 <div class="footer-table p-4">
                     <div class="flex justify-between">
                         <div class="mt-3 mr-5 text-sm font-medium text-gray-500">
-                            <p>  
+                            <p>
                                 Menampilkan
                                 {{ $data_pengajuan->firstItem() }}
                                 -
@@ -529,33 +495,179 @@
 @endsection
 
 @push('script-inject')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
-    $('#page_length').on('change', function() {
-        $('#form').submit()
+    if (document.getElementById('modalConfirmPincab')) {
+        document.getElementById('modalConfirmPincab').addEventListener('click', function () {
+            document.getElementById('confirmationModal').classList.remove('hidden');
+            document.getElementById('confirmationModal').classList.add('h-full');
+            var nama = $('#modalConfirmPincab').data('nama');
+            var namaHtml = nama.toLowerCase();
+            var idPengajuan = $('#modalConfirmPincab').data('id_pengajuan');
+            console.log(idPengajuan);
+            $('#nama_pengajuan').html(namaHtml.toUpperCase());
+            $('[name="id_pengajuan"]').val(idPengajuan);
+        });
+    }
+
+    if (document.getElementById('cancelAction')) {
+        document.getElementById('cancelAction').addEventListener('click', function () {
+            document.getElementById('confirmationModal').classList.add('hidden');
+            document.getElementById('confirmationModal').classList.remove('flex');
+        });
+    }
+
+    $(document).on('click', '.kembalikan-modal', function() {
+        const id = $(this).data('id')
+        const backto = $(this).data('backto')
+
+        // Show modal
+        $('#modal-kembalikan').removeClass('hidden')
+
+        // Set form variables
+        $('#modal-kembalikan #id_pengajuan').val(id)
+        $('#modal-kembalikan #backto').val(backto)
     })
 
-    $('#btn_filter').on('click', function () { 
-        $('#form-filter').submit()
+    $('.review-penyelia').on('click', function(){
+        $("#preload-data").removeClass("hidden");
     })
+    $('.review-pincab').on('click', function(){
+        $("#preload-data").removeClass("hidden");
+    })
+    $('.submit-confirmation-modal').on('click', function(){
+        $("#preload-data").removeClass("hidden");
+    })
+    $('.submit-confirmation-modal-staff').on('click', function(){
+        $("#preload-data").removeClass("hidden");
+    })
+    $('.edit-pengajuan').on('click', function(){
+        $("#preload-data").removeClass("hidden");
+    })
+
+    $('.show-upload-sppk').on('click', function() {
+        const target = $(this).data('target')
+        const id = $(this).data('id')
+        const url_form = "{{url('/post-file')}}/"+id
+        const url_cetak = "{{url('/dagulir/cetak-sppk')}}/"+id
+        var token = generateCsrfToken()
+
+        $(`#${target} #form-sppk`).attr('action', url_form)
+        $(`#${target} #token`).val(token)
+        $(`#${target} #btn-cetak-file`).attr('href', url_cetak)
+        $(`#${target}`).removeClass('hidden');
+    })
+
+    $('.simpan-sppk').on('click', function(){
+        $("#uploadSPPKModal").addClass("hidden");
+        $("#preload-data").removeClass("hidden");
+    })
+    $('.simpan-pk').on('click', function(){
+        $("#uploadPKModal").addClass("hidden");
+        $("#preload-data").removeClass("hidden");
+    })
+
+    $('.show-upload-pk').on('click', function() {
+        const target = $(this).data('target')
+        const id = $(this).data('id')
+        const kode_pendaftaran = $(this).data('kode_pendaftaran')
+        const url_form = "{{url('/dagulir/post-file')}}/"+id
+        const url_cetak = "{{url('/dagulir/cetak-pk')}}/"+id
+        var token = generateCsrfToken()
+
+        $(`#${target} #form-pk`).attr('action', url_form)
+        $(`#${target} #token`).val(token)
+        $(`#${target} #btn-cetak-file`).attr('href', url_cetak)
+        $(`#${target} #kode_pendaftaran`).val(kode_pendaftaran)
+        $(`#${target}`).removeClass('hidden');
+    })
+    $(".tab-table-wrapper .tab-button").click(function(e) {
+        e.preventDefault();
+        var tabID = $(this).data('tab');
+        $(this).addClass('active').siblings().removeClass('active');
+        $('#tab-'+tabID).addClass('active').siblings().removeClass('active');
+
+        if(tabID == 'dagulir'){
+            $('#title-table').html('Dagulir')
+            $('#add-pengajuan').removeClass('hidden');
+        }else{
+            $('#title-table').html('Dagulir')
+            $('#add-pengajuan').addClass('hidden');
+        }
+    });
+
+    $('#btn-filter').on('click', function (e) {
+        e.preventDefault()
+        let tAwal = document.getElementById('tAwal');
+        let tAkhir = document.getElementById('tAkhir');
+        console.log(tAkhir.value);
+        if ($("#form-filter")[0].checkValidity()){
+            $('#form-filter').submit()
+        }else{
+            if(tAwal.value == "" && tAkhir.value == ""){
+                $('#form-filter').submit()
+            }else if(tAwal.value == ""){
+                $("#reqAwal").show();
+            }else if(tAkhir.value == ""){
+                $("#reqAkhir").show();
+            }else{
+                $("#reqAkhir").hide();
+                $("#reqAwal").hide();
+            }
+        }
+    })
+
+    $("#tAwal").on("change", function() {
+        var result = $(this).val();
+        if (result != null) {
+            $("#tAkhir").prop("required", true)
+        }
+    });
 
     var token = "gTWx1U1bVhtz9h51cRNoiluuBfsHqty5MCdXRdmWthFDo9RMhHgHIwrU9DBFVaNj";
+    var cbgValue = '{{ Request()->query('cbg') }}';
 
-    $(document).ready(function () {
-        var cbgValue = '{{ Request()->query('cbg') }}';
+    $(document).ready(function() {
+        $("#errorAkhir").hide();
+
         $.ajax({
             type: "GET",
-            url: "/api/v1/get-cabang", 
+            url: "/api/v1/get-cabang",
             headers: {
                 'token': token,
             },
             success: function (response) {
-                $.map(response.data, function (item, i) {
+                response.data.forEach(element => {
                     $('#cabang').append(
-                        `<option value="${item.kode_cabang}" ${cbgValue == item.kode_cabang ? 'selected' : ''}>${item.cabang}</option>`
+                        `<option value="${element.kode_cabang}" ${cbgValue == element.kode_cabang ? 'selected' : ''}>${element.cabang}</option>`
                     );
                 });
             }
         });
-    });
-</script>
+    })
+
+    $("#tAkhir").on("change", function() {
+        var tAkhir = $(this).val();
+        var tAwal = $("#tAwal").val();
+        if (Date.parse(tAkhir) < Date.parse(tAwal)) {
+            $("#tAkhir").val('');
+            $("#errorAkhir").show();
+        } else {
+            $("#errorAkhir").hide();
+        }
+    })
+
+    $(".confirmationModalPenyelia").on("click", function(){
+        var target = $(this).data('target');
+        var id_pengajuan = $(this).data('id-pengajuan');
+        var nama = $(this).data('nama');
+        var id_penyelia = $(this).data('id-penyelia');
+        console.log(target);
+        $(`${target} #id-pengajuan`).val(id_pengajuan)
+        $(`${target} #id-penyelia`).val(id_penyelia)
+        $(`${target} #nama`).html(nama)
+        $(target).removeClass('hidden');
+    })
+    </script>
 @endpush

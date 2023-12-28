@@ -38,15 +38,30 @@
     if (ijin_usaha == 'nib') {
         $('#docSKU').hide();
         $('#surat_keterangan_usaha').hide();
+
+        $('#nib').show();
+        $('#npwp').show();
+        $('#docNIB').show();
+        $('#docNPWP').show();
     }
 
-    if (ijin_usaha == 'surat_keterangan_usaha') {
+    if (ijin_usaha == 'tidak_ada_legalitas_usaha') {
         $('#nib').hide();
         $('#docNIB').hide();
+        $('#surat_keterangan_usaha').hide();
+        $('#docSKU').hide();
+        $('#docNPWP').hide();
     }
 
     if (ijin_usaha == 'surat_keterangan_usaha') {
         $('#npwpsku').show()
+        $('#docSKU').show()
+        $('#surat_keterangan_usaha').show()
+
+        $('#nib').hide();
+        $('#docNIB').hide();
+        $('#docNPWP').hide();
+        $('#npwp').hide();
     }
     //make input readonly
     $('#ratio_coverage').attr('readonly', true);
@@ -218,7 +233,6 @@
                                     class="form-input input">
                             </div>
                         `);
-                            m
                         } else {
                             if (valItem.nama == 'Foto') {
                                 $('#bukti_pemilikan_jaminan_utama').append(`

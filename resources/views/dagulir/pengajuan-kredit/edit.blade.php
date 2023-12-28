@@ -53,7 +53,11 @@ $dataIndex = match ($skema) {
                 <input type="hidden" name="id_dagulir_temp" id="id_dagulir_temp" value="{{ $pengajuan?->id }}">
                 <div class="mt-3 container mx-auto">
                     <div id="dagulir-tab" class="is-tab-content active">
-                        @include('dagulir.pengajuan.edit-dagulir')
+                        @if ($pengajuan->skema == 'dagulir')
+                            @include('dagulir.pengajuan.edit-dagulir')
+                        @else
+                            @include('dagulir.pengajuan.edit-dagulir-analisis')
+                        @endif
                     </div>
                     @foreach ($dataAspek as $key => $value)
                         @php
@@ -88,7 +92,6 @@ $dataIndex = match ($skema) {
                                             $idLevelDua = str_replace(' ', '_', strtolower($item->nama));
                                         @endphp
                                         {{-- item ijin usaha --}}
-
                                         @if ($item->nama == 'Ijin Usaha')
                                             <div class="form-group">
                                                 <div class="input-box">
@@ -124,7 +127,7 @@ $dataIndex = match ($skema) {
                                                     </div>
                                                 </div>
                                             </div>
-                                            
+
                                             <div class="form-group" id="space_nib"></div>
                                             <div class="form-group" id="nib">
                                                 <div class="input-box">

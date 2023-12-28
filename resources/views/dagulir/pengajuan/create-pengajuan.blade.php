@@ -292,11 +292,11 @@
             </div>
             @enderror
         </div>
-        <div class="" id="foto-ktp-suami">
+        <div class="input-box" id="foto-ktp-suami">
         </div>
-        <div class="" id="foto-ktp-istri">
+        <div class="input-box" id="foto-ktp-istri">
         </div>
-        <div class="" id="foto-ktp-nasabah">
+        <div class="input-box" id="foto-ktp-nasabah">
         </div>
         <div class="form-group-3">
             <div class="input-box ">
